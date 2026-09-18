@@ -587,6 +587,520 @@
       ],
       "resultTier": "noise",
       "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_001",
+      "title": "入秋该怎么进补？三种家常做法",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用养生文章把“补”引向日常饮食语境",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：进补文章",
+      "noiseCategory": "tonic-article",
+      "pageType": "self-media",
+      "url": "https://yangsheng-weekly.local/autumn-tonic",
+      "domain": "yangsheng-weekly.local",
+      "publishedAt": "2024-09-08",
+      "headline": "入秋该怎么进补？三种家常做法",
+      "snippet": "秋季进补讲究清淡，先用汤水调理，再谈滋补。",
+      "body": [
+        "入秋之后昼夜温差变大，不少读者问到进补的顺序。",
+        "营养师建议先从作息和水分入手，再考虑汤水与食材搭配，避免一开始就上重油厚味。",
+        "文中列出三道家常汤水的做法与适用人群，并提醒慢性病患者先咨询医生。"
+      ],
+      "keywords": [
+        "进补",
+        "秋季进补",
+        "鸡公岭 补"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_002",
+      "title": "市民健康讲座：聊聊“补”这个字",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "让“补”落到汉字与营养常识，远离破庙语境",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：进补文章",
+      "noiseCategory": "tonic-article",
+      "pageType": "news",
+      "url": "https://xxdaily.local/2024/0912-health-talk",
+      "domain": "xxdaily.local",
+      "publishedAt": "2024-09-12",
+      "headline": "市民健康讲座：聊聊“补”这个字",
+      "snippet": "讲座从一个汉字讲到日常营养观念，现场座无虚席。",
+      "body": [
+        "上周末的市民健康讲座从一个汉字讲起：补。",
+        "主讲人梳理了“补”在修补、补充、滋补三类语境中的常见用法，强调日常饮食以均衡为先。",
+        "讲座最后安排了答疑，主要围绕老年读者的换季饮食问题。"
+      ],
+      "keywords": [
+        "补",
+        "补 字",
+        "健康讲座"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_003",
+      "title": "秋季滋补礼盒 限时五折",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用电商广告淹没“补”相关检索",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：补品广告",
+      "noiseCategory": "supplement-ad",
+      "pageType": "commercial",
+      "url": "https://buybus.local/promo/autumn-gift-box",
+      "domain": "buybus.local",
+      "publishedAt": "2025-08-28",
+      "headline": "秋季滋补礼盒 限时五折",
+      "snippet": "六款滋补食材组合装，包邮，支持七天无理由退换。",
+      "body": [
+        "礼盒内含六款常见滋补食材，适合走亲访友。",
+        "活动期间下单立减，叠加满减券更优惠。",
+        "页面提示：保健食品不能代替药物。"
+      ],
+      "keywords": [
+        "补品",
+        "滋补礼盒",
+        "进补"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_004",
+      "title": "本地特产滋补直供，当日发货",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用本地电商结果继续稀释“补”",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：补品广告",
+      "noiseCategory": "supplement-ad",
+      "pageType": "commercial",
+      "url": "https://xxshop.local/local-tonic",
+      "domain": "xxshop.local",
+      "publishedAt": "2025-09-03",
+      "headline": "本地特产滋补直供，当日发货",
+      "snippet": "产地直发，同城可配送，商品页附检测报告。",
+      "body": [
+        "店铺主打本地干货与滋补食材，产地直发。",
+        "同城订单当日发出，外埠订单 48 小时内发货。",
+        "商品页附批次检测报告，支持开票。"
+      ],
+      "keywords": [
+        "补品",
+        "本地特产",
+        "滋补"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_005",
+      "title": "XX县暑期补习班开始招生",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用教培广告占据本地检索结果",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：补课机构",
+      "noiseCategory": "tutoring",
+      "pageType": "commercial",
+      "url": "https://xxedu.local/summer-class",
+      "domain": "xxedu.local",
+      "publishedAt": "2025-06-18",
+      "headline": "XX县暑期补习班开始招生",
+      "snippet": "小学至高中分班授课，报名即送入学测评。",
+      "body": [
+        "暑期班分小学、初中、高中三个层级，按科目分班。",
+        "报名后安排一次入学测评，据此分班。",
+        "校区在县城主干道，可预约试听。"
+      ],
+      "keywords": [
+        "补习",
+        "补课",
+        "XX县"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_006",
+      "title": "一对一名师补课，先试听后付费",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "继续用教培广告稀释检索结果",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：补课机构",
+      "noiseCategory": "tutoring",
+      "pageType": "commercial",
+      "url": "https://xxedu.local/one-on-one",
+      "domain": "xxedu.local",
+      "publishedAt": "2025-07-02",
+      "headline": "一对一名师补课，先试听后付费",
+      "snippet": "按课时计费，支持线上预约、调课和请假。",
+      "body": [
+        "课程按课时计费，可先试听一节再决定是否续报。",
+        "支持线上预约、调课和请假，课时有效期三个月。",
+        "页面注明教师资质以平台公示为准。"
+      ],
+      "keywords": [
+        "补课",
+        "一对一",
+        "补习班"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_007",
+      "title": "屋顶补漏、墙面修补 上门服务",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用维修服务占据“补”的另一层常见语义",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：修补服务",
+      "noiseCategory": "repair-service",
+      "pageType": "commercial",
+      "url": "https://xxfix.local/roof-repair",
+      "domain": "xxfix.local",
+      "publishedAt": "2025-05-21",
+      "headline": "屋顶补漏、墙面修补 上门服务",
+      "snippet": "县城及周边乡镇均可预约，先看现场再报价。",
+      "body": [
+        "承接屋顶补漏、外墙渗水、内墙开裂修补。",
+        "服务范围覆盖县城及周边乡镇，先看现场再报价。",
+        "维修完工后提供三个月保修。"
+      ],
+      "keywords": [
+        "修补",
+        "补漏",
+        "上门维修"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_008",
+      "title": "鸡公岭北线一日徒步攻略",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "复现第一幕路线信息，但不解释符号与石碑",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：鸡公岭旅游攻略",
+      "noiseCategory": "travel-guide",
+      "pageType": "trail-guide",
+      "url": "https://trailbook.local/routes/jigongling-day-trip",
+      "domain": "trailbook.local",
+      "publishedAt": "2024-04-06",
+      "headline": "鸡公岭北线一日徒步攻略",
+      "snippet": "全程约七公里，爬升平缓，适合周末半日往返。",
+      "body": [
+        "从北侧村口上山，沿林道经过一处山洞和一处石庙，登顶后原路返回。",
+        "全程约七公里，爬升平缓，正常体力四到五小时可以完成。",
+        "沿途有两处岔口容易走错，建议提前下载离线轨迹；雨后路面湿滑。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "鸡公岭徒步",
+        "鸡公岭 攻略"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_009",
+      "title": "鸡公岭周边两日游：山洞与石庙",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "让石庙看起来只是普通打卡点",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：鸡公岭旅游攻略",
+      "noiseCategory": "travel-guide",
+      "pageType": "trail-guide",
+      "url": "https://travelnote.local/jigongling-2day",
+      "domain": "travelnote.local",
+      "publishedAt": "2024-10-19",
+      "headline": "鸡公岭周边两日游：山洞与石庙",
+      "snippet": "第二天安排山间石庙与山洞，适合拍照。",
+      "body": [
+        "第一天走北线主步道，第二天安排山间石庙和山洞。",
+        "石庙规模不大，庙旁立着一块字迹模糊的石碑，是很多游客的拍照点。",
+        "帖主提醒：庙内塑像残损严重，请勿触碰；山区无信号路段较长。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "石庙",
+        "鸡公岭 神像"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_010",
+      "title": "全国叫“鸡公岭”的地方不止一处",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用同名地点解释为什么网上检索会串味",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED",
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：同名地点",
+      "noiseCategory": "same-name-place",
+      "pageType": "same-name",
+      "url": "https://geoname.local/same-name/jigongling",
+      "domain": "geoname.local",
+      "publishedAt": "2023-12-11",
+      "headline": "全国叫“鸡公岭”的地方不止一处",
+      "snippet": "至少四省有同名山岭，检索时务必加上区县名。",
+      "body": [
+        "以“鸡公岭”为名的山岭、村落在南方多个省份都有分布。",
+        "条目列出四处同名地点的行政区划与海拔，彼此相距较远。",
+        "检索建议：加上区县名或邻近水库名，避免把不同地点的新闻混在一起。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "同名地名",
+        "地名检索"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_011",
+      "title": "周末爬鸡公岭拍的一组片子，求点评",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用摄影帖子提供似是而非的现场信息",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED",
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：摄影帖子",
+      "noiseCategory": "photo-post",
+      "pageType": "forum",
+      "url": "https://photoforum.local/t/jigongling-photos",
+      "domain": "photoforum.local",
+      "publishedAt": "2024-11-02",
+      "headline": "周末爬鸡公岭拍的一组片子，求点评",
+      "snippet": "山顶云海不错，庙里光线太暗，细节基本没拍到。",
+      "body": [
+        "第一次走这条线，山顶云海比预期好，用了偏振镜。",
+        "石庙里光线太暗，塑像细节基本糊了，只留下几张外景。",
+        "楼下回复多在讨论镜头和滤镜，也有人问路线怎么走。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "摄影",
+        "石庙"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_012",
+      "title": "XX县农产品展销会开幕，展期三天",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "用无关地方新闻填充本地检索结果",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：无关地方新闻",
+      "noiseCategory": "unrelated-news",
+      "pageType": "news",
+      "url": "https://xxdaily.local/2025/1103-agri-fair",
+      "domain": "xxdaily.local",
+      "publishedAt": "2025-11-03",
+      "headline": "XX县农产品展销会开幕，展期三天",
+      "snippet": "展销会集中展示本地粮油、果蔬与深加工产品。",
+      "body": [
+        "本届展销会在县体育中心举行，展期三天。",
+        "展区分为粮油、果蔬、深加工三类，共一百二十余个摊位。",
+        "主办方称将同步开展线上直播带货。"
+      ],
+      "keywords": [
+        "XX县",
+        "展会",
+        "本地新闻"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_013",
+      "title": "十字在纹章、路标与标识中的常见含义",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "让双S十字看起来只是普通符号学条目",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：泛符号百科",
+      "noiseCategory": "symbol-encyclopedia",
+      "pageType": "encyclopedia",
+      "url": "https://openwiki.local/symbol/cross",
+      "domain": "openwiki.local",
+      "publishedAt": "2023-07-25",
+      "headline": "十字在纹章、路标与标识中的常见含义",
+      "snippet": "十字是最常见的几何符号之一，含义随语境变化。",
+      "body": [
+        "十字作为几何符号广泛出现在纹章、宗教标识、路标和医疗标志中。",
+        "条目列举了十余种常见变体，包括正十字、斜十字和双横样式。",
+        "提醒：相同的图形在不同地区和行业中含义差别很大，判断时须结合上下文。"
+      ],
+      "keywords": [
+        "十字",
+        "符号",
+        "双S 十字"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_014",
+      "title": "缩写 A.W 的常见对应关系",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "说明两个字母加一个点不足以定位唯一对象",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：泛符号百科",
+      "noiseCategory": "symbol-encyclopedia",
+      "pageType": "encyclopedia",
+      "url": "https://openwiki.local/abbr/aw",
+      "domain": "openwiki.local",
+      "publishedAt": "2023-08-14",
+      "headline": "缩写 A.W 的常见对应关系",
+      "snippet": "人名、地名与机构名都可能出现这一组字母。",
+      "body": [
+        "条目汇总了 A.W 在人名、地名、机构名与产品型号中的常见对应。",
+        "其中既有外文人名缩写，也有工程图纸上的标注习惯。",
+        "结论是：两个字母加一个点不足以定位到唯一对象。"
+      ],
+      "keywords": [
+        "A.W",
+        "缩写",
+        "字母组合"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_015",
+      "title": "石雕神像修补翻新，接庙宇小件",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "把“补 神像”引向石雕维修服务",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：修补服务",
+      "noiseCategory": "repair-service",
+      "pageType": "commercial",
+      "url": "https://stonecare.local/statue-restore",
+      "domain": "stonecare.local",
+      "publishedAt": "2025-03-09",
+      "headline": "石雕神像修补翻新，接庙宇小件",
+      "snippet": "断裂粘接、缺件补配与表面做旧均可接单。",
+      "body": [
+        "承接石雕神像的断裂粘接、缺件补配与表面做旧。",
+        "可按原样配色，也可只做加固不做补配。",
+        "页面说明：文物类构件需先由文保部门出具意见。"
+      ],
+      "keywords": [
+        "神像",
+        "修补",
+        "石雕"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A2_T01_016",
+      "title": "山路连续 S 弯，拍车最好的几个机位",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "把“双S”引向山路弯道摄影",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "notes": "T01 噪音：摄影帖子",
+      "noiseCategory": "photo-post",
+      "pageType": "forum",
+      "url": "https://photoforum.local/t/s-curve-spots",
+      "domain": "photoforum.local",
+      "publishedAt": "2024-06-15",
+      "headline": "山路连续 S 弯，拍车最好的几个机位",
+      "snippet": "两个连续弯的落差最好看，注意别站在路中间。",
+      "body": [
+        "这段山路有两个连续的 S 弯，从上方的土坡能拍到落差。",
+        "最佳时间是上午，光线从侧面过来，车灯和路面反光都在。",
+        "提醒：不要站在路中间拍摄，弯道上车辆看不见人。"
+      ],
+      "keywords": [
+        "双S",
+        "S弯",
+        "山路摄影"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
     }
   ]
 }

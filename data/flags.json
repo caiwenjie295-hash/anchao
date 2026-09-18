@@ -281,6 +281,195 @@
       "relatedFlags": [],
       "notes": "清零时与所有剧情状态一起重置",
       "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_SEARCH_BU_ATTEMPTED",
+      "title": "已尝试搜索“补/神像/石庙”",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "记录玩家已用与“补”有关的模糊词搜索过",
+      "unlockCondition": [
+        "FLAG_A1_COMPLETE"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_WEB_SEARCH_FAILED"
+      ],
+      "notes": "由 Act2T01Controller 消费 browser:searched 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_SEARCH_SS_ATTEMPTED",
+      "title": "已尝试搜索“双S/A.W”",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "记录玩家已用与双S或 A.W 有关的模糊词搜索过",
+      "unlockCondition": [
+        "FLAG_A1_COMPLETE"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_WEB_SEARCH_FAILED"
+      ],
+      "notes": "由 Act2T01Controller 消费 browser:searched 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_WEB_SEARCH_FAILED",
+      "title": "互联网搜索已无解",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "browser",
+      "purpose": "两类模糊搜索都完成后确认网上查不到解释",
+      "unlockCondition": [
+        "FLAG_A2_SEARCH_BU_ATTEMPTED",
+        "FLAG_A2_SEARCH_SS_ATTEMPTED"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
+      ],
+      "notes": "两类搜索齐备后幂等写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_OFFLINE_RESEARCH_NEEDED",
+      "title": "需要转向线下调查",
+      "act": 2,
+      "phase": "A2_T01",
+      "source": "story",
+      "purpose": "把玩家从互联网引向下一步调查",
+      "unlockCondition": [
+        "FLAG_A2_WEB_SEARCH_FAILED"
+      ],
+      "relatedFlags": [],
+      "notes": "与 FLAG_A2_WEB_SEARCH_FAILED 同时写入并转入 bridge 阶段",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_ELDER_PHOTO_SHOWN",
+      "title": "已向老人出示现场照片",
+      "act": 2,
+      "phase": "A2_T02",
+      "source": "scene",
+      "purpose": "记录玩家展示过第一幕破庙现场证据",
+      "unlockCondition": [
+        "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_HEIBUMU_AUDIO_HEARD"
+      ],
+      "notes": "由 WB-0003 消费 showAct2Evidence 事件写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_HEIBUMU_AUDIO_HEARD",
+      "title": "已听到方言口述",
+      "act": 2,
+      "phase": "A2_T02",
+      "source": "scene",
+      "purpose": "记录线索老人说出带口音的说法",
+      "unlockCondition": [
+        "FLAG_A2_ELDER_PHOTO_SHOWN"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_HEIBUMU_NAME_SOLVED"
+      ],
+      "notes": "由 WB-0003 写入；系统不自动纠正用字",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_HEIBUMU_NAME_SOLVED",
+      "title": "已还原正式名称",
+      "act": 2,
+      "phase": "A2_T02",
+      "source": "story",
+      "purpose": "记录玩家完成三段同音字辨识",
+      "unlockCondition": [
+        "FLAG_A2_HEIBUMU_AUDIO_HEARD"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
+      ],
+      "notes": "由 StateManager.confirmHeibumuName 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_COUNTY_RECORD_HINT_KNOWN",
+      "title": "已知县志可能有记录",
+      "act": 2,
+      "phase": "A2_T02",
+      "source": "scene",
+      "purpose": "把玩家从桥头引向县图书馆",
+      "unlockCondition": [
+        "FLAG_A2_HEIBUMU_NAME_SOLVED"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_LIBRARY_ENTERED"
+      ],
+      "notes": "由 WB-0003 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_LIBRARY_ENTERED",
+      "title": "已进入县图书馆",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "scene",
+      "purpose": "记录玩家开始地方志检索",
+      "unlockCondition": [
+        "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_LOCAL_GAZETTE_FOUND"
+      ],
+      "notes": "由 WB-0004 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_LOCAL_GAZETTE_FOUND",
+      "title": "已找到地方志卷册",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "scene",
+      "purpose": "记录玩家完成目录收窄并打开卷册",
+      "unlockCondition": [
+        "FLAG_A2_LIBRARY_ENTERED"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_BUMUZHI_FOUND"
+      ],
+      "notes": "由 WB-0004 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_BUMUZHI_FOUND",
+      "title": "已找到《补母志》正文",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "scene",
+      "purpose": "记录玩家翻到《补母志》页面",
+      "unlockCondition": [
+        "FLAG_A2_LOCAL_GAZETTE_FOUND"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
+      ],
+      "notes": "由 WB-0004 写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A2_BUMU_RULE_BASIC_KNOWN",
+      "title": "已知表层规则",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "notepad",
+      "purpose": "记录玩家标记关键词并完成摘录",
+      "unlockCondition": [
+        "FLAG_A2_BUMUZHI_FOUND"
+      ],
+      "relatedFlags": [],
+      "notes": "由 WB-0004 写入；只揭示表层规则",
+      "defaultValue": false
     }
   ]
 }

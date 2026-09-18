@@ -11,6 +11,19 @@ const getItems = <T>(document: unknown, name: string): T[] => {
 export const noteEntries = getItems<NoteEntry>(notesDocument, 'notes.json');
 const flags = getItems<{ id: string }>(flagsDocument, 'flags.json');
 export const noteById = new Map(noteEntries.map((entry) => [entry.id, entry]));
+
+/** 第二幕 T01–T03 由本模块统一登记，供并行任务按 ID 消费。 */
+export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001'];
+const act2NoteRequiredText: Record<string, string[]> = {
+  NOTE_A2_T01_001: ['网上几乎找不到有用的信息', '只有当地人才知道'],
+  NOTE_A2_T01_002: ['这个词太普通了'],
+  NOTE_A2_T02_001: ['hei bu mu', '黑', '捕', '补', '埔', '木', '母', '墓'],
+  NOTE_A2_T02_002: ['黑补母', '吃什么补什么', '县志'],
+  NOTE_A2_T03_001: ['补缺', '以有余补不足'],
+};
+/** T04 才揭示的结论不得提前出现在第二幕摘录里。 */
+const act2NoteForbiddenText: Record<string, string[]> = { NOTE_A2_T03_001: ['记忆', '身份'] };
+
 export function validateNoteData(): void {
   if (noteEntries.length < 2) throw new Error('记事本缺少阶段E-F条目。');
   const ids = new Set<string>();
@@ -20,6 +33,12 @@ export function validateNoteData(): void {
     for (const flagId of [...entry.triggerFlags, ...entry.unlockCondition, ...entry.relatedFlags]) if (!flags.some((flag) => flag.id === flagId)) throw new Error(`${entry.id} 引用了未登记 Flag：${flagId}`);
   }
   if (noteById.get('NOTE_A1_E_001')?.content !== '七公里的路线，为什么连人或尸体都找不到？') throw new Error('NOTE_A1_E_001 文本必须保持冻结内容。');
+  for (const noteId of ACT2_NOTE_IDS) {
+    const entry = noteById.get(noteId);
+    if (!entry) throw new Error(`第二幕笔记缺少登记：${noteId}`);
+    for (const text of act2NoteRequiredText[noteId] ?? []) if (!entry.content.includes(text)) throw new Error(`${noteId} 缺少冻结内容：${text}`);
+    for (const text of act2NoteForbiddenText[noteId] ?? []) if (entry.content.includes(text)) throw new Error(`${noteId} 泄露了后续结论：${text}`);
+  }
 }
 validateNoteData();
 export const getAutoEntries = (state: NotepadState): NoteEntry[] => [...new Set(state.autoEntryIds)].map((id) => noteById.get(id)).filter((entry): entry is NoteEntry => Boolean(entry));
