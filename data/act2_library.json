@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "record": {
+    "id": "LIBRARY_A2_T03_001",
+    "title": "县图书馆 · 地方志检索",
+    "act": 2,
+    "phase": "A2_T03",
+    "source": "library",
+    "purpose": "让玩家亲手收窄目录、打开卷册、翻页找到《补母志》，标记关键词并主动摘录，得到黑补母的表层规则",
+    "unlockCondition": ["FLAG_A2_COUNTY_RECORD_HINT_KNOWN"],
+    "relatedFlags": [
+      "FLAG_A2_LIBRARY_ENTERED",
+      "FLAG_A2_LOCAL_GAZETTE_FOUND",
+      "FLAG_A2_BUMUZHI_FOUND",
+      "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
+    ],
+    "notes": "纯 CSS 占位阅览室；资源空位 IMG_A2_T03_001 由最终集成任务登记，本轮不生成正式美术"
+  },
+  "scene": {
+    "eyebrow": "XX县图书馆 · 地方志阅览室",
+    "title": "县图书馆",
+    "intro": "雨后的阅览室没什么人。借阅台后的老馆员只抬了抬下巴：“地方志不外借，里间自己翻。”",
+    "ambience": "日光灯管偶尔轻响，纸页带着旧年月的潮气。",
+    "catalogTitle": "地方志目录",
+    "catalogHint": "先想清楚“补”该归在哪一门——按门类把范围收窄。",
+    "catalogNoiseNote": "目录按门类分册，未收窄到某一门之前，不逐册索引卷内条目。",
+    "shelfTitle": "已收窄的卷册",
+    "readerInstruction": "逐叶翻过去，别停在目录页。",
+    "returnLabel": "回到桌面，继续调查",
+    "placeholderAssetId": "IMG_A2_T03_001"
+  },
+  "search": {
+    "correctSectionId": "SECTION_A2_T03_009",
+    "targetVolumeId": "VOLUME_A2_T03_002",
+    "targetPageId": "PAGE_A2_T03_005"
+  },
+  "flags": {
+    "entered": "FLAG_A2_LIBRARY_ENTERED",
+    "gazetteFound": "FLAG_A2_LOCAL_GAZETTE_FOUND",
+    "bumuzhiFound": "FLAG_A2_BUMUZHI_FOUND",
+    "ruleKnown": "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
+  },
+  "sections": [
+    { "id": "SECTION_A2_T03_001", "name": "地理沿革", "summary": "建置、疆域与迁治，按朝代编次，附旧图摹本。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_002", "name": "山川河流", "summary": "山系、水系与渡口，另附水利旧图。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_003", "name": "风俗", "summary": "岁时、婚丧、集市与庙会，多录旧俗。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_004", "name": "祠庙", "summary": "坛庙、寺观与野祠，只记形制与地址。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_005", "name": "乡贤", "summary": "科举、义行与列传，多颂扬之辞。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_006", "name": "农业", "summary": "田亩、谷种、耕作与赋税，逐年登记。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_007", "name": "灾害", "summary": "水旱、疫疠与兵燹，只列年月与灾情。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_008", "name": "方言", "summary": "方音、俗字与谚语，注音从旧。", "isCorrect": false },
+    { "id": "SECTION_A2_T03_009", "name": "地方传说", "summary": "里巷传闻与野语志异，采自乡老口述，真伪并存，编者不加删削。", "isCorrect": true }
+  ],
+  "volumes": [
+    { "id": "VOLUME_A2_T03_001", "sectionId": "SECTION_A2_T03_001", "title": "XX县地理沿革", "spine": "志 · 一", "summary": "疆域、建置与迁治，附旧图摹本。" },
+    { "id": "VOLUME_A2_T03_002", "sectionId": "SECTION_A2_T03_009", "title": "XX县风土志", "spine": "志 · 九", "summary": "里巷传闻与野语志异，多采自乡老口述。" },
+    { "id": "VOLUME_A2_T03_003", "sectionId": "SECTION_A2_T03_004", "title": "XX县祠庙录", "spine": "志 · 四", "summary": "坛庙寺观与野祠的形制、地址。" }
+  ],
+  "pages": [
+    {
+      "id": "PAGE_A2_T03_001",
+      "volumeId": "VOLUME_A2_T03_001",
+      "pageNumber": 1,
+      "leafLabel": "志 · 一 第一叶",
+      "title": "卷首",
+      "heading": "XX县地理沿革",
+      "paragraphs": [
+        "XX县，古属XX郡。明初置县，治所三迁，今址在XX水之北。",
+        "县境多山，西接鸡公岭，旧为樵采之路，不通车马。"
+      ]
+    },
+    {
+      "id": "PAGE_A2_T03_002",
+      "volumeId": "VOLUME_A2_T03_001",
+      "pageNumber": 2,
+      "leafLabel": "志 · 一 第二叶",
+      "title": "疆域",
+      "heading": "疆域",
+      "paragraphs": [
+        "疆域东西八十里，南北百里；西境尽山，东境多田。",
+        "鸡公岭在县西四十里，岭下有溪，溪畔旧有野祠一所，岁久失祀。"
+      ]
+    },
+    {
+      "id": "PAGE_A2_T03_003",
+      "volumeId": "VOLUME_A2_T03_002",
+      "pageNumber": 1,
+      "leafLabel": "志 · 九 第一叶",
+      "title": "卷首",
+      "heading": "XX县风土志",
+      "paragraphs": [
+        "是编采里巷传闻，与旧志体例不同，编者不加删削，以存其真。",
+        "凡所录者，多为乡老口述，真伪并存，读者自辨。"
+      ]
+    },
+    {
+      "id": "PAGE_A2_T03_004",
+      "volumeId": "VOLUME_A2_T03_002",
+      "pageNumber": 2,
+      "leafLabel": "志 · 九 第二叶",
+      "title": "本卷目次",
+      "heading": "本卷目次",
+      "paragraphs": [
+        "一、岁时；二、庙会；三、野祠；四、补母志。",
+        "以上各篇，分叶另录，请依次翻检。"
+      ]
+    },
+    {
+      "id": "PAGE_A2_T03_005",
+      "volumeId": "VOLUME_A2_T03_002",
+      "pageNumber": 3,
+      "leafLabel": "志 · 九 第三叶",
+      "title": "补母志",
+      "heading": "补母志",
+      "isTarget": true,
+      "paragraphs": [
+        "县西鸡公岭旧有野祠一所，乡人名之曰黑补母。",
+        "其神不增不损，唯补人所缺——缺什么，便以什么补之。",
+        "补之法，取有余以补不足：有所余者偿之，有所亏者受之。",
+        "相传食其土所产者，即得其相应之能：食木者善攀，食水者善泅，食火者耐寒。",
+        "乡人岁时以新谷、清酒、盐与布帛供奉祠前，不敢以私愿轻渎。"
+      ]
+    },
+    {
+      "id": "PAGE_A2_T03_006",
+      "volumeId": "VOLUME_A2_T03_003",
+      "pageNumber": 1,
+      "leafLabel": "志 · 四 第一叶",
+      "title": "野祠",
+      "heading": "野祠",
+      "paragraphs": [
+        "县境坛庙寺观凡二十有三，具录形制地址，不载灵异。",
+        "鸡公岭野祠在岭下溪畔，一间一龛，无额无碑，岁久失祀。"
+      ]
+    }
+  ],
+  "keywords": [
+    { "id": "KW_A2_T03_001", "pageId": "PAGE_A2_T03_005", "label": "补缺", "gloss": "所缺者可补；不增不减，只补其缺。", "core": true, "coreMeaning": "fill-gap" },
+    { "id": "KW_A2_T03_002", "pageId": "PAGE_A2_T03_005", "label": "以有余补不足", "gloss": "取有余的一方，偿不足的一方。", "core": true, "coreMeaning": "surplus-fills-deficit" },
+    { "id": "KW_A2_T03_003", "pageId": "PAGE_A2_T03_005", "label": "食其物得其能", "gloss": "吃了什么，就添上对应的本事。", "core": true, "coreMeaning": "eating-grants-ability" },
+    { "id": "KW_A2_T03_004", "pageId": "PAGE_A2_T03_005", "label": "民间供奉", "gloss": "新谷、清酒、盐与布帛，供在野祠前。", "core": false }
+  ],
+  "excerpt": {
+    "entryId": "ENTRY_A2_T03_001",
+    "noteId": "NOTE_A2_T03_001",
+    "title": "补母志 · 摘录",
+    "content": "《补母志》摘录 · 县西鸡公岭野祠\n\n黑补母不增不减，只补人所缺：缺什么，就用某种东西补什么。补之法，取有余以补不足。相传食其物者得其能。乡人以新谷、清酒、盐与布帛供奉。"
+  },
+  "requiredCoreKeywordCount": 3,
+  "completion": {
+    "title": "补母志 · 表层规则",
+    "conclusion": "缺什么，就用某种东西补什么。",
+    "detail": "黑补母补的只是“缺”：补的来源不同，补上来的东西也不同。县志只记到这里。"
+  }
+}
