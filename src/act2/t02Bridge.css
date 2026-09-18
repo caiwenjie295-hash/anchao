@@ -1,0 +1,411 @@
+/* WB-0003 第二幕 T02 桥头老人 —— 独立 .act2-bridge 作用域，克制占位场景，不使用远程资源。 */
+
+.act2-bridge {
+  --act2-bridge-paper: #f4f0e6;
+  --act2-bridge-card: #fffdf7;
+  --act2-bridge-ink: #35312a;
+  --act2-bridge-muted: #7a7466;
+  --act2-bridge-line: #d8d0bd;
+  --act2-bridge-accent: #8a6d3b;
+  --act2-bridge-stone: #e6dfcd;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: var(--act2-bridge-ink);
+  background:
+    linear-gradient(180deg, rgba(230, 223, 205, 0.55), rgba(244, 240, 230, 0) 55%),
+    var(--act2-bridge-paper);
+  border: 1px solid var(--act2-bridge-line);
+  border-radius: 14px;
+  font-family: "Songti SC", "Noto Serif SC", serif, system-ui;
+}
+
+.act2-bridge__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.act2-bridge__location {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__title {
+  margin: 4px 0 0;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.act2-bridge__return,
+.act2-bridge__ask,
+.act2-bridge__replay,
+.act2-bridge__confirm,
+.act2-bridge__continue,
+.act2-bridge__show {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--act2-bridge-accent);
+  background: transparent;
+  color: var(--act2-bridge-accent);
+  cursor: pointer;
+}
+
+.act2-bridge__return:hover,
+.act2-bridge__ask:hover,
+.act2-bridge__replay:hover,
+.act2-bridge__confirm:hover,
+.act2-bridge__continue:hover,
+.act2-bridge__show:hover {
+  background: rgba(138, 109, 59, 0.08);
+}
+
+.act2-bridge__confirm:disabled,
+.act2-bridge__continue:disabled,
+.act2-bridge__show:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.act2-bridge__return:focus-visible,
+.act2-bridge__ask:focus-visible,
+.act2-bridge__replay:focus-visible,
+.act2-bridge__confirm:focus-visible,
+.act2-bridge__continue:focus-visible,
+.act2-bridge__show:focus-visible,
+.act2-bridge__elder:focus-visible,
+.act2-bridge__evidence-slot:focus-visible,
+.act2-bridge__option input:focus-visible {
+  outline: 2px solid var(--act2-bridge-accent);
+  outline-offset: 2px;
+}
+
+.act2-bridge__intro {
+  margin: 0;
+  line-height: 1.8;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__body {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.act2-bridge__elders {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.act2-bridge__elder {
+  font: inherit;
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--act2-bridge-line);
+  background: var(--act2-bridge-card);
+  color: var(--act2-bridge-ink);
+  cursor: pointer;
+}
+
+.act2-bridge__elder--active {
+  border-color: var(--act2-bridge-accent);
+  background: rgba(138, 109, 59, 0.08);
+}
+
+.act2-bridge__elder-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__dialogue {
+  flex: 1 1 320px;
+  min-width: 280px;
+  padding: 16px 18px;
+  border: 1px solid var(--act2-bridge-line);
+  border-radius: 12px;
+  background: var(--act2-bridge-card);
+}
+
+.act2-bridge__dialogue h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.act2-bridge__dialogue p {
+  margin: 6px 0;
+  line-height: 1.8;
+}
+
+.act2-bridge__ask {
+  margin-top: 10px;
+}
+
+.act2-bridge__evidence {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--act2-bridge-line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.act2-bridge__evidence h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--act2-bridge-muted);
+  font-weight: 500;
+}
+
+.act2-bridge__evidence-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--act2-bridge-line);
+  border-radius: 10px;
+  background: var(--act2-bridge-paper);
+  color: var(--act2-bridge-ink);
+}
+
+.act2-bridge__evidence-item:hover {
+  border-color: var(--act2-bridge-accent);
+}
+
+.act2-bridge__evidence-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.act2-bridge__evidence-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.act2-bridge__show {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.act2-bridge__evidence-name {
+  font-weight: 600;
+}
+
+.act2-bridge__evidence-desc {
+  font-size: 13px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__evidence-item .evidence-thumbnail,
+.act2-bridge__evidence-slot {
+  width: 64px;
+  height: 48px;
+  flex: 0 0 auto;
+}
+
+.act2-bridge__evidence-item .evidence-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.act2-bridge__evidence-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--act2-bridge-line);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--act2-bridge-muted);
+  background: var(--act2-bridge-stone);
+}
+
+.act2-bridge__oral {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--act2-bridge-line);
+}
+
+.act2-bridge__evidence-lead {
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__phrase {
+  margin: 10px 0;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+}
+
+.act2-bridge__replay-echo {
+  display: block;
+  font-size: 13px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__phrase-after {
+  color: var(--act2-bridge-ink);
+}
+
+.act2-bridge__audio-notice {
+  font-size: 12px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__replay {
+  margin-top: 8px;
+}
+
+.act2-bridge__puzzle {
+  padding: 18px;
+  border: 1px solid var(--act2-bridge-line);
+  border-radius: 12px;
+  background: var(--act2-bridge-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.act2-bridge__puzzle-prompt {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__puzzle h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.act2-bridge__part {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--act2-bridge-line);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.act2-bridge__part legend {
+  font-size: 13px;
+  padding: 0 6px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__part[disabled] {
+  background: var(--act2-bridge-stone);
+}
+
+.act2-bridge__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.act2-bridge__part-locked {
+  margin: 0;
+  width: 100%;
+  font-size: 12px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__locked-hint {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--act2-bridge-stone);
+  color: var(--act2-bridge-ink);
+  line-height: 1.7;
+}
+
+.act2-bridge__guessing-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__confirm {
+  align-self: flex-start;
+}
+
+.act2-bridge__resolution {
+  padding: 18px;
+  border: 1px solid var(--act2-bridge-accent);
+  border-radius: 12px;
+  background: var(--act2-bridge-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.act2-bridge__entry-title {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: 0.1em;
+}
+
+.act2-bridge__entry-body {
+  margin: 0;
+  line-height: 1.8;
+}
+
+.act2-bridge__entry-related {
+  margin: 0;
+  font-size: 13px;
+  color: var(--act2-bridge-muted);
+}
+
+.act2-bridge__elder-remark {
+  margin: 0;
+  line-height: 1.8;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--act2-bridge-stone);
+}
+
+.act2-bridge__continue {
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .act2-bridge__elders {
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .act2-bridge__elder {
+    flex: 1 1 40%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act2-bridge *,
+  .act2-bridge *::before,
+  .act2-bridge *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
