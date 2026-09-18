@@ -187,20 +187,24 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
           ) : (
             <>
               <p className="act2-library__reader-instruction">{librarySceneCopy.readerInstruction}</p>
-              <nav className="act2-library__leaves" aria-label="卷内页序">
-                {volumePages.map((page) => (
-                  <button
-                    key={page.id}
-                    type="button"
-                    className="act2-library__leaf"
-                    data-page-id={page.id}
-                    aria-current={page.id === currentPage.id ? 'page' : undefined}
-                    onClick={() => manager.openGazettePage(page.id)}
-                  >
-                    {page.leafLabel}
-                  </button>
-                ))}
-              </nav>
+              {/* 静态页序：仅作进度展示，未到达的页不得是可激活控件，翻页只能经上一叶/下一叶。 */}
+              <ol className="act2-library__leaves" aria-label="卷内页序" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                {volumePages.map((page) => {
+                  const current = page.id === currentPage.id;
+                  return (
+                    <li
+                      key={page.id}
+                      className="act2-library__leaf"
+                      data-page-id={page.id}
+                      data-leaf-state={current ? 'current' : 'pending'}
+                      aria-current={current ? 'page' : undefined}
+                      style={{ cursor: 'default' }}
+                    >
+                      {page.leafLabel}
+                    </li>
+                  );
+                })}
+              </ol>
 
               <article className="act2-library__page" data-page-id={currentPage.id} data-volume-id={currentPage.volumeId}>
                 <header className="act2-library__page-head">

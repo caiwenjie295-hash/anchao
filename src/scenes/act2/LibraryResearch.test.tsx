@@ -98,6 +98,42 @@ describe('LibraryResearch (act2 T03)', () => {
     expect(pick('.act2-library__conclusion')).toBeNull();
   });
 
+  it('requires sequential leaf turns and never exposes a control that jumps to the gazette page', async () => {
+    await setup();
+    await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
+    await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
+    expect(libraryState().currentPageId).toBe('PAGE_A2_T03_003');
+
+    // 页序只作静态进度展示：不存在可直接激活的页控件，更没有直达目标页的入口。
+    const leaves = pick('.act2-library__leaves');
+    expect(leaves).not.toBeNull();
+    expect(leaves?.querySelectorAll('button, a, [role="button"], [role="link"], [tabindex]')).toHaveLength(0);
+    expect(
+      container.querySelectorAll('button[data-page-id], a[data-page-id], [role="button"][data-page-id], [tabindex][data-page-id]'),
+    ).toHaveLength(0);
+
+    const pendingTargetLeaf = pick(`[data-leaf-state="pending"][data-page-id="${libraryTargetPageId}"]`);
+    expect(pendingTargetLeaf?.tagName).toBe('LI');
+    expect(pick(`.act2-library__leaves [data-page-id="${libraryTargetPageId}"]`)?.getAttribute('aria-current')).toBeNull();
+
+    // 第一次“下一叶”只到 PAGE_A2_T03_004，尚未发现《补母志》。
+    await click(pick('.act2-library__next'));
+    expect(libraryState().currentPageId).toBe('PAGE_A2_T03_004');
+    expect(flags().FLAG_A2_BUMUZHI_FOUND).toBeUndefined();
+
+    // 第二次“下一叶”才到 PAGE_A2_T03_005，此时写入 FLAG_A2_BUMUZHI_FOUND。
+    await click(pick('.act2-library__next'));
+    expect(libraryState().currentPageId).toBe(libraryTargetPageId);
+    expect(flags().FLAG_A2_BUMUZHI_FOUND).toBe(true);
+
+    // 当前页继续提供等价的可访问状态。
+    expect(pick(`.act2-library__leaves [data-page-id="${libraryTargetPageId}"]`)?.getAttribute('aria-current')).toBe('page');
+    expect(pick(`[data-leaf-state="current"][data-page-id="${libraryTargetPageId}"]`)?.tagName).toBe('LI');
+
+    // 末页之后不能继续翻页。
+    expect(pick<HTMLButtonElement>('.act2-library__next')?.disabled).toBe(true);
+  });
+
   it('toggles the bookmark for the current leaf only', async () => {
     await setup();
     await reachTargetPage();
