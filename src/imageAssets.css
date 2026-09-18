@@ -1,0 +1,61 @@
+.app-icon { background:transparent; border:0; box-shadow:none; }
+.window-controls button { display:grid; place-items:center; }
+.window-controls .sprite-icon { width:22px; height:22px; }
+.wechat-avatar { background:transparent; }
+.wechat-message__asset-icon { display:inline-block; width:30px; height:30px; flex-shrink:0; }
+.wechat-message--image .wechat-message__body:has(.evidence-thumbnail) { display:flex; flex-direction:column; align-items:flex-start; max-width:260px; background:#e5e9e6; }
+.evidence-thumbnail { display:block; padding:0; border:0; background:transparent; cursor:zoom-in; max-width:100%; }
+.evidence-thumbnail>img { display:block; width:100%; height:auto; border-radius:3px; }
+.evidence-lightbox { width:min(1100px,94vw); max-height:92dvh; padding:16px; border:1px solid #607069; border-radius:8px; color:#e3e8e5; background:#111a18; }
+.evidence-lightbox::backdrop { background:#000c; }
+.evidence-lightbox header { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:12px; }
+.evidence-lightbox header button { border:1px solid #71817b; border-radius:4px; padding:6px 12px; color:inherit; background:#263831; cursor:pointer; }
+.evidence-lightbox>img { display:block; width:100%; max-height:76dvh; object-fit:contain; }
+.browser-page figure { margin:24px 0; }.browser-page figcaption { margin-top:8px; color:#9baca4; font-size:12px; }
+.act1-scene__canvas--image { display:grid; place-items:center; container-type:size; background:#080e0c; }
+.act1-scene__canvas--image::before,.act1-scene__canvas--image::after { display:none; }
+.scene-image-frame { position:relative; width:min(100cqw,calc(100cqh * 4 / 3)); aspect-ratio:4/3; }
+.scene-background { display:block; width:100%; height:100%; }
+.scene-image-frame .scene-hotspot__mark { color:#c2bbaa; font-size:clamp(10px,1.3vw,17px); opacity:.62; }
+.act1-scene__detail { display:flex; justify-content:space-between; gap:16px; align-items:center; }
+.act1-scene__detail>.evidence-thumbnail { width:100px; flex:0 0 100px; }
+.photo-thumb { width:100%; object-fit:cover; }
+.photo-scroll { container-type:size; }
+.photo-zoom { min-width:0; min-height:0; height:auto; aspect-ratio:4/3; margin-inline:auto; }
+.evidence-photo { height:auto; aspect-ratio:4/3; }
+.evidence-photo--cave::before { display:none; }
+.photo-evidence-image { display:block; width:100%; height:100%; }
+.double-s { top:55%; left:73%; color:#918c7e; }
+
+/* T08: neutral field-study shell; original scene pixels are intentionally unfiltered. */
+.wechat-list__items { min-height:0; flex:1 1 auto; overflow-y:auto; scrollbar-gutter:stable; }
+.wechat-chat__messages { overflow-y:auto; scrollbar-gutter:stable; overscroll-behavior:contain; }
+
+.act1-scene { color:#2d3437; background:#d9dcde; }
+.act1-scene__eyebrow, .act1-scene__progress { color:#59646a; }
+.act1-scene__header h1 { color:#202a2f; }
+.act1-scene__canvas { border-color:#aeb5b8; background-color:#69736f; box-shadow:0 16px 40px rgba(48,57,61,.2); }
+.act1-scene__instruction { position:absolute; z-index:3; right:12px; bottom:12px; margin:0; padding:7px 10px; border:1px solid rgba(72,82,88,.24); border-radius:3px; color:#273137; background:rgba(244,246,246,.9); box-shadow:0 3px 12px rgba(44,52,56,.12); font-size:12px; line-height:1.45; letter-spacing:.02em; }
+.act1-scene__detail { border-bottom-color:#acb4b7; }
+.act1-scene__detail h2 { color:#293338; }
+.act1-scene__detail p, .act1-scene__footer > p, .scene-continue__hint { color:#4c575d; }
+.journey-transition button, .scene-camera, .scene-continue { border-color:#7b878d; color:#273237; background:rgba(255,255,255,.5); }
+.journey-transition button:hover, .scene-camera:hover:not(:disabled), .scene-continue:hover:not(:disabled) { border-color:#4c616c; background:#f8f9f9; }
+.scene-camera { border-color:#8f7559; color:#44362c; background:rgba(248,243,235,.75); }
+
+.scene-clue-focus { position:fixed; z-index:13000; inset:0; display:grid; place-items:center; padding:20px; background:rgba(28,34,37,.66); animation:scene-clue-focus-overlay-in 260ms ease-out both; }
+.scene-clue-focus__panel { width:min(760px,100%); max-height:min(86dvh,780px); overflow:auto; padding:16px; border:1px solid #aab3b5; border-radius:5px; color:#263136; background:#f4f6f5; box-shadow:0 20px 56px rgba(15,20,22,.38); animation:scene-clue-focus-panel-in 320ms cubic-bezier(.2,.76,.25,1) both; }
+.scene-clue-focus__header { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:12px; }
+.scene-clue-focus__header h2 { margin:0; font-size:16px; font-weight:600; }
+.scene-clue-focus__header button { flex:0 0 auto; min-height:34px; padding:0 11px; border:1px solid #718087; border-radius:3px; color:#253237; background:#fff; cursor:pointer; font-size:13px; }
+.scene-clue-focus__header button:hover { border-color:#43565f; background:#edf2f2; }
+.scene-clue-focus__image { position:relative; width:100%; aspect-ratio:4/3; margin:0; overflow:hidden; border:1px solid #c1c9ca; border-radius:3px; background:#dce1e1; }
+.scene-clue-focus__image img { display:block; width:100%; height:100%; object-fit:cover; }
+.scene-clue-focus__image--independent img { animation:scene-clue-focus-image-in 360ms cubic-bezier(.2,.76,.25,1) both; }
+.scene-clue-focus__image--background img { transform:scale(2.25); }
+.scene-clue-focus__panel > p { margin:13px 2px 1px; color:#445055; font-size:14px; line-height:1.65; }
+@keyframes scene-clue-focus-overlay-in { from { opacity:0; } to { opacity:1; } }
+@keyframes scene-clue-focus-panel-in { from { opacity:0; transform:scale(.985); } to { opacity:1; transform:scale(1); } }
+@keyframes scene-clue-focus-image-in { from { opacity:0; transform:scale(1.025); } to { opacity:1; transform:scale(1); } }
+@media (max-width:720px) { .act1-scene__instruction { right:8px; bottom:8px; max-width:calc(100% - 16px); font-size:11px; } .scene-clue-focus { padding:12px; } .scene-clue-focus__panel { max-height:92dvh; padding:12px; } }
+@media (prefers-reduced-motion:reduce) { .scene-clue-focus, .scene-clue-focus__panel, .scene-clue-focus__image--independent img { animation-duration:.001ms; } }

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "FILE_A1_C_001", "title": "毕业材料清单", "act": 1, "phase": "C", "source": "mail", "purpose": "学校通知附件占位", "unlockCondition": [], "relatedFlags": [], "notes": "正式文件素材暂缺", "filename": "毕业材料清单.pdf", "mimeType": "application/pdf" },
+    { "id": "FILE_A1_C_002", "title": "作品集备份", "act": 1, "phase": "C", "source": "mail", "purpose": "求职材料附件占位", "unlockCondition": [], "relatedFlags": [], "notes": "正式文件素材暂缺", "filename": "portfolio_2020.zip", "mimeType": "application/zip" },
+    { "id": "FILE_A1_C_003", "title": "面试日程", "act": 1, "phase": "C", "source": "mail", "purpose": "面试邀请附件占位", "unlockCondition": [], "relatedFlags": [], "notes": "正式文件素材暂缺", "filename": "interview_schedule.ics", "mimeType": "text/calendar" },
+    { "id": "FILE_A1_C_004", "title": "录用说明", "act": 1, "phase": "C", "source": "mail", "purpose": "offer 附件占位", "unlockCondition": [], "relatedFlags": [], "notes": "正式文件素材暂缺", "filename": "offer_notes.pdf", "mimeType": "application/pdf" },
+    { "id": "FILE_A1_C_005", "title": "订单发票", "act": 1, "phase": "C", "source": "mail", "purpose": "购物通知附件占位", "unlockCondition": [], "relatedFlags": [], "notes": "正式文件素材暂缺", "filename": "order_invoice.pdf", "mimeType": "application/pdf" }
+  ]
+}

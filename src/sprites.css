@@ -1,0 +1,3 @@
+.sprite-icon, .avatar-sprite { display: block; width: 100%; height: 100%; overflow: hidden; }
+.sprite-icon image, .avatar-sprite image { pointer-events: none; }
+.avatar-sprite { border-radius: inherit; }

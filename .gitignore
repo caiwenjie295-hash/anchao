@@ -1,0 +1,29 @@
+# Dependencies and local caches
+node_modules/
+.vite/
+coverage/
+
+# Generated deliverables (rebuild from source)
+dist/
+/暗潮.html
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+*.zip
+
+# OS and editor metadata
+.DS_Store
+.idea/
+.vscode/
+
+# Local multi-worktree container
+.worktrees/

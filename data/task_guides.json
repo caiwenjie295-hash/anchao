@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "GUIDE_A1_001",
+      "phases": ["A", "B"],
+      "prerequisiteFlags": [],
+      "completionFlags": ["FLAG_A1_XIAOA_MISSING_KNOWN"],
+      "summary": "看看有没有新的消息",
+      "steps": [
+        { "label": "打开微信，留意新消息", "completionFlag": "FLAG_A1_MOM_MSG_TRIGGERED", "appId": "wechat" },
+        { "label": "读一读母亲发来的消息", "completionFlag": "FLAG_A1_XIAOA_MISSING_KNOWN", "appId": "wechat" }
+      ]
+    },
+    {
+      "id": "GUIDE_A1_002",
+      "phases": ["B", "C"],
+      "prerequisiteFlags": ["FLAG_A1_XIAOA_MISSING_KNOWN"],
+      "completionFlags": ["FLAG_A1_MAIL_XIAOA_OPENED"],
+      "summary": "找出小A最后留下的线索",
+      "steps": [
+        { "label": "在邮箱置顶区域找到小A的旧邮件", "completionFlag": "FLAG_A1_MAIL_XIAOA_FOUND", "appId": "mail" },
+        { "label": "打开邮件，确认时间和地点", "completionFlag": "FLAG_A1_MAIL_XIAOA_OPENED", "appId": "mail" }
+      ]
+    },
+    {
+      "id": "GUIDE_A1_003",
+      "phases": ["C", "D", "E"],
+      "prerequisiteFlags": ["FLAG_A1_MAIL_XIAOA_OPENED"],
+      "completionFlags": ["FLAG_A1_NEWS_FOUND", "FLAG_A1_ROUTE_INFO_FOUND"],
+      "summary": "核对鸡公岭的公开信息",
+      "steps": [
+        { "label": "找到与失踪有关的旧报道", "completionFlag": "FLAG_A1_NEWS_FOUND", "appId": "browser" },
+        { "label": "确认徒步路线的长度与难度", "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND", "appId": "browser" }
+      ]
+    },
+    {
+      "id": "GUIDE_A1_004",
+      "phases": ["I", "J"],
+      "prerequisiteFlags": ["FLAG_A1_TEMPLE_PHOTO_TAKEN"],
+      "completionFlags": ["FLAG_A1_SS_FOUND"],
+      "summary": "整理鸡公岭现场照片",
+      "steps": [
+        { "label": "从资源管理器打开山洞照片", "completionKind": "cave-photo-opened", "appId": "explorer" },
+        { "label": "调整画面，让暗处细节变得可辨", "completionKind": "cave-symbol-visible", "appId": "photos" },
+        { "label": "检查画面中新出现的痕迹", "completionFlag": "FLAG_A1_SS_FOUND", "appId": "photos" }
+      ]
+    },
+    {
+      "id": "GUIDE_A1_005",
+      "phases": ["K"],
+      "prerequisiteFlags": ["FLAG_A1_SS_FOUND"],
+      "completionFlags": ["FLAG_A1_COMPLETE"],
+      "summary": "整理已经找到的线索",
+      "steps": [
+        { "label": "确认新线索已记入记事本", "completionFlag": "FLAG_A1_SS_CLUE_RECORDED" },
+        { "label": "回到照片，点击“整理思绪，继续”", "completionFlag": "FLAG_A1_COMPLETE", "appId": "photos" }
+      ]
+    }
+  ]
+}

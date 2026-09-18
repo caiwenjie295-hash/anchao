@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "CONTACT_A1_A_001", "title": "母亲", "act": 1, "phase": "A", "source": "wechat", "purpose": "以自然生活对话开启第一幕认知变化", "unlockCondition": [], "relatedFlags": ["FLAG_A1_MOM_MSG_READ"], "notes": "阶段 B 的主动消息由控制器解锁", "name": "母亲", "kind": "person", "avatarAssetId": "IMG_A1_B_001", "pinned": true, "sortOrder": 1 },
+    { "id": "CONTACT_A1_A_002", "title": "小月", "act": 1, "phase": "A", "source": "wechat", "purpose": "承载同学间的日常关系", "unlockCondition": [], "relatedFlags": [], "notes": "生活联系人", "name": "小月", "kind": "person", "avatarAssetId": "IMG_A1_B_002", "pinned": true, "sortOrder": 2 },
+    { "id": "CONTACT_A1_A_003", "title": "林嘉", "act": 1, "phase": "A", "source": "wechat", "purpose": "呈现大学室友的生活噪音", "unlockCondition": [], "relatedFlags": [], "notes": "大学室友", "name": "林嘉", "kind": "person", "avatarAssetId": "IMG_A1_B_003", "pinned": false, "sortOrder": 3 },
+    { "id": "CONTACT_A1_A_004", "title": "高三（7）班同学群", "act": 1, "phase": "A", "source": "wechat", "purpose": "呈现高中同学群的日常信息", "unlockCondition": [], "relatedFlags": [], "notes": "高中同学群", "name": "高三（7）班同学群", "kind": "group", "avatarAssetId": "IMG_A1_B_004", "pinned": false, "sortOrder": 4 },
+    { "id": "CONTACT_A1_A_005", "title": "陈雨（HR）", "act": 1, "phase": "A", "source": "wechat", "purpose": "呈现春招生活内容", "unlockCondition": [], "relatedFlags": [], "notes": "招聘联系人", "name": "陈雨（HR）", "kind": "person", "avatarAssetId": "IMG_A1_B_005", "pinned": false, "sortOrder": 5 },
+    { "id": "CONTACT_A1_A_006", "title": "周老师", "act": 1, "phase": "A", "source": "wechat", "purpose": "呈现学校生活内容", "unlockCondition": [], "relatedFlags": [], "notes": "大学老师", "name": "周老师", "kind": "person", "avatarAssetId": "IMG_A1_B_006", "pinned": false, "sortOrder": 6 },
+    { "id": "CONTACT_A1_A_007", "title": "文件传输助手", "act": 1, "phase": "A", "source": "wechat", "purpose": "提供可信的本地文件生活痕迹", "unlockCondition": [], "relatedFlags": [], "notes": "系统联系人", "name": "文件传输助手", "kind": "system", "avatarAssetId": "IMG_A1_B_007", "pinned": false, "sortOrder": 7 },
+    { "id": "CONTACT_A1_A_008", "title": "阿福", "act": 1, "phase": "A", "source": "wechat", "purpose": "提供纯生活化聊天内容", "unlockCondition": [], "relatedFlags": [], "notes": "宠物店联系人", "name": "阿福", "kind": "person", "avatarAssetId": "IMG_A1_B_008", "pinned": false, "sortOrder": 8 },
+    { "id": "CONTACT_A1_A_009", "title": "摄影社", "act": 1, "phase": "A", "source": "wechat", "purpose": "提供无关群聊图片消息", "unlockCondition": [], "relatedFlags": [], "notes": "生活社团群", "name": "摄影社", "kind": "group", "avatarAssetId": "IMG_A1_B_009", "pinned": false, "sortOrder": 9 },
+    { "id": "CONTACT_A1_A_010", "title": "我", "act": 1, "phase": "A", "source": "wechat", "purpose": "标识历史消息的玩家发送方", "unlockCondition": [], "relatedFlags": [], "notes": "不在联系人列表显示", "name": "我", "kind": "person", "avatarAssetId": "IMG_A1_B_010", "pinned": false, "sortOrder": 99, "visibleInList": false }
+  ]
+}

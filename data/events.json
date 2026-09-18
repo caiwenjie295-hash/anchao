@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "EVENT_A1_B_001", "title": "母亲主动微信消息", "act": 1, "phase": "B", "source": "wechat", "purpose": "在生活对话中自然引出小A失踪多年", "unlockCondition": ["APP_WECHAT_OPENED"], "relatedFlags": ["FLAG_A1_MOM_MSG_TRIGGERED"], "notes": "控制器仅在首次微信打开后调度一次", "eventType": "delayed-chat", "contactId": "CONTACT_A1_A_001", "delayMs": 1200, "completionFlagId": "FLAG_A1_MOM_MSG_TRIGGERED" }
+  ]
+}

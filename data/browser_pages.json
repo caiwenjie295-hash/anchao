@@ -1,0 +1,592 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "PAGE_A1_E_001",
+      "title": "鸡公岭外围徒步者失联，搜救持续至第七日",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "确认小A在鸡公岭附近失踪且搜救未找到人或尸体",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_NEWS_FOUND"
+      ],
+      "notes": "阶段E关键地方新闻",
+      "pageType": "news",
+      "url": "https://xxdaily.local/2020/0427-hiking-search",
+      "domain": "xxdaily.local",
+      "publishedAt": "2020-04-27",
+      "headline": "鸡公岭外围徒步者失联，搜救持续至第七日",
+      "snippet": "王某于4月19日在XX县鸡公岭外围与同伴失散；搜救队暂未发现本人及遗留物。",
+      "body": [
+        "XX县融媒4月27日讯。19岁男子王澳于4月19日进入鸡公岭外围步道后失联。",
+        "县应急、民间救援队及周边村民连续七日搜索，覆盖主步道、岔口和两处溪谷。截至发稿，未发现本人、尸体或可明确确认的遗留物。",
+        "家属称其当天携带轻装和手机，最后一次可辨识定位在鸡公岭北侧入口附近。"
+      ],
+      "keywords": [
+        "XX县失踪",
+        "2020 XX县失踪",
+        "徒步失踪",
+        "鸡公岭"
+      ],
+      "resultTier": "strong",
+      "triggerFlags": [
+        "FLAG_A1_NEWS_FOUND"
+      ],
+      "images": [
+        {
+          "assetId": "IMG_A1_E_001",
+          "caption": "救援队沿山路展开搜寻。"
+        },
+        {
+          "assetId": "IMG_A1_E_002",
+          "caption": "连续搜索后，队员沿原路返回。"
+        }
+      ]
+    },
+    {
+      "id": "PAGE_A1_E_002",
+      "title": "鸡公岭北线徒步记录：林道与溪谷之间的七公里",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "确认路线约七公里且不属于极端难度",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_ROUTE_INFO_FOUND"
+      ],
+      "notes": "阶段E关键徒步攻略",
+      "pageType": "trail-guide",
+      "url": "https://trailbook.local/routes/jigongling-north",
+      "domain": "trailbook.local",
+      "publishedAt": "2019-10-13",
+      "headline": "鸡公岭北线徒步记录：林道与溪谷之间的七公里",
+      "snippet": "入口至山顶约7公里，爬升不大，晴天适合有基础装备的徒步者。",
+      "body": [
+        "北线从村口入口起算，沿林道经过山洞与石庙，到山顶约7公里。",
+        "除雨后湿滑与两个岔口需要留意外，路线没有攀岩、涉险横渡等极端地形；有基础徒步经验即可完成。",
+        "建议结伴、在天黑前返回，并将路线告知家人。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "鸡公岭徒步",
+        "徒步失踪",
+        "XX县 鸡公岭"
+      ],
+      "resultTier": "strong",
+      "triggerFlags": [
+        "FLAG_A1_ROUTE_INFO_FOUND"
+      ]
+    },
+    {
+      "id": "PAGE_A1_E_003",
+      "title": "鸡公岭",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供地方地理背景",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "百科噪音页面",
+      "pageType": "encyclopedia",
+      "url": "https://baike.local/jigongling-xx",
+      "domain": "baike.local",
+      "publishedAt": "2024-03-02",
+      "headline": "鸡公岭",
+      "snippet": "XX县北部低山地带的俗称，周边分布护林站和数个自然村。",
+      "body": [
+        "鸡公岭是XX县北部低山地带的俗称，并非正式行政区名称。",
+        "该区域曾有零散采石与护林设施，近年以近郊徒步和采风为主。",
+        "不同向导对入口与路线名称的称呼并不完全一致。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "XX县 鸡公岭"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_004",
+      "title": "鸡公岭天气：周末午后有阵雨",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供正常天气信息噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "天气页面",
+      "pageType": "weather",
+      "url": "https://weather.xx.local/places/jigongling",
+      "domain": "weather.xx.local",
+      "publishedAt": "2026-09-17",
+      "headline": "鸡公岭天气：周末午后有阵雨",
+      "snippet": "体感闷热，午后局地短时阵雨，山路可能湿滑。",
+      "body": [
+        "今日多云，午后有局地阵雨。",
+        "北线入口附近气温18至25摄氏度，紫外线中等。",
+        "天气数据仅供出行参考，请以现场预警为准。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "鸡公岭徒步"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_005",
+      "title": "鸡公岭北线示意图",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供路线节点的地图噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "地图页面",
+      "pageType": "map",
+      "url": "https://map.xx.local/place/jigongling-north",
+      "domain": "map.xx.local",
+      "publishedAt": "2025-08-10",
+      "headline": "鸡公岭北线示意图",
+      "snippet": "入口、山洞、石庙与山顶的手绘路线节点。",
+      "body": [
+        "一名徒步者留存的手绘笔记，标出了沿途山洞与石庙。",
+        "图中入口到山洞约4公里，到石庙约5公里，到山顶约7公里。",
+        "雨天山路泥滑，沿途注意落石。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "XX县 鸡公岭"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": [],
+      "images": [
+        {
+          "assetId": "IMG_A1_E_003",
+          "caption": "徒步者留存的手绘路线图。"
+        }
+      ]
+    },
+    {
+      "id": "PAGE_A1_E_006",
+      "title": "第一次走鸡公岭北线，岔口到底该往哪边？",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "呈现论坛讨论与路线噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "论坛页面",
+      "pageType": "forum",
+      "url": "https://hikeforum.local/thread/8812",
+      "domain": "hikeforum.local",
+      "publishedAt": "2021-05-16",
+      "headline": "第一次走鸡公岭北线，岔口到底该往哪边？",
+      "snippet": "网友讨论路标、雨后泥泞和手机信号。",
+      "body": [
+        "楼主：周末想带朋友走北线，看到有人说第二个岔口容易错。",
+        "回复：跟着旧护林站方向的木牌走，雨后别穿平底鞋；不熟路就早点折返。",
+        "回复：我去年走过，白天人不算少，约三个小时来回。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "鸡公岭徒步",
+        "徒步失踪"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_007",
+      "title": "镜头里的鸡公岭：雾从溪谷升起来",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "呈现自媒体采风噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "自媒体页面",
+      "pageType": "self-media",
+      "url": "https://fieldnotes.local/posts/jigongling-fog",
+      "domain": "fieldnotes.local",
+      "publishedAt": "2023-11-05",
+      "headline": "镜头里的鸡公岭：雾从溪谷升起来",
+      "snippet": "一篇关于清晨采风的随笔，记录雾气和旧林道。",
+      "body": [
+        "清晨的溪谷比预想更安静，雾贴着林子慢慢升起来。",
+        "我们只走到观景石就折返，同行的人一直在拍树皮。",
+        "如果来拍照，记得带防潮袋和备用电池。"
+      ],
+      "keywords": [
+        "鸡公岭"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_008",
+      "title": "同名地：南城鸡公岭的采石场改造计划",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供同名地点干扰",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "同名地点页面",
+      "pageType": "same-name",
+      "url": "https://southcity.local/news/jigongling-renewal",
+      "domain": "southcity.local",
+      "publishedAt": "2022-07-19",
+      "headline": "同名地：南城鸡公岭的采石场改造计划",
+      "snippet": "南城一处同名山岗将改建为城市公园。",
+      "body": [
+        "南城鸡公岭位于城郊西侧，与XX县鸡公岭并非同一地点。",
+        "旧采石场改造计划已进入公示阶段。",
+        "项目包括步道、停车场和植物修复区。"
+      ],
+      "keywords": [
+        "鸡公岭"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_009",
+      "title": "两名驴友在石门沟迷路后获救",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供其他徒步事故干扰",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "其他事故新闻",
+      "pageType": "incident",
+      "url": "https://citynews.local/2024/shimengou-rescue",
+      "domain": "citynews.local",
+      "publishedAt": "2024-08-14",
+      "headline": "两名驴友在石门沟迷路后获救",
+      "snippet": "救援人员根据电话定位于当晚找到两名迷路者。",
+      "body": [
+        "两名游客偏离石门沟景区步道后报警求助。",
+        "救援人员当晚在溪边找到两人，均无大碍。",
+        "景区提醒游客不要进入未开放区域。"
+      ],
+      "keywords": [
+        "徒步失踪",
+        "XX县失踪"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_010",
+      "title": "鸡公岭山脚民宿：周末两晚套餐",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供商业内容噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "商业页面",
+      "pageType": "commercial",
+      "url": "https://stay.xx.local/jigongling-weekend",
+      "domain": "stay.xx.local",
+      "publishedAt": "2026-09-01",
+      "headline": "鸡公岭山脚民宿：周末两晚套餐",
+      "snippet": "含早餐与接驳预约，不含向导服务。",
+      "body": [
+        "山脚民宿提供周末住宿与车站接驳。",
+        "秋季套餐需提前两天预约。",
+        "请勿将本页面作为户外路线或安全建议。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "XX县 鸡公岭"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_011",
+      "title": "2020年XX县春季治安情况通报",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供年份相关的官方噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "地方通报",
+      "pageType": "news",
+      "url": "https://gov.xx.local/bulletin/2020-spring",
+      "domain": "gov.xx.local",
+      "publishedAt": "2020-05-08",
+      "headline": "2020年XX县春季治安情况通报",
+      "snippet": "公布警情数据与防诈提醒，不涉及鸡公岭失联案件。",
+      "body": [
+        "本季度全县社会治安总体平稳。",
+        "请居民警惕网络刷单和冒充客服诈骗。",
+        "如需报警请拨打当地报警电话。"
+      ],
+      "keywords": [
+        "2020 XX县失踪",
+        "XX县失踪"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_012",
+      "title": "失联之后：家属如何整理报案时间线",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供泛失联信息",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "公益自媒体",
+      "pageType": "self-media",
+      "url": "https://mutualaid.local/posts/missing-timeline",
+      "domain": "mutualaid.local",
+      "publishedAt": "2022-02-11",
+      "headline": "失联之后：家属如何整理报案时间线",
+      "snippet": "一篇面向家属的资料整理建议。",
+      "body": [
+        "先保存最后的通话、定位和出行记录。",
+        "按时间顺序记录已联系的人与地点。",
+        "不同案件情况差异很大，本文不构成专业意见。"
+      ],
+      "keywords": [
+        "XX县失踪",
+        "徒步失踪"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_013",
+      "title": "鸡公岭旧护林站的来历",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "补充普通地方历史",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "地方百科",
+      "pageType": "encyclopedia",
+      "url": "https://baike.local/jigongling-ranger-station",
+      "domain": "baike.local",
+      "publishedAt": "2021-09-30",
+      "headline": "鸡公岭旧护林站的来历",
+      "snippet": "建于上世纪末，现仅保留墙基和指示牌。",
+      "body": [
+        "旧护林站曾负责北坡防火巡查。",
+        "停止使用后，入口附近保留一块说明牌。",
+        "近年徒步者常将其作为北线起点。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "鸡公岭徒步"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_014",
+      "title": "徒步装备清单：七公里短线也别只带一瓶水",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供徒步商业内容",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "商业装备页",
+      "pageType": "commercial",
+      "url": "https://outdoor-shop.local/guides/dayhike-kit",
+      "domain": "outdoor-shop.local",
+      "publishedAt": "2025-04-21",
+      "headline": "徒步装备清单：七公里短线也别只带一瓶水",
+      "snippet": "水、雨具、充电宝与离线地图的基础清单。",
+      "body": [
+        "距离短不代表可以忽略天气和补给。",
+        "准备舒适的鞋、饮水和简单急救用品。",
+        "文末附有店内装备链接。"
+      ],
+      "keywords": [
+        "徒步失踪",
+        "鸡公岭徒步"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_015",
+      "title": "鸡公岭北坡封闭施工说明",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供过期路线信息干扰",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "旧公告",
+      "pageType": "map",
+      "url": "https://gov.xx.local/trails/closure-2018",
+      "domain": "gov.xx.local",
+      "publishedAt": "2018-06-20",
+      "headline": "鸡公岭北坡封闭施工说明",
+      "snippet": "2018年雨季期间部分林道临时封闭。",
+      "body": [
+        "因排水沟修整，北坡局部林道临时封闭。",
+        "本通知有效期至2018年9月。",
+        "请关注后续开放公告。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "XX县 鸡公岭"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_016",
+      "title": "XX县周边徒步路线难度对照",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供路线相对难度背景",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "路线攻略",
+      "pageType": "trail-guide",
+      "url": "https://trailbook.local/xx-county/compare",
+      "domain": "trailbook.local",
+      "publishedAt": "2023-04-08",
+      "headline": "XX县周边徒步路线难度对照",
+      "snippet": "鸡公岭北线被列为低至中等强度的近郊线路。",
+      "body": [
+        "按距离、爬升与补给条件，鸡公岭北线属于低至中等强度。",
+        "连续降雨或夜行会显著增加难度。",
+        "对陌生路线，建议结伴并预留折返时间。"
+      ],
+      "keywords": [
+        "鸡公岭徒步",
+        "徒步失踪"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_017",
+      "title": "失物招领：黑色保温杯",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供与失踪搜索同词的无关噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "论坛失物页面",
+      "pageType": "forum",
+      "url": "https://xxforum.local/thread/lost-cup",
+      "domain": "xxforum.local",
+      "publishedAt": "2020-04-20",
+      "headline": "失物招领：黑色保温杯",
+      "snippet": "县城公交站捡到一只黑色保温杯。",
+      "body": [
+        "失物为黑色保温杯，杯底有划痕。",
+        "请凭特征到服务台认领。",
+        "保留七日后按规定处理。"
+      ],
+      "keywords": [
+        "2020 XX县失踪",
+        "XX县失踪"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_018",
+      "title": "鸡公岭摄影路线：不进深山的两小时玩法",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供普通旅行内容",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "自媒体页面",
+      "pageType": "self-media",
+      "url": "https://fieldnotes.local/posts/jigongling-photo-walk",
+      "domain": "fieldnotes.local",
+      "publishedAt": "2024-10-28",
+      "headline": "鸡公岭摄影路线：不进深山的两小时玩法",
+      "snippet": "从旧护林站入口走到观景石再返回的拍照路线。",
+      "body": [
+        "这条路线适合上午或傍晚拍照。",
+        "我们在观景石停留半小时后原路返回。",
+        "雨雾天气不建议离开林道。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "鸡公岭徒步"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_019",
+      "title": "徒步群内的失联传言，哪些信息不可靠",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供调查中的信息辨别噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "论坛讨论",
+      "pageType": "forum",
+      "url": "https://hikeforum.local/thread/2020-rumors",
+      "domain": "hikeforum.local",
+      "publishedAt": "2020-05-01",
+      "headline": "徒步群内的失联传言，哪些信息不可靠",
+      "snippet": "版主提醒不要转发未经核实的失联截图。",
+      "body": [
+        "群聊截图常缺少时间与来源。",
+        "请以救援队或家属公开说明为准。",
+        "将未经确认的猜测当事实会干扰搜救。"
+      ],
+      "keywords": [
+        "徒步失踪",
+        "2020 XX县失踪"
+      ],
+      "resultTier": "weak",
+      "triggerFlags": []
+    },
+    {
+      "id": "PAGE_A1_E_020",
+      "title": "鸡公岭附近农产品集市周日开市",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "提供纯商业生活噪音",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "商业信息",
+      "pageType": "commercial",
+      "url": "https://market.xx.local/jigongling-sunday",
+      "domain": "market.xx.local",
+      "publishedAt": "2026-09-12",
+      "headline": "鸡公岭附近农产品集市周日开市",
+      "snippet": "山脚集市将有蜂蜜、山货和手作摊位。",
+      "body": [
+        "集市位于山脚停车场旁。",
+        "摊位以当地农产品和手作为主。",
+        "活动如遇雨天将顺延。"
+      ],
+      "keywords": [
+        "鸡公岭",
+        "XX县 鸡公岭"
+      ],
+      "resultTier": "noise",
+      "triggerFlags": []
+    }
+  ]
+}

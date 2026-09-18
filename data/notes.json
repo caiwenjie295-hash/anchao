@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {"id":"NOTE_A1_E_001","title":"路线疑问","act":1,"phase":"E","source":"notepad","purpose":"将路线尺度与搜救结果的矛盾留给玩家思考","unlockCondition":["FLAG_A1_MISSING_CASE_SUSPICIOUS"],"relatedFlags":["FLAG_A1_MISSING_CASE_SUSPICIOUS"],"notes":"自动弱提示，固定文本","content":"七公里的路线，为什么连人或尸体都找不到？","entryType":"clue","triggerFlags":["FLAG_A1_MISSING_CASE_SUSPICIOUS"]},
+    {"id":"NOTE_A1_F_001","title":"前往鸡公岭","act":1,"phase":"F","source":"notepad","purpose":"自然表达主角前往现场的决定","unlockCondition":["FLAG_A1_XIAOA_MISSING_KNOWN","FLAG_A1_MAIL_XIAOA_OPENED","FLAG_A1_NEWS_FOUND","FLAG_A1_ROUTE_INFO_FOUND"],"relatedFlags":[],"notes":"阶段F自然收敛，不触发场景跳转","content":"邮件里的地点、新闻里的搜救、那条七公里的路线……我得去鸡公岭看看。","entryType":"decision","triggerFlags":["FLAG_A1_XIAOA_MISSING_KNOWN","FLAG_A1_MAIL_XIAOA_OPENED","FLAG_A1_NEWS_FOUND","FLAG_A1_ROUTE_INFO_FOUND"]},
+    {"id":"NOTE_A1_K_001","title":"第一幕线索","act":1,"phase":"K","source":"notepad","purpose":"汇总小A失踪案中已被确认的现场异常","unlockCondition":["FLAG_A1_SS_FOUND"],"relatedFlags":["FLAG_A1_SS_CLUE_RECORDED"],"notes":"第一幕结束前的自动记录","content":"小A · 2020.04.19 · XX县 · 鸡公岭 · A.W · 双S · 补\n\n我原本只想知道，一个人为什么会在这样一条普通的徒步线路上消失。现在我开始觉得，他来这里也许根本不是为了徒步。","entryType":"clue","triggerFlags":["FLAG_A1_SS_FOUND"]}
+  ]
+}

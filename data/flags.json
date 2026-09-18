@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "FLAG_A1_MOM_MSG_TRIGGERED",
+      "title": "母亲新消息已触发",
+      "act": 1,
+      "phase": "B",
+      "source": "wechat",
+      "purpose": "防止母亲主动消息重复触发",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "首次打开微信 1200ms 后写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_MOM_MSG_READ",
+      "title": "母亲新消息已读",
+      "act": 1,
+      "phase": "B",
+      "source": "wechat",
+      "purpose": "记录玩家已进入母亲会话",
+      "unlockCondition": [
+        "FLAG_A1_MOM_MSG_TRIGGERED"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_MOM_MSG_TRIGGERED"
+      ],
+      "notes": "进入母亲会话时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_XIAOA_MISSING_KNOWN",
+      "title": "已知小A失踪多年",
+      "act": 1,
+      "phase": "B",
+      "source": "wechat",
+      "purpose": "记录阶段 B 的核心认知",
+      "unlockCondition": [
+        "FLAG_A1_MOM_MSG_READ"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_MOM_MSG_READ"
+      ],
+      "notes": "与母亲消息已读同步写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_MAIL_XIAOA_FOUND",
+      "title": "已找到小A旧邮件",
+      "act": 1,
+      "phase": "C",
+      "source": "mail",
+      "purpose": "记录玩家在邮箱中定位到关键邮件",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_MAIL_XIAOA_OPENED"
+      ],
+      "notes": "打开 MAIL_A1_C_001 时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_MAIL_XIAOA_OPENED",
+      "title": "已打开小A旧邮件",
+      "act": 1,
+      "phase": "C",
+      "source": "mail",
+      "purpose": "记录阶段 C 的核心邮件已被阅读",
+      "unlockCondition": [
+        "FLAG_A1_MAIL_XIAOA_FOUND"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_DATE_20200419_KNOWN",
+        "FLAG_A1_LOCATION_KNOWN"
+      ],
+      "notes": "打开 MAIL_A1_C_001 时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_DATE_20200419_KNOWN",
+      "title": "已知 2020-04-19 日期",
+      "act": 1,
+      "phase": "C",
+      "source": "mail",
+      "purpose": "登记小A邮件中的时间锚点",
+      "unlockCondition": [
+        "FLAG_A1_MAIL_XIAOA_OPENED"
+      ],
+      "relatedFlags": [],
+      "notes": "打开 MAIL_A1_C_001 时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_LOCATION_KNOWN",
+      "title": "已知 XX县定位",
+      "act": 1,
+      "phase": "C",
+      "source": "mail",
+      "purpose": "登记小A邮件中的地点线索",
+      "unlockCondition": [
+        "FLAG_A1_MAIL_XIAOA_OPENED"
+      ],
+      "relatedFlags": [],
+      "notes": "打开 MAIL_A1_C_001 时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_NEWS_FOUND",
+      "title": "已找到小A失踪新闻",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "记录玩家读到鸡公岭附近失踪与未寻获结果",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_MISSING_CASE_SUSPICIOUS"
+      ],
+      "notes": "打开 PAGE_A1_E_001 时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_ROUTE_INFO_FOUND",
+      "title": "已找到鸡公岭路线信息",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "记录玩家读到七公里普通徒步路线",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_MISSING_CASE_SUSPICIOUS"
+      ],
+      "notes": "打开 PAGE_A1_E_002 时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_MISSING_CASE_SUSPICIOUS",
+      "title": "察觉失踪案存在矛盾",
+      "act": 1,
+      "phase": "E",
+      "source": "browser",
+      "purpose": "记录七公里路线与无人尸体未寻获之间的不协调",
+      "unlockCondition": [
+        "FLAG_A1_NEWS_FOUND",
+        "FLAG_A1_ROUTE_INFO_FOUND"
+      ],
+      "relatedFlags": [],
+      "notes": "两项浏览器事实齐备时写入",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_AW_FOUND",
+      "title": "已注意到 A.W",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "记录玩家主动检查山洞墙面字母",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_AW_PHOTO_TAKEN"
+      ],
+      "notes": "由 Act1PhaseGHIController 处理场景检查事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_AW_PHOTO_TAKEN",
+      "title": "已拍摄山洞留言墙",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "允许离开山洞并供后续照片处理使用",
+      "unlockCondition": [
+        "FLAG_A1_AW_FOUND"
+      ],
+      "relatedFlags": [],
+      "notes": "由 Act1PhaseGHIController 处理拍摄事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_TEMPLE_FOUND",
+      "title": "已进入破庙",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "记录抵达破庙",
+      "unlockCondition": [
+        "FLAG_A1_AW_PHOTO_TAKEN"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_BU_FOUND"
+      ],
+      "notes": "由 Act1PhaseGHIController 处理场景进入事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_BU_FOUND",
+      "title": "已检查“补”字",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "记录玩家主动检查破庙门旁石碑上的字",
+      "unlockCondition": [
+        "FLAG_A1_TEMPLE_FOUND"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_TEMPLE_PHOTO_TAKEN"
+      ],
+      "notes": "由 Act1PhaseGHIController 处理场景检查事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_TEMPLE_PHOTO_TAKEN",
+      "title": "已拍摄破庙石碑",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "允许下山并供后续复看破庙石碑使用",
+      "unlockCondition": [
+        "FLAG_A1_TEMPLE_FOUND",
+        "FLAG_A1_BU_FOUND"
+      ],
+      "relatedFlags": [],
+      "notes": "由 Act1PhaseGHIController 处理拍摄事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_PHOTO_EDIT_OPENED",
+      "title": "已进入山洞照片编辑",
+      "act": 1,
+      "phase": "J",
+      "source": "photos",
+      "purpose": "记录玩家开始处理暗处照片",
+      "unlockCondition": [
+        "FLAG_A1_AW_PHOTO_TAKEN"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_SS_FOUND"
+      ],
+      "notes": "由 Act1PhaseJKController 处理照片编辑事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_SS_FOUND",
+      "title": "已发现双 S 十字符号",
+      "act": 1,
+      "phase": "K",
+      "source": "photos",
+      "purpose": "记录玩家主动检查处理后显现的符号",
+      "unlockCondition": [
+        "FLAG_A1_PHOTO_EDIT_OPENED"
+      ],
+      "relatedFlags": [
+        "FLAG_A1_SS_CLUE_RECORDED"
+      ],
+      "notes": "由 Act1PhaseJKController 处理符号检查事件",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_SS_CLUE_RECORDED",
+      "title": "双 S 线索已记录",
+      "act": 1,
+      "phase": "K",
+      "source": "notepad",
+      "purpose": "确认第一幕关键证据已进入调查记录",
+      "unlockCondition": [
+        "FLAG_A1_SS_FOUND"
+      ],
+      "relatedFlags": [],
+      "notes": "由 Act1PhaseJKController 写入自动记录",
+      "defaultValue": false
+    },
+    {
+      "id": "FLAG_A1_COMPLETE",
+      "title": "第一幕结束",
+      "act": 1,
+      "phase": "K",
+      "source": "photos",
+      "purpose": "玩家确认收束后展示幕末旁白",
+      "unlockCondition": [
+        "FLAG_A1_SS_CLUE_RECORDED"
+      ],
+      "relatedFlags": [],
+      "notes": "清零时与所有剧情状态一起重置",
+      "defaultValue": false
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{"schemaVersion":1,"items":[
+  {"id":"CLUE_A1_E_001","title":"鸡公岭外围失踪新闻","act":1,"phase":"E","source":"browser","purpose":"登记小A失踪与搜救未寻获事实","unlockCondition":[],"relatedFlags":["FLAG_A1_NEWS_FOUND"],"notes":"关联页面而不重复正文","pageId":"PAGE_A1_E_001","noteId":"NOTE_A1_E_001"},
+  {"id":"CLUE_A1_E_002","title":"鸡公岭北线七公里","act":1,"phase":"E","source":"browser","purpose":"登记路线距离与难度事实","unlockCondition":[],"relatedFlags":["FLAG_A1_ROUTE_INFO_FOUND"],"notes":"关联页面而不重复正文","pageId":"PAGE_A1_E_002","noteId":"NOTE_A1_E_001"},
+  {"id":"CLUE_A1_E_003","title":"失踪案的路线矛盾","act":1,"phase":"E","source":"notepad","purpose":"登记两项事实形成的不协调","unlockCondition":["FLAG_A1_MISSING_CASE_SUSPICIOUS"],"relatedFlags":["FLAG_A1_MISSING_CASE_SUSPICIOUS"],"notes":"关联自动笔记","pageId":null,"noteId":"NOTE_A1_E_001"},
+  {"id":"CLUE_A1_H_001","title":"山洞墙上的 A.W","act":1,"phase":"H","source":"scene","purpose":"关联山洞的主动检查与拍摄结果","unlockCondition":["FLAG_A1_AW_FOUND"],"relatedFlags":["FLAG_A1_AW_FOUND","FLAG_A1_AW_PHOTO_TAKEN"],"notes":"只登记关联，不复述观察文本","sceneId":"SCENE_A1_H_001","hotspotId":"HOTSPOT_A1_H_014","photoId":"IMG_A1_H_003"},
+  {"id":"CLUE_A1_I_001","title":"破庙门旁石碑上的“补”","act":1,"phase":"I","source":"scene","purpose":"关联破庙门旁石碑的主动检查与拍摄结果","unlockCondition":["FLAG_A1_BU_FOUND"],"relatedFlags":["FLAG_A1_BU_FOUND","FLAG_A1_TEMPLE_PHOTO_TAKEN"],"notes":"只登记关联，不解释其含义","sceneId":"SCENE_A1_I_001","hotspotId":"HOTSPOT_A1_I_005","photoId":"IMG_A1_I_004"}
+]}

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {"id":"IMG_A1_H_003","title":"山洞留言墙","act":1,"phase":"J","source":"photos","purpose":"经处理后让玩家主动发现双 S 十字符号","unlockCondition":["FLAG_A1_AW_PHOTO_TAKEN"],"relatedFlags":["FLAG_A1_PHOTO_EDIT_OPENED","FLAG_A1_SS_FOUND"],"notes":"T06 唯一的双 S 谜题输入","filename":"鸡公岭_山洞留言墙.jpg","caption":"拍摄时间：鸡公岭山洞 · 光线很暗","editorHint":"墙面太暗。也许调高曝光、阴影和对比度能看清更多。","symbolLabel":"暗处有一笔不属于 A.W 的刻痕。","findingText":"两枚相反方向的 S 围成了一个十字。它不属于 A.W。"},
+    {"id":"IMG_A1_I_004","title":"破庙石碑","act":1,"phase":"J","source":"photos","purpose":"保留“补”字石碑的现场证据","unlockCondition":["FLAG_A1_TEMPLE_PHOTO_TAKEN"],"relatedFlags":[],"notes":"第一幕只可复看，不解释含义","filename":"鸡公岭_破庙石碑.jpg","caption":"拍摄时间：山腰破庙 · 门旁石碑上有一个褪色的字","editorHint":"石碑上的刻痕已经褪色，没有留下更多可辨认的信息。","symbolLabel":"","findingText":""}
+  ]
+}

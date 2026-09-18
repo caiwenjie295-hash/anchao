@@ -1,0 +1,632 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "HOTSPOT_A1_G_001",
+      "title": "登山入口石牌",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_001",
+      "hotspotKind": "environment",
+      "label": "登山入口石牌",
+      "observation": "旧石牌上写着山名，石阶从门后延伸进树林。",
+      "position": {
+        "x": 8,
+        "y": 18,
+        "width": 40,
+        "height": 19
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_002",
+      "title": "蕨丛",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_001",
+      "hotspotKind": "environment",
+      "label": "蕨丛",
+      "observation": "叶片上积着水，碰一下便落满手背。",
+      "position": {
+        "x": 51,
+        "y": 73,
+        "width": 13,
+        "height": 18
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_003",
+      "title": "泥地脚印",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_001",
+      "hotspotKind": "environment",
+      "label": "泥地脚印",
+      "observation": "新旧脚印混在一起，看不出是谁留下的。",
+      "position": {
+        "x": 17,
+        "y": 78,
+        "width": 24,
+        "height": 19
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_004",
+      "title": "空塑料瓶",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_002",
+      "hotspotKind": "environment",
+      "label": "空塑料瓶",
+      "observation": "瓶身被踩扁，里面还晃着一点浑水。",
+      "position": {
+        "x": 18,
+        "y": 70,
+        "width": 12,
+        "height": 13
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_005",
+      "title": "旧护栏",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_002",
+      "hotspotKind": "environment",
+      "label": "旧护栏",
+      "observation": "锈蚀的栏杆只剩半截，摸上去冰凉。",
+      "position": {
+        "x": 63,
+        "y": 40,
+        "width": 21,
+        "height": 29
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_006",
+      "title": "苔藓石堆",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_002",
+      "hotspotKind": "environment",
+      "label": "苔藓石堆",
+      "observation": "几块石头像是被路人随手垒过，又被苔藓盖住。",
+      "position": {
+        "x": 38,
+        "y": 63,
+        "width": 16,
+        "height": 17
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_007",
+      "title": "溪流",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_003",
+      "hotspotKind": "environment",
+      "label": "溪流",
+      "observation": "水不深，石头却滑得让人不想贸然踩进去。",
+      "position": {
+        "x": 4,
+        "y": 66,
+        "width": 45,
+        "height": 21
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_008",
+      "title": "湿树根",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_003",
+      "hotspotKind": "environment",
+      "label": "湿树根",
+      "observation": "树根从土里翻出来，像一道天然的台阶。",
+      "position": {
+        "x": 57,
+        "y": 59,
+        "width": 18,
+        "height": 20
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_G_009",
+      "title": "岩壁裂缝",
+      "act": 1,
+      "phase": "G",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_G_003",
+      "hotspotKind": "environment",
+      "label": "岩壁裂缝",
+      "observation": "裂缝里长着几根细草，洞口的凉气从那里漫出来。",
+      "position": {
+        "x": 76,
+        "y": 24,
+        "width": 14,
+        "height": 33
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_001",
+      "title": "2017·小林",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "2017·小林",
+      "observation": "字迹很浅，年份旁边画了一个歪歪的太阳。",
+      "position": {
+        "x": 35,
+        "y": 28,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_002",
+      "title": "到此一游",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "到此一游",
+      "observation": "有人在旧刻痕上又描了一遍。",
+      "position": {
+        "x": 46,
+        "y": 28,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_003",
+      "title": "阿杰♡阿敏",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "阿杰♡阿敏",
+      "observation": "心形已经被水汽磨得不完整。",
+      "position": {
+        "x": 57,
+        "y": 28,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_004",
+      "title": "2013.8",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "2013.8",
+      "observation": "只有日期，没有留下名字。",
+      "position": {
+        "x": 68,
+        "y": 28,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_005",
+      "title": "三角涂鸦",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "三角涂鸦",
+      "observation": "几条线交叠成一个没画完的三角。",
+      "position": {
+        "x": 79,
+        "y": 28,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_006",
+      "title": "陈路留",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "陈路留",
+      "observation": "字写得很急，最后一笔蹭到石缝里。",
+      "position": {
+        "x": 35,
+        "y": 41,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_007",
+      "title": "2019夏",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "2019夏",
+      "observation": "下面还有两道像是雨滴划过的痕迹。",
+      "position": {
+        "x": 46,
+        "y": 41,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_008",
+      "title": "小杰",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "小杰",
+      "observation": "名字旁边留了一道短横线。",
+      "position": {
+        "x": 57,
+        "y": 41,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_009",
+      "title": "2015/10",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "2015/10",
+      "observation": "刻痕被后来的泥点遮去一半。",
+      "position": {
+        "x": 68,
+        "y": 41,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_010",
+      "title": "笑脸",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "笑脸",
+      "observation": "一个圆圈和两只很浅的眼睛。",
+      "position": {
+        "x": 79,
+        "y": 41,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_011",
+      "title": "阿北 2021",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "阿北 2021",
+      "observation": "笔画比周围的新一些，也没有多余的话。",
+      "position": {
+        "x": 35,
+        "y": 54,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_012",
+      "title": "∞",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "∞",
+      "observation": "像是用钝物反复划出来的符号。",
+      "position": {
+        "x": 46,
+        "y": 54,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_013",
+      "title": "2022.4.3",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "普通留言观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "graffiti",
+      "label": "2022.4.3",
+      "observation": "日期写在一条深色水痕旁。",
+      "position": {
+        "x": 57,
+        "y": 54,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_H_014",
+      "title": "A.W",
+      "act": 1,
+      "phase": "H",
+      "source": "scene",
+      "purpose": "登记玩家主动注意到的墙面记号",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_AW_FOUND"
+      ],
+      "notes": "与普通留言同层级呈现",
+      "sceneId": "SCENE_A1_H_001",
+      "hotspotKind": "aw-mark",
+      "label": "A.W",
+      "observation": "石壁角落有一组很小的字母，像是被人随手留下。",
+      "position": {
+        "x": 69,
+        "y": 54,
+        "width": 10,
+        "height": 8
+      },
+      "triggerFlags": [
+        "FLAG_A1_AW_FOUND"
+      ],
+      "imageAssetId": "IMG_A1_H_002"
+    },
+    {
+      "id": "HOTSPOT_A1_I_001",
+      "title": "残缺塑像",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_I_001",
+      "hotspotKind": "temple-object",
+      "label": "残缺塑像",
+      "observation": "塑像的脸已经剥落，只剩下模糊的轮廓。",
+      "position": {
+        "x": 61,
+        "y": 29,
+        "width": 11,
+        "height": 26
+      },
+      "triggerFlags": [],
+      "imageAssetId": "IMG_A1_I_003"
+    },
+    {
+      "id": "HOTSPOT_A1_I_002",
+      "title": "空石座",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_I_001",
+      "hotspotKind": "temple-object",
+      "label": "空石座",
+      "observation": "石座上积了薄灰，像很久没人放过东西。",
+      "position": {
+        "x": 34,
+        "y": 46,
+        "width": 14,
+        "height": 10
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_I_003",
+      "title": "断香炉",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_I_001",
+      "hotspotKind": "temple-object",
+      "label": "断香炉",
+      "observation": "香炉裂成两半，里面只剩潮湿的灰。",
+      "position": {
+        "x": 47,
+        "y": 60,
+        "width": 11,
+        "height": 15
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_I_004",
+      "title": "漏雨屋檐",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "普通环境观察",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "不推动剧情",
+      "sceneId": "SCENE_A1_I_001",
+      "hotspotKind": "temple-object",
+      "label": "漏雨屋檐",
+      "observation": "水从瓦片缺口落下，砸在地面的一小片青苔上。",
+      "position": {
+        "x": 7,
+        "y": 2,
+        "width": 83,
+        "height": 22
+      },
+      "triggerFlags": []
+    },
+    {
+      "id": "HOTSPOT_A1_I_005",
+      "title": "补",
+      "act": 1,
+      "phase": "I",
+      "source": "scene",
+      "purpose": "登记玩家主动检查到的单字",
+      "unlockCondition": [],
+      "relatedFlags": [
+        "FLAG_A1_BU_FOUND"
+      ],
+      "notes": "不解释其含义，与环境物同层级呈现",
+      "sceneId": "SCENE_A1_I_001",
+      "hotspotKind": "bu-mark",
+      "label": "补",
+      "observation": "靠在庙门边的旧石碑上刻着一个“补”字，边缘已经被苔痕侵蚀。",
+      "position": {
+        "x": 3,
+        "y": 50,
+        "width": 18,
+        "height": 36
+      },
+      "triggerFlags": [
+        "FLAG_A1_BU_FOUND"
+      ],
+      "imageAssetId": "IMG_A1_I_002"
+    }
+  ]
+}

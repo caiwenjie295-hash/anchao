@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "UI_A1_C_001", "title": "收件箱", "act": 1, "phase": "C", "source": "mail", "purpose": "显示收到的工作、生活与旧邮件", "unlockCondition": [], "relatedFlags": [], "notes": "默认文件夹", "folderKey": "inbox", "label": "收件箱", "sortOrder": 1 },
+    { "id": "UI_A1_C_002", "title": "星标邮件", "act": 1, "phase": "C", "source": "mail", "purpose": "快速查看玩家手动星标的邮件", "unlockCondition": [], "relatedFlags": [], "notes": "由存档状态过滤", "folderKey": "starred", "label": "星标邮件", "sortOrder": 2 },
+    { "id": "UI_A1_C_003", "title": "草稿箱", "act": 1, "phase": "C", "source": "mail", "purpose": "保留未完成的生活邮件", "unlockCondition": [], "relatedFlags": [], "notes": "仅展示数据化草稿", "folderKey": "drafts", "label": "草稿箱", "sortOrder": 3 },
+    { "id": "UI_A1_C_004", "title": "已发送", "act": 1, "phase": "C", "source": "mail", "purpose": "回看主角发送过的邮件", "unlockCondition": [], "relatedFlags": [], "notes": "含给小A的旧回复", "folderKey": "sent", "label": "已发送", "sortOrder": 4 },
+    { "id": "UI_A1_C_005", "title": "订阅邮件", "act": 1, "phase": "C", "source": "mail", "purpose": "容纳新闻与产品订阅", "unlockCondition": [], "relatedFlags": [], "notes": "生活噪音内容", "folderKey": "subscriptions", "label": "订阅邮件", "sortOrder": 5 },
+    { "id": "UI_A1_C_006", "title": "垃圾箱", "act": 1, "phase": "C", "source": "mail", "purpose": "保留已删除的低价值邮件", "unlockCondition": [], "relatedFlags": [], "notes": "不提供恢复操作", "folderKey": "trash", "label": "垃圾箱", "sortOrder": 6 },
+    { "id": "UI_A1_C_007", "title": "已归档", "act": 1, "phase": "C", "source": "mail", "purpose": "收纳旧通知与资料", "unlockCondition": [], "relatedFlags": [], "notes": "不提供移动操作", "folderKey": "archive", "label": "已归档", "sortOrder": 7 }
+  ]
+}
