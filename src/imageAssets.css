@@ -59,3 +59,11 @@
 @keyframes scene-clue-focus-image-in { from { opacity:0; transform:scale(1.025); } to { opacity:1; transform:scale(1); } }
 @media (max-width:720px) { .act1-scene__instruction { right:8px; bottom:8px; max-width:calc(100% - 16px); font-size:11px; } .scene-clue-focus { padding:12px; } .scene-clue-focus__panel { max-height:92dvh; padding:12px; } }
 @media (prefers-reduced-motion:reduce) { .scene-clue-focus, .scene-clue-focus__panel, .scene-clue-focus__image--independent img { animation-duration:.001ms; } }
+
+/* WB-0005 第二幕资源空位：IMG_A2_T02_001 只用克制的 CSS 占位，不使用远程资源，也不冒充正式美术。
+   IMG_A2_T03_001 的占位已由内容模块的 .act2-library__shelf-art 提供，此处不再加规则以免覆盖内容组件视觉。 */
+.act2-experience--scene[data-asset-id="IMG_A2_T02_001"] {
+  background:
+    radial-gradient(ellipse 58% 20% at 50% 6%, rgba(255, 255, 255, .5), transparent 72%),
+    linear-gradient(180deg, #cdd5d7 0 21%, #bcc6c7 21% 42%, #9ea7a5 42% 57%, #b4aea1 57% 75%, #8d8880 75% 100%);
+}
