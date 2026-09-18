@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "trace": {
+    "taskId": "WB-0003",
+    "workOrder": "docs/work_orders/WB-0003.md",
+    "contract": "docs/第二幕_T01-T03_WorkBuddy并行契约.md",
+    "storySpec": "game/05_暗潮_第二幕_开发步骤规范_T01-T07 (1).md#T02",
+    "stage": "A2_T02",
+    "baseline": "1f47307",
+    "updatedAt": "2026-09-18"
+  },
+  "scene": {
+    "title": "县城桥头",
+    "location": "石桥北岸 · 路边休息区",
+    "intro": "傍晚的桥头比白天凉快。几个老人摇着蒲扇坐在石凳上，聊的都是家常。没人招呼你——可以先听听，再慢慢打听。",
+    "chatPrompt": "坐下听听",
+    "askMountainLabel": "打听鸡公岭",
+    "evidencePanelTitle": "把照片给老人看",
+    "evidencePanelHint": "老人眯着眼看了半天。",
+    "returnLabel": "回到桌面"
+  },
+  "audio": {
+    "audioId": "AUDIO_A2_T02_001",
+    "phrase": "黑捕木。",
+    "replayLabel": "重听口述",
+    "replayNotice": "（口述录音暂缺，这里保留老人的原话。）",
+    "replaySuffixTemplate": "（又听了一遍，还是这个音。）"
+  },
+  "evidence": [
+    {
+      "assetId": "IMG_A1_I_001",
+      "name": "破庙外景照片",
+      "description": "从山脚往上拍的破庙外观，屋顶塌了一角。"
+    },
+    {
+      "assetId": "IMG_A1_I_002",
+      "name": "石碑刻字照片",
+      "description": "庙内石碑上那个字的特写。"
+    },
+    {
+      "assetId": "IMG_A1_I_003",
+      "name": "残缺塑像照片",
+      "description": "庙里残缺塑像的局部，面貌已经看不清了。"
+    }
+  ],
+  "elders": [
+    {
+      "id": "ELDER_A2_T02_001",
+      "name": "讲山路的老人",
+      "isClueElder": false,
+      "chat": [
+        "这几天的山路不好走，前晌下了雨，七公里那段的路基塌了半边。",
+        "我早上挑水回来，看见养路段的人在桥头歇脚，说还得修两天。"
+      ],
+      "mountainReply": [
+        "鸡公岭那条路我走了四十年。晴天还好，一下雨，石头缝里全滑。",
+        "你们要上山，赶早。晌午以后雾从谷底往上漫，看不清脚下的。"
+      ]
+    },
+    {
+      "id": "ELDER_A2_T02_002",
+      "name": "爱看热闹的老人",
+      "isClueElder": false,
+      "chat": [
+        "上个月来了一伙年轻人，背着大包小包，说要徒步进山，拍什么“野庙”。",
+        "我看他们连草鞋都没带，穿个白球鞋就往泥里踩，走一半就哭丧着脸下来了。"
+      ],
+      "mountainReply": [
+        "徒步的年轻人年年有，今年特别多。都说是网上刷到这个岭的。",
+        "要去就去吧，山里头除了蚊子，也没别的东西咬人。"
+      ]
+    },
+    {
+      "id": "ELDER_A2_T02_003",
+      "name": "摇蒲扇的老人",
+      "isClueElder": false,
+      "chat": [
+        "村里有条旧闻：庙里住着的东西，白天不见，夜里数人。",
+        "老辈人讲这是邪祟。我是不信的，可我娘信，天一擦黑就不许我出门。"
+      ],
+      "mountainReply": [
+        "你问鸡公岭的庙？年轻人都说那里邪性，夜里的风声跟人叹气一样。",
+        "信不信由你，反正天黑以后，桥头这边的狗都不往那边叫。"
+      ]
+    },
+    {
+      "id": "ELDER_A2_T02_004",
+      "name": "坐在石凳尽头的老人",
+      "isClueElder": true,
+      "chat": [
+        "人上了岁数，就信一句老话：吃什么补什么。骨头汤补骨头，猪脑补脑子。",
+        "我小时候我娘总说，亏了什么，就得用什么补回来。这话糙，理不糙。"
+      ],
+      "mountainReply": [
+        "鸡公岭啊……后山那座庙，供的是个黑脸的。名字我记得，就是口音重，说出来你们听不准。",
+        "你要真想知道，拿照片来给我看看，我这记性，见了东西才想得起来。"
+      ],
+      "evidenceLead": "老人接过照片，凑到眼前看了好一阵，忽然拿蒲扇拍了下膝盖。",
+      "phrase": "黑捕木。",
+      "phraseAfter": "就叫这个。我娘那辈人都这么念，一口老腔，你们写字的怕是要猜半天。"
+    }
+  ],
+  "puzzle": {
+    "id": "PUZZLE_A2_T02_001",
+    "notebookPrompt": "hei bu mu？",
+    "question": "老人念的是哪三个字？",
+    "parts": [
+      { "part": "first", "label": "首字", "options": ["黑", "嘿"] },
+      { "part": "middle", "label": "中字", "options": ["捕", "补", "埔"] },
+      { "part": "last", "label": "末字", "options": ["木", "母", "墓"] }
+    ],
+    "correct": { "first": "黑", "middle": "补", "last": "母" },
+    "maxAttempts": 3,
+    "lockPart": "middle",
+    "lockValue": "补",
+    "lockedHint": "老人又念了一遍，还是那句话——吃什么，补什么。中间那个字，八成跑不出“补”。",
+    "confirmLabel": "记下来",
+    "guessingNote": "结合第一幕石碑上的刻字，再想想。"
+  },
+  "resolution": {
+    "entryId": "ENTRY_A2_T02_001",
+    "entryTitle": "黑补母",
+    "entryBody": "黑补母（hei bu mu）：桥头老人口中“黑捕木”的正字。中间的“补”字，与鸡公岭破庙石碑上的刻字一致。",
+    "entryRelated": "关联线索：石碑刻字“补”。",
+    "elderRemark": "“对对对，就是这个音。以前县志里好像写过……县图书馆的地方志兴许还留着，你们去翻翻看。”",
+    "flagId": "FLAG_A2_COUNTY_RECORD_HINT_KNOWN",
+    "noteId": "NOTE_A2_T02_002",
+    "continueLabel": "去县图书馆查地方志",
+    "nextStage": "library"
+  },
+  "flags": {
+    "evidenceShown": "FLAG_A2_ELDER_PHOTO_SHOWN",
+    "audioHeard": "FLAG_A2_HEIBUMU_AUDIO_HEARD"
+  },
+  "noteIds": {
+    "phraseHeard": "NOTE_A2_T02_001"
+  }
+}
