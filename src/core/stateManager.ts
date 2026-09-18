@@ -1,11 +1,25 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import type { AppId, AppState, Bounds, GamePhase } from './types';
+import { isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 
 type StateListener = () => void;
+
+type Act2ResearchPatch = {
+  stage?: Act2Stage;
+  bridge?: Partial<Act2ResearchState['bridge']>;
+  library?: Partial<Act2ResearchState['library']>;
+};
+
+const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library'];
+const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library'];
+const act2StagePhases: Record<Act2ActiveStage, GamePhase> = { search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03' };
+const heibumuNameParts: HeibumuNamePart[] = ['first', 'middle', 'last'];
+const heibumuName = { first: '黑', middle: '补', last: '母' } as const;
+const heibumuNameText = '黑补母';
+const heibumuNameSolvedFlag = 'FLAG_A2_HEIBUMU_NAME_SOLVED';
 
 const copyBounds = (bounds: Bounds): Bounds => ({ ...bounds });
 const viewportBounds = (): Bounds => ({
@@ -33,7 +47,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 1 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 2 });
   }
 
   private nextZIndex(): number {
@@ -179,7 +193,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 1 });
+    this.bus.emit('progress:reset', { schemaVersion: 2 });
   }
 
   startJourney(sceneId: string): void {
@@ -257,6 +271,136 @@ export class StateManager {
 
   finishFirstAct(): void {
     if (this.state.game.phase === 'K' && this.state.game.flags.FLAG_A1_SS_CLUE_RECORDED === true) this.setFlag('FLAG_A1_COMPLETE', true);
+  }
+
+  private get act2Research(): Act2ResearchState {
+    return this.state.modules.act2Research;
+  }
+
+  private commitAct2Research(patch: Act2ResearchPatch): void {
+    const current = this.state.modules.act2Research;
+    const next: Act2ResearchState = {
+      stage: patch.stage ?? current.stage,
+      bridge: patch.bridge ? { ...current.bridge, ...patch.bridge } : current.bridge,
+      library: patch.library ? { ...current.library, ...patch.library } : current.library,
+    };
+    this.commit({ ...this.state, modules: { ...this.state.modules, act2Research: next } });
+  }
+
+  /** 只有第一幕完成且第二幕尚未启动时生效；保留全部第一幕状态。 */
+  startSecondAct(): void {
+    const { game, modules } = this.state;
+    if (game.flags.FLAG_A1_COMPLETE !== true || modules.act2Research.stage !== 'inactive') return;
+    this.commit({
+      ...this.state,
+      game: { ...game, act: 2, phase: 'A2_T01' },
+      modules: { ...modules, act2Research: { ...modules.act2Research, stage: 'search' } },
+    });
+    this.bus.emit('act2:started', { act: 2 });
+    this.bus.emit('phase:changed', { phase: 'A2_T01' });
+  }
+
+  /** 阶段只能沿 search → bridge → library 前进；未启动、重复或回退都无副作用。 */
+  setAct2Stage(stage: Act2ActiveStage): void {
+    const current = this.act2Research.stage;
+    if (!act2ActiveStages.includes(stage)) return;
+    if (current === 'inactive' || current === stage) return;
+    if (act2StageOrder.indexOf(stage) < act2StageOrder.indexOf(current)) return;
+    const phase = act2StagePhases[stage];
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, phase },
+      modules: { ...this.state.modules, act2Research: { ...this.act2Research, stage } },
+    });
+    this.bus.emit('act2:stage-changed', { stage });
+    this.bus.emit('phase:changed', { phase });
+  }
+
+  talkToAct2Elder(elderId: string): void {
+    const bridge = this.act2Research.bridge;
+    const id = elderId.trim();
+    if (this.act2Research.stage !== 'bridge' || !id || bridge.talkedElderIds.includes(id)) return;
+    this.commitAct2Research({ bridge: { talkedElderIds: [...bridge.talkedElderIds, id] } });
+    this.bus.emit('act2:elder-talked', { elderId: id });
+  }
+
+  /** 只接受契约冻结的三张第一幕证据图；出示证据后线索老人会说出“黑捕木”。 */
+  showAct2Evidence(assetId: string): void {
+    const bridge = this.act2Research.bridge;
+    const asset = assetId.trim();
+    if (this.act2Research.stage !== 'bridge' || !isAct2EvidenceAssetId(asset) || bridge.shownEvidenceAssetIds.includes(asset)) return;
+    this.commitAct2Research({ bridge: { shownEvidenceAssetIds: [...bridge.shownEvidenceAssetIds, asset], heardPhrase: true } });
+    this.bus.emit('act2:evidence-shown', { assetId: asset });
+  }
+
+  setHeibumuNameChoice(part: HeibumuNamePart, value: string): void {
+    const bridge = this.act2Research.bridge;
+    const choice = value.trim();
+    if (this.act2Research.stage !== 'bridge' || !bridge.heardPhrase || !choice) return;
+    if (!heibumuNameParts.includes(part) || bridge.nameChoices[part] === choice) return;
+    this.commitAct2Research({ bridge: { nameChoices: { ...bridge.nameChoices, [part]: choice } } });
+  }
+
+  confirmHeibumuName(): void {
+    const bridge = this.act2Research.bridge;
+    const { first, middle, last } = bridge.nameChoices;
+    if (this.act2Research.stage !== 'bridge' || !bridge.heardPhrase) return;
+    if (first !== heibumuName.first || middle !== heibumuName.middle || last !== heibumuName.last) return;
+    if (this.state.game.flags[heibumuNameSolvedFlag] === true) return;
+    this.setFlag(heibumuNameSolvedFlag, true);
+    this.bus.emit('act2:name-solved', { name: heibumuNameText });
+  }
+
+  visitGazetteSection(sectionId: string): void {
+    const library = this.act2Research.library;
+    const id = sectionId.trim();
+    if (this.act2Research.stage !== 'library' || !id || library.visitedSectionIds.includes(id)) return;
+    this.commitAct2Research({ library: { visitedSectionIds: [...library.visitedSectionIds, id] } });
+    this.bus.emit('act2:gazette-section-visited', { sectionId: id });
+  }
+
+  /** 契约要求先收窄目录再打开卷册。 */
+  openGazetteVolume(volumeId: string): void {
+    const library = this.act2Research.library;
+    const id = volumeId.trim();
+    if (this.act2Research.stage !== 'library' || !id || library.visitedSectionIds.length === 0 || library.openedVolumeIds.includes(id)) return;
+    this.commitAct2Research({ library: { openedVolumeIds: [...library.openedVolumeIds, id] } });
+    this.bus.emit('act2:gazette-volume-opened', { volumeId: id });
+  }
+
+  openGazettePage(pageId: string): void {
+    const library = this.act2Research.library;
+    const id = pageId.trim();
+    if (this.act2Research.stage !== 'library' || !id || library.openedVolumeIds.length === 0 || library.currentPageId === id) return;
+    this.commitAct2Research({ library: { currentPageId: id } });
+    this.bus.emit('act2:gazette-page-opened', { pageId: id });
+  }
+
+  /** 只能给正在阅读的页面加书签或取消书签。 */
+  toggleGazetteBookmark(pageId: string): void {
+    const library = this.act2Research.library;
+    const id = pageId.trim();
+    if (this.act2Research.stage !== 'library' || !id || library.currentPageId !== id) return;
+    const bookmarkedPageIds = library.bookmarkedPageIds.includes(id)
+      ? library.bookmarkedPageIds.filter((page) => page !== id)
+      : [...library.bookmarkedPageIds, id];
+    this.commitAct2Research({ library: { bookmarkedPageIds } });
+  }
+
+  markGazetteKeyword(keywordId: string): void {
+    const library = this.act2Research.library;
+    const id = keywordId.trim();
+    if (this.act2Research.stage !== 'library' || !id || library.currentPageId === null || library.markedKeywordIds.includes(id)) return;
+    this.commitAct2Research({ library: { markedKeywordIds: [...library.markedKeywordIds, id] } });
+    this.bus.emit('act2:gazette-keyword-marked', { keywordId: id });
+  }
+
+  excerptGazetteEntry(entryId: string): void {
+    const library = this.act2Research.library;
+    const id = entryId.trim();
+    if (this.act2Research.stage !== 'library' || !id || library.currentPageId === null || library.excerptedEntryIds.includes(id)) return;
+    this.commitAct2Research({ library: { excerptedEntryIds: [...library.excerptedEntryIds, id] } });
+    this.bus.emit('act2:gazette-entry-excerpted', { entryId: id });
   }
 }
 

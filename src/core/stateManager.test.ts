@@ -1,7 +1,12 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { act, createElement } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
-import { StateManager } from './stateManager';
+import { loadState } from './saveManager';
+import { StateManager, stateManager } from './stateManager';
+import type { Act2ActiveStage, HeibumuNamePart } from './types';
+import { Act1Ending } from '../scenes/act1/Act1Ending';
 
 describe('StateManager window behaviour', () => {
   let bus: EventBus;
@@ -127,6 +132,282 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([1]);
+    expect(resets).toEqual([2]);
+  });
+});
+
+describe('StateManager second-act foundation', () => {
+  let bus: EventBus;
+  let manager: StateManager;
+
+  beforeEach(() => {
+    localStorage.clear();
+    bus = new EventBus();
+    manager = new StateManager(bus, createDefaultState());
+  });
+
+  /** 第一幕已完成的桌面，用于检查入口门槛。 */
+  const completedAct1Manager = (): StateManager => {
+    const state = createDefaultState();
+    state.game.phase = 'K';
+    state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true };
+    return new StateManager(bus, state);
+  };
+
+  const runToBridge = (instance: StateManager): void => {
+    instance.startSecondAct();
+    instance.setAct2Stage('bridge');
+  };
+
+  const runToLibrary = (instance: StateManager): void => {
+    runToBridge(instance);
+    instance.setAct2Stage('library');
+    instance.visitGazetteSection('SECTION_A2_T03_001');
+  };
+
+  const solveName = (instance: StateManager): void => {
+    runToBridge(instance);
+    instance.showAct2Evidence('IMG_A1_I_002');
+    instance.setHeibumuNameChoice('first', '黑');
+    instance.setHeibumuNameChoice('middle', '补');
+    instance.setHeibumuNameChoice('last', '母');
+    instance.confirmHeibumuName();
+  };
+
+  it('does not start the second act before the first act is complete', () => {
+    const started: string[] = [];
+    bus.on('act2:started', () => started.push('started'));
+    manager.startSecondAct();
+    expect(manager.getState().game.act).toBe(1);
+    expect(manager.getState().game.phase).toBe('A');
+    expect(manager.getState().modules.act2Research.stage).toBe('inactive');
+    expect(started).toEqual([]);
+  });
+
+  it('starts the second act once and keeps every first-act record', () => {
+    const state = createDefaultState();
+    state.game.phase = 'K';
+    state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true };
+    state.modules.mail = { readIds: ['MAIL_A1_C_001'], starredIds: ['MAIL_A1_C_001'] };
+    state.modules.browser.queryHistory = ['鸡公岭'];
+    state.modules.notepad.userText = '此前记录';
+    state.modules.scene.capturedPhotoIds = ['IMG_A1_H_003', 'IMG_A1_I_004'];
+    state.modules.photos.adjustments = { IMG_A1_H_003: { exposure: 55, shadows: 50, contrast: 35 } };
+    manager = new StateManager(bus, state);
+    const started: number[] = []; const phases: string[] = [];
+    bus.on('act2:started', ({ act }) => started.push(act));
+    bus.on('phase:changed', ({ phase }) => phases.push(phase));
+    manager.startSecondAct();
+    manager.startSecondAct();
+    const next = manager.getState();
+    expect(next.game.act).toBe(2);
+    expect(next.game.phase).toBe('A2_T01');
+    expect(next.modules.act2Research.stage).toBe('search');
+    expect(next.game.flags).toEqual({ FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true });
+    expect(next.modules.mail).toEqual({ readIds: ['MAIL_A1_C_001'], starredIds: ['MAIL_A1_C_001'] });
+    expect(next.modules.browser.queryHistory).toEqual(['鸡公岭']);
+    expect(next.modules.notepad.userText).toBe('此前记录');
+    expect(next.modules.scene.capturedPhotoIds).toEqual(['IMG_A1_H_003', 'IMG_A1_I_004']);
+    expect(next.modules.photos.adjustments.IMG_A1_H_003).toEqual({ exposure: 55, shadows: 50, contrast: 35 });
+    expect(started).toEqual([2]);
+    expect(phases).toEqual(['A2_T01']);
+  });
+
+  it('advances the second-act stage forwards only', () => {
+    manager = completedAct1Manager();
+    const stages: string[] = []; const phases: string[] = [];
+    bus.on('act2:stage-changed', ({ stage }) => stages.push(stage));
+    bus.on('phase:changed', ({ phase }) => phases.push(phase));
+    manager.setAct2Stage('bridge');
+    expect(manager.getState().modules.act2Research.stage).toBe('inactive');
+    manager.startSecondAct();
+    manager.setAct2Stage('nowhere' as Act2ActiveStage);
+    manager.setAct2Stage('search');
+    manager.setAct2Stage('bridge');
+    manager.setAct2Stage('library');
+    manager.setAct2Stage('bridge');
+    expect(manager.getState().modules.act2Research.stage).toBe('library');
+    expect(manager.getState().game.phase).toBe('A2_T03');
+    expect(stages).toEqual(['bridge', 'library']);
+    expect(phases).toEqual(['A2_T01', 'A2_T02', 'A2_T03']);
+  });
+
+  it('gates elder conversations behind the bridge stage and never repeats an elder', () => {
+    manager = completedAct1Manager();
+    const talked: string[] = [];
+    bus.on('act2:elder-talked', ({ elderId }) => talked.push(elderId));
+    manager.talkToAct2Elder('ELDER_A2_T02_001');
+    manager.startSecondAct();
+    manager.talkToAct2Elder('ELDER_A2_T02_001');
+    manager.setAct2Stage('bridge');
+    manager.talkToAct2Elder('   ');
+    manager.talkToAct2Elder('ELDER_A2_T02_001');
+    manager.talkToAct2Elder('ELDER_A2_T02_001');
+    manager.talkToAct2Elder('ELDER_A2_T02_002');
+    expect(manager.getState().modules.act2Research.bridge.talkedElderIds).toEqual(['ELDER_A2_T02_001', 'ELDER_A2_T02_002']);
+    expect(talked).toEqual(['ELDER_A2_T02_001', 'ELDER_A2_T02_002']);
+  });
+
+  it('accepts only the frozen evidence set and marks the phrase heard once', () => {
+    manager = completedAct1Manager();
+    const shown: string[] = [];
+    bus.on('act2:evidence-shown', ({ assetId }) => shown.push(assetId));
+    manager.setAct2Stage('bridge');
+    manager.showAct2Evidence('IMG_A1_I_001');
+    manager.startSecondAct();
+    manager.showAct2Evidence('IMG_A1_I_001');
+    manager.setAct2Stage('bridge');
+    manager.showAct2Evidence('   ');
+    manager.showAct2Evidence('IMG_A1_X_999');
+    manager.showAct2Evidence('IMG_A1_I_001');
+    expect(manager.getState().modules.act2Research.bridge).toMatchObject({ shownEvidenceAssetIds: ['IMG_A1_I_001'], heardPhrase: true });
+    manager.showAct2Evidence('IMG_A1_I_001');
+    manager.showAct2Evidence('IMG_A1_I_003');
+    expect(manager.getState().modules.act2Research.bridge.shownEvidenceAssetIds).toEqual(['IMG_A1_I_001', 'IMG_A1_I_003']);
+    expect(shown).toEqual(['IMG_A1_I_001', 'IMG_A1_I_003']);
+  });
+
+  it('records the name choices after the phrase was heard and solves 黑补母 exactly once', () => {
+    manager = completedAct1Manager();
+    const solved: string[] = [];
+    bus.on('act2:name-solved', ({ name }) => solved.push(name));
+    manager.setAct2Stage('bridge');
+    manager.setHeibumuNameChoice('first', '黑');
+    manager.startSecondAct();
+    manager.setAct2Stage('bridge');
+    manager.setHeibumuNameChoice('first', '黑');
+    expect(manager.getState().modules.act2Research.bridge.nameChoices).toEqual({ first: null, middle: null, last: null });
+    manager.showAct2Evidence('IMG_A1_I_002');
+    manager.setHeibumuNameChoice('nowhere' as HeibumuNamePart, '黑');
+    manager.setHeibumuNameChoice('first', '   ');
+    manager.setHeibumuNameChoice('first', '嘿');
+    manager.setHeibumuNameChoice('first', '黑');
+    manager.setHeibumuNameChoice('first', '黑');
+    manager.setHeibumuNameChoice('middle', '捕');
+    manager.setHeibumuNameChoice('last', '木');
+    manager.confirmHeibumuName();
+    expect(solved).toEqual([]);
+    expect(manager.getState().game.flags.FLAG_A2_HEIBUMU_NAME_SOLVED).not.toBe(true);
+    manager.setHeibumuNameChoice('middle', '补');
+    manager.setHeibumuNameChoice('last', '母');
+    manager.confirmHeibumuName();
+    manager.confirmHeibumuName();
+    expect(manager.getState().modules.act2Research.bridge.nameChoices).toEqual({ first: '黑', middle: '补', last: '母' });
+    expect(manager.getState().game.flags.FLAG_A2_HEIBUMU_NAME_SOLVED).toBe(true);
+    expect(solved).toEqual(['黑补母']);
+  });
+
+  it('gates the gazette reading chain and records every library action once', () => {
+    manager = completedAct1Manager();
+    const sections: string[] = []; const volumes: string[] = []; const pages: string[] = [];
+    const keywords: string[] = []; const excerpts: string[] = [];
+    bus.on('act2:gazette-section-visited', ({ sectionId }) => sections.push(sectionId));
+    bus.on('act2:gazette-volume-opened', ({ volumeId }) => volumes.push(volumeId));
+    bus.on('act2:gazette-page-opened', ({ pageId }) => pages.push(pageId));
+    bus.on('act2:gazette-keyword-marked', ({ keywordId }) => keywords.push(keywordId));
+    bus.on('act2:gazette-entry-excerpted', ({ entryId }) => excerpts.push(entryId));
+    runToBridge(manager);
+    manager.visitGazetteSection('SECTION_A2_T03_001');
+    manager.setAct2Stage('library');
+    manager.openGazetteVolume('VOLUME_A2_T03_001');
+    manager.openGazettePage('PAGE_A2_T03_001');
+    manager.visitGazetteSection('SECTION_A2_T03_001');
+    manager.visitGazetteSection('SECTION_A2_T03_001');
+    manager.openGazetteVolume('VOLUME_A2_T03_001');
+    manager.openGazetteVolume('VOLUME_A2_T03_001');
+    manager.markGazetteKeyword('KEYWORD_A2_T03_000');
+    manager.excerptGazetteEntry('ENTRY_A2_T03_000');
+    manager.openGazettePage('PAGE_A2_T03_001');
+    manager.openGazettePage('PAGE_A2_T03_002');
+    manager.openGazettePage('PAGE_A2_T03_002');
+    manager.toggleGazetteBookmark('PAGE_A2_T03_001');
+    manager.toggleGazetteBookmark('PAGE_A2_T03_002');
+    manager.markGazetteKeyword('KEYWORD_A2_T03_001');
+    manager.markGazetteKeyword('KEYWORD_A2_T03_001');
+    manager.excerptGazetteEntry('ENTRY_A2_T03_001');
+    manager.excerptGazetteEntry('ENTRY_A2_T03_001');
+    manager.toggleGazetteBookmark('PAGE_A2_T03_002');
+    expect(manager.getState().modules.act2Research.library).toEqual({
+      visitedSectionIds: ['SECTION_A2_T03_001'],
+      openedVolumeIds: ['VOLUME_A2_T03_001'],
+      currentPageId: 'PAGE_A2_T03_002',
+      bookmarkedPageIds: [],
+      markedKeywordIds: ['KEYWORD_A2_T03_001'],
+      excerptedEntryIds: ['ENTRY_A2_T03_001'],
+    });
+    expect(sections).toEqual(['SECTION_A2_T03_001']);
+    expect(volumes).toEqual(['VOLUME_A2_T03_001']);
+    expect(pages).toEqual(['PAGE_A2_T03_001', 'PAGE_A2_T03_002']);
+    expect(keywords).toEqual(['KEYWORD_A2_T03_001']);
+    expect(excerpts).toEqual(['ENTRY_A2_T03_001']);
+  });
+
+  it('keeps second-act research state across save and reload', () => {
+    manager = completedAct1Manager();
+    solveName(manager);
+    manager.setAct2Stage('library');
+    manager.visitGazetteSection('SECTION_A2_T03_001');
+    manager.openGazetteVolume('VOLUME_A2_T03_001');
+    manager.openGazettePage('PAGE_A2_T03_004');
+    manager.markGazetteKeyword('KEYWORD_A2_T03_001');
+    manager.excerptGazetteEntry('ENTRY_A2_T03_001');
+    const saved = manager.getState();
+    const restored = new StateManager(bus, loadState()).getState();
+    expect(restored).toEqual(saved);
+    expect(restored.modules.act2Research.bridge.heardPhrase).toBe(true);
+    expect(restored.modules.act2Research.library.currentPageId).toBe('PAGE_A2_T03_004');
+  });
+
+  it('resets the second act back to a fresh first-act state', () => {
+    manager = completedAct1Manager();
+    solveName(manager);
+    runToLibrary(manager);
+    manager.openGazetteVolume('VOLUME_A2_T03_001');
+    manager.resetProgress();
+    expect(manager.getState()).toEqual(createDefaultState());
+    expect(manager.getState().modules.act2Research.stage).toBe('inactive');
+    expect(manager.getState().game.act).toBe(1);
+  });
+});
+
+describe('Act1Ending second-act entry', () => {
+  let container: HTMLDivElement;
+  let root: Root;
+
+  beforeEach(() => {
+    localStorage.clear();
+    stateManager.resetProgress();
+    container = document.createElement('div');
+    document.body.append(container);
+    root = createRoot(container);
+  });
+
+  afterEach(() => {
+    act(() => root.unmount());
+    container.remove();
+  });
+
+  it('starts the second act from the ending page and keeps every first-act record', async () => {
+    stateManager.setFlag('FLAG_A1_COMPLETE', true);
+    stateManager.setFlag('FLAG_A1_SS_FOUND', true);
+    stateManager.recordBrowserSearch('鸡公岭');
+    await act(async () => { root.render(createElement(Act1Ending)); });
+    const button = container.querySelector('.act1-ending__continue') as HTMLButtonElement;
+    expect(button.textContent).toBe('回到桌面，继续调查');
+    await act(async () => { button.click(); });
+    const state = stateManager.getState();
+    expect(state.game.act).toBe(2);
+    expect(state.game.phase).toBe('A2_T01');
+    expect(state.modules.act2Research.stage).toBe('search');
+    expect(state.game.flags).toEqual({ FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true });
+    expect(state.modules.browser.queryHistory).toEqual(['鸡公岭']);
+  });
+
+  it('does not start the second act while the first act is unfinished', async () => {
+    await act(async () => { root.render(createElement(Act1Ending)); });
+    await act(async () => { (container.querySelector('.act1-ending__continue') as HTMLButtonElement).click(); });
+    expect(stateManager.getState().game.act).toBe(1);
+    expect(stateManager.getState().game.phase).toBe('A');
+    expect(stateManager.getState().modules.act2Research.stage).toBe('inactive');
   });
 });

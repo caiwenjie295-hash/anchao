@@ -45,12 +45,14 @@ export default function App() {
   const openApp = (appId: AppId) => stateManager.openApp(appId);
   const taskbarClick = (appId: AppId) => stateManager.toggleTaskbarApp(appId);
   const sceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
-  if (state.game.flags.FLAG_A1_COMPLETE === true) return <Act1Ending />;
+  const secondActStarted = state.modules.act2Research.stage !== 'inactive';
+  const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
+  if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) return <Act1Ending />;
   return (
     <>
-    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label="暗潮第一幕私人桌面" aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
+    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
-      <h1 className="sr-only">暗潮第一幕私人桌面</h1>
+      <h1 className="sr-only">{desktopLabel}</h1>
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <DesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} />)}
       </div>

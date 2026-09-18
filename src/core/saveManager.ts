@@ -1,9 +1,12 @@
-import { APP_IDS, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
-import { createDefaultState, createDefaultWindow } from './defaultState';
+import { APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
+import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow } from './defaultState';
 import { sceneById } from '../data/sceneData';
 
 export const SAVE_KEY = 'anchao.save.v1';
+/** schema 1 为第一幕存档，schema 2 增加第二幕 `act2Research`；两者都必须可加载。 */
+const supportedSchemaVersions = [1, 2];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
+const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
@@ -33,9 +36,41 @@ const safeWindow = (appId: AppId, candidate: unknown, index: number): DesktopWin
   };
 };
 
+const safeNameChoice = (value: unknown): string | null => typeof value === 'string' && value.trim().length > 0 ? value : null;
+
+/** schema 1 存档没有第二幕字段；任何损坏或越界的第二幕字段都回退到默认值，不影响第一幕进度。 */
+const safeAct2Research = (candidate: unknown): Act2ResearchState => {
+  const fallback = createDefaultAct2ResearchState();
+  if (!isRecord(candidate)) return fallback;
+  const bridge = isRecord(candidate.bridge) ? candidate.bridge : null;
+  const library = isRecord(candidate.library) ? candidate.library : null;
+  const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
+  return {
+    stage: validAct2Stages.includes(candidate.stage as Act2Stage) ? candidate.stage as Act2Stage : fallback.stage,
+    bridge: {
+      talkedElderIds: bridge ? safeStringIds(bridge.talkedElderIds) : [],
+      shownEvidenceAssetIds: bridge ? safeStringIds(bridge.shownEvidenceAssetIds).filter((assetId) => isAct2EvidenceAssetId(assetId)) : [],
+      heardPhrase: bridge?.heardPhrase === true,
+      nameChoices: {
+        first: nameChoices ? safeNameChoice(nameChoices.first) : null,
+        middle: nameChoices ? safeNameChoice(nameChoices.middle) : null,
+        last: nameChoices ? safeNameChoice(nameChoices.last) : null,
+      },
+    },
+    library: {
+      visitedSectionIds: library ? safeStringIds(library.visitedSectionIds) : [],
+      openedVolumeIds: library ? safeStringIds(library.openedVolumeIds) : [],
+      currentPageId: library && typeof library.currentPageId === 'string' && library.currentPageId.length > 0 ? library.currentPageId : null,
+      bookmarkedPageIds: library ? safeStringIds(library.bookmarkedPageIds) : [],
+      markedKeywordIds: library ? safeStringIds(library.markedKeywordIds) : [],
+      excerptedEntryIds: library ? safeStringIds(library.excerptedEntryIds) : [],
+    },
+  };
+};
+
 export const hydrateState = (candidate: unknown): AppState => {
   const fallback = createDefaultState();
-  if (!isRecord(candidate) || candidate.schemaVersion !== 1) return fallback;
+  if (!isRecord(candidate) || !supportedSchemaVersions.includes(candidate.schemaVersion as number)) return fallback;
   const game = isRecord(candidate.game) ? candidate.game : {};
   const desktop = isRecord(candidate.desktop) ? candidate.desktop : {};
   const settings = isRecord(candidate.settings) ? candidate.settings : {};
@@ -45,6 +80,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const notepad = isRecord(modules.notepad) ? modules.notepad : null;
   const scene = isRecord(modules.scene) ? modules.scene : null;
   const photos = isRecord(modules.photos) ? modules.photos : null;
+  const act2Research = safeAct2Research(modules.act2Research);
   const rawWindows = isRecord(desktop.windows) ? desktop.windows : {};
   const windows = Object.fromEntries(APP_IDS.map((appId, index) => [appId, safeWindow(appId, rawWindows[appId], index)])) as AppState['desktop']['windows'];
   const activeAppId = APP_IDS.includes(desktop.activeAppId as AppId) ? desktop.activeAppId as AppId : null;
@@ -55,7 +91,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     game: {
       act: finiteNumber(game.act, fallback.game.act),
       phase: typeof game.phase === 'string' ? game.phase : fallback.game.phase,
@@ -99,6 +135,7 @@ export const hydrateState = (candidate: unknown): AppState => {
           : {},
         inspectedSymbolPhotoIds: photos ? safeStringIds(photos.inspectedSymbolPhotoIds) : [],
       },
+      act2Research,
     },
   };
 };

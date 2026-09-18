@@ -7,7 +7,10 @@ export function Act1Ending() {
     <div><p className="act1-ending__label">{ending.title}</p>
       {ending.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
       <h1>{ending.footer}</h1>
-      <ResetProgressButton onReset={() => stateManager.resetProgress()} />
+      <div className="act1-ending__actions">
+        <button type="button" className="act1-ending__continue" onClick={() => stateManager.startSecondAct()}>回到桌面，继续调查</button>
+        <ResetProgressButton onReset={() => stateManager.resetProgress()} />
+      </div>
     </div>
   </section>;
 }
