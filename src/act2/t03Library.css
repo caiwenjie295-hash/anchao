@@ -318,7 +318,23 @@
 }
 
 @media (max-width: 720px) {
-  .act2-library { padding: 12px; }
+  /* 窄屏（如 390×844）改为内容驱动的纵向滚动流：
+     覆盖根级 minmax(0, 1fr) 主体行，避免阅读器内容溢出行高后与完成结论、返回按钮重叠；
+     垂直滚动仍由根级 .act2-library 的 overflow: auto 承担。 */
+  .act2-library {
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    align-content: start;
+    padding: 12px;
+  }
+  /* 目录 / 卷册 / 阅读器恢复内容驱动高度，不在窄屏被压成固定行高。 */
+  .act2-library__body,
+  .act2-library__catalog,
+  .act2-library__shelf,
+  .act2-library__reader {
+    min-height: auto;
+    min-width: 0;
+  }
   .act2-library__body { grid-template-columns: minmax(0, 1fr); }
   .act2-library__reader { grid-column: auto; }
   .act2-library__controls { flex-direction: column; align-items: stretch; }
