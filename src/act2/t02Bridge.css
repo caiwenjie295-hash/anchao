@@ -47,7 +47,8 @@
 .act2-bridge__ask,
 .act2-bridge__replay,
 .act2-bridge__confirm,
-.act2-bridge__continue {
+.act2-bridge__continue,
+.act2-bridge__show {
   font: inherit;
   font-size: 14px;
   padding: 8px 16px;
@@ -62,8 +63,16 @@
 .act2-bridge__ask:hover,
 .act2-bridge__replay:hover,
 .act2-bridge__confirm:hover,
-.act2-bridge__continue:hover {
+.act2-bridge__continue:hover,
+.act2-bridge__show:hover {
   background: rgba(138, 109, 59, 0.08);
+}
+
+.act2-bridge__confirm:disabled,
+.act2-bridge__continue:disabled,
+.act2-bridge__show:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .act2-bridge__return:focus-visible,
@@ -71,8 +80,8 @@
 .act2-bridge__replay:focus-visible,
 .act2-bridge__confirm:focus-visible,
 .act2-bridge__continue:focus-visible,
+.act2-bridge__show:focus-visible,
 .act2-bridge__elder:focus-visible,
-.act2-bridge__evidence-item:focus-visible,
 .act2-bridge__evidence-slot:focus-visible,
 .act2-bridge__option input:focus-visible {
   outline: 2px solid var(--act2-bridge-accent);
@@ -162,8 +171,6 @@
 }
 
 .act2-bridge__evidence-item {
-  font: inherit;
-  text-align: left;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -171,12 +178,30 @@
   border: 1px solid var(--act2-bridge-line);
   border-radius: 10px;
   background: var(--act2-bridge-paper);
-  cursor: pointer;
   color: var(--act2-bridge-ink);
 }
 
 .act2-bridge__evidence-item:hover {
   border-color: var(--act2-bridge-accent);
+}
+
+.act2-bridge__evidence-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.act2-bridge__evidence-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.act2-bridge__show {
+  padding: 6px 12px;
+  font-size: 13px;
 }
 
 .act2-bridge__evidence-name {
@@ -186,7 +211,6 @@
 .act2-bridge__evidence-desc {
   font-size: 13px;
   color: var(--act2-bridge-muted);
-  flex: 1;
 }
 
 .act2-bridge__evidence-item .evidence-thumbnail,

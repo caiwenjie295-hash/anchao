@@ -75,7 +75,10 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
     manager.setHeibumuNameChoice(part, value);
   };
 
+  const canConfirm = namePartOrder.every((part) => bridge.nameChoices[part] !== null);
+
   const confirmName = () => {
+    if (!canConfirm) return;
     manager.confirmHeibumuName();
     if (manager.getState().game.flags.FLAG_A2_HEIBUMU_NAME_SOLVED === true) {
       setWrongAttempts(0);
@@ -132,17 +135,23 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
               <div className="act2-bridge__evidence">
                 <h3>{bridgeScene.evidencePanelTitle}</h3>
                 {bridgeEvidence.map((item) => (
-                  <button
-                    key={item.assetId}
-                    type="button"
-                    className="act2-bridge__evidence-item"
-                    aria-label={`出示${item.name}`}
-                    onClick={() => manager.showAct2Evidence(item.assetId)}
-                  >
-                    <span className="act2-bridge__evidence-name">{item.name}</span>
-                    <span className="act2-bridge__evidence-desc">{item.description}</span>
-                    <EvidenceSlot assetId={item.assetId} caption={item.name} />
-                  </button>
+                  <article key={item.assetId} className="act2-bridge__evidence-item">
+                    <div className="act2-bridge__evidence-copy">
+                      <span className="act2-bridge__evidence-name">{item.name}</span>
+                      <span className="act2-bridge__evidence-desc">{item.description}</span>
+                    </div>
+                    <div className="act2-bridge__evidence-actions">
+                      <EvidenceSlot assetId={item.assetId} caption={item.name} />
+                      <button
+                        type="button"
+                        className="act2-bridge__show"
+                        aria-label={`出示${item.name}`}
+                        onClick={() => manager.showAct2Evidence(item.assetId)}
+                      >
+                        出示照片
+                      </button>
+                    </div>
+                  </article>
                 ))}
               </div>
             )}
@@ -196,7 +205,7 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
           })}
           {locked && <p className="act2-bridge__locked-hint" role="note">{bridgePuzzle.lockedHint}</p>}
           <p className="act2-bridge__guessing-note">{bridgePuzzle.guessingNote}</p>
-          <button type="button" className="act2-bridge__confirm" onClick={confirmName}>{bridgePuzzle.confirmLabel}</button>
+          <button type="button" className="act2-bridge__confirm" disabled={!canConfirm} onClick={confirmName}>{bridgePuzzle.confirmLabel}</button>
         </div>
       )}
 

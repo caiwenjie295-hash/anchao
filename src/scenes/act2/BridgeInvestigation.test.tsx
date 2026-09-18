@@ -54,6 +54,11 @@ describe('BridgeInvestigation', () => {
     container = document.createElement('div');
     document.body.append(container);
     root = createRoot(container);
+    if (typeof HTMLDialogElement !== 'undefined' && !HTMLDialogElement.prototype.showModal) {
+      HTMLDialogElement.prototype.showModal = function stubShowModal(this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      };
+    }
   });
 
   afterEach(() => {
@@ -103,6 +108,67 @@ describe('BridgeInvestigation', () => {
     expect(live?.getAttribute('aria-live')).toBe('polite');
     await act(async () => { replay!.click(); });
     expect(container.textContent).toContain('重听口述');
+  });
+
+  it('never nests buttons and clicking zoom does not present evidence or trigger the oral phrase', async () => {
+    await render();
+    await clickButton(bridgeClueElder.name);
+
+    expect(container.querySelector('button button')).toBeNull();
+    const items = [...container.querySelectorAll('article.act2-bridge__evidence-item')];
+    expect(items).toHaveLength(bridgeEvidence.length);
+    const thumbnail = container.querySelector<HTMLButtonElement>('button[aria-label^="放大查看"]');
+    expect(thumbnail).not.toBeNull();
+    const present = container.querySelector<HTMLButtonElement>(`button[aria-label="出示${bridgeEvidence[0].name}"]`);
+    expect(present).not.toBeNull();
+    expect(thumbnail!.parentElement).toBe(present!.parentElement);
+
+    await act(async () => { thumbnail!.click(); });
+    expect(thumbnail!.closest('dialog')?.hasAttribute('open') ?? container.querySelector('dialog[open]') !== null).toBe(true);
+    expect(container.querySelector('dialog[open]')).not.toBeNull();
+    expect(manager.getState().modules.act2Research.bridge.shownEvidenceAssetIds).toEqual([]);
+    expect(manager.getState().modules.act2Research.bridge.heardPhrase).toBe(false);
+    expect(manager.getState().game.flags.FLAG_A2_ELDER_PHOTO_SHOWN).toBeUndefined();
+    expect(manager.getState().game.flags.FLAG_A2_HEIBUMU_AUDIO_HEARD).toBeUndefined();
+    expect(manager.getState().modules.notepad.autoEntryIds).toEqual([]);
+    expect(container.textContent).not.toContain('黑捕木');
+    expect(container.querySelector('button[data-audio-id="AUDIO_A2_T02_001"]')).toBeNull();
+  });
+
+  it('keeps the confirm disabled until all three parts are chosen and empty submits never count', async () => {
+    await render();
+    await clickButton(bridgeClueElder.name);
+    await showEvidence(bridgeEvidence[0].name);
+
+    const confirmButton = () => container.querySelector<HTMLButtonElement>('button.act2-bridge__confirm')!;
+    expect(confirmButton()).not.toBeNull();
+    expect(confirmButton()!.disabled).toBe(true);
+
+    const choose = async (part: string, value: string) => {
+      const input = container.querySelector<HTMLInputElement>(`input[name="act2-bridge-${part}"][value="${value}"]`)!;
+      await act(async () => { input.click(); });
+    };
+    const confirm = async () => { await act(async () => { confirmButton()!.click(); }); };
+
+    await confirm();
+    await confirm();
+    await choose('first', '嘿');
+    await confirm();
+    expect(confirmButton()!.disabled).toBe(true);
+    await choose('middle', '埔');
+    expect(confirmButton()!.disabled).toBe(true);
+    await choose('last', '墓');
+    expect(confirmButton()!.disabled).toBe(false);
+
+    await confirm();
+    expect(container.querySelector('fieldset.act2-bridge__part[disabled], fieldset.act2-bridge__part input[value="捕"]')!.closest('fieldset')!.disabled).toBe(false);
+    await confirm();
+    expect(manager.getState().modules.act2Research.bridge.nameChoices.middle).toBe('埔');
+
+    await confirm();
+    expect(manager.getState().modules.act2Research.bridge.nameChoices.middle).toBe('补');
+    expect(container.querySelector<HTMLInputElement>('input[name="act2-bridge-middle"][value="捕"]')!.closest('fieldset')!.disabled).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_HEIBUMU_NAME_SOLVED).toBeUndefined();
   });
 
   it('does not complete on wrong answers and locks only the middle character after three failures', async () => {
