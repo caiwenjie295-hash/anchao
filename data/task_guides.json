@@ -56,6 +56,44 @@
         { "label": "确认新线索已记入记事本", "completionFlag": "FLAG_A1_SS_CLUE_RECORDED" },
         { "label": "回到照片，点击“整理思绪，继续”", "completionFlag": "FLAG_A1_COMPLETE", "appId": "photos" }
       ]
+    },
+    {
+      "id": "GUIDE_A2_T01_001",
+      "phases": ["A2_T01"],
+      "prerequisiteFlags": ["FLAG_A1_COMPLETE"],
+      "completionFlags": ["FLAG_A2_WEB_SEARCH_FAILED"],
+      "summary": "在网上再查一次，看看能查到什么",
+      "steps": [
+        { "label": "用“鸡公岭”配上那个字搜一遍", "completionFlag": "FLAG_A2_SEARCH_BU_ATTEMPTED", "appId": "browser" },
+        { "label": "再搜一遍那两个字母和那个记号", "completionFlag": "FLAG_A2_SEARCH_SS_ATTEMPTED", "appId": "browser" },
+        { "label": "确认网上查不出结果，换一种查法", "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED" }
+      ]
+    },
+    {
+      "id": "GUIDE_A2_T02_001",
+      "phases": ["A2_T02"],
+      "prerequisiteFlags": ["FLAG_A2_WEB_SEARCH_FAILED"],
+      "completionFlags": ["FLAG_A2_HEIBUMU_NAME_SOLVED"],
+      "summary": "去县城桥头，找当地人聊聊",
+      "steps": [
+        { "label": "把现场拍到的照片给老人看", "completionFlag": "FLAG_A2_ELDER_PHOTO_SHOWN" },
+        { "label": "听听他们怎么念这个名字", "completionFlag": "FLAG_A2_HEIBUMU_AUDIO_HEARD" },
+        { "label": "确定那三个字到底怎么写", "completionFlag": "FLAG_A2_HEIBUMU_NAME_SOLVED" },
+        { "label": "问问以前有没有人写过", "completionFlag": "FLAG_A2_COUNTY_RECORD_HINT_KNOWN" }
+      ]
+    },
+    {
+      "id": "GUIDE_A2_T03_001",
+      "phases": ["A2_T03"],
+      "prerequisiteFlags": ["FLAG_A2_COUNTY_RECORD_HINT_KNOWN"],
+      "completionFlags": ["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],
+      "summary": "去县图书馆查一查旧地方志",
+      "steps": [
+        { "label": "在地方志目录里缩小范围", "completionFlag": "FLAG_A2_LIBRARY_ENTERED" },
+        { "label": "打开对应的卷册", "completionFlag": "FLAG_A2_LOCAL_GAZETTE_FOUND" },
+        { "label": "翻到记着这件事的那一页", "completionFlag": "FLAG_A2_BUMUZHI_FOUND" },
+        { "label": "标记关键词，并摘录到记事本", "completionFlag": "FLAG_A2_BUMU_RULE_BASIC_KNOWN" }
+      ]
     }
   ]
 }

@@ -1,11 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../core/defaultState';
-import { getCurrentTaskGuide } from './taskGuideData';
+import { getCurrentTaskGuide, validateTaskGuideData } from './taskGuideData';
 
-const withFlags = (flags: Record<string, boolean>, phase: ReturnType<typeof createDefaultState>['game']['phase'] = 'A') => {
+type State = ReturnType<typeof createDefaultState>;
+
+const withFlags = (flags: Record<string, boolean>, phase: State['game']['phase'] = 'A') => {
   const state = createDefaultState();
   state.game.phase = phase;
   state.game.flags = flags;
+  return state;
+};
+
+const act2State = (flags: Record<string, boolean>, phase: State['game']['phase'] = 'A2_T01', stage: State['modules']['act2Research']['stage'] = 'search') => {
+  const state = withFlags(flags, phase);
+  state.game.act = 2;
+  state.modules.act2Research.stage = stage;
   return state;
 };
 
@@ -43,5 +52,45 @@ describe('desktop task guides', () => {
 
   it('returns null for states outside the frozen guide chain', () => {
     expect(getCurrentTaskGuide(withFlags({}, 'F'))).toBeNull();
+  });
+});
+
+describe('act2 desktop task guides', () => {
+  it('validates the frozen guide chain and keeps it answer-free', () => {
+    expect(() => validateTaskGuideData()).not.toThrow();
+  });
+
+  it('points T01 at the browser and tracks both searches', () => {
+    const guide = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true }));
+    expect(guide).toMatchObject({ id: 'GUIDE_A2_T01_001', actionAppId: 'browser', totalCount: 3 });
+    const afterOne = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_SEARCH_BU_ATTEMPTED: true }));
+    expect(afterOne).toMatchObject({ completedCount: 1, actionAppId: 'browser' });
+    expect(getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true }))).toBeNull();
+  });
+
+  it('gives T02 and T03 step hints without inventing a desktop app', () => {
+    const bridge = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true }, 'A2_T02', 'bridge'));
+    expect(bridge?.id).toBe('GUIDE_A2_T02_001');
+    expect(bridge?.actionAppId).toBeUndefined();
+    expect(bridge?.actionLabel).toBeUndefined();
+    expect(bridge?.steps.every((step) => step.appId === undefined)).toBe(true);
+
+    const library = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true, FLAG_A2_COUNTY_RECORD_HINT_KNOWN: true }, 'A2_T03', 'library'));
+    expect(library?.id).toBe('GUIDE_A2_T03_001');
+    expect(library?.actionAppId).toBeUndefined();
+    expect(library?.steps.every((step) => step.appId === undefined)).toBe(true);
+  });
+
+  it('never spells the answer in act-two guide text', () => {
+    for (const phase of ['A2_T01', 'A2_T02', 'A2_T03'] as const) {
+      const guide = getCurrentTaskGuide(act2State({
+        FLAG_A1_COMPLETE: true,
+        FLAG_A2_WEB_SEARCH_FAILED: true,
+        FLAG_A2_OFFLINE_RESEARCH_NEEDED: true,
+        FLAG_A2_COUNTY_RECORD_HINT_KNOWN: true,
+      }, phase));
+      if (!guide) continue;
+      expect(`${guide.summary}${guide.steps.map((step) => step.label).join('')}`).not.toMatch(/黑补母|补母志|以有余补不足/);
+    }
   });
 });

@@ -1,5 +1,6 @@
 import taskGuidesDocument from '../../data/task_guides.json';
-import type { AppId, AppState } from '../core/types';
+import flagsDocument from '../../data/flags.json';
+import { APP_IDS, type AppId, type AppState } from '../core/types';
 import { isSymbolVisible } from './photoData';
 
 type CompletionKind = 'cave-photo-opened' | 'cave-symbol-visible';
@@ -42,6 +43,12 @@ export type TaskGuide = Readonly<{
 
 const document = taskGuidesDocument as TaskGuideDocument;
 const CAVE_PHOTO_ID = 'IMG_A1_H_003';
+const flags = (flagsDocument as { items: { id: string }[] }).items;
+
+/** 桌面提示不得代替玩家给出第二幕答案。 */
+const ACT2_GUIDE_FORBIDDEN_TERMS = ['黑补母', '补母志', '以有余补不足'];
+/** T02、T03 只给步骤提示，不伪造桌面 App 入口。 */
+const ACT2_HINT_ONLY_GUIDE_IDS = ['GUIDE_A2_T02_001', 'GUIDE_A2_T03_001'];
 
 const actionLabels: Record<AppId, string> = {
   wechat: '打开微信',
@@ -69,6 +76,31 @@ const isGuideAvailable = (guide: TaskGuideDefinition, state: AppState): boolean 
   && guide.prerequisiteFlags.every((flagId) => hasFlag(state, flagId))
   && !guide.completionFlags.every((flagId) => hasFlag(state, flagId))
 );
+
+export function validateTaskGuideData(): void {
+  if (document.items.length === 0) throw new Error('桌面任务引导缺少条目。');
+  const ids = new Set<string>();
+  for (const guide of document.items) {
+    if (!guide.id || ids.has(guide.id)) throw new Error(`桌面任务引导 ID 无效：${guide.id}`);
+    ids.add(guide.id);
+    if (!guide.phases.length || !guide.completionFlags.length || !guide.summary || !guide.steps.length) throw new Error(`桌面任务引导字段无效：${guide.id}`);
+    if (!Array.isArray(guide.prerequisiteFlags)) throw new Error(`桌面任务引导前置字段无效：${guide.id}`);
+    const referencedFlagIds = [...guide.prerequisiteFlags, ...guide.completionFlags, ...guide.steps.flatMap((step) => (step.completionFlag ? [step.completionFlag] : []))];
+    for (const flagId of referencedFlagIds) if (!flags.some((flag) => flag.id === flagId)) throw new Error(`${guide.id} 引用了未登记 Flag：${flagId}`);
+    for (const step of guide.steps) {
+      if (!step.label) throw new Error(`${guide.id} 缺少步骤文案。`);
+      if (step.appId && !APP_IDS.includes(step.appId)) throw new Error(`${guide.id} 引用了未登记应用：${step.appId}`);
+    }
+    if (guide.id.startsWith('GUIDE_A2_')) {
+      const text = [guide.summary, ...guide.steps.map((step) => step.label)].join('\n');
+      for (const term of ACT2_GUIDE_FORBIDDEN_TERMS) if (text.includes(term)) throw new Error(`${guide.id} 泄露了第二幕答案：${term}`);
+      if (ACT2_HINT_ONLY_GUIDE_IDS.includes(guide.id) && guide.steps.some((step) => step.appId)) throw new Error(`${guide.id} 不得伪造桌面 App 入口。`);
+    }
+  }
+  const act2T01 = document.items.find((guide) => guide.id === 'GUIDE_A2_T01_001');
+  if (!act2T01?.steps.some((step) => step.appId === 'browser')) throw new Error('GUIDE_A2_T01_001 必须提供浏览器入口。');
+}
+validateTaskGuideData();
 
 /** Returns the first unfinished guide in the frozen first-act desktop sequence. */
 export function getCurrentTaskGuide(state: AppState): TaskGuide | null {
