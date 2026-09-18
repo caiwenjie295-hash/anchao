@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -69,7 +69,7 @@ export interface PhotosState {
 }
 
 export interface AppState {
-  schemaVersion: 1;
+  schemaVersion: 2;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -79,6 +79,36 @@ export interface AppState {
     notepad: NotepadState;
     scene: SceneState;
     photos: PhotosState;
+    act2Research: Act2ResearchState;
+  };
+}
+
+export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library';
+
+export type Act2ActiveStage = Exclude<Act2Stage, 'inactive'>;
+
+export type HeibumuNamePart = 'first' | 'middle' | 'last';
+
+/** 第二幕 T02 只允许复用第一幕破庙现场的三张证据图。 */
+export const ACT2_EVIDENCE_ASSET_IDS = ['IMG_A1_I_001', 'IMG_A1_I_002', 'IMG_A1_I_003'] as const;
+
+export const isAct2EvidenceAssetId = (assetId: string): boolean => ACT2_EVIDENCE_ASSET_IDS.some((id) => id === assetId);
+
+export interface Act2ResearchState {
+  stage: Act2Stage;
+  bridge: {
+    talkedElderIds: string[];
+    shownEvidenceAssetIds: string[];
+    heardPhrase: boolean;
+    nameChoices: { first: string | null; middle: string | null; last: string | null };
+  };
+  library: {
+    visitedSectionIds: string[];
+    openedVolumeIds: string[];
+    currentPageId: string | null;
+    bookmarkedPageIds: string[];
+    markedKeywordIds: string[];
+    excerptedEntryIds: string[];
   };
 }
 
@@ -101,6 +131,16 @@ export type AnchaoEventMap = {
   'photo:editor-opened': { photoId: string };
   'photo:adjusted': { photoId: string };
   'photo:symbol-inspected': { photoId: string };
-  'progress:reset': { schemaVersion: 1 };
-  'save:completed': { schemaVersion: 1 };
+  'act2:started': { act: 2 };
+  'act2:stage-changed': { stage: Act2ActiveStage };
+  'act2:elder-talked': { elderId: string };
+  'act2:evidence-shown': { assetId: string };
+  'act2:name-solved': { name: string };
+  'act2:gazette-section-visited': { sectionId: string };
+  'act2:gazette-volume-opened': { volumeId: string };
+  'act2:gazette-page-opened': { pageId: string };
+  'act2:gazette-keyword-marked': { keywordId: string };
+  'act2:gazette-entry-excerpted': { entryId: string };
+  'progress:reset': { schemaVersion: 2 };
+  'save:completed': { schemaVersion: 2 };
 };

@@ -1,4 +1,4 @@
-import { APP_IDS, type AppId, type AppState, type Bounds, type DesktopWindow } from './types';
+import { APP_IDS, type Act2ResearchState, type AppId, type AppState, type Bounds, type DesktopWindow } from './types';
 import { initiallyStarredMailIds } from '../data/mailData';
 
 const initialBounds: Record<AppId, Bounds> = {
@@ -20,8 +20,26 @@ export const createDefaultWindow = (appId: AppId, zIndex: number): DesktopWindow
   zIndex,
 });
 
+export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
+  stage: 'inactive',
+  bridge: {
+    talkedElderIds: [],
+    shownEvidenceAssetIds: [],
+    heardPhrase: false,
+    nameChoices: { first: null, middle: null, last: null },
+  },
+  library: {
+    visitedSectionIds: [],
+    openedVolumeIds: [],
+    currentPageId: null,
+    bookmarkedPageIds: [],
+    markedKeywordIds: [],
+    excerptedEntryIds: [],
+  },
+});
+
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 1,
+  schemaVersion: 2,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,
@@ -35,5 +53,6 @@ export const createDefaultState = (): AppState => ({
     notepad: { userText: '', autoEntryIds: [] },
     scene: { journeyStarted: false, currentSceneId: null, visitedSceneIds: [], inspectedHotspotIds: [], capturedPhotoIds: [] },
     photos: { activePhotoId: null, openedPhotoIds: [], adjustments: {}, zoomByPhotoId: {}, inspectedSymbolPhotoIds: [] },
+    act2Research: createDefaultAct2ResearchState(),
   },
 });
