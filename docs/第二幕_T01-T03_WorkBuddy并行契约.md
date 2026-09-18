@@ -138,7 +138,7 @@ act2:gazette-entry-excerpted
 | 内容 | 数据入口 | ID 范围 |
 | --- | --- | --- |
 | T01 页面/查询 | 既有 `data/browser_pages.json`、`data/search_queries.json` | `PAGE_A2_T01_001+`、`QUERY_A2_T01_001+` |
-| T01 笔记 | `data/notes.json` | `NOTE_A2_T01_001`、`NOTE_A2_T01_002` |
+| T01–T03 笔记 | `data/notes.json`（由 WB-0002 统一登记） | `NOTE_A2_T01_001`、`NOTE_A2_T01_002`、`NOTE_A2_T02_001`、`NOTE_A2_T02_002`、`NOTE_A2_T03_001` |
 | T02 老人与对话 | 新建 `data/act2_bridge.json` | `ELDER_A2_T02_001+`、`DIALOG_A2_T02_001+` |
 | T03 目录/卷册/页面 | 新建 `data/act2_library.json` | `SECTION_A2_T03_001+`、`VOLUME_A2_T03_001+`、`PAGE_A2_T03_001+` |
 | 第二幕资源空位 | `data/images.json` 由最终集成任务登记 | `IMG_A2_T02_001+`、`IMG_A2_T03_001+`，`file: null` |
