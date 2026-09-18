@@ -81,16 +81,75 @@ describe('act2 desktop task guides', () => {
     expect(library?.steps.every((step) => step.appId === undefined)).toBe(true);
   });
 
+  it('keeps T02 visible until the county-record hint is written', () => {
+    const solved = act2State({
+      FLAG_A1_COMPLETE: true,
+      FLAG_A2_WEB_SEARCH_FAILED: true,
+      FLAG_A2_OFFLINE_RESEARCH_NEEDED: true,
+      FLAG_A2_ELDER_PHOTO_SHOWN: true,
+      FLAG_A2_HEIBUMU_AUDIO_HEARD: true,
+      FLAG_A2_HEIBUMU_NAME_SOLVED: true,
+    }, 'A2_T02', 'bridge');
+    const guide = getCurrentTaskGuide(solved);
+    expect(guide).toMatchObject({ id: 'GUIDE_A2_T02_001', completedCount: 3, totalCount: 4 });
+    expect(guide?.steps.map((step) => step.complete)).toEqual([true, true, true, false]);
+    expect(guide?.steps.map((step) => step.current)).toEqual([false, false, false, true]);
+
+    solved.game.flags.FLAG_A2_COUNTY_RECORD_HINT_KNOWN = true;
+    expect(getCurrentTaskGuide(solved)).toBeNull();
+  });
+
+  it('completes the T03 steps in order as the library flags arrive', () => {
+    const base = {
+      FLAG_A1_COMPLETE: true,
+      FLAG_A2_WEB_SEARCH_FAILED: true,
+      FLAG_A2_OFFLINE_RESEARCH_NEEDED: true,
+      FLAG_A2_COUNTY_RECORD_HINT_KNOWN: true,
+    };
+    const entered = getCurrentTaskGuide(act2State({ ...base, FLAG_A2_LIBRARY_ENTERED: true }, 'A2_T03', 'library'));
+    expect(entered).toMatchObject({ id: 'GUIDE_A2_T03_001', completedCount: 1 });
+    expect(entered?.steps.map((step) => step.complete)).toEqual([true, false, false, false]);
+    expect(entered?.steps.map((step) => step.current)).toEqual([false, true, false, false]);
+    expect(entered?.steps[0].label).toBe('进入县图书馆的地方志阅览室');
+
+    const volume = getCurrentTaskGuide(act2State({ ...base, FLAG_A2_LIBRARY_ENTERED: true, FLAG_A2_LOCAL_GAZETTE_FOUND: true }, 'A2_T03', 'library'));
+    expect(volume?.steps.map((step) => step.complete)).toEqual([true, true, false, false]);
+    expect(volume?.steps.map((step) => step.current)).toEqual([false, false, true, false]);
+    expect(volume?.steps[1].label).toBe('在目录里缩小范围，找到相关卷册');
+
+    const done = getCurrentTaskGuide(act2State({
+      ...base,
+      FLAG_A2_LIBRARY_ENTERED: true,
+      FLAG_A2_LOCAL_GAZETTE_FOUND: true,
+      FLAG_A2_BUMUZHI_FOUND: true,
+      FLAG_A2_BUMU_RULE_BASIC_KNOWN: true,
+    }, 'A2_T03', 'library'));
+    expect(done).toBeNull();
+  });
+
   it('never spells the answer in act-two guide text', () => {
-    for (const phase of ['A2_T01', 'A2_T02', 'A2_T03'] as const) {
-      const guide = getCurrentTaskGuide(act2State({
+    const states = [
+      act2State({ FLAG_A1_COMPLETE: true }, 'A2_T01', 'search'),
+      act2State({
+        FLAG_A1_COMPLETE: true,
+        FLAG_A2_WEB_SEARCH_FAILED: true,
+        FLAG_A2_OFFLINE_RESEARCH_NEEDED: true,
+        FLAG_A2_ELDER_PHOTO_SHOWN: true,
+        FLAG_A2_HEIBUMU_AUDIO_HEARD: true,
+        FLAG_A2_HEIBUMU_NAME_SOLVED: true,
+      }, 'A2_T02', 'bridge'),
+      act2State({
         FLAG_A1_COMPLETE: true,
         FLAG_A2_WEB_SEARCH_FAILED: true,
         FLAG_A2_OFFLINE_RESEARCH_NEEDED: true,
         FLAG_A2_COUNTY_RECORD_HINT_KNOWN: true,
-      }, phase));
-      if (!guide) continue;
-      expect(`${guide.summary}${guide.steps.map((step) => step.label).join('')}`).not.toMatch(/黑补母|补母志|以有余补不足/);
+        FLAG_A2_LIBRARY_ENTERED: true,
+      }, 'A2_T03', 'library'),
+    ];
+    for (const state of states) {
+      const guide = getCurrentTaskGuide(state);
+      expect(guide).not.toBeNull();
+      expect(`${guide?.summary ?? ''}${guide?.steps.map((step) => step.label).join('')}`).not.toMatch(/黑补母|补母志|以有余补不足/);
     }
   });
 });
