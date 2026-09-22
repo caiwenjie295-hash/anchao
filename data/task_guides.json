@@ -94,6 +94,18 @@
         { "label": "翻到记着这件事的那一页", "completionFlag": "FLAG_A2_BUMUZHI_FOUND" },
         { "label": "标记关键词，并摘录到记事本", "completionFlag": "FLAG_A2_BUMU_RULE_BASIC_KNOWN" }
       ]
+    },
+    {
+      "id": "GUIDE_A2_T04_001",
+      "phases": ["A2_T04"],
+      "prerequisiteFlags": ["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],
+      "completionFlags": ["FLAG_A2_TRANSFER_RULE_INFERRED"],
+      "summary": "读完卷末的旧录，把材料整理出来",
+      "steps": [
+        { "label": "读完三篇夹在卷末的志异", "completionKind": "tales-read" },
+        { "label": "把三篇材料逐一记进记事本", "completionFlag": "FLAG_A2_TALES_SORTED" },
+        { "label": "确认你从材料里看见的问题", "completionFlag": "FLAG_A2_TRANSFER_RULE_INFERRED" }
+      ]
     }
   ]
 }

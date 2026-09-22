@@ -2,6 +2,7 @@ import { StateManager, stateManager as defaultManager } from '../../core/stateMa
 import type { Act2ActiveStage } from '../../core/types';
 import { BridgeInvestigation } from './BridgeInvestigation';
 import { LibraryResearch } from './LibraryResearch';
+import { TalesInvestigation } from './TalesInvestigation';
 
 /** 桥头场景通用外层的资源空位：`file: null`，只用克制 CSS 占位。 */
 export const ACT2_BRIDGE_PLACEHOLDER_ASSET_ID = 'IMG_A2_T02_001';
@@ -10,6 +11,7 @@ export const ACT2_BRIDGE_PLACEHOLDER_ASSET_ID = 'IMG_A2_T02_001';
 export const ACT2_RESUME_LABELS = {
   bridge: '继续桥头调查',
   library: '继续地方志调查',
+  tales: '继续查阅三篇志异',
 } as const;
 
 export interface Act2ExperienceProps {
@@ -28,6 +30,7 @@ export interface Act2ExperienceProps {
  */
 export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene, manager = defaultManager }: Act2ExperienceProps) {
   const isBridge = stage === 'bridge';
+  const isLibrary = stage === 'library';
   const placeholderAssetId = isBridge ? ACT2_BRIDGE_PLACEHOLDER_ASSET_ID : undefined;
 
   if (sceneOpen) {
@@ -39,7 +42,7 @@ export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene
       >
         {isBridge
           ? <BridgeInvestigation manager={manager} onReturnDesktop={onDismissScene} />
-          : <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} />}
+          : isLibrary ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} /> : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
       </div>
     );
   }

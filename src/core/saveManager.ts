@@ -3,10 +3,10 @@ import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow
 import { sceneById } from '../data/sceneData';
 
 export const SAVE_KEY = 'anchao.save.v1';
-/** schema 1 为第一幕存档，schema 2 增加第二幕 `act2Research`；两者都必须可加载。 */
-const supportedSchemaVersions = [1, 2];
+/** schema 1 为第一幕，schema 2 增加第二幕，schema 3 增加 T04 志异调查；都必须可加载。 */
+const supportedSchemaVersions = [1, 2, 3];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
-const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library'];
+const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
@@ -44,6 +44,7 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   if (!isRecord(candidate)) return fallback;
   const bridge = isRecord(candidate.bridge) ? candidate.bridge : null;
   const library = isRecord(candidate.library) ? candidate.library : null;
+  const tales = isRecord(candidate.tales) ? candidate.tales : null;
   const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
   return {
     stage: validAct2Stages.includes(candidate.stage as Act2Stage) ? candidate.stage as Act2Stage : fallback.stage,
@@ -64,6 +65,13 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
       bookmarkedPageIds: library ? safeStringIds(library.bookmarkedPageIds) : [],
       markedKeywordIds: library ? safeStringIds(library.markedKeywordIds) : [],
       excerptedEntryIds: library ? safeStringIds(library.excerptedEntryIds) : [],
+    },
+    tales: {
+      readTaleIds: tales ? safeStringIds(tales.readTaleIds) : [],
+      collectedTaleIds: tales ? safeStringIds(tales.collectedTaleIds) : [],
+      placedCardIds: tales ? safeStringIds(tales.placedCardIds) : [],
+      sorted: tales?.sorted === true,
+      inferenceAcknowledged: tales?.inferenceAcknowledged === true,
     },
   };
 };
@@ -91,7 +99,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     game: {
       act: finiteNumber(game.act, fallback.game.act),
       phase: typeof game.phase === 'string' ? game.phase : fallback.game.phase,

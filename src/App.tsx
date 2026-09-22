@@ -20,8 +20,8 @@ import './imageAssets.css';
 
 type Act2SceneStage = Exclude<Act2ActiveStage, 'search'>;
 
-/** 只有 bridge / library 会接管全屏场景；search 仍是普通桌面。 */
-const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library';
+/** 只有 bridge / library / tales 会接管全屏场景；search 仍是普通桌面。 */
+const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales';
 
 export default function App() {
   const state = useSyncExternalStore(stateManager.subscribe, stateManager.getState, stateManager.getState);

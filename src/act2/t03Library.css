@@ -372,6 +372,7 @@
 
 .act2-library__footer { display: flex; justify-content: flex-end; }
 .act2-library__return { min-height: 42px; padding: 0 20px; font-size: 13px; }
+.act2-library__continue-tales { min-height: 44px; margin-top: 14px; padding: 0 16px; border: 1px solid rgba(120, 98, 68, .55); border-radius: 3px; color: var(--act2-library-ink); background: #dac69b; cursor: pointer; font: inherit; font-size: 13px; }
 
 /* ── 断点 ──────────────────────────────────────────────────────────────────
    行模板在根级已是内容驱动，这里只切换主体列数：

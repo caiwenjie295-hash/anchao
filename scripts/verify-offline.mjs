@@ -9,6 +9,7 @@ const html = await readFile('暗潮.html', 'utf8');
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
 const errors = [];
 const requests = [];
+const offlineRuns = Math.max(1, Math.min(2, Number.parseInt(process.env.ANCHAO_OFFLINE_RUNS ?? '2', 10) || 2));
 const virtualConsole = new VirtualConsole();
 virtualConsole.on('jsdomError', (error) => errors.push(error.message));
 const settle = () => new Promise((resolve) => setTimeout(resolve, 30));
@@ -213,7 +214,7 @@ async function advanceAct2() {
   assert.equal(state().game.flags.FLAG_A2_LOCAL_GAZETTE_FOUND, true);
   await click('[data-volume-id="VOLUME_A2_T03_002"]');
 
-  // 只能逐叶到达目标页：页序不是可激活控件。
+  // 只能逐页到达目标页：页序不是可激活控件。
   assert.equal(document().querySelectorAll('.act2-library__leaves button, .act2-library__leaves a, [data-page-id][role="button"]').length, 0);
   await click('.act2-library__next');
   assert.equal(state().modules.act2Research.library.currentPageId, 'PAGE_A2_T03_004');
@@ -235,11 +236,34 @@ async function advanceAct2() {
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T03_001'));
   assert.match(query('.act2-library__conclusion').textContent, /缺什么，就用某种东西补什么。/);
 
-  // 完成态停留，不出现 T04。桌面仍留在 DOM 中（被 aria-hidden），因此只检查第二幕场景与存档。
+  // 完成态先停留，桌面仍留在 DOM 中（被 aria-hidden），因此只检查第二幕场景与存档。
   const sceneText = query('.act2-library').textContent;
   for (const term of ['记忆', '身份', '性格', '转移', '案例一']) assert.equal(sceneText.includes(term), false, `T03 must not show T04 term: ${term}`);
   assert.equal(sceneText.includes('T04'), false);
   for (const term of ['记忆', '身份', '性格', '转移']) assert.equal(save().includes(term), false, `T03 must not persist T04 term: ${term}`);
+
+  // T04：显式进入三篇志异，阅读、收集、整理并确认问题。
+  await click('.act2-library__continue-tales');
+  assert.equal(state().modules.act2Research.stage, 'tales');
+  for (const title of ['石工补指', '书生遗事', '哑女借声']) {
+    await textButton(title, '.act2-tales__record');
+    await click('.act2-tales__read');
+    await click('.act2-tales__collect');
+  }
+  const columns = ['人物', '缺失', '进食', '获得与异变'];
+  for (let index = 1; index <= 12; index += 1) {
+    await click(`.act2-tales__card:nth-of-type(1)`);
+    const card = query('.act2-tales__card.is-selected');
+    const column = columns[Math.floor((index - 1) % 4)];
+    const heading = [...document().querySelectorAll('.act2-tales__column h3')].find((item) => item.textContent === column);
+    assert.ok(heading, `Missing sorting column: ${column}`);
+    heading.parentElement.querySelector('.act2-tales__drop').click(); await settle();
+    assert.equal(card.isConnected, false);
+  }
+  await click('.act2-tales__finish-sort');
+  await textButton('记下这个问题', '.act2-tales__inference button');
+  assert.equal(state().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T04_004'));
 }
 
 async function reset() {
@@ -263,6 +287,7 @@ async function reset() {
     stage: 'inactive',
     bridge: { talkedElderIds: [], shownEvidenceAssetIds: [], heardPhrase: false, nameChoices: { first: null, middle: null, last: null } },
     library: { visitedSectionIds: [], openedVolumeIds: [], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: [], excerptedEntryIds: [] },
+    tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
   });
   await mount(save());
   assert.equal(document().querySelectorAll('.app-window').length, 0);
@@ -274,24 +299,24 @@ try {
   assert.equal(document().querySelectorAll('script[src], link[href]').length, 0);
   for (const image of document().querySelectorAll('svg image')) assert.match(image.getAttribute('href'), /^data:image\/png;base64,/);
   assert.equal(document().querySelector('script[type="module"]'), null);
-  for (let run = 1; run <= 2; run++) {
+  for (let run = 1; run <= offlineRuns; run++) {
     await investigate(); await solvePhoto();
     await mount(save());
     assert.ok(query('.act1-ending'));
     if (run === 1) {
       await advanceAct2();
       // 返回桌面 ↔ 继续入口不丢进度。
-      await click('.act2-library__return');
+      await click('.act2-tales__return');
       assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'false');
-      await textButton('继续地方志调查', '.act2-experience__continue');
-      assert.ok(query('.act2-library'));
-      assert.deepEqual(state().modules.act2Research.library.excerptedEntryIds, ['ENTRY_A2_T03_001']);
+      await textButton('继续查阅三篇志异', '.act2-experience__continue');
+      assert.ok(query('.act2-tales'));
+      assert.equal(state().modules.act2Research.tales.inferenceAcknowledged, true);
       // 第二幕阶段存档重载后从当前阶段恢复，并再次自动打开场景。
       await mount(save());
-      assert.equal(state().modules.act2Research.stage, 'library');
-      assert.ok(query('.act2-library'), 'reload must resume the second-act stage');
+      assert.equal(state().modules.act2Research.stage, 'tales');
+      assert.ok(query('.act2-tales'), 'reload must resume the second-act stage');
       assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'true');
-      await click('.act2-library__return');
+      await click('.act2-tales__return');
     }
     await reset();
     console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T03' : ''}`);

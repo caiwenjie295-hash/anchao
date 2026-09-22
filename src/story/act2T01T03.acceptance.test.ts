@@ -292,7 +292,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(library().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
   });
 
-  it('restores a schema 2 save mid-second-act and clears everything on reset', async () => {
+  it('restores a migrated second-act save mid-second-act and clears everything on reset', async () => {
     await reachLibrary();
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
     await click(pick('[data-volume-id="VOLUME_A2_T03_002"]'));
@@ -300,7 +300,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await click(pick('.act2-library__next'));
 
     const saved = loadState();
-    expect(saved.schemaVersion).toBe(2);
+    expect(saved.schemaVersion).toBe(3);
     expect(saved.game.act).toBe(2);
     expect(saved.modules.act2Research.stage).toBe('library');
     expect(saved.modules.act2Research.library.currentPageId).toBe('PAGE_A2_T03_005');
