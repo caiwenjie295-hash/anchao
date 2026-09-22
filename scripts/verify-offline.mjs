@@ -319,7 +319,7 @@ try {
       await click('.act2-tales__return');
     }
     await reset();
-    console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T03' : ''}`);
+    console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T04' : ''}`);
   }
   assert.deepEqual(requests, []);
   assert.deepEqual(errors, []);

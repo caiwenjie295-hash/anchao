@@ -127,6 +127,18 @@ describe('act2 desktop task guides', () => {
     expect(done).toBeNull();
   });
 
+  it('tracks T04 reading and collection separately from sorting', () => {
+    const base = act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_BUMU_RULE_BASIC_KNOWN: true }, 'A2_T04', 'tales');
+    expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([false, false, false]);
+    base.modules.act2Research.tales.readTaleIds = ['TALE_A2_T04_001', 'TALE_A2_T04_002', 'TALE_A2_T04_003'];
+    expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([true, false, false]);
+    base.modules.act2Research.tales.collectedTaleIds = [...base.modules.act2Research.tales.readTaleIds];
+    expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([true, true, false]);
+    base.game.flags.FLAG_A2_TALES_SORTED = true;
+    base.game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true;
+    expect(getCurrentTaskGuide(base)).toBeNull();
+  });
+
   it('never spells the answer in act-two guide text', () => {
     const states = [
       act2State({ FLAG_A1_COMPLETE: true }, 'A2_T01', 'search'),

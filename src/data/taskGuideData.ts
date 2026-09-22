@@ -3,7 +3,7 @@ import flagsDocument from '../../data/flags.json';
 import { APP_IDS, type AppId, type AppState } from '../core/types';
 import { isSymbolVisible } from './photoData';
 
-type CompletionKind = 'cave-photo-opened' | 'cave-symbol-visible' | 'tales-read';
+type CompletionKind = 'cave-photo-opened' | 'cave-symbol-visible' | 'tales-read' | 'tales-collected';
 
 type TaskGuideStepDefinition = {
   label: string;
@@ -69,6 +69,7 @@ const isStepComplete = (step: TaskGuideStepDefinition, state: AppState): boolean
     return adjustment !== undefined && isSymbolVisible(adjustment);
   }
   if (step.completionKind === 'tales-read') return state.modules.act2Research.tales.readTaleIds.length === 3;
+  if (step.completionKind === 'tales-collected') return state.modules.act2Research.tales.collectedTaleIds.length === 3;
   return false;
 };
 

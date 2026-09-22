@@ -103,7 +103,7 @@
       "summary": "读完卷末的旧录，把材料整理出来",
       "steps": [
         { "label": "读完三篇夹在卷末的志异", "completionKind": "tales-read" },
-        { "label": "把三篇材料逐一记进记事本", "completionFlag": "FLAG_A2_TALES_SORTED" },
+        { "label": "把三篇材料逐一记进记事本", "completionKind": "tales-collected" },
         { "label": "确认你从材料里看见的问题", "completionFlag": "FLAG_A2_TRANSFER_RULE_INFERRED" }
       ]
     }

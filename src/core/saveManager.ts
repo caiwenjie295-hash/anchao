@@ -1,6 +1,7 @@
 import { APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
 import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow } from './defaultState';
 import { sceneById } from '../data/sceneData';
+import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1 为第一幕，schema 2 增加第二幕，schema 3 增加 T04 志异调查；都必须可加载。 */
@@ -46,6 +47,10 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const library = isRecord(candidate.library) ? candidate.library : null;
   const tales = isRecord(candidate.tales) ? candidate.tales : null;
   const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
+  const readTaleIds = tales ? safeStringIds(tales.readTaleIds).filter((id) => taleById.has(id)) : [];
+  const collectedTaleIds = tales ? safeStringIds(tales.collectedTaleIds).filter((id) => readTaleIds.includes(id)) : [];
+  const placedCardIds = tales ? safeStringIds(tales.placedCardIds).filter((id) => taleCardById.has(id)) : [];
+  const sorted = tales?.sorted === true && placedCardIds.length === taleCards.length;
   return {
     stage: validAct2Stages.includes(candidate.stage as Act2Stage) ? candidate.stage as Act2Stage : fallback.stage,
     bridge: {
@@ -67,11 +72,11 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
       excerptedEntryIds: library ? safeStringIds(library.excerptedEntryIds) : [],
     },
     tales: {
-      readTaleIds: tales ? safeStringIds(tales.readTaleIds) : [],
-      collectedTaleIds: tales ? safeStringIds(tales.collectedTaleIds) : [],
-      placedCardIds: tales ? safeStringIds(tales.placedCardIds) : [],
-      sorted: tales?.sorted === true,
-      inferenceAcknowledged: tales?.inferenceAcknowledged === true,
+      readTaleIds,
+      collectedTaleIds,
+      placedCardIds,
+      sorted,
+      inferenceAcknowledged: sorted && tales?.inferenceAcknowledged === true,
     },
   };
 };

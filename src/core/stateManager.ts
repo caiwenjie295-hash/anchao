@@ -4,7 +4,7 @@ import { loadState, saveState } from './saveManager';
 import { isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
-import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
+import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
 
 type StateListener = () => void;
 
@@ -412,8 +412,7 @@ export class StateManager {
     const id = taleId.trim();
     if (this.act2Research.stage !== 'tales' || !id || !taleById.has(id) || tales.readTaleIds.includes(id)) return;
     this.commitAct2Research({ tales: { readTaleIds: [...tales.readTaleIds, id] } });
-    const index = [...taleById.keys()].indexOf(id) + 1;
-    this.setFlag(`FLAG_A2_TALE_0${index}_READ`, true);
+    this.setFlag(taleById.get(id)?.readFlagId ?? '', true);
     this.bus.emit('act2:tale-read', { taleId: id });
   }
 
@@ -422,6 +421,7 @@ export class StateManager {
     const id = taleId.trim();
     if (this.act2Research.stage !== 'tales' || !id || !taleById.has(id) || !tales.readTaleIds.includes(id) || tales.collectedTaleIds.includes(id)) return;
     this.commitAct2Research({ tales: { collectedTaleIds: [...tales.collectedTaleIds, id] } });
+    this.addNotepadAutoEntry(taleNoteIdById.get(id) ?? '');
     this.bus.emit('act2:tale-collected', { taleId: id });
   }
 

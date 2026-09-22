@@ -375,11 +375,14 @@ describe('StateManager second-act foundation', () => {
     manager.setFlag('FLAG_A2_BUMU_RULE_BASIC_KNOWN', true);
     manager.setAct2Stage('tales');
     manager.readAct2Tale('TALE_A2_T04_001'); manager.readAct2Tale('TALE_A2_T04_001');
+    manager.collectAct2Tale('TALE_A2_T04_002');
     manager.collectAct2Tale('TALE_A2_T04_001'); manager.collectAct2Tale('TALE_A2_T04_001');
     expect(manager.getState().modules.act2Research.tales.readTaleIds).toEqual(['TALE_A2_T04_001']);
     expect(manager.getState().modules.act2Research.tales.collectedTaleIds).toEqual(['TALE_A2_T04_001']);
+    expect(manager.getState().modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T04_001']);
     manager.readAct2Tale('TALE_A2_T04_002'); manager.readAct2Tale('TALE_A2_T04_003');
     manager.collectAct2Tale('TALE_A2_T04_002'); manager.collectAct2Tale('TALE_A2_T04_003');
+    expect(manager.getState().modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T04_001', 'NOTE_A2_T04_002', 'NOTE_A2_T04_003']);
     for (let index = 1; index <= 12; index += 1) manager.placeAct2TaleCard(`CARD_A2_T04_${String(index).padStart(3, '0')}`);
     manager.finishAct2TaleSorting(); manager.finishAct2TaleSorting();
     manager.acknowledgeAct2TransferInference(); manager.acknowledgeAct2TransferInference();
