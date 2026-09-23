@@ -308,7 +308,7 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
   .wechat-chat__messages { padding: 16px 10px; }
 }
 @media (max-width: 1100px) {
-  .app-window[aria-label="浏览器 窗口"] {
+  .app-window:has(.browser-app) {
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
