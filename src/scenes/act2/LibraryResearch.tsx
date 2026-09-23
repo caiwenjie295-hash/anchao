@@ -43,7 +43,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
   const library = state.modules.act2Research.library;
   const flags = state.game.flags;
   const [zoom, setZoom] = useState(LIBRARY_MIN_ZOOM);
-  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(() => library.visitedSectionIds.includes(libraryCorrectSectionId) ? libraryCorrectSectionId : null);
 
   const enteredFlag = flags[libraryFlagIds.entered] === true;
   const gazetteFlag = flags[libraryFlagIds.gazetteFound] === true;
@@ -148,6 +148,8 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                 <h3>{activeSection.name}</h3>
                 <p>{activeSection.summary}</p>
               </>
+            ) : correctSectionVisited ? (
+              <><h3>地方传说</h3><p>{librarySections.find((section) => section.id === libraryCorrectSectionId)?.summary}</p></>
             ) : (
               <p>选一门类，先看目录怎么说。</p>
             )}
@@ -183,11 +185,11 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
         <section className="act2-library__reader" aria-labelledby="act2-library-reader-title">
           <h2 id="act2-library-reader-title" className="act2-library__subtitle">卷册</h2>
           {!currentPage ? (
-            <p className="act2-library__reader-idle">从架上取一册，逐叶翻。</p>
+            <p className="act2-library__reader-idle">从架上取一册，逐页翻。</p>
           ) : (
             <>
               <p className="act2-library__reader-instruction">{librarySceneCopy.readerInstruction}</p>
-              {/* 静态页序：仅作进度展示，未到达的页不得是可激活控件，翻页只能经上一叶/下一叶。 */}
+              {/* 静态页序：仅作进度展示，未到达的页不得是可激活控件，翻页只能经上一页/下一页。 */}
               <ol className="act2-library__leaves" aria-label="卷内页序" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
                 {volumePages.map((page) => {
                   const current = page.id === currentPage.id;
@@ -226,7 +228,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                     disabled={!prevPage}
                     onClick={() => prevPage && manager.openGazettePage(prevPage.id)}
                   >
-                    上一叶
+                    上一页
                   </button>
                   <button
                     type="button"
@@ -234,7 +236,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                     disabled={!nextPage}
                     onClick={() => nextPage && manager.openGazettePage(nextPage.id)}
                   >
-                    下一叶
+                    下一页
                   </button>
                 </div>
                 <div className="act2-library__tools">
@@ -318,6 +320,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
             <h2>{libraryCompletion.title}</h2>
             <p className="act2-library__conclusion-line">{libraryCompletion.conclusion}</p>
             <p className="act2-library__conclusion-detail">{libraryCompletion.detail}</p>
+            <button type="button" className="act2-library__continue-tales" onClick={() => manager.setAct2Stage('tales')}>继续查阅三篇志异</button>
           </div>
         ) : (
           <p className="act2-library__ambience">{librarySceneCopy.ambience}</p>

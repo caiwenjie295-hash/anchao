@@ -1,20 +1,36 @@
-/* 第二幕 T03：县图书馆地方志检索。独立 .act2-library* 作用域，克制的旧纸张 / 暗淡灯光占位视觉。 */
+/* 第二幕 T03：县图书馆地方志检索。独立 .act2-library* 作用域。
+   ── 布局模型 ────────────────────────────────────────────────────────────────
+   根级 .act2-library 是唯一的主纵向滚动容器（position: fixed; inset: 0; overflow: auto），
+   四个直接子行（标题 / 主体 / 完成结论 / 返回按钮）全部内容驱动：
+     grid-template-rows: auto auto auto auto; align-content: start;
+   任何断点都不再使用 minmax(0, 1fr) 固定主体行，从根本上消除
+   “阅读器内容溢出行高 → 覆盖完成结论与返回按钮”的重叠缺陷。
+   主体内部：≥1201px 三栏（目录 / 卷册 / 阅读器），≤1024px 双栏（阅读器独占下一行），
+   ≤720px 单列文档流；全部高度由内容决定，纵向滚动统一交给根容器。
+   ── 视觉方向 ────────────────────────────────────────────────────────────────
+   安静、暗淡灯光的旧阅览室桌面 + 纸书质感的方志页面：
+   正文页用米色纸张、细密纸纹、刊头双线、首行缩进与两端对齐的中文书籍排版；
+   完成结论落在一张纸面摘录卡上，呼应“从书里抄下来的一句”。全部为克制 CSS，无远程资源。 */
+
 .act2-library {
   --act2-library-desk: #17140f;
   --act2-library-desk-2: #24201a;
-  --act2-library-paper: #ece0c6;
-  --act2-library-paper-2: #e2d4b6;
-  --act2-library-ink: #33291d;
+  --act2-library-paper: #efe4cb;
+  --act2-library-paper-2: #e4d5b5;
+  --act2-library-ink: #32291c;
   --act2-library-ink-soft: #6b5c46;
   --act2-library-lamp: rgba(240, 214, 158, .18);
   --act2-library-line: rgba(120, 98, 68, .5);
   --act2-library-muted: #b8a88c;
+  --act2-library-paper-grain: repeating-linear-gradient(0deg, rgba(124, 100, 62, .05) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(124, 100, 62, .04) 0 1px, transparent 1px 4px);
   position: fixed;
   z-index: 12000;
   inset: 0;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
-  gap: clamp(12px, 1.8vw, 20px);
+  grid-template-rows: auto auto auto auto;
+  align-content: start;
+  gap: clamp(14px, 2vw, 22px);
   padding: clamp(14px, 2.4vw, 30px);
   overflow: auto;
   color: var(--act2-library-paper);
@@ -30,6 +46,7 @@
   outline-offset: 2px;
 }
 
+/* 跳转链接是辅助功能入口，不参与主内容排版。 */
 .act2-library__skip {
   position: absolute;
   top: -3rem;
@@ -70,21 +87,21 @@
   line-height: 1.7;
 }
 
+/* ── 主体：三块面板，高度始终由内容决定 ─────────────────────────────────── */
 .act2-library__body {
   display: grid;
   grid-template-columns: minmax(180px, .8fr) minmax(180px, .9fr) minmax(320px, 2fr);
   gap: clamp(12px, 1.6vw, 22px);
-  min-height: 0;
+  min-width: 0;
 }
 
 .act2-library__catalog,
 .act2-library__shelf,
 .act2-library__reader {
-  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-height: 0;
+  gap: 12px;
+  min-width: 0;
   padding: clamp(12px, 1.4vw, 18px);
   border: 1px solid rgba(196, 176, 138, .22);
   border-radius: 3px 5px 4px 3px;
@@ -112,6 +129,7 @@
 }
 .act2-library__hint { color: #d9c79f; }
 
+/* ── 目录：卡片目录抽屉 ─────────────────────────────────────────────────── */
 .act2-library__sections {
   display: grid;
   gap: 6px;
@@ -121,7 +139,7 @@
 }
 .act2-library__section {
   width: 100%;
-  min-height: 38px;
+  min-height: 40px;
   padding: 8px 11px;
   border: 1px solid var(--act2-library-line);
   border-radius: 2px 4px 3px 2px;
@@ -162,6 +180,7 @@
     linear-gradient(180deg, rgba(126, 104, 70, .34), rgba(30, 26, 20, .5));
 }
 
+/* ── 卷册：书脊卡片 ─────────────────────────────────────────────────────── */
 .act2-library__volumes {
   display: grid;
   gap: 9px;
@@ -191,13 +210,15 @@
 .act2-library__volume-title { font-size: 13px; letter-spacing: .06em; }
 .act2-library__volume-summary { grid-column: 2; color: var(--act2-library-muted); font-size: 11px; line-height: 1.5; }
 
+/* ── 阅读器 ─────────────────────────────────────────────────────────────── */
 .act2-library__leaves {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 .act2-library__leaf {
-  padding: 6px 10px;
+  min-height: 32px;
+  padding: 5px 10px;
   border: 1px solid var(--act2-library-line);
   border-radius: 2px;
   color: #ddcfae;
@@ -209,33 +230,53 @@
 .act2-library__leaf:hover { border-color: rgba(219, 190, 132, .66); }
 .act2-library__leaf[aria-current="page"] { border-color: rgba(232, 205, 150, .9); color: #201a12; background: var(--act2-library-paper-2); }
 
+/* 方志内页：米色纸面 + 细密纸纹 + 刊头双线，书籍式排版。 */
 .act2-library__page {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 0;
-  padding: clamp(14px, 1.8vw, 26px) clamp(16px, 2vw, 30px);
-  border: 1px solid rgba(120, 98, 68, .5);
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(18px, 2.2vw, 30px) clamp(20px, 3vw, 44px);
+  border: 1px solid rgba(120, 98, 68, .45);
   border-radius: 2px;
   color: var(--act2-library-ink);
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 249, 232, .7), transparent 70%),
-    linear-gradient(174deg, var(--act2-library-paper) 0%, var(--act2-library-paper-2) 100%);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, .32);
+    radial-gradient(ellipse 130% 80% at 50% -12%, rgba(255, 251, 238, .55), transparent 58%),
+    var(--act2-library-paper-grain),
+    linear-gradient(176deg, var(--act2-library-paper) 0%, var(--act2-library-paper-2) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 236, .55),
+    0 18px 40px rgba(0, 0, 0, .38),
+    0 2px 6px rgba(0, 0, 0, .25);
 }
-.act2-library__page-head h3 { margin: 0 0 4px; font-size: clamp(16px, 1.8vw, 22px); font-weight: 600; letter-spacing: .14em; }
+.act2-library__page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding-bottom: 10px;
+  border-bottom: 3px double rgba(107, 92, 70, .5);
+}
+.act2-library__page-head h3 {
+  margin: 0;
+  font-size: clamp(17px, 1.9vw, 23px);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
 .act2-library__page-leaf { margin: 0; color: var(--act2-library-ink-soft); font-size: 11px; letter-spacing: .1em; }
-.act2-library__page-text { line-height: 1.95; }
-.act2-library__page-text p { margin: 0 0 .72em; text-indent: 2em; }
+.act2-library__page-text { line-height: 2.02; }
+.act2-library__page-text p { margin: 0 0 .75em; text-indent: 2em; text-align: justify; }
 .act2-library__page-text p:last-child { margin-bottom: 0; }
 
+/* ── 阅读器工具行 ───────────────────────────────────────────────────────── */
 .act2-library__controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 .act2-library__pager,
 .act2-library__tools { display: flex; align-items: center; gap: 8px; }
@@ -246,7 +287,7 @@
 .act2-library__bookmark,
 .act2-library__excerpt-button,
 .act2-library__return {
-  min-height: 36px;
+  min-height: 38px;
   padding: 0 13px;
   border: 1px solid rgba(196, 176, 138, .5);
   border-radius: 3px;
@@ -272,13 +313,15 @@
 .act2-library__bookmark[aria-pressed="true"] { border-color: rgba(232, 205, 150, .92); color: #201a12; background: var(--act2-library-paper-2); }
 .act2-library__zoom-value { min-width: 3.4em; color: #d9c79f; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 12px; text-align: center; }
 
+/* ── 关键词：贴在案头的批注签 ───────────────────────────────────────────── */
 .act2-library__keywords { display: grid; gap: 8px; }
-.act2-library__keywords-title { margin: 4px 0 0; color: #e3d5b4; font-size: 12px; font-weight: 600; letter-spacing: .14em; }
+.act2-library__keywords-title { margin: 2px 0 0; color: #e3d5b4; font-size: 12px; font-weight: 600; letter-spacing: .14em; }
 .act2-library__keyword-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
 .act2-library__keyword {
   display: grid;
   gap: 4px;
   width: 100%;
+  min-height: 44px;
   padding: 9px 11px;
   border: 1px dashed rgba(196, 176, 138, .46);
   border-radius: 3px;
@@ -295,35 +338,69 @@
 .act2-library__keyword-gloss { color: var(--act2-library-muted); font-size: 11px; line-height: 1.5; }
 .act2-library__keyword-status { margin: 0; color: #d9c79f; font-size: 12px; letter-spacing: .06em; }
 
-.act2-library__excerpt { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
+.act2-library__excerpt { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 2px; }
 .act2-library__excerpt-button { border-color: rgba(226, 197, 138, .72); color: #241d13; background: linear-gradient(180deg, #ecdcb6, #cfb987); font-weight: 600; }
 .act2-library__excerpt-hint { color: var(--act2-library-muted); font-size: 11px; line-height: 1.5; }
 
+/* ── 完成结论：从书里抄下来的一张纸面摘录卡 ────────────────────────────── */
 .act2-library__result { min-height: 62px; }
 .act2-library__ambience { margin: 0; color: rgba(214, 200, 172, .68); font-size: 12px; line-height: 1.6; }
 .act2-library__conclusion {
-  border-left: 2px solid rgba(232, 205, 150, .74);
-  padding: 6px 0 6px 16px;
+  max-width: 620px;
+  padding: 14px 20px 15px;
+  border: 1px solid rgba(120, 98, 68, .45);
+  border-radius: 2px;
+  color: var(--act2-library-ink);
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%, rgba(255, 251, 238, .5), transparent 60%),
+    var(--act2-library-paper-grain),
+    linear-gradient(178deg, var(--act2-library-paper) 0%, var(--act2-library-paper-2) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 236, .5),
+    0 12px 28px rgba(0, 0, 0, .36);
 }
-.act2-library__conclusion h2 { margin: 0 0 6px; color: #f2e6c9; font-size: 13px; font-weight: 600; letter-spacing: .16em; }
-.act2-library__conclusion-line { margin: 0 0 6px; color: #ffedc4; font-size: clamp(17px, 2.2vw, 22px); letter-spacing: .1em; }
-.act2-library__conclusion-detail { max-width: 66ch; margin: 0; color: rgba(224, 211, 184, .82); font-size: 12px; line-height: 1.7; }
+.act2-library__conclusion h2 { margin: 0 0 7px; color: var(--act2-library-ink-soft); font-size: 12px; font-weight: 600; letter-spacing: .2em; }
+.act2-library__conclusion-line {
+  margin: 0 0 7px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(120, 98, 68, .35);
+  color: var(--act2-library-ink);
+  font-size: clamp(17px, 2.2vw, 22px);
+  letter-spacing: .1em;
+}
+.act2-library__conclusion-detail { max-width: 34em; margin: 0; color: var(--act2-library-ink-soft); font-size: 12px; line-height: 1.75; text-align: justify; }
 
 .act2-library__footer { display: flex; justify-content: flex-end; }
 .act2-library__return { min-height: 42px; padding: 0 20px; font-size: 13px; }
+.act2-library__continue-tales { min-height: 44px; margin-top: 14px; padding: 0 16px; border: 1px solid rgba(120, 98, 68, .55); border-radius: 3px; color: var(--act2-library-ink); background: #dac69b; cursor: pointer; font: inherit; font-size: 13px; }
 
+/* ── 断点 ──────────────────────────────────────────────────────────────────
+   行模板在根级已是内容驱动，这里只切换主体列数：
+   ≤1024px 双栏（阅读器独占下一行）；≤720px 单列文档流。 */
 @media (max-width: 1024px) {
   .act2-library__body { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .act2-library__reader { grid-column: 1 / -1; }
 }
 
 @media (max-width: 720px) {
-  .act2-library { padding: 12px; }
+  .act2-library { gap: 14px; padding: 12px; }
   .act2-library__body { grid-template-columns: minmax(0, 1fr); }
   .act2-library__reader { grid-column: auto; }
+  .act2-library__section-note { min-height: 0; }
+  /* 触控目标 ≥44px。 */
+  .act2-library__section,
+  .act2-library__leaf,
+  .act2-library__prev,
+  .act2-library__next,
+  .act2-library__zoom-out,
+  .act2-library__zoom-in,
+  .act2-library__bookmark,
+  .act2-library__excerpt-button,
+  .act2-library__return { min-height: 44px; }
   .act2-library__controls { flex-direction: column; align-items: stretch; }
   .act2-library__pager,
   .act2-library__tools { flex-wrap: wrap; }
+  .act2-library__keyword-list { grid-template-columns: minmax(0, 1fr); }
   .act2-library__footer { justify-content: stretch; }
   .act2-library__return { width: 100%; }
 }

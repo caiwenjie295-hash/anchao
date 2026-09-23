@@ -13,13 +13,17 @@ const flags = getItems<{ id: string }>(flagsDocument, 'flags.json');
 export const noteById = new Map(noteEntries.map((entry) => [entry.id, entry]));
 
 /** 第二幕 T01–T03 由本模块统一登记，供并行任务按 ID 消费。 */
-export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001'];
+export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001', 'NOTE_A2_T04_001', 'NOTE_A2_T04_002', 'NOTE_A2_T04_003', 'NOTE_A2_T04_004'];
 const act2NoteRequiredText: Record<string, string[]> = {
   NOTE_A2_T01_001: ['网上几乎找不到有用的信息', '只有当地人才知道'],
   NOTE_A2_T01_002: ['这个词太普通了'],
   NOTE_A2_T02_001: ['hei bu mu', '黑', '捕', '补', '埔', '木', '母', '墓'],
   NOTE_A2_T02_002: ['黑补母', '吃什么补什么', '县志'],
   NOTE_A2_T03_001: ['补缺', '以有余补不足'],
+  NOTE_A2_T04_001: ['周三', '山鸡'],
+  NOTE_A2_T04_002: ['六儿', '沈'],
+  NOTE_A2_T04_003: ['哑女', '画眉'],
+  NOTE_A2_T04_004: ['小A缺什么？'],
 };
 /** T04 才揭示的结论不得提前出现在第二幕摘录里。 */
 const act2NoteForbiddenText: Record<string, string[]> = { NOTE_A2_T03_001: ['记忆', '身份'] };

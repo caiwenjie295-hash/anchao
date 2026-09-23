@@ -470,6 +470,11 @@
       "relatedFlags": [],
       "notes": "由 WB-0004 写入；只揭示表层规则",
       "defaultValue": false
-    }
+    },
+    {"id":"FLAG_A2_TALE_01_READ","title":"已读石工补指","act":2,"phase":"A2_T04","source":"library","purpose":"记录第一篇原始志异已读","unlockCondition":["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],"relatedFlags":[],"notes":"由 StateManager.readAct2Tale 写入","defaultValue":false},
+    {"id":"FLAG_A2_TALE_02_READ","title":"已读书生遗事","act":2,"phase":"A2_T04","source":"library","purpose":"记录第二篇原始志异已读","unlockCondition":["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],"relatedFlags":[],"notes":"由 StateManager.readAct2Tale 写入","defaultValue":false},
+    {"id":"FLAG_A2_TALE_03_READ","title":"已读哑女借声","act":2,"phase":"A2_T04","source":"library","purpose":"记录第三篇原始志异已读","unlockCondition":["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],"relatedFlags":[],"notes":"由 StateManager.readAct2Tale 写入","defaultValue":false},
+    {"id":"FLAG_A2_TALES_SORTED","title":"已整理三篇志异","act":2,"phase":"A2_T04","source":"library","purpose":"记录十二张材料已归位","unlockCondition":["FLAG_A2_TALE_01_READ","FLAG_A2_TALE_02_READ","FLAG_A2_TALE_03_READ"],"relatedFlags":["FLAG_A2_TRANSFER_RULE_INFERRED"],"notes":"由 StateManager.finishAct2TaleSorting 写入","defaultValue":false},
+    {"id":"FLAG_A2_TRANSFER_RULE_INFERRED","title":"已归纳来源者特征","act":2,"phase":"A2_T04","source":"notepad","purpose":"记录玩家确认未证实归纳","unlockCondition":["FLAG_A2_TALES_SORTED"],"relatedFlags":[],"notes":"由 StateManager.acknowledgeAct2TransferInference 写入","defaultValue":false}
   ]
 }

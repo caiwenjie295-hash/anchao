@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -69,7 +69,7 @@ export interface PhotosState {
 }
 
 export interface AppState {
-  schemaVersion: 2;
+  schemaVersion: 3;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -83,7 +83,7 @@ export interface AppState {
   };
 }
 
-export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library';
+export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales';
 
 export type Act2ActiveStage = Exclude<Act2Stage, 'inactive'>;
 
@@ -109,6 +109,13 @@ export interface Act2ResearchState {
     bookmarkedPageIds: string[];
     markedKeywordIds: string[];
     excerptedEntryIds: string[];
+  };
+  tales: {
+    readTaleIds: string[];
+    collectedTaleIds: string[];
+    placedCardIds: string[];
+    sorted: boolean;
+    inferenceAcknowledged: boolean;
   };
 }
 
@@ -141,6 +148,11 @@ export type AnchaoEventMap = {
   'act2:gazette-page-opened': { pageId: string };
   'act2:gazette-keyword-marked': { keywordId: string };
   'act2:gazette-entry-excerpted': { entryId: string };
-  'progress:reset': { schemaVersion: 2 };
-  'save:completed': { schemaVersion: 2 };
+  'act2:tale-read': { taleId: string };
+  'act2:tale-collected': { taleId: string };
+  'act2:tale-card-placed': { cardId: string };
+  'act2:tales-sorted': Record<string, never>;
+  'act2:transfer-inferred': Record<string, never>;
+  'progress:reset': { schemaVersion: 3 };
+  'save:completed': { schemaVersion: 3 };
 };

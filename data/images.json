@@ -255,6 +255,32 @@
       "file": "鸡公岭地图.png",
       "assetType": "image",
       "notes": "用户提供原始PNG，通过资源ID映射并内联到离线入口"
+    },
+    {
+      "id": "IMG_A2_T02_001",
+      "title": "桥头调查场景占位",
+      "act": 2,
+      "phase": "A2_T02",
+      "source": "scene",
+      "purpose": "桥头老人调查场景通用外层的可替换占位",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "WB-0005 资源空位：本轮不生成正式美术，file 为 null，仅由克制 CSS 占位",
+      "assetType": "image",
+      "file": null
+    },
+    {
+      "id": "IMG_A2_T03_001",
+      "title": "县图书馆地方志书架占位",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "scene",
+      "purpose": "县图书馆地方志书架与阅览区的可替换占位",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "WB-0005 资源空位：本轮不生成正式美术，file 为 null，仅由克制 CSS 占位",
+      "assetType": "image",
+      "file": null
     }
   ]
 }

@@ -16,7 +16,7 @@ describe('saveManager', () => {
     state.desktop.windows.mail.status = 'normal';
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated.desktop.windows.mail.status).toBe('normal');
-    expect(hydrated.schemaVersion).toBe(2);
+    expect(hydrated.schemaVersion).toBe(3);
   });
 
   it('falls back safely when storage contains malformed JSON', () => {
@@ -60,7 +60,7 @@ describe('saveManager', () => {
     expect(invalid.modules.scene).toMatchObject({ journeyStarted: false, currentSceneId: null, visitedSceneIds: [] });
   });
 
-  it('migrates a completed schema 1 first-act save to schema 2 without losing progress', () => {
+  it('migrates a completed schema 1 first-act save to schema 3 without losing progress', () => {
     const legacy = asLegacyFirstActSave();
     legacy.game = { act: 1, phase: 'K', flags: { FLAG_A1_SS_FOUND: true, FLAG_A1_COMPLETE: true }, discoveredClueIds: ['CLUE_A1_K_001'] };
     legacy.modules = {
@@ -71,7 +71,7 @@ describe('saveManager', () => {
       photos: { activePhotoId: 'IMG_A1_H_003', openedPhotoIds: ['IMG_A1_H_003'], adjustments: { IMG_A1_H_003: { exposure: 55, shadows: 50, contrast: 35 } }, zoomByPhotoId: { IMG_A1_H_003: 1.8 }, inspectedSymbolPhotoIds: ['IMG_A1_H_003'] },
     };
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.schemaVersion).toBe(3);
     expect(migrated.game).toEqual({ act: 1, phase: 'K', flags: { FLAG_A1_SS_FOUND: true, FLAG_A1_COMPLETE: true }, discoveredClueIds: ['CLUE_A1_K_001'] });
     expect(migrated.modules.mail).toEqual({ readIds: ['MAIL_A1_C_001'], starredIds: ['MAIL_A1_C_001'] });
     expect(migrated.modules.browser).toEqual({ queryHistory: ['鸡公岭'], visitedPageIds: ['PAGE_A1_E_001'] });
@@ -82,7 +82,7 @@ describe('saveManager', () => {
     expect(migrated.modules.act2Research).toEqual(createDefaultAct2ResearchState());
   });
 
-  it('round-trips schema 2 second-act research state', () => {
+  it('migrates schema 2 second-act research state to schema 3', () => {
     const state = createDefaultState();
     state.game.act = 2;
     state.game.phase = 'A2_T03';
@@ -90,6 +90,7 @@ describe('saveManager', () => {
       stage: 'library',
       bridge: { talkedElderIds: ['ELDER_A2_T02_001'], shownEvidenceAssetIds: ['IMG_A1_I_002'], heardPhrase: true, nameChoices: { first: '黑', middle: '补', last: '母' } },
       library: { visitedSectionIds: ['SECTION_A2_T03_001'], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: 'PAGE_A2_T03_004', bookmarkedPageIds: ['PAGE_A2_T03_004'], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: ['ENTRY_A2_T03_001'] },
+      tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
     };
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated).toEqual(state);
@@ -117,18 +118,30 @@ describe('saveManager', () => {
       stage: 'inactive',
       bridge: { talkedElderIds: ['ELDER_A2_T02_001'], shownEvidenceAssetIds: ['IMG_A1_I_002'], heardPhrase: false, nameChoices: { first: '黑', middle: null, last: null } },
       library: { visitedSectionIds: [], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: [] },
+      tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
     });
     expect(hydrated.game.flags).toEqual({ FLAG_A1_COMPLETE: true });
     expect(hydrated.modules.notepad.userText).toBe('第一幕笔记');
   });
 
+  it('migrates schema 2 and sanitizes malformed schema 3 tale progress', () => {
+    const v2 = createDefaultState() as unknown as Record<string, unknown>;
+    v2.schemaVersion = 2;
+    delete ((v2.modules as Record<string, unknown>).act2Research as Record<string, unknown>).tales;
+    expect(hydrateState(v2).modules.act2Research.tales).toEqual(createDefaultAct2ResearchState().tales);
+    const state = createDefaultState(); state.game.flags = { FLAG_A1_COMPLETE: true }; state.modules.notepad.userText = '保留';
+    const repaired = hydrateState({ ...state, modules: { ...state.modules, act2Research: { ...state.modules.act2Research, tales: { readTaleIds: ['TALE_A2_T04_001', 'bad'], collectedTaleIds: ['TALE_A2_T04_002', 'TALE_A2_T04_001'], placedCardIds: ['CARD_A2_T04_001', 'bad'], sorted: true, inferenceAcknowledged: true } } } });
+    expect(repaired.modules.act2Research.tales).toEqual({ readTaleIds: ['TALE_A2_T04_001'], collectedTaleIds: ['TALE_A2_T04_001'], placedCardIds: ['CARD_A2_T04_001'], sorted: false, inferenceAcknowledged: false });
+    expect(repaired.game.flags).toEqual({ FLAG_A1_COMPLETE: true }); expect(repaired.modules.notepad.userText).toBe('保留');
+  });
+
   it('rejects unsupported schema versions and keeps the save key stable', () => {
-    expect(hydrateState({ ...createDefaultState(), schemaVersion: 3 })).toEqual(createDefaultState());
+    expect(hydrateState({ ...createDefaultState(), schemaVersion: 4 })).toEqual(createDefaultState());
     expect(hydrateState({ ...createDefaultState(), schemaVersion: '2' })).toEqual(createDefaultState());
     expect(SAVE_KEY).toBe('anchao.save.v1');
     localStorage.setItem(SAVE_KEY, JSON.stringify(asLegacyFirstActSave()));
     const loaded = loadState(localStorage);
-    expect(loaded.schemaVersion).toBe(2);
+    expect(loaded.schemaVersion).toBe(3);
     expect(loaded.modules.act2Research.stage).toBe('inactive');
   });
 });

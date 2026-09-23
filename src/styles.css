@@ -397,3 +397,27 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
   .scene-continue__hint { width: 100%; max-width: none; text-align: right; }
   .explorer-app { grid-template-columns: 110px minmax(0, 1fr); }.explorer-app main { padding: 15px; }.explorer-app aside { padding: 15px 8px; }.photo-controls { grid-template-columns: 1fr; gap: 7px; }.photo-controls h3 { display: none; }.photo-controls label { grid-template-columns: 42px 1fr 30px; }
 }
+
+/* WB-0005：第一幕→第二幕入口、第二幕通用外层与返回桌面后的继续入口。 */
+.act1-ending__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 4px; }
+.act1-ending__continue { min-height: 42px; padding: 0 20px; border: 1px solid #6d7f78; border-radius: 3px; color: #e4e9e5; background: rgba(228, 233, 229, .08); cursor: pointer; font-size: 14px; letter-spacing: .08em; transition: background-color 150ms ease, border-color 150ms ease; }
+.act1-ending__continue:hover { border-color: #a4b6ad; background: rgba(228, 233, 229, .18); }
+.act1-ending__continue:focus-visible { outline: 3px solid #9fb1a8; outline-offset: 3px; }
+
+/* library 自带全屏壳；bridge 由本层提供通用外层。 */
+.act2-experience--library { display: contents; }
+.act2-experience--bridge { position: fixed; z-index: 12000; inset: 0; overflow: auto; padding: clamp(12px, 2.4vw, 28px); background: #d5d1c4; }
+.act2-experience--resume { position: fixed; z-index: 9100; left: 14px; bottom: 66px; max-width: calc(100vw - 28px); }
+.act2-experience__continue { min-height: 42px; max-width: 100%; padding: 0 18px; border: 1px solid #7d98ad; border-radius: 3px; color: #23415a; background: rgba(240, 246, 250, .94); box-shadow: 0 7px 20px rgba(35, 53, 69, .2); cursor: pointer; font-size: 13px; letter-spacing: .04em; transition: background-color 150ms ease, border-color 150ms ease; }
+.act2-experience__continue:hover { border-color: #4f7391; background: #e6f1f8; }
+.act2-experience__continue:focus-visible { outline: 3px solid #0067c0; outline-offset: 2px; }
+
+@media (max-width: 520px) {
+  .act2-experience--bridge { padding: 10px; }
+  .act2-experience--resume { right: 14px; bottom: 62px; }
+  .act2-experience__continue { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act1-ending__continue, .act2-experience__continue { transition-duration: .001ms; }
+}

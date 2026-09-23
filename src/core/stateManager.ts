@@ -4,6 +4,7 @@ import { loadState, saveState } from './saveManager';
 import { isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
+import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
 
 type StateListener = () => void;
 
@@ -11,11 +12,12 @@ type Act2ResearchPatch = {
   stage?: Act2Stage;
   bridge?: Partial<Act2ResearchState['bridge']>;
   library?: Partial<Act2ResearchState['library']>;
+  tales?: Partial<Act2ResearchState['tales']>;
 };
 
-const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library'];
-const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library'];
-const act2StagePhases: Record<Act2ActiveStage, GamePhase> = { search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03' };
+const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library', 'tales'];
+const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales'];
+const act2StagePhases: Record<Act2ActiveStage, GamePhase> = { search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04' };
 const heibumuNameParts: HeibumuNamePart[] = ['first', 'middle', 'last'];
 const heibumuName = { first: '黑', middle: '补', last: '母' } as const;
 const heibumuNameText = '黑补母';
@@ -47,7 +49,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 2 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 3 });
   }
 
   private nextZIndex(): number {
@@ -193,7 +195,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 2 });
+    this.bus.emit('progress:reset', { schemaVersion: 3 });
   }
 
   startJourney(sceneId: string): void {
@@ -283,6 +285,7 @@ export class StateManager {
       stage: patch.stage ?? current.stage,
       bridge: patch.bridge ? { ...current.bridge, ...patch.bridge } : current.bridge,
       library: patch.library ? { ...current.library, ...patch.library } : current.library,
+      tales: patch.tales ? { ...current.tales, ...patch.tales } : current.tales,
     };
     this.commit({ ...this.state, modules: { ...this.state.modules, act2Research: next } });
   }
@@ -306,6 +309,7 @@ export class StateManager {
     if (!act2ActiveStages.includes(stage)) return;
     if (current === 'inactive' || current === stage) return;
     if (act2StageOrder.indexOf(stage) < act2StageOrder.indexOf(current)) return;
+    if (stage === 'tales' && this.state.game.flags.FLAG_A2_BUMU_RULE_BASIC_KNOWN !== true) return;
     const phase = act2StagePhases[stage];
     this.commit({
       ...this.state,
@@ -401,6 +405,49 @@ export class StateManager {
     if (this.act2Research.stage !== 'library' || !id || library.currentPageId === null || library.excerptedEntryIds.includes(id)) return;
     this.commitAct2Research({ library: { excerptedEntryIds: [...library.excerptedEntryIds, id] } });
     this.bus.emit('act2:gazette-entry-excerpted', { entryId: id });
+  }
+
+  readAct2Tale(taleId: string): void {
+    const tales = this.act2Research.tales;
+    const id = taleId.trim();
+    if (this.act2Research.stage !== 'tales' || !id || !taleById.has(id) || tales.readTaleIds.includes(id)) return;
+    this.commitAct2Research({ tales: { readTaleIds: [...tales.readTaleIds, id] } });
+    this.setFlag(taleById.get(id)?.readFlagId ?? '', true);
+    this.bus.emit('act2:tale-read', { taleId: id });
+  }
+
+  collectAct2Tale(taleId: string): void {
+    const tales = this.act2Research.tales;
+    const id = taleId.trim();
+    if (this.act2Research.stage !== 'tales' || !id || !taleById.has(id) || !tales.readTaleIds.includes(id) || tales.collectedTaleIds.includes(id)) return;
+    this.commitAct2Research({ tales: { collectedTaleIds: [...tales.collectedTaleIds, id] } });
+    this.addNotepadAutoEntry(taleNoteIdById.get(id) ?? '');
+    this.bus.emit('act2:tale-collected', { taleId: id });
+  }
+
+  placeAct2TaleCard(cardId: string): void {
+    const tales = this.act2Research.tales;
+    const id = cardId.trim();
+    if (this.act2Research.stage !== 'tales' || !id || !taleCardById.has(id) || tales.collectedTaleIds.length !== taleById.size || tales.placedCardIds.includes(id)) return;
+    this.commitAct2Research({ tales: { placedCardIds: [...tales.placedCardIds, id] } });
+    this.bus.emit('act2:tale-card-placed', { cardId: id });
+  }
+
+  finishAct2TaleSorting(): void {
+    const tales = this.act2Research.tales;
+    if (this.act2Research.stage !== 'tales' || tales.sorted || tales.placedCardIds.length !== taleCards.length) return;
+    this.commitAct2Research({ tales: { sorted: true } });
+    this.setFlag('FLAG_A2_TALES_SORTED', true);
+    this.bus.emit('act2:tales-sorted', {});
+  }
+
+  acknowledgeAct2TransferInference(): void {
+    const tales = this.act2Research.tales;
+    if (this.act2Research.stage !== 'tales' || !tales.sorted || tales.inferenceAcknowledged) return;
+    this.commitAct2Research({ tales: { inferenceAcknowledged: true } });
+    this.addNotepadAutoEntry('NOTE_A2_T04_004');
+    this.setFlag('FLAG_A2_TRANSFER_RULE_INFERRED', true);
+    this.bus.emit('act2:transfer-inferred', {});
   }
 }
 

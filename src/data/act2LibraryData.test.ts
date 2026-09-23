@@ -56,7 +56,7 @@ describe('act2 T03 library data', () => {
     expect(act2Library.sections.filter((section) => section.isCorrect)).toHaveLength(1);
   });
 
-  it('keeps at least three volumes and six pages with continuous leaf numbers', () => {
+  it('keeps at least three volumes and six pages with continuous page numbers', () => {
     expect(act2Library.volumes.length).toBeGreaterThanOrEqual(3);
     expect(act2Library.pages.length).toBeGreaterThanOrEqual(6);
     for (const volume of act2Library.volumes) {

@@ -25,7 +25,7 @@
     "catalogHint": "先想清楚“补”该归在哪一门——按门类把范围收窄。",
     "catalogNoiseNote": "目录按门类分册，未收窄到某一门之前，不逐册索引卷内条目。",
     "shelfTitle": "已收窄的卷册",
-    "readerInstruction": "逐叶翻过去，别停在目录页。",
+    "readerInstruction": "逐页翻过去，别停在目录页。",
     "returnLabel": "回到桌面，继续调查",
     "placeholderAssetId": "IMG_A2_T03_001"
   },
@@ -61,7 +61,7 @@
       "id": "PAGE_A2_T03_001",
       "volumeId": "VOLUME_A2_T03_001",
       "pageNumber": 1,
-      "leafLabel": "志 · 一 第一叶",
+      "leafLabel": "志 · 一 第 1 页",
       "title": "卷首",
       "heading": "XX县地理沿革",
       "paragraphs": [
@@ -73,7 +73,7 @@
       "id": "PAGE_A2_T03_002",
       "volumeId": "VOLUME_A2_T03_001",
       "pageNumber": 2,
-      "leafLabel": "志 · 一 第二叶",
+      "leafLabel": "志 · 一 第 2 页",
       "title": "疆域",
       "heading": "疆域",
       "paragraphs": [
@@ -85,7 +85,7 @@
       "id": "PAGE_A2_T03_003",
       "volumeId": "VOLUME_A2_T03_002",
       "pageNumber": 1,
-      "leafLabel": "志 · 九 第一叶",
+      "leafLabel": "志 · 九 第 1 页",
       "title": "卷首",
       "heading": "XX县风土志",
       "paragraphs": [
@@ -97,19 +97,19 @@
       "id": "PAGE_A2_T03_004",
       "volumeId": "VOLUME_A2_T03_002",
       "pageNumber": 2,
-      "leafLabel": "志 · 九 第二叶",
+      "leafLabel": "志 · 九 第 2 页",
       "title": "本卷目次",
       "heading": "本卷目次",
       "paragraphs": [
         "一、岁时；二、庙会；三、野祠；四、补母志。",
-        "以上各篇，分叶另录，请依次翻检。"
+        "以上各篇，分页另录，请依次翻检。"
       ]
     },
     {
       "id": "PAGE_A2_T03_005",
       "volumeId": "VOLUME_A2_T03_002",
       "pageNumber": 3,
-      "leafLabel": "志 · 九 第三叶",
+      "leafLabel": "志 · 九 第 3 页",
       "title": "补母志",
       "heading": "补母志",
       "isTarget": true,
@@ -125,7 +125,7 @@
       "id": "PAGE_A2_T03_006",
       "volumeId": "VOLUME_A2_T03_003",
       "pageNumber": 1,
-      "leafLabel": "志 · 四 第一叶",
+      "leafLabel": "志 · 四 第 1 页",
       "title": "野祠",
       "heading": "野祠",
       "paragraphs": [
