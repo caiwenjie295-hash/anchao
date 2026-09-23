@@ -5,6 +5,7 @@ import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, t
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
+import { isAct2T06PageId } from '../data/browserData';
 
 type StateListener = () => void;
 
@@ -17,7 +18,7 @@ type Act2ResearchPatch = {
 };
 
 const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library', 'tales'];
-const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school'];
+const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming'];
 const act2StagePhases: Record<Act2ActiveStage, GamePhase> = { search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04' };
 const heibumuNameParts: HeibumuNamePart[] = ['first', 'middle', 'last'];
 const heibumuName = { first: '黑', middle: '补', last: '母' } as const;
@@ -50,7 +51,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 4 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 5 });
   }
 
   private nextZIndex(): number {
@@ -175,6 +176,7 @@ export class StateManager {
   }
 
   recordBrowserPageVisit(pageId: string): void {
+    if (pageId.startsWith('PAGE_A2_T06_') && (!isAct2T06PageId(pageId) || this.act2Research.stage !== 'qiming')) return;
     const { visitedPageIds } = this.state.modules.browser;
     if (!visitedPageIds.includes(pageId)) {
       this.commit({ ...this.state, modules: { ...this.state.modules, browser: { ...this.state.modules.browser, visitedPageIds: [...visitedPageIds, pageId] } } });
@@ -196,7 +198,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 4 });
+    this.bus.emit('progress:reset', { schemaVersion: 5 });
   }
 
   startJourney(sceneId: string): void {
@@ -464,6 +466,43 @@ export class StateManager {
     this.bus.emit('phase:changed', { phase: 'A2_T05' });
     this.bus.emit('flag:changed', { flagId: 'FLAG_A2_SCHOOL_ENTERED', value: true });
     this.bus.emit('act2:school-entered', {});
+  }
+
+  /** 只有 T05 双 S 已确认且玩家进行了有效启明搜索时才能进入 T06。 */
+  enterAct2QimingResearch(): void {
+    const { game } = this.state;
+    if (this.act2Research.stage !== 'school' || game.flags.FLAG_A2_SS_MATCH_CONFIRMED !== true) return;
+    this.commit({
+      ...this.state,
+      game: { ...game, phase: 'A2_T06' },
+      modules: { ...this.state.modules, act2Research: { ...this.act2Research, stage: 'qiming' } },
+    });
+    this.bus.emit('act2:qiming-entered', {});
+    this.bus.emit('phase:changed', { phase: 'A2_T06' });
+  }
+
+  inferAct2QimingNameMatch(person: 'huang' | 'zhong'): void {
+    const { game, modules } = this.state;
+    const flags = game.flags;
+    const pages = modules.browser.visitedPageIds;
+    if (person !== 'huang' && person !== 'zhong') return;
+    if (this.act2Research.stage !== 'qiming' || flags.FLAG_A2_QIMING_TESTIMONIALS_READ !== true || flags.FLAG_A2_QIMING_FORUM_FOUND !== true || !pages.includes('PAGE_A2_T06_004') || !pages.includes('PAGE_A2_T06_006')) return;
+    if (person === 'zhong' && !pages.includes('PAGE_A2_T06_007')) return;
+    const flagId = person === 'huang' ? 'FLAG_A2_HUANG_MATCH_INFERRED' : 'FLAG_A2_ZHONG_MATCH_INFERRED';
+    if (flags[flagId] === true) return;
+    this.setFlag(flagId, true);
+    this.bus.emit('act2:qiming-name-matched', { person });
+    const nextFlags = this.state.game.flags;
+    if (nextFlags.FLAG_A2_HUANG_MATCH_INFERRED === true && nextFlags.FLAG_A2_ZHONG_MATCH_INFERRED === true) this.addNotepadAutoEntry('NOTE_A2_T06_003');
+  }
+
+  confirmAct2OtherCasesAbnormal(): void {
+    const { flags } = this.state.game;
+    const pages = this.state.modules.browser.visitedPageIds;
+    if (this.act2Research.stage !== 'qiming' || flags.FLAG_A2_HUANG_MATCH_INFERRED !== true || flags.FLAG_A2_ZHONG_MATCH_INFERRED !== true || !pages.includes('PAGE_A2_T06_008') || !pages.includes('PAGE_A2_T06_009') || flags.FLAG_A2_OTHER_CASES_ABNORMAL === true) return;
+    this.setFlag('FLAG_A2_OTHER_CASES_ABNORMAL', true);
+    this.addNotepadAutoEntry('NOTE_A2_T06_004');
+    this.bus.emit('act2:qiming-cases-confirmed', {});
   }
 
   visitAct2SchoolArea(areaId: string): void {

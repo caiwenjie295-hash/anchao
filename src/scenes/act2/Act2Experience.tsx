@@ -18,7 +18,7 @@ export const ACT2_RESUME_LABELS = {
 
 export interface Act2ExperienceProps {
   /** 当前第二幕场景阶段；`search` 或 `inactive` 时本组件不应被挂载。 */
-  stage: Exclude<Act2Stage, 'inactive' | 'search'>;
+  stage: Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school'>;
   /** 场景是否正在全屏显示；false 时只渲染桌面继续入口。 */
   sceneOpen: boolean;
   onDismissScene: () => void;

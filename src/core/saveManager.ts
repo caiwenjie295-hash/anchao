@@ -2,12 +2,13 @@ import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceA
 import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow } from './defaultState';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
+import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
 
 export const SAVE_KEY = 'anchao.save.v1';
-/** schema 1/2/3 的有效进度全部迁移到 schema 4。 */
-const supportedSchemaVersions = [1, 2, 3, 4];
+/** schema 1–4 的有效进度全部迁移到 schema 5。 */
+const supportedSchemaVersions = [1, 2, 3, 4, 5];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
-const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school'];
+const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
@@ -103,9 +104,13 @@ export const hydrateState = (candidate: unknown): AppState => {
     ? Object.fromEntries(Object.entries(game.flags).filter(([, value]) => ['boolean', 'string', 'number'].includes(typeof value))) as AppState['game']['flags']
     : {};
   const t05FlagIds = ['FLAG_A2_SCHOOL_ENTERED', 'FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SS_MATCH_CONFIRMED'];
-  for (const flagId of t05FlagIds) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
-  const schoolStageValid = act2Research.stage === 'school' && rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
-  if (act2Research.stage === 'school' && !schoolStageValid) act2Research.stage = 'tales';
+  const t06FlagIds = ['FLAG_A2_QIMING_OFFICIAL_FOUND', 'FLAG_A2_QIMING_TESTIMONIALS_READ', 'FLAG_A2_QIMING_FORUM_FOUND', 'FLAG_A2_HUANG_MATCH_INFERRED', 'FLAG_A2_ZHONG_MATCH_INFERRED', 'FLAG_A2_OTHER_CASES_ABNORMAL'];
+  for (const flagId of [...t05FlagIds, ...t06FlagIds]) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
+  const schoolPrerequisitesValid = rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
+  let qimingStageValid = act2Research.stage === 'qiming' && schoolPrerequisitesValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true;
+  if (act2Research.stage === 'qiming' && !qimingStageValid) act2Research.stage = schoolPrerequisitesValid ? 'school' : 'tales';
+  if (act2Research.stage === 'school' && !schoolPrerequisitesValid) act2Research.stage = 'tales';
+  let schoolStageValid = (act2Research.stage === 'school' || qimingStageValid) && schoolPrerequisitesValid;
   const t05Dependencies: [string, string][] = [
     ['FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_SCHOOL_ENTERED'],
     ['FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCHOOL_ENTERED'],
@@ -114,7 +119,7 @@ export const hydrateState = (candidate: unknown): AppState => {
     ['FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SCHOOL_ENTERED'],
     ['FLAG_A2_SS_MATCH_CONFIRMED', 'FLAG_A2_SCHOOL_SS_FOUND'],
   ];
-  if (!schoolStageValid) for (const flagId of t05FlagIds) delete rawFlags[flagId];
+  if (!schoolStageValid && !qimingStageValid) for (const flagId of t05FlagIds) delete rawFlags[flagId];
   else for (const [flagId, requiredFlag] of t05Dependencies) if (rawFlags[flagId] === true && rawFlags[requiredFlag] !== true) delete rawFlags[flagId];
   const visitedAreas = act2Research.school.visitedAreaIds;
   const inspectedHotspots = act2Research.school.inspectedHotspotIds;
@@ -131,17 +136,57 @@ export const hydrateState = (candidate: unknown): AppState => {
   // dependency chain again so no downstream T05 Flag survives without it.
   for (const [flagId, requiredFlag] of t05Dependencies) if (rawFlags[flagId] === true && rawFlags[requiredFlag] !== true) delete rawFlags[flagId];
   if (rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true && rawFlags.FLAG_A1_SS_FOUND !== true) delete rawFlags.FLAG_A2_SS_MATCH_CONFIRMED;
-  if (!schoolStageValid) act2Research.school = { visitedAreaIds: [], inspectedHotspotIds: [] };
+  if (qimingStageValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED !== true) {
+    qimingStageValid = false;
+    act2Research.stage = schoolPrerequisitesValid ? 'school' : 'tales';
+    schoolStageValid = act2Research.stage === 'school' && schoolPrerequisitesValid;
+  }
+  if (!schoolStageValid && !qimingStageValid) act2Research.school = { visitedAreaIds: [], inspectedHotspotIds: [] };
+  const rawVisitedPageIds = browser ? safeStringIds(browser.visitedPageIds).filter((id) => browserPageById.has(id)) : [];
+  const validT06VisitedIds = rawVisitedPageIds.filter((id) => ACT2_T06_PAGE_IDS.includes(id));
+  const nonT06VisitedIds = rawVisitedPageIds.filter((id) => !id.startsWith('PAGE_A2_T06_'));
+  const visitedT06 = qimingStageValid ? validT06VisitedIds : [];
+  const setT06 = new Set(visitedT06);
+  if (!qimingStageValid) for (const flagId of t06FlagIds) delete rawFlags[flagId];
+  const t06Dependencies: [string, boolean][] = [
+    ['FLAG_A2_QIMING_OFFICIAL_FOUND', visitedT06.some((id) => ['PAGE_A2_T06_001','PAGE_A2_T06_002','PAGE_A2_T06_003','PAGE_A2_T06_004','PAGE_A2_T06_005'].includes(id))],
+    ['FLAG_A2_QIMING_TESTIMONIALS_READ', setT06.has('PAGE_A2_T06_004')],
+    ['FLAG_A2_QIMING_FORUM_FOUND', setT06.has('PAGE_A2_T06_006')],
+    ['FLAG_A2_HUANG_MATCH_INFERRED', setT06.has('PAGE_A2_T06_004') && setT06.has('PAGE_A2_T06_006')],
+    ['FLAG_A2_ZHONG_MATCH_INFERRED', setT06.has('PAGE_A2_T06_004') && setT06.has('PAGE_A2_T06_007')],
+    ['FLAG_A2_OTHER_CASES_ABNORMAL', setT06.has('PAGE_A2_T06_008') && setT06.has('PAGE_A2_T06_009')],
+  ];
+  for (const [flagId, evidencePresent] of t06Dependencies) if (rawFlags[flagId] === true && !evidencePresent) delete rawFlags[flagId];
+  if (rawFlags.FLAG_A2_QIMING_OFFICIAL_FOUND !== true) {
+    for (const flagId of ['FLAG_A2_QIMING_TESTIMONIALS_READ','FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL']) delete rawFlags[flagId];
+  }
+  if (rawFlags.FLAG_A2_QIMING_FORUM_FOUND !== true) for (const flagId of ['FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL']) delete rawFlags[flagId];
+  if (rawFlags.FLAG_A2_HUANG_MATCH_INFERRED !== true || rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED !== true) delete rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL;
+  const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
+  const queryHistory = rawQueryHistory.filter((query) => {
+    const definition = findSearchQuery(query);
+    return !definition || !isAct2T06Record(definition) || qimingStageValid;
+  });
   const hydratedPhase = typeof game.phase === 'string' ? game.phase : fallback.game.phase;
-  const safePhase = act2Research.stage === 'school' ? 'A2_T05' : hydratedPhase === 'A2_T05' ? 'A2_T04' : hydratedPhase;
+  const phaseForStage: Partial<Record<Act2Stage, string>> = {
+    search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06',
+  };
+  const safePhase = phaseForStage[act2Research.stage] ?? (
+    hydratedPhase.startsWith('A2_T') ? fallback.game.phase : hydratedPhase
+  );
   const autoEntryIds = notepad ? safeStringIds(notepad.autoEntryIds).filter((id) => {
     const triggerFlagByNote: Record<string, string> = {
       NOTE_A2_T05_001: 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN',
       NOTE_A2_T05_002: 'FLAG_A2_SCORE_CHANGE_KNOWN',
       NOTE_A2_T05_003: 'FLAG_A2_QIMING_NAME_FOUND',
       NOTE_A2_T05_004: 'FLAG_A2_SS_MATCH_CONFIRMED',
+      NOTE_A2_T06_001: 'FLAG_A2_QIMING_OFFICIAL_FOUND',
+      NOTE_A2_T06_002: 'FLAG_A2_QIMING_FORUM_FOUND',
+      NOTE_A2_T06_003: 'FLAG_A2_HUANG_MATCH_INFERRED',
+      NOTE_A2_T06_004: 'FLAG_A2_OTHER_CASES_ABNORMAL',
     };
     const triggerFlag = triggerFlagByNote[id];
+    if (id === 'NOTE_A2_T06_003') return rawFlags.FLAG_A2_HUANG_MATCH_INFERRED === true && rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED === true;
     return triggerFlag === undefined || rawFlags[triggerFlag] === true;
   }) : [];
   const rawWindows = isRecord(desktop.windows) ? desktop.windows : {};
@@ -154,7 +199,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   return {
-    schemaVersion: 4,
+    schemaVersion: 5,
     game: {
       act: finiteNumber(game.act, fallback.game.act),
       phase: safePhase,
@@ -169,8 +214,8 @@ export const hydrateState = (candidate: unknown): AppState => {
         starredIds: mail ? safeStringIds(mail.starredIds) : [...fallback.modules.mail.starredIds],
       },
       browser: {
-        queryHistory: browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [],
-        visitedPageIds: browser ? safeStringIds(browser.visitedPageIds) : [],
+        queryHistory,
+        visitedPageIds: [...nonT06VisitedIds, ...visitedT06],
       },
       notepad: {
         userText: notepad && typeof notepad.userText === 'string' ? notepad.userText : '',

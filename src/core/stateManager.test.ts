@@ -132,7 +132,7 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([4]);
+    expect(resets).toEqual([5]);
   });
 });
 
@@ -468,6 +468,37 @@ describe('StateManager T05 school investigation', () => {
     expect(manager.getState().game.flags.FLAG_A2_SCHOOL_SS_FOUND).toBe(true);
     expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds.filter((id) => id === 'NOTE_A2_T05_004')).toHaveLength(1);
+  });
+});
+
+describe('StateManager T06 qiming research', () => {
+  it('enters only with the T05 match and requires explicit comparisons plus both later cases', () => {
+    const state = createDefaultState();
+    state.modules.act2Research.stage = 'school';
+    state.game.flags = { FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
+    const bus = new EventBus(); const manager = new StateManager(bus, state); const entered: string[] = [];
+    bus.on('act2:qiming-entered', () => entered.push('entered'));
+    manager.enterAct2QimingResearch(); manager.enterAct2QimingResearch();
+    expect(manager.getState().modules.act2Research.stage).toBe('qiming');
+    expect(manager.getState().game.phase).toBe('A2_T06');
+    expect(entered).toEqual(['entered']);
+    manager.recordBrowserPageVisit('PAGE_A2_T06_004'); manager.recordBrowserPageVisit('PAGE_A2_T06_006');
+    manager.setFlag('FLAG_A2_QIMING_TESTIMONIALS_READ', true); manager.setFlag('FLAG_A2_QIMING_FORUM_FOUND', true);
+    manager.inferAct2QimingNameMatch('huang'); manager.inferAct2QimingNameMatch('huang');
+    expect(manager.getState().game.flags.FLAG_A2_HUANG_MATCH_INFERRED).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).not.toBe(true);
+    manager.recordBrowserPageVisit('PAGE_A2_T06_008');
+    manager.confirmAct2OtherCasesAbnormal();
+    expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).not.toBe(true);
+    manager.inferAct2QimingNameMatch('zhong');
+    expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).not.toBe(true);
+    manager.recordBrowserPageVisit('PAGE_A2_T06_007');
+    manager.inferAct2QimingNameMatch('zhong');
+    manager.confirmAct2OtherCasesAbnormal();
+    expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).not.toBe(true);
+    manager.recordBrowserPageVisit('PAGE_A2_T06_009'); manager.confirmAct2OtherCasesAbnormal();
+    expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T06_004');
   });
 });
 

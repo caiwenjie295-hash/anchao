@@ -119,7 +119,20 @@
         { "label": "查看光荣榜上的历次记录", "completionFlag": "FLAG_A2_SCORE_CHANGE_KNOWN" },
         { "label": "读一读成绩表下方的文字", "completionFlag": "FLAG_A2_QIMING_NAME_FOUND" },
         { "label": "翻看以前展示过的学习笔记", "completionFlag": "FLAG_A2_SCHOOL_SS_FOUND" },
-        { "label": "把新旧记号放在一起比一比", "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED" }
+        { "label": "把新旧记号放在一起比一比", "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED" },
+        { "label": "回到浏览器，看看启明的公开资料", "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND", "appId": "browser" }
+      ]
+    },
+    {
+      "id": "GUIDE_A2_T06_001",
+      "phases": ["A2_T06"],
+      "prerequisiteFlags": ["FLAG_A2_SS_MATCH_CONFIRMED"],
+      "completionFlags": ["FLAG_A2_OTHER_CASES_ABNORMAL"],
+      "summary": "继续核对启明留下的公开资料与不同说法",
+      "steps": [
+        { "label": "读一读官网与地方报道", "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND", "appId": "browser" },
+        { "label": "把成功案例与论坛昵称放在一起比较", "completionFlag": "FLAG_A2_HUANG_MATCH_INFERRED" },
+        { "label": "再核对另一组名字和后续记录", "completionFlag": "FLAG_A2_OTHER_CASES_ABNORMAL", "appId": "browser" }
       ]
     }
   ]
