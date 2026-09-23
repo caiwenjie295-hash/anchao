@@ -106,6 +106,21 @@
         { "label": "把三篇材料逐一记进记事本", "completionKind": "tales-collected" },
         { "label": "确认你从材料里看见的问题", "completionFlag": "FLAG_A2_TRANSFER_RULE_INFERRED" }
       ]
+    },
+    {
+      "id": "GUIDE_A2_T05_001",
+      "phases": ["A2_T04", "A2_T05"],
+      "prerequisiteFlags": ["FLAG_A2_TRANSFER_RULE_INFERRED"],
+      "completionFlags": ["FLAG_A2_SS_MATCH_CONFIRMED"],
+      "summary": "回学校看看旧资料，记下你能确认的事",
+      "steps": [
+        { "label": "在微信里看看小月发来的消息", "completionFlag": "FLAG_A2_SCHOOL_ENTERED", "appId": "wechat" },
+        { "label": "听听班主任记得的小A", "completionFlag": "FLAG_A2_LEAVE_OF_ABSENCE_KNOWN" },
+        { "label": "查看光荣榜上的历次记录", "completionFlag": "FLAG_A2_SCORE_CHANGE_KNOWN" },
+        { "label": "读一读成绩表下方的文字", "completionFlag": "FLAG_A2_QIMING_NAME_FOUND" },
+        { "label": "翻看以前展示过的学习笔记", "completionFlag": "FLAG_A2_SCHOOL_SS_FOUND" },
+        { "label": "把新旧记号放在一起比一比", "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED" }
+      ]
     }
   ]
 }

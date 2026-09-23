@@ -101,6 +101,8 @@ export function validateTaskGuideData(): void {
   }
   const act2T01 = document.items.find((guide) => guide.id === 'GUIDE_A2_T01_001');
   if (!act2T01?.steps.some((step) => step.appId === 'browser')) throw new Error('GUIDE_A2_T01_001 必须提供浏览器入口。');
+  const act2T05 = document.items.find((guide) => guide.id === 'GUIDE_A2_T05_001');
+  if (!act2T05 || !act2T05.steps.some((step) => step.appId === 'wechat') || act2T05.completionFlags[0] !== 'FLAG_A2_SS_MATCH_CONFIRMED') throw new Error('T05 任务引导必须从微信开始且在比对确认后结束。');
 }
 validateTaskGuideData();
 

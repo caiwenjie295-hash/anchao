@@ -56,3 +56,43 @@ describe('WechatApp phase B read acknowledgement', () => {
     controller.dispose();
   });
 });
+
+describe('WechatApp T05 school transition', () => {
+  let container: HTMLDivElement;
+  let root: Root;
+
+  beforeEach(() => {
+    localStorage.clear();
+    container = document.createElement('div'); document.body.append(container); root = createRoot(container);
+    if (!HTMLDialogElement.prototype.showModal) Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value(this: HTMLDialogElement) { this.setAttribute('open', ''); } });
+    if (!HTMLDialogElement.prototype.close) Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value(this: HTMLDialogElement) { this.removeAttribute('open'); } });
+  });
+
+  afterEach(() => { act(() => root.unmount()); container.remove(); });
+
+  it('shows Xiaoyue’s gated life messages, lets players inspect local placeholders and enter school on request', async () => {
+    const state = createDefaultState();
+    state.game.act = 2; state.game.phase = 'A2_T04'; state.game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true; state.modules.act2Research.stage = 'tales';
+    const manager = new StateManager(new EventBus(), state);
+    await act(async () => { root.render(<WechatApp manager={manager} />); });
+    const xiaoyue = [...container.querySelectorAll('button')].find((button) => button.textContent?.includes('小月'));
+    await act(async () => { xiaoyue?.click(); });
+    expect(container.textContent).toContain('去年聚会拍的');
+    expect(container.textContent).toContain('小A');
+    const placeholder = container.querySelector<HTMLButtonElement>('.wechat-message__placeholder-image');
+    expect(placeholder).not.toBeNull();
+    await act(async () => { placeholder?.click(); });
+    const dialog = container.querySelector<HTMLDialogElement>('.wechat-image-placeholder');
+    expect(dialog?.open).toBe(true);
+    expect(dialog?.querySelector('.wechat-image-placeholder__card')?.getAttribute('data-asset-id')).toBe('IMG_A2_T05_011');
+    expect(dialog?.textContent).toContain('本地图片资源空位');
+    expect(document.activeElement?.getAttribute('aria-label')).toBe('关闭图片');
+    await act(async () => { dialog?.dispatchEvent(new Event('cancel', { cancelable: true })); });
+    expect(container.querySelector('.wechat-image-placeholder')).toBeNull();
+    expect(document.activeElement).toBe(placeholder);
+    await act(async () => { container.querySelector<HTMLButtonElement>('.wechat-school-transition button')?.click(); });
+    expect(manager.getState().modules.act2Research.stage).toBe('school');
+    expect(manager.getState().game.phase).toBe('A2_T05');
+    expect(manager.getState().game.flags.FLAG_A2_SCHOOL_ENTERED).toBe(true);
+  });
+});

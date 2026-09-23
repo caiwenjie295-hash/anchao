@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { photoById, isSymbolVisible } from '../../data/photoData';
 import { assetLoader } from '../../core/assetLoader';
+import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 
 const defaults = { exposure: 0, shadows: 0, contrast: 0 };
 
@@ -23,7 +24,7 @@ export function PhotosApp({ manager = stateManager }: { manager?: StateManager }
           <img className="photo-evidence-image" src={assetLoader.get(photoId)!.src} alt={photo.title} />
           <div className="photo-shadow" style={{ opacity: Math.max(.05, .78 - adjustment.shadows / 135) }} />
           {revealed && <button type="button" className={`double-s${inspected ? ' double-s--inspected' : ''}`} onClick={() => manager.inspectPhotoSymbol(photoId)} aria-label="检查暗处的双 S 十字符号">
-            <svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 7C8 7 8 29 30 30S52 53 30 53M30 7C52 7 52 29 30 30S8 53 30 53M7 30H53M30 7V53" /></svg>
+            <DoubleSSymbol label="暗处的双 S 十字符号" />
           </button>}
         </div>
       </div></div>

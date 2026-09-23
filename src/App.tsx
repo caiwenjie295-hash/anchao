@@ -1,6 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { stateManager } from './core/stateManager';
-import type { Act2ActiveStage, Act2Stage, AppId } from './core/types';
+import type { Act2Stage, AppId } from './core/types';
 import { apps, appById } from './data/apps';
 import { AppWindow } from './components/AppWindow';
 import { DesktopIcon } from './components/DesktopIcon';
@@ -18,10 +18,10 @@ import { Act2Experience } from './scenes/act2/Act2Experience';
 import './styles.css';
 import './imageAssets.css';
 
-type Act2SceneStage = Exclude<Act2ActiveStage, 'search'>;
+type Act2SceneStage = Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school'>;
 
 /** 只有 bridge / library / tales 会接管全屏场景；search 仍是普通桌面。 */
-const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales';
+const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales' || stage === 'school';
 
 export default function App() {
   const state = useSyncExternalStore(stateManager.subscribe, stateManager.getState, stateManager.getState);

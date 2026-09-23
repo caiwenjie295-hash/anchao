@@ -43,10 +43,11 @@ export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
     sorted: false,
     inferenceAcknowledged: false,
   },
+  school: { visitedAreaIds: [], inspectedHotspotIds: [] },
 });
 
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 3,
+  schemaVersion: 4,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,

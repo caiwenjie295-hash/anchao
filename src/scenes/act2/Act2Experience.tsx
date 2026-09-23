@@ -1,8 +1,9 @@
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
-import type { Act2ActiveStage } from '../../core/types';
+import type { Act2Stage } from '../../core/types';
 import { BridgeInvestigation } from './BridgeInvestigation';
 import { LibraryResearch } from './LibraryResearch';
 import { TalesInvestigation } from './TalesInvestigation';
+import { SchoolInvestigation } from './SchoolInvestigation';
 
 /** 桥头场景通用外层的资源空位：`file: null`，只用克制 CSS 占位。 */
 export const ACT2_BRIDGE_PLACEHOLDER_ASSET_ID = 'IMG_A2_T02_001';
@@ -12,11 +13,12 @@ export const ACT2_RESUME_LABELS = {
   bridge: '继续桥头调查',
   library: '继续地方志调查',
   tales: '继续查阅三篇志异',
+  school: '继续高中调查',
 } as const;
 
 export interface Act2ExperienceProps {
   /** 当前第二幕场景阶段；`search` 或 `inactive` 时本组件不应被挂载。 */
-  stage: Exclude<Act2ActiveStage, 'search'>;
+  stage: Exclude<Act2Stage, 'inactive' | 'search'>;
   /** 场景是否正在全屏显示；false 时只渲染桌面继续入口。 */
   sceneOpen: boolean;
   onDismissScene: () => void;
@@ -31,6 +33,7 @@ export interface Act2ExperienceProps {
 export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene, manager = defaultManager }: Act2ExperienceProps) {
   const isBridge = stage === 'bridge';
   const isLibrary = stage === 'library';
+  const isSchool = stage === 'school';
   const placeholderAssetId = isBridge ? ACT2_BRIDGE_PLACEHOLDER_ASSET_ID : undefined;
 
   if (sceneOpen) {
@@ -42,7 +45,9 @@ export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene
       >
         {isBridge
           ? <BridgeInvestigation manager={manager} onReturnDesktop={onDismissScene} />
-          : isLibrary ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} /> : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
+          : isLibrary ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} />
+            : isSchool ? <SchoolInvestigation manager={manager} onReturnToDesktop={onDismissScene} />
+              : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
       </div>
     );
   }

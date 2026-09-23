@@ -13,7 +13,7 @@ const flags = getItems<{ id: string }>(flagsDocument, 'flags.json');
 export const noteById = new Map(noteEntries.map((entry) => [entry.id, entry]));
 
 /** 第二幕 T01–T03 由本模块统一登记，供并行任务按 ID 消费。 */
-export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001', 'NOTE_A2_T04_001', 'NOTE_A2_T04_002', 'NOTE_A2_T04_003', 'NOTE_A2_T04_004'];
+export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001', 'NOTE_A2_T04_001', 'NOTE_A2_T04_002', 'NOTE_A2_T04_003', 'NOTE_A2_T04_004', 'NOTE_A2_T05_001', 'NOTE_A2_T05_002', 'NOTE_A2_T05_003', 'NOTE_A2_T05_004'];
 const act2NoteRequiredText: Record<string, string[]> = {
   NOTE_A2_T01_001: ['网上几乎找不到有用的信息', '只有当地人才知道'],
   NOTE_A2_T01_002: ['这个词太普通了'],
@@ -24,6 +24,10 @@ const act2NoteRequiredText: Record<string, string[]> = {
   NOTE_A2_T04_002: ['六儿', '沈'],
   NOTE_A2_T04_003: ['哑女', '画眉'],
   NOTE_A2_T04_004: ['小A缺什么？'],
+  NOTE_A2_T05_001: ['高二休学两个月', '返校后安静', '成绩提升'],
+  NOTE_A2_T05_002: ['600', '400', '300', '130', '88', '53', '20'],
+  NOTE_A2_T05_003: ['启明青少年成长中心两个月来对我的教育和培养'],
+  NOTE_A2_T05_004: ['鸡公岭', '小A / 启明'],
 };
 /** T04 才揭示的结论不得提前出现在第二幕摘录里。 */
 const act2NoteForbiddenText: Record<string, string[]> = { NOTE_A2_T03_001: ['记忆', '身份'] };

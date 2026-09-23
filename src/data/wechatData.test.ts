@@ -10,6 +10,8 @@ import {
   visibleContacts,
 } from './wechatData';
 import { createDefaultState } from '../core/defaultState';
+import imagesDocument from '../../data/images.json';
+import { messageById } from './wechatData';
 
 describe('wechat data', () => {
   it('has traceable, resolvable contacts, flags and placeholder resources', () => {
@@ -28,5 +30,18 @@ describe('wechat data', () => {
     expect(getUnreadCount(MOM_CONTACT_ID, state)).toBe(1);
     state.flags[MOM_READ_FLAG] = true;
     expect(getUnreadCount(MOM_CONTACT_ID, state)).toBe(0);
+  });
+
+  it('keeps Xiaoyue’s T05 messages hidden until T04 inference and includes varied life content', () => {
+    const state = createDefaultState().game;
+    expect(getConversationMessages('CONTACT_A1_A_002', state).some((message) => message.id.startsWith('CHAT_A2_T05_'))).toBe(false);
+    state.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true;
+    const messages = getConversationMessages('CONTACT_A1_A_002', state).filter((message) => message.id.startsWith('CHAT_A2_T05_'));
+    expect(messages).toHaveLength(10);
+    expect(messages.filter((message) => message.kind === 'text')).toHaveLength(5);
+    expect(messages.filter((message) => message.kind === 'image').map((message) => message.assetId)).toContain('IMG_A2_T05_009');
+    expect(messageById.get('CHAT_A2_T05_004')?.assetId).toBe('IMG_A2_T05_011');
+    expect(imagesDocument.items.find((image) => image.id === 'IMG_A2_T05_011')?.file).toBeNull();
+    expect(messages.every((message) => message.conversationId === 'CONTACT_A1_A_002')).toBe(true);
   });
 });

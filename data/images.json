@@ -14,6 +14,17 @@
       "assetType": "image",
       "file": "小学合照1.png"
     },
+    { "id": "IMG_A2_T05_001", "title": "高中校门", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "高中探索校门背景替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": [], "notes": "本地资源空位，不加载网络资源", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_002", "title": "高中走廊", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "走廊与厕所方向背景替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": [], "notes": "本地资源空位；消防栓只作为普通环境物件", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_003", "title": "高中旧教室", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "小A与小月旧教室背景替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": [], "notes": "本地资源空位，不加载网络资源", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_004", "title": "高中光荣榜", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "光荣榜与王澳成绩记录替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": [], "notes": "本地资源空位，不加载网络资源", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_005", "title": "高中老师办公室", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "老师办公室背景替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": [], "notes": "本地资源空位，不加载网络资源", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_006", "title": "学霸笔记页", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "双 S 学霸笔记图像替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": ["FLAG_A2_SCHOOL_SS_FOUND"], "notes": "本地资源空位；笔记符号由共用绘制组件显示", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_007", "title": "高中宣传栏", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "宣传栏背景替换位", "unlockCondition": ["FLAG_A2_SCHOOL_ENTERED"], "relatedFlags": [], "notes": "本地资源空位，不加载网络资源", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_008", "title": "同学聚会照", "act": 2, "phase": "A2_T05", "source": "wechat", "purpose": "小月微信聚会生活照替换位", "unlockCondition": ["FLAG_A2_TRANSFER_RULE_INFERRED"], "relatedFlags": [], "notes": "本地资源空位，微信显示带说明的可查看替代视图", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_009", "title": "小A旧照", "act": 2, "phase": "A2_T05", "source": "wechat", "purpose": "小月分享的小A旧生活照替换位", "unlockCondition": ["FLAG_A2_TRANSFER_RULE_INFERRED"], "relatedFlags": [], "notes": "本地资源空位，微信显示带说明的可查看替代视图", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_010", "title": "小月的日常", "act": 2, "phase": "A2_T05", "source": "wechat", "purpose": "小月近期生活照替换位", "unlockCondition": ["FLAG_A2_TRANSFER_RULE_INFERRED"], "relatedFlags": [], "notes": "本地资源空位，微信显示带说明的可查看替代视图", "assetType": "image", "file": null },
+    { "id": "IMG_A2_T05_011", "title": "高中旧合照", "act": 2, "phase": "A2_T05", "source": "wechat", "purpose": "小月分享的高中开学旧合照本地资源空位", "unlockCondition": ["FLAG_A2_TRANSFER_RULE_INFERRED"], "relatedFlags": [], "notes": "本地图片资源空位，由微信说明视图展示，不复用初中照片", "assetType": "image", "file": null },
     {
       "id": "IMG_A1_D_002",
       "title": "初中三人合照",
