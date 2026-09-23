@@ -5,7 +5,8 @@ import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
 import { Act2T06Controller } from '../../story/act2T06Controller';
-import { BrowserApp } from './BrowserApp';
+import { browserPageById } from '../../data/browserData';
+import { BrowserApp, BrowserPageView } from './BrowserApp';
 
 describe('BrowserApp T06 visibility gates', () => {
   let root: Root; let host: HTMLDivElement; let manager: StateManager; let bus: EventBus;
@@ -51,5 +52,12 @@ describe('BrowserApp T06 visibility gates', () => {
     await act(async () => (host.querySelector('.browser-page__actions button') as HTMLButtonElement).click());
     expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).toBe(true);
     controller.dispose();
+  });
+
+  it('keeps the same hook order when a page changes from available to missing', async () => {
+    await act(async () => { root.render(createElement(BrowserPageView, { page: browserPageById.get('PAGE_A2_T06_004'), manager })); });
+    expect(host.textContent).toContain('学员黄子山');
+    await expect(act(async () => { root.render(createElement(BrowserPageView, { page: undefined, manager })); })).resolves.toBeUndefined();
+    expect(host.textContent).toContain('该内部页面已不可用');
   });
 });

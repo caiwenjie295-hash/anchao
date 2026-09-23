@@ -106,10 +106,11 @@ export const hydrateState = (candidate: unknown): AppState => {
   const t05FlagIds = ['FLAG_A2_SCHOOL_ENTERED', 'FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SS_MATCH_CONFIRMED'];
   const t06FlagIds = ['FLAG_A2_QIMING_OFFICIAL_FOUND', 'FLAG_A2_QIMING_TESTIMONIALS_READ', 'FLAG_A2_QIMING_FORUM_FOUND', 'FLAG_A2_HUANG_MATCH_INFERRED', 'FLAG_A2_ZHONG_MATCH_INFERRED', 'FLAG_A2_OTHER_CASES_ABNORMAL'];
   for (const flagId of [...t05FlagIds, ...t06FlagIds]) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
-  let schoolStageValid = act2Research.stage === 'school' && rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
-  if (act2Research.stage === 'school' && !schoolStageValid) act2Research.stage = 'tales';
-  let qimingStageValid = act2Research.stage === 'qiming' && rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true;
-  if (act2Research.stage === 'qiming' && !qimingStageValid) act2Research.stage = rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true ? 'school' : 'tales';
+  const schoolPrerequisitesValid = rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
+  let qimingStageValid = act2Research.stage === 'qiming' && schoolPrerequisitesValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true;
+  if (act2Research.stage === 'qiming' && !qimingStageValid) act2Research.stage = schoolPrerequisitesValid ? 'school' : 'tales';
+  if (act2Research.stage === 'school' && !schoolPrerequisitesValid) act2Research.stage = 'tales';
+  let schoolStageValid = (act2Research.stage === 'school' || qimingStageValid) && schoolPrerequisitesValid;
   const t05Dependencies: [string, string][] = [
     ['FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_SCHOOL_ENTERED'],
     ['FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCHOOL_ENTERED'],
@@ -137,8 +138,8 @@ export const hydrateState = (candidate: unknown): AppState => {
   if (rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true && rawFlags.FLAG_A1_SS_FOUND !== true) delete rawFlags.FLAG_A2_SS_MATCH_CONFIRMED;
   if (qimingStageValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED !== true) {
     qimingStageValid = false;
-    act2Research.stage = 'school';
-    schoolStageValid = rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
+    act2Research.stage = schoolPrerequisitesValid ? 'school' : 'tales';
+    schoolStageValid = act2Research.stage === 'school' && schoolPrerequisitesValid;
   }
   if (!schoolStageValid && !qimingStageValid) act2Research.school = { visitedAreaIds: [], inspectedHotspotIds: [] };
   const rawVisitedPageIds = browser ? safeStringIds(browser.visitedPageIds).filter((id) => browserPageById.has(id)) : [];
@@ -167,13 +168,12 @@ export const hydrateState = (candidate: unknown): AppState => {
     return !definition || !isAct2T06Record(definition) || qimingStageValid;
   });
   const hydratedPhase = typeof game.phase === 'string' ? game.phase : fallback.game.phase;
-  const safePhase = act2Research.stage === 'qiming'
-    ? 'A2_T06'
-    : act2Research.stage === 'school'
-      ? 'A2_T05'
-      : (hydratedPhase === 'A2_T06' || hydratedPhase === 'A2_T05') && ['inactive', 'search', 'bridge', 'library', 'tales'].includes(act2Research.stage)
-        ? (act2Research.stage === 'tales' ? 'A2_T04' : hydratedPhase === 'A2_T05' ? 'A2_T04' : hydratedPhase)
-        : hydratedPhase;
+  const phaseForStage: Partial<Record<Act2Stage, string>> = {
+    search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06',
+  };
+  const safePhase = phaseForStage[act2Research.stage] ?? (
+    hydratedPhase.startsWith('A2_T') ? fallback.game.phase : hydratedPhase
+  );
   const autoEntryIds = notepad ? safeStringIds(notepad.autoEntryIds).filter((id) => {
     const triggerFlagByNote: Record<string, string> = {
       NOTE_A2_T05_001: 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN',

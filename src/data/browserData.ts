@@ -7,7 +7,11 @@ export type TraceableRecord = { id: string; title: string; act: number; phase: s
 export type BrowserPageType = 'news' | 'encyclopedia' | 'trail-guide' | 'weather' | 'map' | 'forum' | 'self-media' | 'same-name' | 'incident' | 'commercial';
 /** 第二幕 T01 页面必须落在规范列出的九类互联网噪音里。 */
 export type Act2NoiseCategory = 'tonic-article' | 'supplement-ad' | 'tutoring' | 'repair-service' | 'travel-guide' | 'same-name-place' | 'photo-post' | 'unrelated-news' | 'symbol-encyclopedia';
-export type BrowserPage = TraceableRecord & { pageType: BrowserPageType; noiseCategory?: Act2NoiseCategory; url: string; domain: string; publishedAt: string; headline: string; snippet: string; body: string[]; keywords: string[]; resultTier: 'strong' | 'weak' | 'noise'; triggerFlags: string[]; images?: { assetId: string; caption: string }[] };
+export type BrowserPageInteraction =
+  | { type: 'copy-names'; prompt: string; successMessage: string; failureMessage: string; names: { value: string; buttonLabel: string }[] }
+  | { type: 'qiming-name-match'; prompt: string; buttonLabel: string; person: 'huang' | 'zhong'; requiredVisitedPageIds: string[] }
+  | { type: 'confirm-other-cases'; prompt: string; buttonLabel: string; requiredVisitedPageIds: string[]; requiredFlags: string[] };
+export type BrowserPage = TraceableRecord & { pageType: BrowserPageType; noiseCategory?: Act2NoiseCategory; url: string; domain: string; publishedAt: string; headline: string; snippet: string; body: string[]; keywords: string[]; resultTier: 'strong' | 'weak' | 'noise'; triggerFlags: string[]; images?: { assetId: string; caption: string }[]; interactions?: BrowserPageInteraction[] };
 export type SearchQuery = TraceableRecord & { query: string; aliases: string[]; suggestionTerms: string[]; resultPageIds: string[] };
 type Collection<T> = { schemaVersion: number; items: T[] };
 
@@ -61,6 +65,12 @@ export function validateBrowserData(): void {
     if (!traceable(page) || ids.has(page.id)) throw new Error(`浏览器页面追溯字段或 ID 无效：${page.id}`);
     ids.add(page.id);
     if (!allowedPageTypes.includes(page.pageType) || !['strong', 'weak', 'noise'].includes(page.resultTier) || !page.url || !page.domain || !page.headline || !page.snippet || !Array.isArray(page.body) || page.body.length === 0 || page.body.some((line) => !line.trim())) throw new Error(`浏览器页面字段无效：${page.id}`);
+    for (const interaction of page.interactions ?? []) {
+      if (!interaction.prompt || (interaction.type === 'copy-names' && (!interaction.successMessage || !interaction.failureMessage || interaction.names.length === 0)) || (interaction.type !== 'copy-names' && !interaction.buttonLabel)) throw new Error(`${page.id} 交互元数据字段无效。`);
+      if ('requiredVisitedPageIds' in interaction && interaction.requiredVisitedPageIds.some((id) => !ACT2_T06_PAGE_IDS.includes(id))) throw new Error(`${page.id} 交互引用了未登记页面。`);
+      if ('requiredFlags' in interaction && interaction.requiredFlags.some((id) => !flags.some((flag) => flag.id === id))) throw new Error(`${page.id} 交互引用了未登记 Flag。`);
+      if (interaction.type === 'copy-names' && interaction.names.some((name) => !name.value || !name.buttonLabel)) throw new Error(`${page.id} 复制姓名数据无效。`);
+    }
     for (const flagId of [...page.relatedFlags, ...page.triggerFlags]) if (!flags.some((flag) => flag.id === flagId)) throw new Error(`${page.id} 引用了未登记 Flag：${flagId}`);
     if (isAct2T01Record(page)) {
       if (!page.noiseCategory || !ACT2_T01_NOISE_CATEGORIES.includes(page.noiseCategory)) throw new Error(`T01 噪音页面缺少有效分类：${page.id}`);

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { EvidenceImage } from '../../components/EvidenceImage';
 import { stateManager, type StateManager } from '../../core/stateManager';
-import { browserPageById, findSearchQuery, getResultsForQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible, type BrowserPage } from '../../data/browserData';
+import { browserPageById, findSearchQuery, getResultsForQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible, type BrowserPage, type BrowserPageInteraction } from '../../data/browserData';
 
 type View = { kind: 'home' } | { kind: 'results'; query: string } | { kind: 'page'; pageId: string };
 type Tab = { id: number; view: View; stack: View[]; stackIndex: number };
@@ -104,11 +104,25 @@ function SearchResults({ query, stage, onOpen }: { query: string; stage: import(
   const results = getResultsForQuery(query, stage);
   return <section className="browser-results" aria-live="polite"><header><p>内部搜索</p><h2>{query}</h2><span>{results.length ? `约 ${results.length} 条结果` : '没有完全匹配的结果'}</span></header>{results.length ? <ol>{results.map((page) => <li key={page.id}><button type="button" onClick={() => onOpen(page.id)}><span className="browser-result__domain">{page.domain}</span><strong>{page.headline}</strong><span>{page.publishedAt} · {page.snippet}</span></button></li>)}</ol> : <p className="browser-empty">试试“鸡公岭”“XX县失踪”或其他搜索建议。</p>}</section>;
 }
-function BrowserPageView({ page, manager }: { page: BrowserPage | undefined; manager: StateManager }) {
-  if (!page) return <p className="browser-empty">该内部页面已不可用。</p>;
-  const t06 = isAct2T06Record(page);
+export function BrowserPageView({ page, manager }: { page: BrowserPage | undefined; manager: StateManager }) {
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
-  const copyName = async (name: string) => { try { await navigator.clipboard.writeText(name); setCopyStatus(`已复制${name}`); } catch { setCopyStatus(`复制不可用，请选中“${name}”后手动复制`); } };
   const visited = manager.getState().modules.browser.visitedPageIds;
-  return <article className="browser-page"><p className="browser-page__source">{page.domain} · {page.publishedAt}</p><h2>{page.headline}</h2><p className="browser-page__url">{page.url}</p><div>{page.body.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>{t06 && page.id === 'PAGE_A2_T06_004' && <div className="browser-page__actions" aria-label="复制案例姓名"><p>姓名可复制；若复制按钮不可用，也可选中姓名后手动复制。</p>{copyStatus && <p role="status">{copyStatus}</p>}{['黄子山', '钟子月'].map((name) => <button type="button" key={name} onClick={() => void copyName(name)}>复制{name}</button>)}</div>}{t06 && page.id === 'PAGE_A2_T06_006' && visited.includes('PAGE_A2_T06_004') && <div className="browser-page__actions"><p>论坛昵称与公开案例是否可能对应？请结合两页内容分别判断。</p><button type="button" onClick={() => manager.inferAct2QimingNameMatch('huang')}>黄山可能对应黄子山</button></div>}{t06 && page.id === 'PAGE_A2_T06_007' && visited.includes('PAGE_A2_T06_004') && visited.includes('PAGE_A2_T06_006') && <div className="browser-page__actions"><p>论坛昵称与公开案例是否可能对应？请结合两页内容分别判断。</p><button type="button" onClick={() => manager.inferAct2QimingNameMatch('zhong')}>月子可能对应钟子月</button></div>}{t06 && page.id === 'PAGE_A2_T06_009' && visited.includes('PAGE_A2_T06_008') && manager.getState().game.flags.FLAG_A2_HUANG_MATCH_INFERRED === true && manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED === true && <div className="browser-page__actions"><p>两则实名后续都已读，且已分别比较论坛昵称与案例姓名。</p><button type="button" onClick={() => manager.confirmAct2OtherCasesAbnormal()}>记录其他学员也出现异常后续</button></div>}{page.images?.map((picture) => <figure key={picture.assetId}><EvidenceImage assetId={picture.assetId} caption={picture.caption} /><figcaption>{picture.caption}</figcaption></figure>)}</article>;
+  if (!page) return <p className="browser-empty">该内部页面已不可用。</p>;
+  const interactions = (page.interactions ?? []).filter((interaction) => (
+    ('requiredVisitedPageIds' in interaction ? interaction.requiredVisitedPageIds.every((id) => visited.includes(id)) : true)
+    && ('requiredFlags' in interaction ? interaction.requiredFlags.every((id) => manager.getState().game.flags[id] === true) : true)
+  ));
+  const copyName = async (interaction: Extract<BrowserPageInteraction, { type: 'copy-names' }>, name: string) => {
+    try {
+      await navigator.clipboard.writeText(name);
+      setCopyStatus(interaction.successMessage.replaceAll('{name}', name));
+    } catch {
+      setCopyStatus(interaction.failureMessage.replaceAll('{name}', name));
+    }
+  };
+  const runInteraction = (interaction: BrowserPageInteraction) => {
+    if (interaction.type === 'qiming-name-match') manager.inferAct2QimingNameMatch(interaction.person);
+    if (interaction.type === 'confirm-other-cases') manager.confirmAct2OtherCasesAbnormal();
+  };
+  return <article className="browser-page"><p className="browser-page__source">{page.domain} · {page.publishedAt}</p><h2>{page.headline}</h2><p className="browser-page__url">{page.url}</p><div>{page.body.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>{interactions.map((interaction, index) => <div className="browser-page__actions" key={`${page.id}-interaction-${index}`}><p>{interaction.prompt}</p>{interaction.type === 'copy-names' ? <>{copyStatus && <p role="status">{copyStatus}</p>}{interaction.names.map((name) => <button type="button" key={name.value} onClick={() => void copyName(interaction, name.value)}>{name.buttonLabel}</button>)}</> : <button type="button" onClick={() => runInteraction(interaction)}>{interaction.buttonLabel}</button>}</div>)}{page.images?.map((picture) => <figure key={picture.assetId}><EvidenceImage assetId={picture.assetId} caption={picture.caption} /><figcaption>{picture.caption}</figcaption></figure>)}</article>;
 }

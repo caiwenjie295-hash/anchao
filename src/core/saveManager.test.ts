@@ -239,6 +239,19 @@ describe('saveManager', () => {
     expect(cleaned.modules.browser.queryHistory).toEqual(['鸡公岭']);
     expect(cleaned.modules.notepad.autoEntryIds).toEqual([]);
     expect(cleaned.game.flags.FLAG_A2_QIMING_FORUM_FOUND).toBeUndefined();
+    expect(cleaned.game.flags.FLAG_A2_SCHOOL_ENTERED).toBe(true);
+    expect(cleaned.game.flags.FLAG_A2_SCHOOL_SS_FOUND).toBe(true);
+  });
+
+  it('derives a phase from the validated Act2 stage instead of preserving a forged T06 phase', () => {
+    const forged = createDefaultState();
+    forged.game.act = 2; forged.game.phase = 'A2_T06';
+    forged.modules.act2Research.stage = 'search';
+    expect(hydrateState(JSON.parse(JSON.stringify(forged)))).toMatchObject({ game: { phase: 'A2_T01' }, modules: { act2Research: { stage: 'search' } } });
+    forged.modules.act2Research.stage = 'bridge';
+    expect(hydrateState(JSON.parse(JSON.stringify(forged)))).toMatchObject({ game: { phase: 'A2_T02' }, modules: { act2Research: { stage: 'bridge' } } });
+    forged.modules.act2Research.stage = 'library';
+    expect(hydrateState(JSON.parse(JSON.stringify(forged)))).toMatchObject({ game: { phase: 'A2_T03' }, modules: { act2Research: { stage: 'library' } } });
   });
 
   it('rejects unsupported schema versions and keeps the save key stable', () => {
