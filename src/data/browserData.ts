@@ -1,6 +1,7 @@
 import pagesDocument from '../../data/browser_pages.json';
 import queriesDocument from '../../data/search_queries.json';
 import flagsDocument from '../../data/flags.json';
+import type { Act2Stage } from '../core/types';
 
 export type TraceableRecord = { id: string; title: string; act: number; phase: string; source: string; purpose: string; unlockCondition: string[]; relatedFlags: string[]; notes: string };
 export type BrowserPageType = 'news' | 'encyclopedia' | 'trail-guide' | 'weather' | 'map' | 'forum' | 'self-media' | 'same-name' | 'incident' | 'commercial';
@@ -17,6 +18,8 @@ export const ACT2_T01_FORBIDDEN_TERMS = ['黑补母', '补母志', '以有余补
 export const ACT2_T01_BU_QUERY_IDS = ['QUERY_A2_T01_001', 'QUERY_A2_T01_002', 'QUERY_A2_T01_003', 'QUERY_A2_T01_006'];
 /** 与“双S / A.W”有关的冻结查询。 */
 export const ACT2_T01_SS_QUERY_IDS = ['QUERY_A2_T01_004', 'QUERY_A2_T01_005'];
+export const ACT2_T06_QUERY_IDS = ['QUERY_A2_T06_001', 'QUERY_A2_T06_002', 'QUERY_A2_T06_003', 'QUERY_A2_T06_004', 'QUERY_A2_T06_005', 'QUERY_A2_T06_006', 'QUERY_A2_T06_007'];
+export const ACT2_T06_PAGE_IDS = ['PAGE_A2_T06_001', 'PAGE_A2_T06_002', 'PAGE_A2_T06_003', 'PAGE_A2_T06_004', 'PAGE_A2_T06_005', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009', 'PAGE_A2_T06_010', 'PAGE_A2_T06_011', 'PAGE_A2_T06_012'];
 export type Act2T01SearchTopic = 'bu' | 'ss';
 
 const allowedPageTypes: BrowserPageType[] = ['news', 'encyclopedia', 'trail-guide', 'weather', 'map', 'forum', 'self-media', 'same-name', 'incident', 'commercial'];
@@ -32,6 +35,7 @@ export const browserPageById = new Map(browserPages.map((page) => [page.id, page
 export const searchQueryByNormalizedTerm = new Map(searchQueries.flatMap((definition) => [definition.query, ...definition.aliases].map((term) => [normalizeSearchQuery(term), definition] as const)));
 const traceable = (record: TraceableRecord): boolean => Boolean(record.id && record.title && record.act && record.phase && record.source && record.purpose && record.notes && Array.isArray(record.unlockCondition) && Array.isArray(record.relatedFlags));
 export const isAct2T01Record = (record: TraceableRecord): boolean => record.act === 2 && record.phase === 'A2_T01';
+export const isAct2T06Record = (record: TraceableRecord): boolean => record.act === 2 && record.phase === 'A2_T06';
 
 const act2T01SearchTopicByQueryId = new Map<string, Act2T01SearchTopic>([
   ...ACT2_T01_BU_QUERY_IDS.map((id) => [id, 'bu'] as const),
@@ -85,13 +89,35 @@ export function validateBrowserData(): void {
   const frozenQueryIds = [...ACT2_T01_BU_QUERY_IDS, ...ACT2_T01_SS_QUERY_IDS];
   if (frozenQueryIds.some((id) => !t01QueryIds.includes(id))) throw new Error('T01 冻结查询缺少数据登记。');
   if (t01QueryIds.some((id) => !frozenQueryIds.includes(id))) throw new Error('T01 查询缺少冻结主题分类。');
+  const t06Pages = browserPages.filter(isAct2T06Record);
+  const t06Queries = searchQueries.filter(isAct2T06Record);
+  if (t06Pages.map((page) => page.id).sort().join('|') !== [...ACT2_T06_PAGE_IDS].sort().join('|')) throw new Error('T06 页面必须且只能使用冻结的十二个页面 ID。');
+  if (t06Queries.map((query) => query.id).sort().join('|') !== [...ACT2_T06_QUERY_IDS].sort().join('|')) throw new Error('T06 查询必须且只能使用冻结的七个查询 ID。');
+  const earlyQimingQueries = t06Queries.filter((query) => ACT2_T06_QUERY_IDS.slice(0, 4).includes(query.id));
+  if (earlyQimingQueries.some((query) => query.resultPageIds.slice(0, 4).some((id) => id === 'PAGE_A2_T06_006' || id === 'PAGE_A2_T06_007'))) throw new Error('T06 官方查询必须先展示官方材料，论坛结果靠后。');
+  const complaintQuery = t06Queries.find((query) => query.id === 'QUERY_A2_T06_005');
+  if (complaintQuery?.resultPageIds[0] !== 'PAGE_A2_T06_006') throw new Error('T06 投诉查询必须将论坛主帖提前。');
 }
 validateBrowserData();
 
 export const findSearchQuery = (query: string): SearchQuery | undefined => searchQueryByNormalizedTerm.get(normalizeSearchQuery(query));
-export const getSuggestions = (query: string): string[] => {
-  const normalized = normalizeSearchQuery(query);
-  if (!normalized) return searchQueries.slice(0, 5).map((item) => item.query);
-  return [...new Set(searchQueries.flatMap((item) => [item.query, ...item.aliases, ...item.suggestionTerms]).filter((term) => normalizeSearchQuery(term).includes(normalized)))].slice(0, 6);
+export const isAct2T06Query = (query: string): boolean => {
+  const definition = findSearchQuery(query);
+  return definition !== undefined && isAct2T06Record(definition);
 };
-export const getResultsForQuery = (query: string): BrowserPage[] => findSearchQuery(query)?.resultPageIds.map((id) => browserPageById.get(id)).filter((page): page is BrowserPage => Boolean(page)) ?? [];
+export const isAct2T06PageId = (pageId: string): boolean => ACT2_T06_PAGE_IDS.includes(pageId);
+export const isBrowserPageVisible = (page: BrowserPage | undefined, stage: Act2Stage | null): page is BrowserPage => (
+  page !== undefined && (!isAct2T06Record(page) || stage === 'qiming')
+);
+const queryVisible = (definition: SearchQuery, stage: Act2Stage | null): boolean => !isAct2T06Record(definition) || stage === 'qiming';
+export const getSuggestions = (query: string, stage: Act2Stage | null = null): string[] => {
+  const visibleQueries = searchQueries.filter((definition) => queryVisible(definition, stage));
+  const normalized = normalizeSearchQuery(query);
+  if (!normalized) return visibleQueries.slice(0, 5).map((item) => item.query);
+  return [...new Set(visibleQueries.flatMap((item) => [item.query, ...item.aliases, ...item.suggestionTerms]).filter((term) => normalizeSearchQuery(term).includes(normalized)))].slice(0, 6);
+};
+export const getResultsForQuery = (query: string, stage: Act2Stage | null = null): BrowserPage[] => {
+  const definition = findSearchQuery(query);
+  if (!definition || !queryVisible(definition, stage)) return [];
+  return definition.resultPageIds.map((id) => browserPageById.get(id)).filter((page): page is BrowserPage => isBrowserPageVisible(page, stage));
+};

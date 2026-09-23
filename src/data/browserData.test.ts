@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ACT2_T01_BU_QUERY_IDS, ACT2_T01_FORBIDDEN_TERMS, ACT2_T01_NOISE_CATEGORIES, ACT2_T01_SS_QUERY_IDS, browserPages, classifyAct2T01Search, findSearchQuery, getResultsForQuery, normalizeSearchQuery, searchQueries, validateBrowserData } from './browserData';
+import { ACT2_T01_BU_QUERY_IDS, ACT2_T01_FORBIDDEN_TERMS, ACT2_T01_NOISE_CATEGORIES, ACT2_T01_SS_QUERY_IDS, ACT2_T06_PAGE_IDS, ACT2_T06_QUERY_IDS, browserPages, classifyAct2T01Search, findSearchQuery, getResultsForQuery, getSuggestions, normalizeSearchQuery, searchQueries, validateBrowserData } from './browserData';
 
 describe('browser data', () => {
   it('validates traceability, page references and noise mixed result sets', () => {
@@ -69,5 +69,16 @@ describe('act2 T01 search noise', () => {
   it('keeps first-act queries untouched', () => {
     expect(browserPages.filter((page) => page.act === 1).length).toBe(20);
     expect(searchQueries.filter((query) => query.act === 1).length).toBe(7);
+  });
+});
+
+describe('act2 T06 gated search data', () => {
+  it('registers the frozen T06 page and query sets, hidden until qiming stage', () => {
+    expect(browserPages.filter((page) => page.phase === 'A2_T06').map((page) => page.id).sort()).toEqual([...ACT2_T06_PAGE_IDS].sort());
+    expect(searchQueries.filter((query) => query.phase === 'A2_T06').map((query) => query.id).sort()).toEqual([...ACT2_T06_QUERY_IDS].sort());
+    expect(getSuggestions('启明', 'school').some((term) => term.includes('经历') || term.includes('论坛'))).toBe(false);
+    expect(getResultsForQuery('启明 投诉', 'school')).toEqual([]);
+    expect(getResultsForQuery('启明 投诉', 'qiming')[0]?.id).toBe('PAGE_A2_T06_006');
+    expect(getResultsForQuery('启明青少年成长中心', 'qiming')[0]?.id).toBe('PAGE_A2_T06_001');
   });
 });

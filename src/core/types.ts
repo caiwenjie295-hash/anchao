@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -69,7 +69,7 @@ export interface PhotosState {
 }
 
 export interface AppState {
-  schemaVersion: 4;
+  schemaVersion: 5;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -83,9 +83,9 @@ export interface AppState {
   };
 }
 
-export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' | 'school';
+export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' | 'school' | 'qiming';
 
-export type Act2ActiveStage = Exclude<Act2Stage, 'inactive' | 'school'>;
+export type Act2ActiveStage = Exclude<Act2Stage, 'inactive' | 'school' | 'qiming'>;
 
 export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_XIAOYUE_CLASSROOM', 'AREA_A2_T05_RESTROOM_APPROACH', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_NOTICE_BOARD'] as const;
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
@@ -162,6 +162,9 @@ export type AnchaoEventMap = {
   'act2:school-area-visited': { areaId: string };
   'act2:school-hotspot-inspected': { hotspotId: string };
   'act2:school-symbol-matched': Record<string, never>;
-  'progress:reset': { schemaVersion: 4 };
-  'save:completed': { schemaVersion: 4 };
+  'act2:qiming-entered': Record<string, never>;
+  'act2:qiming-name-matched': { person: 'huang' | 'zhong' };
+  'act2:qiming-cases-confirmed': Record<string, never>;
+  'progress:reset': { schemaVersion: 5 };
+  'save:completed': { schemaVersion: 5 };
 };

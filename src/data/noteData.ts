@@ -13,7 +13,7 @@ const flags = getItems<{ id: string }>(flagsDocument, 'flags.json');
 export const noteById = new Map(noteEntries.map((entry) => [entry.id, entry]));
 
 /** 第二幕 T01–T03 由本模块统一登记，供并行任务按 ID 消费。 */
-export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001', 'NOTE_A2_T04_001', 'NOTE_A2_T04_002', 'NOTE_A2_T04_003', 'NOTE_A2_T04_004', 'NOTE_A2_T05_001', 'NOTE_A2_T05_002', 'NOTE_A2_T05_003', 'NOTE_A2_T05_004'];
+export const ACT2_NOTE_IDS = ['NOTE_A2_T01_001', 'NOTE_A2_T01_002', 'NOTE_A2_T02_001', 'NOTE_A2_T02_002', 'NOTE_A2_T03_001', 'NOTE_A2_T04_001', 'NOTE_A2_T04_002', 'NOTE_A2_T04_003', 'NOTE_A2_T04_004', 'NOTE_A2_T05_001', 'NOTE_A2_T05_002', 'NOTE_A2_T05_003', 'NOTE_A2_T05_004', 'NOTE_A2_T06_001', 'NOTE_A2_T06_002', 'NOTE_A2_T06_003', 'NOTE_A2_T06_004'];
 const act2NoteRequiredText: Record<string, string[]> = {
   NOTE_A2_T01_001: ['网上几乎找不到有用的信息', '只有当地人才知道'],
   NOTE_A2_T01_002: ['这个词太普通了'],
@@ -28,6 +28,10 @@ const act2NoteRequiredText: Record<string, string[]> = {
   NOTE_A2_T05_002: ['600', '400', '300', '130', '88', '53', '20'],
   NOTE_A2_T05_003: ['启明青少年成长中心两个月来对我的教育和培养'],
   NOTE_A2_T05_004: ['鸡公岭', '小A / 启明'],
+  NOTE_A2_T06_001: ['搜索结果几乎都是宣传材料', '孝顺'],
+  NOTE_A2_T06_002: ['强行送入训练中心', '没有独立核实'],
+  NOTE_A2_T06_003: ['黄子山', '黄山', '钟子月', '月子'],
+  NOTE_A2_T06_004: ['下落不明', '精神状态异常', '不止发生在小A身上'],
 };
 /** T04 才揭示的结论不得提前出现在第二幕摘录里。 */
 const act2NoteForbiddenText: Record<string, string[]> = { NOTE_A2_T03_001: ['记忆', '身份'] };

@@ -12,6 +12,7 @@ import { Act1PhaseEFController } from './story/act1PhaseEFController';
 import { Act1PhaseGHIController } from './story/act1PhaseGHIController';
 import { Act1PhaseJKController } from './story/act1PhaseJKController';
 import { Act2T01Controller } from './story/act2T01Controller';
+import { Act2T06Controller } from './story/act2T06Controller';
 import { Act1SceneExperience } from './scenes/act1/Act1SceneExperience';
 import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
@@ -39,13 +40,16 @@ export default function App() {
     const phaseGHIController = new Act1PhaseGHIController();
     const phaseJKController = new Act1PhaseJKController();
     const act2T01Controller = new Act2T01Controller();
+    const act2T06Controller = new Act2T06Controller();
     phaseBController.start();
     phaseCController.start();
     phaseEFController.start();
     phaseGHIController.start();
     phaseJKController.start();
     act2T01Controller.start();
+    act2T06Controller.start();
     return () => {
+      act2T06Controller.dispose();
       act2T01Controller.dispose();
       phaseJKController.dispose();
       phaseGHIController.dispose();

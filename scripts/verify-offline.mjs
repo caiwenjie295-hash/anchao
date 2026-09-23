@@ -373,9 +373,44 @@ try {
       assert.match(query('.t05-school__backdrop').textContent, /校门/);
       assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'true');
       await click('.t05-school__return');
+      // T06 opens only after an active Qiming search; suggestions/results stay hidden before then.
+      await openOrFocusApp('浏览器');
+      await setInput('#browser-search', '启明');
+      assert.equal(document().querySelector('.browser-suggestions')?.textContent.includes('启明 投诉'), false);
+      assert.equal(state().modules.act2Research.stage, 'school');
+      await browse('启明 投诉');
+      assert.equal(state().modules.act2Research.stage, 'qiming');
+      assert.equal(state().game.phase, 'A2_T06');
+      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_006').headline, '.browser-results button');
+      assert.equal(state().game.flags.FLAG_A2_QIMING_FORUM_FOUND, true);
+      assert.equal(state().game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ, undefined);
+      assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T06_002'));
+      await browse('启明 黄子山');
+      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_004').headline, '.browser-results button');
+      assert.equal(state().game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ, true);
+      assert.ok(query('.browser-page__actions').textContent.includes('复制黄子山'));
+      await browse('启明 投诉');
+      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_006').headline, '.browser-results button');
+      await textButton('黄山可能对应黄子山', '.browser-page__actions button');
+      assert.equal(state().game.flags.FLAG_A2_HUANG_MATCH_INFERRED, true);
+      await browse('启明 投诉');
+      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_007').headline, '.browser-results button');
+      await textButton('月子可能对应钟子月', '.browser-page__actions button');
+      assert.equal(state().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED, true);
+      await browse('启明 黄子山');
+      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_008').headline, '.browser-results button');
+      await browse('启明 钟子月');
+      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_009').headline, '.browser-results button');
+      await textButton('记录其他学员也出现异常后续', '.browser-page__actions button');
+      assert.equal(state().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL, true);
+      assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T06_004'));
+      await mount(save());
+      assert.equal(state().modules.act2Research.stage, 'qiming');
+      assert.equal(state().game.phase, 'A2_T06');
+      assert.ok(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_009'));
     }
     await reset();
-      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T05' : ''}`);
+      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T06' : ''}`);
   }
   assert.deepEqual(requests, []);
   assert.deepEqual(errors, []);

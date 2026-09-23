@@ -149,6 +149,13 @@ describe('act2 desktop task guides', () => {
     expect(getCurrentTaskGuide(base)).toBeNull();
   });
 
+  it('shows the T06 guide only after the browser research stage has been entered', () => {
+    const base = act2State({ FLAG_A2_SS_MATCH_CONFIRMED: true }, 'A2_T06', 'qiming');
+    expect(getCurrentTaskGuide(base)).toMatchObject({ id: 'GUIDE_A2_T06_001', actionAppId: 'browser', completedCount: 0 });
+    base.game.phase = 'A2_T05'; base.modules.act2Research.stage = 'school';
+    expect(getCurrentTaskGuide(base)?.id).not.toBe('GUIDE_A2_T06_001');
+  });
+
   it('never spells the answer in act-two guide text', () => {
     const states = [
       act2State({ FLAG_A1_COMPLETE: true }, 'A2_T01', 'search'),
