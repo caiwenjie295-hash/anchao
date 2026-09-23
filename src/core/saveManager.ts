@@ -119,7 +119,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const visitedAreas = act2Research.school.visitedAreaIds;
   const inspectedHotspots = act2Research.school.inspectedHotspotIds;
   const t05EvidenceChecks: [string, boolean][] = [
-    ['FLAG_A2_FIRE_HYDRANT_SEEN', visitedAreas.includes('AREA_A2_T05_CORRIDOR') || visitedAreas.includes('AREA_A2_T05_RESTROOM_APPROACH')],
+    ['FLAG_A2_FIRE_HYDRANT_SEEN', visitedAreas.includes('AREA_A2_T05_CORRIDOR')],
     ['FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', inspectedHotspots.includes('HOTSPOT_A2_T05_TEACHER')],
     ['FLAG_A2_SCORE_CHANGE_KNOWN', inspectedHotspots.includes('HOTSPOT_A2_T05_RANKS')],
     ['FLAG_A2_QIMING_NAME_FOUND', inspectedHotspots.includes('HOTSPOT_A2_T05_QIMING_TEXT')],

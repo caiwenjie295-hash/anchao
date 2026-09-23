@@ -40,22 +40,32 @@ function MessageBubble({ message }: { message: WechatMessage }) {
   const content = message.kind === 'voice' ? `${message.content} · ${message.durationSeconds}″` : message.content;
   const hasImage = message.kind === 'image' && message.assetId !== null && assetLoader.isAvailable(message.assetId);
   const [placeholderOpen, setPlaceholderOpen] = useState(false);
+  const placeholderTriggerRef = useRef<HTMLButtonElement>(null);
+  const placeholderDialogRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = placeholderDialogRef.current;
+    if (!placeholderOpen || !dialog) return;
+    dialog.showModal();
+    dialog.querySelector<HTMLButtonElement>('button')?.focus();
+    return () => {
+      if (dialog.open) dialog.close();
+      placeholderTriggerRef.current?.focus();
+    };
+  }, [placeholderOpen]);
   return (
     <div className={className}>
       {!isSelf && <Avatar contactId={message.senderId} compact />}
       <div className="wechat-message__body" data-asset-id={message.assetId ?? undefined}>
         {hasImage && <EvidenceImage assetId={message.assetId!} caption={message.content} />}
-        {message.kind === 'image' && !hasImage && <button type="button" className="wechat-message__placeholder-image" aria-label={`查看图片说明：${message.content}`} onClick={() => setPlaceholderOpen(true)}><SpriteIcon name="file-image" /><span>查看图片 · 本地资源空位</span></button>}
+        {message.kind === 'image' && !hasImage && <button ref={placeholderTriggerRef} type="button" className="wechat-message__placeholder-image" aria-label={`查看图片说明：${message.content}`} onClick={() => setPlaceholderOpen(true)}><SpriteIcon name="file-image" /><span>查看图片 · 本地资源空位</span></button>}
         {message.kind === 'file' && <span className="wechat-message__asset-icon" aria-hidden="true"><SpriteIcon name="file-document" /></span>}
         {message.kind === 'voice' && <span className="wechat-message__asset-icon" aria-hidden="true">◖</span>}
         <span>{content}</span>
       </div>
-      {placeholderOpen && <div className="wechat-image-placeholder-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setPlaceholderOpen(false); }}>
-        <section className="wechat-image-placeholder" role="dialog" aria-modal="true" aria-label={message.content}>
+      {placeholderOpen && <dialog ref={placeholderDialogRef} className="wechat-image-placeholder" aria-label={message.content} onCancel={(event) => { event.preventDefault(); setPlaceholderOpen(false); }} onClick={(event) => { if (event.target === event.currentTarget) setPlaceholderOpen(false); }}>
           <header><strong>{message.content}</strong><button type="button" aria-label="关闭图片" onClick={() => setPlaceholderOpen(false)}>关闭 ×</button></header>
           <div className="wechat-image-placeholder__card" data-asset-id={message.assetId ?? undefined}><span aria-hidden="true"><SpriteIcon name="file-image" /></span><p>{message.content}</p><small>{message.assetId} · 本地图片资源空位</small><p>此处保留可替换图片位置；当前版本未加载外部图片。</p></div>
-        </section>
-      </div>}
+      </dialog>}
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
   visibleContacts,
 } from './wechatData';
 import { createDefaultState } from '../core/defaultState';
+import imagesDocument from '../../data/images.json';
+import { messageById } from './wechatData';
 
 describe('wechat data', () => {
   it('has traceable, resolvable contacts, flags and placeholder resources', () => {
@@ -38,6 +40,8 @@ describe('wechat data', () => {
     expect(messages).toHaveLength(10);
     expect(messages.filter((message) => message.kind === 'text')).toHaveLength(5);
     expect(messages.filter((message) => message.kind === 'image').map((message) => message.assetId)).toContain('IMG_A2_T05_009');
+    expect(messageById.get('CHAT_A2_T05_004')?.assetId).toBe('IMG_A2_T05_011');
+    expect(imagesDocument.items.find((image) => image.id === 'IMG_A2_T05_011')?.file).toBeNull();
     expect(messages.every((message) => message.conversationId === 'CONTACT_A1_A_002')).toBe(true);
   });
 });

@@ -203,8 +203,20 @@ describe('saveManager', () => {
     expect(cleaned.modules.notepad.autoEntryIds).toEqual([]);
   });
 
+  it('does not restore the hydrant flag from visiting only the restroom approach', () => {
+    const broken = createDefaultState();
+    broken.game.act = 2; broken.game.phase = 'A2_T05';
+    broken.game.flags = { FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_FIRE_HYDRANT_SEEN: true };
+    broken.modules.act2Research.stage = 'school';
+    broken.modules.act2Research.school.visitedAreaIds = ['AREA_A2_T05_RESTROOM_APPROACH'];
+    const cleaned = hydrateState(JSON.parse(JSON.stringify(broken)));
+    expect(cleaned.modules.act2Research.stage).toBe('school');
+    expect(cleaned.modules.act2Research.school.visitedAreaIds).toEqual(['AREA_A2_T05_RESTROOM_APPROACH']);
+    expect(cleaned.game.flags.FLAG_A2_FIRE_HYDRANT_SEEN).toBeUndefined();
+  });
+
   it('rejects unsupported schema versions and keeps the save key stable', () => {
-    expect(hydrateState({ ...createDefaultState(), schemaVersion: 4 })).toEqual(createDefaultState());
+    expect(hydrateState({ ...createDefaultState(), schemaVersion: 5 })).toEqual(createDefaultState());
     expect(hydrateState({ ...createDefaultState(), schemaVersion: '2' })).toEqual(createDefaultState());
     expect(SAVE_KEY).toBe('anchao.save.v1');
     localStorage.setItem(SAVE_KEY, JSON.stringify(asLegacyFirstActSave()));

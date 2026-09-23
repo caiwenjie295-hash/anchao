@@ -472,7 +472,7 @@ export class StateManager {
     if (this.act2Research.stage !== 'school' || !ACT2_SCHOOL_AREA_IDS.includes(id as (typeof ACT2_SCHOOL_AREA_IDS)[number]) || school.visitedAreaIds.includes(id)) return;
     this.commitAct2Research({ school: { visitedAreaIds: [...school.visitedAreaIds, id] } });
     this.bus.emit('act2:school-area-visited', { areaId: id });
-    if ((id === 'AREA_A2_T05_CORRIDOR' || id === 'AREA_A2_T05_RESTROOM_APPROACH') && this.state.game.flags.FLAG_A2_FIRE_HYDRANT_SEEN !== true) this.setFlag('FLAG_A2_FIRE_HYDRANT_SEEN', true);
+    if (id === 'AREA_A2_T05_CORRIDOR' && this.state.game.flags.FLAG_A2_FIRE_HYDRANT_SEEN !== true) this.setFlag('FLAG_A2_FIRE_HYDRANT_SEEN', true);
   }
 
   inspectAct2SchoolHotspot(hotspotId: string): void {

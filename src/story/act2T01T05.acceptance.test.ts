@@ -48,5 +48,20 @@ describe('Second-act T05 acceptance: Xiaoyue to school scene', () => {
     expect(restored.modules.act2Research.stage).toBe('school');
     expect(restored.game.phase).toBe('A2_T05');
     expect(restored.game.flags.FLAG_A2_SCHOOL_ENTERED).toBe(true);
+
+    await click('.act2-experience__continue');
+    await act(async () => {
+      stateManager.visitAct2SchoolArea('AREA_A2_T05_XIAOA_CLASSROOM');
+      stateManager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_SCHOLAR_NOTE');
+      stateManager.inspectAct2SchoolNotebook();
+      stateManager.confirmAct2SchoolSymbolMatch();
+    });
+    expect(container.querySelector('.t05-school__ending')).not.toBeNull();
+    await click('.t05-school__ending button');
+    expect(container.querySelector('.t05-school')).toBeNull();
+    expect(container.querySelector('.desktop')?.getAttribute('aria-hidden')).toBe('false');
+    expect(container.querySelector('.desktop')?.hasAttribute('inert')).toBe(false);
+    expect(container.querySelector('.app-window[aria-label="记事本 窗口"]')).not.toBeNull();
+    expect(stateManager.getState().desktop.activeAppId).toBe('notepad');
   });
 });

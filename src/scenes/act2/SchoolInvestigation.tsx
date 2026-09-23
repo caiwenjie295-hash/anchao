@@ -69,7 +69,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         </nav>
       </main>
     </div>
-    {isComplete && <aside className="t05-school__ending" aria-live="polite"><h2>这两处记号可以放在一起看</h2><p>{act2School.matchNote}</p><button type="button" onClick={() => manager.openApp('notepad')}>查看调查笔记</button></aside>}
+    {isComplete && <aside className="t05-school__ending" aria-live="polite"><h2>这两处记号可以放在一起看</h2><p>{act2School.matchNote}</p><button type="button" onClick={() => { onReturnToDesktop?.(); manager.openApp('notepad'); }}>查看调查笔记</button></aside>}
     {hotspot && <div className="t05-school__dialog-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setHotspotId(null); }}>
       <section ref={dialogRef} className="t05-school__dialog" role="dialog" aria-modal="true" aria-labelledby="t05-school-dialog-title">
         <header><h2 id="t05-school-dialog-title">{hotspot.title}</h2><button type="button" aria-label="关闭" onClick={() => setHotspotId(null)}>关闭 ×</button></header>
