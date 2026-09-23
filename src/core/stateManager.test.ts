@@ -132,7 +132,7 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([3]);
+    expect(resets).toEqual([4]);
   });
 });
 
@@ -388,6 +388,84 @@ describe('StateManager second-act foundation', () => {
     manager.acknowledgeAct2TransferInference(); manager.acknowledgeAct2TransferInference();
     expect(manager.getState().modules.act2Research.tales).toMatchObject({ placedCardIds: expect.arrayContaining(['CARD_A2_T04_012']), sorted: true, inferenceAcknowledged: true });
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T04_004');
+  });
+});
+
+describe('StateManager T05 school investigation', () => {
+  let bus: EventBus;
+  let manager: StateManager;
+
+  beforeEach(() => {
+    localStorage.clear();
+    bus = new EventBus();
+    const state = createDefaultState();
+    state.game.act = 2;
+    state.game.phase = 'A2_T04';
+    state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true };
+    state.modules.act2Research.stage = 'tales';
+    manager = new StateManager(bus, state);
+  });
+
+  it('enters school only from an inferred T04 and cannot be bypassed through setAct2Stage', () => {
+    const entered: number[] = [];
+    bus.on('act2:school-entered', () => entered.push(1));
+    manager.setAct2Stage('school' as Act2ActiveStage);
+    expect(manager.getState().modules.act2Research.stage).toBe('tales');
+    manager.getState().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = false;
+    manager.enterAct2School();
+    expect(manager.getState().modules.act2Research.stage).toBe('tales');
+    manager.getState().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true;
+    manager.enterAct2School();
+    manager.enterAct2School();
+    expect(manager.getState().modules.act2Research.stage).toBe('school');
+    expect(manager.getState().game.phase).toBe('A2_T05');
+    expect(manager.getState().game.flags.FLAG_A2_SCHOOL_ENTERED).toBe(true);
+    expect(entered).toEqual([1]);
+  });
+
+  it('records known school areas and evidence idempotently, with the hydrant outside puzzle progress', () => {
+    manager.enterAct2School();
+    const areas: string[] = []; const hotspots: string[] = [];
+    bus.on('act2:school-area-visited', ({ areaId }) => areas.push(areaId));
+    bus.on('act2:school-hotspot-inspected', ({ hotspotId }) => hotspots.push(hotspotId));
+    manager.visitAct2SchoolArea('AREA_A2_T05_CORRIDOR');
+    manager.visitAct2SchoolArea('AREA_A2_T05_CORRIDOR');
+    manager.visitAct2SchoolArea('AREA_A2_T05_UNKNOWN');
+    expect(manager.getState().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN).toBe(true);
+    expect(manager.getState().modules.act2Research.school.visitedAreaIds).toEqual(['AREA_A2_T05_CORRIDOR']);
+    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).not.toBe(true);
+    manager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_TEACHER');
+    expect(manager.getState().modules.act2Research.school.inspectedHotspotIds).toEqual([]);
+    manager.visitAct2SchoolArea('AREA_A2_T05_TEACHER_OFFICE');
+    manager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_TEACHER');
+    manager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_TEACHER');
+    expect(areas).toEqual(['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_TEACHER_OFFICE']);
+    expect(hotspots).toEqual(['HOTSPOT_A2_T05_TEACHER']);
+    manager.acknowledgeAct2TeacherAccount(); manager.acknowledgeAct2TeacherAccount();
+    expect(manager.getState().game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN).toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T05_001');
+  });
+
+  it('gates ranks, Qiming text and school double-S notes behind the corresponding inspected content', () => {
+    manager.enterAct2School();
+    manager.readAct2SchoolRanks(); manager.readAct2QimingTestimonial(); manager.inspectAct2SchoolNotebook();
+    expect(manager.getState().game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).not.toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).not.toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_SCHOOL_SS_FOUND).not.toBe(true);
+    manager.visitAct2SchoolArea('AREA_A2_T05_HONOR_ROLL');
+    manager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_RANKS');
+    manager.readAct2SchoolRanks(); manager.readAct2SchoolRanks();
+    manager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_QIMING_TEXT');
+    manager.readAct2QimingTestimonial(); manager.readAct2QimingTestimonial();
+    expect(manager.getState().game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).toBe(true);
+    manager.visitAct2SchoolArea('AREA_A2_T05_XIAOA_CLASSROOM');
+    manager.inspectAct2SchoolHotspot('HOTSPOT_A2_T05_SCHOLAR_NOTE');
+    manager.inspectAct2SchoolNotebook(); manager.inspectAct2SchoolNotebook();
+    manager.confirmAct2SchoolSymbolMatch(); manager.confirmAct2SchoolSymbolMatch();
+    expect(manager.getState().game.flags.FLAG_A2_SCHOOL_SS_FOUND).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds.filter((id) => id === 'NOTE_A2_T05_004')).toHaveLength(1);
   });
 });
 

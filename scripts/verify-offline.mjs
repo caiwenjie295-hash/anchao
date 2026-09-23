@@ -264,6 +264,60 @@ async function advanceAct2() {
   await textButton('记下这个问题', '.act2-tales__inference button');
   assert.equal(state().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED, true);
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T04_004'));
+
+  // T05 only starts after the player chooses the new WeChat transition.
+  await click('.act2-tales__return');
+  await openOrFocusApp('微信');
+  await textButton('小月', '.wechat-conversation');
+  assert.ok(query('.wechat-chat__messages').textContent.includes('去年聚会拍的'));
+  await click('.wechat-message__placeholder-image');
+  assert.ok(query('.wechat-image-placeholder').textContent.includes('本地图片资源空位'));
+  await click('.wechat-image-placeholder [aria-label="关闭图片"]');
+  assert.equal(state().modules.act2Research.stage, 'tales');
+  await click('.wechat-school-transition button');
+  assert.equal(state().modules.act2Research.stage, 'school');
+  assert.equal(state().game.phase, 'A2_T05');
+  assert.equal(state().game.flags.FLAG_A2_SCHOOL_ENTERED, true);
+  assert.ok(query('.t05-school'));
+
+  await textButton('走廊', '.t05-school__map button');
+  assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, true);
+  assert.equal(state().modules.notepad.autoEntryIds.some((id) => id.includes('HYDRANT')), false);
+  await textButton('老师办公室', '.t05-school__map button');
+  await textButton('听听老师回忆', '.t05-school__hotspots button');
+  assert.match(query('.t05-school__dialog').textContent, /高二那年休学了两个月/);
+  await textButton('记下老师的回忆', '.t05-school__dialog button');
+  await textButton('关闭 ×', '.t05-school__dialog button');
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T05_001'));
+
+  await textButton('光荣榜', '.t05-school__map button');
+  await textButton('查看历次名次', '.t05-school__hotspots button');
+  assert.deepEqual([...query('.t05-school__ranks').querySelectorAll('strong')].map((item) => Number(item.textContent)), [600, 400, 300, 130, 88, 53, 20]);
+  await textButton('记下这组名次', '.t05-school__dialog button');
+  await textButton('查看成绩表下方的感谢文字', '.t05-school__dialog button');
+  assert.match(query('.t05-school__dialog').textContent, /启明青少年成长中心两个月来对我的教育和培养/);
+  await textButton('记下这段文字', '.t05-school__dialog button');
+  await textButton('关闭 ×', '.t05-school__dialog button');
+  assert.equal(state().game.flags.FLAG_A2_QIMING_NAME_FOUND, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T05_003'));
+
+  await textButton('小A旧教室', '.t05-school__map button');
+  await textButton('翻看学霸笔记', '.t05-school__hotspots button');
+  assert.ok(query('.t05-school__notebook-page'));
+  await textButton('打开双 S 比对', '.t05-school__dialog button');
+  assert.ok(query('.t05-comparison__side'));
+  await textButton('半透明重合');
+  assert.ok(query('[aria-label="重合图案透明度"]'));
+  await textButton('确认图案一致');
+  assert.equal(state().game.flags.FLAG_A2_SS_MATCH_CONFIRMED, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T05_004'));
+  await click('.t05-school__return');
+  assert.equal(document().querySelector('.t05-school'), null);
+  await mount(save());
+  assert.equal(state().modules.act2Research.stage, 'school');
+  assert.ok(query('.t05-school'));
+  assert.match(query('.t05-school__backdrop').textContent, /校门/);
+  await click('.t05-school__return');
 }
 
 async function reset() {
@@ -288,6 +342,7 @@ async function reset() {
     bridge: { talkedElderIds: [], shownEvidenceAssetIds: [], heardPhrase: false, nameChoices: { first: null, middle: null, last: null } },
     library: { visitedSectionIds: [], openedVolumeIds: [], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: [], excerptedEntryIds: [] },
     tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
+    school: { visitedAreaIds: [], inspectedHotspotIds: [] },
   });
   await mount(save());
   assert.equal(document().querySelectorAll('.app-window').length, 0);
@@ -305,21 +360,22 @@ try {
     assert.ok(query('.act1-ending'));
     if (run === 1) {
       await advanceAct2();
-      // 返回桌面 ↔ 继续入口不丢进度。
-      await click('.act2-tales__return');
-      assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'false');
-      await textButton('继续查阅三篇志异', '.act2-experience__continue');
-      assert.ok(query('.act2-tales'));
+      // T05 场景返回桌面后，继续入口恢复场景且保留学校阶段。
+      await textButton('继续高中调查', '.act2-experience__continue');
+      assert.ok(query('.t05-school'));
+      assert.equal(state().modules.act2Research.stage, 'school');
+      await click('.t05-school__return');
       assert.equal(state().modules.act2Research.tales.inferenceAcknowledged, true);
-      // 第二幕阶段存档重载后从当前阶段恢复，并再次自动打开场景。
+      // 学校阶段存档重载后从校门总览恢复。
       await mount(save());
-      assert.equal(state().modules.act2Research.stage, 'tales');
-      assert.ok(query('.act2-tales'), 'reload must resume the second-act stage');
+      assert.equal(state().modules.act2Research.stage, 'school');
+      assert.ok(query('.t05-school'), 'reload must resume the school stage');
+      assert.match(query('.t05-school__backdrop').textContent, /校门/);
       assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'true');
-      await click('.act2-tales__return');
+      await click('.t05-school__return');
     }
     await reset();
-    console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T04' : ''}`);
+      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T05' : ''}`);
   }
   assert.deepEqual(requests, []);
   assert.deepEqual(errors, []);

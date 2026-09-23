@@ -136,6 +136,16 @@ describe('act2 desktop task guides', () => {
     expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([true, true, false]);
     base.game.flags.FLAG_A2_TALES_SORTED = true;
     base.game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true;
+    expect(getCurrentTaskGuide(base)).toMatchObject({ id: 'GUIDE_A2_T05_001', actionAppId: 'wechat' });
+  });
+
+  it('points T05 to Xiaoyue first and hides the guide only after the match is confirmed', () => {
+    const base = act2State({ FLAG_A2_TRANSFER_RULE_INFERRED: true }, 'A2_T04', 'tales');
+    expect(getCurrentTaskGuide(base)).toMatchObject({ id: 'GUIDE_A2_T05_001', actionAppId: 'wechat', completedCount: 0 });
+    base.game.phase = 'A2_T05'; base.modules.act2Research.stage = 'school';
+    base.game.flags.FLAG_A2_SCHOOL_ENTERED = true;
+    expect(getCurrentTaskGuide(base)?.steps[0].complete).toBe(true);
+    base.game.flags.FLAG_A2_SS_MATCH_CONFIRMED = true;
     expect(getCurrentTaskGuide(base)).toBeNull();
   });
 

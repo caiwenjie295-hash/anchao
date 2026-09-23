@@ -1,7 +1,7 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import { isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
@@ -13,10 +13,11 @@ type Act2ResearchPatch = {
   bridge?: Partial<Act2ResearchState['bridge']>;
   library?: Partial<Act2ResearchState['library']>;
   tales?: Partial<Act2ResearchState['tales']>;
+  school?: Partial<Act2ResearchState['school']>;
 };
 
 const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library', 'tales'];
-const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales'];
+const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school'];
 const act2StagePhases: Record<Act2ActiveStage, GamePhase> = { search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04' };
 const heibumuNameParts: HeibumuNamePart[] = ['first', 'middle', 'last'];
 const heibumuName = { first: '黑', middle: '补', last: '母' } as const;
@@ -49,7 +50,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 3 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 4 });
   }
 
   private nextZIndex(): number {
@@ -195,7 +196,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 3 });
+    this.bus.emit('progress:reset', { schemaVersion: 4 });
   }
 
   startJourney(sceneId: string): void {
@@ -286,6 +287,7 @@ export class StateManager {
       bridge: patch.bridge ? { ...current.bridge, ...patch.bridge } : current.bridge,
       library: patch.library ? { ...current.library, ...patch.library } : current.library,
       tales: patch.tales ? { ...current.tales, ...patch.tales } : current.tales,
+      school: patch.school ? { ...current.school, ...patch.school } : current.school,
     };
     this.commit({ ...this.state, modules: { ...this.state.modules, act2Research: next } });
   }
@@ -308,7 +310,7 @@ export class StateManager {
     const current = this.act2Research.stage;
     if (!act2ActiveStages.includes(stage)) return;
     if (current === 'inactive' || current === stage) return;
-    if (act2StageOrder.indexOf(stage) < act2StageOrder.indexOf(current)) return;
+    if (act2StageOrder.indexOf(stage) !== act2StageOrder.indexOf(current) + 1) return;
     if (stage === 'tales' && this.state.game.flags.FLAG_A2_BUMU_RULE_BASIC_KNOWN !== true) return;
     const phase = act2StagePhases[stage];
     this.commit({
@@ -448,6 +450,72 @@ export class StateManager {
     this.addNotepadAutoEntry('NOTE_A2_T04_004');
     this.setFlag('FLAG_A2_TRANSFER_RULE_INFERRED', true);
     this.bus.emit('act2:transfer-inferred', {});
+  }
+
+  /** 只能由小月的新微信内容主动触发；重载不会越级进入。 */
+  enterAct2School(): void {
+    const { game } = this.state;
+    if (this.act2Research.stage !== 'tales' || game.flags.FLAG_A2_TRANSFER_RULE_INFERRED !== true || game.flags.FLAG_A2_SCHOOL_ENTERED === true) return;
+    this.commit({
+      ...this.state,
+      game: { ...game, phase: 'A2_T05', flags: { ...game.flags, FLAG_A2_SCHOOL_ENTERED: true } },
+      modules: { ...this.state.modules, act2Research: { ...this.act2Research, stage: 'school' } },
+    });
+    this.bus.emit('phase:changed', { phase: 'A2_T05' });
+    this.bus.emit('flag:changed', { flagId: 'FLAG_A2_SCHOOL_ENTERED', value: true });
+    this.bus.emit('act2:school-entered', {});
+  }
+
+  visitAct2SchoolArea(areaId: string): void {
+    const id = areaId.trim();
+    const school = this.act2Research.school;
+    if (this.act2Research.stage !== 'school' || !ACT2_SCHOOL_AREA_IDS.includes(id as (typeof ACT2_SCHOOL_AREA_IDS)[number]) || school.visitedAreaIds.includes(id)) return;
+    this.commitAct2Research({ school: { visitedAreaIds: [...school.visitedAreaIds, id] } });
+    this.bus.emit('act2:school-area-visited', { areaId: id });
+    if ((id === 'AREA_A2_T05_CORRIDOR' || id === 'AREA_A2_T05_RESTROOM_APPROACH') && this.state.game.flags.FLAG_A2_FIRE_HYDRANT_SEEN !== true) this.setFlag('FLAG_A2_FIRE_HYDRANT_SEEN', true);
+  }
+
+  inspectAct2SchoolHotspot(hotspotId: string): void {
+    const id = hotspotId.trim();
+    const areaByHotspot: Record<(typeof ACT2_SCHOOL_HOTSPOT_IDS)[number], string> = {
+      HOTSPOT_A2_T05_TEACHER: 'AREA_A2_T05_TEACHER_OFFICE',
+      HOTSPOT_A2_T05_RANKS: 'AREA_A2_T05_HONOR_ROLL',
+      HOTSPOT_A2_T05_QIMING_TEXT: 'AREA_A2_T05_HONOR_ROLL',
+      HOTSPOT_A2_T05_SCHOLAR_NOTE: 'AREA_A2_T05_XIAOA_CLASSROOM',
+    };
+    if (this.act2Research.stage !== 'school' || !ACT2_SCHOOL_HOTSPOT_IDS.includes(id as (typeof ACT2_SCHOOL_HOTSPOT_IDS)[number]) || this.act2Research.school.inspectedHotspotIds.includes(id) || !this.act2Research.school.visitedAreaIds.includes(areaByHotspot[id as (typeof ACT2_SCHOOL_HOTSPOT_IDS)[number]])) return;
+    this.commitAct2Research({ school: { inspectedHotspotIds: [...this.act2Research.school.inspectedHotspotIds, id] } });
+    this.bus.emit('act2:school-hotspot-inspected', { hotspotId: id });
+  }
+
+  acknowledgeAct2TeacherAccount(): void {
+    if (this.act2Research.stage !== 'school' || !this.act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_TEACHER') || this.state.game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN === true) return;
+    this.setFlag('FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', true);
+    this.addNotepadAutoEntry('NOTE_A2_T05_001');
+  }
+
+  readAct2SchoolRanks(): void {
+    if (this.act2Research.stage !== 'school' || !this.act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_RANKS') || this.state.game.flags.FLAG_A2_SCORE_CHANGE_KNOWN === true) return;
+    this.setFlag('FLAG_A2_SCORE_CHANGE_KNOWN', true);
+    this.addNotepadAutoEntry('NOTE_A2_T05_002');
+  }
+
+  readAct2QimingTestimonial(): void {
+    if (this.act2Research.stage !== 'school' || this.state.game.flags.FLAG_A2_SCORE_CHANGE_KNOWN !== true || !this.act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_QIMING_TEXT') || this.state.game.flags.FLAG_A2_QIMING_NAME_FOUND === true) return;
+    this.setFlag('FLAG_A2_QIMING_NAME_FOUND', true);
+    this.addNotepadAutoEntry('NOTE_A2_T05_003');
+  }
+
+  inspectAct2SchoolNotebook(): void {
+    if (this.act2Research.stage !== 'school' || !this.act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') || this.state.game.flags.FLAG_A2_SCHOOL_SS_FOUND === true) return;
+    this.setFlag('FLAG_A2_SCHOOL_SS_FOUND', true);
+  }
+
+  confirmAct2SchoolSymbolMatch(): void {
+    if (this.act2Research.stage !== 'school' || this.state.game.flags.FLAG_A1_SS_FOUND !== true || this.state.game.flags.FLAG_A2_SCHOOL_SS_FOUND !== true || !this.act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') || this.state.game.flags.FLAG_A2_SS_MATCH_CONFIRMED === true) return;
+    this.setFlag('FLAG_A2_SS_MATCH_CONFIRMED', true);
+    this.addNotepadAutoEntry('NOTE_A2_T05_004');
+    this.bus.emit('act2:school-symbol-matched', {});
   }
 }
 

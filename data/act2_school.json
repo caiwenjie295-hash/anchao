@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "record": { "id": "SCENE_A2_T05_SCHOOL", "title": "回到高中", "act": 2, "phase": "A2_T05", "source": "scene", "purpose": "连接地方志调查与小A现实经历", "unlockCondition": ["FLAG_A2_TRANSFER_RULE_INFERRED"], "relatedFlags": ["FLAG_A2_SCHOOL_ENTERED"], "notes": "正文、分数与导航由数据维护；消防栓只作视觉记忆" },
+  "intro": "校门旁的值班室换过一次，走廊尽头的窗户还是旧样子。你沿着记忆里的路线慢慢往里走。",
+  "areas": [
+    { "id": "AREA_A2_T05_GATE", "title": "校门", "imageId": "IMG_A2_T05_001", "description": "校门口的传达室窗台落着薄薄一层灰。你还记得以前总有人在这里等迟到的同学。", "links": ["AREA_A2_T05_CORRIDOR"] },
+    { "id": "AREA_A2_T05_CORRIDOR", "title": "走廊", "imageId": "IMG_A2_T05_002", "description": "走廊两侧的教室门牌褪了色。墙边的消防栓安静地嵌在原处。", "links": ["AREA_A2_T05_GATE", "AREA_A2_T05_XIAOA_CLASSROOM", "AREA_A2_T05_XIAOYUE_CLASSROOM", "AREA_A2_T05_RESTROOM_APPROACH", "AREA_A2_T05_HONOR_ROLL", "AREA_A2_T05_TEACHER_OFFICE", "AREA_A2_T05_NOTICE_BOARD"] },
+    { "id": "AREA_A2_T05_XIAOA_CLASSROOM", "title": "小A旧教室", "imageId": "IMG_A2_T05_003", "description": "课桌已经换过几轮。靠窗的位置曾经是小A的座位。", "links": ["AREA_A2_T05_CORRIDOR"] },
+    { "id": "AREA_A2_T05_XIAOYUE_CLASSROOM", "title": "小月旧教室", "imageId": "IMG_A2_T05_003", "description": "小月以前的教室就在隔壁，门口还贴着旧社团活动的照片。", "links": ["AREA_A2_T05_CORRIDOR"] },
+    { "id": "AREA_A2_T05_RESTROOM_APPROACH", "title": "厕所方向", "imageId": "IMG_A2_T05_002", "description": "拐过去就是厕所。水池上方的镜子边缘有些发黑。", "links": ["AREA_A2_T05_CORRIDOR"] },
+    { "id": "AREA_A2_T05_HONOR_ROLL", "title": "光荣榜", "imageId": "IMG_A2_T05_004", "description": "几届毕业生的成绩表按年份排开，最醒目的标题是“高三年级阶段成绩记录”。", "links": ["AREA_A2_T05_CORRIDOR"] },
+    { "id": "AREA_A2_T05_TEACHER_OFFICE", "title": "老师办公室", "imageId": "IMG_A2_T05_005", "description": "办公室里还留着旧班级的纸质档案，班主任认出了你的名字。", "links": ["AREA_A2_T05_CORRIDOR"] },
+    { "id": "AREA_A2_T05_NOTICE_BOARD", "title": "宣传栏", "imageId": "IMG_A2_T05_007", "description": "宣传栏贴着社团招新、运动会和旧校庆的照片。", "links": ["AREA_A2_T05_CORRIDOR"] }
+  ],
+  "hotspots": [
+    { "id": "HOTSPOT_A2_T05_TEACHER", "title": "和班主任聊聊", "areaId": "AREA_A2_T05_TEACHER_OFFICE", "actionLabel": "听听老师回忆", "content": "小A高二那年休学了两个月。回来以后整个人安静了很多，跟同学也疏远了，几乎把时间都用在学习上。那阵子他的成绩提得特别快，快得我们都没想到。" },
+    { "id": "HOTSPOT_A2_T05_RANKS", "title": "历次成绩记录", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "查看历次名次", "recordTitle": "高三年级阶段成绩记录", "studentName": "王澳", "ranks": [600, 400, 300, 130, 88, 53, 20] },
+    { "id": "HOTSPOT_A2_T05_QIMING_TEXT", "title": "成绩表下方的感谢文字", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "读一下落款", "content": "感谢启明青少年成长中心两个月来对我的教育和培养。" },
+    { "id": "HOTSPOT_A2_T05_SCHOLAR_NOTE", "title": "旧学习笔记", "areaId": "AREA_A2_T05_XIAOA_CLASSROOM", "actionLabel": "翻看学霸笔记", "content": "这本笔记曾经在学校的优秀学习资料展上展示过。页边有一个用黑笔描了两遍的双 S 记号。" }
+  ],
+  "notebookPage": { "heading": "物理 · 错题整理", "lines": ["函数与几何", "错题归纳"], "replacementNote": "本地笔记页资源空位 · 图案由共用符号绘制组件呈现" },
+  "softHint": "小月记得学校以前展示过小A的学习笔记，也许还能找到。",
+  "matchNote": "鸡公岭 ↔ 小A / 启明"
+}

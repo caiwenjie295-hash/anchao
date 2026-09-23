@@ -1,13 +1,13 @@
-import { APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
 import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow } from './defaultState';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 
 export const SAVE_KEY = 'anchao.save.v1';
-/** schema 1 为第一幕，schema 2 增加第二幕，schema 3 增加 T04 志异调查；都必须可加载。 */
-const supportedSchemaVersions = [1, 2, 3];
+/** schema 1/2/3 的有效进度全部迁移到 schema 4。 */
+const supportedSchemaVersions = [1, 2, 3, 4];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
-const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales'];
+const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
@@ -46,6 +46,7 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const bridge = isRecord(candidate.bridge) ? candidate.bridge : null;
   const library = isRecord(candidate.library) ? candidate.library : null;
   const tales = isRecord(candidate.tales) ? candidate.tales : null;
+  const school = isRecord(candidate.school) ? candidate.school : null;
   const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
   const readTaleIds = tales ? safeStringIds(tales.readTaleIds).filter((id) => taleById.has(id)) : [];
   const collectedTaleIds = tales ? safeStringIds(tales.collectedTaleIds).filter((id) => readTaleIds.includes(id)) : [];
@@ -78,6 +79,10 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
       sorted,
       inferenceAcknowledged: sorted && tales?.inferenceAcknowledged === true,
     },
+    school: {
+      visitedAreaIds: school ? safeStringIds(school.visitedAreaIds).filter((id) => ACT2_SCHOOL_AREA_IDS.includes(id as (typeof ACT2_SCHOOL_AREA_IDS)[number])) : [],
+      inspectedHotspotIds: school ? safeStringIds(school.inspectedHotspotIds).filter((id) => ACT2_SCHOOL_HOTSPOT_IDS.includes(id as (typeof ACT2_SCHOOL_HOTSPOT_IDS)[number])) : [],
+    },
   };
 };
 
@@ -94,6 +99,51 @@ export const hydrateState = (candidate: unknown): AppState => {
   const scene = isRecord(modules.scene) ? modules.scene : null;
   const photos = isRecord(modules.photos) ? modules.photos : null;
   const act2Research = safeAct2Research(modules.act2Research);
+  const rawFlags = isRecord(game.flags)
+    ? Object.fromEntries(Object.entries(game.flags).filter(([, value]) => ['boolean', 'string', 'number'].includes(typeof value))) as AppState['game']['flags']
+    : {};
+  const t05FlagIds = ['FLAG_A2_SCHOOL_ENTERED', 'FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SS_MATCH_CONFIRMED'];
+  for (const flagId of t05FlagIds) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
+  const schoolStageValid = act2Research.stage === 'school' && rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
+  if (act2Research.stage === 'school' && !schoolStageValid) act2Research.stage = 'tales';
+  const t05Dependencies: [string, string][] = [
+    ['FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_SCHOOL_ENTERED'],
+    ['FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCHOOL_ENTERED'],
+    ['FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_SCHOOL_ENTERED'],
+    ['FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCORE_CHANGE_KNOWN'],
+    ['FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SCHOOL_ENTERED'],
+    ['FLAG_A2_SS_MATCH_CONFIRMED', 'FLAG_A2_SCHOOL_SS_FOUND'],
+  ];
+  if (!schoolStageValid) for (const flagId of t05FlagIds) delete rawFlags[flagId];
+  else for (const [flagId, requiredFlag] of t05Dependencies) if (rawFlags[flagId] === true && rawFlags[requiredFlag] !== true) delete rawFlags[flagId];
+  const visitedAreas = act2Research.school.visitedAreaIds;
+  const inspectedHotspots = act2Research.school.inspectedHotspotIds;
+  const t05EvidenceChecks: [string, boolean][] = [
+    ['FLAG_A2_FIRE_HYDRANT_SEEN', visitedAreas.includes('AREA_A2_T05_CORRIDOR') || visitedAreas.includes('AREA_A2_T05_RESTROOM_APPROACH')],
+    ['FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', inspectedHotspots.includes('HOTSPOT_A2_T05_TEACHER')],
+    ['FLAG_A2_SCORE_CHANGE_KNOWN', inspectedHotspots.includes('HOTSPOT_A2_T05_RANKS')],
+    ['FLAG_A2_QIMING_NAME_FOUND', inspectedHotspots.includes('HOTSPOT_A2_T05_QIMING_TEXT')],
+    ['FLAG_A2_SCHOOL_SS_FOUND', inspectedHotspots.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE')],
+    ['FLAG_A2_SS_MATCH_CONFIRMED', inspectedHotspots.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') && rawFlags.FLAG_A1_SS_FOUND === true],
+  ];
+  for (const [flagId, evidencePresent] of t05EvidenceChecks) if (rawFlags[flagId] === true && !evidencePresent) delete rawFlags[flagId];
+  // Evidence checks may remove a prerequisite after the first pass; close the
+  // dependency chain again so no downstream T05 Flag survives without it.
+  for (const [flagId, requiredFlag] of t05Dependencies) if (rawFlags[flagId] === true && rawFlags[requiredFlag] !== true) delete rawFlags[flagId];
+  if (rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true && rawFlags.FLAG_A1_SS_FOUND !== true) delete rawFlags.FLAG_A2_SS_MATCH_CONFIRMED;
+  if (!schoolStageValid) act2Research.school = { visitedAreaIds: [], inspectedHotspotIds: [] };
+  const hydratedPhase = typeof game.phase === 'string' ? game.phase : fallback.game.phase;
+  const safePhase = act2Research.stage === 'school' ? 'A2_T05' : hydratedPhase === 'A2_T05' ? 'A2_T04' : hydratedPhase;
+  const autoEntryIds = notepad ? safeStringIds(notepad.autoEntryIds).filter((id) => {
+    const triggerFlagByNote: Record<string, string> = {
+      NOTE_A2_T05_001: 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN',
+      NOTE_A2_T05_002: 'FLAG_A2_SCORE_CHANGE_KNOWN',
+      NOTE_A2_T05_003: 'FLAG_A2_QIMING_NAME_FOUND',
+      NOTE_A2_T05_004: 'FLAG_A2_SS_MATCH_CONFIRMED',
+    };
+    const triggerFlag = triggerFlagByNote[id];
+    return triggerFlag === undefined || rawFlags[triggerFlag] === true;
+  }) : [];
   const rawWindows = isRecord(desktop.windows) ? desktop.windows : {};
   const windows = Object.fromEntries(APP_IDS.map((appId, index) => [appId, safeWindow(appId, rawWindows[appId], index)])) as AppState['desktop']['windows'];
   const activeAppId = APP_IDS.includes(desktop.activeAppId as AppId) ? desktop.activeAppId as AppId : null;
@@ -104,13 +154,11 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     game: {
       act: finiteNumber(game.act, fallback.game.act),
-      phase: typeof game.phase === 'string' ? game.phase : fallback.game.phase,
-      flags: isRecord(game.flags)
-        ? Object.fromEntries(Object.entries(game.flags).filter(([, value]) => ['boolean', 'string', 'number'].includes(typeof value))) as AppState['game']['flags']
-        : {},
+      phase: safePhase,
+      flags: rawFlags,
       discoveredClueIds: Array.isArray(game.discoveredClueIds) ? game.discoveredClueIds.filter((id): id is string => typeof id === 'string') : [],
     },
     desktop: { windows, activeAppId, openedOnceAppIds },
@@ -126,7 +174,7 @@ export const hydrateState = (candidate: unknown): AppState => {
       },
       notepad: {
         userText: notepad && typeof notepad.userText === 'string' ? notepad.userText : '',
-        autoEntryIds: notepad ? safeStringIds(notepad.autoEntryIds) : [],
+        autoEntryIds,
       },
       scene: {
         journeyStarted,
