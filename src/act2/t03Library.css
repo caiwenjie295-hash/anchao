@@ -172,13 +172,16 @@
 .act2-library__section-note p { margin: 0; }
 
 .act2-library__shelf-art {
-  height: 74px;
+  width: 100%;
+  height: 160px;
   border: 1px solid rgba(196, 176, 138, .2);
   border-radius: 2px;
   background:
     repeating-linear-gradient(90deg, rgba(226, 205, 160, .16) 0 3px, transparent 3px 11px),
     linear-gradient(180deg, rgba(126, 104, 70, .34), rgba(30, 26, 20, .5));
 }
+
+img.act2-library__shelf-art { display: block; object-fit: cover; object-position: center 42%; }
 
 /* ── 卷册：书脊卡片 ─────────────────────────────────────────────────────── */
 .act2-library__volumes {

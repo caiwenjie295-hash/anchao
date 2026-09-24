@@ -1,4 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
+import { assetLoader } from '../../core/assetLoader';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import {
   countMarkedCoreKeywords,
@@ -157,7 +158,9 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
         </section>
 
         <section className="act2-library__shelf" aria-labelledby="act2-library-shelf-title">
-          <div className="act2-library__shelf-art" data-asset-id={librarySceneCopy.placeholderAssetId} aria-hidden="true" />
+          {assetLoader.get(librarySceneCopy.placeholderAssetId)?.src
+            ? <img className="act2-library__shelf-art" src={assetLoader.get(librarySceneCopy.placeholderAssetId)!.src} data-asset-id={librarySceneCopy.placeholderAssetId} alt="县图书馆的地方志书架与阅览区" />
+            : <div className="act2-library__shelf-art" data-asset-id={librarySceneCopy.placeholderAssetId} aria-hidden="true" />}
           <h2 id="act2-library-shelf-title" className="act2-library__subtitle">{librarySceneCopy.shelfTitle}</h2>
           {gazetteFound ? (
             <ul className="act2-library__volumes">

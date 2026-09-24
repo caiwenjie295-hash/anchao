@@ -18,7 +18,7 @@
     { "id": "HOTSPOT_A2_T05_QIMING_TEXT", "title": "成绩表下方的感谢文字", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "读一下落款", "content": "感谢启明青少年成长中心两个月来对我的教育和培养。" },
     { "id": "HOTSPOT_A2_T05_SCHOLAR_NOTE", "title": "旧学习笔记", "areaId": "AREA_A2_T05_XIAOA_CLASSROOM", "actionLabel": "翻看学霸笔记", "content": "这本笔记曾经在学校的优秀学习资料展上展示过。页边有一个用黑笔描了两遍的双 S 记号。" }
   ],
-  "notebookPage": { "heading": "物理 · 错题整理", "lines": ["函数与几何", "错题归纳"], "replacementNote": "本地笔记页资源空位 · 图案由共用符号绘制组件呈现" },
+  "notebookPage": { "heading": "物理 · 错题整理", "lines": ["函数与几何", "错题归纳"], "replacementNote": "页边的图案与笔记内容并不相干。" },
   "softHint": "小月记得学校以前展示过小A的学习笔记，也许还能找到。",
   "matchNote": "鸡公岭 ↔ 小A / 启明"
 }

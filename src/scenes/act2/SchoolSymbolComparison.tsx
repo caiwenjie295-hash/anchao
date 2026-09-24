@@ -13,6 +13,7 @@ export function SchoolSymbolComparison({ manager, onClose }: { manager: StateMan
   const [offsetY, setOffsetY] = useState(0);
   const closeRef = useRef<HTMLButtonElement>(null);
   const cavePhoto = assetLoader.get('IMG_A1_H_003')?.src;
+  const notebookPhoto = assetLoader.get('IMG_A2_T05_006')?.src;
   const canConfirm = manager.getState().game.flags.FLAG_A1_SS_FOUND === true && manager.getState().game.flags.FLAG_A2_SCHOOL_SS_FOUND === true;
   useEffect(() => { closeRef.current?.focus(); }, []);
   return <section className="t05-comparison" role="dialog" aria-modal="true" aria-labelledby="t05-comparison-title">
@@ -25,7 +26,7 @@ export function SchoolSymbolComparison({ manager, onClose }: { manager: StateMan
     </div>
     {view === 'side' ? <div className="t05-comparison__side">
       <figure className="t05-comparison__cave" data-asset-id="IMG_A1_H_003">{cavePhoto && <img src={cavePhoto} alt="第一幕山洞留言墙照片" />}<DoubleSSymbol className="t05-comparison__symbol" label="山洞照片中的双 S 符号" style={{ transform: `scale(${caveZoom})` }} /><figcaption>鸡公岭 · 山洞照片</figcaption></figure>
-      <figure className="t05-comparison__paper"><div className="t05-comparison__paper-text">{act2School.notebookPage.heading}<br />────────────────{act2School.notebookPage.lines.map((line) => <span key={line}><br />{line}</span>)}</div><DoubleSSymbol className="t05-comparison__symbol" label="学霸笔记页边的双 S 符号" style={{ transform: `scale(${schoolZoom})` }} /><figcaption>小A · 学习笔记</figcaption></figure>
+      <figure className="t05-comparison__paper" data-asset-id="IMG_A2_T05_006">{notebookPhoto ? <img src={notebookPhoto} alt="学霸笔记原页" /> : <div className="t05-comparison__paper-text">{act2School.notebookPage.heading}<br />────────────────{act2School.notebookPage.lines.map((line) => <span key={line}><br />{line}</span>)}</div>}<DoubleSSymbol className="t05-comparison__symbol" label="学霸笔记页边的双 S 符号" style={{ transform: `scale(${schoolZoom})` }} /><figcaption>小A · 学习笔记</figcaption></figure>
     </div> : <div className="t05-comparison__overlap" aria-label="双 S 半透明重合视图">
       {cavePhoto && <img className="t05-comparison__overlap-photo" src={cavePhoto} alt="山洞留言墙照片" />}
       <DoubleSSymbol className="t05-comparison__overlap-symbol t05-comparison__overlap-symbol--cave" label="山洞双 S 底图" style={{ transform: `translate(-50%, -50%) scale(${caveZoom})` }} />

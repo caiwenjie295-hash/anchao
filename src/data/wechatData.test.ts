@@ -41,7 +41,7 @@ describe('wechat data', () => {
     expect(messages.filter((message) => message.kind === 'text')).toHaveLength(5);
     expect(messages.filter((message) => message.kind === 'image').map((message) => message.assetId)).toContain('IMG_A2_T05_009');
     expect(messageById.get('CHAT_A2_T05_004')?.assetId).toBe('IMG_A2_T05_011');
-    expect(imagesDocument.items.find((image) => image.id === 'IMG_A2_T05_011')?.file).toBeNull();
+    expect(imagesDocument.items.find((image) => image.id === 'IMG_A2_T05_011')?.file).toBe('IMG_A2_T05_011.jpg');
     expect(messages.every((message) => message.conversationId === 'CONTACT_A1_A_002')).toBe(true);
   });
 });

@@ -270,15 +270,19 @@ async function advanceAct2() {
   await openOrFocusApp('微信');
   await textButton('小月', '.wechat-conversation');
   assert.ok(query('.wechat-chat__messages').textContent.includes('去年聚会拍的'));
-  await click('.wechat-message__placeholder-image');
-  assert.ok(query('.wechat-image-placeholder').textContent.includes('本地图片资源空位'));
-  await click('.wechat-image-placeholder [aria-label="关闭图片"]');
+  await click('.wechat-message__body[data-asset-id="IMG_A2_T05_008"] .evidence-thumbnail');
+  assert.match(query('.evidence-lightbox[open] img').src, /^data:image\/jpeg;base64,/);
+  await click('.evidence-lightbox[open] [aria-label="关闭图片"]');
+  await click('.wechat-message__body[data-asset-id="IMG_A2_T05_011"] .evidence-thumbnail');
+  assert.match(query('.evidence-lightbox[open] img').src, /^data:image\/jpeg;base64,/);
+  await click('.evidence-lightbox[open] [aria-label="关闭图片"]');
   assert.equal(state().modules.act2Research.stage, 'tales');
   await click('.wechat-school-transition button');
   assert.equal(state().modules.act2Research.stage, 'school');
   assert.equal(state().game.phase, 'A2_T05');
   assert.equal(state().game.flags.FLAG_A2_SCHOOL_ENTERED, true);
   assert.ok(query('.t05-school'));
+  assert.match(query('.t05-school__backdrop img').src, /^data:image\/jpeg;base64,/);
 
   await textButton('走廊', '.t05-school__map button');
   assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, true);

@@ -55,6 +55,8 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
 
   if (!isBridgeStage) return null;
 
+  const sceneImage = assetLoader.get('IMG_A2_T02_001')?.src;
+
   const selectedElder = bridgeElders.find((elder) => elder.id === selectedElderId) ?? null;
   const isClueElderSelected = selectedElder?.isClueElder === true;
   const locked = wrongAttempts >= bridgePuzzle.maxAttempts;
@@ -103,6 +105,8 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
         </div>
         {onReturnDesktop && <button type="button" className="act2-bridge__return" onClick={onReturnDesktop}>{bridgeScene.returnLabel}</button>}
       </header>
+
+      {sceneImage && <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，几位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" />}
 
       {!heard && <p className="act2-bridge__intro">{bridgeScene.intro}</p>}
 

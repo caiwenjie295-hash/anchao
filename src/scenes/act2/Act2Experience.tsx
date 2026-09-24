@@ -5,7 +5,7 @@ import { LibraryResearch } from './LibraryResearch';
 import { TalesInvestigation } from './TalesInvestigation';
 import { SchoolInvestigation } from './SchoolInvestigation';
 
-/** 桥头场景通用外层的资源空位：`file: null`，只用克制 CSS 占位。 */
+/** 桥头场景资源 ID；场景图由 BridgeInvestigation 显示。 */
 export const ACT2_BRIDGE_PLACEHOLDER_ASSET_ID = 'IMG_A2_T02_001';
 
 /** 返回桌面后的中性继续入口文案；不泄露任何答案。 */
