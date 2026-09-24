@@ -423,3 +423,18 @@ img.act2-library__shelf-art { display: block; object-fit: cover; object-position
   .act2-library__section:hover,
   .act2-library__section[aria-current="true"] { transform: none; }
 }
+
+/* 阅览室照片承载找书；目录和书页保持独立可读。 */
+.act2-library { isolation: isolate; background: #17140f; }
+.act2-library__ambient { position: fixed; z-index: -1; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.54); pointer-events: none; }
+.act2-library__catalog,
+.act2-library__shelf,
+.act2-library__reader { background: rgba(25, 21, 16, .8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-color: rgba(247, 230, 192, .44); }
+.act2-library__shelf-scene { position: relative; height: 235px; margin: 10px 0 14px; overflow: hidden; border: 1px solid rgba(233, 209, 158, .65); border-radius: 6px; background: #433d2f; }
+.act2-library__shelf-scene img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.act2-library__shelf-hotspot { position: absolute; left: 6%; top: 12%; width: 43%; height: 72%; border: 2px solid rgba(250, 221, 150, .85); border-radius: 8px; background: rgba(24, 20, 14, .38); color: #fff5dc; box-shadow: 0 0 0 5px rgba(255, 229, 170, .15), inset 0 0 32px rgba(245, 210, 141, .16); text-shadow: 0 2px 5px #000; cursor: pointer; font: 600 13px/1.4 inherit; }
+.act2-library__shelf-hotspot:hover,
+.act2-library__shelf-hotspot:focus-visible { background: rgba(77, 59, 30, .57); outline: 2px solid #ffe1a2; outline-offset: 3px; }
+.act2-library__shelf-focus { position: relative; height: 185px; margin-bottom: 12px; border: 1px solid #d6bb83; border-radius: 6px; background-color: #473a28; background-size: 240% auto; background-position: 15% 47%; box-shadow: 0 10px 26px #0006; }
+.act2-library__shelf-focus span { position: absolute; left: 8px; bottom: 8px; padding: 5px 8px; border-radius: 3px; background: rgba(24, 19, 13, .85); color: #fff5dc; font-size: 12px; }
+.act2-library__page { background: var(--act2-library-paper-grain), #efe4cb; }

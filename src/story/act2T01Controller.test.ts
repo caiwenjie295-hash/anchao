@@ -39,8 +39,8 @@ describe('Act2T01Controller', () => {
     expect(state.game.flags.FLAG_A2_WEB_SEARCH_FAILED).toBe(true);
     expect(state.game.flags.FLAG_A2_OFFLINE_RESEARCH_NEEDED).toBe(true);
     expect(state.modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T01_001']);
-    expect(state.modules.act2Research.stage).toBe('bridge');
-    expect(state.game.phase).toBe('A2_T02');
+    expect(state.modules.act2Research.stage).toBe('search');
+    expect(state.game.phase).toBe('A2_T01');
     controller.dispose();
   });
 
@@ -49,7 +49,7 @@ describe('Act2T01Controller', () => {
     for (const query of [...buQueries, ...ssQueries, ...buQueries]) manager.recordBrowserSearch(query);
     const state = manager.getState();
     expect(state.modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T01_001']);
-    expect(state.modules.act2Research.stage).toBe('bridge');
+    expect(state.modules.act2Research.stage).toBe('search');
     controller.dispose();
   });
 

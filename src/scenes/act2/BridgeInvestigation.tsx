@@ -98,6 +98,7 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
 
   return (
     <section className="act2-bridge" aria-label={bridgeScene.title}>
+      {sceneImage && <img className="act2-bridge__ambient" src={sceneImage} alt="" aria-hidden="true" />}
       <header className="act2-bridge__header">
         <div>
           <p className="act2-bridge__location">{bridgeScene.location}</p>
@@ -106,28 +107,28 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
         {onReturnDesktop && <button type="button" className="act2-bridge__return" onClick={onReturnDesktop}>{bridgeScene.returnLabel}</button>}
       </header>
 
-      {sceneImage && <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，几位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" />}
-
       {!heard && <p className="act2-bridge__intro">{bridgeScene.intro}</p>}
 
       <div className="act2-bridge__body">
-        <div className="act2-bridge__elders" role="group" aria-label="桥头休息区的老人">
-          {bridgeElders.map((elder) => (
-            <button
-              key={elder.id}
-              type="button"
-              className={`act2-bridge__elder${selectedElderId === elder.id ? ' act2-bridge__elder--active' : ''}`}
-              aria-pressed={selectedElderId === elder.id}
-              onClick={() => selectElder(elder.id)}
-            >
-              {elder.name}
-              <span className="act2-bridge__elder-hint">{bridge.talkedElderIds.includes(elder.id) ? '聊过了' : bridgeScene.chatPrompt}</span>
-            </button>
-          ))}
+        <div className="act2-bridge__stage" role="group" aria-label="点击照片中的老人交谈">
+          {sceneImage && <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，四位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" />}
+          {bridgeElders.map((elder) => <button
+            key={elder.id}
+            type="button"
+            className={`act2-bridge__elder${selectedElderId === elder.id ? ' act2-bridge__elder--active' : ''}`}
+            style={{ left: `${elder.focus.x}%`, top: `${elder.focus.y}%` }}
+            aria-pressed={selectedElderId === elder.id}
+            onClick={() => selectElder(elder.id)}
+          >
+            <span className="act2-bridge__elder-dot" aria-hidden="true">听</span>
+            <span className="act2-bridge__elder-label">{elder.name} · {bridge.talkedElderIds.includes(elder.id) ? '聊过了' : bridgeScene.chatPrompt}</span>
+          </button>)}
         </div>
 
+        {!selectedElder && <div className="act2-bridge__dialogue act2-bridge__dialogue--empty"><h2>桥边闲谈</h2><p>点照片中的“听”，选择一位老人。先听他们说些什么，再慢慢问鸡公岭的事。</p></div>}
         {selectedElder && (
           <div className="act2-bridge__dialogue" aria-live="polite">
+            {sceneImage && <div className="act2-bridge__portrait" role="img" aria-label={`${selectedElder.name}的现场局部特写`} style={{ backgroundImage: `url(${sceneImage})`, backgroundPosition: `${selectedElder.focus.x}% ${selectedElder.focus.y}%` }} />}
             <h2>{selectedElder.name}</h2>
             {selectedElder.chat.map((line) => <p key={line}>{line}</p>)}
             {!askedMountain && (

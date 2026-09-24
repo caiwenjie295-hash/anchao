@@ -32,6 +32,18 @@ describe('BrowserApp T06 visibility gates', () => {
     expect(host.textContent).toContain('启明 投诉');
     expect(manager.getState().modules.browser.queryHistory).toEqual(['启明 投诉', '启明']);
   });
+  it('keeps an intentionally cleared address empty instead of restoring the previous query', async () => {
+    await render();
+    await search('鸡公岭');
+    const input = host.querySelector('#browser-search') as HTMLInputElement;
+    expect(input.value).toBe('鸡公岭');
+    await act(async () => {
+      input.focus();
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, '');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    expect(input.value).toBe('');
+  });
   it('records a page only after opening it and offers explicit comparisons and later-case confirmation', async () => {
     manager.enterAct2QimingResearch();
     const controller = new Act2T06Controller(manager, bus); controller.start();

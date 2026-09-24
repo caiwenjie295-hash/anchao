@@ -16,7 +16,7 @@ import { Act2T06Controller } from './story/act2T06Controller';
 import { Act1SceneExperience } from './scenes/act1/Act1SceneExperience';
 import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
-import { StoryTransition } from './components/StoryTransition';
+import { StoryTransition, StoryTransitionLaunch } from './components/StoryTransition';
 import { getPendingStoryTransition } from './data/storyTransitionData';
 import './styles.css';
 import './imageAssets.css';
@@ -31,6 +31,7 @@ export default function App() {
   const [time, setTime] = useState(() => new Date());
   // “已返回桌面”只是瞬时显示状态；阶段一变或清零即刻失效。
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
+  const [openedTransitionId, setOpenedTransitionId] = useState<string | null>(null);
   useEffect(() => {
     const interval = window.setInterval(() => setTime(new Date()), 15_000);
     return () => window.clearInterval(interval);
@@ -77,15 +78,24 @@ export default function App() {
   const secondActStarted = act2Stage !== 'inactive';
   const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
   const transition = getPendingStoryTransition(state);
+  const transitionOpen = transition !== null && (transition.id === 'TRANSITION_A1_INTRO' || openedTransitionId === transition.id);
+  const continueTransition = () => {
+    if (!transition) return;
+    stateManager.acknowledgeStoryTransition(transition.id);
+    setOpenedTransitionId(null);
+  };
+  const transitionLayer = transition && (transitionOpen
+    ? <StoryTransition transition={transition} onContinue={continueTransition} />
+    : <StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} />);
   if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
     return <>
-      <div aria-hidden={transition !== null} inert={transition !== null}><Act1Ending /></div>
-      {transition && <StoryTransition transition={transition} onContinue={() => stateManager.acknowledgeStoryTransition(transition.id)} />}
+      <div aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending /></div>
+      {transitionLayer}
     </>;
   }
   return (
     <>
-    <div aria-hidden={transition !== null} inert={transition !== null}>
+    <div aria-hidden={transitionOpen} inert={transitionOpen}>
     <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
@@ -122,7 +132,7 @@ export default function App() {
       />
     )}
     </div>
-    {transition && <StoryTransition transition={transition} onContinue={() => stateManager.acknowledgeStoryTransition(transition.id)} />}
+    {transitionLayer}
     </>
   );
 }

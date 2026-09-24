@@ -31,6 +31,7 @@ describe('T05 school exploration', () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '老师办公室')?.click(); });
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '听听老师回忆')?.click(); });
+    expect(container.querySelector('.t05-school__backdrop .t05-school__image-hotspot')).not.toBeNull();
     expect((document.activeElement as HTMLElement)?.textContent).toContain('关闭');
     await act(async () => { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
     expect(container.querySelector('[role="dialog"]')).toBeNull();

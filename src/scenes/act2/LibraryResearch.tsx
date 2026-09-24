@@ -44,6 +44,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
   const library = state.modules.act2Research.library;
   const flags = state.game.flags;
   const [zoom, setZoom] = useState(LIBRARY_MIN_ZOOM);
+  const [shelfFocused, setShelfFocused] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(() => library.visitedSectionIds.includes(libraryCorrectSectionId) ? libraryCorrectSectionId : null);
 
   const enteredFlag = flags[libraryFlagIds.entered] === true;
@@ -65,6 +66,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
   }, [manager, targetPageActive, bumuzhiFlag]);
 
   if (stage !== 'library') return null;
+  const sceneImage = assetLoader.get(librarySceneCopy.placeholderAssetId)?.src;
 
   const correctSectionVisited = library.visitedSectionIds.includes(libraryCorrectSectionId);
   const gazetteFound = gazetteFlag || correctSectionVisited;
@@ -110,6 +112,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
 
   return (
     <section className="act2-library" aria-label={`${librarySceneCopy.title} · 地方志检索`}>
+      {sceneImage && <img className="act2-library__ambient" src={sceneImage} alt="" aria-hidden="true" />}
       <a className="act2-library__skip" href="#act2-library-return">跳到返回按钮</a>
 
       <header className="act2-library__header">
@@ -158,11 +161,15 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
         </section>
 
         <section className="act2-library__shelf" aria-labelledby="act2-library-shelf-title">
-          {assetLoader.get(librarySceneCopy.placeholderAssetId)?.src
-            ? <img className="act2-library__shelf-art" src={assetLoader.get(librarySceneCopy.placeholderAssetId)!.src} data-asset-id={librarySceneCopy.placeholderAssetId} alt="县图书馆的地方志书架与阅览区" />
-            : <div className="act2-library__shelf-art" data-asset-id={librarySceneCopy.placeholderAssetId} aria-hidden="true" />}
           <h2 id="act2-library-shelf-title" className="act2-library__subtitle">{librarySceneCopy.shelfTitle}</h2>
-          {gazetteFound ? (
+          <div className="act2-library__shelf-scene" data-asset-id={librarySceneCopy.placeholderAssetId}>
+            {sceneImage && <img src={sceneImage} alt="县图书馆的书架与阅览区" />}
+            <button type="button" className="act2-library__shelf-hotspot" aria-expanded={shelfFocused} onClick={() => setShelfFocused((value) => !value)}>查看左侧书架局部</button>
+          </div>
+          {shelfFocused && <div className="act2-library__shelf-focus" aria-label="地方志书架局部特写" style={sceneImage ? { backgroundImage: `url(${sceneImage})` } : undefined}>
+            <span>地方志与县志 · 书脊区</span>
+          </div>}
+          {gazetteFound && shelfFocused ? (
             <ul className="act2-library__volumes">
               {libraryVolumes.map((volume) => (
                 <li key={volume.id}>
@@ -180,7 +187,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                 </li>
               ))}
             </ul>
-          ) : (
+          ) : gazetteFound ? <p className="act2-library__shelf-locked">目录已缩小范围。点击照片里有光照的左侧书架，辨认书脊。</p> : (
             <p className="act2-library__shelf-locked">范围还没收窄到册。先在上面选定一门类。</p>
           )}
         </section>

@@ -46,6 +46,7 @@
   "elders": [
     {
       "id": "ELDER_A2_T02_001",
+      "focus": { "x": 28, "y": 62 },
       "name": "讲山路的老人",
       "isClueElder": false,
       "chat": [
@@ -59,6 +60,7 @@
     },
     {
       "id": "ELDER_A2_T02_002",
+      "focus": { "x": 35, "y": 57 },
       "name": "爱看热闹的老人",
       "isClueElder": false,
       "chat": [
@@ -72,6 +74,7 @@
     },
     {
       "id": "ELDER_A2_T02_003",
+      "focus": { "x": 49, "y": 69 },
       "name": "摇蒲扇的老人",
       "isClueElder": false,
       "chat": [
@@ -85,6 +88,7 @@
     },
     {
       "id": "ELDER_A2_T02_004",
+      "focus": { "x": 60, "y": 55 },
       "name": "坐在石凳尽头的老人",
       "isClueElder": true,
       "chat": [

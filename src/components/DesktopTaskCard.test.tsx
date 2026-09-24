@@ -29,6 +29,7 @@ describe('DesktopTaskCard', () => {
     await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={onOpenApp} />); });
 
     expect(container.textContent).toContain('当前待办');
+    await act(async () => { (container.querySelector('.desktop-task-card__toggle') as HTMLButtonElement).click(); });
     expect(container.querySelectorAll('.desktop-task-card__step--complete')).toHaveLength(1);
     expect(container.querySelectorAll('.desktop-task-card__step--current')).toHaveLength(1);
     await act(async () => { (container.querySelector('.desktop-task-card__action') as HTMLButtonElement).click(); });
@@ -39,12 +40,11 @@ describe('DesktopTaskCard', () => {
     const state = createDefaultState();
     await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={vi.fn()} />); });
     const toggle = container.querySelector('.desktop-task-card__toggle') as HTMLButtonElement;
-    expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    await act(async () => { toggle.click(); });
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(container.querySelector('.desktop-task-card__body')).toBeNull();
     await act(async () => { toggle.click(); });
     expect(container.querySelector('.desktop-task-card__body')).not.toBeNull();
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
     expect(state.game.phase).toBe('A');
   });
 

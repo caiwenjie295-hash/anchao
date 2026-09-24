@@ -60,20 +60,15 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         <div className={`t05-school__backdrop t05-school__backdrop--${area.id.toLowerCase().replaceAll('_', '-')}${areaImage ? ' t05-school__backdrop--image' : ''}`} data-asset-id={area.imageId}>
           {areaImage && <img src={areaImage} alt="" />}
           <p>{area.title}</p>
-          {area.id === 'AREA_A2_T05_CORRIDOR' && !areaImage && <span className="t05-school__hydrant" aria-label="墙边的消防栓">消防栓</span>}
+          {availableHotspots.map((item) => <button type="button" key={item.id} className="t05-school__image-hotspot" style={{ left: `${item.focus.x}%`, top: `${item.focus.y}%` }} onClick={(event) => openHotspot(item.id, event.currentTarget)}>{item.actionLabel}</button>)}
+          <nav className="t05-school__image-routes" aria-label="从照片前往相邻地点">{area.links.map((id) => { const target = schoolAreaById.get(id)!; return <button type="button" key={id} onClick={() => { setAreaId(id); setHotspotId(null); }}>{target.title} →</button>; })}</nav>
         </div>
         <h2>{area.title}</h2>
         <p className="t05-school__description">{area.description}</p>
-        {availableHotspots.length > 0 && <div className="t05-school__hotspots" aria-label="可以查看的内容">
-          {availableHotspots.map((item) => <button type="button" key={item.id} onClick={(event) => openHotspot(item.id, event.currentTarget)}>{item.actionLabel}</button>)}
-        </div>}
         {area.id === 'AREA_A2_T05_TEACHER_OFFICE' && flags.FLAG_A2_SCHOOL_SS_FOUND !== true && <p className="t05-school__soft-hint">{act2School.softHint}</p>}
-        <nav className="t05-school__routes" aria-label="相邻地点">
-          <span>前往：</span>{area.links.map((id) => { const target = schoolAreaById.get(id)!; return <button type="button" key={id} onClick={() => { setAreaId(id); setHotspotId(null); }}>{target.title}</button>; })}
-        </nav>
       </main>
     </div>
-    {isComplete && <aside className="t05-school__ending" aria-live="polite"><h2>这两处记号可以放在一起看</h2><p>{act2School.matchNote}</p><button type="button" onClick={() => { onReturnToDesktop?.(); manager.openApp('notepad'); }}>查看调查笔记</button></aside>}
+    {isComplete && <aside className="t05-school__ending" aria-live="polite"><h2>这两处记号可以放在一起看</h2><p>{act2School.matchNote}</p><p>回到浏览器，核查“启明”相关的公开记录。</p><button type="button" onClick={() => { onReturnToDesktop?.(); manager.openApp('notepad'); }}>查看调查笔记</button><button type="button" onClick={() => { onReturnToDesktop?.(); manager.openApp('browser'); }}>进行下一步调查 · 核查启明</button></aside>}
     {hotspot && <div className="t05-school__dialog-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setHotspotId(null); }}>
       <section ref={dialogRef} className="t05-school__dialog" role="dialog" aria-modal="true" aria-labelledby="t05-school-dialog-title">
         <header><h2 id="t05-school-dialog-title">{hotspot.title}</h2><button type="button" aria-label="关闭" onClick={() => setHotspotId(null)}>关闭 ×</button></header>
