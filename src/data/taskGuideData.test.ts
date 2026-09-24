@@ -146,6 +146,8 @@ describe('act2 desktop task guides', () => {
     base.game.flags.FLAG_A2_SCHOOL_ENTERED = true;
     expect(getCurrentTaskGuide(base)?.steps[0].complete).toBe(true);
     base.game.flags.FLAG_A2_SS_MATCH_CONFIRMED = true;
+    expect(getCurrentTaskGuide(base)?.actionAppId).toBe('browser');
+    base.game.flags.FLAG_A2_QIMING_OFFICIAL_FOUND = true;
     expect(getCurrentTaskGuide(base)).toBeNull();
   });
 

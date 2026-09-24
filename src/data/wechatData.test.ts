@@ -37,8 +37,9 @@ describe('wechat data', () => {
     expect(getConversationMessages('CONTACT_A1_A_002', state).some((message) => message.id.startsWith('CHAT_A2_T05_'))).toBe(false);
     state.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true;
     const messages = getConversationMessages('CONTACT_A1_A_002', state).filter((message) => message.id.startsWith('CHAT_A2_T05_'));
-    expect(messages).toHaveLength(10);
-    expect(messages.filter((message) => message.kind === 'text')).toHaveLength(5);
+    expect(messages).toHaveLength(15);
+    expect(messages.filter((message) => message.kind === 'text')).toHaveLength(10);
+    expect(messages.filter((message) => message.senderId === 'CONTACT_A1_A_010')).toHaveLength(5);
     expect(messages.filter((message) => message.kind === 'image').map((message) => message.assetId)).toContain('IMG_A2_T05_009');
     expect(messageById.get('CHAT_A2_T05_004')?.assetId).toBe('IMG_A2_T05_011');
     expect(imagesDocument.items.find((image) => image.id === 'IMG_A2_T05_011')?.file).toBe('IMG_A2_T05_011.jpg');

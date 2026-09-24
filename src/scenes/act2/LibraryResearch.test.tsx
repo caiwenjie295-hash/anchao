@@ -35,6 +35,7 @@ describe('LibraryResearch (act2 T03)', () => {
 
   const reachTargetPage = async () => {
     await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
+    await click(pick('.act2-library__shelf-hotspot'));
     await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
     await click(pick('.act2-library__next'));
     await click(pick('.act2-library__next'));
@@ -81,6 +82,8 @@ describe('LibraryResearch (act2 T03)', () => {
     await setup();
     await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBe(true);
+    expect(pick(`[data-volume-id="${TARGET_VOLUME}"]`)).toBeNull();
+    await click(pick('.act2-library__shelf-hotspot'));
     expect(pick(`[data-volume-id="${TARGET_VOLUME}"]`)).not.toBeNull();
 
     await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
@@ -101,6 +104,7 @@ describe('LibraryResearch (act2 T03)', () => {
   it('requires sequential page turns and never exposes a control that jumps to the gazette page', async () => {
     await setup();
     await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
+    await click(pick('.act2-library__shelf-hotspot'));
     await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
     expect(libraryState().currentPageId).toBe('PAGE_A2_T03_003');
 

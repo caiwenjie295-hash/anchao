@@ -61,7 +61,7 @@ export class Act2T01Controller {
     if (this.manager.getState().game.flags[offlineFlag] !== true) this.manager.setFlag(offlineFlag, true);
     this.manager.addNotepadAutoEntry(conclusionNoteId);
     this.clearWeakPromptTimer();
-    this.manager.setAct2Stage('bridge');
+    // Search evidence is complete; the player chooses when to leave the browser.
   }
 
   private armWeakPromptTimer(): void {

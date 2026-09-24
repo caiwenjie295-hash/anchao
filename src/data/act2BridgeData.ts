@@ -41,6 +41,7 @@ export interface BridgeEvidenceItem {
 
 export interface BridgeElder {
   id: string;
+  focus: { x: number; y: number };
   name: string;
   isClueElder: boolean;
   chat: string[];
@@ -147,6 +148,7 @@ export function validateBridgeData(data: Act2BridgeData = act2BridgeData): void 
     if (elderIds.has(elder.id)) throw new Error(`老人 ID 重复：${elder.id}`);
     elderIds.add(elder.id);
     if (!isNonEmptyString(elder.name)) throw new Error(`${elder.id} 缺少称呼。`);
+    if (![elder.focus?.x, elder.focus?.y].every((position) => typeof position === 'number' && position >= 0 && position <= 100)) throw new Error(`${elder.id} 的照片位置无效。`);
     if (!isStringArray(elder.chat) || !isStringArray(elder.mountainReply)) throw new Error(`${elder.id} 的生活闲谈不能为空。`);
     if (elder.isClueElder && (!isNonEmptyString(elder.evidenceLead) || !isNonEmptyString(elder.phrase) || !isNonEmptyString(elder.phraseAfter))) {
       throw new Error('线索老人缺少证据反应或口述原话。');

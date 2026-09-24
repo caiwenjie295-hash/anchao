@@ -13,10 +13,10 @@
     { "id": "AREA_A2_T05_NOTICE_BOARD", "title": "宣传栏", "imageId": "IMG_A2_T05_007", "description": "宣传栏贴着社团招新、运动会和旧校庆的照片。", "links": ["AREA_A2_T05_CORRIDOR"] }
   ],
   "hotspots": [
-    { "id": "HOTSPOT_A2_T05_TEACHER", "title": "和班主任聊聊", "areaId": "AREA_A2_T05_TEACHER_OFFICE", "actionLabel": "听听老师回忆", "content": "小A高二那年休学了两个月。回来以后整个人安静了很多，跟同学也疏远了，几乎把时间都用在学习上。那阵子他的成绩提得特别快，快得我们都没想到。" },
-    { "id": "HOTSPOT_A2_T05_RANKS", "title": "历次成绩记录", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "查看历次名次", "recordTitle": "高三年级阶段成绩记录", "studentName": "王澳", "ranks": [600, 400, 300, 130, 88, 53, 20] },
-    { "id": "HOTSPOT_A2_T05_QIMING_TEXT", "title": "成绩表下方的感谢文字", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "读一下落款", "content": "感谢启明青少年成长中心两个月来对我的教育和培养。" },
-    { "id": "HOTSPOT_A2_T05_SCHOLAR_NOTE", "title": "旧学习笔记", "areaId": "AREA_A2_T05_XIAOA_CLASSROOM", "actionLabel": "翻看学霸笔记", "content": "这本笔记曾经在学校的优秀学习资料展上展示过。页边有一个用黑笔描了两遍的双 S 记号。" }
+    { "id": "HOTSPOT_A2_T05_TEACHER", "title": "和班主任聊聊", "areaId": "AREA_A2_T05_TEACHER_OFFICE", "actionLabel": "听听老师回忆", "focus": { "x": 51, "y": 53 }, "content": "小A高二那年休学了两个月。回来以后整个人安静了很多，跟同学也疏远了，几乎把时间都用在学习上。那阵子他的成绩提得特别快，快得我们都没想到。" },
+    { "id": "HOTSPOT_A2_T05_RANKS", "title": "历次成绩记录", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "查看历次名次", "focus": { "x": 59, "y": 40 }, "recordTitle": "高三年级阶段成绩记录", "studentName": "王澳", "ranks": [600, 400, 300, 130, 88, 53, 20] },
+    { "id": "HOTSPOT_A2_T05_QIMING_TEXT", "title": "成绩表下方的感谢文字", "areaId": "AREA_A2_T05_HONOR_ROLL", "actionLabel": "读一下落款", "focus": { "x": 58, "y": 69 }, "content": "感谢启明青少年成长中心两个月来对我的教育和培养。" },
+    { "id": "HOTSPOT_A2_T05_SCHOLAR_NOTE", "title": "旧学习笔记", "areaId": "AREA_A2_T05_XIAOA_CLASSROOM", "actionLabel": "翻看学霸笔记", "focus": { "x": 48, "y": 72 }, "content": "这本笔记曾经在学校的优秀学习资料展上展示过。页边有一个用黑笔描了两遍的双 S 记号。" }
   ],
   "notebookPage": { "heading": "物理 · 错题整理", "lines": ["函数与几何", "错题归纳"], "replacementNote": "页边的图案与笔记内容并不相干。" },
   "softHint": "小月记得学校以前展示过小A的学习笔记，也许还能找到。",

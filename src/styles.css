@@ -42,6 +42,9 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .desktop-task-card__step--complete { color: #536675; }
 .desktop-task-card__step--complete .desktop-task-card__status { border-color: #486378; background: rgba(220, 232, 239, .68); transform: scale(.94); }
 .desktop-task-card__step-label { min-width: 0; }
+.desktop-task-card__hint-toggle { display:block; width:100%; padding:2px 0; border:0; color:inherit; background:transparent; cursor:pointer; text-align:left; font:inherit; }
+.desktop-task-card__hint-toggle small { display:block; margin-top:3px; color:#2a6489; font-size:11px; text-decoration:underline; }
+.desktop-task-card__hint { display:block; margin-top:5px; padding:7px 9px; border-left:2px solid #557b92; color:#2c4150; background:#e7f0f4; font-size:12px; line-height:1.5; }
 .desktop-task-card__current { align-self: center; margin-top: 1px; padding: 1px 5px; border-radius: 2px; color: #72511a; background: #ead7a8; font-size: 10px; line-height: 1.4; letter-spacing: .05em; animation: desktop-task-card-current 220ms ease-out both; }
 .desktop-task-card__action { width: 100%; min-height: 33px; margin-top: 14px; border: 1px solid #7d98ad; border-radius: 3px; color: #254157; background: rgba(231, 240, 246, .75); cursor: pointer; font-size: 12px; font-weight: 600; }
 .desktop-task-card__action:hover { border-color: #547d9e; color: #133d5d; background: #e2eff7; }
@@ -76,7 +79,7 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .app-shell__placeholder { display: grid; flex: 1; place-content: center; gap: 8px; margin-top: 28px; min-height: 180px; border: 1px dashed #b7c6d4; border-radius: 4px; color: #556676; background: repeating-linear-gradient(0deg, rgba(241,246,250,.72), rgba(241,246,250,.72) 30px, #fff 31px); text-align: center; }
 .app-shell__placeholder small { color: #7b8995; font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 11px; }
 .wechat-app { display: grid; height: 100%; min-height: 0; grid-template-columns: minmax(205px, 34%) 1fr; background: #f5f5f5; color: #171717; }
-.wechat-list { display: flex; min-width: 0; flex-direction: column; border-right: 1px solid #dedede; background: #ededed; }
+.wechat-list { display: flex; min-width: 0; min-height: 0; flex-direction: column; border-right: 1px solid #dedede; background: #ededed; }
 .wechat-list__header { display: flex; flex: 0 0 64px; align-items: center; justify-content: space-between; padding: 0 20px; }
 .wechat-list__header h2 { margin: 0; font-size: 18px; font-weight: 600; }
 .wechat-list__header > span { color: #656565; font-size: 21px; }
@@ -95,8 +98,10 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .wechat-chat { display: flex; min-width: 0; min-height: 0; flex-direction: column; background: #f5f5f5; }
 .wechat-chat__header { display: flex; flex: 0 0 64px; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #e6e6e6; }
 .wechat-chat__header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.wechat-chat__history-button { min-height:34px; padding:0 10px; border:1px solid #c6d2ca; border-radius:4px; color:#365a48; background:#f8fbf8; cursor:pointer; font-size:12px; }
+.wechat-chat__history-button:hover { background:#e6f0e8; }
 .wechat-chat__header span { color: #676767; letter-spacing: 2px; }
-.wechat-chat__messages { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 13px; overflow: auto; padding: 22px clamp(16px, 4vw, 40px); }
+.wechat-chat__messages { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 13px; overflow-y: scroll; overscroll-behavior: contain; scrollbar-color: #9eaaa2 #e9eeea; scrollbar-width: auto; padding: 22px clamp(16px, 4vw, 40px); }
 .wechat-message { display: flex; align-items: flex-start; gap: 9px; max-width: min(82%, 530px); }
 .wechat-message--self { align-self: flex-end; }
 .wechat-message__body { display: flex; align-items: center; gap: 7px; max-width: 100%; padding: 9px 11px; border-radius: 5px; color: #222; background: #fff; font-size: 14px; line-height: 1.48; word-break: break-word; box-shadow: 0 1px rgba(0,0,0,.03); }
@@ -231,6 +236,9 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .browser-page > div { color: #d0d6dd; font-size: 15px; line-height: 1.85; }
 .browser-page > div p { margin: 0 0 18px; }
 .browser-empty { padding: 38px; color: #94a0ae; text-align: center; }
+.browser-next-investigation { position: absolute; right: 22px; bottom: 22px; z-index: 5; width: min(330px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #8fa8a0; border-radius: 8px; color: #21372d; background: #f2f8f4ed; box-shadow: 0 12px 32px #0005; }
+.browser-next-investigation p { margin: 0 0 10px; font-size: 13px; line-height: 1.6; }
+.browser-next-investigation button { min-height: 40px; padding: 0 14px; border: 1px solid #315e4c; border-radius: 4px; color: #fff; background: #315e4c; cursor: pointer; }
 .notepad-app { display: flex; height: 100%; min-height: 0; flex-direction: column; color: #202328; background: #fbfbfb; font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace; }
 .notepad-app > header { min-height: 57px; padding: 9px 15px 4px; border-bottom: 1px solid #dedede; background: #fff; font-family: "Microsoft YaHei", system-ui, sans-serif; }
 .notepad-app header > div { display: flex; align-items: center; gap: 7px; }
@@ -434,6 +442,11 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .story-transition button { min-height:48px; margin-top:28px; padding:0 22px; border:1px solid #b5beb9; border-radius:2px; color:#f5f6f3; background:transparent; cursor:pointer; font:14px system-ui,sans-serif; letter-spacing:.12em; }
 .story-transition button:hover { background:#202523; }
 .story-transition button:focus-visible { outline:3px solid #f4f4ef; outline-offset:5px; }
+.story-transition-launch { position:fixed; z-index:19000; right:clamp(20px,3vw,48px); bottom:76px; width:min(320px,calc(100vw - 40px)); padding:18px 20px; border:1px solid #bac7c0; border-radius:8px; color:#233329; background:#f3f6f0f2; box-shadow:0 16px 44px #101b1580; backdrop-filter:blur(16px); }
+.story-transition-launch span { display:block; color:#526b59; font-size:12px; letter-spacing:.08em; }
+.story-transition-launch p { margin:8px 0 14px; font-size:14px; line-height:1.6; }
+.story-transition-launch button { min-height:42px; padding:0 16px; border:1px solid #315f4a; border-radius:4px; color:#fff; background:#315f4a; cursor:pointer; }
+.story-transition-launch button:focus-visible { outline:3px solid #315f4a; outline-offset:3px; }
 
 @media (max-width: 520px) {
   .act2-experience--bridge { padding: 10px; }

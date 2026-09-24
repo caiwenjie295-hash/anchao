@@ -12,12 +12,13 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const [tabs, setTabs] = useState<Tab[]>([{ id: 1, view: { kind: 'home' }, stack: [{ kind: 'home' }], stackIndex: 0 }]);
   const [activeTabId, setActiveTabId] = useState(1);
-  const [draft, setDraft] = useState('');
+  // null means the address follows the active page; '' is an intentional empty edit.
+  const [draft, setDraft] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
   const stage = state.modules.act2Research.stage;
-  const safeDraft = draft;
-  const suggestions = useMemo(() => getSuggestions(isAct2T06Query(draft) && stage !== 'qiming' ? '' : draft, stage), [draft, stage]);
+  const safeDraft = draft ?? '';
+  const suggestions = useMemo(() => getSuggestions(isAct2T06Query(safeDraft) && stage !== 'qiming' ? '' : safeDraft, stage), [safeDraft, stage]);
   const visibleView = (view: View): View => {
     if (view.kind === 'results' && findSearchQuery(view.query) && isAct2T06Record(findSearchQuery(view.query)!) && stage !== 'qiming') return { kind: 'home' };
     if (view.kind === 'page' && !isBrowserPageVisible(browserPageById.get(view.pageId), stage)) return { kind: 'home' };
@@ -26,7 +27,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
   const shownView = visibleView(activeTab.view);
   useEffect(() => {
     if (stage === 'qiming') return;
-    setDraft(''); setHistoryOpen(false);
+    setDraft(null); setHistoryOpen(false);
     setTabs((current) => current.map((tab) => {
       const stack = tab.stack.filter((view) => visibleView(view).kind !== 'home' || view.kind === 'home');
       const nextStack = stack.length ? stack : [{ kind: 'home' as const }];
@@ -40,7 +41,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     const stack = push ? [...tab.stack.slice(0, tab.stackIndex + 1), nextView] : tab.stack;
     return { ...tab, view: nextView, stack, stackIndex: push ? stack.length - 1 : tab.stackIndex };
   }));
-  const submitSearch = (value = draft) => {
+  const submitSearch = (value = safeDraft) => {
     if (!value.trim()) return;
     const view = searchView(value);
     const definition = findSearchQuery(value);
@@ -56,6 +57,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
   const openPage = (pageId: string) => {
     manager.recordBrowserPageVisit(pageId);
     replaceActive({ kind: 'page', pageId });
+    setDraft(null);
     setHistoryOpen(false);
   };
   const navigate = (direction: -1 | 1) => {
@@ -63,24 +65,25 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     if (nextIndex < 0 || nextIndex >= activeTab.stack.length) return;
     const nextView = visibleView(activeTab.stack[nextIndex]);
     setTabs((current) => current.map((tab) => tab.id === activeTabId ? { ...tab, view: nextView, stackIndex: nextIndex } : tab));
+    setDraft(null);
     if (nextView.kind === 'page') manager.recordBrowserPageVisit(nextView.pageId);
   };
   const newTab = () => {
     const id = Math.max(...tabs.map((tab) => tab.id)) + 1;
     setTabs((current) => [...current, { id, view: { kind: 'home' }, stack: [{ kind: 'home' }], stackIndex: 0 }]);
     setActiveTabId(id);
-    setDraft('');
+    setDraft(null);
   };
   const closeTab = (id: number) => {
-    if (tabs.length === 1) return replaceActive({ kind: 'home' });
+    if (tabs.length === 1) { replaceActive({ kind: 'home' }); setDraft(null); return; }
     const next = tabs.filter((tab) => tab.id !== id);
     setTabs(next);
-    if (id === activeTabId) setActiveTabId(next.at(-1)?.id ?? 1);
+    if (id === activeTabId) { setActiveTabId(next.at(-1)?.id ?? 1); setDraft(null); }
   };
-  const addressValue = safeDraft || (shownView.kind === 'page' ? browserPageById.get(shownView.pageId)?.url ?? '' : shownView.kind === 'results' ? shownView.query : '');
+  const addressValue = draft ?? (shownView.kind === 'page' ? browserPageById.get(shownView.pageId)?.url ?? '' : shownView.kind === 'results' ? shownView.query : '');
   return <section className="browser-app" aria-label="内部浏览器">
     <div className="browser-tabs" aria-label="浏览器标签页">
-      <div className="browser-tabs__scroll">{tabs.map((tab) => { const tabView = visibleView(tab.view); return <div key={tab.id} className={`browser-tab${tab.id === activeTabId ? ' browser-tab--active' : ''}`}><button type="button" className="browser-tab__select" onClick={() => { setActiveTabId(tab.id); setDraft(''); }} aria-current={tab.id === activeTabId ? 'page' : undefined}>{viewLabel(tabView)}</button><button type="button" className="browser-tab__close" onClick={() => closeTab(tab.id)} aria-label={`关闭 ${viewLabel(tabView)}`}>×</button></div>; })}</div>
+      <div className="browser-tabs__scroll">{tabs.map((tab) => { const tabView = visibleView(tab.view); return <div key={tab.id} className={`browser-tab${tab.id === activeTabId ? ' browser-tab--active' : ''}`}><button type="button" className="browser-tab__select" onClick={() => { setActiveTabId(tab.id); setDraft(null); }} aria-current={tab.id === activeTabId ? 'page' : undefined}>{viewLabel(tabView)}</button><button type="button" className="browser-tab__close" onClick={() => closeTab(tab.id)} aria-label={`关闭 ${viewLabel(tabView)}`}>×</button></div>; })}</div>
       <button type="button" className="browser-new-tab" onClick={newTab} aria-label="新建标签页">＋</button>
     </div>
     <header className="browser-toolbar">
@@ -94,6 +97,10 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
       {shownView.kind === 'results' && <SearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
       {shownView.kind === 'page' && <BrowserPageView page={browserPageById.get(shownView.pageId)} manager={manager} />}
     </div>
+    {stage === 'search' && state.game.flags.FLAG_A2_WEB_SEARCH_FAILED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
+      <p>现有搜索已经看完。整理好记录后，再去听听当地人的说法。</p>
+      <button type="button" onClick={() => manager.setAct2Stage('bridge')}>进行下一步调查</button>
+    </aside>}
   </section>;
 }
 

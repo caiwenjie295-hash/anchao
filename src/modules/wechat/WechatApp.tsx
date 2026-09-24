@@ -73,6 +73,7 @@ function MessageBubble({ message }: { message: WechatMessage }) {
 export function WechatApp({ manager = stateManager, bus = eventBus }: { manager?: StateManager; bus?: EventBus }) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
+  const [viewingHistory, setViewingHistory] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
   const selectedContact = selectedContactId ? contactById.get(selectedContactId) : undefined;
   const messages = selectedContactId ? getConversationMessages(selectedContactId, state.game) : [];
@@ -84,12 +85,20 @@ export function WechatApp({ manager = stateManager, bus = eventBus }: { manager?
 
   useLayoutEffect(() => {
     const messageArea = messagesRef.current;
-    if (messageArea && selectedContactId) messageArea.scrollTop = messageArea.scrollHeight;
+    if (messageArea && selectedContactId && !viewingHistory) messageArea.scrollTop = messageArea.scrollHeight;
   }, [selectedContactId, messages.length, messages.at(-1)?.id]);
 
   const openConversation = (contactId: string) => {
     setSelectedContactId(contactId);
+    setViewingHistory(false);
     bus.emit('chat:opened', { contactId });
+  };
+
+  const toggleHistory = () => {
+    const messageArea = messagesRef.current;
+    if (!messageArea) return;
+    messageArea.scrollTop = viewingHistory ? messageArea.scrollHeight : 0;
+    setViewingHistory(!viewingHistory);
   };
 
   return (
@@ -122,8 +131,11 @@ export function WechatApp({ manager = stateManager, bus = eventBus }: { manager?
       <section className="wechat-chat" aria-live="polite" aria-label={selectedContact ? `${selectedContact.name} 的会话` : '未选择会话'}>
         {selectedContact ? (
           <>
-            <header className="wechat-chat__header"><h3>{selectedContact.name}</h3><span aria-hidden="true">···</span></header>
-            <div ref={messagesRef} className="wechat-chat__messages">
+            <header className="wechat-chat__header"><h3>{selectedContact.name}</h3>{messages.length > 4 && <button type="button" className="wechat-chat__history-button" onClick={toggleHistory}>{viewingHistory ? '回到最新消息 ↓' : '查看更早消息 ↑'}</button>}</header>
+            <div ref={messagesRef} className="wechat-chat__messages" onScroll={(event) => {
+              const area = event.currentTarget;
+              if (area.scrollHeight > area.clientHeight) setViewingHistory(area.scrollTop + area.clientHeight < area.scrollHeight - 16);
+            }}>
               {messages.map((message) => <MessageBubble key={message.id} message={message} />)}
               {selectedContactId === 'CONTACT_A1_A_002' && state.modules.act2Research.stage === 'tales' && state.game.flags.FLAG_A2_TRANSFER_RULE_INFERRED === true && <div className="wechat-school-transition"><p>小月的消息停在这里。</p><button type="button" onClick={() => manager.enterAct2School()}>回高中看看</button></div>}
             </div>

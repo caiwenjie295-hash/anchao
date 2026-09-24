@@ -66,6 +66,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
   const completeT01 = async () => {
     await run(() => stateManager.recordBrowserSearch('鸡公岭 补'));
     await run(() => stateManager.recordBrowserSearch('双S 十字'));
+    await run(() => stateManager.setAct2Stage('bridge'));
   };
 
   /** 用冻结公共 API 推进 T02，供 T03 与重载用例聚焦下游接线。 */
@@ -135,6 +136,17 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(stage()).toBe('search');
   });
 
+  it('keeps a new black-screen transition behind the player action', async () => {
+    await mountApp();
+    await startSecondAct();
+    expect(pick('.story-transition')).toBeNull();
+    expect(pick('.story-transition-launch button')?.textContent).toBe('进行下一步调查');
+    await click(pick('.story-transition-launch button'));
+    expect(pick('.story-transition')).not.toBeNull();
+    await click(pick('.story-transition button'));
+    expect(pick('.story-transition')).toBeNull();
+  });
+
   it.each([
     ['鸡公岭 补', '双S 十字'],
     ['双S 十字', '鸡公岭 补'],
@@ -151,6 +163,8 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(flags().FLAG_A2_SEARCH_SS_ATTEMPTED).toBe(true);
     expect(flags().FLAG_A2_WEB_SEARCH_FAILED).toBe(true);
     expect(flags().FLAG_A2_OFFLINE_RESEARCH_NEEDED).toBe(true);
+    expect(stage()).toBe('search');
+    await run(() => stateManager.setAct2Stage('bridge'));
     expect(stage()).toBe('bridge');
     expect(state().game.phase).toBe('A2_T02');
     expect(autoEntries()).toContain('NOTE_A2_T01_001');
@@ -164,6 +178,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
   it('ignores unrelated searches and keeps the desktop task card in sync with the stage', async () => {
     await mountApp();
     await startSecondAct();
+    await click(pick('.desktop-task-card__toggle'));
     expect(pick('.desktop-task-card')?.textContent).toContain('在网上再查一次');
 
     await run(() => stateManager.recordBrowserSearch('随便搜点什么'));
@@ -248,6 +263,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     // 正确目录 → 目标卷册可见。
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBe(true);
+    await click(pick('.act2-library__shelf-hotspot'));
     await click(pick('[data-volume-id="VOLUME_A2_T03_002"]'));
     expect(library().openedVolumeIds).toEqual(['VOLUME_A2_T03_002']);
     expect(library().currentPageId).toBe('PAGE_A2_T03_003');
@@ -295,6 +311,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
   it('restores a migrated second-act save mid-second-act and clears everything on reset', async () => {
     await reachLibrary();
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
+    await click(pick('.act2-library__shelf-hotspot'));
     await click(pick('[data-volume-id="VOLUME_A2_T03_002"]'));
     await click(pick('.act2-library__next'));
     await click(pick('.act2-library__next'));

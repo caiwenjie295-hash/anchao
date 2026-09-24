@@ -30,7 +30,7 @@
       "completionFlags": ["FLAG_A1_NEWS_FOUND", "FLAG_A1_ROUTE_INFO_FOUND"],
       "summary": "核对鸡公岭的公开信息",
       "steps": [
-        { "label": "找到与失踪有关的旧报道", "completionFlag": "FLAG_A1_NEWS_FOUND", "appId": "browser" },
+        { "label": "找到与失踪有关的旧报道", "completionFlag": "FLAG_A1_NEWS_FOUND", "appId": "browser", "hint": "可以试试“XX县失踪”。" },
         { "label": "确认徒步路线的长度与难度", "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND", "appId": "browser" }
       ]
     },
@@ -64,8 +64,8 @@
       "completionFlags": ["FLAG_A2_WEB_SEARCH_FAILED"],
       "summary": "在网上再查一次，看看能查到什么",
       "steps": [
-        { "label": "用“鸡公岭”配上那个字搜一遍", "completionFlag": "FLAG_A2_SEARCH_BU_ATTEMPTED", "appId": "browser" },
-        { "label": "再搜一遍那两个字母和那个记号", "completionFlag": "FLAG_A2_SEARCH_SS_ATTEMPTED", "appId": "browser" },
+        { "label": "用“鸡公岭”配上那个字搜一遍", "completionFlag": "FLAG_A2_SEARCH_BU_ATTEMPTED", "appId": "browser", "hint": "试试“鸡公岭 补”。" },
+        { "label": "再搜一遍那两个字母和那个记号", "completionFlag": "FLAG_A2_SEARCH_SS_ATTEMPTED", "appId": "browser", "hint": "试试“双S 十字”。" },
         { "label": "确认网上查不出结果，换一种查法", "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED" }
       ]
     },
@@ -111,7 +111,7 @@
       "id": "GUIDE_A2_T05_001",
       "phases": ["A2_T04", "A2_T05"],
       "prerequisiteFlags": ["FLAG_A2_TRANSFER_RULE_INFERRED"],
-      "completionFlags": ["FLAG_A2_SS_MATCH_CONFIRMED"],
+      "completionFlags": ["FLAG_A2_SS_MATCH_CONFIRMED", "FLAG_A2_QIMING_OFFICIAL_FOUND"],
       "summary": "回学校看看旧资料，记下你能确认的事",
       "steps": [
         { "label": "在微信里看看小月发来的消息", "completionFlag": "FLAG_A2_SCHOOL_ENTERED", "appId": "wechat" },
@@ -120,7 +120,7 @@
         { "label": "读一读成绩表下方的文字", "completionFlag": "FLAG_A2_QIMING_NAME_FOUND" },
         { "label": "翻看以前展示过的学习笔记", "completionFlag": "FLAG_A2_SCHOOL_SS_FOUND" },
         { "label": "把新旧记号放在一起比一比", "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED" },
-        { "label": "回到浏览器，看看启明的公开资料", "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND", "appId": "browser" }
+        { "label": "回到浏览器，看看启明的公开资料", "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND", "appId": "browser", "hint": "先搜“启明 投诉”，也可以查“启明 黄子山”。" }
       ]
     },
     {

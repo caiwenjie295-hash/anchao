@@ -71,11 +71,13 @@ describe('BridgeInvestigation', () => {
 
     expect(container.textContent).toContain(bridgeScene.title);
     expect(container.textContent).not.toMatch(/任务|T02|WB-0003/);
+    expect(container.querySelectorAll('.act2-bridge__stage .act2-bridge__elder')).toHaveLength(4);
 
     const bystander = bridgeElders.find((elder) => !elder.isClueElder)!;
     await clickButton(bystander.name);
     expect(manager.getState().modules.act2Research.bridge.talkedElderIds).toContain(bystander.id);
     expect(container.textContent).toContain(bystander.chat[0]);
+    expect(container.querySelector('.act2-bridge__portrait[role="img"]')).not.toBeNull();
 
     for (const item of bridgeEvidence) {
       expect([...container.querySelectorAll('button')].some((button) => button.getAttribute('aria-label') === `出示${item.name}`)).toBe(false);

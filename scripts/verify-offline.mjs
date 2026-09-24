@@ -19,6 +19,8 @@ async function settle() {
   await delay();
   // Continue each story card as a player would before testing the next action.
   for (let i = 0; i < 3; i++) {
+    const launch = dom?.window.document.querySelector('.story-transition-launch button');
+    if (launch) { launch.click(); await delay(); }
     const card = dom?.window.document.querySelector('.story-transition');
     const button = card?.querySelector('button');
     if (!button) break;
@@ -175,6 +177,8 @@ async function advanceAct2() {
   assert.equal(state().game.flags.FLAG_A2_SEARCH_SS_ATTEMPTED, true);
   assert.equal(state().game.flags.FLAG_A2_WEB_SEARCH_FAILED, true);
   assert.equal(state().game.flags.FLAG_A2_OFFLINE_RESEARCH_NEEDED, true);
+  assert.equal(state().modules.act2Research.stage, 'search');
+  await click('.browser-next-investigation button');
   assert.equal(state().modules.act2Research.stage, 'bridge');
   assert.equal(state().game.phase, 'A2_T02');
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T01_001'));
@@ -227,6 +231,7 @@ async function advanceAct2() {
   // 正确目录 → 目标卷册。
   await click('[data-section-id="SECTION_A2_T03_009"]');
   assert.equal(state().game.flags.FLAG_A2_LOCAL_GAZETTE_FOUND, true);
+  await click('.act2-library__shelf-hotspot');
   await click('[data-volume-id="VOLUME_A2_T03_002"]');
 
   // 只能逐页到达目标页：页序不是可激活控件。
@@ -303,14 +308,14 @@ async function advanceAct2() {
   assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, true);
   assert.equal(state().modules.notepad.autoEntryIds.some((id) => id.includes('HYDRANT')), false);
   await textButton('老师办公室', '.t05-school__map button');
-  await textButton('听听老师回忆', '.t05-school__hotspots button');
+  await textButton('听听老师回忆', '.t05-school__image-hotspot');
   assert.match(query('.t05-school__dialog').textContent, /高二那年休学了两个月/);
   await textButton('记下老师的回忆', '.t05-school__dialog button');
   await textButton('关闭 ×', '.t05-school__dialog button');
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T05_001'));
 
   await textButton('光荣榜', '.t05-school__map button');
-  await textButton('查看历次名次', '.t05-school__hotspots button');
+  await textButton('查看历次名次', '.t05-school__image-hotspot');
   assert.deepEqual([...query('.t05-school__ranks').querySelectorAll('strong')].map((item) => Number(item.textContent)), [600, 400, 300, 130, 88, 53, 20]);
   await textButton('记下这组名次', '.t05-school__dialog button');
   await textButton('查看成绩表下方的感谢文字', '.t05-school__dialog button');
@@ -321,7 +326,7 @@ async function advanceAct2() {
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T05_003'));
 
   await textButton('小A旧教室', '.t05-school__map button');
-  await textButton('翻看学霸笔记', '.t05-school__hotspots button');
+  await textButton('翻看学霸笔记', '.t05-school__image-hotspot');
   assert.ok(query('.t05-school__notebook-page'));
   await textButton('打开双 S 比对', '.t05-school__dialog button');
   assert.ok(query('.t05-comparison__side'));

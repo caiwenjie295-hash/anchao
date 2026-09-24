@@ -7,6 +7,7 @@ type CompletionKind = 'cave-photo-opened' | 'cave-symbol-visible' | 'tales-read'
 
 type TaskGuideStepDefinition = {
   label: string;
+  hint?: string;
   completionFlag?: string;
   completionKind?: CompletionKind;
   appId?: AppId;
@@ -25,6 +26,7 @@ type TaskGuideDocument = { schemaVersion: 1; items: TaskGuideDefinition[] };
 
 export type TaskGuideStep = Readonly<{
   label: string;
+  hint?: string;
   complete: boolean;
   current: boolean;
   appId?: AppId;
@@ -91,6 +93,7 @@ export function validateTaskGuideData(): void {
     for (const flagId of referencedFlagIds) if (!flags.some((flag) => flag.id === flagId)) throw new Error(`${guide.id} 引用了未登记 Flag：${flagId}`);
     for (const step of guide.steps) {
       if (!step.label) throw new Error(`${guide.id} 缺少步骤文案。`);
+      if (step.hint !== undefined && (typeof step.hint !== 'string' || !step.hint.trim())) throw new Error(`${guide.id} 的步骤暗示无效。`);
       if (step.appId && !APP_IDS.includes(step.appId)) throw new Error(`${guide.id} 引用了未登记应用：${step.appId}`);
     }
     if (guide.id.startsWith('GUIDE_A2_')) {
@@ -102,7 +105,7 @@ export function validateTaskGuideData(): void {
   const act2T01 = document.items.find((guide) => guide.id === 'GUIDE_A2_T01_001');
   if (!act2T01?.steps.some((step) => step.appId === 'browser')) throw new Error('GUIDE_A2_T01_001 必须提供浏览器入口。');
   const act2T05 = document.items.find((guide) => guide.id === 'GUIDE_A2_T05_001');
-  if (!act2T05 || !act2T05.steps.some((step) => step.appId === 'wechat') || act2T05.completionFlags[0] !== 'FLAG_A2_SS_MATCH_CONFIRMED') throw new Error('T05 任务引导必须从微信开始且在比对确认后结束。');
+  if (!act2T05 || !act2T05.steps.some((step) => step.appId === 'wechat') || act2T05.completionFlags[0] !== 'FLAG_A2_SS_MATCH_CONFIRMED' || act2T05.completionFlags[1] !== 'FLAG_A2_QIMING_OFFICIAL_FOUND') throw new Error('T05 任务引导必须从微信开始并在双 S 后指向启明公开资料。');
 }
 validateTaskGuideData();
 
@@ -115,6 +118,7 @@ export function getCurrentTaskGuide(state: AppState): TaskGuide | null {
   const currentIndex = completed.findIndex((complete) => !complete);
   const steps = guide.steps.map((step, index) => ({
     label: step.label,
+    ...(step.hint ? { hint: step.hint } : {}),
     complete: completed[index],
     current: index === currentIndex,
     ...(step.appId ? { appId: step.appId } : {}),
