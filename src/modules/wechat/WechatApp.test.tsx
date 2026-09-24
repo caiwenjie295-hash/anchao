@@ -70,7 +70,7 @@ describe('WechatApp T05 school transition', () => {
 
   afterEach(() => { act(() => root.unmount()); container.remove(); });
 
-  it('shows Xiaoyue’s gated life messages, lets players inspect local placeholders and enter school on request', async () => {
+  it('shows Xiaoyue’s gated life photos and enters school on request', async () => {
     const state = createDefaultState();
     state.game.act = 2; state.game.phase = 'A2_T04'; state.game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true; state.modules.act2Research.stage = 'tales';
     const manager = new StateManager(new EventBus(), state);
@@ -79,17 +79,13 @@ describe('WechatApp T05 school transition', () => {
     await act(async () => { xiaoyue?.click(); });
     expect(container.textContent).toContain('去年聚会拍的');
     expect(container.textContent).toContain('小A');
-    const placeholder = container.querySelector<HTMLButtonElement>('.wechat-message__placeholder-image');
-    expect(placeholder).not.toBeNull();
-    await act(async () => { placeholder?.click(); });
-    const dialog = container.querySelector<HTMLDialogElement>('.wechat-image-placeholder');
+    const photo = container.querySelector<HTMLButtonElement>('.wechat-message__body[data-asset-id="IMG_A2_T05_011"] .evidence-thumbnail');
+    expect(photo?.querySelector('img')?.getAttribute('src')).toBeTruthy();
+    await act(async () => { photo?.click(); });
+    const dialog = container.querySelector<HTMLDialogElement>('.evidence-lightbox[open]');
     expect(dialog?.open).toBe(true);
-    expect(dialog?.querySelector('.wechat-image-placeholder__card')?.getAttribute('data-asset-id')).toBe('IMG_A2_T05_011');
-    expect(dialog?.textContent).toContain('本地图片资源空位');
-    expect(document.activeElement?.getAttribute('aria-label')).toBe('关闭图片');
-    await act(async () => { dialog?.dispatchEvent(new Event('cancel', { cancelable: true })); });
-    expect(container.querySelector('.wechat-image-placeholder')).toBeNull();
-    expect(document.activeElement).toBe(placeholder);
+    await act(async () => { dialog?.querySelector<HTMLButtonElement>('[aria-label="关闭图片"]')?.click(); });
+    expect(dialog?.open).toBe(false);
     await act(async () => { container.querySelector<HTMLButtonElement>('.wechat-school-transition button')?.click(); });
     expect(manager.getState().modules.act2Research.stage).toBe('school');
     expect(manager.getState().game.phase).toBe('A2_T05');

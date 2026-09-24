@@ -1,4 +1,4 @@
-/* WB-0003 第二幕 T02 桥头老人 —— 独立 .act2-bridge 作用域，克制占位场景，不使用远程资源。 */
+/* 第二幕 T02 桥头老人，独立 .act2-bridge 作用域。 */
 
 .act2-bridge {
   --act2-bridge-paper: #f4f0e6;
@@ -28,6 +28,16 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
+}
+
+.act2-bridge__scene-image {
+  display: block;
+  width: 100%;
+  height: clamp(190px, 27vh, 280px);
+  border: 1px solid var(--act2-bridge-line);
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: center 62%;
 }
 
 .act2-bridge__location {

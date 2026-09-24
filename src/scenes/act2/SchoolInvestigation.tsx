@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
+import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { act2School, schoolAreaById } from '../../data/act2SchoolData';
 import { SchoolSymbolComparison } from './SchoolSymbolComparison';
@@ -19,6 +20,8 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   const hotspot = hotspotId ? act2School.hotspots.find((item) => item.id === hotspotId) : undefined;
   const flags = state.game.flags;
   const isComplete = flags.FLAG_A2_SS_MATCH_CONFIRMED === true;
+  const areaImage = assetLoader.get(area.imageId)?.src;
+  const notebookImage = assetLoader.get('IMG_A2_T05_006')?.src;
 
   useEffect(() => { manager.visitAct2SchoolArea(areaId); }, [areaId, manager]);
   useEffect(() => {
@@ -54,9 +57,10 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         <nav>{act2School.areas.map((item) => <button type="button" key={item.id} aria-current={areaId === item.id ? 'location' : undefined} onClick={() => { setAreaId(item.id); setHotspotId(null); }}>{item.title}</button>)}</nav>
       </aside>
       <main className="t05-school__room">
-        <div className={`t05-school__backdrop t05-school__backdrop--${area.id.toLowerCase().replaceAll('_', '-')}`} data-asset-id={area.imageId}>
+        <div className={`t05-school__backdrop t05-school__backdrop--${area.id.toLowerCase().replaceAll('_', '-')}${areaImage ? ' t05-school__backdrop--image' : ''}`} data-asset-id={area.imageId}>
+          {areaImage && <img src={areaImage} alt="" />}
           <p>{area.title}</p>
-          {area.id === 'AREA_A2_T05_CORRIDOR' && <span className="t05-school__hydrant" aria-label="墙边的消防栓">消防栓</span>}
+          {area.id === 'AREA_A2_T05_CORRIDOR' && !areaImage && <span className="t05-school__hydrant" aria-label="墙边的消防栓">消防栓</span>}
         </div>
         <h2>{area.title}</h2>
         <p className="t05-school__description">{area.description}</p>
@@ -79,7 +83,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
           {flags.FLAG_A2_SCORE_CHANGE_KNOWN === true && <button type="button" onClick={(event) => openHotspot('HOTSPOT_A2_T05_QIMING_TEXT', event.currentTarget)}>查看成绩表下方的感谢文字</button>}
         </> : hotspot.id === 'HOTSPOT_A2_T05_QIMING_TEXT' ? <><p>{hotspot.content}</p><button type="button" onClick={() => manager.readAct2QimingTestimonial()}>{flags.FLAG_A2_QIMING_NAME_FOUND === true ? '已记入笔记' : '记下这段文字'}</button></>
           : hotspot.id === 'HOTSPOT_A2_T05_TEACHER' ? <><p>{hotspot.content}</p><button type="button" onClick={() => manager.acknowledgeAct2TeacherAccount()}>{flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN === true ? '已记入笔记' : '记下老师的回忆'}</button></>
-            : <><div className="t05-school__notebook-page" data-asset-id="IMG_A2_T05_006"><div>{act2School.notebookPage.heading}{act2School.notebookPage.lines.map((line) => <div key={line}>{line}</div>)}</div><DoubleSSymbol className="t05-school__notebook-symbol" label="学霸笔记页边的双 S 符号" /><small>{act2School.notebookPage.replacementNote}</small></div><p>{hotspot.content}</p><button type="button" onClick={() => { manager.inspectAct2SchoolNotebook(); setComparisonOpen(true); }}>打开双 S 比对</button></>}
+            : <><div className={`t05-school__notebook-page${notebookImage ? ' t05-school__notebook-page--image' : ''}`} data-asset-id="IMG_A2_T05_006"><div className="t05-school__notebook-visual">{notebookImage && <img src={notebookImage} alt="学霸笔记原页" />}<DoubleSSymbol className="t05-school__notebook-symbol" label="学霸笔记页边的双 S 符号" /></div><div className="t05-school__notebook-copy"><strong>{act2School.notebookPage.heading}</strong>{act2School.notebookPage.lines.map((line) => <div key={line}>{line}</div>)}<small>{act2School.notebookPage.replacementNote}</small></div></div><p>{hotspot.content}</p><button type="button" onClick={() => { manager.inspectAct2SchoolNotebook(); setComparisonOpen(true); }}>打开双 S 比对</button></>}
       </section>
     </div>}
     {comparisonOpen && <div className="t05-school__dialog-backdrop" role="presentation"><SchoolSymbolComparison manager={manager} onClose={() => setComparisonOpen(false)} /></div>}
