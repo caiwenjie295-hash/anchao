@@ -425,6 +425,16 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .act2-experience__continue:hover { border-color: #4f7391; background: #e6f1f8; }
 .act2-experience__continue:focus-visible { outline: 3px solid #0067c0; outline-offset: 2px; }
 
+.story-transition { position:fixed; z-index:20000; inset:0; display:grid; place-items:center; overflow:auto; padding:clamp(24px,5vw,72px); color:#f2f2ef; background:#050607; font-family:"Songti SC","Noto Serif SC",Georgia,serif; }
+.story-transition__content { width:min(640px,100%); }
+.story-transition__eyebrow { margin:0 0 24px; color:#aeb4b1; font:13px/1.5 system-ui,sans-serif; letter-spacing:.32em; }
+.story-transition h1 { margin:0 0 36px; color:#fff; font-size:clamp(30px,4vw,48px); font-weight:500; letter-spacing:.16em; line-height:1.3; }
+.story-transition__copy { max-width:38em; }
+.story-transition__copy p { margin:0 0 18px; color:#e1e4e1; font-size:clamp(17px,1.7vw,21px); line-height:1.9; letter-spacing:.04em; }
+.story-transition button { min-height:48px; margin-top:28px; padding:0 22px; border:1px solid #b5beb9; border-radius:2px; color:#f5f6f3; background:transparent; cursor:pointer; font:14px system-ui,sans-serif; letter-spacing:.12em; }
+.story-transition button:hover { background:#202523; }
+.story-transition button:focus-visible { outline:3px solid #f4f4ef; outline-offset:5px; }
+
 @media (max-width: 520px) {
   .act2-experience--bridge { padding: 10px; }
   .act2-experience--resume { right: 14px; bottom: 62px; }

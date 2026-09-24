@@ -16,6 +16,8 @@ import { Act2T06Controller } from './story/act2T06Controller';
 import { Act1SceneExperience } from './scenes/act1/Act1SceneExperience';
 import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
+import { StoryTransition } from './components/StoryTransition';
+import { getPendingStoryTransition } from './data/storyTransitionData';
 import './styles.css';
 import './imageAssets.css';
 
@@ -74,9 +76,16 @@ export default function App() {
   const sceneOpen = act1SceneOpen || act2SceneOpen;
   const secondActStarted = act2Stage !== 'inactive';
   const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
-  if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) return <Act1Ending />;
+  const transition = getPendingStoryTransition(state);
+  if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
+    return <>
+      <div aria-hidden={transition !== null} inert={transition !== null}><Act1Ending /></div>
+      {transition && <StoryTransition transition={transition} onContinue={() => stateManager.acknowledgeStoryTransition(transition.id)} />}
+    </>;
+  }
   return (
     <>
+    <div aria-hidden={transition !== null} inert={transition !== null}>
     <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
@@ -112,6 +121,8 @@ export default function App() {
         manager={stateManager}
       />
     )}
+    </div>
+    {transition && <StoryTransition transition={transition} onContinue={() => stateManager.acknowledgeStoryTransition(transition.id)} />}
     </>
   );
 }

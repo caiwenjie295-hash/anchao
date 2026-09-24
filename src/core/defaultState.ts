@@ -47,7 +47,7 @@ export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
 });
 
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 5,
+  schemaVersion: 6,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,
@@ -62,5 +62,6 @@ export const createDefaultState = (): AppState => ({
     scene: { journeyStarted: false, currentSceneId: null, visitedSceneIds: [], inspectedHotspotIds: [], capturedPhotoIds: [] },
     photos: { activePhotoId: null, openedPhotoIds: [], adjustments: {}, zoomByPhotoId: {}, inspectedSymbolPhotoIds: [] },
     act2Research: createDefaultAct2ResearchState(),
+    storyTransitions: { seenIds: [] },
   },
 });
