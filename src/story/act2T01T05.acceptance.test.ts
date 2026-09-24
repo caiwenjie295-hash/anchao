@@ -44,7 +44,7 @@ describe('Second-act T05 acceptance: Xiaoyue to school scene', () => {
     await click('.t05-school__return');
     expect(container.querySelector('.act2-experience__continue')?.textContent).toBe('继续高中调查');
     const restored = new StateManager(new EventBus(), loadState()).getState();
-    expect(restored.schemaVersion).toBe(5);
+    expect(restored.schemaVersion).toBe(6);
     expect(restored.modules.act2Research.stage).toBe('school');
     expect(restored.game.phase).toBe('A2_T05');
     expect(restored.game.flags.FLAG_A2_SCHOOL_ENTERED).toBe(true);

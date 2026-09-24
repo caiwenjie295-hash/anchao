@@ -300,7 +300,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await click(pick('.act2-library__next'));
 
     const saved = loadState();
-    expect(saved.schemaVersion).toBe(5);
+    expect(saved.schemaVersion).toBe(6);
     expect(saved.game.act).toBe(2);
     expect(saved.modules.act2Research.stage).toBe('library');
     expect(saved.modules.act2Research.library.currentPageId).toBe('PAGE_A2_T03_005');

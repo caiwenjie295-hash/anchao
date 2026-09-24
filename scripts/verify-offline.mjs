@@ -9,11 +9,24 @@ const html = await readFile('暗潮.html', 'utf8');
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
 const errors = [];
 const requests = [];
+const seenTransitionIds = new Set();
 const offlineRuns = Math.max(1, Math.min(2, Number.parseInt(process.env.ANCHAO_OFFLINE_RUNS ?? '2', 10) || 2));
 const virtualConsole = new VirtualConsole();
 virtualConsole.on('jsdomError', (error) => errors.push(error.message));
-const settle = () => new Promise((resolve) => setTimeout(resolve, 30));
 let dom;
+const delay = () => new Promise((resolve) => setTimeout(resolve, 30));
+async function settle() {
+  await delay();
+  // Continue each story card as a player would before testing the next action.
+  for (let i = 0; i < 3; i++) {
+    const card = dom?.window.document.querySelector('.story-transition');
+    const button = card?.querySelector('button');
+    if (!button) break;
+    seenTransitionIds.add(card.getAttribute('data-story-transition'));
+    button.click();
+    await delay();
+  }
+}
 async function mount(saved) {
   dom?.window.close();
   dom = new JSDOM(html, {
@@ -27,6 +40,8 @@ async function mount(saved) {
       if (saved) window.localStorage.setItem('anchao.save.v1', saved);
     },
   });
+  await delay();
+  if (!saved) assert.equal(dom.window.document.querySelector('.story-transition')?.getAttribute('data-story-transition'), 'TRANSITION_A1_INTRO');
   await settle();
 }
 const document = () => dom.window.document;
@@ -412,6 +427,9 @@ try {
       assert.equal(state().modules.act2Research.stage, 'qiming');
       assert.equal(state().game.phase, 'A2_T06');
       assert.ok(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_009'));
+      for (const id of ['TRANSITION_A1_INTRO', 'TRANSITION_A1_B', 'TRANSITION_A1_C', 'TRANSITION_A1_H', 'TRANSITION_A1_I', 'TRANSITION_A1_RETURN', 'TRANSITION_A1_J', 'TRANSITION_A2_T01', 'TRANSITION_A2_T02', 'TRANSITION_A2_T03', 'TRANSITION_A2_T04', 'TRANSITION_A2_T05', 'TRANSITION_A2_T06']) {
+        assert.ok(seenTransitionIds.has(id), `Missing story transition in offline flow: ${id}`);
+      }
     }
     await reset();
       console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T06' : ''}`);

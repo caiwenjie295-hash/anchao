@@ -6,6 +6,7 @@ import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/s
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
 import { isAct2T06PageId } from '../data/browserData';
+import { getPendingStoryTransition } from '../data/storyTransitionData';
 
 type StateListener = () => void;
 
@@ -51,7 +52,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 5 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 6 });
   }
 
   private nextZIndex(): number {
@@ -145,6 +146,12 @@ export class StateManager {
     this.bus.emit('phase:changed', { phase });
   }
 
+  acknowledgeStoryTransition(id: string): void {
+    const pending = getPendingStoryTransition(this.state);
+    if (pending?.id !== id) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, storyTransitions: { seenIds: [...this.state.modules.storyTransitions.seenIds, id] } } });
+  }
+
   markMailRead(mailId: string): void {
     const { readIds } = this.state.modules.mail;
     if (!readIds.includes(mailId)) {
@@ -198,7 +205,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 5 });
+    this.bus.emit('progress:reset', { schemaVersion: 6 });
   }
 
   startJourney(sceneId: string): void {

@@ -68,8 +68,10 @@ export interface PhotosState {
   inspectedSymbolPhotoIds: string[];
 }
 
+export interface StoryTransitionsState { seenIds: string[] }
+
 export interface AppState {
-  schemaVersion: 5;
+  schemaVersion: 6;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -80,6 +82,7 @@ export interface AppState {
     scene: SceneState;
     photos: PhotosState;
     act2Research: Act2ResearchState;
+    storyTransitions: StoryTransitionsState;
   };
 }
 
@@ -165,6 +168,6 @@ export type AnchaoEventMap = {
   'act2:qiming-entered': Record<string, never>;
   'act2:qiming-name-matched': { person: 'huang' | 'zhong' };
   'act2:qiming-cases-confirmed': Record<string, never>;
-  'progress:reset': { schemaVersion: 5 };
-  'save:completed': { schemaVersion: 5 };
+  'progress:reset': { schemaVersion: 6 };
+  'save:completed': { schemaVersion: 6 };
 };

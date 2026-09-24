@@ -132,7 +132,18 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([5]);
+    expect(resets).toEqual([6]);
+  });
+
+  it('acknowledges only the current story card and persists the choice', () => {
+    manager.acknowledgeStoryTransition('TRANSITION_A2_T06');
+    expect(manager.getState().modules.storyTransitions.seenIds).toEqual([]);
+    manager.acknowledgeStoryTransition('TRANSITION_A1_INTRO');
+    manager.acknowledgeStoryTransition('TRANSITION_A1_INTRO');
+    expect(manager.getState().modules.storyTransitions.seenIds).toEqual(['TRANSITION_A1_INTRO']);
+    expect(JSON.parse(localStorage.getItem('anchao.save.v1') ?? '{}').modules.storyTransitions.seenIds).toEqual(['TRANSITION_A1_INTRO']);
+    manager.resetProgress();
+    expect(manager.getState().modules.storyTransitions.seenIds).toEqual([]);
   });
 });
 

@@ -3,10 +3,11 @@ import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
+import { isStoryTransitionReached, storyTransitions, storyTransitionIds } from '../data/storyTransitionData';
 
 export const SAVE_KEY = 'anchao.save.v1';
-/** schema 1–4 的有效进度全部迁移到 schema 5。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5];
+/** schema 1–5 的有效进度全部迁移到 schema 6。 */
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming'];
 
@@ -198,8 +199,8 @@ export const hydrateState = (candidate: unknown): AppState => {
   const requestedSceneId = scene && typeof scene.currentSceneId === 'string' ? scene.currentSceneId : null;
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
-  return {
-    schemaVersion: 5,
+  const hydrated: AppState = {
+    schemaVersion: 6,
     game: {
       act: finiteNumber(game.act, fallback.game.act),
       phase: safePhase,
@@ -242,8 +243,14 @@ export const hydrateState = (candidate: unknown): AppState => {
         inspectedSymbolPhotoIds: photos ? safeStringIds(photos.inspectedSymbolPhotoIds) : [],
       },
       act2Research,
+      storyTransitions: { seenIds: [] },
     },
   };
+  const storyTransitionsCandidate = isRecord(modules.storyTransitions) ? modules.storyTransitions : null;
+  hydrated.modules.storyTransitions.seenIds = candidate.schemaVersion === 6
+    ? safeStringIds(storyTransitionsCandidate?.seenIds).filter((id) => storyTransitionIds.has(id) && isStoryTransitionReached(hydrated, storyTransitions.find((item) => item.id === id)!))
+    : storyTransitions.filter((item) => !(safePhase === 'A' && item.id === 'TRANSITION_A1_INTRO') && isStoryTransitionReached(hydrated, item)).map((item) => item.id);
+  return hydrated;
 };
 
 export const loadState = (storage: Storage | undefined = typeof window === 'undefined' ? undefined : window.localStorage): AppState => {
