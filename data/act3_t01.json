@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "stage": "T01",
+  "intro": "锈铁门、藤蔓与红砖墙。第一幕的山路在脚后；现在轮到启明旧址亲自开口。",
+  "lenses": [
+    {
+      "id": "LENS_A3_T01_001",
+      "title": "外门正面",
+      "stance": "look",
+      "assetId": "IMG_A3_T01_001",
+      "description": "走到 T00 那扇锈门外。门缝、右柱裂痕、墙高与藤形须逐一对位。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T01_GATE_VIEW", "label": "查看锈门与右柱" }
+      ],
+      "links": ["LENS_A3_T01_002"]
+    },
+    {
+      "id": "LENS_A3_T01_002",
+      "title": "右柱近景",
+      "stance": "approach",
+      "assetId": "IMG_A3_T01_002",
+      "description": "走近右柱，手触到湿藤叶。叶下隐约露出黄底金属牌边。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T01_PILLAR_CLOSE", "label": "拨开爬山虎" }
+      ],
+      "links": ["LENS_A3_T01_003", "LENS_A3_T01_001"]
+    },
+    {
+      "id": "LENS_A3_T01_003",
+      "title": "标牌露出",
+      "stance": "look",
+      "assetId": "IMG_A3_T01_003",
+      "description": "藤叶被拨到一边，旧黄底红字牌字面空处留给后期覆盖准确名称。可以调出旧宣传合影做比对。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T01_SIGN_REVEALED", "label": "对照旧宣传合影" }
+      ],
+      "links": ["LENS_A3_T01_004"]
+    },
+    {
+      "id": "LENS_A3_T01_004",
+      "title": "门缝内视角",
+      "stance": "enter",
+      "assetId": "IMG_A3_T01_004",
+      "description": "小月先从门缝挤入；镜头仍能看见 001 的右柱作方位锚点。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T01_GATE_ENTERED", "label": "跟着小月进入" }
+      ],
+      "links": ["LENS_A3_T01_005"]
+    },
+    {
+      "id": "LENS_A3_T01_005",
+      "title": "第二层围栏",
+      "stance": "look",
+      "assetId": "IMG_A3_T01_005",
+      "description": "回头偏左见第二层生锈铁丝围栏。顶端刀片铁丝网，没有上锁的窄门。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T01_INNER_FENCE", "label": "穿过第二层围栏" }
+      ],
+      "links": ["LENS_A3_T01_006"]
+    },
+    {
+      "id": "LENS_A3_T01_006",
+      "title": "操场配电箱",
+      "stance": "look",
+      "assetId": "IMG_A3_T01_006",
+      "description": "越过操场接近主楼。楼门口旧配电箱里有被剪断的粗线，与 T00 山坡电缆遥相呼应，但不阻止进入主楼。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T01_BREAKER_OPTIONAL", "label": "查看配电箱断线（可选）" },
+        { "clueId": "CLUE_A3_T01_MAIN_BUILDING", "label": "进入主楼" }
+      ],
+      "links": []
+    }
+  ]
+}

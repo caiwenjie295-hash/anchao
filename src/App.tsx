@@ -16,6 +16,7 @@ import { Act2T06Controller } from './story/act2T06Controller';
 import { Act1SceneExperience } from './scenes/act1/Act1SceneExperience';
 import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
+import { Act3Investigation } from './scenes/act3/Act3Investigation';
 import { StoryTransition, StoryTransitionLaunch } from './components/StoryTransition';
 import { getPendingStoryTransition } from './data/storyTransitionData';
 import './styles.css';
@@ -31,6 +32,7 @@ export default function App() {
   const [time, setTime] = useState(() => new Date());
   // “已返回桌面”只是瞬时显示状态；阶段一变或清零即刻失效。
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
+  const [dismissedAct3, setDismissedAct3] = useState(false);
   const [openedTransitionId, setOpenedTransitionId] = useState<string | null>(null);
   useEffect(() => {
     const interval = window.setInterval(() => setTime(new Date()), 15_000);
@@ -51,7 +53,15 @@ export default function App() {
     phaseJKController.start();
     act2T01Controller.start();
     act2T06Controller.start();
+    // 第三幕入口：当第二幕 T06 收束时启动；T07 完成后由主审替换前置条件。
+    const onFlagChanged = ({ flagId }: { flagId: string }) => {
+      if (flagId === 'FLAG_A2_OTHER_CASES_ABNORMAL') stateManager.startAct3();
+    };
+    const unsubscribeFlag = stateManager.subscribeFlagChanged(onFlagChanged);
+    // 已经在 T06 收束后挂载的场景（如重载）需要立即触发一次。
+    if (stateManager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL === true) stateManager.startAct3();
     return () => {
+      unsubscribeFlag();
       act2T06Controller.dispose();
       act2T01Controller.dispose();
       phaseJKController.dispose();
@@ -74,7 +84,10 @@ export default function App() {
   const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
   const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
   const act2SceneOpen = act2SceneStage !== null && dismissedAct2Stage !== act2SceneStage;
-  const sceneOpen = act1SceneOpen || act2SceneOpen;
+  const act3Stage = state.modules.act3.stage;
+  const act3Active = act3Stage !== 'inactive';
+  const act3Open = act3Active && !dismissedAct3;
+  const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open;
   const secondActStarted = act2Stage !== 'inactive';
   const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
   const transition = getPendingStoryTransition(state);
@@ -131,6 +144,22 @@ export default function App() {
         onResumeScene={() => setDismissedAct2Stage(null)}
         manager={stateManager}
       />
+    )}
+    {act3Active && (
+      <>
+        {act3Open && (
+          <Act3Investigation
+            manager={stateManager}
+            onReturnToDesktop={() => setDismissedAct3(true)}
+          />
+        )}
+        {dismissedAct3 && (
+          <aside className="story-transition-launch" aria-label="第三幕调查已就绪">
+            <span>第三幕 · {act3Stage === 'T00' ? '再次进山' : act3Stage === 'T01' ? '启明旧址入口' : '教室与标语'}</span>
+            <button type="button" onClick={() => setDismissedAct3(false)}>继续启明遗址调查</button>
+          </aside>
+        )}
+      </>
     )}
     </div>
     {transitionLayer}

@@ -464,9 +464,9 @@ try {
       assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T06_004'));
       await mount(save());
       assert.equal(state().modules.act2Research.stage, 'qiming');
-      assert.equal(state().game.phase, 'A2_T06');
+      assert.equal(state().game.phase, 'A3_T00');
       assert.ok(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_009'));
-      for (const id of ['TRANSITION_A1_INTRO', 'TRANSITION_A1_B', 'TRANSITION_A1_C', 'TRANSITION_A1_H', 'TRANSITION_A1_I', 'TRANSITION_A1_RETURN', 'TRANSITION_A1_J', 'TRANSITION_A2_T01', 'TRANSITION_A2_T02', 'TRANSITION_A2_T03', 'TRANSITION_A2_T04', 'TRANSITION_A2_T05', 'TRANSITION_A2_T06']) {
+      for (const id of ['TRANSITION_A1_INTRO', 'TRANSITION_A1_B', 'TRANSITION_A1_C', 'TRANSITION_A1_H', 'TRANSITION_A1_I', 'TRANSITION_A1_RETURN', 'TRANSITION_A1_J', 'TRANSITION_A2_T01', 'TRANSITION_A2_T02', 'TRANSITION_A2_T03', 'TRANSITION_A2_T04', 'TRANSITION_A2_T05', 'TRANSITION_A2_T06', 'TRANSITION_A3_T00']) {
         assert.ok(seenTransitionIds.has(id), `Missing story transition in offline flow: ${id}`);
       }
     }

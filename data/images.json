@@ -292,6 +292,30 @@
       "notes": "用户提供图片的本地 JPEG 副本，离线内联",
       "assetType": "image",
       "file": "IMG_A2_T03_001.jpg"
-    }
+    },
+    {"id":"IMG_A3_T00_001","title":"再次出发","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 长途公路占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":[],"notes":"本体未生成，只登记稳定资源 ID","assetType":"image"},
+    {"id":"IMG_A3_T00_002","title":"县城补给","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 县城傍晚占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":[],"notes":"本体未生成","assetType":"image"},
+    {"id":"IMG_A3_T00_003","title":"山脚重入","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 山脚占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":[],"notes":"本体未生成","assetType":"image"},
+    {"id":"IMG_A3_T00_004","title":"山坡电缆","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 电缆远景占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":["FLAG_A3_ROUTE_CABLE_FOUND"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T00_005","title":"电缆断点","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 电缆近景占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":["FLAG_A3_ROUTE_CABLE_FOUND"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T00_006","title":"回到洞口","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 山洞外景占位（第一幕 IMG_A1_H_001 同地点）","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":[],"notes":"后期编辑剪自第一幕母图","assetType":"image"},
+    {"id":"IMG_A3_T00_007","title":"洞内谈话","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 山洞内部占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T00_008","title":"再访石庙","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 石庙重访占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":[],"notes":"基于第一幕 IMG_A1_I_001 编辑","assetType":"image"},
+    {"id":"IMG_A3_T00_009","title":"山下水痕","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 异常水流占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":["FLAG_A3_DRAIN_FOUND"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T00_010","title":"拨泥见沟","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 排水沟近景占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":["FLAG_A3_DRAIN_FOUND"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T00_011","title":"沿沟上行","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 旧红砖与等距树占位","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":["FLAG_A3_OLD_ROAD_FOUND"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T00_012","title":"外墙锈门","act":3,"phase":"A3_T00","source":"scene","purpose":"T00 末图，与 T01 首图同一外门","unlockCondition":["FLAG_A2_OTHER_CASES_ABNORMAL"],"relatedFlags":["FLAG_A3_GATE_REACHED"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T01_001","title":"外门正面","act":3,"phase":"A3_T01","source":"scene","purpose":"与 T00 末图同一外门","unlockCondition":["FLAG_A3_GATE_REACHED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T01_002","title":"右柱近景","act":3,"phase":"A3_T01","source":"scene","purpose":"T01 拨开爬山虎前","unlockCondition":["FLAG_A3_GATE_REACHED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T01_003","title":"标牌露出","act":3,"phase":"A3_T01","source":"scene","purpose":"同机位拨叶后，名称由网页覆盖","unlockCondition":["FLAG_A3_GATE_REACHED"],"relatedFlags":["FLAG_A3_QIMING_SITE_CONFIRMED"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T01_004","title":"门缝内视角","act":3,"phase":"A3_T01","source":"scene","purpose":"第一人称贴近外门缝","unlockCondition":["FLAG_A3_GATE_REACHED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T01_005","title":"第二层围栏","act":3,"phase":"A3_T01","source":"scene","purpose":"刀片铁丝网与窄门","unlockCondition":["FLAG_A3_GATE_REACHED"],"relatedFlags":["FLAG_A3_INNER_FENCE_PASSED"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T01_006","title":"操场配电箱","act":3,"phase":"A3_T01","source":"scene","purpose":"通向 T02 主楼入口","unlockCondition":["FLAG_A3_GATE_REACHED"],"relatedFlags":[],"notes":"T02 主楼门形象不变","assetType":"image"},
+    {"id":"IMG_A3_T02_001","title":"一层长走廊","act":3,"phase":"A3_T02","source":"scene","purpose":"T02 主楼入口母图","unlockCondition":["FLAG_A3_INNER_FENCE_PASSED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T02_002","title":"教室门口","act":3,"phase":"A3_T02","source":"scene","purpose":"门框漆皮脱落","unlockCondition":["FLAG_A3_INNER_FENCE_PASSED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T02_003","title":"讲台前回望全室","act":3,"phase":"A3_T02","source":"scene","purpose":"黑板框与两只喇叭位置","unlockCondition":["FLAG_A3_INNER_FENCE_PASSED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T02_004","title":"黑板近景","act":3,"phase":"A3_T02","source":"scene","purpose":"双 S 后期叠层","unlockCondition":["FLAG_A3_INNER_FENCE_PASSED"],"relatedFlags":["FLAG_A3_CLASSROOM_SS_CONFIRMED"],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T02_005","title":"标语与喇叭","act":3,"phase":"A3_T02","source":"scene","purpose":"标语留白由网页正文渲染","unlockCondition":["FLAG_A3_INNER_FENCE_PASSED"],"relatedFlags":[],"notes":"无 file 字段","assetType":"image"},
+    {"id":"IMG_A3_T02_006","title":"走廊拐角","act":3,"phase":"A3_T02","source":"scene","purpose":"消防栓自然入画不交互","unlockCondition":["FLAG_A3_INNER_FENCE_PASSED"],"relatedFlags":["FLAG_A3_CLASSROOM_TURNED"],"notes":"无 file 字段","assetType":"image"}
   ]
 }

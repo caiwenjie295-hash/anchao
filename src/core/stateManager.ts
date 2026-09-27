@@ -1,12 +1,13 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
 import { isAct2T06PageId } from '../data/browserData';
 import { getPendingStoryTransition } from '../data/storyTransitionData';
+import { act3FirstLensId, act3LensById, act3StageClueIds, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_GATE_FLAG, ACT3_STAGE_NEXT } from '../data/act3Data';
 
 type StateListener = () => void;
 
@@ -49,10 +50,15 @@ export class StateManager {
     return () => this.subscribers.delete(listener);
   };
 
+  /** 订阅 flag:changed 事件，返回取消订阅函数。 */
+  subscribeFlagChanged = (handler: (payload: { flagId: string; value: boolean | string | number }) => void): (() => void) => {
+    return this.bus.on('flag:changed', handler);
+  };
+
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 6 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 7 });
   }
 
   private nextZIndex(): number {
@@ -205,7 +211,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 6 });
+    this.bus.emit('progress:reset', { schemaVersion: 7 });
   }
 
   startJourney(sceneId: string): void {
@@ -562,6 +568,85 @@ export class StateManager {
     this.setFlag('FLAG_A2_SS_MATCH_CONFIRMED', true);
     this.addNotepadAutoEntry('NOTE_A2_T05_004');
     this.bus.emit('act2:school-symbol-matched', {});
+  }
+
+  // ─── 第三幕 T00–T02 接口 ───────────────────────────────────────────
+
+  /** 入口前置：第二幕 T06 收束。
+   *  T07 完工后由主审把入口条件改为 T07 完成态 Flag。 */
+  static readonly ACT3_ENTRY_FLAG = 'FLAG_A2_OTHER_CASES_ABNORMAL';
+  static readonly ACT3_GATE_FLAG_T00 = 'FLAG_A3_GATE_REACHED';
+  static readonly ACT3_GATE_FLAG_T01 = 'FLAG_A3_INNER_FENCE_PASSED';
+  static readonly ACT3_GATE_FLAG_T02 = 'FLAG_A3_CLASSROOM_TURNED';
+  static readonly ACT3_COMPLETE_FLAG_T00 = 'FLAG_A3_OLD_ROAD_FOUND';
+  static readonly ACT3_COMPLETE_FLAG_T01 = 'FLAG_A3_QIMING_SITE_CONFIRMED';
+  static readonly ACT3_COMPLETE_FLAG_T02 = 'FLAG_A3_CLASSROOM_CONTRADICTION_NOTED';
+
+  private get act3(): Act3State { return this.state.modules.act3; }
+
+  private commitAct3(patch: Partial<Act3State>): void {
+    const next: Act3State = { ...this.act3, ...patch };
+    this.commit({ ...this.state, modules: { ...this.state.modules, act3: next } });
+  }
+
+  /** 启动第三幕；只在第二幕 T06 结论存在、第三幕尚未启动时生效。 */
+  startAct3(): void {
+    if (this.state.game.flags[StateManager.ACT3_ENTRY_FLAG] !== true || this.act3.stage !== 'inactive') return;
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, act: 3, phase: 'A3_T00' },
+      modules: { ...this.state.modules, act3: { ...this.act3, stage: 'T00' } },
+    });
+    this.bus.emit('act3:started', { act: 3 });
+    this.bus.emit('phase:changed', { phase: 'A3_T00' });
+  }
+
+  /** 切换当前镜头；不允许跨 T。 */
+  enterAct3Lens(lensId: string): void {
+    const id = lensId.trim();
+    const stage = this.act3.stage;
+    if (stage === 'inactive' || !id) return;
+    const lens = act3LensById(stage, id);
+    if (!lens) return;
+    const visitedLensIds = this.act3.visitedLensIds.includes(id) ? this.act3.visitedLensIds : [...this.act3.visitedLensIds, id];
+    this.commitAct3({ currentLensId: id, visitedLensIds });
+    this.bus.emit('act3:lens-entered', { lensId: id });
+  }
+
+  /** 检视线索；镜头与线索必须属于当前 T。 */
+  inspectAct3Clue(clueId: string): void {
+    const id = clueId.trim();
+    const stage = this.act3.stage;
+    const currentId = this.act3.currentLensId;
+    if (stage === 'inactive' || !id || !currentId) return;
+    const lens = act3LensById(stage, currentId);
+    if (!lens || !lens.hotspots.some((hotspot) => hotspot.clueId === id)) return;
+    if (this.act3.inspectedClueIds.includes(id)) return;
+    this.commitAct3({ inspectedClueIds: [...this.act3.inspectedClueIds, id] });
+    this.bus.emit('act3:clue-inspected', { clueId: id });
+  }
+
+  /** 玩家主动确认阶段结论；线索、Flag 与下一阶段均由当前阶段的固定数据决定。 */
+  confirmAct3Stage(): void {
+    const stage = this.act3.stage;
+    if (stage === 'inactive') return;
+    const required = act3StageClueIds(stage);
+    const id = ACT3_STAGE_COMPLETION_FLAG[stage];
+    if (!required.length || !required.every((clueId) => this.act3.inspectedClueIds.includes(clueId)) || this.state.game.flags[id] === true) return;
+    const gateId = ACT3_STAGE_GATE_FLAG[stage];
+    const nextStage = ACT3_STAGE_NEXT[stage];
+    const confirmedFlagIds = [...new Set([...this.act3.confirmedFlagIds, id, gateId])];
+    const nextLensId = nextStage ? act3FirstLensId(nextStage) : this.act3.currentLensId;
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, flags: { ...this.state.game.flags, [id]: true, [gateId]: true }, phase: nextStage ? `A3_${nextStage}` as GamePhase : this.state.game.phase },
+      modules: { ...this.state.modules, act3: { ...this.act3, confirmedFlagIds, stage: nextStage ?? stage, currentLensId: nextLensId, visitedLensIds: nextLensId && !this.act3.visitedLensIds.includes(nextLensId) ? [...this.act3.visitedLensIds, nextLensId] : this.act3.visitedLensIds } },
+    });
+    this.bus.emit('act3:stage-confirmed', { flagId: id });
+    if (nextStage) {
+      this.bus.emit('act3:stage-changed', { stage: nextStage });
+      this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
+    }
   }
 }
 

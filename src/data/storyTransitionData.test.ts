@@ -5,7 +5,7 @@ import { getPendingStoryTransition, storyTransitions, validateStoryTransitions }
 describe('story transitions', () => {
   it('validates every authored card and starts a new game with the prologue', () => {
     expect(validateStoryTransitions()).toBeUndefined();
-    expect(storyTransitions).toHaveLength(15);
+    expect(storyTransitions).toHaveLength(16);
     expect(getPendingStoryTransition(createDefaultState())?.id).toBe('TRANSITION_A1_INTRO');
   });
 

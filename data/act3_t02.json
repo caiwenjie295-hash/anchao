@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "stage": "T02",
+  "intro": "推门进入一层长走廊。惨白天光从侧窗进来，碎玻璃和旧课桌留下多年无人收拾的气息。",
+  "lenses": [
+    {
+      "id": "LENS_A3_T02_001",
+      "title": "一层长走廊",
+      "stance": "look",
+      "assetId": "IMG_A3_T02_001",
+      "description": "狭长走廊，左侧连续教室门、右侧旧窗。地面零星碎玻璃；远处右拐角自然出现一个不起眼的消防栓轮廓。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T02_CORRIDOR", "label": "看向左侧教室" }
+      ],
+      "links": ["LENS_A3_T02_002"]
+    },
+    {
+      "id": "LENS_A3_T02_002",
+      "title": "教室门口",
+      "stance": "approach",
+      "assetId": "IMG_A3_T02_002",
+      "description": "从 001 向左走近一间教室门。门框漆皮脱落，门内东倒西歪的课桌与没有靠背的椅子。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T02_CLASSROOM_DOOR", "label": "走进教室" }
+      ],
+      "links": ["LENS_A3_T02_003", "LENS_A3_T02_001"]
+    },
+    {
+      "id": "LENS_A3_T02_003",
+      "title": "讲台前",
+      "stance": "look",
+      "assetId": "IMG_A3_T02_003",
+      "description": "站在讲台前回望全室，旧课桌、粉尘与窗外灰光。前缘能看见黑板边框与两只旧广播喇叭。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T02_BLACKBOARD", "label": "看向黑板" }
+      ],
+      "links": ["LENS_A3_T02_004"]
+    },
+    {
+      "id": "LENS_A3_T02_004",
+      "title": "黑板近景",
+      "stance": "approach",
+      "assetId": "IMG_A3_T02_004",
+      "description": "同一块黑板靠得更近，粉尘上有多处歪斜划痕，留位置给后期双 S 叠层。木框裂痕与 003 接得上。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T02_SS_SCRATCH", "label": "检查黑板划痕" }
+      ],
+      "links": ["LENS_A3_T02_005"]
+    },
+    {
+      "id": "LENS_A3_T02_005",
+      "title": "标语与喇叭",
+      "stance": "look",
+      "assetId": "IMG_A3_T02_005",
+      "description": "讲台边仰视，墙上标语纸张卷边、胶痕、墙皮剥落；标语留白由网页正文渲染，不让模型生成可读文字。看上一只旧广播喇叭。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T02_SLOGAN_SPEAKER", "label": "记下标语与喇叭" }
+      ],
+      "links": ["LENS_A3_T02_006"]
+    },
+    {
+      "id": "LENS_A3_T02_006",
+      "title": "走廊拐角",
+      "stance": "look",
+      "assetId": "IMG_A3_T02_006",
+      "description": "从教室出来朝走廊尽头右拐角看，窗下老式消防栓箱在普通构图中自然入画，不显眼也不交互。右转后无窗区变暗，通向 T03。",
+      "hotspots": [
+        { "clueId": "CLUE_A3_T02_CORRIDOR_TURN", "label": "走向拐角" }
+      ],
+      "links": []
+    }
+  ]
+}
