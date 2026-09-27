@@ -14,7 +14,7 @@ export interface StoryTransitionRecord {
   targetAppId?: AppId;
 }
 
-export const STORY_PHASE_ORDER: GamePhase[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'A2_T01', 'A2_T02', 'A2_T03', 'A2_T04', 'A2_T05', 'A2_T06', 'A2_T07', 'A3_T00', 'A3_T01', 'A3_T02', 'A3_T03'];
+export const STORY_PHASE_ORDER: GamePhase[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'A2_T01', 'A2_T02', 'A2_T03', 'A2_T04', 'A2_T05', 'A2_T06', 'A2_T07', 'A3_T00', 'A3_T01', 'A3_T02', 'A3_T03', 'A3_T04'];
 export const storyTransitions = document.items as StoryTransitionRecord[];
 export const storyTransitionIds = new Set(storyTransitions.map((item) => item.id));
 
