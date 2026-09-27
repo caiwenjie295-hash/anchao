@@ -584,6 +584,7 @@ export class StateManager {
   static readonly ACT3_COMPLETE_FLAG_T01 = 'FLAG_A3_QIMING_SITE_CONFIRMED';
   static readonly ACT3_COMPLETE_FLAG_T02 = 'FLAG_A3_CLASSROOM_CONTRADICTION_NOTED';
   static readonly ACT3_COMPLETE_FLAG_T03 = 'FLAG_A3_CONFINEMENT_SITE_CONFIRMED';
+  static readonly ACT3_COMPLETE_FLAG_T04 = 'FLAG_A3_VVAKE_PAPER_FOUND';
 
   private get act3(): Act3State { return this.state.modules.act3; }
 
@@ -610,7 +611,7 @@ export class StateManager {
     const stage = this.act3.stage;
     if (stage === 'inactive' || !id) return;
     const lens = act3LensById(stage, id);
-    if (!lens) return;
+    if (!lens || lens.requiresClueIds?.some((required) => !this.act3.inspectedClueIds.includes(required))) return;
     const visitedLensIds = this.act3.visitedLensIds.includes(id) ? this.act3.visitedLensIds : [...this.act3.visitedLensIds, id];
     this.commitAct3({ currentLensId: id, visitedLensIds });
     this.bus.emit('act3:lens-entered', { lensId: id });
@@ -647,6 +648,7 @@ export class StateManager {
     });
     this.bus.emit('act3:stage-confirmed', { flagId: id });
     if (stage === 'T03') this.addNotepadAutoEntry('NOTE_A3_T03_001');
+    if (stage === 'T04') this.addNotepadAutoEntry('NOTE_A3_T04_001');
     if (nextStage) {
       this.bus.emit('act3:stage-changed', { stage: nextStage });
       this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
@@ -749,6 +751,22 @@ export class StateManager {
     if (this.state.game.flags.FLAG_A2_COMPLETE === true) return;
     this.setFlag('FLAG_A2_COMPLETE', true);
     this.bus.emit('act2:t07-complete', {});
+  }
+
+  /** 新阶段上线后，已确认上一阶段的旧存档仍可由玩家主动继续。 */
+  advanceAct3Stage(): void {
+    const stage = this.act3.stage;
+    if (stage === 'inactive') return;
+    const nextStage = ACT3_STAGE_NEXT[stage];
+    if (!nextStage || this.state.game.flags[ACT3_STAGE_COMPLETION_FLAG[stage]] !== true || this.state.game.flags[ACT3_STAGE_GATE_FLAG[stage]] !== true) return;
+    const nextLensId = act3FirstLensId(nextStage);
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, phase: `A3_${nextStage}` as GamePhase },
+      modules: { ...this.state.modules, act3: { ...this.act3, stage: nextStage, currentLensId: nextLensId, visitedLensIds: this.act3.visitedLensIds.includes(nextLensId) ? this.act3.visitedLensIds : [...this.act3.visitedLensIds, nextLensId] } },
+    });
+    this.bus.emit('act3:stage-changed', { stage: nextStage });
+    this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
   }
 }
 

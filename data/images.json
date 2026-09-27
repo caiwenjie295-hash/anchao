@@ -329,6 +329,12 @@
     {"id":"IMG_A3_T03_003","title":"门外窥孔与挡板","act":3,"phase":"A3_T03","source":"scene","purpose":"T03 门外窥孔与挡板缺图占位","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":[],"notes":"正式摄影图待美术统一接入；文字与热点可独立操作","assetType":"image"},
     {"id":"IMG_A3_T03_004","title":"四十八与七十二小时门","act":3,"phase":"A3_T03","source":"scene","purpose":"T03 四十八与七十二小时门缺图占位","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":[],"notes":"正式摄影图待美术统一接入；文字与热点可独立操作","assetType":"image"},
     {"id":"IMG_A3_T03_005","title":"地下楼梯口","act":3,"phase":"A3_T03","source":"scene","purpose":"T03 地下楼梯口缺图占位","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":[],"notes":"正式摄影图待美术统一接入；文字与热点可独立操作","assetType":"image"},
-    {"id":"IMG_A3_T03_006","title":"楼梯半程","act":3,"phase":"A3_T03","source":"scene","purpose":"T03 楼梯半程缺图占位","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":[],"notes":"正式摄影图待美术统一接入；文字与热点可独立操作","assetType":"image"}
+    {"id":"IMG_A3_T03_006","title":"楼梯半程","act":3,"phase":"A3_T03","source":"scene","purpose":"T03 楼梯半程缺图占位","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":[],"notes":"正式摄影图待美术统一接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T04_001","title":"地下走廊门牌","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 地下走廊门牌缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
+    {"id":"IMG_A3_T04_002","title":"档案室门口","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 档案室门口缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
+    {"id":"IMG_A3_T04_003","title":"空架与年份编号","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 空架与年份编号缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
+    {"id":"IMG_A3_T04_004","title":"架边地面","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 架边地面缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
+    {"id":"IMG_A3_T04_005","title":"折旧纸片","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 折旧纸片缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
+    {"id":"IMG_A3_T04_006","title":"回到地下走廊","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 回到地下走廊缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"}
   ]
 }

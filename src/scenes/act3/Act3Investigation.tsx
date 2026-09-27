@@ -15,6 +15,7 @@ const STAGE_TITLE: Record<Act3ActiveStage, string> = {
   T01: '启明旧址入口',
   T02: '教室与标语',
   T03: '禁闭区',
+  T04: '档案室',
 };
 
 const STAGE_LABEL: Record<Act3ActiveStage, string> = {
@@ -22,6 +23,7 @@ const STAGE_LABEL: Record<Act3ActiveStage, string> = {
   T01: '第三幕 · T01',
   T02: '第三幕 · T02',
   T03: '第三幕 · T03',
+  T04: '第三幕 · T04',
 };
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
@@ -139,9 +141,10 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
             <nav className="act3-investigation__routes" aria-label="前往相邻镜头">
               {lens.links.map((linkId) => {
                 const target: Act3Lens | null = act3LensById(stage, linkId);
+                const locked = target?.requiresClueIds?.some((required) => !state.modules.act3.inspectedClueIds.includes(required));
                 return target ? (
-                  <button type="button" key={linkId} onClick={() => { manager.enterAct3Lens(linkId); setHotspotId(null); }}>
-                    {target.title} →
+                  <button type="button" key={linkId} disabled={locked} title={locked ? '先检查当前镜头的线索' : undefined} onClick={() => { manager.enterAct3Lens(linkId); setHotspotId(null); }}>
+                    {target.title} →{locked ? '（先检查线索）' : ''}
                   </button>
               ) : null;
               })}
@@ -167,6 +170,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
       {stageAlreadyConfirmed && nextStage && (
         <div className="act3-investigation__confirm-bar act3-investigation__confirm-bar--done">
           <p>本阶段已确认。当前阶段：{STAGE_TITLE[nextStage]}。</p>
+          <button type="button" onClick={() => manager.advanceAct3Stage()}>继续{STAGE_TITLE[nextStage]}</button>
         </div>
       )}
       {stageAlreadyConfirmed && !nextStage && (

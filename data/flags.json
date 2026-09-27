@@ -506,6 +506,8 @@
     {"id":"FLAG_A2_SECOND_TRIP_PLANNED","title":"已约定第二次进山","act":2,"phase":"A2_T07","source":"scene","purpose":"记录小月与主角共同确定的行程","unlockCondition":["FLAG_A2_QIMING_LOCATION_INFERRED"],"relatedFlags":["FLAG_A2_COMPLETE"],"notes":"由玩家主动确认行程后写入，不出现进入第三幕按钮","defaultValue":false},
     {"id":"FLAG_A2_COMPLETE","title":"第二幕完成","act":2,"phase":"A2_T07","source":"scene","purpose":"记录幕末黑屏收束已播放","unlockCondition":["FLAG_A2_SECOND_TRIP_PLANNED"],"relatedFlags":[],"notes":"终幕只播放一次，之后可回看资料但不得自动进入第三幕","defaultValue":false},
     {"id":"FLAG_A3_CONFINEMENT_SITE_CONFIRMED","title":"确认禁闭现场","act":3,"phase":"A3_T03","source":"scene","purpose":"玩家核对三间门的时长与外侧窥孔挡板后主动确认","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":["FLAG_A3_STAIRS_DESCENDED"],"notes":"只支持旧论坛部分叙述，不核实发帖人身份","defaultValue":false},
-    {"id":"FLAG_A3_STAIRS_DESCENDED","title":"与小月一起下楼","act":3,"phase":"A3_T03","source":"scene","purpose":"T03结束时经手电观察后共同确认下楼","unlockCondition":["FLAG_A3_CONFINEMENT_SITE_CONFIRMED"],"relatedFlags":[],"notes":"解锁T04地下走廊","defaultValue":false}
+    {"id":"FLAG_A3_STAIRS_DESCENDED","title":"与小月一起下楼","act":3,"phase":"A3_T03","source":"scene","purpose":"T03结束时经手电观察后共同确认下楼","unlockCondition":["FLAG_A3_CONFINEMENT_SITE_CONFIRMED"],"relatedFlags":[],"notes":"解锁T04地下走廊","defaultValue":false},
+    {"id":"FLAG_A3_VVAKE_PAPER_FOUND","title":"取得 VVaKe 纸片","act":3,"phase":"A3_T04","source":"scene","purpose":"玩家蹲下发现并主动收起档案室纸片","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":["FLAG_A3_BROADCAST_DOOR_REACHED"],"notes":"只保存纸片词语，不解释含义","defaultValue":false},
+    {"id":"FLAG_A3_BROADCAST_DOOR_REACHED","title":"找到广播室方向","act":3,"phase":"A3_T04","source":"scene","purpose":"T04到T05地下走廊门槛","unlockCondition":["FLAG_A3_VVAKE_PAPER_FOUND"],"relatedFlags":[],"notes":"玩家可回看档案室","defaultValue":false}
   ]
 }

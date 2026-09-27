@@ -39,3 +39,7 @@
 .act3-investigation[data-act3-stage="T03"]{background:#101820}
 .act3-investigation[data-act3-stage="T03"] .act3-investigation__viewport{background:radial-gradient(circle at 48% 54%,#4c5b62 0%,#27343c 38%,#0d1318 78%)}
 .act3-investigation[data-act3-stage="T03"] .act3-investigation__viewport--placeholder:after{content:"禁闭区影像待接入"}
+/* 档案室纸片以文字层呈现，缺图也能准确阅读。 */
+.act3-investigation[data-act3-stage="T04"] .act3-investigation__viewport{background:radial-gradient(circle at 52% 45%,#536067,#253039 50%,#111820 85%)}
+.act3-investigation[data-act3-stage="T04"] .act3-investigation__viewport--placeholder:after{content:"档案室影像待接入"}
+.act3-investigation[data-act3-stage="T04"] .act3-investigation__lens[data-asset-id="IMG_A3_T04_005"] .act3-investigation__description{border-left:4px solid #b9ad85;padding:.8rem 1rem;background:#303430;color:#f0e9d6;white-space:pre-wrap}
