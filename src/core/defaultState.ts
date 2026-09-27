@@ -1,4 +1,4 @@
-import { APP_IDS, type Act2ResearchState, type AppId, type AppState, type Bounds, type DesktopWindow } from './types';
+import { APP_IDS, type Act2ResearchState, type Act3State, type AppId, type AppState, type Bounds, type DesktopWindow } from './types';
 import { initiallyStarredMailIds } from '../data/mailData';
 
 const initialBounds: Record<AppId, Bounds> = {
@@ -46,8 +46,16 @@ export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
   school: { visitedAreaIds: [], inspectedHotspotIds: [] },
 });
 
+export const createDefaultAct3State = (): Act3State => ({
+  stage: 'inactive',
+  currentLensId: null,
+  visitedLensIds: [],
+  inspectedClueIds: [],
+  confirmedFlagIds: [],
+});
+
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 6,
+  schemaVersion: 7,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,
@@ -62,6 +70,7 @@ export const createDefaultState = (): AppState => ({
     scene: { journeyStarted: false, currentSceneId: null, visitedSceneIds: [], inspectedHotspotIds: [], capturedPhotoIds: [] },
     photos: { activePhotoId: null, openedPhotoIds: [], adjustments: {}, zoomByPhotoId: {}, inspectedSymbolPhotoIds: [] },
     act2Research: createDefaultAct2ResearchState(),
+    act3: createDefaultAct3State(),
     storyTransitions: { seenIds: [] },
   },
 });

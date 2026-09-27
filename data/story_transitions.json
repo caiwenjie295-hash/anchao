@@ -15,6 +15,7 @@
     { "id": "TRANSITION_A2_T03", "presentation": "immediate", "phase": "A2_T03", "trigger": "phase", "requiredFlags": [], "eyebrow": "第二幕 · 县志", "title": "名字有了写法", "paragraphs": ["老人含混的发音，终于被你辨成“黑补母”。", "这个名字不像随口编出的。县图书馆的地方志或许留着更早的记载。"], "actionLabel": "去图书馆" },
     { "id": "TRANSITION_A2_T04", "presentation": "immediate", "phase": "A2_T04", "trigger": "phase", "requiredFlags": [], "eyebrow": "第二幕 · 志异", "title": "规则只是表面", "paragraphs": ["《补母志》说，缺什么，就用某种东西补什么。可这句话还解释不了山里的痕迹。", "再读三篇相关记述，看看不同的人究竟失去和得到过什么。"], "actionLabel": "继续翻阅" },
     { "id": "TRANSITION_A2_T05", "presentation": "immediate", "phase": "A2_T05", "trigger": "phase", "requiredFlags": [], "eyebrow": "第二幕 · 高中", "title": "回到小A身上", "paragraphs": ["资料整理留下一个问题：小A缺什么？", "小月提起高中时期的他。去学校看看，也许能找到那段变化从何时开始。"], "actionLabel": "走进学校" },
-    { "id": "TRANSITION_A2_T06", "targetAppId": "browser", "phase": "A2_T06", "trigger": "phase", "requiredFlags": [], "eyebrow": "第二幕 · 启明", "title": "两条线第一次相交", "paragraphs": ["小A休学、成绩变化和启明的名字被放到了一起；学校笔记上的双 S，又与你在鸡公岭拍下的图案相近。", "先查查启明公开留下了什么，再判断这些联系意味着什么。"], "actionLabel": "调查启明" }
+    { "id": "TRANSITION_A2_T06", "targetAppId": "browser", "phase": "A2_T06", "trigger": "phase", "requiredFlags": [], "eyebrow": "第二幕 · 启明", "title": "两条线第一次相交", "paragraphs": ["小A休学、成绩变化和启明的名字被放到了一起；学校笔记上的双 S，又与你在鸡公岭拍下的图案相近。", "先查查启明公开留下了什么，再判断这些联系意味着什么。"], "actionLabel": "调查启明" },
+    { "id": "TRANSITION_A3_T00", "presentation": "immediate", "phase": "A3_T00", "trigger": "phase", "requiredFlags": ["FLAG_A2_OTHER_CASES_ABNORMAL"], "eyebrow": "第三幕 · 启程", "title": "再去鸡公岭", "paragraphs": ["两次线上调查都指回同一座山。两天后，你和小月重新进山，想看看真正藏在山里的东西。", "雨后坡面被冲开一截旧电缆，但真正的路要靠水流分叉才能找到。"], "actionLabel": "再次进山" }
   ]
 }

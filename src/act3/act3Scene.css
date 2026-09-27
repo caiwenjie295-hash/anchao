@@ -1,0 +1,37 @@
+/* 第三幕镜头调查壳层样式；按工单视觉总规范使用低饱和冷灰调。 */
+.act3-investigation{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;overflow:auto;background:#1d262c;color:#e7edf0;font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+.act3-investigation button{min-height:44px;border:1px solid #6f8290;border-radius:7px;background:#dde4e7;color:#1d2629;padding:.5rem .85rem;font:inherit;cursor:pointer}
+.act3-investigation button:hover{background:#c9d4d8}
+.act3-investigation button:focus-visible{outline:3px solid #58a4c8;outline-offset:2px}
+.act3-investigation__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:clamp(.8rem,2vw,1.3rem) clamp(1rem,4vw,3rem);background:#0f1418}
+.act3-investigation__header p{margin:0;color:#9fb1bb;font-size:.78rem;letter-spacing:.1em}
+.act3-investigation__header h1{margin:.1rem 0;font:600 clamp(1.3rem,3vw,2rem)/1.2 Georgia,serif}
+.act3-investigation__header span{font-size:.92rem;color:#cfd9dd}
+.act3-investigation__return{flex:none;color:#0f1418!important}
+.act3-investigation__layout{flex:1;display:grid;place-items:center;padding:1.5rem;min-height:0}
+.act3-investigation__lens{width:min(100%,1080px);display:grid;gap:1rem}
+.act3-investigation__viewport{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid #36444b;background:linear-gradient(150deg,#3a4a52 0%,#5a6c75 60%,#2f3a41 100%)}
+.act3-investigation__viewport--approach{background:linear-gradient(150deg,#3f4d54,#4d5d65 60%,#2a3137)}
+.act3-investigation__viewport--crouch{background:linear-gradient(155deg,#2c3439,#3b444a 60%,#22282c)}
+.act3-investigation__viewport--enter{background:linear-gradient(150deg,#2d353b,#404a51 60%,#1c2125)}
+.act3-investigation__viewport>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.act3-investigation__viewport-title{position:absolute;top:.8rem;left:.9rem;padding:.4rem .7rem;border-radius:6px;background:rgba(11,16,20,.72);font-weight:650;font-size:.95rem}
+.act3-investigation__viewport--placeholder{display:grid;place-items:center}
+.act3-investigation__viewport--placeholder:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 18px,transparent 18px 36px)}
+.act3-investigation__viewport--placeholder:after{content:"图片占位";padding:.45rem .8rem;border-radius:6px;background:rgba(11,16,20,.55);font-size:.85rem;color:#cbd6db}
+.act3-investigation__description{max-width:70ch;color:#cdd6d9;line-height:1.7}
+.act3-investigation__hotspots{display:flex;flex-wrap:wrap;gap:.55rem}
+.act3-investigation__hotspot[aria-pressed=true]{background:#cfe0e5;border-color:#9cc5d4}
+.act3-investigation__routes{display:flex;flex-wrap:wrap;gap:.5rem;border-top:1px solid #2c363c;padding-top:.8rem}
+.act3-investigation__routes button{flex:none;min-height:38px;background:#cdd6da;color:#1d262c}
+.act3-investigation__dialog-backdrop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1rem;background:#0a0d10cc}
+.act3-investigation__dialog{width:min(100%,560px);max-height:80vh;overflow:auto;padding:clamp(1rem,3vw,1.3rem);border:1px solid #6f8290;border-radius:12px;background:#172330;box-shadow:0 24px 80px #0009}
+.act3-investigation__dialog>header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.act3-investigation__dialog h2{margin:0;font:600 1.3rem/1.25 Georgia,serif}
+.act3-investigation__dialog p{margin:.6rem 0 1rem;line-height:1.7}
+@media(max-width:760px){.act3-investigation__layout{padding:.8rem}.act3-investigation__viewport{aspect-ratio:3/4}}
+.act3-investigation__confirm-bar{flex:none;display:flex;align-items:center;justify-content:center;gap:1rem;padding:.8rem clamp(1rem,4vw,3rem);background:#142028;border-top:1px solid #2c363c}
+.act3-investigation__confirm-bar--done{background:#0f1a12;border-color:#1f3325}
+.act3-investigation__confirm-bar p{margin:0;color:#cdd6d9;font-size:.9rem}
+.act3-investigation__confirm-btn{flex:none;background:#cfe0e5!important;border-color:#9cc5d4!important;font-weight:650!important}
+@media(prefers-reduced-motion:reduce){.act3-investigation *{animation:none!important;transition:none!important}}

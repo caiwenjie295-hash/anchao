@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A3_T00' | 'A3_T01' | 'A3_T02';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 6;
+  schemaVersion: 7;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -82,6 +82,7 @@ export interface AppState {
     scene: SceneState;
     photos: PhotosState;
     act2Research: Act2ResearchState;
+    act3: Act3State;
     storyTransitions: StoryTransitionsState;
   };
 }
@@ -89,6 +90,9 @@ export interface AppState {
 export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' | 'school' | 'qiming';
 
 export type Act2ActiveStage = Exclude<Act2Stage, 'inactive' | 'school' | 'qiming'>;
+
+/** 第三幕 T 阶段；T00–T02 已实现，T03–T07 待后续工单冻结。 */
+export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02';
 
 export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_XIAOYUE_CLASSROOM', 'AREA_A2_T05_RESTROOM_APPROACH', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_NOTICE_BOARD'] as const;
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
@@ -126,6 +130,51 @@ export interface Act2ResearchState {
   };
   school: Act2SchoolState;
 }
+
+/** 第三幕镜头调查通用状态。currentLensId 由 T00 写入为 'LENS_A3_T00_001'。 */
+export interface Act3State {
+  stage: Act3Stage;
+  /** 当前镜头 ID；切换只在确认进入 T 时重置。 */
+  currentLensId: string | null;
+  /** 已访问过的镜头 ID，重载后用于按需预载与回看。 */
+  visitedLensIds: string[];
+  /** 已检视过的线索 ID。 */
+  inspectedClueIds: string[];
+  /** 玩家已主动确认的对应阶段结论 Flag 名。 */
+  confirmedFlagIds: string[];
+}
+
+/** 第三幕关卡内的镜头定义。 */
+export interface Act3Lens {
+  id: string;
+  /** 同一镜头标题；保持地点与朝向。 */
+  title: string;
+  /** 站位描述（看向/靠近/蹲下）。 */
+  stance: 'look' | 'approach' | 'crouch' | 'enter';
+  /** 镜头对应的资源 ID；图片未接入时仍保留稳定 ID。 */
+  assetId: string;
+  /** 镜头场景文本；不放入谜底。 */
+  description: string;
+  /** 镜头上可点选的热点：写为线索 ID + 可见动作标签。 */
+  hotspots: Act3Hotspot[];
+  /** 邻近镜头的 ID（沿同一站位/朝向）。 */
+  links: string[];
+}
+
+export interface Act3Hotspot {
+  clueId: string;
+  /** 显示动作标签：看向、靠近、蹲下、检查、比对、收集、确认。 */
+  label: string;
+}
+
+/** 第三幕场景内的事件支持。 */
+export type Act3ActiveStage = Exclude<Act3Stage, 'inactive'>;
+
+export const ACT3_PHASE_FOR_STAGE: Record<Act3ActiveStage, GamePhase> = {
+  T00: 'A3_T00',
+  T01: 'A3_T01',
+  T02: 'A3_T02',
+};
 
 export type AnchaoEventMap = {
   'app:opened': { appId: AppId };
@@ -168,6 +217,11 @@ export type AnchaoEventMap = {
   'act2:qiming-entered': Record<string, never>;
   'act2:qiming-name-matched': { person: 'huang' | 'zhong' };
   'act2:qiming-cases-confirmed': Record<string, never>;
-  'progress:reset': { schemaVersion: 6 };
-  'save:completed': { schemaVersion: 6 };
+  'act3:started': { act: 3 };
+  'act3:stage-changed': { stage: Act3ActiveStage };
+  'act3:lens-entered': { lensId: string };
+  'act3:clue-inspected': { clueId: string };
+  'act3:stage-confirmed': { flagId: string };
+  'progress:reset': { schemaVersion: 7 };
+  'save:completed': { schemaVersion: 7 };
 };

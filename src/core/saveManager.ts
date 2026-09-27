@@ -1,15 +1,17 @@
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
-import { createDefaultAct2ResearchState, createDefaultState, createDefaultWindow } from './defaultState';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
+import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultState, createDefaultWindow } from './defaultState';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
 import { isStoryTransitionReached, storyTransitions, storyTransitionIds } from '../data/storyTransitionData';
+import { act3LensById } from '../data/act3Data';
 
 export const SAVE_KEY = 'anchao.save.v1';
-/** schema 1–5 的有效进度全部迁移到 schema 6。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6];
+/** schema 1–5 全部迁移到 schema 6；schema 1–6 全部迁移到 schema 7（增设第三幕模块）。 */
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming'];
+const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
@@ -88,6 +90,21 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   };
 };
 
+/** schema 1–6 没有 act3 字段；任何损坏或越界的第三幕字段都回退到默认值，不影响既有进度。 */
+const safeAct3 = (candidate: unknown): Act3State => {
+  const fallback = createDefaultAct3State();
+  if (!isRecord(candidate)) return fallback;
+  const stage = validAct3Stages.includes(candidate.stage as Act3Stage) ? candidate.stage as Act3Stage : fallback.stage;
+  const visitedLensIds = safeStringIds(candidate.visitedLensIds);
+  const inspectedClueIds = safeStringIds(candidate.inspectedClueIds);
+  const confirmedFlagIds = safeStringIds(candidate.confirmedFlagIds);
+  // 只允许当前阶段已访问的镜头作为 currentLensId；脏数据回退到首镜头或 null。
+  const expectedFirstLensId = stage === 'inactive' ? null : `LENS_A3_${stage}_001`;
+  const requestedCurrentId = typeof candidate.currentLensId === 'string' && candidate.currentLensId.length > 0 ? candidate.currentLensId : expectedFirstLensId;
+  const currentLensId = stage === 'inactive' ? null : (requestedCurrentId && visitedLensIds.includes(requestedCurrentId) && act3LensById(stage, requestedCurrentId) ? requestedCurrentId : expectedFirstLensId);
+  return { stage, currentLensId, visitedLensIds, inspectedClueIds, confirmedFlagIds };
+};
+
 export const hydrateState = (candidate: unknown): AppState => {
   const fallback = createDefaultState();
   if (!isRecord(candidate) || !supportedSchemaVersions.includes(candidate.schemaVersion as number)) return fallback;
@@ -101,6 +118,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const scene = isRecord(modules.scene) ? modules.scene : null;
   const photos = isRecord(modules.photos) ? modules.photos : null;
   const act2Research = safeAct2Research(modules.act2Research);
+  let act3 = safeAct3(modules.act3);
   const rawFlags = isRecord(game.flags)
     ? Object.fromEntries(Object.entries(game.flags).filter(([, value]) => ['boolean', 'string', 'number'].includes(typeof value))) as AppState['game']['flags']
     : {};
@@ -163,6 +181,11 @@ export const hydrateState = (candidate: unknown): AppState => {
   }
   if (rawFlags.FLAG_A2_QIMING_FORUM_FOUND !== true) for (const flagId of ['FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL']) delete rawFlags[flagId];
   if (rawFlags.FLAG_A2_HUANG_MATCH_INFERRED !== true || rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED !== true) delete rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL;
+  if (act3.stage !== 'inactive' && (rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL !== true
+    || (act3.stage === 'T01' && rawFlags.FLAG_A3_GATE_REACHED !== true)
+    || (act3.stage === 'T02' && rawFlags.FLAG_A3_INNER_FENCE_PASSED !== true))) {
+    act3 = createDefaultAct3State();
+  }
   const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
   const queryHistory = rawQueryHistory.filter((query) => {
     const definition = findSearchQuery(query);
@@ -172,7 +195,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const phaseForStage: Partial<Record<Act2Stage, string>> = {
     search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06',
   };
-  const safePhase = phaseForStage[act2Research.stage] ?? (
+  const safePhase = act3.stage !== 'inactive' ? `A3_${act3.stage}` as AppState['game']['phase'] : phaseForStage[act2Research.stage] ?? (
     hydratedPhase.startsWith('A2_T') ? fallback.game.phase : hydratedPhase
   );
   const autoEntryIds = notepad ? safeStringIds(notepad.autoEntryIds).filter((id) => {
@@ -200,9 +223,9 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 6,
+    schemaVersion: 7,
     game: {
-      act: finiteNumber(game.act, fallback.game.act),
+      act: act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,
       flags: rawFlags,
       discoveredClueIds: Array.isArray(game.discoveredClueIds) ? game.discoveredClueIds.filter((id): id is string => typeof id === 'string') : [],
@@ -243,11 +266,12 @@ export const hydrateState = (candidate: unknown): AppState => {
         inspectedSymbolPhotoIds: photos ? safeStringIds(photos.inspectedSymbolPhotoIds) : [],
       },
       act2Research,
+      act3,
       storyTransitions: { seenIds: [] },
     },
   };
   const storyTransitionsCandidate = isRecord(modules.storyTransitions) ? modules.storyTransitions : null;
-  hydrated.modules.storyTransitions.seenIds = candidate.schemaVersion === 6
+  hydrated.modules.storyTransitions.seenIds = candidate.schemaVersion === 7 || candidate.schemaVersion === 6
     ? safeStringIds(storyTransitionsCandidate?.seenIds).filter((id) => storyTransitionIds.has(id) && isStoryTransitionReached(hydrated, storyTransitions.find((item) => item.id === id)!))
     : storyTransitions.filter((item) => !(safePhase === 'A' && item.id === 'TRANSITION_A1_INTRO') && isStoryTransitionReached(hydrated, item)).map((item) => item.id);
   return hydrated;
