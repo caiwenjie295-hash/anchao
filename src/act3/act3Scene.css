@@ -35,3 +35,7 @@
 .act3-investigation__confirm-bar p{margin:0;color:#cdd6d9;font-size:.9rem}
 .act3-investigation__confirm-btn{flex:none;background:#cfe0e5!important;border-color:#9cc5d4!important;font-weight:650!important}
 @media(prefers-reduced-motion:reduce){.act3-investigation *{animation:none!important;transition:none!important}}
+/* 禁闭区保留可读的手电光斑，按键与线索仍有足够对比度。 */
+.act3-investigation[data-act3-stage="T03"]{background:#101820}
+.act3-investigation[data-act3-stage="T03"] .act3-investigation__viewport{background:radial-gradient(circle at 48% 54%,#4c5b62 0%,#27343c 38%,#0d1318 78%)}
+.act3-investigation[data-act3-stage="T03"] .act3-investigation__viewport--placeholder:after{content:"禁闭区影像待接入"}

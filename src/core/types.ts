@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A2_T07' | 'A3_T00' | 'A3_T01' | 'A3_T02';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A2_T07' | 'A3_T00' | 'A3_T01' | 'A3_T02' | 'A3_T03';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -91,8 +91,8 @@ export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' |
 
 export type Act2ActiveStage = Exclude<Act2Stage, 'inactive' | 'school' | 'qiming' | 'finale'>;
 
-/** 第三幕 T 阶段；T00–T02 已实现，T03–T07 待后续工单冻结。 */
-export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02';
+/** 第三幕已实现的调查阶段。 */
+export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02' | 'T03';
 
 export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_XIAOYUE_CLASSROOM', 'AREA_A2_T05_RESTROOM_APPROACH', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_NOTICE_BOARD'] as const;
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
@@ -183,6 +183,7 @@ export const ACT3_PHASE_FOR_STAGE: Record<Act3ActiveStage, GamePhase> = {
   T00: 'A3_T00',
   T01: 'A3_T01',
   T02: 'A3_T02',
+  T03: 'A3_T03',
 };
 
 export type AnchaoEventMap = {

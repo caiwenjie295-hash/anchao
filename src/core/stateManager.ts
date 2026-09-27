@@ -583,6 +583,7 @@ export class StateManager {
   static readonly ACT3_COMPLETE_FLAG_T00 = 'FLAG_A3_OLD_ROAD_FOUND';
   static readonly ACT3_COMPLETE_FLAG_T01 = 'FLAG_A3_QIMING_SITE_CONFIRMED';
   static readonly ACT3_COMPLETE_FLAG_T02 = 'FLAG_A3_CLASSROOM_CONTRADICTION_NOTED';
+  static readonly ACT3_COMPLETE_FLAG_T03 = 'FLAG_A3_CONFINEMENT_SITE_CONFIRMED';
 
   private get act3(): Act3State { return this.state.modules.act3; }
 
@@ -645,6 +646,7 @@ export class StateManager {
       modules: { ...this.state.modules, act3: { ...this.act3, confirmedFlagIds, stage: nextStage ?? stage, currentLensId: nextLensId, visitedLensIds: nextLensId && !this.act3.visitedLensIds.includes(nextLensId) ? [...this.act3.visitedLensIds, nextLensId] : this.act3.visitedLensIds } },
     });
     this.bus.emit('act3:stage-confirmed', { flagId: id });
+    if (stage === 'T03') this.addNotepadAutoEntry('NOTE_A3_T03_001');
     if (nextStage) {
       this.bus.emit('act3:stage-changed', { stage: nextStage });
       this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });

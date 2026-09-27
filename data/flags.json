@@ -504,6 +504,8 @@
     {"id":"FLAG_A2_TEMPLE_FRAME_FOUND","title":"确认视频里的破庙","act":2,"phase":"A2_T07","source":"scene","purpose":"记录有效截图与破庙外景主动比对后的确认","unlockCondition":["FLAG_A2_PROMO_VIDEO_FOUND"],"relatedFlags":["FLAG_A2_QIMING_LOCATION_INFERRED"],"notes":"必须先有落在关键帧窗口内的截图并与 IMG_A1_I_001 外景比对","defaultValue":false},
     {"id":"FLAG_A2_QIMING_LOCATION_INFERRED","title":"确认启明与鸡公岭破庙相关","act":2,"phase":"A2_T07","source":"notepad","purpose":"记录玩家亲自汇合两条线索后的地点结论","unlockCondition":["FLAG_A2_PROMO_PHOTO_SS_FOUND","FLAG_A2_TEMPLE_FRAME_FOUND","FLAG_A2_PROMO_VIDEO_WATCHED"],"relatedFlags":["FLAG_A2_SECOND_TRIP_PLANNED"],"notes":"只到过去曾在该地点附近活动，不推断机构现址或双 S 本义","defaultValue":false},
     {"id":"FLAG_A2_SECOND_TRIP_PLANNED","title":"已约定第二次进山","act":2,"phase":"A2_T07","source":"scene","purpose":"记录小月与主角共同确定的行程","unlockCondition":["FLAG_A2_QIMING_LOCATION_INFERRED"],"relatedFlags":["FLAG_A2_COMPLETE"],"notes":"由玩家主动确认行程后写入，不出现进入第三幕按钮","defaultValue":false},
-    {"id":"FLAG_A2_COMPLETE","title":"第二幕完成","act":2,"phase":"A2_T07","source":"scene","purpose":"记录幕末黑屏收束已播放","unlockCondition":["FLAG_A2_SECOND_TRIP_PLANNED"],"relatedFlags":[],"notes":"终幕只播放一次，之后可回看资料但不得自动进入第三幕","defaultValue":false}
+    {"id":"FLAG_A2_COMPLETE","title":"第二幕完成","act":2,"phase":"A2_T07","source":"scene","purpose":"记录幕末黑屏收束已播放","unlockCondition":["FLAG_A2_SECOND_TRIP_PLANNED"],"relatedFlags":[],"notes":"终幕只播放一次，之后可回看资料但不得自动进入第三幕","defaultValue":false},
+    {"id":"FLAG_A3_CONFINEMENT_SITE_CONFIRMED","title":"确认禁闭现场","act":3,"phase":"A3_T03","source":"scene","purpose":"玩家核对三间门的时长与外侧窥孔挡板后主动确认","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":["FLAG_A3_STAIRS_DESCENDED"],"notes":"只支持旧论坛部分叙述，不核实发帖人身份","defaultValue":false},
+    {"id":"FLAG_A3_STAIRS_DESCENDED","title":"与小月一起下楼","act":3,"phase":"A3_T03","source":"scene","purpose":"T03结束时经手电观察后共同确认下楼","unlockCondition":["FLAG_A3_CONFINEMENT_SITE_CONFIRMED"],"relatedFlags":[],"notes":"解锁T04地下走廊","defaultValue":false}
   ]
 }

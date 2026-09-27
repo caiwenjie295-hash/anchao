@@ -29,8 +29,8 @@ function assertLocalImage(value) {
   assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
 }
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
-const act3Docs = ['t00', 't01', 't02'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
-const [t00Doc, t01Doc, t02Doc] = await Promise.all(act3Docs);
+const act3Docs = ['t00', 't01', 't02', 't03'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
+const [t00Doc, t01Doc, t02Doc, t03Doc] = await Promise.all(act3Docs);
 const errors = [];
 const requests = [];
 const seenTransitionIds = new Set();
@@ -470,26 +470,28 @@ async function investigateAct3() {
   await click('.t07-finale__return');
   await textButton('开始第三幕调查', '.story-transition-launch button');
   assert.equal(state().game.phase, 'A3_T00');
-  for (const [stage, doc] of [['T00', t00Doc], ['T01', t01Doc], ['T02', t02Doc]]) {
+  for (const [stage, doc] of [['T00', t00Doc], ['T01', t01Doc], ['T02', t02Doc], ['T03', t03Doc]]) {
     assert.equal(state().modules.act3.stage, stage);
-    for (const [index, lens] of doc.lenses.entries()) {
+    const lenses = doc.lenses.filter((lens) => lens.id !== 'LENS_A3_T03_000');
+    for (const [index, lens] of lenses.entries()) {
       assert.equal(query('.act3-investigation__lens').getAttribute('data-asset-id'), lens.assetId);
       for (const hotspot of lens.hotspots) {
         await click(`[data-clue-id="${hotspot.clueId}"]`);
         assert.ok(query('.act3-investigation__dialog'));
         await click('.act3-investigation__dialog [aria-label="关闭"]');
       }
-      if (index + 1 < doc.lenses.length) {
-        await textButton(doc.lenses[index + 1].title, '.act3-investigation__routes button');
+      if (index + 1 < lenses.length) {
+        await textButton(lenses[index + 1].title, '.act3-investigation__routes button');
       }
     }
     await click('.act3-investigation__confirm-btn');
   }
-  assert.equal(state().game.phase, 'A3_T02');
-  assert.equal(state().game.flags.FLAG_A3_CLASSROOM_CONTRADICTION_NOTED, true);
+  assert.equal(state().game.phase, 'A3_T03');
+  assert.equal(state().game.flags.FLAG_A3_CONFINEMENT_SITE_CONFIRMED, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T03_001'));
   await mount(save());
-  assert.equal(state().modules.act3.stage, 'T02');
-  assert.equal(state().game.phase, 'A3_T02');
+  assert.equal(state().modules.act3.stage, 'T03');
+  assert.equal(state().game.phase, 'A3_T03');
 }
 
 async function reset() {
@@ -530,7 +532,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
     await investigateAct3();
     await reset();
     assert.deepEqual(errors, []);
-    console.log('PASS: offline T07 finale and act3 T00–T02');
+    console.log('PASS: offline T07 finale and act3 T00–T03');
   } finally { dom?.window.close(); }
 } else try {
   await mount();
@@ -606,7 +608,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       } finally { await rm(savePath, { force: true }); }
     }
     await reset();
-      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T07 and act3 T00–T02' : ''}`);
+      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T07 and act3 T00–T03' : ''}`);
   }
   assert.ok(requests.some((url) => url.endsWith('/assets/app.js')));
   assert.ok(requests.some((url) => url.endsWith('/assets/app.css')));

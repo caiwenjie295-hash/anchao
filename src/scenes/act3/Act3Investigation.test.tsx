@@ -8,7 +8,7 @@ import { act3StageDoc } from '../../data/act3Data';
 import { Act3Investigation } from './Act3Investigation';
 
 describe('Third-act player path', () => {
-  it('walks from T00 to the T02 conclusion through visible controls', async () => {
+  it('walks from T00 to the T03 confinement conclusion through visible controls', async () => {
     localStorage.clear();
     const state = createDefaultState();
     state.game.flags.FLAG_A2_COMPLETE = true;
@@ -23,8 +23,8 @@ describe('Third-act player path', () => {
     };
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} />); });
-      for (const stage of ['T00', 'T01', 'T02'] as const) {
-        const lenses = act3StageDoc(stage).lenses;
+      for (const stage of ['T00', 'T01', 'T02', 'T03'] as const) {
+        const lenses = act3StageDoc(stage).lenses.filter((lens) => lens.id !== 'LENS_A3_T03_000');
         for (const [index, lens] of lenses.entries()) {
           expect(container.querySelector('.act3-investigation__lens')?.getAttribute('data-asset-id')).toBe(lens.assetId);
           for (const hotspot of lens.hotspots) {
@@ -39,8 +39,9 @@ describe('Third-act player path', () => {
         }
         await click(container.querySelector<HTMLButtonElement>('.act3-investigation__confirm-btn') ?? undefined);
       }
-      expect(manager.getState().game.phase).toBe('A3_T02');
-      expect(manager.getState().game.flags.FLAG_A3_CLASSROOM_CONTRADICTION_NOTED).toBe(true);
+      expect(manager.getState().game.phase).toBe('A3_T03');
+      expect(manager.getState().game.flags.FLAG_A3_CONFINEMENT_SITE_CONFIRMED).toBe(true);
+      expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T03_001');
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();
