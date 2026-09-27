@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "trace": {
     "taskId": "WB-0003",
-    "workOrder": "docs/work_orders/WB-0003.md",
+    "workOrder": "docs/work_orders/工单/WB-0003.md",
     "contract": "docs/第二幕_T01-T03_WorkBuddy并行契约.md",
     "storySpec": "game/05_暗潮_第二幕_开发步骤规范_T01-T07 (1).md#T02",
     "stage": "A2_T02",

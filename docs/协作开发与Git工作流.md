@@ -34,7 +34,7 @@ APPROVED 才能 --no-ff 合并到 main，并按需打 tag
 
 ## 3. 工单与文件所有权
 
-每次实现前由 Codex 从 `docs/work_orders/TEMPLATE.md` 创建工单。工单是该任务的权威合同，至少冻结：
+每次实现前由 Codex 从 `docs/work_orders/TEMPLATE.md` 创建工单，并保存到 `docs/work_orders/工单/<TASK-ID>.md`。工单是该任务的权威合同，至少冻结：
 
 - 目标、非目标和验收标准；
 - 精确的允许写入路径、只读依赖与禁止路径；
