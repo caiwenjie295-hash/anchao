@@ -335,6 +335,12 @@
     {"id":"IMG_A3_T04_003","title":"空架与年份编号","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 空架与年份编号缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
     {"id":"IMG_A3_T04_004","title":"架边地面","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 架边地面缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
     {"id":"IMG_A3_T04_005","title":"折旧纸片","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 折旧纸片缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
-    {"id":"IMG_A3_T04_006","title":"回到地下走廊","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 回到地下走廊缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"}
+    {"id":"IMG_A3_T04_006","title":"回到地下走廊","act":3,"phase":"A3_T04","source":"scene","purpose":"T04 回到地下走廊缺图占位","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":[],"notes":"正式摄影图待接入；纸片标题与六词由文字层显示","assetType":"image"},
+    {"id":"IMG_A3_T05_001","title":"广播室门口","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 广播室入口缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T05_002","title":"搬空的设备位","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 空设备位缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T05_003","title":"旧桌","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 旧桌缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T05_004","title":"桌脚低处","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 低视角纸边缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T05_005","title":"13aCK 纸片","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 原词由文字层显示","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T05_006","title":"走廊深处的气味","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 厨房方向缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"}
   ]
 }

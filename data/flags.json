@@ -508,6 +508,8 @@
     {"id":"FLAG_A3_CONFINEMENT_SITE_CONFIRMED","title":"确认禁闭现场","act":3,"phase":"A3_T03","source":"scene","purpose":"玩家核对三间门的时长与外侧窥孔挡板后主动确认","unlockCondition":["FLAG_A3_CLASSROOM_TURNED"],"relatedFlags":["FLAG_A3_STAIRS_DESCENDED"],"notes":"只支持旧论坛部分叙述，不核实发帖人身份","defaultValue":false},
     {"id":"FLAG_A3_STAIRS_DESCENDED","title":"与小月一起下楼","act":3,"phase":"A3_T03","source":"scene","purpose":"T03结束时经手电观察后共同确认下楼","unlockCondition":["FLAG_A3_CONFINEMENT_SITE_CONFIRMED"],"relatedFlags":[],"notes":"解锁T04地下走廊","defaultValue":false},
     {"id":"FLAG_A3_VVAKE_PAPER_FOUND","title":"取得 VVaKe 纸片","act":3,"phase":"A3_T04","source":"scene","purpose":"玩家蹲下发现并主动收起档案室纸片","unlockCondition":["FLAG_A3_STAIRS_DESCENDED"],"relatedFlags":["FLAG_A3_BROADCAST_DOOR_REACHED"],"notes":"只保存纸片词语，不解释含义","defaultValue":false},
-    {"id":"FLAG_A3_BROADCAST_DOOR_REACHED","title":"找到广播室方向","act":3,"phase":"A3_T04","source":"scene","purpose":"T04到T05地下走廊门槛","unlockCondition":["FLAG_A3_VVAKE_PAPER_FOUND"],"relatedFlags":[],"notes":"玩家可回看档案室","defaultValue":false}
+    {"id":"FLAG_A3_BROADCAST_DOOR_REACHED","title":"找到广播室方向","act":3,"phase":"A3_T04","source":"scene","purpose":"T04到T05地下走廊门槛","unlockCondition":["FLAG_A3_VVAKE_PAPER_FOUND"],"relatedFlags":[],"notes":"玩家可回看档案室","defaultValue":false},
+    {"id":"FLAG_A3_13ACK_PAPER_FOUND","title":"取得 13aCK 纸片","act":3,"phase":"A3_T05","source":"scene","purpose":"蹲下后主动收起广播室纸片","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":["FLAG_A3_KITCHEN_DOOR_REACHED"],"notes":"仅记录原词，不解码","defaultValue":false},
+    {"id":"FLAG_A3_KITCHEN_DOOR_REACHED","title":"找到厨房方向","act":3,"phase":"A3_T05","source":"scene","purpose":"广播室结束后走向厨房","unlockCondition":["FLAG_A3_13ACK_PAPER_FOUND"],"relatedFlags":[],"notes":"气味未确定来源","defaultValue":false}
   ]
 }

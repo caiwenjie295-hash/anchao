@@ -43,3 +43,11 @@
 .act3-investigation[data-act3-stage="T04"] .act3-investigation__viewport{background:radial-gradient(circle at 52% 45%,#536067,#253039 50%,#111820 85%)}
 .act3-investigation[data-act3-stage="T04"] .act3-investigation__viewport--placeholder:after{content:"档案室影像待接入"}
 .act3-investigation[data-act3-stage="T04"] .act3-investigation__lens[data-asset-id="IMG_A3_T04_005"] .act3-investigation__description{border-left:4px solid #b9ad85;padding:.8rem 1rem;background:#303430;color:#f0e9d6;white-space:pre-wrap}
+/* 广播室两张原始纸片可并排复看，保留各自标题与原词。 */
+.act3-investigation[data-act3-stage="T05"] .act3-investigation__viewport{background:radial-gradient(circle at 45% 48%,#4b5157,#252c33 55%,#101820 90%)}
+.act3-investigation[data-act3-stage="T05"] .act3-investigation__viewport--placeholder:after{content:"广播室影像待接入"}
+.act3-investigation__paper-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;padding:.8rem;background:#202a30;border:1px solid #52616b;border-radius:8px}
+.act3-investigation__paper-compare article{padding:.7rem;background:#eee6d2;color:#273039;border-radius:4px}
+.act3-investigation__paper-compare h2{margin:0 0 .4rem;font:700 1.1rem Georgia,serif}
+.act3-investigation__paper-compare p{margin:0;line-height:1.6}
+.act3-investigation__paper-compare>p{grid-column:1/-1;color:#d2dbe0}

@@ -5,7 +5,7 @@ import { act3FirstLensId, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage
 describe('third-act authored lens graph', () => {
   it('keeps each stage navigable with registered resource IDs and unique clues', () => {
     const imageIds = new Set(imageDocument.items.map((image) => image.id));
-    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04'] as AuthoredAct3Stage[]) {
+    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05'] as AuthoredAct3Stage[]) {
       const doc = act3StageDoc(stage);
       const lensIds = new Set(doc.lenses.map((lens) => lens.id));
       expect(doc.stage).toBe(stage);
@@ -27,5 +27,14 @@ describe('third-act authored lens graph', () => {
     expect(paper.description).toContain('VVaKe');
     for (const word of ['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗']) expect(paper.description).toContain(word);
     expect(doc.lenses.slice(0, 4).some((lens) => lens.description.includes('VVaKe'))).toBe(false);
+  });
+
+  it('keeps the broadcast paper words exact and locked behind the low view', () => {
+    const doc = act3StageDoc('T05');
+    const paper = doc.lenses.find((lens) => lens.id === 'LENS_A3_T05_005')!;
+    expect(paper.requiresClueIds).toEqual(['CLUE_A3_T05_PAPER_EDGE']);
+    expect(paper.description).toContain('13aCK');
+    for (const word of ['老鼠', '血', '草垛', '木房子', '玫瑰', '表']) expect(paper.description).toContain(word);
+    expect(doc.lenses.slice(0, 4).some((lens) => lens.description.includes('13aCK'))).toBe(false);
   });
 });

@@ -12,7 +12,7 @@ export const SAVE_KEY = 'anchao.save.v1';
 const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
-const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04'];
+const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
@@ -214,7 +214,8 @@ export const hydrateState = (candidate: unknown): AppState => {
     || (act3.stage === 'T01' && rawFlags.FLAG_A3_GATE_REACHED !== true)
     || (act3.stage === 'T02' && rawFlags.FLAG_A3_INNER_FENCE_PASSED !== true)
     || (act3.stage === 'T03' && rawFlags.FLAG_A3_CLASSROOM_TURNED !== true)
-    || (act3.stage === 'T04' && rawFlags.FLAG_A3_STAIRS_DESCENDED !== true))) {
+    || (act3.stage === 'T04' && rawFlags.FLAG_A3_STAIRS_DESCENDED !== true)
+    || (act3.stage === 'T05' && rawFlags.FLAG_A3_BROADCAST_DOOR_REACHED !== true))) {
     act3 = createDefaultAct3State();
   }
   const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
@@ -245,6 +246,7 @@ export const hydrateState = (candidate: unknown): AppState => {
       NOTE_A2_T07_004: 'FLAG_A2_SECOND_TRIP_PLANNED',
       NOTE_A3_T03_001: 'FLAG_A3_CONFINEMENT_SITE_CONFIRMED',
       NOTE_A3_T04_001: 'FLAG_A3_VVAKE_PAPER_FOUND',
+      NOTE_A3_T05_001: 'FLAG_A3_13ACK_PAPER_FOUND',
     };
     const triggerFlag = triggerFlagByNote[id];
     if (id === 'NOTE_A2_T06_003') return rawFlags.FLAG_A2_HUANG_MATCH_INFERRED === true && rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED === true;

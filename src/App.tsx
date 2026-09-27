@@ -156,7 +156,7 @@ export default function App() {
         )}
         {dismissedAct3 && (
           <aside className="story-transition-launch" aria-label="第三幕调查已就绪">
-            <span>第三幕 · {act3Stage === 'T00' ? '再次进山' : act3Stage === 'T01' ? '启明旧址入口' : act3Stage === 'T02' ? '教室与标语' : act3Stage === 'T03' ? '禁闭区' : '档案室'}</span>
+            <span>第三幕 · {act3Stage === 'T00' ? '再次进山' : act3Stage === 'T01' ? '启明旧址入口' : act3Stage === 'T02' ? '教室与标语' : act3Stage === 'T03' ? '禁闭区' : act3Stage === 'T04' ? '档案室' : '广播室'}</span>
             <button type="button" onClick={() => setDismissedAct3(false)}>继续启明遗址调查</button>
           </aside>
         )}

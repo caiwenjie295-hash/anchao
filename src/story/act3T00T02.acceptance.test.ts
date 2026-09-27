@@ -72,7 +72,7 @@ describe('Third-act T00–T02 continuous investigation', () => {
     expect(state.modules.act3.currentLensId).toBe('LENS_A3_T01_001');
   });
 
-  it('reloads each stage and reaches the T04 archive paper', () => {
+  it('reloads each stage and reaches both underground paper lists', () => {
     let manager = new StateManager(undefined, completedT07());
     manager.startAct3();
     inspectStage(manager, 'T00');
@@ -108,8 +108,27 @@ describe('Third-act T00–T02 continuous investigation', () => {
     expect(manager.getState().game.flags.FLAG_A3_VVAKE_PAPER_FOUND).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T04_001');
     manager = new StateManager(undefined, hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
-    expect(manager.getState().game.phase).toBe('A3_T04');
-    expect(manager.getState().modules.act3.stage).toBe('T04');
+    expect(manager.getState().game.phase).toBe('A3_T05');
+    expect(manager.getState().modules.act3.stage).toBe('T05');
+    manager.enterAct3Lens('LENS_A3_T05_005');
+    expect(manager.getState().modules.act3.currentLensId).not.toBe('LENS_A3_T05_005');
+    for (const lens of act3StageDoc('T05').lenses.slice(0, 5)) {
+      manager.enterAct3Lens(lens.id);
+      for (const hotspot of lens.hotspots) manager.inspectAct3Clue(hotspot.clueId);
+    }
+    expect(manager.getState().game.flags.FLAG_A3_13ACK_PAPER_FOUND).toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T05_001');
+    manager = new StateManager(undefined, hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
+    expect(manager.getState().game.phase).toBe('A3_T05');
+    expect(manager.getState().game.flags.FLAG_A3_13ACK_PAPER_FOUND).toBe(true);
+    manager.confirmAct3Stage();
+    expect(manager.getState().game.flags.FLAG_A3_KITCHEN_DOOR_REACHED).not.toBe(true);
+    manager.enterAct3Lens('LENS_A3_T05_006');
+    manager.inspectAct3Clue('CLUE_A3_T05_KITCHEN_DIRECTION');
+    manager.confirmAct3Stage();
+    expect(manager.getState().game.flags.FLAG_A3_KITCHEN_DOOR_REACHED).toBe(true);
+    manager = new StateManager(undefined, hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
+    expect(manager.getState().modules.act3.stage).toBe('T05');
   });
 
   it('lets a completed T03 save continue when T04 becomes available', () => {
@@ -126,5 +145,21 @@ describe('Third-act T00–T02 continuous investigation', () => {
     const restored = new StateManager(undefined, hydrateState(oldSave));
     restored.advanceAct3Stage();
     expect(restored.getState().game.phase).toBe('A3_T04');
+  });
+
+  it('lets a completed T04 save continue when T05 becomes available', () => {
+    const manager = new StateManager(undefined, completedT07());
+    manager.startAct3();
+    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04'] as const) {
+      inspectStage(manager, stage);
+      manager.confirmAct3Stage();
+    }
+    const oldSave = JSON.parse(JSON.stringify(manager.getState()));
+    oldSave.modules.act3.stage = 'T04';
+    oldSave.modules.act3.currentLensId = 'LENS_A3_T04_006';
+    oldSave.game.phase = 'A3_T04';
+    const restored = new StateManager(undefined, hydrateState(oldSave));
+    restored.advanceAct3Stage();
+    expect(restored.getState().game.phase).toBe('A3_T05');
   });
 });
