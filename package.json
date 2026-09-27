@@ -8,8 +8,12 @@
     "build": "tsc -b && vite build",
     "build:offline": "tsc -b && node scripts/build-offline.mjs",
     "test:offline": "node scripts/verify-offline.mjs",
+    "test:unit": "node scripts/run-test-group.mjs unit",
+    "test:component": "node scripts/run-test-group.mjs component",
+    "test:acceptance": "node scripts/run-test-group.mjs acceptance",
+    "test:browser": "node scripts/test-browser.mjs",
     "test": "vitest run",
-    "quality:gate": "bash scripts/quality-gate.sh"
+    "quality:gate": "node scripts/quality-gate.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.1.1",

@@ -6,6 +6,7 @@ coverage/
 # Generated deliverables (rebuild from source)
 dist/
 /暗潮.html
+/暗潮离线/
 
 # Local environment and secrets
 .env
