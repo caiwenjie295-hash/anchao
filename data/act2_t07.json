@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "record": {
+    "id": "REC_A2_T07_001",
+    "title": "宣传资料逐帧调查",
+    "act": 2,
+    "phase": "A2_T07",
+    "source": "scene",
+    "purpose": "汇合鸡公岭与启明两条线索，只确认过去存在直接地点关联",
+    "unlockCondition": ["FLAG_A2_OTHER_CASES_ABNORMAL"],
+    "relatedFlags": [
+      "FLAG_A2_PROMO_VIDEO_FOUND",
+      "FLAG_A2_PROMO_VIDEO_WATCHED",
+      "FLAG_A2_PROMO_PHOTO_SS_FOUND",
+      "FLAG_A2_TEMPLE_FRAME_FOUND",
+      "FLAG_A2_QIMING_LOCATION_INFERRED",
+      "FLAG_A2_SECOND_TRIP_PLANNED",
+      "FLAG_A2_COMPLETE"
+    ],
+    "notes": "由 WB-0010 冻结；只新增 T07，不回改 T01–T06"
+  },
+  "entryLabel": "和小月核对旧资料",
+  "resumeLabel": "继续和小月核对资料",
+  "intro": "我把查到的材料整理好，约小月在城东的咖啡馆见面。为了方便看材料，我们并排坐下。",
+  "promoSurfaceText": ["科学培养", "行为矫正", "传统文化", "军事化管理"],
+  "promoSurfaceNote": "这些说法都来自机构自己的宣传材料，没有第三方核实。",
+  "photoMaterialId": "MATERIAL_A2_T07_PHOTO",
+  "materials": [
+    {
+      "id": "MATERIAL_A2_T07_PHOTO",
+      "kind": "photo",
+      "title": "启明校门合影",
+      "imageId": "IMG_A2_T07_001",
+      "altText": "一家三口拿着锦旗在启明校门口的合影",
+      "placeholderLabel": "合影",
+      "placeholderNote": "一家三口拿着锦旗站在校门口，孩子站在中间。",
+      "caption": "锦旗 · 校门 · 一家三口",
+      "openLabel": "和小月一起看这张合影",
+      "xiaoyueLine": "“你看这个照片！”小月指向一家三口拿着锦旗在启明校门口合影的照片右下角。",
+      "cornerNote": "照片右下角受镜头畸变和画质影响，已经糊成了一片。",
+      "zoomLabel": "放大右下角",
+      "symbolNote": "我顺着她的手指仔细看，依稀辨认出一个标志：双 S。",
+      "logoSpeculation": "“可能就是这个机构的 Logo。”我对她点点头。",
+      "confirmLabel": "记下合影里的这个标志",
+      "confirmedNote": "校门合影右下角的双 S 已记入笔记。它现在只能算这个机构用过的记号。"
+    },
+    {
+      "id": "MATERIAL_A2_T07_VIDEO",
+      "kind": "video",
+      "title": "创始人受访视频",
+      "imageId": "IMG_A2_T07_003",
+      "altText": "戴着黑框眼镜、穿着白大褂的创始人接受采访",
+      "placeholderLabel": "视频封面",
+      "placeholderNote": "黑框眼镜、白大褂，受访者正对着镜头说话。",
+      "caption": "受访 · 科学培养 · 山路",
+      "openLabel": "打开受访视频"
+    }
+  ],
+  "video": {
+    "materialId": "MATERIAL_A2_T07_VIDEO",
+    "title": "创始人受访视频",
+    "durationMs": 16000,
+    "frameMs": 200,
+    "stepMs": 5000,
+    "requiredSegmentIds": ["SEG_A2_T07_002", "SEG_A2_T07_003"],
+    "continuityNote": "分镜不多，从光线和对话的流畅度来看，不像是分了好几天拍的。",
+    "segments": [
+      {
+        "id": "SEG_A2_T07_001",
+        "shotId": "SHOT_A2_T07_INTERVIEW",
+        "startMs": 0,
+        "endMs": 4000,
+        "label": "受访开场",
+        "imageId": "IMG_A2_T07_003",
+        "placeholderNote": "黑框眼镜、白大褂，受访者正对着镜头说话。",
+        "line": "“我们是科学培养小孩，这里的教官都是把学生当作自己的孩子一样，用我们博士团队研究的最科学的教育方法培养孩子，让孩子重新拾起优秀的品质。”"
+      },
+      {
+        "id": "SEG_A2_T07_002",
+        "shotId": "SHOT_A2_T07_TRAIL",
+        "startMs": 4000,
+        "endMs": 6500,
+        "label": "山路行走",
+        "imageId": "IMG_A2_T07_004",
+        "placeholderNote": "他们一边走着一边录，背景是一段山路，山清水秀。",
+        "line": "（脚步声）他们一边走一边录：孩子每天都要走一段山路，锻炼身体，也锻炼意志。"
+      },
+      {
+        "id": "SEG_A2_T07_003",
+        "shotId": "SHOT_A2_T07_TRAIL",
+        "startMs": 6500,
+        "endMs": 9000,
+        "label": "山路转弯",
+        "imageId": "IMG_A2_T07_004",
+        "placeholderNote": "镜头转过一个弯晃了一下，背景里有个黑乎乎的东西，乍看是一堆破石头挡在路中间。",
+        "line": "（镜头晃动）山路转过一个弯，背景里有个黑乎乎的东西。"
+      },
+      {
+        "id": "SEG_A2_T07_004",
+        "shotId": "SHOT_A2_T07_INTERVIEW",
+        "startMs": 9000,
+        "endMs": 16000,
+        "label": "课程收尾",
+        "imageId": "IMG_A2_T07_003",
+        "placeholderNote": "镜头又切回受访者，背景是机构门口。",
+        "line": "“传统文化、军事化管理，是我们课程的两根支柱。”"
+      }
+    ],
+    "keyFrames": [
+      {
+        "id": "FRAME_A2_T07_001",
+        "segmentId": "SEG_A2_T07_003",
+        "startMs": 6800,
+        "endMs": 8600,
+        "imageId": "IMG_A2_T07_005",
+        "zoomImageId": "IMG_A2_T07_006",
+        "altText": "山路背景里短暂出现的石质建筑",
+        "placeholderNote": "用石头简易搭成的小石堆，中间留出一个方形缺口。",
+        "caption": "山路背景里的石质建筑"
+      }
+    ],
+    "captureHint": "刚才好像有什么东西一闪而过。",
+    "captureLabel": "截图",
+    "captureOutsideLabel": "这个画面没有可截取的东西",
+    "screenshotZoomLabel": "放大截图",
+    "watchedNote": "主要片段已经看过一遍。"
+  },
+  "comparison": {
+    "exteriorImageId": "IMG_A1_I_001",
+    "exteriorCaption": "第一次徒步拍下的破庙外景",
+    "exteriorAltText": "用石头简易搭成的破庙外景，中间留出约一平方米的空间",
+    "exteriorNote": "说是庙，实际上只是个用石头简易搭成的小石堆，中间留出约一平方米的空间。",
+    "openLabel": "调出第一次徒步的破庙外景",
+    "zoomLabel": "放大",
+    "zoomBothHint": "把两边都放大，再看一次轮廓。",
+    "compareLabel": "把这两张放在一起核对",
+    "confirmLabel": "确认两处的石质轮廓一致",
+    "structureNote": "石堆的垒法、中空的正面和塌落的石檐，两边都能对上。",
+    "xiaoyueLine": "“这张照片你哪来的，我觉得就是一个东西啊！”小月抓住我的手腕，夺过手机仔细对比起来。",
+    "replyLine": "“就是小A失踪的地方。前两天我去了一趟，你还记得吗？”",
+    "lockedHint": "先在视频里截到可疑的画面，再拿外景来对照。"
+  },
+  "inference": {
+    "title": "把两条线放在一起",
+    "jigonglingBranch": ["黑补母", "破庙", "双S", "小A失踪"],
+    "qimingBranch": ["小A曾接受改造", "学霸笔记双S", "多名异常学员", "宣传资料"],
+    "conclusion": "启明曾经就在鸡公岭破庙附近。",
+    "confirmLabel": "确认启明曾在鸡公岭破庙附近活动",
+    "caveat": "这只说明过去存在这样的地点关联。启明现在是否还在山里、这个标志到底代表什么，都还没有证据。",
+    "lockedHint": "合影、视频、破庙外景都要亲自核过，才能下这个结论。"
+  },
+  "trip": {
+    "title": "再进一次山",
+    "lines": [
+      { "speaker": "小月", "text": "“是不是得再去一趟！我感觉那边肯定和小A的失踪有关系，至少能证明启明青少年成长中心就在那附近！”" },
+      { "speaker": "我", "text": "“确实啊！”我又看了一次视频，分镜不多，从光线和对话流畅度来看，不像是分了好几天拍的。" },
+      { "speaker": "我", "text": "“要不一起去一趟？你会开车吗？这边过去要十个小时左右，一个人开太累了。”" },
+      { "speaker": "小月", "text": "“会，我们轮流开就好。这次我感觉能查出点什么。”" },
+      { "speaker": "我", "text": "“记得带冲锋衣和登山鞋，那边需要徒步一段路，安全第一。”" },
+      { "speaker": "我", "text": "“万一下雨就不好了，冲锋衣还能挡一下水，我们不用一直打着伞。”" },
+      { "speaker": "小月", "text": "“知道了，我明天去买一件，准备一下，咱们后天出发。你工作那边不要紧吗？”" },
+      { "speaker": "我", "text": "“没事，那边我安排过了，调休了。”" }
+    ],
+    "gearImageId": "IMG_A2_T07_007",
+    "gearCaption": "冲锋衣与登山鞋",
+    "gearAltText": "准备带进山的冲锋衣和登山鞋",
+    "gearNote": "冲锋衣、登山鞋，还有雨天要用的东西。",
+    "confirmLabel": "约定后天出发",
+    "plannedNote": "后天出发，十个小时左右的车程，两人轮流开；带上冲锋衣和登山鞋，下雨也能挡一下。",
+    "lockedHint": "先把资料核对完，再和小月商量行程。"
+  },
+  "finale": {
+    "cues": [
+      { "id": "CUE_A2_T07_001", "label": "键盘声", "file": null },
+      { "id": "CUE_A2_T07_002", "label": "键盘声淡出", "file": null },
+      { "id": "CUE_A2_T07_003", "label": "雨声", "file": null },
+      { "id": "CUE_A2_T07_004", "label": "风声 / 树叶", "file": null }
+    ],
+    "lines": [
+      "第一次进山的时候，我只是想找一个失踪的人。",
+      "第二次，我已经知道自己在找什么了。",
+      "启明。"
+    ],
+    "continueLabel": "继续",
+    "replayLabel": "回看资料",
+    "closingNote": "第二幕完"
+  }
+}

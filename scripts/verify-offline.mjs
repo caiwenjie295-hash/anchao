@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import jsdom from 'jsdom';
 const { JSDOM, VirtualConsole, requestInterceptor } = jsdom;
 
@@ -25,6 +29,8 @@ function assertLocalImage(value) {
   assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
 }
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
+const act3Docs = ['t00', 't01', 't02'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
+const [t00Doc, t01Doc, t02Doc] = await Promise.all(act3Docs);
 const errors = [];
 const requests = [];
 const seenTransitionIds = new Set();
@@ -37,7 +43,7 @@ async function settle() {
   await delay();
   // Continue each story card as a player would before testing the next action.
   for (let i = 0; i < 3; i++) {
-    const launch = dom?.window.document.querySelector('.story-transition-launch button');
+    const launch = dom?.window.document.querySelector('.story-transition-launch:not([aria-label="第三幕调查已就绪"]) button');
     if (launch) { launch.click(); await delay(); }
     const card = dom?.window.document.querySelector('.story-transition');
     const button = card?.querySelector('button');
@@ -378,6 +384,114 @@ async function advanceAct2() {
   await click('.t05-school__return');
 }
 
+async function investigateT07() {
+  // 入口是中性文案，且必须由玩家点击；浏览 T06 页面不会自动进入。
+  assert.equal(document().querySelector('.t07-finale'), null);
+  await click('.act2-t07-entry');
+  assert.equal(state().modules.act2Research.stage, 'finale');
+  assert.equal(state().game.phase, 'A2_T07');
+  assert.ok(query('.t07-finale'));
+  assert.equal(query('main.desktop').hasAttribute('inert'), true);
+
+  // 半途重载不丢进度，也不跳过任何步骤。
+  await mount(save());
+  assert.equal(state().modules.act2Research.stage, 'finale');
+  assert.ok(query('.t07-finale'));
+  assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, undefined);
+
+  // 合影右下角的双 S：放大后才由玩家主动确认。
+  await click('.t07-finale__photo-zoom');
+  assert.ok(query('.t07-finale__photo-symbol'));
+  assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, undefined);
+  await click('.t07-finale__photo-confirm');
+  assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_001'));
+
+  // 视频：打开后可见，窗口外不可截，窗口内可截，只拖不播不算看过。
+  await click('.t07-finale__video-open');
+  assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_FOUND, true);
+  assert.equal(query('.t07-finale__capture').disabled, true);
+  await setInput('.t07-finale__seek', '7000');
+  assert.equal(query('.t07-finale__capture').disabled, false);
+  await click('.t07-finale__capture');
+  assert.deepEqual(state().modules.act2Research.t07.capturedFrameIds, ['FRAME_A2_T07_001']);
+  await setInput('.t07-finale__seek', '4000');
+  assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_WATCHED, undefined);
+  await click('.t07-finale__play');
+  await new Promise((resolve) => setTimeout(resolve, 5200));
+  await settle();
+  await click('.t07-finale__play');
+  assert.equal(document().querySelector('.t07-finale__play').textContent, '播放');
+  assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_WATCHED, true);
+
+  // 外景对照只能用第一幕破庙外景，不能用“补”字石碑近照。
+  await textButton('外景对照', '.t07-finale__tab');
+  assert.ok(query('[data-asset-id="IMG_A1_I_001"]'));
+  assert.equal(query('.t07-finale__compare-grid').querySelector('[data-asset-id="IMG_A1_I_004"]'), null);
+  await click('.t07-finale__zoom-left');
+  await click('.t07-finale__zoom-right');
+  await click('.t07-finale__compare');
+  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, undefined);
+  await click('.t07-finale__temple-confirm');
+  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_002'));
+
+  // 地点结论只到“曾经在鸡公岭破庙附近活动”。
+  await textButton('地点结论', '.t07-finale__tab');
+  await click('.t07-finale__infer');
+  assert.equal(state().game.flags.FLAG_A2_QIMING_LOCATION_INFERRED, true);
+  assert.match(query('.t07-finale__panel').textContent, /启明曾经就在鸡公岭破庙附近/);
+
+  // 小月与主角一起约定第二次进山，然后播放一次幕末收束。
+  await textButton('再次进山', '.t07-finale__tab');
+  await click('.t07-finale__trip-confirm');
+  assert.equal(state().game.flags.FLAG_A2_SECOND_TRIP_PLANNED, true);
+  assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_004'));
+  assert.ok(query('.t07-finale__ending'));
+  await new Promise((resolve) => setTimeout(resolve, 5200));
+  await settle();
+  assert.match(query('.t07-finale__ending').textContent, /第一次进山的时候/);
+  assert.match(query('.t07-finale__ending').textContent, /启明。/);
+  assert.equal(query('.t07-finale').textContent.includes('第三幕'), false);
+  await click('.t07-finale__ending-continue');
+  assert.equal(state().game.flags.FLAG_A2_COMPLETE, true);
+  assert.equal(document().querySelector('.t07-finale__ending'), null);
+  assert.ok(query('.t07-finale__ending-replay'));
+
+  // 完成后重载：可回看资料，但不自动进入第三幕。
+  await mount(save());
+  assert.equal(state().modules.act2Research.stage, 'finale');
+  assert.equal(state().game.flags.FLAG_A2_COMPLETE, true);
+  assert.ok(query('.t07-finale'));
+  assert.equal(document().querySelector('.t07-finale__ending'), null);
+}
+
+async function investigateAct3() {
+  await click('.t07-finale__return');
+  await textButton('开始第三幕调查', '.story-transition-launch button');
+  assert.equal(state().game.phase, 'A3_T00');
+  for (const [stage, doc] of [['T00', t00Doc], ['T01', t01Doc], ['T02', t02Doc]]) {
+    assert.equal(state().modules.act3.stage, stage);
+    for (const [index, lens] of doc.lenses.entries()) {
+      assert.equal(query('.act3-investigation__lens').getAttribute('data-asset-id'), lens.assetId);
+      for (const hotspot of lens.hotspots) {
+        await click(`[data-clue-id="${hotspot.clueId}"]`);
+        assert.ok(query('.act3-investigation__dialog'));
+        await click('.act3-investigation__dialog [aria-label="关闭"]');
+      }
+      if (index + 1 < doc.lenses.length) {
+        await textButton(doc.lenses[index + 1].title, '.act3-investigation__routes button');
+      }
+    }
+    await click('.act3-investigation__confirm-btn');
+  }
+  assert.equal(state().game.phase, 'A3_T02');
+  assert.equal(state().game.flags.FLAG_A3_CLASSROOM_CONTRADICTION_NOTED, true);
+  await mount(save());
+  assert.equal(state().modules.act3.stage, 'T02');
+  assert.equal(state().game.phase, 'A3_T02');
+}
+
 async function reset() {
   const before = save();
   await click('.debug-reset__trigger');
@@ -401,13 +515,24 @@ async function reset() {
     library: { visitedSectionIds: [], openedVolumeIds: [], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: [], excerptedEntryIds: [] },
     tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
     school: { visitedAreaIds: [], inspectedHotspotIds: [] },
+    t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
   });
+  assert.deepEqual(state().modules.act3, { stage: 'inactive', currentLensId: null, visitedLensIds: [], inspectedClueIds: [], confirmedFlagIds: [] });
   await mount(save());
   assert.equal(document().querySelectorAll('.app-window').length, 0);
   assert.equal(document().querySelector('.act2-experience'), null);
 }
 
-try {
+if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
+  try {
+    await mount(await readFile(process.env.ANCHAO_OFFLINE_SAVE_PATH, 'utf8'));
+    await investigateT07();
+    await investigateAct3();
+    await reset();
+    assert.deepEqual(errors, []);
+    console.log('PASS: offline T07 finale and act3 T00–T02');
+  } finally { dom?.window.close(); }
+} else try {
   await mount();
   assert.equal(document().querySelectorAll('script[src], link[href]').length, 2);
   for (const image of document().querySelectorAll('svg image')) assertLocalImage(image.getAttribute('href'));
@@ -464,14 +589,24 @@ try {
       assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T06_004'));
       await mount(save());
       assert.equal(state().modules.act2Research.stage, 'qiming');
-      assert.equal(state().game.phase, 'A3_T00');
+      assert.equal(state().game.phase, 'A2_T06');
       assert.ok(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_009'));
-      for (const id of ['TRANSITION_A1_INTRO', 'TRANSITION_A1_B', 'TRANSITION_A1_C', 'TRANSITION_A1_H', 'TRANSITION_A1_I', 'TRANSITION_A1_RETURN', 'TRANSITION_A1_J', 'TRANSITION_A2_T01', 'TRANSITION_A2_T02', 'TRANSITION_A2_T03', 'TRANSITION_A2_T04', 'TRANSITION_A2_T05', 'TRANSITION_A2_T06', 'TRANSITION_A3_T00']) {
+      for (const id of ['TRANSITION_A1_INTRO', 'TRANSITION_A1_B', 'TRANSITION_A1_C', 'TRANSITION_A1_H', 'TRANSITION_A1_I', 'TRANSITION_A1_RETURN', 'TRANSITION_A1_J', 'TRANSITION_A2_T01', 'TRANSITION_A2_T02', 'TRANSITION_A2_T03', 'TRANSITION_A2_T04', 'TRANSITION_A2_T05', 'TRANSITION_A2_T06']) {
         assert.ok(seenTransitionIds.has(id), `Missing story transition in offline flow: ${id}`);
       }
+      const savePath = join(tmpdir(), `anchao-offline-${randomUUID()}.json`);
+      await writeFile(savePath, save(), 'utf8');
+      try {
+        const child = spawnSync(process.execPath, ['scripts/verify-offline.mjs'], {
+          env: { ...process.env, ANCHAO_OFFLINE_PHASE: 'finale', ANCHAO_OFFLINE_SAVE_PATH: savePath },
+          stdio: 'inherit', timeout: 120_000,
+        });
+        if (child.error) throw child.error;
+        assert.equal(child.status, 0, 'Offline finale process failed');
+      } finally { await rm(savePath, { force: true }); }
     }
     await reset();
-      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T06' : ''}`);
+      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T07 and act3 T00–T02' : ''}`);
   }
   assert.ok(requests.some((url) => url.endsWith('/assets/app.js')));
   assert.ok(requests.some((url) => url.endsWith('/assets/app.css')));

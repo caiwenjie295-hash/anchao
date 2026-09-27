@@ -8,6 +8,7 @@ import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2T
 import { isAct2T06PageId } from '../data/browserData';
 import { getPendingStoryTransition } from '../data/storyTransitionData';
 import { act3FirstLensId, act3LensById, act3StageClueIds, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_GATE_FLAG, ACT3_STAGE_NEXT } from '../data/act3Data';
+import { act2T07, isAct2T07MaterialId, isAct2T07SegmentId, keyFrameById } from '../data/act2T07Data';
 
 type StateListener = () => void;
 
@@ -17,10 +18,11 @@ type Act2ResearchPatch = {
   library?: Partial<Act2ResearchState['library']>;
   tales?: Partial<Act2ResearchState['tales']>;
   school?: Partial<Act2ResearchState['school']>;
+  t07?: Partial<Act2ResearchState['t07']>;
 };
 
 const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library', 'tales'];
-const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming'];
+const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const act2StagePhases: Record<Act2ActiveStage, GamePhase> = { search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04' };
 const heibumuNameParts: HeibumuNamePart[] = ['first', 'middle', 'last'];
 const heibumuName = { first: '黑', middle: '补', last: '母' } as const;
@@ -303,6 +305,7 @@ export class StateManager {
       library: patch.library ? { ...current.library, ...patch.library } : current.library,
       tales: patch.tales ? { ...current.tales, ...patch.tales } : current.tales,
       school: patch.school ? { ...current.school, ...patch.school } : current.school,
+      t07: patch.t07 ? { ...current.t07, ...patch.t07 } : current.t07,
     };
     this.commit({ ...this.state, modules: { ...this.state.modules, act2Research: next } });
   }
@@ -572,9 +575,8 @@ export class StateManager {
 
   // ─── 第三幕 T00–T02 接口 ───────────────────────────────────────────
 
-  /** 入口前置：第二幕 T06 收束。
-   *  T07 完工后由主审把入口条件改为 T07 完成态 Flag。 */
-  static readonly ACT3_ENTRY_FLAG = 'FLAG_A2_OTHER_CASES_ABNORMAL';
+  /** 第三幕在第二幕 T07 完整收束后，由玩家主动进入。 */
+  static readonly ACT3_ENTRY_FLAG = 'FLAG_A2_COMPLETE';
   static readonly ACT3_GATE_FLAG_T00 = 'FLAG_A3_GATE_REACHED';
   static readonly ACT3_GATE_FLAG_T01 = 'FLAG_A3_INNER_FENCE_PASSED';
   static readonly ACT3_GATE_FLAG_T02 = 'FLAG_A3_CLASSROOM_TURNED';
@@ -589,7 +591,7 @@ export class StateManager {
     this.commit({ ...this.state, modules: { ...this.state.modules, act3: next } });
   }
 
-  /** 启动第三幕；只在第二幕 T06 结论存在、第三幕尚未启动时生效。 */
+  /** 启动第三幕；只在第二幕 T07 完成、第三幕尚未启动时生效。 */
   startAct3(): void {
     if (this.state.game.flags[StateManager.ACT3_ENTRY_FLAG] !== true || this.act3.stage !== 'inactive') return;
     this.commit({
@@ -647,6 +649,104 @@ export class StateManager {
       this.bus.emit('act3:stage-changed', { stage: nextStage });
       this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
     }
+  }
+
+  /** 只有 T06 收束且玩家主动点击入口才进入 T07；重复点击无副作用。 */
+  enterAct2FinaleInvestigation(): void {
+    const { game, modules } = this.state;
+    if (modules.act2Research.stage !== 'qiming' || game.flags.FLAG_A2_OTHER_CASES_ABNORMAL !== true) return;
+    this.commit({
+      ...this.state,
+      game: { ...game, phase: 'A2_T07' },
+      modules: { ...modules, act2Research: { ...modules.act2Research, stage: 'finale' } },
+    });
+    this.bus.emit('phase:changed', { phase: 'A2_T07' });
+    this.bus.emit('act2:t07-entered', {});
+  }
+
+  /** 只接受冻结的资料 ID；打开受访视频后写入 FOUND。 */
+  viewAct2T07Material(materialId: string): void {
+    const id = materialId.trim();
+    if (this.act2Research.stage !== 'finale' || !isAct2T07MaterialId(id)) return;
+    const t07 = this.act2Research.t07;
+    if (!t07.viewedMaterialIds.includes(id)) this.commitAct2Research({ t07: { viewedMaterialIds: [...t07.viewedMaterialIds, id] } });
+    if (act2T07.video.materialId === id && this.state.game.flags.FLAG_A2_PROMO_VIDEO_FOUND !== true) this.setFlag('FLAG_A2_PROMO_VIDEO_FOUND', true);
+    this.bus.emit('act2:t07-material-viewed', { materialId: id });
+  }
+
+  /** 只在真实播放推进时调用；拖动进度条不算覆盖。 */
+  markAct2T07SegmentPlayed(segmentId: string): void {
+    const id = segmentId.trim();
+    if (this.act2Research.stage !== 'finale' || this.state.game.flags.FLAG_A2_PROMO_VIDEO_FOUND !== true || !isAct2T07SegmentId(id)) return;
+    const t07 = this.act2Research.t07;
+    if (!t07.playedSegmentIds.includes(id)) this.commitAct2Research({ t07: { playedSegmentIds: [...t07.playedSegmentIds, id] } });
+    if (this.state.game.flags.FLAG_A2_PROMO_VIDEO_WATCHED === true) return;
+    const played = this.state.modules.act2Research.t07.playedSegmentIds;
+    if (act2T07.video.requiredSegmentIds.every((segmentId2) => played.includes(segmentId2))) this.setFlag('FLAG_A2_PROMO_VIDEO_WATCHED', true);
+  }
+
+  /** 截图必须落在登记的关键帧窗口内；不接受伪造帧 ID 或窗口外的时间。 */
+  captureAct2T07Frame(frameId: string, timeMs: number): void {
+    const id = frameId.trim();
+    const frame = keyFrameById.get(id);
+    if (this.act2Research.stage !== 'finale' || !frame || this.state.game.flags.FLAG_A2_PROMO_VIDEO_FOUND !== true) return;
+    if (!Number.isFinite(timeMs) || timeMs < frame.startMs || timeMs > frame.endMs) return;
+    const t07 = this.act2Research.t07;
+    if (t07.capturedFrameIds.includes(id)) return;
+    this.commitAct2Research({ t07: { capturedFrameIds: [...t07.capturedFrameIds, id] } });
+    this.bus.emit('act2:t07-frame-captured', { frameId: id });
+  }
+
+  /** 只能核对已经截到的帧；比对结果持久化，缩放与开合只是瞬时状态。 */
+  compareAct2T07TempleFrame(frameId: string): void {
+    const id = frameId.trim();
+    const t07 = this.act2Research.t07;
+    if (this.act2Research.stage !== 'finale' || !t07.capturedFrameIds.includes(id) || t07.comparedFrameIds.includes(id)) return;
+    this.commitAct2Research({ t07: { comparedFrameIds: [...t07.comparedFrameIds, id] } });
+    this.bus.emit('act2:t07-frame-compared', { frameId: id });
+  }
+
+  confirmAct2T07TempleFrame(): void {
+    if (this.act2Research.stage !== 'finale' || this.act2Research.t07.comparedFrameIds.length === 0) return;
+    if (this.state.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND === true) return;
+    this.setFlag('FLAG_A2_TEMPLE_FRAME_FOUND', true);
+    this.addNotepadAutoEntry('NOTE_A2_T07_002');
+    this.bus.emit('act2:t07-temple-confirmed', {});
+  }
+
+  /** 双 S 只来自合影右下角的主动检查与确认。 */
+  confirmAct2T07PhotoSymbol(): void {
+    if (this.act2Research.stage !== 'finale' || !this.act2Research.t07.viewedMaterialIds.includes(act2T07.photoMaterialId)) return;
+    if (this.state.game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true) return;
+    this.setFlag('FLAG_A2_PROMO_PHOTO_SS_FOUND', true);
+    this.addNotepadAutoEntry('NOTE_A2_T07_001');
+  }
+
+  /** 地点结论要求合影双 S、有效截图比对与视频主要片段全部亲自完成。 */
+  inferAct2T07Location(): void {
+    const flags = this.state.game.flags;
+    if (this.act2Research.stage !== 'finale') return;
+    if (flags.FLAG_A2_PROMO_PHOTO_SS_FOUND !== true || flags.FLAG_A2_TEMPLE_FRAME_FOUND !== true || flags.FLAG_A2_PROMO_VIDEO_WATCHED !== true) return;
+    if (flags.FLAG_A2_QIMING_LOCATION_INFERRED === true) return;
+    this.setFlag('FLAG_A2_QIMING_LOCATION_INFERRED', true);
+    this.addNotepadAutoEntry('NOTE_A2_T07_003');
+    this.bus.emit('act2:t07-location-inferred', {});
+  }
+
+  planAct2T07SecondTrip(): void {
+    if (this.act2Research.stage !== 'finale' || this.state.game.flags.FLAG_A2_QIMING_LOCATION_INFERRED !== true) return;
+    if (this.state.game.flags.FLAG_A2_SECOND_TRIP_PLANNED === true) return;
+    this.setFlag('FLAG_A2_SECOND_TRIP_PLANNED', true);
+    this.addNotepadAutoEntry('NOTE_A2_T07_004');
+    this.bus.emit('act2:t07-trip-planned', {});
+  }
+
+  /** 幕末收束只在行程确认后写入一次；之后可回看资料但不自动进入第三幕。 */
+  completeAct2T07Finale(): void {
+    if (this.act2Research.stage !== 'finale' || this.state.game.flags.FLAG_A2_SECOND_TRIP_PLANNED !== true) return;
+    if (this.state.game.flags.FLAG_A2_COMPLETE === true) return;
+    this.setFlag('FLAG_A2_COMPLETE', true);
+    this.bus.emit('act2:t07-complete', {});
   }
 }
 

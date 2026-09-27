@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A3_T00' | 'A3_T01' | 'A3_T02';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A2_T07' | 'A3_T00' | 'A3_T01' | 'A3_T02';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -87,9 +87,9 @@ export interface AppState {
   };
 }
 
-export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' | 'school' | 'qiming';
+export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' | 'school' | 'qiming' | 'finale';
 
-export type Act2ActiveStage = Exclude<Act2Stage, 'inactive' | 'school' | 'qiming'>;
+export type Act2ActiveStage = Exclude<Act2Stage, 'inactive' | 'school' | 'qiming' | 'finale'>;
 
 /** 第三幕 T 阶段；T00–T02 已实现，T03–T07 待后续工单冻结。 */
 export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02';
@@ -97,6 +97,14 @@ export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02';
 export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_XIAOYUE_CLASSROOM', 'AREA_A2_T05_RESTROOM_APPROACH', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_NOTICE_BOARD'] as const;
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
 export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[] }
+
+/** T07 只保存可恢复的语义进度：已看资料、实际播放覆盖的片段、有效截图与已比对帧。 */
+export interface Act2T07State {
+  viewedMaterialIds: string[];
+  playedSegmentIds: string[];
+  capturedFrameIds: string[];
+  comparedFrameIds: string[];
+}
 
 export type HeibumuNamePart = 'first' | 'middle' | 'last';
 
@@ -129,6 +137,7 @@ export interface Act2ResearchState {
     inferenceAcknowledged: boolean;
   };
   school: Act2SchoolState;
+  t07: Act2T07State;
 }
 
 /** 第三幕镜头调查通用状态。currentLensId 由 T00 写入为 'LENS_A3_T00_001'。 */
@@ -222,6 +231,14 @@ export type AnchaoEventMap = {
   'act3:lens-entered': { lensId: string };
   'act3:clue-inspected': { clueId: string };
   'act3:stage-confirmed': { flagId: string };
+  'act2:t07-entered': Record<string, never>;
+  'act2:t07-material-viewed': { materialId: string };
+  'act2:t07-frame-captured': { frameId: string };
+  'act2:t07-frame-compared': { frameId: string };
+  'act2:t07-temple-confirmed': Record<string, never>;
+  'act2:t07-location-inferred': Record<string, never>;
+  'act2:t07-trip-planned': Record<string, never>;
+  'act2:t07-complete': Record<string, never>;
   'progress:reset': { schemaVersion: 7 };
   'save:completed': { schemaVersion: 7 };
 };

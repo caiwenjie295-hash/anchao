@@ -92,6 +92,7 @@ describe('saveManager', () => {
       library: { visitedSectionIds: ['SECTION_A2_T03_001'], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: 'PAGE_A2_T03_004', bookmarkedPageIds: ['PAGE_A2_T03_004'], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: ['ENTRY_A2_T03_001'] },
       tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
       school: { visitedAreaIds: [], inspectedHotspotIds: [] },
+      t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
     };
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated).toEqual(state);
@@ -121,6 +122,7 @@ describe('saveManager', () => {
       library: { visitedSectionIds: [], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: [] },
       tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
       school: { visitedAreaIds: [], inspectedHotspotIds: [] },
+      t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
     });
     expect(hydrated.game.flags).toEqual({ FLAG_A1_COMPLETE: true });
     expect(hydrated.modules.notepad.userText).toBe('第一幕笔记');

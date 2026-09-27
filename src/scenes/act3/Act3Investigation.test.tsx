@@ -11,7 +11,7 @@ describe('Third-act player path', () => {
   it('walks from T00 to the T02 conclusion through visible controls', async () => {
     localStorage.clear();
     const state = createDefaultState();
-    state.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL = true;
+    state.game.flags.FLAG_A2_COMPLETE = true;
     const manager = new StateManager(new EventBus(), state);
     manager.startAct3();
     const container = document.createElement('div');
