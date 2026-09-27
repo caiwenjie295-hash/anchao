@@ -585,6 +585,7 @@ export class StateManager {
   static readonly ACT3_COMPLETE_FLAG_T02 = 'FLAG_A3_CLASSROOM_CONTRADICTION_NOTED';
   static readonly ACT3_COMPLETE_FLAG_T03 = 'FLAG_A3_CONFINEMENT_SITE_CONFIRMED';
   static readonly ACT3_COMPLETE_FLAG_T04 = 'FLAG_A3_VVAKE_PAPER_FOUND';
+  static readonly ACT3_COMPLETE_FLAG_T05 = 'FLAG_A3_13ACK_PAPER_FOUND';
 
   private get act3(): Act3State { return this.state.modules.act3; }
 
@@ -628,6 +629,10 @@ export class StateManager {
     if (this.act3.inspectedClueIds.includes(id)) return;
     this.commitAct3({ inspectedClueIds: [...this.act3.inspectedClueIds, id] });
     this.bus.emit('act3:clue-inspected', { clueId: id });
+    if (stage === 'T05' && id === 'CLUE_A3_T05_13ACK_PAPER') {
+      this.setFlag('FLAG_A3_13ACK_PAPER_FOUND', true);
+      this.addNotepadAutoEntry('NOTE_A3_T05_001');
+    }
   }
 
   /** 玩家主动确认阶段结论；线索、Flag 与下一阶段均由当前阶段的固定数据决定。 */
@@ -636,7 +641,7 @@ export class StateManager {
     if (stage === 'inactive') return;
     const required = act3StageClueIds(stage);
     const id = ACT3_STAGE_COMPLETION_FLAG[stage];
-    if (!required.length || !required.every((clueId) => this.act3.inspectedClueIds.includes(clueId)) || this.state.game.flags[id] === true) return;
+    if (!required.length || !required.every((clueId) => this.act3.inspectedClueIds.includes(clueId)) || this.act3.confirmedFlagIds.includes(id)) return;
     const gateId = ACT3_STAGE_GATE_FLAG[stage];
     const nextStage = ACT3_STAGE_NEXT[stage];
     const confirmedFlagIds = [...new Set([...this.act3.confirmedFlagIds, id, gateId])];

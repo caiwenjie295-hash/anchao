@@ -16,6 +16,7 @@ const STAGE_TITLE: Record<Act3ActiveStage, string> = {
   T02: '教室与标语',
   T03: '禁闭区',
   T04: '档案室',
+  T05: '广播室',
 };
 
 const STAGE_LABEL: Record<Act3ActiveStage, string> = {
@@ -24,6 +25,7 @@ const STAGE_LABEL: Record<Act3ActiveStage, string> = {
   T02: '第三幕 · T02',
   T03: '第三幕 · T03',
   T04: '第三幕 · T04',
+  T05: '第三幕 · T05',
 };
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
@@ -121,6 +123,13 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
             <p className="act3-investigation__viewport-title">{lens.title}</p>
           </div>
           <p className="act3-investigation__description">{lens.description}</p>
+          {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && (
+            <aside className="act3-investigation__paper-compare" aria-label="两张词表">
+              <article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article>
+              <article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article>
+              <p>两张词表。含义暂时不明。</p>
+            </aside>
+          )}
           {lens.hotspots.length > 0 && (
             <nav className="act3-investigation__hotspots" aria-label="可执行动作">
               {lens.hotspots.map((hotspot) => (
