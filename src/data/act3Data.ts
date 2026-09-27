@@ -4,9 +4,10 @@ import t02Document from '../../data/act3_t02.json';
 import t03Document from '../../data/act3_t03.json';
 import t04Document from '../../data/act3_t04.json';
 import t05Document from '../../data/act3_t05.json';
+import t06Document from '../../data/act3_t06.json';
 import type { Act3Hotspot, Act3Lens } from '../core/types';
 
-export type AuthoredAct3Stage = 'T00' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05';
+export type AuthoredAct3Stage = 'T00' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05' | 'T06';
 export interface Act3StageDocument {
   stage: AuthoredAct3Stage;
   intro: string;
@@ -38,7 +39,7 @@ const toLens = (value: unknown): Act3Lens => {
 };
 
 const toDoc = (document: { stage: string; intro: string; lenses: unknown[] }): Act3StageDocument => ({
-  stage: document.stage === 'T00' || document.stage === 'T01' || document.stage === 'T02' || document.stage === 'T03' || document.stage === 'T04' || document.stage === 'T05' ? document.stage : 'T00',
+  stage: document.stage === 'T00' || document.stage === 'T01' || document.stage === 'T02' || document.stage === 'T03' || document.stage === 'T04' || document.stage === 'T05' || document.stage === 'T06' ? document.stage : 'T00',
   intro: typeof document.intro === 'string' ? document.intro : '',
   lenses: Array.isArray(document.lenses) ? document.lenses.map(toLens) : [],
 });
@@ -49,6 +50,7 @@ export const act3T02: Act3StageDocument = toDoc(t02Document);
 export const act3T03: Act3StageDocument = toDoc(t03Document);
 export const act3T04: Act3StageDocument = toDoc(t04Document);
 export const act3T05: Act3StageDocument = toDoc(t05Document);
+export const act3T06: Act3StageDocument = toDoc(t06Document);
 
 const stageDocs: Record<AuthoredAct3Stage, Act3StageDocument> = {
   T00: act3T00,
@@ -57,6 +59,7 @@ const stageDocs: Record<AuthoredAct3Stage, Act3StageDocument> = {
   T03: act3T03,
   T04: act3T04,
   T05: act3T05,
+  T06: act3T06,
 };
 
 export const act3StageDoc = (stage: AuthoredAct3Stage): Act3StageDocument => stageDocs[stage];
@@ -81,6 +84,7 @@ export const ACT3_STAGE_COMPLETION_FLAG: Record<AuthoredAct3Stage, string> = {
   T03: 'FLAG_A3_CONFINEMENT_SITE_CONFIRMED',
   T04: 'FLAG_A3_VVAKE_PAPER_FOUND',
   T05: 'FLAG_A3_13ACK_PAPER_FOUND',
+  T06: 'FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED',
 };
 
 export const ACT3_STAGE_GATE_FLAG: Record<AuthoredAct3Stage, string> = {
@@ -90,6 +94,7 @@ export const ACT3_STAGE_GATE_FLAG: Record<AuthoredAct3Stage, string> = {
   T03: 'FLAG_A3_STAIRS_DESCENDED',
   T04: 'FLAG_A3_BROADCAST_DOOR_REACHED',
   T05: 'FLAG_A3_KITCHEN_DOOR_REACHED',
+  T06: 'FLAG_A3_KITCHEN_EXITED',
 };
 
 export const ACT3_STAGE_NEXT: Record<AuthoredAct3Stage, AuthoredAct3Stage | null> = {
@@ -98,7 +103,8 @@ export const ACT3_STAGE_NEXT: Record<AuthoredAct3Stage, AuthoredAct3Stage | null
   T02: 'T03',
   T03: 'T04',
   T04: 'T05',
-  T05: null,
+  T05: 'T06',
+  T06: null,
 };
 
 const byIdMaps = new Map<string, Map<string, Act3Lens>>();
@@ -119,6 +125,7 @@ const firstLensIndex: Record<AuthoredAct3Stage, string> = {
   T03: 'LENS_A3_T03_001',
   T04: 'LENS_A3_T04_001',
   T05: 'LENS_A3_T05_001',
+  T06: 'LENS_A3_T06_001',
 };
 
 export const act3FirstLensId = (stage: AuthoredAct3Stage): string => firstLensIndex[stage];

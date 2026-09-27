@@ -586,6 +586,7 @@ export class StateManager {
   static readonly ACT3_COMPLETE_FLAG_T03 = 'FLAG_A3_CONFINEMENT_SITE_CONFIRMED';
   static readonly ACT3_COMPLETE_FLAG_T04 = 'FLAG_A3_VVAKE_PAPER_FOUND';
   static readonly ACT3_COMPLETE_FLAG_T05 = 'FLAG_A3_13ACK_PAPER_FOUND';
+  static readonly ACT3_COMPLETE_FLAG_T06 = 'FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED';
 
   private get act3(): Act3State { return this.state.modules.act3; }
 
@@ -632,6 +633,10 @@ export class StateManager {
     if (stage === 'T05' && id === 'CLUE_A3_T05_13ACK_PAPER') {
       this.setFlag('FLAG_A3_13ACK_PAPER_FOUND', true);
       this.addNotepadAutoEntry('NOTE_A3_T05_001');
+    }
+    if (stage === 'T06' && id === 'CLUE_A3_T06_TEMPLE_COMPARE') {
+      this.setFlag('FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED', true);
+      this.addNotepadAutoEntry('NOTE_A3_T06_001');
     }
   }
 

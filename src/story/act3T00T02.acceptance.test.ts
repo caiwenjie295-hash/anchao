@@ -72,7 +72,7 @@ describe('Third-act T00–T02 continuous investigation', () => {
     expect(state.modules.act3.currentLensId).toBe('LENS_A3_T01_001');
   });
 
-  it('reloads each stage and reaches both underground paper lists', () => {
+  it('reloads each stage and reaches the kitchen comparison', () => {
     let manager = new StateManager(undefined, completedT07());
     manager.startAct3();
     inspectStage(manager, 'T00');
@@ -128,7 +128,22 @@ describe('Third-act T00–T02 continuous investigation', () => {
     manager.confirmAct3Stage();
     expect(manager.getState().game.flags.FLAG_A3_KITCHEN_DOOR_REACHED).toBe(true);
     manager = new StateManager(undefined, hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
-    expect(manager.getState().modules.act3.stage).toBe('T05');
+    expect(manager.getState().modules.act3.stage).toBe('T06');
+    manager.enterAct3Lens('LENS_A3_T06_008');
+    expect(manager.getState().modules.act3.currentLensId).not.toBe('LENS_A3_T06_008');
+    for (const lens of act3StageDoc('T06').lenses.slice(0, 7)) {
+      manager.enterAct3Lens(lens.id);
+      for (const hotspot of lens.hotspots) manager.inspectAct3Clue(hotspot.clueId);
+    }
+    expect(manager.getState().game.flags.FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED).not.toBe(true);
+    manager.enterAct3Lens('LENS_A3_T06_008');
+    manager.inspectAct3Clue('CLUE_A3_T06_TEMPLE_COMPARE');
+    expect(manager.getState().game.flags.FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED).toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T06_001');
+    manager = new StateManager(undefined, hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
+    manager.confirmAct3Stage();
+    expect(manager.getState().game.flags.FLAG_A3_KITCHEN_EXITED).toBe(true);
+    expect(manager.getState().game.phase).toBe('A3_T06');
   });
 
   it('lets a completed T03 save continue when T04 becomes available', () => {
@@ -161,5 +176,21 @@ describe('Third-act T00–T02 continuous investigation', () => {
     const restored = new StateManager(undefined, hydrateState(oldSave));
     restored.advanceAct3Stage();
     expect(restored.getState().game.phase).toBe('A3_T05');
+  });
+
+  it('lets a completed T05 save continue when T06 becomes available', () => {
+    const manager = new StateManager(undefined, completedT07());
+    manager.startAct3();
+    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05'] as const) {
+      inspectStage(manager, stage);
+      manager.confirmAct3Stage();
+    }
+    const oldSave = JSON.parse(JSON.stringify(manager.getState()));
+    oldSave.modules.act3.stage = 'T05';
+    oldSave.modules.act3.currentLensId = 'LENS_A3_T05_006';
+    oldSave.game.phase = 'A3_T05';
+    const restored = new StateManager(undefined, hydrateState(oldSave));
+    restored.advanceAct3Stage();
+    expect(restored.getState().game.phase).toBe('A3_T06');
   });
 });
