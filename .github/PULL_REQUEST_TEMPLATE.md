@@ -1,7 +1,7 @@
 ## 工单
 
 - Task ID:
-- Work order: `docs/work_orders/<TASK-ID>.md`
+- Work order: `docs/work_orders/工单/<TASK-ID>.md`
 - Review record: `docs/reviews/<TASK-ID>.md`
 
 ## 交付

@@ -13,7 +13,7 @@
 
 1. `维护导航.md`
 2. `docs/协作开发与Git工作流.md`
-3. 当前工单 `docs/work_orders/<TASK-ID>.md`
+3. 当前工单 `docs/work_orders/工单/<TASK-ID>.md`
 4. 工单引用的剧情规范、并行契约和交接文档
 
 ## 强制规则
