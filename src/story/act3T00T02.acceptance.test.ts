@@ -3,6 +3,7 @@ import { createDefaultState } from '../core/defaultState';
 import { hydrateState } from '../core/saveManager';
 import { StateManager } from '../core/stateManager';
 import { act3StageClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_GATE_FLAG } from '../data/act3Data';
+import { act2T07 } from '../data/act2T07Data';
 import { getPendingStoryTransition } from '../data/storyTransitionData';
 import type { Act3ActiveStage } from '../core/types';
 
@@ -24,6 +25,24 @@ function completedT06() {
   return state;
 }
 
+function completedT07() {
+  const manager = new StateManager(undefined, completedT06());
+  manager.enterAct2FinaleInvestigation();
+  manager.viewAct2T07Material(act2T07.photoMaterialId);
+  manager.confirmAct2T07PhotoSymbol();
+  manager.viewAct2T07Material(act2T07.video.materialId);
+  for (const id of act2T07.video.requiredSegmentIds) manager.markAct2T07SegmentPlayed(id);
+  const frame = act2T07.video.keyFrames[0];
+  manager.captureAct2T07Frame(frame.id, frame.startMs);
+  manager.compareAct2T07TempleFrame(frame.id);
+  manager.confirmAct2T07TempleFrame();
+  manager.inferAct2T07Location();
+  manager.planAct2T07SecondTrip();
+  manager.completeAct2T07Finale();
+  expect(manager.getState().game.flags.FLAG_A2_COMPLETE).toBe(true);
+  return manager.getState();
+}
+
 function inspectStage(manager: StateManager, stage: Act3ActiveStage) {
   expect(manager.getState().modules.act3.stage).toBe(stage);
   for (const lens of act3StageDoc(stage).lenses) {
@@ -35,7 +54,7 @@ function inspectStage(manager: StateManager, stage: Act3ActiveStage) {
 
 describe('Third-act T00–T02 continuous investigation', () => {
   it('requires every T00 clue and enters T01 with both gate flags', () => {
-    const manager = new StateManager(undefined, completedT06());
+    const manager = new StateManager(undefined, completedT07());
     manager.startAct3();
     expect(manager.getState().game.phase).toBe('A3_T00');
     expect(getPendingStoryTransition(manager.getState())?.id).toBe('TRANSITION_A3_T00');
@@ -54,7 +73,7 @@ describe('Third-act T00–T02 continuous investigation', () => {
   });
 
   it('reloads T01 and T02 at the right phase, then reaches the T02 conclusion', () => {
-    let manager = new StateManager(undefined, completedT06());
+    let manager = new StateManager(undefined, completedT07());
     manager.startAct3();
     inspectStage(manager, 'T00');
     manager.confirmAct3Stage();

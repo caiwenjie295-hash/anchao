@@ -4,6 +4,7 @@ import { BridgeInvestigation } from './BridgeInvestigation';
 import { LibraryResearch } from './LibraryResearch';
 import { TalesInvestigation } from './TalesInvestigation';
 import { SchoolInvestigation } from './SchoolInvestigation';
+import { T07Investigation } from './T07Investigation';
 
 /** 桥头场景资源 ID；场景图由 BridgeInvestigation 显示。 */
 export const ACT2_BRIDGE_PLACEHOLDER_ASSET_ID = 'IMG_A2_T02_001';
@@ -14,11 +15,12 @@ export const ACT2_RESUME_LABELS = {
   library: '继续地方志调查',
   tales: '继续查阅三篇志异',
   school: '继续高中调查',
+  finale: '继续和小月核对资料',
 } as const;
 
 export interface Act2ExperienceProps {
   /** 当前第二幕场景阶段；`search` 或 `inactive` 时本组件不应被挂载。 */
-  stage: Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school'>;
+  stage: Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school' | 'finale'>;
   /** 场景是否正在全屏显示；false 时只渲染桌面继续入口。 */
   sceneOpen: boolean;
   onDismissScene: () => void;
@@ -34,6 +36,7 @@ export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene
   const isBridge = stage === 'bridge';
   const isLibrary = stage === 'library';
   const isSchool = stage === 'school';
+  const isFinale = stage === 'finale';
   const placeholderAssetId = isBridge ? ACT2_BRIDGE_PLACEHOLDER_ASSET_ID : undefined;
 
   if (sceneOpen) {
@@ -47,7 +50,8 @@ export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene
           ? <BridgeInvestigation manager={manager} onReturnDesktop={onDismissScene} />
           : isLibrary ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} />
             : isSchool ? <SchoolInvestigation manager={manager} onReturnToDesktop={onDismissScene} />
-              : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
+              : isFinale ? <T07Investigation manager={manager} onReturnToDesktop={onDismissScene} />
+                : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
       </div>
     );
   }

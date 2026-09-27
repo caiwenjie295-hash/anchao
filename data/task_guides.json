@@ -134,6 +134,21 @@
         { "label": "把成功案例与论坛昵称放在一起比较", "completionFlag": "FLAG_A2_HUANG_MATCH_INFERRED" },
         { "label": "再核对另一组名字和后续记录", "completionFlag": "FLAG_A2_OTHER_CASES_ABNORMAL", "appId": "browser" }
       ]
+    },
+    {
+      "id": "GUIDE_A2_T07_001",
+      "phases": ["A2_T07"],
+      "prerequisiteFlags": ["FLAG_A2_OTHER_CASES_ABNORMAL"],
+      "completionFlags": ["FLAG_A2_SECOND_TRIP_PLANNED"],
+      "summary": "和小月把启明留下的旧宣传资料再核一遍",
+      "steps": [
+        { "label": "和小月一起看校门合影", "completionFlag": "FLAG_A2_PROMO_PHOTO_SS_FOUND" },
+        { "label": "打开创始人受访视频", "completionFlag": "FLAG_A2_PROMO_VIDEO_FOUND" },
+        { "label": "把视频的主要片段看过一遍", "completionFlag": "FLAG_A2_PROMO_VIDEO_WATCHED" },
+        { "label": "截下可疑画面，和破庙外景对照", "completionFlag": "FLAG_A2_TEMPLE_FRAME_FOUND" },
+        { "label": "把两条线放在一起，确认地点", "completionFlag": "FLAG_A2_QIMING_LOCATION_INFERRED" },
+        { "label": "和小月约定第二次进山", "completionFlag": "FLAG_A2_SECOND_TRIP_PLANNED" }
+      ]
     }
   ]
 }

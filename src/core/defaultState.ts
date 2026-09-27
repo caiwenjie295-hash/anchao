@@ -44,6 +44,7 @@ export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
     inferenceAcknowledged: false,
   },
   school: { visitedAreaIds: [], inspectedHotspotIds: [] },
+  t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
 });
 
 export const createDefaultAct3State = (): Act3State => ({

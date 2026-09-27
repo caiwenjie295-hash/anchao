@@ -5,12 +5,13 @@ import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
 import { isStoryTransitionReached, storyTransitions, storyTransitionIds } from '../data/storyTransitionData';
 import { act3LensById } from '../data/act3Data';
+import { act2T07, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, ACT2_T07_FRAME_IDS } from '../data/act2T07Data';
 
 export const SAVE_KEY = 'anchao.save.v1';
-/** schema 1–5 全部迁移到 schema 6；schema 1–6 全部迁移到 schema 7（增设第三幕模块）。 */
+/** schema 1–6 的有效进度迁移到 schema 7。 */
 const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
-const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming'];
+const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02'];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -51,7 +52,10 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const library = isRecord(candidate.library) ? candidate.library : null;
   const tales = isRecord(candidate.tales) ? candidate.tales : null;
   const school = isRecord(candidate.school) ? candidate.school : null;
+  const t07 = isRecord(candidate.t07) ? candidate.t07 : null;
   const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
+  // 只保留可恢复的语义进度；比对过的帧必须是已经截到的帧。
+  const capturedFrameIds = t07 ? safeStringIds(t07.capturedFrameIds).filter((id) => ACT2_T07_FRAME_IDS.includes(id)) : [];
   const readTaleIds = tales ? safeStringIds(tales.readTaleIds).filter((id) => taleById.has(id)) : [];
   const collectedTaleIds = tales ? safeStringIds(tales.collectedTaleIds).filter((id) => readTaleIds.includes(id)) : [];
   const placedCardIds = tales ? safeStringIds(tales.placedCardIds).filter((id) => taleCardById.has(id)) : [];
@@ -86,6 +90,12 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
     school: {
       visitedAreaIds: school ? safeStringIds(school.visitedAreaIds).filter((id) => ACT2_SCHOOL_AREA_IDS.includes(id as (typeof ACT2_SCHOOL_AREA_IDS)[number])) : [],
       inspectedHotspotIds: school ? safeStringIds(school.inspectedHotspotIds).filter((id) => ACT2_SCHOOL_HOTSPOT_IDS.includes(id as (typeof ACT2_SCHOOL_HOTSPOT_IDS)[number])) : [],
+    },
+    t07: {
+      viewedMaterialIds: t07 ? safeStringIds(t07.viewedMaterialIds).filter((id) => ACT2_T07_MATERIAL_IDS.includes(id)) : [],
+      playedSegmentIds: t07 ? safeStringIds(t07.playedSegmentIds).filter((id) => ACT2_T07_SEGMENT_IDS.includes(id)) : [],
+      capturedFrameIds,
+      comparedFrameIds: t07 ? safeStringIds(t07.comparedFrameIds).filter((id) => capturedFrameIds.includes(id)) : [],
     },
   };
 };
@@ -124,10 +134,13 @@ export const hydrateState = (candidate: unknown): AppState => {
     : {};
   const t05FlagIds = ['FLAG_A2_SCHOOL_ENTERED', 'FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SS_MATCH_CONFIRMED'];
   const t06FlagIds = ['FLAG_A2_QIMING_OFFICIAL_FOUND', 'FLAG_A2_QIMING_TESTIMONIALS_READ', 'FLAG_A2_QIMING_FORUM_FOUND', 'FLAG_A2_HUANG_MATCH_INFERRED', 'FLAG_A2_ZHONG_MATCH_INFERRED', 'FLAG_A2_OTHER_CASES_ABNORMAL'];
-  for (const flagId of [...t05FlagIds, ...t06FlagIds]) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
+  const t07FlagIds = ['FLAG_A2_PROMO_VIDEO_FOUND', 'FLAG_A2_PROMO_VIDEO_WATCHED', 'FLAG_A2_PROMO_PHOTO_SS_FOUND', 'FLAG_A2_TEMPLE_FRAME_FOUND', 'FLAG_A2_QIMING_LOCATION_INFERRED', 'FLAG_A2_SECOND_TRIP_PLANNED', 'FLAG_A2_COMPLETE'];
+  for (const flagId of [...t05FlagIds, ...t06FlagIds, ...t07FlagIds]) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
   const schoolPrerequisitesValid = rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
-  let qimingStageValid = act2Research.stage === 'qiming' && schoolPrerequisitesValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true;
-  if (act2Research.stage === 'qiming' && !qimingStageValid) act2Research.stage = schoolPrerequisitesValid ? 'school' : 'tales';
+  // T07 阶段同样保留 T06 已完成的进度；不合格时退回 qiming。
+  const act2StageWasFinale = act2Research.stage === 'finale';
+  let qimingStageValid = (act2Research.stage === 'qiming' || act2StageWasFinale) && schoolPrerequisitesValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true;
+  if ((act2Research.stage === 'qiming' || act2StageWasFinale) && !qimingStageValid) act2Research.stage = schoolPrerequisitesValid ? 'school' : 'tales';
   if (act2Research.stage === 'school' && !schoolPrerequisitesValid) act2Research.stage = 'tales';
   let schoolStageValid = (act2Research.stage === 'school' || qimingStageValid) && schoolPrerequisitesValid;
   const t05Dependencies: [string, string][] = [
@@ -181,7 +194,23 @@ export const hydrateState = (candidate: unknown): AppState => {
   }
   if (rawFlags.FLAG_A2_QIMING_FORUM_FOUND !== true) for (const flagId of ['FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL']) delete rawFlags[flagId];
   if (rawFlags.FLAG_A2_HUANG_MATCH_INFERRED !== true || rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED !== true) delete rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL;
-  if (act3.stage !== 'inactive' && (rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL !== true
+  // T07：只有在 T06 收束后进入的阶段才保留 T07 语义进度与 Flag。
+  let t07StageValid = act2Research.stage === 'finale' && rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL === true;
+  if (act2Research.stage === 'finale' && !t07StageValid) act2Research.stage = 'qiming';
+  if (!t07StageValid) {
+    act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] };
+    for (const flagId of t07FlagIds) delete rawFlags[flagId];
+  } else {
+    const t07 = act2Research.t07;
+    if (rawFlags.FLAG_A2_PROMO_VIDEO_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.video.materialId)) delete rawFlags.FLAG_A2_PROMO_VIDEO_FOUND;
+    if (rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED === true && (rawFlags.FLAG_A2_PROMO_VIDEO_FOUND !== true || !act2T07.video.requiredSegmentIds.every((id) => t07.playedSegmentIds.includes(id)))) delete rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED;
+    if (rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.photoMaterialId)) delete rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND;
+    if (rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true && t07.comparedFrameIds.length === 0) delete rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND;
+    if (rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED === true && !(rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true && rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED === true)) delete rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED;
+    if (rawFlags.FLAG_A2_SECOND_TRIP_PLANNED === true && rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED !== true) delete rawFlags.FLAG_A2_SECOND_TRIP_PLANNED;
+    if (rawFlags.FLAG_A2_COMPLETE === true && rawFlags.FLAG_A2_SECOND_TRIP_PLANNED !== true) delete rawFlags.FLAG_A2_COMPLETE;
+  }
+  if (act3.stage !== 'inactive' && (rawFlags.FLAG_A2_COMPLETE !== true
     || (act3.stage === 'T01' && rawFlags.FLAG_A3_GATE_REACHED !== true)
     || (act3.stage === 'T02' && rawFlags.FLAG_A3_INNER_FENCE_PASSED !== true))) {
     act3 = createDefaultAct3State();
@@ -193,7 +222,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   });
   const hydratedPhase = typeof game.phase === 'string' ? game.phase : fallback.game.phase;
   const phaseForStage: Partial<Record<Act2Stage, string>> = {
-    search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06',
+    search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06', finale: 'A2_T07',
   };
   const safePhase = act3.stage !== 'inactive' ? `A3_${act3.stage}` as AppState['game']['phase'] : phaseForStage[act2Research.stage] ?? (
     hydratedPhase.startsWith('A2_T') ? fallback.game.phase : hydratedPhase
@@ -208,9 +237,14 @@ export const hydrateState = (candidate: unknown): AppState => {
       NOTE_A2_T06_002: 'FLAG_A2_QIMING_FORUM_FOUND',
       NOTE_A2_T06_003: 'FLAG_A2_HUANG_MATCH_INFERRED',
       NOTE_A2_T06_004: 'FLAG_A2_OTHER_CASES_ABNORMAL',
+      NOTE_A2_T07_001: 'FLAG_A2_PROMO_PHOTO_SS_FOUND',
+      NOTE_A2_T07_002: 'FLAG_A2_TEMPLE_FRAME_FOUND',
+      NOTE_A2_T07_003: 'FLAG_A2_QIMING_LOCATION_INFERRED',
+      NOTE_A2_T07_004: 'FLAG_A2_SECOND_TRIP_PLANNED',
     };
     const triggerFlag = triggerFlagByNote[id];
     if (id === 'NOTE_A2_T06_003') return rawFlags.FLAG_A2_HUANG_MATCH_INFERRED === true && rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED === true;
+    if (id === 'NOTE_A2_T07_003') return rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED === true && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true && rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED === true;
     return triggerFlag === undefined || rawFlags[triggerFlag] === true;
   }) : [];
   const rawWindows = isRecord(desktop.windows) ? desktop.windows : {};
@@ -271,7 +305,7 @@ export const hydrateState = (candidate: unknown): AppState => {
     },
   };
   const storyTransitionsCandidate = isRecord(modules.storyTransitions) ? modules.storyTransitions : null;
-  hydrated.modules.storyTransitions.seenIds = candidate.schemaVersion === 7 || candidate.schemaVersion === 6
+  hydrated.modules.storyTransitions.seenIds = (candidate.schemaVersion as number) >= 6
     ? safeStringIds(storyTransitionsCandidate?.seenIds).filter((id) => storyTransitionIds.has(id) && isStoryTransitionReached(hydrated, storyTransitions.find((item) => item.id === id)!))
     : storyTransitions.filter((item) => !(safePhase === 'A' && item.id === 'TRANSITION_A1_INTRO') && isStoryTransitionReached(hydrated, item)).map((item) => item.id);
   return hydrated;

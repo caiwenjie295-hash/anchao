@@ -17,15 +17,16 @@ import { Act1SceneExperience } from './scenes/act1/Act1SceneExperience';
 import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
 import { Act3Investigation } from './scenes/act3/Act3Investigation';
+import { Act2T07Entry } from './scenes/act2/T07Investigation';
 import { StoryTransition, StoryTransitionLaunch } from './components/StoryTransition';
 import { getPendingStoryTransition } from './data/storyTransitionData';
 import './styles.css';
 import './imageAssets.css';
 
-type Act2SceneStage = Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school'>;
+type Act2SceneStage = Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school' | 'finale'>;
 
-/** 只有 bridge / library / tales 会接管全屏场景；search 仍是普通桌面。 */
-const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales' || stage === 'school';
+/** 只有 bridge / library / tales / school / finale 会接管全屏场景；search 与 T06 仍是普通桌面。 */
+const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales' || stage === 'school' || stage === 'finale';
 
 export default function App() {
   const state = useSyncExternalStore(stateManager.subscribe, stateManager.getState, stateManager.getState);
@@ -53,15 +54,7 @@ export default function App() {
     phaseJKController.start();
     act2T01Controller.start();
     act2T06Controller.start();
-    // 第三幕入口：当第二幕 T06 收束时启动；T07 完成后由主审替换前置条件。
-    const onFlagChanged = ({ flagId }: { flagId: string }) => {
-      if (flagId === 'FLAG_A2_OTHER_CASES_ABNORMAL') stateManager.startAct3();
-    };
-    const unsubscribeFlag = stateManager.subscribeFlagChanged(onFlagChanged);
-    // 已经在 T06 收束后挂载的场景（如重载）需要立即触发一次。
-    if (stateManager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL === true) stateManager.startAct3();
     return () => {
-      unsubscribeFlag();
       act2T06Controller.dispose();
       act2T01Controller.dispose();
       phaseJKController.dispose();
@@ -83,10 +76,10 @@ export default function App() {
   const taskbarClick = (appId: AppId) => stateManager.toggleTaskbarApp(appId);
   const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
   const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
-  const act2SceneOpen = act2SceneStage !== null && dismissedAct2Stage !== act2SceneStage;
   const act3Stage = state.modules.act3.stage;
   const act3Active = act3Stage !== 'inactive';
   const act3Open = act3Active && !dismissedAct3;
+  const act2SceneOpen = act2SceneStage !== null && !act3Active && dismissedAct2Stage !== act2SceneStage;
   const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open;
   const secondActStarted = act2Stage !== 'inactive';
   const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
@@ -117,6 +110,8 @@ export default function App() {
         {apps.map((app) => <DesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} />)}
       </div>
       <DesktopTaskCard state={state} onOpenApp={openApp} />
+      {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
+      <Act2T07Entry manager={stateManager} />
       {apps.map((app) => {
         const windowState = state.desktop.windows[app.appId];
         return windowState.status === 'closed' || windowState.status === 'minimized' ? null : (
@@ -136,7 +131,7 @@ export default function App() {
       <div id="taskbar"><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={() => stateManager.resetProgress()} time={time} /></div>
     </main>
     {act1SceneOpen && <Act1SceneExperience state={state} />}
-    {act2SceneStage !== null && (
+    {act2SceneStage !== null && !act3Active && (
       <Act2Experience
         stage={act2SceneStage}
         sceneOpen={act2SceneOpen}
@@ -144,6 +139,12 @@ export default function App() {
         onResumeScene={() => setDismissedAct2Stage(null)}
         manager={stateManager}
       />
+    )}
+    {!act3Active && state.game.flags.FLAG_A2_COMPLETE === true && (
+      <aside className="story-transition-launch" aria-label="第三幕调查已就绪">
+        <span>第三幕 · 再次进山</span>
+        <button type="button" onClick={() => { stateManager.startAct3(); setDismissedAct3(false); }}>开始第三幕调查</button>
+      </aside>
     )}
     {act3Active && (
       <>
