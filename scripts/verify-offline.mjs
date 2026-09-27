@@ -1,11 +1,29 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import jsdom from 'jsdom';
 const { JSDOM, VirtualConsole, requestInterceptor } = jsdom;
 
 // Execute the actual deliverable in a DOM test environment, without a web server.
 // A synthetic origin gives jsdom storage semantics; real file:// browser QA is separate.
-const html = await readFile('暗潮.html', 'utf8');
+const directory = '暗潮离线';
+const html = await readFile(`${directory}/index.html`, 'utf8');
+const manifest = JSON.parse(await readFile(`${directory}/manifest.json`, 'utf8'));
+const filePaths = new Set(manifest.files.map((file) => file.path));
+assert.equal(manifest.entry, 'index.html');
+assert.equal(manifest.totalBytes, manifest.files.reduce((sum, file) => sum + file.bytes, 0));
+for (const file of manifest.files) {
+  assert.equal((await stat(`${directory}/${file.path}`)).size, file.bytes, `Missing or altered ${file.path}`);
+}
+assert.ok(Buffer.byteLength(html) < 10_000, 'Offline HTML must remain small');
+const javascript = await readFile(`${directory}/assets/app.js`, 'utf8');
+assert.equal((javascript.match(/data:image/g) ?? []).length, 0, 'Images must not be embedded in app.js');
+function assertLocalImage(value) {
+  const url = new URL(value);
+  assert.equal(url.origin, 'https://anchao-offline.test');
+  const path = decodeURIComponent(url.pathname.slice(1));
+  assert.match(path, /^assets\/.+\.(png|jpe?g|webp)$/i);
+  assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
+}
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
 const errors = [];
 const requests = [];
@@ -34,13 +52,24 @@ async function mount(saved) {
   dom = new JSDOM(html, {
     url: 'https://anchao-offline.test', runScripts: 'dangerously',
     pretendToBeVisual: true, virtualConsole,
-    resources: { interceptors: [requestInterceptor((request) => { if (request.url.startsWith('data:')) return; requests.push(request.url); return new Response('', { status: 403 }); })] },
+    resources: { interceptors: [requestInterceptor(async (request) => {
+      requests.push(request.url);
+      const url = new URL(request.url);
+      const path = decodeURIComponent(url.pathname.slice(1));
+      if (url.origin !== 'https://anchao-offline.test' || !filePaths.has(path)) return new Response('', { status: 403 });
+      const type = path.endsWith('.js') ? 'application/javascript' : path.endsWith('.css') ? 'text/css' : 'application/octet-stream';
+      return new Response(await readFile(`${directory}/${path}`), { headers: { 'Content-Type': type } });
+    })] },
     beforeParse(window) {
       // jsdom lacks native dialog methods; this checks open/close wiring, not modal layout or focus.
       window.HTMLDialogElement.prototype.showModal = function showModal() { this.setAttribute('open', ''); };
       window.HTMLDialogElement.prototype.close = function close() { this.removeAttribute('open'); };
       if (saved) window.localStorage.setItem('anchao.save.v1', saved);
     },
+  });
+  await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Offline document load timed out')), 10_000);
+    dom.window.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
   });
   await delay();
   if (!saved) assert.equal(dom.window.document.querySelector('.story-transition')?.getAttribute('data-story-transition'), 'TRANSITION_A1_INTRO');
@@ -93,7 +122,7 @@ async function browse(term) {
 }
 async function investigate() {
   await openApp('微信');
-  assert.match(query('.avatar-sprite image').getAttribute('href'), /^data:image\/png;base64,/);
+  assertLocalImage(query('.avatar-sprite image').getAttribute('href'));
   await textButton('小月', '.wechat-conversation');
   await click('.wechat-chat .evidence-thumbnail');
   assert.ok(query('.evidence-lightbox[open]'));
@@ -120,12 +149,12 @@ async function investigate() {
   assert.equal(state().game.phase, 'H');
   assert.equal(query('.scene-camera').disabled, true);
   await click('[aria-label="查看A.W"]');
-  assert.match(query('.act1-scene__detail img').src, /^data:image\/png;base64,/);
+  assertLocalImage(query('.act1-scene__detail img').src);
   await click('.scene-camera');
   await click('.scene-continue');
   assert.equal(state().game.phase, 'I');
   await click('[aria-label="查看残缺塑像"]');
-  assert.match(query('.act1-scene__detail img').src, /^data:image\/png;base64,/);
+  assertLocalImage(query('.act1-scene__detail img').src);
   await click('[aria-label="查看补"]');
   await click('.scene-camera');
   await click('.scene-continue');
@@ -136,7 +165,7 @@ async function solvePhoto() {
   await openApp('资源管理器');
   assert.equal(document().querySelectorAll('.photo-file').length, 2);
   await textButton('山洞留言墙', '.photo-file');
-  assert.match(query('.photo-evidence-image').src, /^data:image\/png;base64,/);
+  assertLocalImage(query('.photo-evidence-image').src);
   assert.equal(state().game.phase, 'J');
   assert.equal(document().querySelector('.double-s'), null);
   await setInput('[aria-label="曝光"]', '55');
@@ -296,10 +325,10 @@ async function advanceAct2() {
   await textButton('小月', '.wechat-conversation');
   assert.ok(query('.wechat-chat__messages').textContent.includes('去年聚会拍的'));
   await click('.wechat-message__body[data-asset-id="IMG_A2_T05_008"] .evidence-thumbnail');
-  assert.match(query('.evidence-lightbox[open] img').src, /^data:image\/jpeg;base64,/);
+  assertLocalImage(query('.evidence-lightbox[open] img').src);
   await click('.evidence-lightbox[open] [aria-label="关闭图片"]');
   await click('.wechat-message__body[data-asset-id="IMG_A2_T05_011"] .evidence-thumbnail');
-  assert.match(query('.evidence-lightbox[open] img').src, /^data:image\/jpeg;base64,/);
+  assertLocalImage(query('.evidence-lightbox[open] img').src);
   await click('.evidence-lightbox[open] [aria-label="关闭图片"]');
   assert.equal(state().modules.act2Research.stage, 'tales');
   await click('.wechat-school-transition button');
@@ -307,7 +336,7 @@ async function advanceAct2() {
   assert.equal(state().game.phase, 'A2_T05');
   assert.equal(state().game.flags.FLAG_A2_SCHOOL_ENTERED, true);
   assert.ok(query('.t05-school'));
-  assert.match(query('.t05-school__backdrop img').src, /^data:image\/jpeg;base64,/);
+  assertLocalImage(query('.t05-school__backdrop img').src);
 
   await textButton('走廊', '.t05-school__map button');
   assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, true);
@@ -380,8 +409,8 @@ async function reset() {
 
 try {
   await mount();
-  assert.equal(document().querySelectorAll('script[src], link[href]').length, 0);
-  for (const image of document().querySelectorAll('svg image')) assert.match(image.getAttribute('href'), /^data:image\/png;base64,/);
+  assert.equal(document().querySelectorAll('script[src], link[href]').length, 2);
+  for (const image of document().querySelectorAll('svg image')) assertLocalImage(image.getAttribute('href'));
   assert.equal(document().querySelector('script[type="module"]'), null);
   for (let run = 1; run <= offlineRuns; run++) {
     await investigate(); await solvePhoto();
@@ -444,7 +473,13 @@ try {
     await reset();
       console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T06' : ''}`);
   }
-  assert.deepEqual(requests, []);
+  assert.ok(requests.some((url) => url.endsWith('/assets/app.js')));
+  assert.ok(requests.some((url) => url.endsWith('/assets/app.css')));
+  for (const request of requests) {
+    const url = new URL(request);
+    assert.equal(url.origin, 'https://anchao-offline.test');
+    assert.ok(filePaths.has(decodeURIComponent(url.pathname.slice(1))), `Unexpected resource: ${request}`);
+  }
   assert.deepEqual(errors, []);
-  console.log('PASS: standalone classic script, inline styles, zero external resources and zero runtime errors');
+  console.log('PASS: local offline assets, no network resources and zero runtime errors');
 } finally { dom?.window.close(); }

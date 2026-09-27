@@ -1,9 +1,9 @@
-import ui1 from '../UI_src/UI1.png';
-import ui2 from '../UI_src/UI2.png';
-import ui3 from '../UI_src/UI3.png';
-import ui4 from '../UI_src/UI4.png';
-import wechat1 from '../Wechat_src/Wechat1.png';
-import wechat2 from '../Wechat_src/Wechat2.png';
+import ui1 from '../UI_src/UI1.png?url&no-inline';
+import ui2 from '../UI_src/UI2.png?url&no-inline';
+import ui3 from '../UI_src/UI3.png?url&no-inline';
+import ui4 from '../UI_src/UI4.png?url&no-inline';
+import wechat1 from '../Wechat_src/Wechat1.png?url&no-inline';
+import wechat2 from '../Wechat_src/Wechat2.png?url&no-inline';
 
 export type SpriteName = 'app-wechat' | 'app-mail' | 'app-browser' | 'app-explorer' | 'app-notepad' | 'app-photos' | 'window-minimize' | 'window-maximize' | 'window-restore' | 'window-close' | 'file-image' | 'file-document' | 'attachment';
 type Sprite = { source: string; x: number; y: number; width: number; height: number; imageWidth: number; imageHeight: number };
