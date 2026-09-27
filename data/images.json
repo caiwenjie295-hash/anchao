@@ -349,6 +349,14 @@
     {"id":"IMG_A3_T06_005","title":"上方铁钩","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 铁钩缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入","assetType":"image"},
     {"id":"IMG_A3_T06_006","title":"尽头木神龛","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 神龛缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入","assetType":"image"},
     {"id":"IMG_A3_T06_007","title":"空底座近景","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 空底座缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"与第一幕破庙图同屏比对","assetType":"image"},
-    {"id":"IMG_A3_T06_008","title":"上楼对照旧照片","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 旧照比较背景缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"使用已有 IMG_A1_I_001，空神龛暂以文字占位","assetType":"image"}
+    {"id":"IMG_A3_T06_008","title":"上楼对照旧照片","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 旧照比较背景缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"使用已有 IMG_A1_I_001，空神龛暂以文字占位","assetType":"image"},
+    {"id":"IMG_A3_T07_001","title":"回到一层","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 回楼上缺图占位","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":[],"notes":"自然光比地下更亮","assetType":"image"},
+    {"id":"IMG_A3_T07_002","title":"教室与厕所拐角","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 回程拐角缺图占位","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":[],"notes":"与 T02 走廊连续","assetType":"image"},
+    {"id":"IMG_A3_T07_003","title":"站姿看消防栓","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 站姿消防栓缺图占位","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":[],"notes":"站姿不露背后包裹","assetType":"image"},
+    {"id":"IMG_A3_T07_004","title":"小月的系鞋带回忆","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 小月提醒缺图占位","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":[],"notes":"明确提示改变视角","assetType":"image"},
+    {"id":"IMG_A3_T07_005","title":"蹲下看侧背面","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 低视角缝隙缺图占位","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":[],"notes":"只有蹲下后露出胶带一角","assetType":"image"},
+    {"id":"IMG_A3_T07_006","title":"取出包裹","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 包裹缺图占位","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":[],"notes":"塑料袋与透明胶","assetType":"image"},
+    {"id":"IMG_A3_T07_007","title":"笔记扉页","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 笔记首页缺图占位","unlockCondition":["FLAG_A3_NOTEBOOK_FOUND"],"relatedFlags":[],"notes":"仅 A.W 与字迹","assetType":"image"},
+    {"id":"IMG_A3_T07_008","title":"晚光中的遗址出口","act":3,"phase":"A3_T07","source":"scene","purpose":"T07 离开旧址缺图占位","unlockCondition":["FLAG_A3_NOTEBOOK_FOUND"],"relatedFlags":[],"notes":"可由 T01 旧址入口母图制作晚光变体","assetType":"image"}
   ]
 }

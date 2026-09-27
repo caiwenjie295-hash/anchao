@@ -5,7 +5,7 @@ import { act3FirstLensId, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage
 describe('third-act authored lens graph', () => {
   it('keeps each stage navigable with registered resource IDs and unique clues', () => {
     const imageIds = new Set(imageDocument.items.map((image) => image.id));
-    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06'] as AuthoredAct3Stage[]) {
+    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]) {
       const doc = act3StageDoc(stage);
       const lensIds = new Set(doc.lenses.map((lens) => lens.id));
       expect(doc.stage).toBe(stage);
@@ -46,5 +46,14 @@ describe('third-act authored lens graph', () => {
     ]));
     expect(compare.description).toContain('破庙');
     expect(compare.description).toContain('仍不明');
+  });
+
+  it('reveals the notebook only after Xiaoyue’s hint and crouched inspection', () => {
+    const doc = act3StageDoc('T07');
+    expect(doc.lenses.find((lens) => lens.id === 'LENS_A3_T07_005')?.requiresClueIds).toEqual(['CLUE_A3_T07_XIAOYUE_MEMORY']);
+    expect(doc.lenses.find((lens) => lens.id === 'LENS_A3_T07_006')?.requiresClueIds).toEqual(['CLUE_A3_T07_BACK_GAP']);
+    expect(doc.lenses.find((lens) => lens.id === 'LENS_A3_T07_007')?.requiresClueIds).toEqual(['CLUE_A3_T07_NOTEBOOK_PICKUP']);
+    expect(doc.lenses[6].description).toContain('A.W');
+    expect(doc.lenses[2].description).not.toContain('包裹');
   });
 });

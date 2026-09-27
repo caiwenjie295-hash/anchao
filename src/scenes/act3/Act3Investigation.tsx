@@ -18,6 +18,7 @@ const STAGE_TITLE: Record<Act3ActiveStage, string> = {
   T04: '档案室',
   T05: '广播室',
   T06: '厨房与空神龛',
+  T07: '消防栓与撤离',
 };
 
 const STAGE_LABEL: Record<Act3ActiveStage, string> = {
@@ -28,6 +29,7 @@ const STAGE_LABEL: Record<Act3ActiveStage, string> = {
   T04: '第三幕 · T04',
   T05: '第三幕 · T05',
   T06: '第三幕 · T06',
+  T07: '第三幕 · T07',
 };
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
@@ -198,7 +200,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
       )}
       {stageAlreadyConfirmed && !nextStage && (
         <div className="act3-investigation__confirm-bar act3-investigation__confirm-bar--done" role="status">
-          <p>本阶段调查已记录。可以回看现场与线索。</p>
+          <p>{stage === 'T07' ? '第三幕已完成。小 A 来过这里，并留下笔记；可以回看本幕证据。' : '本阶段调查已记录。可以回看现场与线索。'}</p>
         </div>
       )}
       {lensHotspot && (
