@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "stage": "T03",
+  "intro": "教室尽头右转，窗光退到身后。小月仍和你并肩走着，手电照出一排窄门。",
+  "lenses": [
+    {
+      "id": "LENS_A3_T03_001", "title": "无窗走廊入口", "stance": "look", "assetId": "IMG_A3_T03_001",
+      "description": "墙上有数扇暗铁门，地上的碎玻璃渐少。回头还能看见一层教室的窗光，没有人追来。",
+      "hotspots": [{ "clueId": "CLUE_A3_T03_CORRIDOR", "label": "看向成排的窄门" }],
+      "links": ["LENS_A3_T03_002", "LENS_A3_T03_000"]
+    },
+    {
+      "id": "LENS_A3_T03_002", "title": "二十四小时门", "stance": "approach", "assetId": "IMG_A3_T03_002",
+      "description": "第一扇门旁残留着“24 小时禁闭室”字样。门扇从走廊一侧开合，锈迹盖住了旧漆。",
+      "hotspots": [{ "clueId": "CLUE_A3_T03_24H", "label": "辨认二十四小时标记" }],
+      "links": ["LENS_A3_T03_003", "LENS_A3_T03_001"]
+    },
+    {
+      "id": "LENS_A3_T03_003", "title": "门外的孔与挡板", "stance": "crouch", "assetId": "IMG_A3_T03_003",
+      "description": "三个小孔和活动挡板都朝向走廊，挡板的扣具只在外侧。孔内漆黑，看不见曾经关过谁。",
+      "hotspots": [{ "clueId": "CLUE_A3_T03_PEEPHOLES", "label": "蹲下检查三个窥孔与外侧挡板" }],
+      "links": ["LENS_A3_T03_004", "LENS_A3_T03_002"]
+    },
+    {
+      "id": "LENS_A3_T03_004", "title": "四十八与七十二小时门", "stance": "look", "assetId": "IMG_A3_T03_004",
+      "description": "继续向前，另两扇门分别留着“48 小时”和“72 小时”的标记。小月说，这些数字看起来像时间。旧论坛关于禁闭的说法，在这里有了现场对应；发帖人的身份仍无法核实。",
+      "hotspots": [{ "clueId": "CLUE_A3_T03_48_72H", "label": "逐扇核对四十八与七十二小时标记" }],
+      "links": ["LENS_A3_T03_005", "LENS_A3_T03_003"]
+    },
+    {
+      "id": "LENS_A3_T03_005", "title": "地下楼梯口", "stance": "look", "assetId": "IMG_A3_T03_005",
+      "description": "走廊尽头有一段向下的旧水泥楼梯。扶手锈了，小月握紧手电，问你要不要先看看下面。",
+      "hotspots": [{ "clueId": "CLUE_A3_T03_STAIRS", "label": "用手电照向楼梯" }],
+      "links": ["LENS_A3_T03_006", "LENS_A3_T03_004"]
+    },
+    {
+      "id": "LENS_A3_T03_006", "title": "楼梯半程", "stance": "enter", "assetId": "IMG_A3_T03_006",
+      "description": "手电只能照到前几级，地下长廊还藏在光斑之外。小月仍在身边；你们决定一起下楼。",
+      "hotspots": [{ "clueId": "CLUE_A3_T03_DESCEND", "label": "确认和小月一起下楼" }],
+      "links": ["LENS_A3_T03_005"]
+    },
+    {
+      "id": "LENS_A3_T03_000", "title": "回望教室", "stance": "look", "assetId": "IMG_A3_T02_006",
+      "description": "身后的教室走廊仍有灰白窗光。消防栓在窗下，位置没有变化；你可以回去补看，但通往地下的路仍在前方。",
+      "hotspots": [], "links": ["LENS_A3_T03_001"]
+    }
+  ]
+}

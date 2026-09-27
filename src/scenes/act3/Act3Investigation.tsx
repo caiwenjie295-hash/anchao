@@ -14,12 +14,14 @@ const STAGE_TITLE: Record<Act3ActiveStage, string> = {
   T00: '再次进山',
   T01: '启明旧址入口',
   T02: '教室与标语',
+  T03: '禁闭区',
 };
 
 const STAGE_LABEL: Record<Act3ActiveStage, string> = {
   T00: '第三幕 · T00',
   T01: '第三幕 · T01',
   T02: '第三幕 · T02',
+  T03: '第三幕 · T03',
 };
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
@@ -149,7 +151,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
       </div>
       {allCluesInspected && !stageAlreadyConfirmed && (
         <div className="act3-investigation__confirm-bar">
-          <p>已检查全部线索。确认本阶段结论后将进入{nextStage ? '下一阶段' : '遗址调查收束'}。</p>
+          <p>已检查全部线索。确认本阶段结论后将{nextStage ? '进入下一阶段' : '记录当前发现'}。</p>
           <button
             type="button"
             className="act3-investigation__confirm-btn"
@@ -165,6 +167,11 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
       {stageAlreadyConfirmed && nextStage && (
         <div className="act3-investigation__confirm-bar act3-investigation__confirm-bar--done">
           <p>本阶段已确认。当前阶段：{STAGE_TITLE[nextStage]}。</p>
+        </div>
+      )}
+      {stageAlreadyConfirmed && !nextStage && (
+        <div className="act3-investigation__confirm-bar act3-investigation__confirm-bar--done" role="status">
+          <p>本阶段调查已记录。可以回看现场与线索。</p>
         </div>
       )}
       {lensHotspot && (
