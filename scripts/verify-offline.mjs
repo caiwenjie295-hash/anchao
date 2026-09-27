@@ -29,8 +29,8 @@ function assertLocalImage(value) {
   assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
 }
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
-  const act3Docs = ['t00', 't01', 't02', 't03', 't04', 't05', 't06'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
-  const [t00Doc, t01Doc, t02Doc, t03Doc, t04Doc, t05Doc, t06Doc] = await Promise.all(act3Docs);
+  const act3Docs = ['t00', 't01', 't02', 't03', 't04', 't05', 't06', 't07'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
+  const [t00Doc, t01Doc, t02Doc, t03Doc, t04Doc, t05Doc, t06Doc, t07Doc] = await Promise.all(act3Docs);
 const errors = [];
 const requests = [];
 const seenTransitionIds = new Set();
@@ -470,7 +470,7 @@ async function investigateAct3() {
   await click('.t07-finale__return');
   await textButton('开始第三幕调查', '.story-transition-launch button');
   assert.equal(state().game.phase, 'A3_T00');
-    for (const [stage, doc] of [['T00', t00Doc], ['T01', t01Doc], ['T02', t02Doc], ['T03', t03Doc], ['T04', t04Doc], ['T05', t05Doc], ['T06', t06Doc]]) {
+    for (const [stage, doc] of [['T00', t00Doc], ['T01', t01Doc], ['T02', t02Doc], ['T03', t03Doc], ['T04', t04Doc], ['T05', t05Doc], ['T06', t06Doc], ['T07', t07Doc]]) {
     assert.equal(state().modules.act3.stage, stage);
     const lenses = doc.lenses.filter((lens) => lens.id !== 'LENS_A3_T03_000');
     for (const [index, lens] of lenses.entries()) {
@@ -486,16 +486,21 @@ async function investigateAct3() {
     }
     await click('.act3-investigation__confirm-btn');
   }
-    assert.equal(state().game.phase, 'A3_T06');
+    assert.equal(state().game.phase, 'A3_T07');
   assert.equal(state().game.flags.FLAG_A3_VVAKE_PAPER_FOUND, true);
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T04_001'));
     assert.equal(state().game.flags.FLAG_A3_13ACK_PAPER_FOUND, true);
     assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T05_001'));
     assert.equal(state().game.flags.FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED, true);
     assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T06_001'));
+    assert.equal(state().game.flags.FLAG_A3_NOTEBOOK_FOUND, true);
+    assert.equal(state().game.flags.FLAG_A3_SITE_EXITED, true);
+    assert.equal(state().game.flags.FLAG_A3_COMPLETE, true);
+    assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T07_001'));
+    assert.equal(document().querySelector('[data-act3-stage="T07"]').textContent.includes('进入第四幕'), false);
   await mount(save());
-    assert.equal(state().modules.act3.stage, 'T06');
-    assert.equal(state().game.phase, 'A3_T06');
+    assert.equal(state().modules.act3.stage, 'T07');
+    assert.equal(state().game.phase, 'A3_T07');
 }
 
 async function reset() {
@@ -536,7 +541,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
     await investigateAct3();
     await reset();
     assert.deepEqual(errors, []);
-      console.log('PASS: offline T07 finale and act3 T00–T06');
+      console.log('PASS: offline T07 finale and act3 T00–T07');
   } finally { dom?.window.close(); }
 } else try {
   await mount();
@@ -612,7 +617,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       } finally { await rm(savePath, { force: true }); }
     }
     await reset();
-      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T07 and act3 T00–T06' : ''}`);
+      console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T07 and act3 T00–T07' : ''}`);
   }
   assert.ok(requests.some((url) => url.endsWith('/assets/app.js')));
   assert.ok(requests.some((url) => url.endsWith('/assets/app.css')));

@@ -512,6 +512,9 @@
     {"id":"FLAG_A3_13ACK_PAPER_FOUND","title":"取得 13aCK 纸片","act":3,"phase":"A3_T05","source":"scene","purpose":"蹲下后主动收起广播室纸片","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":["FLAG_A3_KITCHEN_DOOR_REACHED"],"notes":"仅记录原词，不解码","defaultValue":false},
     {"id":"FLAG_A3_KITCHEN_DOOR_REACHED","title":"找到厨房方向","act":3,"phase":"A3_T05","source":"scene","purpose":"广播室结束后走向厨房","unlockCondition":["FLAG_A3_13ACK_PAPER_FOUND"],"relatedFlags":[],"notes":"气味未确定来源","defaultValue":false},
     {"id":"FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED","title":"确认黑补母与启明供奉处关联","act":3,"phase":"A3_T06","source":"scene","purpose":"玩家主动对照旧破庙外景与厨房空神龛","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":["FLAG_A3_KITCHEN_EXITED"],"notes":"不判断骨头来源与供奉物移动方式","defaultValue":false},
-    {"id":"FLAG_A3_KITCHEN_EXITED","title":"离开厨房回到楼上","act":3,"phase":"A3_T06","source":"scene","purpose":"厨房对照后准备返程","unlockCondition":["FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED"],"relatedFlags":[],"notes":"玩家确认阶段结论后记录","defaultValue":false}
+    {"id":"FLAG_A3_KITCHEN_EXITED","title":"离开厨房回到楼上","act":3,"phase":"A3_T06","source":"scene","purpose":"厨房对照后准备返程","unlockCondition":["FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED"],"relatedFlags":[],"notes":"玩家确认阶段结论后记录","defaultValue":false},
+    {"id":"FLAG_A3_NOTEBOOK_FOUND","title":"找到小 A 的笔记本","act":3,"phase":"A3_T07","source":"scene","purpose":"玩家蹲下后从消防栓背面主动取出包裹","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":["FLAG_A3_COMPLETE"],"notes":"不自动展示笔记全文","defaultValue":false},
+    {"id":"FLAG_A3_SITE_EXITED","title":"与小月离开启明旧址","act":3,"phase":"A3_T07","source":"scene","purpose":"终幕玩家主动确认撤离","unlockCondition":["FLAG_A3_NOTEBOOK_FOUND"],"relatedFlags":["FLAG_A3_COMPLETE"],"notes":"不自动进入第四幕","defaultValue":false},
+    {"id":"FLAG_A3_COMPLETE","title":"第三幕完成","act":3,"phase":"A3_T07","source":"scene","purpose":"携带笔记与小月离开旧址","unlockCondition":["FLAG_A3_SITE_EXITED"],"relatedFlags":[],"notes":"第四幕内容未在此解锁","defaultValue":false}
   ]
 }
