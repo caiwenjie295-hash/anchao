@@ -1,0 +1,239 @@
+import { useState, type CSSProperties, type ReactNode } from 'react';
+import { EvidenceImage } from '../../components/EvidenceImage';
+import type { StateManager } from '../../core/stateManager';
+import { type BrowserPage, type BrowserPageInteraction, type BrowserPageType } from '../../data/browserData';
+import { PAGE_TYPE_LABEL, labeledEntries, leadLinesAndNote, parseForumPosts, siteIdentity, urlCrumbs, type SiteIdentity } from './browserPresentation';
+
+type TemplateProps = { page: BrowserPage; identity: SiteIdentity };
+type Template = (props: TemplateProps) => ReactNode;
+type PagePicture = { assetId: string; caption: string };
+
+const kickerSource = (identity: SiteIdentity): string => identity.board ?? identity.host ?? identity.name;
+
+function PageFigure({ picture, wide = false }: { picture: PagePicture; wide?: boolean }) {
+  return <figure className={`browser-page__figure${wide ? ' browser-page__figure--wide' : ''}`}>
+    <EvidenceImage assetId={picture.assetId} caption={picture.caption} />
+    <figcaption>{picture.caption}</figcaption>
+  </figure>;
+}
+
+function KeywordTags({ page }: { page: BrowserPage }) {
+  if (page.keywords.length === 0) return null;
+  return <ul className="browser-page__tags" aria-label="页面标签">{page.keywords.map((keyword) => <li key={keyword}>{keyword}</li>)}</ul>;
+}
+
+function NewsArticle({ page, identity }: TemplateProps) {
+  const [lead, ...rest] = page.body;
+  const pictures = page.images ?? [];
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>{page.publishedAt}</time></p>
+    </header>
+    {pictures[0] && <PageFigure picture={pictures[0]} wide />}
+    <div className="browser-prose">
+      <p className="browser-prose__lead">{lead}</p>
+      {rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      {pictures.slice(1).map((picture) => <PageFigure key={picture.assetId} picture={picture} />)}
+    </div>
+  </>;
+}
+
+function EncyclopediaEntry({ page, identity }: TemplateProps) {
+  const [lead, ...rest] = page.body;
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>最后更新 {page.publishedAt}</time></p>
+    </header>
+    <div className="browser-page__columns">
+      <div className="browser-prose">
+        <p className="browser-prose__lead">{lead}</p>
+        {rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      </div>
+      <aside className="browser-page__aside" aria-label="条目信息">
+        <h2>条目信息</h2>
+        <dl className="browser-page__facts">
+          <div><dt>来源站点</dt><dd>{identity.name}</dd></div>
+          <div><dt>最近更新</dt><dd>{page.publishedAt}</dd></div>
+          {page.keywords.length > 0 && <div><dt>相关条目</dt><dd>{page.keywords.join('、')}</dd></div>}
+        </dl>
+      </aside>
+    </div>
+  </>;
+}
+
+function ForumThread({ page, identity }: TemplateProps) {
+  const posts = parseForumPosts(page);
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{kickerSource(identity)} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{posts.length} 条发言</span><time dateTime={page.publishedAt}>最后回复 {page.publishedAt}</time></p>
+    </header>
+    <ol className="browser-thread">{posts.map((post, index) => <li className="browser-thread__post" key={index}>
+      <span className="browser-thread__avatar" aria-hidden="true">{Array.from(post.author)[0] ?? '·'}</span>
+      <div className="browser-thread__body">
+        <div className="browser-thread__author">
+          <strong>{post.author}</strong>
+          {post.date && <time dateTime={post.date}>{post.date}</time>}
+        </div>
+        <p className="browser-thread__text">{post.text}</p>
+      </div>
+    </li>)}</ol>
+  </>;
+}
+
+function TrailGuide({ page, identity }: TemplateProps) {
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>更新 {page.publishedAt}</time></p>
+    </header>
+    <section className="browser-guide" aria-label="路线要点">
+      <h2>路线要点</h2>
+      <ol className="browser-guide__steps">{page.body.map((line, index) => <li key={index}>
+        <span className="browser-guide__index" aria-hidden="true">{index + 1}</span>
+        <p>{line}</p>
+      </li>)}</ol>
+    </section>
+    <KeywordTags page={page} />
+  </>;
+}
+
+function WeatherBoard({ page, identity }: TemplateProps) {
+  const { rows, note } = leadLinesAndNote(page.body);
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>观测 {page.publishedAt}</time></p>
+    </header>
+    <section className="browser-weather" aria-label="当日概况">
+      <h2>当日概况</h2>
+      <ul className="browser-weather__rows">{rows.map((row, index) => <li key={index}>{row}</li>)}</ul>
+      {note && <p className="browser-page__note">{note}</p>}
+    </section>
+    <KeywordTags page={page} />
+  </>;
+}
+
+function MapBoard({ page, identity }: TemplateProps) {
+  const picture = page.images?.[0];
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>标注 {page.publishedAt}</time></p>
+    </header>
+    {picture && <PageFigure picture={picture} wide />}
+    <section className="browser-mapboard" aria-label="图上说明">
+      <h2>图上说明</h2>
+      <ul className="browser-mapboard__notes">{page.body.map((line, index) => <li key={index}>{line}</li>)}</ul>
+    </section>
+    <KeywordTags page={page} />
+  </>;
+}
+
+function JournalPost({ page, identity }: TemplateProps) {
+  const grouped = labeledEntries(page.body);
+  const [lead, ...rest] = page.body;
+  return <>
+    <header className="browser-page__header browser-page__header--journal">
+      <p className="browser-page__kicker">{kickerSource(identity)} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>发布 {page.publishedAt}</time></p>
+    </header>
+    {grouped
+      ? <>
+        <section className="browser-cases" aria-label="页面列出的条目">
+          <h2>页面列出的条目</h2>
+          <ul>{grouped.entries.map((entry) => <li key={entry.label}>
+            <span className="browser-cases__label">{entry.label}</span>
+            <p>{entry.text}</p>
+          </li>)}</ul>
+        </section>
+        {grouped.rest.length > 0 && <div className="browser-prose">{grouped.rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>}
+      </>
+      : <div className="browser-prose">
+        <p className="browser-prose__lead">{lead}</p>
+        {rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      </div>}
+    <KeywordTags page={page} />
+  </>;
+}
+
+function CommercialListing({ page, identity }: TemplateProps) {
+  return <>
+    <header className="browser-page__header">
+      <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
+      <h1>{page.headline}</h1>
+      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>更新 {page.publishedAt}</time></p>
+    </header>
+    <section className="browser-listing" aria-label="页面要点">
+      <h2>页面要点</h2>
+      <ul className="browser-listing__rows">{page.body.map((line, index) => <li key={index}>
+        <span className="browser-listing__marker" aria-hidden="true" />
+        <p>{line}</p>
+      </li>)}</ul>
+    </section>
+    <KeywordTags page={page} />
+  </>;
+}
+
+const TEMPLATE_BY_TYPE: Record<BrowserPageType, Template> = {
+  news: NewsArticle,
+  incident: NewsArticle,
+  encyclopedia: EncyclopediaEntry,
+  'same-name': EncyclopediaEntry,
+  'trail-guide': TrailGuide,
+  weather: WeatherBoard,
+  map: MapBoard,
+  forum: ForumThread,
+  'self-media': JournalPost,
+  commercial: CommercialListing,
+};
+
+function SiteMasthead({ identity, crumbs }: { identity: SiteIdentity; crumbs: string[] }) {
+  return <div className="browser-page__masthead">
+    <span className="browser-page__logo" aria-hidden="true">{identity.monogram}</span>
+    <span className="browser-page__brand">
+      <strong>{identity.name}</strong>
+      {identity.board ? <span className="browser-page__board">{identity.board}</span> : null}
+    </span>
+    {crumbs.length > 0 && <p className="browser-page__crumb">{crumbs.join(' › ')}</p>}
+  </div>;
+}
+
+export function BrowserPageView({ page, manager }: { page: BrowserPage | undefined; manager: StateManager }) {
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const visited = manager.getState().modules.browser.visitedPageIds;
+  if (!page) return <p className="browser-empty">该内部页面已不可用。</p>;
+  const interactions = (page.interactions ?? []).filter((interaction) => (
+    ('requiredVisitedPageIds' in interaction ? interaction.requiredVisitedPageIds.every((id) => visited.includes(id)) : true)
+    && ('requiredFlags' in interaction ? interaction.requiredFlags.every((id) => manager.getState().game.flags[id] === true) : true)
+  ));
+  const copyName = async (interaction: Extract<BrowserPageInteraction, { type: 'copy-names' }>, name: string) => {
+    try {
+      await navigator.clipboard.writeText(name);
+      setCopyStatus(interaction.successMessage.replaceAll('{name}', name));
+    } catch {
+      setCopyStatus(interaction.failureMessage.replaceAll('{name}', name));
+    }
+  };
+  const runInteraction = (interaction: BrowserPageInteraction) => {
+    if (interaction.type === 'qiming-name-match') manager.inferAct2QimingNameMatch(interaction.person);
+    if (interaction.type === 'confirm-other-cases') manager.confirmAct2OtherCasesAbnormal();
+  };
+  const identity = siteIdentity(page);
+  const Template = TEMPLATE_BY_TYPE[page.pageType];
+  return <article className={`browser-page browser-page--${page.pageType}`} style={{ '--browser-site-hue': identity.hue } as unknown as CSSProperties}>
+    <SiteMasthead identity={identity} crumbs={urlCrumbs(page.url)} />
+    <Template page={page} identity={identity} />
+    <footer className="browser-page__footer"><p className="browser-page__url">{page.url}</p></footer>
+    {interactions.map((interaction, index) => <div className="browser-page__actions" key={`${page.id}-interaction-${index}`}><p>{interaction.prompt}</p>{interaction.type === 'copy-names' ? <>{copyStatus && <p role="status">{copyStatus}</p>}{interaction.names.map((name) => <button type="button" key={name.value} onClick={() => void copyName(interaction, name.value)}>{name.buttonLabel}</button>)}</> : <button type="button" onClick={() => runInteraction(interaction)}>{interaction.buttonLabel}</button>}</div>)}
+  </article>;
+}

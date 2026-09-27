@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { EvidenceImage } from '../../components/EvidenceImage';
 import { stateManager, type StateManager } from '../../core/stateManager';
-import { browserPageById, findSearchQuery, getResultsForQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible, type BrowserPage, type BrowserPageInteraction } from '../../data/browserData';
+import { browserPageById, findSearchQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible } from '../../data/browserData';
+import { BrowserPageView } from './BrowserPageView';
+import { BrowserSearchResults } from './BrowserSearchResults';
+
+/** 页面版式已拆到独立组件，这里保留既有导出路径。 */
+export { BrowserPageView } from './BrowserPageView';
 
 type View = { kind: 'home' } | { kind: 'results'; query: string } | { kind: 'page'; pageId: string };
 type Tab = { id: number; view: View; stack: View[]; stackIndex: number };
@@ -94,7 +98,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     {historyOpen && <aside className="browser-history" aria-label="搜索历史"><strong>最近搜索</strong>{state.modules.browser.queryHistory.filter((query) => stage === 'qiming' || !findSearchQuery(query) || !isAct2T06Record(findSearchQuery(query)!)).length ? state.modules.browser.queryHistory.filter((query) => stage === 'qiming' || !findSearchQuery(query) || !isAct2T06Record(findSearchQuery(query)!)).map((query) => <button type="button" key={query} onClick={() => submitSearch(query)}>{query}</button>) : <p>还没有搜索记录</p>}</aside>}
     <div className="browser-content">
       {shownView.kind === 'home' && <BrowserHome draft={safeDraft} suggestions={suggestions} onChoose={(query) => { setDraft(query); submitSearch(query); }} />}
-      {shownView.kind === 'results' && <SearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
+      {shownView.kind === 'results' && <BrowserSearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
       {shownView.kind === 'page' && <BrowserPageView page={browserPageById.get(shownView.pageId)} manager={manager} />}
     </div>
     {stage === 'search' && state.game.flags.FLAG_A2_WEB_SEARCH_FAILED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
@@ -106,30 +110,4 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
 
 function BrowserHome({ draft, suggestions, onChoose }: { draft: string; suggestions: string[]; onChoose: (query: string) => void }) {
   return <section className="browser-home"><div><p className="browser-home__eyebrow">本机内部索引</p><h2>查找一些旧信息</h2><p>结果来自这台电脑保存的离线网页索引。</p>{draft && <div className="browser-suggestions" aria-label="搜索建议">{suggestions.map((term) => <button type="button" key={term} onClick={() => onChoose(term)}>{term}</button>)}</div>}</div></section>;
-}
-function SearchResults({ query, stage, onOpen }: { query: string; stage: import('../../core/types').Act2Stage; onOpen: (pageId: string) => void }) {
-  const results = getResultsForQuery(query, stage);
-  return <section className="browser-results" aria-live="polite"><header><p>内部搜索</p><h2>{query}</h2><span>{results.length ? `约 ${results.length} 条结果` : '没有完全匹配的结果'}</span></header>{results.length ? <ol>{results.map((page) => <li key={page.id}><button type="button" onClick={() => onOpen(page.id)}><span className="browser-result__domain">{page.domain}</span><strong>{page.headline}</strong><span>{page.publishedAt} · {page.snippet}</span></button></li>)}</ol> : <p className="browser-empty">试试“鸡公岭”“XX县失踪”或其他搜索建议。</p>}</section>;
-}
-export function BrowserPageView({ page, manager }: { page: BrowserPage | undefined; manager: StateManager }) {
-  const [copyStatus, setCopyStatus] = useState<string | null>(null);
-  const visited = manager.getState().modules.browser.visitedPageIds;
-  if (!page) return <p className="browser-empty">该内部页面已不可用。</p>;
-  const interactions = (page.interactions ?? []).filter((interaction) => (
-    ('requiredVisitedPageIds' in interaction ? interaction.requiredVisitedPageIds.every((id) => visited.includes(id)) : true)
-    && ('requiredFlags' in interaction ? interaction.requiredFlags.every((id) => manager.getState().game.flags[id] === true) : true)
-  ));
-  const copyName = async (interaction: Extract<BrowserPageInteraction, { type: 'copy-names' }>, name: string) => {
-    try {
-      await navigator.clipboard.writeText(name);
-      setCopyStatus(interaction.successMessage.replaceAll('{name}', name));
-    } catch {
-      setCopyStatus(interaction.failureMessage.replaceAll('{name}', name));
-    }
-  };
-  const runInteraction = (interaction: BrowserPageInteraction) => {
-    if (interaction.type === 'qiming-name-match') manager.inferAct2QimingNameMatch(interaction.person);
-    if (interaction.type === 'confirm-other-cases') manager.confirmAct2OtherCasesAbnormal();
-  };
-  return <article className="browser-page"><p className="browser-page__source">{page.domain} · {page.publishedAt}</p><h2>{page.headline}</h2><p className="browser-page__url">{page.url}</p><div>{page.body.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>{interactions.map((interaction, index) => <div className="browser-page__actions" key={`${page.id}-interaction-${index}`}><p>{interaction.prompt}</p>{interaction.type === 'copy-names' ? <>{copyStatus && <p role="status">{copyStatus}</p>}{interaction.names.map((name) => <button type="button" key={name.value} onClick={() => void copyName(interaction, name.value)}>{name.buttonLabel}</button>)}</> : <button type="button" onClick={() => runInteraction(interaction)}>{interaction.buttonLabel}</button>}</div>)}{page.images?.map((picture) => <figure key={picture.assetId}><EvidenceImage assetId={picture.assetId} caption={picture.caption} /><figcaption>{picture.caption}</figcaption></figure>)}</article>;
 }
