@@ -17,6 +17,7 @@ const STAGE_TITLE: Record<Act3ActiveStage, string> = {
   T03: '禁闭区',
   T04: '档案室',
   T05: '广播室',
+  T06: '厨房与空神龛',
 };
 
 const STAGE_LABEL: Record<Act3ActiveStage, string> = {
@@ -26,6 +27,7 @@ const STAGE_LABEL: Record<Act3ActiveStage, string> = {
   T03: '第三幕 · T03',
   T04: '第三幕 · T04',
   T05: '第三幕 · T05',
+  T06: '第三幕 · T06',
 };
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
@@ -128,6 +130,18 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
               <article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article>
               <article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article>
               <p>两张词表。含义暂时不明。</p>
+            </aside>
+          )}
+          {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && (
+            <aside className="act3-investigation__temple-compare" aria-label="破庙与空神龛对照">
+              <figure>
+                {assetLoader.get('IMG_A1_I_001')?.src && <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" />}
+                <figcaption>第一次进山 · 破庙外景</figcaption>
+              </figure>
+              <figure>
+                {assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头的空木神龛 · 摄影待接入</div>}
+                <figcaption>启明厨房 · 空神龛与底座</figcaption>
+              </figure>
             </aside>
           )}
           {lens.hotspots.length > 0 && (

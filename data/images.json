@@ -341,6 +341,14 @@
     {"id":"IMG_A3_T05_003","title":"旧桌","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 旧桌缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
     {"id":"IMG_A3_T05_004","title":"桌脚低处","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 低视角纸边缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
     {"id":"IMG_A3_T05_005","title":"13aCK 纸片","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 原词由文字层显示","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
-    {"id":"IMG_A3_T05_006","title":"走廊深处的气味","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 厨房方向缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"}
+    {"id":"IMG_A3_T05_006","title":"走廊深处的气味","act":3,"phase":"A3_T05","source":"scene","purpose":"T05 厨房方向缺图占位","unlockCondition":["FLAG_A3_BROADCAST_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字与热点可独立操作","assetType":"image"},
+    {"id":"IMG_A3_T06_001","title":"厨房门牌","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 门牌缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入；文字层保留门牌","assetType":"image"},
+    {"id":"IMG_A3_T06_002","title":"厨房全景","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 整室缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入","assetType":"image"},
+    {"id":"IMG_A3_T06_003","title":"大锅与砍骨刀","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 锅刀缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入","assetType":"image"},
+    {"id":"IMG_A3_T06_004","title":"地上的大骨","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 骨头缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"来源不明，不作人体鉴定","assetType":"image"},
+    {"id":"IMG_A3_T06_005","title":"上方铁钩","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 铁钩缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入","assetType":"image"},
+    {"id":"IMG_A3_T06_006","title":"尽头木神龛","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 神龛缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"正式影像待接入","assetType":"image"},
+    {"id":"IMG_A3_T06_007","title":"空底座近景","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 空底座缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"与第一幕破庙图同屏比对","assetType":"image"},
+    {"id":"IMG_A3_T06_008","title":"上楼对照旧照片","act":3,"phase":"A3_T06","source":"scene","purpose":"T06 旧照比较背景缺图占位","unlockCondition":["FLAG_A3_KITCHEN_DOOR_REACHED"],"relatedFlags":[],"notes":"使用已有 IMG_A1_I_001，空神龛暂以文字占位","assetType":"image"}
   ]
 }

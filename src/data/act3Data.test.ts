@@ -5,7 +5,7 @@ import { act3FirstLensId, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage
 describe('third-act authored lens graph', () => {
   it('keeps each stage navigable with registered resource IDs and unique clues', () => {
     const imageIds = new Set(imageDocument.items.map((image) => image.id));
-    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05'] as AuthoredAct3Stage[]) {
+    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06'] as AuthoredAct3Stage[]) {
       const doc = act3StageDoc(stage);
       const lensIds = new Set(doc.lenses.map((lens) => lens.id));
       expect(doc.stage).toBe(stage);
@@ -36,5 +36,15 @@ describe('third-act authored lens graph', () => {
     expect(paper.description).toContain('13aCK');
     for (const word of ['老鼠', '血', '草垛', '木房子', '玫瑰', '表']) expect(paper.description).toContain(word);
     expect(doc.lenses.slice(0, 4).some((lens) => lens.description.includes('13aCK'))).toBe(false);
+  });
+
+  it('gates the upstairs shrine comparison on inspected kitchen evidence', () => {
+    const doc = act3StageDoc('T06');
+    const compare = doc.lenses.find((lens) => lens.id === 'LENS_A3_T06_008')!;
+    expect(compare.requiresClueIds).toEqual(expect.arrayContaining([
+      'CLUE_A3_T06_POT_KNIFE', 'CLUE_A3_T06_BONES', 'CLUE_A3_T06_HOOKS', 'CLUE_A3_T06_SHRINE', 'CLUE_A3_T06_EMPTY_BASE',
+    ]));
+    expect(compare.description).toContain('破庙');
+    expect(compare.description).toContain('仍不明');
   });
 });
