@@ -1,5 +1,5 @@
 import document from '../../data/story_transitions.json';
-import type { AppState, GamePhase } from '../core/types';
+import type { AppId, AppState, GamePhase } from '../core/types';
 
 export interface StoryTransitionRecord {
   id: string;
@@ -10,6 +10,8 @@ export interface StoryTransitionRecord {
   title: string;
   paragraphs: string[];
   actionLabel: string;
+  presentation?: 'immediate' | 'launch';
+  targetAppId?: AppId;
 }
 
 export const STORY_PHASE_ORDER: GamePhase[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'A2_T01', 'A2_T02', 'A2_T03', 'A2_T04', 'A2_T05', 'A2_T06'];
@@ -22,6 +24,8 @@ export function validateStoryTransitions(): void {
     if (!STORY_PHASE_ORDER.includes(item.phase) || !['phase', 'journey-finished'].includes(item.trigger)) throw new Error(`转场阶段无效：${item.id}`);
     if (!item.id || !item.eyebrow || !item.title || !item.actionLabel || item.paragraphs.length === 0 || item.paragraphs.some((text) => !text.trim())) throw new Error(`转场文案不完整：${item.id}`);
     if (item.trigger === 'journey-finished' && item.phase !== 'I') throw new Error(`返程转场阶段无效：${item.id}`);
+    if (item.presentation !== undefined && !['immediate', 'launch'].includes(item.presentation)) throw new Error(`转场呈现无效：${item.id}`);
+    if (item.targetAppId !== undefined && !['wechat', 'mail', 'browser', 'explorer', 'notepad', 'photos'].includes(item.targetAppId)) throw new Error(`转场应用无效：${item.id}`);
   }
 }
 
