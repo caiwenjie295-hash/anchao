@@ -72,7 +72,12 @@ async function setInput(selector, value) {
   input.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
   await settle();
 }
-async function openApp(title) { await click(`.taskbar button[aria-label="打开 ${title}"]`); }
+async function openApp(title) {
+  const button = [...document().querySelectorAll('.taskbar button')].find((item) => (item.getAttribute('aria-label') ?? '').endsWith(` ${title}`));
+  assert.ok(button, `Missing taskbar button: ${title}`);
+  if (button.classList.contains('taskbar__app--active')) return;
+  button.click(); await settle();
+}
 /** 任务栏按钮在窗口已打开时会变成“切换到 …”。 */
 async function openOrFocusApp(title) {
   const button = [...document().querySelectorAll('.taskbar button')].find((item) => (item.getAttribute('aria-label') ?? '').endsWith(` ${title}`));

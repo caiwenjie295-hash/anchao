@@ -136,15 +136,47 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(stage()).toBe('search');
   });
 
-  it('keeps a new black-screen transition behind the player action', async () => {
+  it('continues from the first-act ending into one immediate second-act opening', async () => {
     await mountApp();
     await startSecondAct();
-    expect(pick('.story-transition')).toBeNull();
-    expect(pick('.story-transition-launch button')?.textContent).toBe('进行下一步调查');
-    await click(pick('.story-transition-launch button'));
-    expect(pick('.story-transition')).not.toBeNull();
+    expect(pick('.story-transition')?.getAttribute('data-story-transition')).toBe('TRANSITION_A2_T01');
+    expect(pick('.story-transition-launch')).toBeNull();
+    expect(desktop()?.parentElement?.hasAttribute('inert')).toBe(true);
     await click(pick('.story-transition button'));
     expect(pick('.story-transition')).toBeNull();
+    expect(desktop()?.parentElement?.hasAttribute('inert')).toBe(false);
+  });
+
+  it('opens the old-mail destination only after the mother-message transition is confirmed', async () => {
+    await mountApp();
+    await click(pick('.story-transition button'));
+    await run(() => {
+      stateManager.setPhase('B');
+      stateManager.setFlag('FLAG_A1_XIAOA_MISSING_KNOWN', true);
+    });
+    expect(pick('.story-transition-launch')).not.toBeNull();
+    expect(state().desktop.windows.mail.status).toBe('closed');
+    await click(pick('.story-transition-launch button'));
+    expect(pick('.story-transition button')?.textContent).toBe('去翻旧邮件');
+    await click(pick('.story-transition button'));
+    expect(state().desktop.activeAppId).toBe('mail');
+    expect(state().desktop.windows.mail.status).toBe('normal');
+    expect(state().modules.storyTransitions.seenIds).toContain('TRANSITION_A1_B');
+  });
+
+  it('covers the bridge and library before either destination becomes operable', async () => {
+    await mountApp();
+    await startSecondAct();
+    await click(pick('.story-transition button'));
+    await completeT01();
+    expect(pick('.story-transition')?.getAttribute('data-story-transition')).toBe('TRANSITION_A2_T02');
+    expect(pick('.story-transition-launch')).toBeNull();
+    expect(pick('.act2-experience')?.parentElement?.hasAttribute('inert')).toBe(true);
+    await click(pick('.story-transition button'));
+    expect(pick('.act2-bridge')).not.toBeNull();
+    await skipT02();
+    expect(pick('.story-transition')?.getAttribute('data-story-transition')).toBe('TRANSITION_A2_T03');
+    expect(pick('.story-transition-launch')).toBeNull();
   });
 
   it.each([

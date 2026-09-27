@@ -78,10 +78,11 @@ export default function App() {
   const secondActStarted = act2Stage !== 'inactive';
   const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
   const transition = getPendingStoryTransition(state);
-  const transitionOpen = transition !== null && (transition.id === 'TRANSITION_A1_INTRO' || openedTransitionId === transition.id);
+  const transitionOpen = transition !== null && (transition.presentation === 'immediate' || openedTransitionId === transition.id);
   const continueTransition = () => {
     if (!transition) return;
     stateManager.acknowledgeStoryTransition(transition.id);
+    if (transition.targetAppId) stateManager.openApp(transition.targetAppId);
     setOpenedTransitionId(null);
   };
   const transitionLayer = transition && (transitionOpen
