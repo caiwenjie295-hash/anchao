@@ -16,7 +16,7 @@ describe('saveManager', () => {
     state.desktop.windows.mail.status = 'normal';
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated.desktop.windows.mail.status).toBe('normal');
-    expect(hydrated.schemaVersion).toBe(7);
+    expect(hydrated.schemaVersion).toBe(8);
   });
 
   it('falls back safely when storage contains malformed JSON', () => {

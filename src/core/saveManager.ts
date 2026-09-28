@@ -1,5 +1,6 @@
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
-import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultState, createDefaultWindow } from './defaultState';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type Act4State, type Act4Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
+import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultAct4State, createDefaultState, createDefaultWindow } from './defaultState';
+import { birthdayScenes, timeline } from '../data/act4/content';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
@@ -9,7 +10,7 @@ import { act2T07, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, ACT2_T07_FRAME_ID
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1–6 的有效进度迁移到 schema 7。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7];
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'];
@@ -115,6 +116,26 @@ const safeAct3 = (candidate: unknown): Act3State => {
   return { stage, currentLensId, visitedLensIds, inspectedClueIds, confirmedFlagIds };
 };
 
+const act4Stages: Act4Stage[] = ['inactive', 'T01', 'T02', 'T03', 'T04', 'T05'];
+const act4PuzzleIds = Array.from({ length: 12 }, (_, index) => `A4_P${String(index + 1).padStart(2, '0')}`);
+const safeAct4 = (candidate: unknown, flags: AppState['game']['flags']): Act4State => {
+  const fallback = createDefaultAct4State();
+  if (!isRecord(candidate) || flags.FLAG_A3_COMPLETE !== true || !act4Stages.includes(candidate.stage as Act4Stage)) return fallback;
+  const readNotebookPages = Array.isArray(candidate.readNotebookPages) ? [...new Set(candidate.readNotebookPages.filter((page): page is number => Number.isInteger(page) && page >= 1 && page <= 9))] : [];
+  const stage = candidate.stage as Act4Stage;
+  const stageNumber = stage === 'inactive' ? 0 : Number(stage.slice(1));
+  const puzzleStageNumber = (id: string) => { const n = Number(id.slice(-2)); return n <= 3 ? 1 : n <= 5 ? 2 : n <= 8 ? 3 : n <= 10 ? 4 : 5; };
+  const solvedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= stageNumber);
+  const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'] };
+  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) return fallback;
+  const unlockedAccountIds = solvedPuzzleIds.includes('A4_P04') ? safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id)) : [];
+  if (stageNumber >= 3 && unlockedAccountIds.length !== 2) return fallback;
+  const checkedMailRecipients = safeStringIds(candidate.checkedMailRecipients).filter((id) => ['protagonist', 'xiaoyue'].includes(id));
+  const timelineReadDates = safeStringIds(candidate.timelineReadDates).filter((date) => timeline.some(([id]) => id === date));
+  const birthdayNodeId = stage === 'T05' && birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) && (candidate.birthdayNodeId !== 'taken' || solvedPuzzleIds.includes('A4_P11')) ? candidate.birthdayNodeId as string : 'study';
+  return { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stage === 'T04', wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId };
+};
+
 export const hydrateState = (candidate: unknown): AppState => {
   const fallback = createDefaultState();
   if (!isRecord(candidate) || !supportedSchemaVersions.includes(candidate.schemaVersion as number)) return fallback;
@@ -132,6 +153,20 @@ export const hydrateState = (candidate: unknown): AppState => {
   const rawFlags = isRecord(game.flags)
     ? Object.fromEntries(Object.entries(game.flags).filter(([, value]) => ['boolean', 'string', 'number'].includes(typeof value))) as AppState['game']['flags']
     : {};
+  let act4 = safeAct4(modules.act4, rawFlags);
+  if (act4.stage !== 'inactive') {
+    const stageNumber = Number(act4.stage.slice(1));
+    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) act4 = createDefaultAct4State();
+  }
+  if (act4.stage === 'inactive') {
+    for (const key of Object.keys(rawFlags)) if (/^FLAG_A4_/.test(key)) delete rawFlags[key];
+  } else {
+    for (let index = 1; index <= 5; index++) {
+      const id = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
+      if (rawFlags[id] === true && !act4.solvedPuzzleIds.includes(`A4_P${String([1, 4, 6, 9, 11][index - 1]).padStart(2, '0')}`)) delete rawFlags[id];
+    }
+    if (act4.birthdayNodeId !== 'taken') delete rawFlags.FLAG_A4_T05_COMPLETE;
+  }
   const t05FlagIds = ['FLAG_A2_SCHOOL_ENTERED', 'FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SS_MATCH_CONFIRMED'];
   const t06FlagIds = ['FLAG_A2_QIMING_OFFICIAL_FOUND', 'FLAG_A2_QIMING_TESTIMONIALS_READ', 'FLAG_A2_QIMING_FORUM_FOUND', 'FLAG_A2_HUANG_MATCH_INFERRED', 'FLAG_A2_ZHONG_MATCH_INFERRED', 'FLAG_A2_OTHER_CASES_ABNORMAL'];
   const t07FlagIds = ['FLAG_A2_PROMO_VIDEO_FOUND', 'FLAG_A2_PROMO_VIDEO_WATCHED', 'FLAG_A2_PROMO_PHOTO_SS_FOUND', 'FLAG_A2_TEMPLE_FRAME_FOUND', 'FLAG_A2_QIMING_LOCATION_INFERRED', 'FLAG_A2_SECOND_TRIP_PLANNED', 'FLAG_A2_COMPLETE'];
@@ -229,8 +264,8 @@ export const hydrateState = (candidate: unknown): AppState => {
   const phaseForStage: Partial<Record<Act2Stage, string>> = {
     search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06', finale: 'A2_T07',
   };
-  const safePhase = act3.stage !== 'inactive' ? `A3_${act3.stage}` as AppState['game']['phase'] : phaseForStage[act2Research.stage] ?? (
-    hydratedPhase.startsWith('A2_T') ? fallback.game.phase : hydratedPhase
+  const safePhase = act4.stage !== 'inactive' ? `A4_${act4.stage}` as AppState['game']['phase'] : act3.stage !== 'inactive' ? `A3_${act3.stage}` as AppState['game']['phase'] : phaseForStage[act2Research.stage] ?? (
+    hydratedPhase.startsWith('A2_T') || hydratedPhase.startsWith('A4_T') ? fallback.game.phase : hydratedPhase
   );
   const autoEntryIds = notepad ? safeStringIds(notepad.autoEntryIds).filter((id) => {
     const triggerFlagByNote: Record<string, string> = {
@@ -267,9 +302,9 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 7,
+    schemaVersion: 8,
     game: {
-      act: act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
+      act: act4.stage !== 'inactive' ? 4 : act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,
       flags: rawFlags,
       discoveredClueIds: Array.isArray(game.discoveredClueIds) ? game.discoveredClueIds.filter((id): id is string => typeof id === 'string') : [],
@@ -311,6 +346,7 @@ export const hydrateState = (candidate: unknown): AppState => {
       },
       act2Research,
       act3,
+      act4,
       storyTransitions: { seenIds: [] },
     },
   };
