@@ -58,6 +58,3 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     {!imageUrl && <nav className="photo-viewport__fallback" aria-label="无图文字入口">{markers.map(marker => <button key={marker.id} type="button" disabled={marker.disabled} onClick={event => marker.onActivate(event.currentTarget)}>{marker.label}</button>)}</nav>}
   </div>;
 }
-
-
-
