@@ -44,7 +44,7 @@ export const laterScenes: LaterScene[] = [
   shot('T10', 2, 'A4_T10_WORDS', '两张纸片', '小月看着 VVaKe 和 13aCK，问：“像不像 wake 和 back？”我们都沉默了。这只是她的联想，没有机构给出的解释。', '当下桌面两张旧纸与手写 wake/back 并列，人物手部入镜。'),
   shot('T10', 3, 'A4_T10_CAFE', '三杯饮料', '我和小月说起工作，她收到了 offer，我也要回去上班。我们又点一杯奶茶，把三杯放在一起拍照，与第三杯轻碰。', '咖啡馆桌面三杯饮料与手机，第三杯在两人之间，克制留白。'),
   shot('T10', 4, 'A4_T10_MONTHS', '数月之后', '起初我们隔几天聊一次，后来越来越少。我问她“最近怎么样”，她说不错；我也说不错。几个月后，一封启明邮件到了。', '当下生活桌面与简短聊天记录，日历翻过数月，不暗示监控。'),
-  shot('T10', 5, 'A4_T10_MAIL', '最后一封邮件', '主题：关于王澳同学相关事项的说明。发件人：启明。邮件必须由玩家主动打开；其中没有小 A 的下落。', '普通邮箱收件箱内一封启明邮件，内容文字层单独显示，不见发件人实体。'),
+  shot('T10', 5, 'A4_T10_MAIL', '最后一封邮件', '收件箱里躺着启明发来的新邮件，主题是“关于王澳同学相关事项的说明”。我停在这封信前，迟迟没有点开。', '普通邮箱收件箱内一封启明邮件，内容文字层单独显示，不见发件人实体。'),
 ];
 
 export const laterScenesByStage = (stage: LaterStage) => laterScenes.filter((scene) => scene.stage === stage);
@@ -53,4 +53,5 @@ export const firstLaterSceneId: Record<LaterStage, string> = { T06: 'A4_T06_WAKE
 export const lastLaterSceneId: Record<LaterStage, string> = { T06: 'A4_T06_CONFINEMENT', T07: 'A4_T07_SCHOOL', T08: 'A4_T08_KITCHEN', T09: 'A4_T09_BLACKOUT', T10: 'A4_T10_MAIL' };
 
 export const huangArchive = ['黄子山，2008 年改造成功，品学兼优。', '进食 90 天，效果良好。', '计划于 2014 年回归。'] as const;
+export const jayReply = '好久不见啊小 A，怎么想起来联系我了？什么时候有空，咱们叫上小月，三个人吃个饭聚聚，说不定又能在一个城市工作呢？期待三人组回归！';
 export const finalQimingMail = ['您好，', '感谢您一直以来对王澳同学的关心。', '您所关注的相关事项现已结束，无需继续核实。', '过去的事情已经过去，请回到正常的工作与生活。', '祝一切顺利。', '启明'] as const;

@@ -71,6 +71,57 @@ const laterManager = () => {
 describe("fourth act later progression", () => {
   beforeEach(() => localStorage.clear());
 
+  it("migrates a completed schema 8 T05 save and keeps voluntary T06 entry", () => {
+    const old = readyManager().getState();
+    old.schemaVersion = 8 as 9;
+    old.modules.act4.stage = "T05";
+    old.modules.act4.readNotebookPages = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    old.modules.act4.solvedPuzzleIds = ["A4_P01", "A4_P04", "A4_P06", "A4_P09", "A4_P11"];
+    old.modules.act4.unlockedAccountIds = ["weibo", "mail"];
+    old.modules.act4.timelineReadDates = ["04-19"];
+    old.modules.act4.viewedWakeMail = true;
+    old.modules.act4.birthdayNodeId = "taken";
+    for (let index = 1; index <= 5; index++) old.game.flags[`FLAG_A4_T0${index}_COMPLETE`] = true;
+    const saved = JSON.parse(JSON.stringify(old));
+    for (const key of ["laterNodeId", "seenLaterNodeIds", "packageStep", "broadcastIndex", "finalMailOpened"]) delete saved.modules.act4[key];
+    const migrated = hydrateState(saved);
+    expect(migrated.schemaVersion).toBe(9);
+    expect(migrated.modules.act4.stage).toBe("T05");
+    const manager = new StateManager(new EventBus(), migrated);
+    manager.startAct4T06();
+    expect(manager.getState().modules.act4.stage).toBe("T06");
+  });
+
+  it("returns malformed later saves to the valid completed T05 stage", () => {
+    const base = readyManager().getState();
+    base.modules.act4.stage = "T07";
+    base.modules.act4.readNotebookPages = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    base.modules.act4.solvedPuzzleIds = ["A4_P01", "A4_P04", "A4_P06", "A4_P09", "A4_P11", "A4_P13"];
+    base.modules.act4.unlockedAccountIds = ["weibo", "mail"];
+    base.modules.act4.timelineReadDates = ["04-19"];
+    base.modules.act4.viewedWakeMail = true;
+    base.modules.act4.birthdayNodeId = "taken";
+    base.modules.act4.laterNodeId = "A4_T07_DREAM";
+    base.modules.act4.seenLaterNodeIds = laterScenesByStage("T06").map((scene) => scene.id).concat("A4_T07_DREAM");
+    for (let index = 1; index <= 5; index++) base.game.flags[`FLAG_A4_T0${index}_COMPLETE`] = true;
+    base.game.flags.FLAG_A4_T06_COMPLETE = true;
+    const missingFlag = JSON.parse(JSON.stringify(base));
+    delete missingFlag.game.flags.FLAG_A4_T06_COMPLETE;
+    expect(hydrateState(missingFlag)).toMatchObject({ game: { phase: "A4_T05" }, modules: { act4: { stage: "T05", laterNodeId: null } } });
+    expect(hydrateState(missingFlag).game.flags.FLAG_A4_T07_COMPLETE).not.toBe(true);
+    const missingPuzzle = JSON.parse(JSON.stringify(base));
+    missingPuzzle.modules.act4.solvedPuzzleIds = missingPuzzle.modules.act4.solvedPuzzleIds.filter((id: string) => id !== "A4_P13");
+    missingPuzzle.game.flags.FLAG_A4_T07_COMPLETE = true;
+    const repaired = hydrateState(missingPuzzle);
+    expect(repaired.modules.act4.stage).toBe("T05");
+    expect(repaired.modules.act4.solvedPuzzleIds).not.toContain("A4_P13");
+    expect(repaired.game.flags.FLAG_A4_T06_COMPLETE).not.toBe(true);
+    expect(repaired.game.flags.FLAG_A4_T07_COMPLETE).not.toBe(true);
+    const brokenNode = JSON.parse(JSON.stringify(base));
+    brokenNode.modules.act4.laterNodeId = "broken";
+    expect(hydrateState(brokenNode).modules.act4.stage).toBe("T05");
+  });
+
   it("requires scene evidence and ordered actions while optional puzzles remain optional", () => {
     const manager = laterManager();
     manager.startAct4T06();

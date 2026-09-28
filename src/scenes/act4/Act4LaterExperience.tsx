@@ -1,7 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { backWords, wakeWords } from '../../data/act4/content';
-import { firstLaterSceneId, lastLaterSceneId, laterSceneById, laterScenesByStage, type LaterStage } from '../../data/act4/laterContent';
+import { firstLaterSceneId, huangArchive, jayReply, lastLaterSceneId, laterSceneById, laterScenesByStage, type LaterStage } from '../../data/act4/laterContent';
 import { finishAct4Block, nextAct4Block } from '../../story/act4/laterFlow';
 import { T06Experience } from './T06Experience';
 import { T07Experience } from './T07Experience';
@@ -51,7 +51,10 @@ export function Act4LaterExperience({ manager = stateManager, onExit }: { manage
         </div>
         {completed && <p className="a4-done">第四幕完结。邮件与已见片段可回看；小 A 的最终去向没有确证。</p>}
         <details className="a4-recap"><summary>回看本阶段已见片段</summary><div className="a4-page-list">{scenes.filter((scene) => state.seenLaterNodeIds.includes(scene.id)).map((scene) => <button type="button" key={scene.id} aria-current={displayed.id === scene.id ? 'page' : undefined} onClick={() => setReviewId(scene.id)}>{scene.title}</button>)}</div></details>
-        <details className="a4-recap"><summary>玩家回看 / 先前证据</summary><p>笔记末页：Wangao.weibo.com、Wangao@163.com；两个账号同密，“不要担心那一天”。</p><p>第三幕纸片：13aCK · {backWords.join('、')}；VVaKe · {wakeWords.join('、')}。</p><p>2020-04-19 微博：小 A 决定返山，并把两个账号密码改为这一天。</p></details>
+        <details className="a4-recap"><summary>玩家回看 / 先前证据</summary><p>笔记末页：Wangao.weibo.com、Wangao@163.com；两个账号同密，“不要担心那一天”。</p><p>第三幕纸片：13aCK · {backWords.join('、')}；VVaKe · {wakeWords.join('、')}。</p><p>2020-04-19 微博：小 A 决定返山，并把两个账号密码改为这一天。</p>
+          {state.solvedPuzzleIds.includes('A4_P18') && <article className="a4-paper"><strong>小 A 私密经历 / 黄子山档案</strong><p>这三行是玩家随小 A 在档案馆读到的内容，并非当下主角持有的物证。</p>{huangArchive.map((line) => <p key={line}>{line}</p>)}</article>}
+          {state.seenLaterNodeIds.includes('A4_T09_REPLY') && <article className="a4-paper"><strong>小 A 私密经历 / Jay 的回信</strong><p>这是小 A 当时在手机上读到的回信，并非当下主角取得的邮件。</p><p>{jayReply}</p></article>}
+        </details>
       </section>
       <section className="a4-card"><h2>当前行动</h2>
         {reviewId ? <p>正在回看已见片段。回到当前进度后可继续操作。</p> : <>
