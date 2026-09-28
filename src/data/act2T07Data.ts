@@ -2,6 +2,7 @@ import document from '../../data/act2_t07.json';
 import flagsDocument from '../../data/flags.json';
 import notesDocument from '../../data/notes.json';
 import browserPagesDocument from '../../data/browser_pages.json';
+import imagesDocument from '../../data/images.json';
 
 export type T07Cue = { id: string; label: string; file: string | null };
 
@@ -47,6 +48,8 @@ export type T07KeyFrame = {
   caption: string;
 };
 
+export type T07VisualFrame = { startMs: number; endMs: number; imageId: string };
+
 export type Act2T07Data = {
   schemaVersion: number;
   record: { id: string; title: string; act: number; phase: string; source: string; purpose: string; unlockCondition: string[]; relatedFlags: string[]; notes: string };
@@ -67,6 +70,7 @@ export type Act2T07Data = {
     continuityNote: string;
     segments: T07Segment[];
     keyFrames: T07KeyFrame[];
+    visualFrames: T07VisualFrame[];
     captureHint: string;
     captureLabel: string;
     captureOutsideLabel: string;
@@ -106,6 +110,7 @@ export const isAct2T07SegmentId = (id: string): boolean => segmentById.has(id);
 
 export const segmentAt = (timeMs: number): T07Segment | undefined => act2T07.video.segments.find((segment) => timeMs >= segment.startMs && timeMs < segment.endMs);
 export const keyFrameAt = (timeMs: number): T07KeyFrame | undefined => act2T07.video.keyFrames.find((frame) => timeMs >= frame.startMs && timeMs <= frame.endMs);
+export const visualFrameAt = (timeMs: number): T07VisualFrame | undefined => act2T07.video.visualFrames.find((frame) => timeMs >= frame.startMs && timeMs < frame.endMs);
 /** 只有落在登记窗口内的截图才推进剧情；窗口外的画面不可截。 */
 export const isFrameCapturableAt = (frameId: string, timeMs: number): boolean => {
   const frame = keyFrameById.get(frameId);
@@ -130,6 +135,7 @@ const ACT2_T07_EXTERIOR_IMAGE_ID = 'IMG_A1_I_001';
 export function validateAct2T07Data(): void {
   const knownFlags = new Set((flagsDocument as { items: { id: string }[] }).items.map((flag) => flag.id));
   const knownNotes = new Set((notesDocument as { items: { id: string }[] }).items.map((note) => note.id));
+  const knownImages = new Set((imagesDocument as { items: { id: string }[] }).items.map((image) => image.id));
   if (act2T07.schemaVersion !== 1) throw new Error('act2_t07.json schemaVersion 必须为 1。');
   if (act2T07.record.act !== 2 || act2T07.record.phase !== 'A2_T07') throw new Error('T07 可追溯记录无效。');
   for (const flagId of [...act2T07.record.unlockCondition, ...act2T07.record.relatedFlags]) if (!knownFlags.has(flagId)) throw new Error(`T07 数据引用未登记 Flag：${flagId}`);
@@ -157,6 +163,15 @@ export function validateAct2T07Data(): void {
     if (!segment) throw new Error(`T07 关键帧片段无效：${frame.id}`);
     if (frame.startMs < segment.startMs || frame.endMs > segment.endMs || frame.endMs <= frame.startMs) throw new Error(`T07 关键帧窗口越界：${frame.id}`);
     if (frame.endMs - frame.startMs < 1000) throw new Error(`T07 关键帧窗口过窄：${frame.id}`);
+  }
+  if (video.visualFrames.length === 0 || video.visualFrames[0].startMs !== 0 || video.visualFrames[video.visualFrames.length - 1].endMs !== video.durationMs) throw new Error('T07 静帧必须覆盖完整视频时长。');
+  for (let index = 0; index < video.visualFrames.length; index += 1) {
+    const visual = video.visualFrames[index];
+    if (visual.endMs <= visual.startMs || (index > 0 && visual.startMs !== video.visualFrames[index - 1].endMs)) throw new Error('T07 静帧时间不能重叠或留空。');
+    if (!knownImages.has(visual.imageId)) throw new Error(`T07 静帧图片资源未登记：${visual.imageId}`);
+  }
+  for (const frame of video.keyFrames) {
+    if (visualFrameAt(frame.startMs)?.imageId !== frame.imageId || visualFrameAt(frame.endMs)?.imageId !== frame.imageId) throw new Error(`T07 可截图窗口必须显示对应关键帧：${frame.id}`);
   }
   if (act2T07.comparison.exteriorImageId !== ACT2_T07_EXTERIOR_IMAGE_ID) throw new Error('T07 外景对照必须使用 IMG_A1_I_001 破庙外景。');
   if (!act2T07.inference.conclusion.includes('鸡公岭破庙附近')) throw new Error('T07 地点结论必须限制在鸡公岭破庙附近。');

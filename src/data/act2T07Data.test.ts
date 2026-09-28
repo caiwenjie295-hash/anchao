@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import flagsDocument from '../../data/flags.json';
 import notesDocument from '../../data/notes.json';
-import { ACT2_T07_FRAME_IDS, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, act2T07, act2T06RecapPages, formatClock, isFrameCapturableAt, keyFrameAt, keyFrameById, segmentAt, validateAct2T07Data } from './act2T07Data';
+import { ACT2_T07_FRAME_IDS, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, act2T07, act2T06RecapPages, formatClock, isFrameCapturableAt, keyFrameAt, keyFrameById, segmentAt, validateAct2T07Data, visualFrameAt } from './act2T07Data';
 
 const flags = (flagsDocument as { items: { id: string; defaultValue: boolean }[] }).items;
 const notes = (notesDocument as { items: { id: string }[] }).items;
@@ -37,6 +37,11 @@ describe('T07 promotion data', () => {
     expect(segmentAt(7000)?.id).toBe('SEG_A2_T07_003');
     expect(keyFrameAt(10000)).toBeUndefined();
     expect(keyFrameAt(7000)?.id).toBe('FRAME_A2_T07_001');
+    expect(visualFrameAt(0)?.imageId).toBe('IMG_A2_T07_003');
+    expect(visualFrameAt(5000)?.imageId).toBe('IMG_A2_T07_004');
+    expect(visualFrameAt(7000)?.imageId).toBe('IMG_A2_T07_005');
+    expect(visualFrameAt(8800)?.imageId).toBe('IMG_A2_T07_008');
+    expect(visualFrameAt(10000)?.imageId).toBe('IMG_A2_T07_003');
     expect(isFrameCapturableAt('FRAME_A2_T07_001', 7000)).toBe(true);
     expect(isFrameCapturableAt('FRAME_A2_T07_001', 10000)).toBe(false);
     expect(isFrameCapturableAt('FRAME_A2_T07_002', 7000)).toBe(false);

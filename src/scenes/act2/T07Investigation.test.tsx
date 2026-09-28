@@ -89,6 +89,7 @@ describe('T07 promotion investigation', () => {
 
     // 拖动到关键帧窗口外：不可截，也不算看过。
     await seek(5000);
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_004');
     expect(button('.t07-finale__capture').disabled).toBe(true);
     await act(async () => { button('.t07-finale__capture').click(); });
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual([]);
@@ -96,9 +97,13 @@ describe('T07 promotion investigation', () => {
 
     // 落在窗口内才可截。
     await seek(7000);
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_005');
     expect(button('.t07-finale__capture').disabled).toBe(false);
     await click('.t07-finale__capture');
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_001']);
+
+    await seek(8800);
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_008');
 
     // 只拖不播仍然不算看过；实际播放覆盖山路段后才写入 WATCHED。
     await seek(4000);

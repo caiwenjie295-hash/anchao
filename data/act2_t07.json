@@ -119,6 +119,13 @@
         "caption": "山路背景里的石质建筑"
       }
     ],
+    "visualFrames": [
+      { "startMs": 0, "endMs": 4000, "imageId": "IMG_A2_T07_003" },
+      { "startMs": 4000, "endMs": 6800, "imageId": "IMG_A2_T07_004" },
+      { "startMs": 6800, "endMs": 8601, "imageId": "IMG_A2_T07_005" },
+      { "startMs": 8601, "endMs": 9000, "imageId": "IMG_A2_T07_008" },
+      { "startMs": 9000, "endMs": 16000, "imageId": "IMG_A2_T07_003" }
+    ],
     "captureHint": "刚才好像有什么东西一闪而过。",
     "captureLabel": "截图",
     "captureOutsideLabel": "这个画面没有可截取的东西",
