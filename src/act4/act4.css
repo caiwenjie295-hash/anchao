@@ -147,6 +147,15 @@
   padding: 10px 16px;
   background: #313846;
 }
+.a4-later .a4-card { min-height: 320px; }
+.a4-later .a4-scene { min-height: 290px; }
+.a4-later .a4-scene--blackout { background: #080b11; border-color: #252d38; }
+.a4-later .a4-recap { margin-top: 16px; padding: 14px; border: 1px solid #566979; border-radius: 8px; background: #1e2934; }
+.a4-later summary { cursor: pointer; font-weight: 700; }
+.a4-later .a4-recap p { color: #e8e4dc; }
+.a4-later .a4-word-list { padding-left: 2rem; font-size: 1.12rem; letter-spacing: .1em; }
+.a4-later .a4-word-list li { padding: 5px 0; }
+@media (prefers-reduced-motion: reduce) { .a4-later *, .a4-later *::before, .a4-later *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 @media (max-width: 800px) {
   .a4-grid,
   .a4-mails {

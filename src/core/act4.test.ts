@@ -7,6 +7,7 @@ import { act2T07 } from "../data/act2T07Data";
 import { act4OldMails } from "../data/act4/mail";
 import { birthdayImageSlots } from "../data/act4/assets";
 import { birthdayScenes } from "../data/act4/content";
+import { laterScenesByStage, type LaterStage } from "../data/act4/laterContent";
 import { mailById } from "../data/mailData";
 
 const readyManager = () => {
@@ -56,6 +57,69 @@ const readyManager = () => {
   state.modules.act3.stage = "T07";
   return new StateManager(new EventBus(), state);
 };
+
+const laterManager = () => {
+  const manager = readyManager();
+  const state = manager.getState();
+  state.modules.act4.stage = "T05";
+  state.modules.act4.birthdayNodeId = "taken";
+  state.modules.act4.solvedPuzzleIds = ["A4_P01", "A4_P04", "A4_P06", "A4_P09", "A4_P11"];
+  state.game.flags.FLAG_A4_T05_COMPLETE = true;
+  return manager;
+};
+
+describe("fourth act later progression", () => {
+  beforeEach(() => localStorage.clear());
+
+  it("requires scene evidence and ordered actions while optional puzzles remain optional", () => {
+    const manager = laterManager();
+    manager.startAct4T06();
+    expect(manager.getState().modules.act4.stage).toBe("T06");
+    const visit = (stage: LaterStage, until: string) => {
+      for (const scene of laterScenesByStage(stage).slice(1)) {
+        if (manager.getState().modules.act4.laterNodeId === until) break;
+        manager.visitAct4LaterNode(scene.id);
+      }
+    };
+    visit("T06", "A4_T06_BROADCAST");
+    expect(manager.solveAct4Puzzle("A4_P13", ["wake", "day-broadcast", "night-broadcast", "13aCK", "VVaKe"])).toBe(true);
+    visit("T06", "A4_T06_CONFINEMENT");
+    manager.advanceAct4LaterStage();
+    expect(manager.getState().modules.act4.stage).toBe("T07");
+    visit("T07", "A4_T07_MIRROR");
+    manager.visitAct4LaterNode("A4_T07_KITCHEN");
+    expect(manager.getState().modules.act4.laterNodeId).toBe("A4_T07_MIRROR");
+    expect(manager.solveAct4Puzzle("A4_P16", ["huang", "wangao"])).toBe(true);
+    visit("T07", "A4_T07_SCHOOL");
+    manager.advanceAct4LaterStage();
+    visit("T08", "A4_T08_ARCHIVE");
+    manager.visitAct4LaterNode("A4_T08_MIRROR");
+    expect(manager.getState().modules.act4.laterNodeId).toBe("A4_T08_ARCHIVE");
+    expect(manager.solveAct4Puzzle("A4_P18", ["2008", "huang"])).toBe(true);
+    visit("T08", "A4_T08_KITCHEN");
+    manager.advanceAct4LaterStage();
+    visit("T09", "A4_T09_NOTE");
+    manager.advanceAct4Package("tape");
+    expect(manager.getState().modules.act4.packageStep).toBe(0);
+    for (const action of ["bag", "tape", "hide"] as const) manager.advanceAct4Package(action);
+    expect(manager.solveAct4Puzzle("A4_P21", ["bag", "tape", "hide"])).toBe(true);
+    visit("T09", "A4_T09_EXIT");
+    manager.visitAct4LaterNode("A4_T09_BLACKOUT");
+    expect(manager.getState().modules.act4.laterNodeId).toBe("A4_T09_EXIT");
+    for (let index = 0; index < 6; index++) manager.advanceAct4Broadcast();
+    manager.visitAct4LaterNode("A4_T09_BLACKOUT");
+    manager.advanceAct4LaterStage();
+    visit("T10", "A4_T10_WORDS");
+    expect(manager.solveAct4Puzzle("A4_P23", ["possible"])).toBe(true);
+    visit("T10", "A4_T10_MAIL");
+    manager.advanceAct4LaterStage();
+    expect(manager.getState().game.flags.FLAG_A4_COMPLETE).not.toBe(true);
+    manager.openAct4FinalMail();
+    manager.advanceAct4LaterStage();
+    expect(manager.getState().game.flags.FLAG_A4_COMPLETE).toBe(true);
+    expect(manager.getState().modules.act4.solvedPuzzleIds).toHaveLength(10);
+  });
+});
 
 describe("fourth act semantic progress", () => {
   beforeEach(() => localStorage.clear());
@@ -145,7 +209,7 @@ describe("fourth act semantic progress", () => {
     (old as unknown as { schemaVersion: number }).schemaVersion = 7;
     old.modules.mail.readIds = ["MAIL_A1_C_001"];
     const migrated = hydrateState(old);
-    expect(migrated.schemaVersion).toBe(8);
+    expect(migrated.schemaVersion).toBe(9);
     expect(migrated.modules.mail.readIds).toContain("MAIL_A1_C_001");
     expect(migrated.modules.act4.stage).toBe("inactive");
     const forged = createDefaultState();

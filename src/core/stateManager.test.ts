@@ -132,7 +132,7 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([8]);
+    expect(resets).toEqual([9]);
   });
 
   it('acknowledges only the current story card and persists the choice', () => {

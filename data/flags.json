@@ -520,6 +520,12 @@
     {"id":"FLAG_A4_T02_COMPLETE","title":"两个离线账号已进入","act":4,"phase":"A4_T02","source":"scene","purpose":"以共同日期登录","unlockCondition":["FLAG_A4_T01_COMPLETE"],"relatedFlags":[],"notes":"A4_P04 和主动登录","defaultValue":false},
     {"id":"FLAG_A4_T03_COMPLETE","title":"微博时间线已整理","act":4,"phase":"A4_T03","source":"scene","purpose":"确认清醒记录的顺序","unlockCondition":["FLAG_A4_T02_COMPLETE"],"relatedFlags":[],"notes":"A4_P06 完成并主动继续","defaultValue":false},
     {"id":"FLAG_A4_T04_COMPLETE","title":"启明邮件与纸片已比对","act":4,"phase":"A4_T04","source":"scene","purpose":"确认 VVaKe 六词同序","unlockCondition":["FLAG_A4_T03_COMPLETE"],"relatedFlags":[],"notes":"A4_P09 完成并主动继续","defaultValue":false},
-    {"id":"FLAG_A4_T05_COMPLETE","title":"生日往事停在家门","act":4,"phase":"A4_T05","source":"scene","purpose":"确认 2014 年小 A 被带走","unlockCondition":["FLAG_A4_T04_COMPLETE"],"relatedFlags":[],"notes":"A4_P11 完成并抵达家门","defaultValue":false}
+    {"id":"FLAG_A4_T05_COMPLETE","title":"生日往事停在家门","act":4,"phase":"A4_T05","source":"scene","purpose":"确认 2014 年小 A 被带走","unlockCondition":["FLAG_A4_T04_COMPLETE"],"relatedFlags":[],"notes":"A4_P11 完成并抵达家门","defaultValue":false},
+    {"id":"FLAG_A4_T06_COMPLETE","title":"机构日常与禁闭已经历","act":4,"phase":"A4_T06","source":"scene","purpose":"记录玩家看完广播、求助和禁闭亲历","unlockCondition":["FLAG_A4_T05_COMPLETE"],"relatedFlags":[],"notes":"A4_P13 与禁闭节点完成","defaultValue":false},
+    {"id":"FLAG_A4_T07_COMPLETE","title":"记忆错位已经历","act":4,"phase":"A4_T07","source":"scene","purpose":"记录玩家经历梦中姓名、厨房与返校","unlockCondition":["FLAG_A4_T06_COMPLETE"],"relatedFlags":[],"notes":"A4_P16 与高中窗边节点完成","defaultValue":false},
+    {"id":"FLAG_A4_T08_COMPLETE","title":"2020 年返山调查已经历","act":4,"phase":"A4_T08","source":"scene","purpose":"记录档案与在用厨房亲历","unlockCondition":["FLAG_A4_T07_COMPLETE"],"relatedFlags":[],"notes":"A4_P18 与厨房节点完成","defaultValue":false},
+    {"id":"FLAG_A4_T09_COMPLETE","title":"最后几步已经历","act":4,"phase":"A4_T09","source":"scene","purpose":"记录笔记藏匿及门槛广播后意识中断","unlockCondition":["FLAG_A4_T08_COMPLETE"],"relatedFlags":[],"notes":"A4_P21 与六词播报完成，不表示死亡","defaultValue":false},
+    {"id":"FLAG_A4_T10_COMPLETE","title":"现实尾声已读","act":4,"phase":"A4_T10","source":"scene","purpose":"记录尾声的有限推论与最后邮件","unlockCondition":["FLAG_A4_T09_COMPLETE"],"relatedFlags":["FLAG_A4_COMPLETE"],"notes":"A4_P23 与主动打开最终邮件完成","defaultValue":false},
+    {"id":"FLAG_A4_COMPLETE","title":"第四幕完成","act":4,"phase":"A4_T10","source":"scene","purpose":"停在启明最后一封邮件","unlockCondition":["FLAG_A4_T10_COMPLETE"],"relatedFlags":[],"notes":"可回看，不进入第五幕","defaultValue":false}
   ]
 }
