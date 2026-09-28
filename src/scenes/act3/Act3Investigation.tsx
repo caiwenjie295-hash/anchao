@@ -4,6 +4,8 @@ import { StateManager, stateManager as defaultManager } from '../../core/stateMa
 import type { Act3ActiveStage, Act3Lens } from '../../core/types';
 import { act3FirstLensId, act3LensById, act3StageClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT } from '../../data/act3Data';
 import '../../act3/act3Scene.css';
+import { PhotoViewport, type PhotoMarker } from '../../components/PhotoViewport';
+import { act3PhotoLayout } from '../../data/act3PhotoLayout';
 
 export interface Act3InvestigationProps {
   manager?: StateManager;
@@ -110,99 +112,37 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
     setHotspotId(clueId);
   };
 
+  const photoHotspots: PhotoMarker[] = lens.hotspots.map((hotspot) => ({
+    id: hotspot.clueId, label: hotspot.label,
+    ...act3PhotoLayout[lens.id]?.[hotspot.clueId],
+    x: act3PhotoLayout[lens.id]?.[hotspot.clueId]?.x ?? .5,
+    y: act3PhotoLayout[lens.id]?.[hotspot.clueId]?.y ?? .5,
+    active: state.modules.act3.inspectedClueIds.includes(hotspot.clueId),
+    onActivate: (trigger) => onOpenHotspot(hotspot.clueId, trigger),
+  }));
+  const photoRoutes: PhotoMarker[] = lens.links.flatMap((linkId, index) => {
+    const target = act3LensById(stage, linkId);
+    if (!target) return [];
+    const locked = target.requiresClueIds?.some((required) => !state.modules.act3.inspectedClueIds.includes(required));
+    const back = index > 0 || linkId.endsWith('_000');
+    return [{ id: `route:${linkId}`, label: `${back ? '返回' : '前往'}${target.title}${locked ? '（先检查线索）' : ''}`, x: back ? .09 : .91, y: back ? .73 : .58, kind: 'direction' as const, disabled: locked, onActivate: () => { manager.enterAct3Lens(linkId); setHotspotId(null); } }];
+  });
   return (
     <section className="act3-investigation" aria-label="第三幕调查" data-act3-stage={stage}>
       <header className="act3-investigation__header">
-        <div>
-          <p>{STAGE_LABEL[stage]}</p>
-          <h1>{STAGE_TITLE[stage]}</h1>
-          <span>{doc.intro}</span>
-        </div>
+        <div><p>{STAGE_LABEL[stage]}</p><h1>{STAGE_TITLE[stage]}</h1><span>{doc.intro}</span></div>
         <button type="button" className="act3-investigation__return" onClick={onReturnToDesktop}>返回桌面</button>
       </header>
-      <div className="act3-investigation__layout">
-        <main className="act3-investigation__lens" data-asset-id={lens.assetId}>
-          <div className={`act3-investigation__viewport act3-investigation__viewport--${lens.stance}${assetSrc ? '' : ' act3-investigation__viewport--placeholder'}`}>
-            {assetSrc && <img src={assetSrc} alt="" />}
-            <p className="act3-investigation__viewport-title">{lens.title}</p>
-          </div>
-          <p className="act3-investigation__description">{lens.description}</p>
-          {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && (
-            <aside className="act3-investigation__paper-compare" aria-label="两张词表">
-              <article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article>
-              <article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article>
-              <p>两张词表。含义暂时不明。</p>
-            </aside>
-          )}
-          {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && (
-            <aside className="act3-investigation__temple-compare" aria-label="破庙与空神龛对照">
-              <figure>
-                {assetLoader.get('IMG_A1_I_001')?.src && <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" />}
-                <figcaption>第一次进山 · 破庙外景</figcaption>
-              </figure>
-              <figure>
-                {assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}
-                <figcaption>启明厨房 · 空神龛与底座</figcaption>
-              </figure>
-            </aside>
-          )}
-          {lens.hotspots.length > 0 && (
-            <nav className="act3-investigation__hotspots" aria-label="可执行动作">
-              {lens.hotspots.map((hotspot) => (
-                <button
-                  type="button"
-                  key={hotspot.clueId}
-                  className="act3-investigation__hotspot"
-                  data-clue-id={hotspot.clueId}
-                  aria-pressed={hotspotId === hotspot.clueId}
-                  onClick={(event) => onOpenHotspot(hotspot.clueId, event.currentTarget)}
-                >
-                  {hotspot.label}
-                </button>
-              ))}
-            </nav>
-          )}
-          {lens.links.length > 0 && (
-            <nav className="act3-investigation__routes" aria-label="前往相邻镜头">
-              {lens.links.map((linkId) => {
-                const target: Act3Lens | null = act3LensById(stage, linkId);
-                const locked = target?.requiresClueIds?.some((required) => !state.modules.act3.inspectedClueIds.includes(required));
-                return target ? (
-                  <button type="button" key={linkId} disabled={locked} title={locked ? '先检查当前镜头的线索' : undefined} onClick={() => { manager.enterAct3Lens(linkId); setHotspotId(null); }}>
-                    {target.title} →{locked ? '（先检查线索）' : ''}
-                  </button>
-              ) : null;
-              })}
-            </nav>
-          )}
-        </main>
-      </div>
-      {allCluesInspected && !stageAlreadyConfirmed && (
-        <div className="act3-investigation__confirm-bar">
-          <p>已检查全部线索。确认本阶段结论后将{nextStage ? '进入下一阶段' : '记录当前发现'}。</p>
-          <button
-            type="button"
-            className="act3-investigation__confirm-btn"
-            onClick={() => {
-              manager.confirmAct3Stage();
-              setHotspotId(null);
-            }}
-          >
-            确认{STAGE_TITLE[stage]}结论
-          </button>
-        </div>
-      )}
-      {stageAlreadyConfirmed && nextStage && (
-        <div className="act3-investigation__confirm-bar act3-investigation__confirm-bar--done">
-          <p>本阶段已确认。当前阶段：{STAGE_TITLE[nextStage]}。</p>
-          <button type="button" onClick={() => manager.advanceAct3Stage()}>继续{STAGE_TITLE[nextStage]}</button>
-        </div>
-      )}
-      {stageAlreadyConfirmed && !nextStage && (
-        <div className="act3-investigation__confirm-bar act3-investigation__confirm-bar--done" role="status">
-          <p>{stage === 'T07' ? '第三幕已完成。小 A 来过这里，并留下笔记；可以回看本幕证据。' : '本阶段调查已记录。可以回看现场与线索。'}</p>
-        </div>
-      )}
+      <main className="act3-investigation__lens" data-asset-id={lens.assetId}>
+        <PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lens.title} hotspots={photoHotspots} routes={photoRoutes} transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'}>
+          <div className="act3-investigation__caption"><strong>{lens.title}</strong><span>{lens.description}</span></div>
+          {allCluesInspected && !stageAlreadyConfirmed && <div className="act3-investigation__action"><span>已检查全部线索</span><button type="button" onClick={() => { manager.confirmAct3Stage(); setHotspotId(null); }}>确认{STAGE_TITLE[stage]}结论</button></div>}
+          {stageAlreadyConfirmed && nextStage && <div className="act3-investigation__action"><span>本阶段已确认</span><button type="button" onClick={() => manager.advanceAct3Stage()}>继续{STAGE_TITLE[nextStage]}</button></div>}
+          {stageAlreadyConfirmed && !nextStage && <div className="act3-investigation__action" role="status">第三幕已完成。可以回看现场与线索。</div>}
+        </PhotoViewport>
+        {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && <aside className="act3-investigation__paper-compare" aria-label="两张词表"><article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article><article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article><p>两张词表。含义暂时不明。</p></aside>}
+        {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <aside className="act3-investigation__temple-compare" aria-label="破庙与空神龛对照"><figure>{assetLoader.get('IMG_A1_I_001')?.src && <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" />}<figcaption>第一次进山 · 破庙外景</figcaption></figure><figure>{assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}<figcaption>启明厨房 · 空神龛与底座</figcaption></figure></aside>}
+      </main>
       {lensHotspot && (
         <div className="act3-investigation__dialog-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setHotspotId(null); }}>
           <section ref={dialogRef} className="act3-investigation__dialog" role="dialog" aria-modal="true" aria-labelledby="act3-dialog-title">

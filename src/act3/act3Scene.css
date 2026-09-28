@@ -1,66 +1,30 @@
-/* 第三幕镜头调查壳层样式；按工单视觉总规范使用低饱和冷灰调。 */
-.act3-investigation{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;overflow:auto;background:#1d262c;color:#e7edf0;font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif}
-.act3-investigation button{min-height:44px;border:1px solid #6f8290;border-radius:7px;background:#dde4e7;color:#1d2629;padding:.5rem .85rem;font:inherit;cursor:pointer}
-.act3-investigation button:hover{background:#c9d4d8}
-.act3-investigation button:focus-visible{outline:3px solid #58a4c8;outline-offset:2px}
-.act3-investigation__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:clamp(.8rem,2vw,1.3rem) clamp(1rem,4vw,3rem);background:#0f1418}
-.act3-investigation__header p{margin:0;color:#9fb1bb;font-size:.78rem;letter-spacing:.1em}
-.act3-investigation__header h1{margin:.1rem 0;font:600 clamp(1.3rem,3vw,2rem)/1.2 Georgia,serif}
-.act3-investigation__header span{font-size:.92rem;color:#cfd9dd}
-.act3-investigation__return{flex:none;color:#0f1418!important}
-.act3-investigation__layout{flex:1;display:grid;place-items:center;padding:1.5rem;min-height:0}
-.act3-investigation__lens{width:min(100%,1080px);display:grid;gap:1rem}
-.act3-investigation__viewport{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid #36444b;background:linear-gradient(150deg,#3a4a52 0%,#5a6c75 60%,#2f3a41 100%)}
-.act3-investigation__viewport--approach{background:linear-gradient(150deg,#3f4d54,#4d5d65 60%,#2a3137)}
-.act3-investigation__viewport--crouch{background:linear-gradient(155deg,#2c3439,#3b444a 60%,#22282c)}
-.act3-investigation__viewport--enter{background:linear-gradient(150deg,#2d353b,#404a51 60%,#1c2125)}
-.act3-investigation__viewport>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.act3-investigation__viewport-title{position:absolute;top:.8rem;left:.9rem;padding:.4rem .7rem;border-radius:6px;background:rgba(11,16,20,.72);font-weight:650;font-size:.95rem}
-.act3-investigation__viewport--placeholder{display:grid;place-items:center}
-.act3-investigation__viewport--placeholder:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 18px,transparent 18px 36px)}
-.act3-investigation__viewport--placeholder:after{content:"图片占位";padding:.45rem .8rem;border-radius:6px;background:rgba(11,16,20,.55);font-size:.85rem;color:#cbd6db}
-.act3-investigation__description{max-width:70ch;color:#cdd6d9;line-height:1.7}
-.act3-investigation__hotspots{display:flex;flex-wrap:wrap;gap:.55rem}
-.act3-investigation__hotspot[aria-pressed=true]{background:#cfe0e5;border-color:#9cc5d4}
-.act3-investigation__routes{display:flex;flex-wrap:wrap;gap:.5rem;border-top:1px solid #2c363c;padding-top:.8rem}
-.act3-investigation__routes button{flex:none;min-height:38px;background:#cdd6da;color:#1d262c}
-.act3-investigation__dialog-backdrop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1rem;background:#0a0d10cc}
-.act3-investigation__dialog{width:min(100%,560px);max-height:80vh;overflow:auto;padding:clamp(1rem,3vw,1.3rem);border:1px solid #6f8290;border-radius:12px;background:#172330;box-shadow:0 24px 80px #0009}
-.act3-investigation__dialog>header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
-.act3-investigation__dialog h2{margin:0;font:600 1.3rem/1.25 Georgia,serif}
-.act3-investigation__dialog p{margin:.6rem 0 1rem;line-height:1.7}
-@media(max-width:760px){.act3-investigation__layout{padding:.8rem}.act3-investigation__viewport{aspect-ratio:3/4}}
-.act3-investigation__confirm-bar{flex:none;display:flex;align-items:center;justify-content:center;gap:1rem;padding:.8rem clamp(1rem,4vw,3rem);background:#142028;border-top:1px solid #2c363c}
-.act3-investigation__confirm-bar--done{background:#0f1a12;border-color:#1f3325}
-.act3-investigation__confirm-bar p{margin:0;color:#cdd6d9;font-size:.9rem}
-.act3-investigation__confirm-btn{flex:none;background:#cfe0e5!important;border-color:#9cc5d4!important;font-weight:650!important}
-@media(prefers-reduced-motion:reduce){.act3-investigation *{animation:none!important;transition:none!important}}
-/* 禁闭区保留可读的手电光斑，按键与线索仍有足够对比度。 */
-.act3-investigation[data-act3-stage="T03"]{background:#101820}
-.act3-investigation[data-act3-stage="T03"] .act3-investigation__viewport{background:radial-gradient(circle at 48% 54%,#4c5b62 0%,#27343c 38%,#0d1318 78%)}
-.act3-investigation[data-act3-stage="T03"] .act3-investigation__viewport--placeholder:after{content:"禁闭区影像待接入"}
-/* 档案室纸片以文字层呈现，缺图也能准确阅读。 */
-.act3-investigation[data-act3-stage="T04"] .act3-investigation__viewport{background:radial-gradient(circle at 52% 45%,#536067,#253039 50%,#111820 85%)}
-.act3-investigation[data-act3-stage="T04"] .act3-investigation__viewport--placeholder:after{content:"档案室影像待接入"}
-.act3-investigation[data-act3-stage="T04"] .act3-investigation__lens[data-asset-id="IMG_A3_T04_005"] .act3-investigation__description{border-left:4px solid #b9ad85;padding:.8rem 1rem;background:#303430;color:#f0e9d6;white-space:pre-wrap}
-/* 广播室两张原始纸片可并排复看，保留各自标题与原词。 */
-.act3-investigation[data-act3-stage="T05"] .act3-investigation__viewport{background:radial-gradient(circle at 45% 48%,#4b5157,#252c33 55%,#101820 90%)}
-.act3-investigation[data-act3-stage="T05"] .act3-investigation__viewport--placeholder:after{content:"广播室影像待接入"}
-.act3-investigation__paper-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;padding:.8rem;background:#202a30;border:1px solid #52616b;border-radius:8px}
+.act3-investigation{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;overflow:auto;background:#11191c;color:#e8f0f0;font-family:"Segoe UI","Microsoft YaHei",sans-serif}
+.act3-investigation button{font:inherit;cursor:pointer;border:1px solid #aabec0;border-radius:7px;background:#dae5e5;color:#162126;padding:.45rem .7rem;min-height:44px}
+.act3-investigation button:focus-visible{outline:3px solid #96d9ec;outline-offset:2px}
+.act3-investigation__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 20px;background:#17252abe;backdrop-filter:blur(15px)}
+.act3-investigation__header p{margin:0;color:#a9c1c4;font-size:.74rem;letter-spacing:.1em}
+.act3-investigation__header h1{margin:0;font-size:1.15rem}
+.act3-investigation__header span{font-size:.82rem;color:#d0dddd}
+.act3-investigation__header button{flex:none;background:#283d43c9;color:white}
+.act3-investigation__lens{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.act3-investigation__lens>.photo-viewport{flex:1}
+.act3-investigation__caption{align-self:flex-start;max-width:min(70ch,75%);display:grid;gap:3px;padding:9px 12px;border:1px solid #a7c3c45e;border-radius:9px;background:#17292bc2;backdrop-filter:blur(14px);line-height:1.45;text-shadow:0 1px 3px #000}
+.act3-investigation__caption strong{font-size:1rem}
+.act3-investigation__caption span{font-size:.84rem}
+.act3-investigation__action{align-self:center;display:flex;align-items:center;gap:10px;max-width:100%;padding:7px 10px;border-radius:10px;background:#17292bd9;backdrop-filter:blur(14px);font-size:.85rem}
+.act3-investigation__action button{background:#d6e5e2}
+.act3-investigation__paper-compare,.act3-investigation__temple-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;padding:.7rem;background:#1b2729}
 .act3-investigation__paper-compare article{padding:.7rem;background:#eee6d2;color:#273039;border-radius:4px}
 .act3-investigation__paper-compare h2{margin:0 0 .4rem;font:700 1.1rem Georgia,serif}
 .act3-investigation__paper-compare p{margin:0;line-height:1.6}
-.act3-investigation__paper-compare>p{grid-column:1/-1;color:#d2dbe0}
-/* 厨房的旧照片比对留在明亮的上层镜头；缺图时仍能主动确认。 */
-.act3-investigation[data-act3-stage="T06"] .act3-investigation__viewport{background:radial-gradient(circle at 50% 46%,#51534e,#2d322f 55%,#111a19 90%)}
-.act3-investigation[data-act3-stage="T06"] .act3-investigation__viewport--placeholder:after{content:"厨房影像待接入"}
-.act3-investigation__temple-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
-.act3-investigation__temple-compare figure{min-width:0;margin:0;padding:.6rem;background:#202a30;border:1px solid #62727b;border-radius:8px}
-.act3-investigation__temple-compare img,.act3-investigation__comparison-placeholder{display:block;width:100%;height:190px;object-fit:cover;border-radius:4px;background:#3e484b}
-.act3-investigation__comparison-placeholder{display:grid;place-items:center;padding:1rem;text-align:center;color:#e1e8e5}
-.act3-investigation__temple-compare figcaption{margin-top:.4rem;color:#e4e6e1;font-size:.9rem}
-/* 返程从一层自然光走向傍晚，蹲姿镜头继续用稳定热点定位。 */
-.act3-investigation[data-act3-stage="T07"] .act3-investigation__viewport{background:radial-gradient(circle at 53% 42%,#69747a,#3b464b 56%,#152028 90%)}
-.act3-investigation[data-act3-stage="T07"] .act3-investigation__viewport--crouch{background:radial-gradient(circle at 52% 70%,#616b68,#2c3839 55%,#101b21 90%)}
-.act3-investigation[data-act3-stage="T07"] .act3-investigation__viewport--placeholder:after{content:"返程影像待接入"}
-.act3-investigation[data-act3-stage="T07"] .act3-investigation__lens[data-asset-id="IMG_A3_T07_007"] .act3-investigation__description{border-left:4px solid #b9ad85;padding:.8rem 1rem;background:#303430;color:#f0e9d6}
+.act3-investigation__paper-compare>p{grid-column:1/-1}
+.act3-investigation__temple-compare figure{min-width:0;margin:0}
+.act3-investigation__temple-compare img,.act3-investigation__comparison-placeholder{width:100%;height:160px;object-fit:cover;display:grid;place-items:center;background:#38494b}
+.act3-investigation__temple-compare figcaption{font-size:.85rem}
+.act3-investigation__dialog-backdrop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1rem;background:#080e10d9}
+.act3-investigation__dialog{width:min(100%,560px);max-height:80vh;overflow:auto;padding:1.2rem;border:1px solid #7b9296;border-radius:12px;background:#172330;box-shadow:0 24px 80px #0009}
+.act3-investigation__dialog>header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.act3-investigation__dialog h2{margin:0;font:600 1.3rem Georgia,serif}
+.act3-investigation__dialog p{line-height:1.7}
+.act3-investigation__empty{padding:2rem}
+@media(max-width:600px){.act3-investigation__header{padding:6px 10px}.act3-investigation__header h1{font-size:1rem}.act3-investigation__header span{display:none}.act3-investigation__caption{max-width:100%;font-size:.75rem}.act3-investigation__action{flex-wrap:wrap;justify-content:center}.act3-investigation__paper-compare,.act3-investigation__temple-compare{grid-template-columns:1fr}}

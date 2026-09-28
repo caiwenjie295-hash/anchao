@@ -34,12 +34,12 @@ describe('Third-act player path', () => {
           }
           if (index + 1 < lenses.length) {
             const next = lenses[index + 1];
-            await click([...container.querySelectorAll<HTMLButtonElement>('.act3-investigation__routes button')].find((button) => button.textContent?.includes(next.title)));
+            await click([...container.querySelectorAll<HTMLButtonElement>('.photo-viewport__marker--direction')].find((button) => button.textContent?.includes(next.title)));
           }
         }
         if (stage === 'T05') expect(container.querySelector('[aria-label="两张词表"]')?.textContent).toContain('VVaKe');
         if (stage === 'T06') expect(container.querySelector('[aria-label="破庙与空神龛对照"] img')).not.toBeNull();
-        await click(container.querySelector<HTMLButtonElement>('.act3-investigation__confirm-btn') ?? undefined);
+        await click(container.querySelector<HTMLButtonElement>('.act3-investigation__action button') ?? undefined);
       }
       expect(manager.getState().game.phase).toBe('A3_T07');
       expect(manager.getState().game.flags.FLAG_A3_VVAKE_PAPER_FOUND).toBe(true);
