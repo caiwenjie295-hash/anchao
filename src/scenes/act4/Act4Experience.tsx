@@ -9,118 +9,9 @@ import {
 } from "../../data/act4/content";
 import { act4OldMails } from "../../data/act4/mail";
 import { birthdayImageSlots } from "../../data/act4/assets";
-import { act4Hints } from "../../story/act4/actions";
+import { Puzzle } from "./Act4Puzzle";
+import { Act4LaterExperience } from './Act4LaterExperience';
 import "../../act4/act4.css";
-
-type Choice = { id: string; label: string };
-
-function Puzzle({
-  id,
-  title,
-  choices,
-  manager,
-  solved,
-  onSuccess,
-  input,
-}: {
-  id: string;
-  title: string;
-  choices?: Choice[];
-  manager: StateManager;
-  solved: boolean;
-  onSuccess?: () => void;
-  input?: boolean;
-}) {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [typed, setTyped] = useState("");
-  const [attempts, setAttempts] = useState(0);
-  const [notice, setNotice] = useState("");
-  const submit = () => {
-    const answer = input ? [typed.trim()] : selected;
-    if (manager.solveAct4Puzzle(id, answer)) {
-      setNotice("已确认。");
-      onSuccess?.();
-    } else {
-      setAttempts((value) => value + 1);
-      setNotice("还没有对上。可以保留选择继续核对，或重新选择。");
-    }
-  };
-  return (
-    <section className="a4-puzzle" aria-label={`${id} ${title}`}>
-      <h3>
-        {id} · {title} {solved && <span className="a4-done">已完成</span>}
-      </h3>
-      {!solved && (
-        <>
-          {input ? (
-            <label>
-              输入八位日期{" "}
-              <input
-                inputMode="numeric"
-                maxLength={8}
-                value={typed}
-                onChange={(event) => setTyped(event.target.value)}
-              />
-            </label>
-          ) : (
-            <>
-              <p className="a4-selected">
-                已选：
-                {selected.length
-                  ? selected
-                      .map(
-                        (value) =>
-                          choices?.find((choice) => choice.id === value)?.label,
-                      )
-                      .join(" → ")
-                  : "请按顺序点选"}
-              </p>
-              <div className="a4-choices">
-                {choices?.map((choice) => (
-                  <button
-                    type="button"
-                    key={choice.id}
-                    onClick={() =>
-                      setSelected((values) =>
-                        values.includes(choice.id)
-                          ? values
-                          : [...values, choice.id],
-                      )
-                    }
-                  >
-                    {choice.label}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-          <div className="a4-actions">
-            <button type="button" onClick={submit}>
-              确认线索
-            </button>
-            {!input && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSelected([]);
-                  setNotice("已清空选择。");
-                }}
-              >
-                重新选择
-              </button>
-            )}
-          </div>
-          {attempts > 0 && (
-            <p className="a4-hint">
-              提示：{act4Hints[id]?.[Math.min(attempts - 1, 1)]}
-            </p>
-          )}
-        </>
-      )}
-      {notice && <p role="status">{notice}</p>}
-    </section>
-  );
-}
 
 const routeChoices = [
   { id: "cave", label: "02:30 石洞刻名" },
@@ -169,6 +60,7 @@ export function Act4Experience({
       manager.readAct4Timeline(openedPost);
   }, [stage, page, openedPost, act4.solvedPuzzleIds, manager]);
   if (stage === "inactive") return null;
+  if (['T06', 'T07', 'T08', 'T09', 'T10'].includes(stage)) return <Act4LaterExperience manager={manager} onExit={onExit} />;
   const advance = () => manager.advanceAct4Stage();
   return (
     <main className="a4" aria-label="第四幕 王澳">
@@ -660,7 +552,7 @@ export function Act4Experience({
                     确认第五段结束
                   </button>
                 ) : (
-                  <p className="a4-done">待续 · 可退出到桌面或回看此段</p>
+                  <><p className="a4-done">生日这一天停在家门。可回看、退出，或主动进入后续回忆。</p><button type="button" onClick={() => manager.startAct4T06()}>继续体验 2014 年启明机构</button></>
                 )}
               </>
             )}

@@ -1,6 +1,7 @@
 import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type Act4State, type Act4Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
 import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultAct4State, createDefaultState, createDefaultWindow } from './defaultState';
 import { birthdayScenes, timeline } from '../data/act4/content';
+import { firstLaterSceneId, lastLaterSceneId, laterSceneById, laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
@@ -10,7 +11,7 @@ import { act2T07, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, ACT2_T07_FRAME_ID
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1–6 的有效进度迁移到 schema 7。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8];
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'];
@@ -116,18 +117,21 @@ const safeAct3 = (candidate: unknown): Act3State => {
   return { stage, currentLensId, visitedLensIds, inspectedClueIds, confirmedFlagIds };
 };
 
-const act4Stages: Act4Stage[] = ['inactive', 'T01', 'T02', 'T03', 'T04', 'T05'];
-const act4PuzzleIds = Array.from({ length: 12 }, (_, index) => `A4_P${String(index + 1).padStart(2, '0')}`);
+const act4Stages: Act4Stage[] = ['inactive', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09', 'T10'];
+const act4PuzzleIds = Array.from({ length: 24 }, (_, index) => `A4_P${String(index + 1).padStart(2, '0')}`);
 const safeAct4 = (candidate: unknown, flags: AppState['game']['flags']): Act4State => {
   const fallback = createDefaultAct4State();
   if (!isRecord(candidate) || flags.FLAG_A3_COMPLETE !== true || !act4Stages.includes(candidate.stage as Act4Stage)) return fallback;
   const readNotebookPages = Array.isArray(candidate.readNotebookPages) ? [...new Set(candidate.readNotebookPages.filter((page): page is number => Number.isInteger(page) && page >= 1 && page <= 9))] : [];
   const stage = candidate.stage as Act4Stage;
   const stageNumber = stage === 'inactive' ? 0 : Number(stage.slice(1));
-  const puzzleStageNumber = (id: string) => { const n = Number(id.slice(-2)); return n <= 3 ? 1 : n <= 5 ? 2 : n <= 8 ? 3 : n <= 10 ? 4 : 5; };
+  const puzzleStageNumber = (id: string) => { const n = Number(id.slice(-2)); return n <= 3 ? 1 : n <= 5 ? 2 : n <= 8 ? 3 : n <= 10 ? 4 : n <= 12 ? 5 : n <= 15 ? 6 : n <= 17 ? 7 : n <= 20 ? 8 : n <= 22 ? 9 : 10; };
   const solvedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= stageNumber);
-  const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'] };
-  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) return fallback;
+  const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'], T06: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'], T07: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13'], T08: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16'], T09: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16', 'A4_P18'], T10: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16', 'A4_P18', 'A4_P21'] };
+  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) {
+    if (stageNumber >= 6 && flags.FLAG_A4_T05_COMPLETE === true) return safeAct4({ ...candidate, stage: 'T05', solvedPuzzleIds: solvedPuzzleIds.filter((id) => puzzleStageNumber(id) <= 5) }, flags);
+    return fallback;
+  }
   if (stageNumber >= 2 && readNotebookPages.length !== 9) return fallback;
   const unlockedAccountIds = solvedPuzzleIds.includes('A4_P04') ? safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id)) : [];
   if (stageNumber >= 3 && unlockedAccountIds.length !== 2) return fallback;
@@ -135,8 +139,23 @@ const safeAct4 = (candidate: unknown, flags: AppState['game']['flags']): Act4Sta
   const timelineReadDates = safeStringIds(candidate.timelineReadDates).filter((date) => timeline.some(([id]) => id === date));
   if (stageNumber >= 4 && !timelineReadDates.includes('04-19')) return fallback;
   if (stageNumber >= 5 && candidate.viewedWakeMail !== true) return fallback;
-  const birthdayNodeId = stage === 'T05' && birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) && (candidate.birthdayNodeId !== 'taken' || solvedPuzzleIds.includes('A4_P11')) ? candidate.birthdayNodeId as string : 'study';
-  return { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stageNumber >= 4, wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId };
+  const birthdayNodeId = stageNumber >= 5 && birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) && (candidate.birthdayNodeId !== 'taken' || solvedPuzzleIds.includes('A4_P11')) ? candidate.birthdayNodeId as string : 'study';
+  const base = { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stageNumber >= 4, wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId };
+  const laterStage = stageNumber >= 6 ? stage as LaterStage : null;
+  const seenLaterNodeIds = safeStringIds(candidate.seenLaterNodeIds).filter((id) => {
+    const scene = laterSceneById.get(id);
+    return scene && Number(scene.stage.slice(1)) <= stageNumber;
+  });
+  const requestedNode = typeof candidate.laterNodeId === 'string' ? candidate.laterNodeId : null;
+  const validNode = laterStage && requestedNode && laterSceneById.get(requestedNode)?.stage === laterStage && seenLaterNodeIds.includes(requestedNode);
+  const prior = { ...base, stage: 'T05' as const, solvedPuzzleIds: solvedPuzzleIds.filter((id) => puzzleStageNumber(id) <= 5), birthdayNodeId: 'taken', laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, finalMailOpened: false };
+  const stageScenes = laterStage ? laterScenesByStage(laterStage) : [];
+  const currentIndex = stageScenes.findIndex((scene) => scene.id === requestedNode);
+  if (laterStage && (birthdayNodeId !== 'taken' || !validNode || !seenLaterNodeIds.includes(firstLaterSceneId[laterStage]) || !stageScenes.slice(0, currentIndex + 1).every((scene) => seenLaterNodeIds.includes(scene.id)))) return prior;
+  const packageStep = stageNumber >= 9 && seenLaterNodeIds.includes('A4_T09_NOTE') && Number.isInteger(candidate.packageStep) ? Math.max(0, Math.min(3, candidate.packageStep as number)) : 0;
+  const broadcastIndex = stageNumber >= 9 && seenLaterNodeIds.includes('A4_T09_EXIT') && Number.isInteger(candidate.broadcastIndex) ? Math.max(0, Math.min(6, candidate.broadcastIndex as number)) : 0;
+  const finalMailOpened = stage === 'T10' && requestedNode === 'A4_T10_MAIL' && candidate.finalMailOpened === true;
+  return { ...base, laterNodeId: laterStage ? requestedNode : null, seenLaterNodeIds: laterStage ? seenLaterNodeIds : [], packageStep, broadcastIndex, finalMailOpened };
 };
 
 export const hydrateState = (candidate: unknown): AppState => {
@@ -251,7 +270,10 @@ export const hydrateState = (candidate: unknown): AppState => {
   let act4 = safeAct4(modules.act4, validAct4Gate ? rawFlags : {});
   if (act4.stage !== 'inactive') {
     const stageNumber = Number(act4.stage.slice(1));
-    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) act4 = createDefaultAct4State();
+    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) {
+      act4 = index >= 6 && rawFlags.FLAG_A4_T05_COMPLETE === true ? { ...act4, stage: 'T05', solvedPuzzleIds: act4.solvedPuzzleIds.filter((id) => Number(id.slice(-2)) <= 12), laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, finalMailOpened: false } : createDefaultAct4State();
+      break;
+    }
   }
   if (act4.stage === 'inactive') {
     for (const key of Object.keys(rawFlags)) if (/^FLAG_A4_/.test(key)) delete rawFlags[key];
@@ -261,6 +283,13 @@ export const hydrateState = (candidate: unknown): AppState => {
       if (rawFlags[id] === true && !act4.solvedPuzzleIds.includes(`A4_P${String([1, 4, 6, 9, 11][index - 1]).padStart(2, '0')}`)) delete rawFlags[id];
     }
     if (act4.birthdayNodeId !== 'taken') delete rawFlags.FLAG_A4_T05_COMPLETE;
+    for (let index = 6; index <= 10; index++) {
+      const stage = `T${String(index).padStart(2, '0')}` as LaterStage;
+      const flagId = `FLAG_A4_${stage}_COMPLETE`;
+      const puzzleId = `A4_P${[13,16,18,21,23][index - 6]}`;
+      if (Number(act4.stage.slice(1)) < index || !act4.solvedPuzzleIds.includes(puzzleId) || !act4.seenLaterNodeIds.includes(lastLaterSceneId[stage])) delete rawFlags[flagId];
+    }
+    if (act4.stage !== 'T10' || !act4.finalMailOpened || rawFlags.FLAG_A4_T10_COMPLETE !== true) delete rawFlags.FLAG_A4_COMPLETE;
   }
   const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
   const queryHistory = rawQueryHistory.filter((query) => {
@@ -309,7 +338,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 8,
+    schemaVersion: 9,
     game: {
       act: act4.stage !== 'inactive' ? 4 : act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,
