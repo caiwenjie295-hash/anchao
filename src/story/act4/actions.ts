@@ -6,6 +6,12 @@ export const act4Answer: Record<string, string> = {
   A4_P04: '20200419', A4_P05: 'both', A4_P06: '04-03,04-09,04-19',
   A4_P07: 'food,friends,xiaoyue', A4_P08: 'memory', A4_P09: 'VVaKe',
   A4_P10: 'mail-first', A4_P11: 'contact,two-months', A4_P12: 'birthday,river',
+  A4_P13: 'wake,day-broadcast,night-broadcast,13aCK,VVaKe',
+  A4_P14: 'paper-match', A4_P15: 'three-holes,flap',
+  A4_P16: 'huang,wangao', A4_P17: 'double-s,unremembered',
+  A4_P18: '2008,huang', A4_P19: 'cave,drain,wall', A4_P20: 'phone,statue',
+  A4_P21: 'bag,tape,hide', A4_P22: 'xiaoa',
+  A4_P23: 'possible', A4_P24: 'third-cup',
 };
 
 export const act4Hints: Record<string, [string, string]> = {
@@ -21,6 +27,18 @@ export const act4Hints: Record<string, [string, string]> = {
   A4_P10: ['比较同一天的时间。', '启明邮件是 00:00；微博是随后新注册记录。'],
   A4_P11: ['听父母和来人的两句关键话。', '“交给你们我们放心”以及“就两个月”说明事先安排。'],
   A4_P12: ['留意日记日期和河边。', '生日是 12 月 29 日，河边是他曾短暂感到自由的地方。'],
+  A4_P13: ['按一天的时间排，再给两组广播找时段。', '五点起床→早读后→睡前；早间 13aCK，睡前 VVaKe。'],
+  A4_P14: ['这是玩家回看，不是 2014 年小 A 的物件。', '两组词与第三幕的两张纸分别相同。'],
+  A4_P15: ['看铁门的两个可辨认结构。', '三个小孔和翻盖送餐口。'],
+  A4_P16: ['梦中笔记和镜中身份要并看。', '笔记写黄子山；现实自认王澳，只能确认不一致。'],
+  A4_P17: ['看看数学笔记页边。', '双 S 出现，但小 A 不记得写过。'],
+  A4_P18: ['书架先按年份找。', '先 2008 年架，再找黄子山书脊。'],
+  A4_P19: ['旧路沿排水沟上行。', '石洞→排水沟→砖红围墙。'],
+  A4_P20: ['门缝看不清深处。', '用手机放大深处黑色塑像。'],
+  A4_P21: ['先保护笔记，再藏起来。', '塑料袋→透明胶→消防栓背后。'],
+  A4_P22: ['回复里有熟悉的称呼。', '“好久不见啊小 A”让他记得自己的名字。'],
+  A4_P23: ['小月说的是一种读法。', 'wake/back 可能有关，但不是被证实的机构说明。'],
+  A4_P24: ['看桌上为谁多点了一杯。', '第三杯放在两人之间再拍照。'],
 };
 
 export function answerAct4Puzzle(id: string, selections: string[]): boolean {

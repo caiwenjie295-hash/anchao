@@ -25,7 +25,7 @@ export interface GameState {
   discoveredClueIds: string[];
 }
 
-export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A2_T07' | 'A3_T00' | 'A3_T01' | 'A3_T02' | 'A3_T03' | 'A3_T04' | 'A3_T05' | 'A3_T06' | 'A3_T07' | 'A4_T01' | 'A4_T02' | 'A4_T03' | 'A4_T04' | 'A4_T05';
+export type GamePhase = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'A2_T01' | 'A2_T02' | 'A2_T03' | 'A2_T04' | 'A2_T05' | 'A2_T06' | 'A2_T07' | 'A3_T00' | 'A3_T01' | 'A3_T02' | 'A3_T03' | 'A3_T04' | 'A3_T05' | 'A3_T06' | 'A3_T07' | 'A4_T01' | 'A4_T02' | 'A4_T03' | 'A4_T04' | 'A4_T05' | 'A4_T06' | 'A4_T07' | 'A4_T08' | 'A4_T09' | 'A4_T10';
 
 export interface DesktopState {
   windows: Record<AppId, DesktopWindow>;
@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 8;
+  schemaVersion: 9;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -88,7 +88,7 @@ export interface AppState {
   };
 }
 
-export type Act4Stage = 'inactive' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05';
+export type Act4Stage = 'inactive' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05' | 'T06' | 'T07' | 'T08' | 'T09' | 'T10';
 export interface Act4State {
   stage: Act4Stage;
   readNotebookPages: number[];
@@ -99,6 +99,11 @@ export interface Act4State {
   viewedWakeMail: boolean;
   wakePaperConfirmed: boolean;
   birthdayNodeId: string;
+  laterNodeId: string | null;
+  seenLaterNodeIds: string[];
+  packageStep: number;
+  broadcastIndex: number;
+  finalMailOpened: boolean;
 }
 
 export type Act2Stage = 'inactive' | 'search' | 'bridge' | 'library' | 'tales' | 'school' | 'qiming' | 'finale';
@@ -260,6 +265,6 @@ export type AnchaoEventMap = {
   'act2:t07-location-inferred': Record<string, never>;
   'act2:t07-trip-planned': Record<string, never>;
   'act2:t07-complete': Record<string, never>;
-  'progress:reset': { schemaVersion: 8 };
-  'save:completed': { schemaVersion: 8 };
+  'progress:reset': { schemaVersion: 9 };
+  'save:completed': { schemaVersion: 9 };
 };

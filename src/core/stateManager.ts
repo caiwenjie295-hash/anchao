@@ -4,6 +4,7 @@ import { loadState, saveState } from './saveManager';
 import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
 import { birthdayScenes, timeline } from '../data/act4/content';
 import { answerAct4Puzzle } from '../story/act4/actions';
+import { firstLaterSceneId, lastLaterSceneId, laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
@@ -62,7 +63,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 8 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 9 });
   }
 
   private nextZIndex(): number {
@@ -215,7 +216,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 8 });
+    this.bus.emit('progress:reset', { schemaVersion: 9 });
   }
 
   startJourney(sceneId: string): void {
@@ -816,7 +817,7 @@ export class StateManager {
   /** 答案在控制器中检查；这里只接受语义题目与当前阶段前置。 */
   solveAct4Puzzle(puzzleId: string, selections: string[]): boolean {
     const act4 = this.state.modules.act4;
-    const stageByPuzzle: Record<string, Act4Stage> = { A4_P01: 'T01', A4_P02: 'T01', A4_P03: 'T01', A4_P04: 'T02', A4_P05: 'T02', A4_P06: 'T03', A4_P07: 'T03', A4_P08: 'T03', A4_P09: 'T04', A4_P10: 'T04', A4_P11: 'T05', A4_P12: 'T05' };
+    const stageByPuzzle: Record<string, Act4Stage> = { A4_P01: 'T01', A4_P02: 'T01', A4_P03: 'T01', A4_P04: 'T02', A4_P05: 'T02', A4_P06: 'T03', A4_P07: 'T03', A4_P08: 'T03', A4_P09: 'T04', A4_P10: 'T04', A4_P11: 'T05', A4_P12: 'T05', A4_P13: 'T06', A4_P14: 'T06', A4_P15: 'T06', A4_P16: 'T07', A4_P17: 'T07', A4_P18: 'T08', A4_P19: 'T08', A4_P20: 'T08', A4_P21: 'T09', A4_P22: 'T09', A4_P23: 'T10', A4_P24: 'T10' };
     if (stageByPuzzle[puzzleId] !== act4.stage) return false;
     if (act4.solvedPuzzleIds.includes(puzzleId)) return true;
     if (!answerAct4Puzzle(puzzleId, selections)) return false;
@@ -827,6 +828,20 @@ export class StateManager {
     if (puzzleId === 'A4_P09' && (!act4.unlockedAccountIds.includes('mail') || !act4.viewedWakeMail)) return false;
     if (puzzleId === 'A4_P11' && act4.birthdayNodeId !== 'door') return false;
     if (puzzleId === 'A4_P12' && birthdayScenes.findIndex((scene) => scene.id === act4.birthdayNodeId) < 3) return false;
+    const node = act4.laterNodeId;
+    const seen = act4.seenLaterNodeIds;
+    if (puzzleId === 'A4_P13' && !seen.includes('A4_T06_BROADCAST')) return false;
+    if (puzzleId === 'A4_P14' && !seen.includes('A4_T06_BROADCAST')) return false;
+    if (puzzleId === 'A4_P15' && node !== 'A4_T06_CONFINEMENT') return false;
+    if (puzzleId === 'A4_P16' && node !== 'A4_T07_MIRROR') return false;
+    if (puzzleId === 'A4_P17' && !seen.includes('A4_T07_MATH')) return false;
+    if (puzzleId === 'A4_P18' && node !== 'A4_T08_ARCHIVE') return false;
+    if (puzzleId === 'A4_P19' && !seen.includes('A4_T08_ROUTE')) return false;
+    if (puzzleId === 'A4_P20' && node !== 'A4_T08_KITCHEN') return false;
+    if (puzzleId === 'A4_P21' && (node !== 'A4_T09_NOTE' || act4.packageStep !== 3)) return false;
+    if (puzzleId === 'A4_P22' && !seen.includes('A4_T09_REPLY')) return false;
+    if (puzzleId === 'A4_P23' && node !== 'A4_T10_WORDS') return false;
+    if (puzzleId === 'A4_P24' && node !== 'A4_T10_CAFE') return false;
     const solvedPuzzleIds = [...act4.solvedPuzzleIds, puzzleId];
     const wakePaperConfirmed = act4.wakePaperConfirmed || puzzleId === 'A4_P09';
     this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, solvedPuzzleIds, wakePaperConfirmed } } });
@@ -868,6 +883,67 @@ export class StateManager {
     const flagId = `FLAG_A4_T${String(index + 1).padStart(2, '0')}_COMPLETE`;
     const nextStage = sequence[index + 1];
     this.commit({ ...this.state, game: { ...this.state.game, flags: { ...this.state.game.flags, [flagId]: true }, phase: nextStage ? `A4_${nextStage}` : 'A4_T05' }, modules: { ...this.state.modules, act4: { ...act4, stage: nextStage ?? act4.stage } } });
+  }
+
+  /** T05 停在家门；玩家再次主动选择才进入机构回忆。 */
+  startAct4T06(): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T05' || act4.birthdayNodeId !== 'taken' || this.state.game.flags.FLAG_A4_T05_COMPLETE !== true || act4.laterNodeId) return;
+    const first = firstLaterSceneId.T06;
+    this.commit({ ...this.state, game: { ...this.state.game, phase: 'A4_T06' }, modules: { ...this.state.modules, act4: { ...act4, stage: 'T06', laterNodeId: first, seenLaterNodeIds: [...act4.seenLaterNodeIds, first] } } });
+  }
+
+  visitAct4LaterNode(id: string): void {
+    const act4 = this.state.modules.act4;
+    if (!['T06','T07','T08','T09','T10'].includes(act4.stage)) return;
+    const stage = act4.stage as LaterStage;
+    const scenes = laterScenesByStage(stage);
+    const currentIndex = scenes.findIndex((scene) => scene.id === act4.laterNodeId);
+    if (currentIndex < 0 || scenes[currentIndex + 1]?.id !== id) return;
+    if (act4.stage === 'T06' && id === 'A4_T06_ROOMMATE' && !act4.solvedPuzzleIds.includes('A4_P13')) return;
+    if (act4.stage === 'T07' && id === 'A4_T07_KITCHEN' && !act4.solvedPuzzleIds.includes('A4_P16')) return;
+    if (act4.stage === 'T08' && id === 'A4_T08_MIRROR' && !act4.solvedPuzzleIds.includes('A4_P18')) return;
+    if (act4.stage === 'T09' && id === 'A4_T09_EXIT' && !act4.solvedPuzzleIds.includes('A4_P21')) return;
+    if (act4.stage === 'T09' && id === 'A4_T09_BLACKOUT' && act4.broadcastIndex !== 6) return;
+    if (act4.stage === 'T10' && id === 'A4_T10_CAFE' && !act4.solvedPuzzleIds.includes('A4_P23')) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, laterNodeId: id, seenLaterNodeIds: act4.seenLaterNodeIds.includes(id) ? act4.seenLaterNodeIds : [...act4.seenLaterNodeIds, id] } } });
+  }
+
+  advanceAct4Package(action: 'bag' | 'tape' | 'hide'): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T09' || act4.laterNodeId !== 'A4_T09_NOTE' || ['bag','tape','hide'][act4.packageStep] !== action) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, packageStep: act4.packageStep + 1 } } });
+  }
+
+  advanceAct4Broadcast(): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T09' || act4.laterNodeId !== 'A4_T09_EXIT' || act4.broadcastIndex >= 6) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, broadcastIndex: act4.broadcastIndex + 1 } } });
+  }
+
+  openAct4FinalMail(): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T10' || act4.laterNodeId !== 'A4_T10_MAIL' || act4.finalMailOpened) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, finalMailOpened: true } } });
+  }
+
+  advanceAct4LaterStage(): void {
+    const act4 = this.state.modules.act4;
+    const sequence: LaterStage[] = ['T06','T07','T08','T09','T10'];
+    const required = ['A4_P13','A4_P16','A4_P18','A4_P21','A4_P23'];
+    const index = sequence.indexOf(act4.stage as LaterStage);
+    if (index < 0 || act4.laterNodeId !== lastLaterSceneId[sequence[index]] || !act4.solvedPuzzleIds.includes(required[index])) return;
+    if (index > 0 && this.state.game.flags[`FLAG_A4_${sequence[index - 1]}_COMPLETE`] !== true) return;
+    if (act4.stage === 'T09' && act4.broadcastIndex !== 6) return;
+    if (act4.stage === 'T10' && !act4.finalMailOpened) return;
+    const stageFlag = `FLAG_A4_${act4.stage}_COMPLETE`;
+    const nextStage = sequence[index + 1];
+    if (!nextStage && this.state.game.flags.FLAG_A4_COMPLETE === true) return;
+    const nextNode = nextStage ? firstLaterSceneId[nextStage] : act4.laterNodeId;
+    this.commit({ ...this.state,
+      game: { ...this.state.game, phase: nextStage ? `A4_${nextStage}` : 'A4_T10', flags: { ...this.state.game.flags, [stageFlag]: true, ...(nextStage ? {} : { FLAG_A4_COMPLETE: true }) } },
+      modules: { ...this.state.modules, act4: { ...act4, stage: nextStage ?? act4.stage, laterNodeId: nextNode, seenLaterNodeIds: nextNode && !act4.seenLaterNodeIds.includes(nextNode) ? [...act4.seenLaterNodeIds, nextNode] : act4.seenLaterNodeIds } },
+    });
   }
 }
 
