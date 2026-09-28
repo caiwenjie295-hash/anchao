@@ -11,6 +11,7 @@ import { act4OldMails } from "../../data/act4/mail";
 import { birthdayImageSlots } from "../../data/act4/assets";
 import { Puzzle } from "./Act4Puzzle";
 import { Act4LaterExperience } from './Act4LaterExperience';
+import { Act4SceneImage } from './Act4SceneImage';
 import "../../act4/act4.css";
 
 const routeChoices = [
@@ -66,7 +67,7 @@ export function Act4Experience({
     <main className="a4" aria-label="第四幕 王澳">
       <header className="a4-header">
         <div>
-          <small>第四幕 · 王澳 · {stage}</small>
+          <small>第四幕 · 王澳</small>
           <h1>
             {stage === "T01"
               ? "县城夜晚"
@@ -91,6 +92,7 @@ export function Act4Experience({
             </p>
             <p>小月：“先把他的笔记看完吧。”</p>
             <div className="a4-paper" data-asset-id="IMG_A4_T01_001">
+              <Act4SceneImage assetId="IMG_A4_T01_001" alt="小 A 留下的笔记" />
               <span>小 A 的笔记 · {page}/9</span>
               <p>{notebookPages[page - 1]}</p>
             </div>
@@ -280,9 +282,9 @@ export function Act4Experience({
         </div>
       )}
       {stage === "T03" && (
-        <div className="a4-grid">
+        <div className="a4-grid a4-grid--social">
           <section className="a4-card">
-            <p>离线微博档案 · 王澳 · 2020 年 4 月</p>
+            <div className="a4-social-profile"><div className="a4-social-cover" /><div className="a4-social-avatar" aria-hidden="true">澳</div><div><strong>王澳</strong><span>@Wangao · 2020 年 4 月加入</span><p>写下最近的事，也许有一天能想明白。</p></div></div>
             <Puzzle
               id="A4_P06"
               title="三篇代表性微博排序"
@@ -292,25 +294,22 @@ export function Act4Experience({
             />
             {solved("A4_P06") && (
               <>
-                <div className="a4-page-list">
+                <div className="a4-social-timeline" aria-label="王澳的动态">
                   {timeline.map(([date]) => (
                     <button
                       type="button"
                       key={date}
+                      className="a4-social-post"
+                      aria-current={openedPost === date ? 'true' : undefined}
                       onClick={() => {
                         setOpenedPost(date);
                         manager.readAct4Timeline(date);
                       }}
                     >
-                      {date}
-                      {act4.timelineReadDates.includes(date) && " ✓"}
+                      <span className="a4-social-post__avatar" aria-hidden="true">澳</span><span><strong>王澳 <small>@Wangao · 2020-{date}</small></strong><span>{timeline.find(([itemDate]) => itemDate === date)?.[1]}</span>{act4.timelineReadDates.includes(date) && <small>已读</small>}</span>
                     </button>
                   ))}
                 </div>
-                <article className="a4-paper">
-                  <strong>2020-{openedPost}</strong>
-                  <p>{timeline.find(([date]) => date === openedPost)?.[1]}</p>
-                </article>
               </>
             )}
           </section>
@@ -359,29 +358,27 @@ export function Act4Experience({
         </div>
       )}
       {stage === "T04" && (
-        <div className="a4-grid">
+        <div className="a4-grid a4-grid--mail">
           <section className="a4-card">
-            <p>离线邮箱 · Wangao@163.com</p>
-            <div className="a4-page-list">
-              <button type="button" onClick={() => setOpenedMail("ordinary")}>
-                普通邮件 · 招聘 / 广告
-              </button>
+            <div className="a4-mail-brand"><strong>王澳的邮箱</strong><span>Wangao@163.com</span></div>
+            <div className="a4-mail-shell"><nav className="a4-mail-folders" aria-label="邮箱文件夹"><strong>文件夹</strong><span>收件箱</span><span>已发送</span><span>草稿箱</span></nav><div className="a4-mail-main"><div className="a4-mail-toolbar">收件箱 <span>按时间排序</span></div><div className="a4-mail-list" role="group" aria-label="邮件列表">
+              <button type="button" aria-current={openedMail === 'ordinary' ? 'true' : undefined} onClick={() => setOpenedMail("ordinary")}><strong>校园招聘通知</strong><span>面试安排与岗位信息</span><time>04-08</time></button>
+              <button type="button" onClick={() => setOpenedMail("ordinary")}><strong>生活服务</strong><span>本月优惠活动</span><time>04-06</time></button>
               <button
                 type="button"
+                aria-current={openedMail === 'wake' ? 'true' : undefined}
                 onClick={() => {
                   setOpenedMail("wake");
                   manager.viewAct4WakeMail();
                 }}
               >
-                启明 · VVaKe · 04-03 00:00
+                <strong>启明</strong><span>VVaKe</span><time>04-03 00:00</time>
               </button>
             </div>
             {openedMail === "ordinary" ? (
-              <p className="a4-paper">
-                收件箱里有招聘通知、面试通知和广告。那封启明来信藏在这些普通邮件间。
-              </p>
+              <article className="a4-mail-reading"><h2>校园招聘通知</h2><p>发件人：校园招聘</p><p>面试时间及岗位安排已经更新，请登录招聘页面查看。</p></article>
             ) : (
-              <article className="a4-paper">
+              <article className="a4-mail-reading">
                 <strong>
                   主题：VVaKe
                   <br />
@@ -391,7 +388,7 @@ export function Act4Experience({
                 </strong>
                 <p>{wakeWords.join(" · ")}</p>
               </article>
-            )}
+            )}</div></div>
           </section>
           <section className="a4-card">
             <h2>第三幕带回的两张纸</h2>
@@ -454,9 +451,9 @@ export function Act4Experience({
               data-asset-id={birthdayImageSlots[birthdayIndex].assetId}
               aria-label={birthdayImageSlots[birthdayIndex].alt}
             >
+              <Act4SceneImage assetId={birthdayImageSlots[birthdayIndex].assetId} alt={birthdayImageSlots[birthdayIndex].alt} />
               <h2>{birthday.title}</h2>
               <p>{birthday.text}</p>
-              <small>场景图片待补 · 文字可完整游玩</small>
             </div>
             {!completedT05 &&
               birthdayIndex < birthdayScenes.length - 1 &&

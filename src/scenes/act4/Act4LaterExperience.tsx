@@ -8,6 +8,7 @@ import { T07Experience } from './T07Experience';
 import { T08Experience } from './T08Experience';
 import { T09Experience } from './T09Experience';
 import { T10Experience } from './T10Experience';
+import { Act4SceneImage } from './Act4SceneImage';
 import '../../act4/act4.css';
 
 const labels: Record<LaterStage, string> = {
@@ -33,19 +34,19 @@ export function Act4LaterExperience({ manager = stateManager, onExit }: { manage
   const finishBlock = finishAct4Block(stage, state);
   const atEnd = current.id === lastLaterSceneId[stage];
   const completed = whole.game.flags.FLAG_A4_COMPLETE === true;
-  return <main className="a4 a4-later" aria-label={`第四幕 ${stage}`}>
-    <header className="a4-header"><div><small>第四幕 · {stage}</small><h1>{labels[stage]}</h1></div><button type="button" onClick={onExit}>退出到桌面</button></header>
+  return <main className="a4 a4-later" aria-label="第四幕">
+    <header className="a4-header"><div><small>第四幕 · 王澳</small><h1>{labels[stage]}</h1></div><button type="button" onClick={onExit}>退出到桌面</button></header>
     <div className="a4-grid">
       <section className="a4-card">
         <p className="a4-perspective">{stage === 'T10' ? '当下调查：这里只引用主角与小月能取得的公开资料与纸片。' : '玩家专属第一人称经历：这段画面不是当下主角取得的录像或证言。'}</p>
         <article className={`a4-scene${displayed.id === 'A4_T09_BLACKOUT' ? ' a4-scene--blackout' : ''}`} data-asset-id={displayed.assetId} aria-label={displayed.imageDescription}>
-          <h2>{displayed.title}</h2><p>{displayed.text}</p><small>图片待补 · 完整文字与操作仍可使用</small>
+          <Act4SceneImage assetId={displayed.assetId} alt={displayed.title} /><h2>{displayed.title}</h2><p>{displayed.text}</p>
         </article>
         <div className="a4-actions">
           {reviewId ? <button type="button" onClick={() => setReviewId(null)}>回到当前进度</button> : <>
             {next && <button type="button" disabled={nextBlock !== null} onClick={() => manager.visitAct4LaterNode(next.id)}>继续经历</button>}
             {nextBlock && <p role="status">{nextBlock}</p>}
-            {atEnd && !completed && <button type="button" disabled={finishBlock !== null} onClick={() => manager.advanceAct4LaterStage()}>{stage === 'T10' ? '读完邮件，收束第四幕' : `确认 ${stage} 结束，继续`}</button>}
+            {atEnd && !completed && <button type="button" disabled={finishBlock !== null} onClick={() => manager.advanceAct4LaterStage()}>{stage === 'T10' ? '读完邮件，收束第四幕' : '继续下一段经历'}</button>}
             {atEnd && finishBlock && <p role="status">{finishBlock}</p>}
           </>}
         </div>

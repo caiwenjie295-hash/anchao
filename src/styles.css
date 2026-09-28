@@ -527,6 +527,39 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .story-transition-launch p { margin:8px 0 14px; font-size:14px; line-height:1.6; }
 .story-transition-launch button { min-height:42px; padding:0 16px; border:1px solid #315f4a; border-radius:4px; color:#fff; background:#315f4a; cursor:pointer; }
 .story-transition-launch button:focus-visible { outline:3px solid #315f4a; outline-offset:3px; }
+.browser-news-related, .browser-entry-sources, .browser-entry-toc, .browser-forum-nav { padding: 12px 16px; margin: 18px 0; border: 1px solid hsl(var(--browser-site-hue,205) 20% 38%); border-radius: 6px; }
+.browser-news-related h2 { font-size: 1rem; margin: 0 0 6px; }
+.browser-entry-toc { display: flex; flex-wrap: wrap; gap: 16px; }
+.browser-entry-toc a { color: inherit; text-decoration: underline; }
+.browser-forum-nav { display: flex; flex-wrap: wrap; gap: 10px; font-size: .85rem; }
+.browser-forum-nav span + span::before { content: '›'; margin-right: 10px; }
+.browser-page--news, .browser-page--incident { background: #f8f6f1; color: #252b31; border-top: 5px solid #9a3030; }
+.browser-page--news .browser-page__masthead, .browser-page--incident .browser-page__masthead { border-bottom: 2px solid #9a3030; }
+.browser-page--news .browser-page__brand strong, .browser-page--incident .browser-page__brand strong { color: #892b2b; font-size: 1.1rem; }
+.browser-page--news h1, .browser-page--incident h1, .browser-page--encyclopedia h1, .browser-page--same-name h1 { color: #1c2935; }
+.browser-page--news .browser-prose, .browser-page--incident .browser-prose, .browser-page--encyclopedia .browser-prose, .browser-page--same-name .browser-prose { color: #354452; }
+.browser-page--news .browser-prose__lead, .browser-page--incident .browser-prose__lead, .browser-page--encyclopedia .browser-prose__lead, .browser-page--same-name .browser-prose__lead { color: #263442; }
+.browser-page--news .browser-page__byline, .browser-page--incident .browser-page__byline, .browser-page--encyclopedia .browser-page__byline, .browser-page--same-name .browser-page__byline { color: #617180; border-color: #c7d1d8; }
+.browser-page--encyclopedia, .browser-page--same-name { background: #f2f6fa; color: #293a4b; border-top: 5px solid #427b91; }
+.browser-page--encyclopedia .browser-page__brand strong, .browser-page--same-name .browser-page__brand strong { color: #275e78; font-size: 1.1rem; }
+.browser-page--encyclopedia .browser-page__aside, .browser-page--same-name .browser-page__aside { background: #e3edf4; border-color: #b9cbd7; }
+.browser-page--encyclopedia .browser-page__aside h2, .browser-page--same-name .browser-page__aside h2, .browser-page--encyclopedia .browser-page__facts dd, .browser-page--same-name .browser-page__facts dd { color: #263b4b; }
+.browser-page--forum { background: #172029; border-top: 5px solid #6c8c61; }
+.browser-page--forum .browser-page__masthead { background: #263b35; padding-inline: 12px; }
+.browser-page--forum .browser-thread__post { border-radius: 2px; border-left: 3px solid #628477; }
+.browser-next-investigation { position: static; width: auto; margin: 20px; padding: 16px; border: 1px solid #869da7; border-radius: 8px; background: #eaf0ef; color: #24333a; }
+.taskbar__system-area { display: flex; align-items: center; gap: 8px; }
+.taskbar__system-area .story-transition-launch { position: static; z-index: auto; width: auto; max-width: min(40vw, 390px); padding: 0; border: 0; box-shadow: none; background: transparent; backdrop-filter: none; display: flex; align-items: center; gap: 5px; }
+.taskbar__system-area .story-transition-launch span { display: none; }
+.taskbar__system-area .story-transition-launch button { min-height: 34px; padding: 4px 9px; font-size: 12px; white-space: normal; }
+@media (max-width: 600px) { .taskbar__system-area .story-transition-launch { max-width: 145px; } .taskbar__system-area .story-transition-launch button { font-size: 11px; line-height: 1.2; } }
+.taskbar-investigation { position: relative; }
+.taskbar-investigation summary { list-style: none; cursor: pointer; border: 1px solid #668f7a; border-radius: 5px; padding: 6px 10px; background: #315f4a; color: #fff; font-size: 12px; }
+.taskbar-investigation summary::-webkit-details-marker { display: none; }
+.taskbar-investigation summary:focus-visible { outline: 3px solid #315f4a; outline-offset: 2px; }
+.taskbar-investigation__menu { position: absolute; right: 0; bottom: 42px; width: min(310px, calc(100vw - 20px)); padding: 10px; border: 1px solid #a6b8ad; border-radius: 8px; background: #f3f6f0; box-shadow: 0 8px 24px #101b1550; }
+.taskbar-investigation__menu .story-transition-launch { max-width: none; display: grid; gap: 7px; }
+.taskbar-investigation__menu .story-transition-launch button { width: 100%; min-height: 40px; }
 
 @media (max-width: 520px) {
   .act2-experience--bridge { padding: 10px; }

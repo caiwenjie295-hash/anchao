@@ -36,9 +36,9 @@ export function Puzzle({
     }
   };
   return (
-    <section className="a4-puzzle" aria-label={`${id} ${title}`}>
+    <section className="a4-puzzle" aria-label={title}>
       <h3>
-        {id} · {title} {solved && <span className="a4-done">已完成</span>}
+        {title} {solved && <span className="a4-done">已完成</span>}
       </h3>
       {!solved && (
         <>
