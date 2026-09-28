@@ -790,7 +790,8 @@ export class StateManager {
 
   /** 第三幕终点只是入口；玩家在回看笔记时主动开始第四幕。 */
   startAct4(): void {
-    if (this.state.game.flags.FLAG_A3_COMPLETE !== true || this.state.modules.act4.stage !== 'inactive') return;
+    if (this.state.game.flags.FLAG_A3_COMPLETE !== true || this.state.game.flags.FLAG_A3_SITE_EXITED !== true
+      || this.state.modules.act3.stage !== 'T07' || this.state.modules.act4.stage !== 'inactive') return;
     this.commit({ ...this.state, game: { ...this.state.game, act: 4, phase: 'A4_T01' }, modules: { ...this.state.modules, act4: { ...this.state.modules.act4, stage: 'T01' } } });
   }
 
@@ -860,7 +861,9 @@ export class StateManager {
     const required = ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'];
     const index = sequence.indexOf(act4.stage);
     if (index < 0 || !act4.solvedPuzzleIds.includes(required[index])) return;
+    if (act4.stage === 'T01' && !Array.from({ length: 9 }, (_, page) => page + 1).every((page) => act4.readNotebookPages.includes(page))) return;
     if (act4.stage === 'T02' && act4.unlockedAccountIds.length !== 2) return;
+    if (act4.stage === 'T03' && !act4.timelineReadDates.includes('04-19')) return;
     if (act4.stage === 'T05' && act4.birthdayNodeId !== 'taken') return;
     const flagId = `FLAG_A4_T${String(index + 1).padStart(2, '0')}_COMPLETE`;
     const nextStage = sequence[index + 1];
