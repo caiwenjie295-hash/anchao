@@ -71,7 +71,7 @@ describe('saveManager', () => {
       photos: { activePhotoId: 'IMG_A1_H_003', openedPhotoIds: ['IMG_A1_H_003'], adjustments: { IMG_A1_H_003: { exposure: 55, shadows: 50, contrast: 35 } }, zoomByPhotoId: { IMG_A1_H_003: 1.8 }, inspectedSymbolPhotoIds: ['IMG_A1_H_003'] },
     };
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(7);
+    expect(migrated.schemaVersion).toBe(8);
     expect(migrated.game).toEqual({ act: 1, phase: 'K', flags: { FLAG_A1_SS_FOUND: true, FLAG_A1_COMPLETE: true }, discoveredClueIds: ['CLUE_A1_K_001'] });
     expect(migrated.modules.mail).toEqual({ readIds: ['MAIL_A1_C_001'], starredIds: ['MAIL_A1_C_001'] });
     expect(migrated.modules.browser).toEqual({ queryHistory: ['鸡公岭'], visitedPageIds: ['PAGE_A1_E_001'] });
@@ -148,7 +148,7 @@ describe('saveManager', () => {
     legacy.modules.act2Research.tales = { readTaleIds: ['TALE_A2_T04_001'], collectedTaleIds: ['TALE_A2_T04_001'], placedCardIds: Array.from({ length: 12 }, (_, index) => `CARD_A2_T04_${String(index + 1).padStart(3, '0')}`), sorted: true, inferenceAcknowledged: true };
     legacy.modules.notepad.autoEntryIds = ['NOTE_A1_K_001', 'NOTE_A2_T04_004'];
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(7);
+    expect(migrated.schemaVersion).toBe(8);
     expect(migrated.game.flags).toEqual(legacy.game.flags);
     expect(migrated.modules.act2Research.tales).toEqual(legacy.modules.act2Research.tales);
     expect(migrated.modules.notepad.autoEntryIds).toEqual(legacy.modules.notepad.autoEntryIds);
@@ -163,7 +163,7 @@ describe('saveManager', () => {
     school.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_CORRIDOR', 'unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_TEACHER', 'unknown'] };
     school.modules.notepad.autoEntryIds = ['NOTE_A2_T05_001', 'NOTE_A2_T05_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(school)));
-    expect(restored.schemaVersion).toBe(7);
+    expect(restored.schemaVersion).toBe(8);
     expect(restored.game.phase).toBe('A2_T05');
     expect(restored.modules.act2Research.stage).toBe('school');
     expect(restored.modules.act2Research.school).toEqual({ visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] });
@@ -227,7 +227,7 @@ describe('saveManager', () => {
     qiming.modules.browser.queryHistory = ['启明 投诉', '鸡公岭'];
     qiming.modules.notepad.autoEntryIds = ['NOTE_A2_T06_001', 'NOTE_A2_T06_002', 'NOTE_A2_T06_003', 'NOTE_A2_T06_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(qiming)));
-    expect(restored.schemaVersion).toBe(7);
+    expect(restored.schemaVersion).toBe(8);
     expect(restored.modules.act2Research.stage).toBe('qiming');
     expect(restored.game.phase).toBe('A2_T06');
     expect(restored.modules.browser.visitedPageIds).toEqual(['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009']);
@@ -262,7 +262,7 @@ describe('saveManager', () => {
     expect(SAVE_KEY).toBe('anchao.save.v1');
     localStorage.setItem(SAVE_KEY, JSON.stringify(asLegacyFirstActSave()));
     const loaded = loadState(localStorage);
-    expect(loaded.schemaVersion).toBe(7);
+    expect(loaded.schemaVersion).toBe(8);
     expect(loaded.modules.act2Research.stage).toBe('inactive');
   });
 

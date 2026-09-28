@@ -142,7 +142,7 @@ describe('T07 acceptance', () => {
     const legacy = JSON.parse(JSON.stringify(manager.getState())) as Record<string, unknown>;
     legacy.schemaVersion = 6;
     const restored = hydrateState(legacy);
-    expect(restored.schemaVersion).toBe(7);
+    expect(restored.schemaVersion).toBe(8);
     expect(restored.modules.act2Research.stage).toBe('finale');
     expect(restored.game.phase).toBe('A2_T07');
     expect(restored.modules.act2Research.t07).toEqual({
@@ -175,7 +175,7 @@ describe('T07 acceptance', () => {
 
     // 完成后重载：仍停在 finale，可回看资料，但不出现第三幕入口、也不重复触发完成事件。
     const restored = new StateManager(new EventBus(), hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
-    expect(restored.getState().schemaVersion).toBe(7);
+    expect(restored.getState().schemaVersion).toBe(8);
     expect(restored.getState().modules.act2Research.stage).toBe('finale');
     expect(restored.getState().game.phase).toBe('A2_T07');
     expect(restored.getState().game.flags.FLAG_A2_COMPLETE).toBe(true);

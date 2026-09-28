@@ -128,12 +128,15 @@ const safeAct4 = (candidate: unknown, flags: AppState['game']['flags']): Act4Sta
   const solvedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= stageNumber);
   const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'] };
   if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) return fallback;
+  if (stageNumber >= 2 && readNotebookPages.length !== 9) return fallback;
   const unlockedAccountIds = solvedPuzzleIds.includes('A4_P04') ? safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id)) : [];
   if (stageNumber >= 3 && unlockedAccountIds.length !== 2) return fallback;
   const checkedMailRecipients = safeStringIds(candidate.checkedMailRecipients).filter((id) => ['protagonist', 'xiaoyue'].includes(id));
   const timelineReadDates = safeStringIds(candidate.timelineReadDates).filter((date) => timeline.some(([id]) => id === date));
+  if (stageNumber >= 4 && !timelineReadDates.includes('04-19')) return fallback;
+  if (stageNumber >= 5 && candidate.viewedWakeMail !== true) return fallback;
   const birthdayNodeId = stage === 'T05' && birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) && (candidate.birthdayNodeId !== 'taken' || solvedPuzzleIds.includes('A4_P11')) ? candidate.birthdayNodeId as string : 'study';
-  return { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stage === 'T04', wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId };
+  return { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stageNumber >= 4, wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId };
 };
 
 export const hydrateState = (candidate: unknown): AppState => {
@@ -153,20 +156,6 @@ export const hydrateState = (candidate: unknown): AppState => {
   const rawFlags = isRecord(game.flags)
     ? Object.fromEntries(Object.entries(game.flags).filter(([, value]) => ['boolean', 'string', 'number'].includes(typeof value))) as AppState['game']['flags']
     : {};
-  let act4 = safeAct4(modules.act4, rawFlags);
-  if (act4.stage !== 'inactive') {
-    const stageNumber = Number(act4.stage.slice(1));
-    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) act4 = createDefaultAct4State();
-  }
-  if (act4.stage === 'inactive') {
-    for (const key of Object.keys(rawFlags)) if (/^FLAG_A4_/.test(key)) delete rawFlags[key];
-  } else {
-    for (let index = 1; index <= 5; index++) {
-      const id = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
-      if (rawFlags[id] === true && !act4.solvedPuzzleIds.includes(`A4_P${String([1, 4, 6, 9, 11][index - 1]).padStart(2, '0')}`)) delete rawFlags[id];
-    }
-    if (act4.birthdayNodeId !== 'taken') delete rawFlags.FLAG_A4_T05_COMPLETE;
-  }
   const t05FlagIds = ['FLAG_A2_SCHOOL_ENTERED', 'FLAG_A2_FIRE_HYDRANT_SEEN', 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'FLAG_A2_SCORE_CHANGE_KNOWN', 'FLAG_A2_QIMING_NAME_FOUND', 'FLAG_A2_SCHOOL_SS_FOUND', 'FLAG_A2_SS_MATCH_CONFIRMED'];
   const t06FlagIds = ['FLAG_A2_QIMING_OFFICIAL_FOUND', 'FLAG_A2_QIMING_TESTIMONIALS_READ', 'FLAG_A2_QIMING_FORUM_FOUND', 'FLAG_A2_HUANG_MATCH_INFERRED', 'FLAG_A2_ZHONG_MATCH_INFERRED', 'FLAG_A2_OTHER_CASES_ABNORMAL'];
   const t07FlagIds = ['FLAG_A2_PROMO_VIDEO_FOUND', 'FLAG_A2_PROMO_VIDEO_WATCHED', 'FLAG_A2_PROMO_PHOTO_SS_FOUND', 'FLAG_A2_TEMPLE_FRAME_FOUND', 'FLAG_A2_QIMING_LOCATION_INFERRED', 'FLAG_A2_SECOND_TRIP_PLANNED', 'FLAG_A2_COMPLETE'];
@@ -254,6 +243,24 @@ export const hydrateState = (candidate: unknown): AppState => {
     || (act3.stage === 'T06' && rawFlags.FLAG_A3_KITCHEN_DOOR_REACHED !== true)
     || (act3.stage === 'T07' && rawFlags.FLAG_A3_KITCHEN_EXITED !== true))) {
     act3 = createDefaultAct3State();
+  }
+  const validAct4Gate = act3.stage === 'T07' && rawFlags.FLAG_A3_KITCHEN_EXITED === true
+    && rawFlags.FLAG_A3_NOTEBOOK_FOUND === true && rawFlags.FLAG_A3_SITE_EXITED === true
+    && rawFlags.FLAG_A3_COMPLETE === true;
+  if (!validAct4Gate && isRecord(modules.act4) && modules.act4.stage !== 'inactive') delete rawFlags.FLAG_A3_COMPLETE;
+  let act4 = safeAct4(modules.act4, validAct4Gate ? rawFlags : {});
+  if (act4.stage !== 'inactive') {
+    const stageNumber = Number(act4.stage.slice(1));
+    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) act4 = createDefaultAct4State();
+  }
+  if (act4.stage === 'inactive') {
+    for (const key of Object.keys(rawFlags)) if (/^FLAG_A4_/.test(key)) delete rawFlags[key];
+  } else {
+    for (let index = 1; index <= 5; index++) {
+      const id = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
+      if (rawFlags[id] === true && !act4.solvedPuzzleIds.includes(`A4_P${String([1, 4, 6, 9, 11][index - 1]).padStart(2, '0')}`)) delete rawFlags[id];
+    }
+    if (act4.birthdayNodeId !== 'taken') delete rawFlags.FLAG_A4_T05_COMPLETE;
   }
   const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
   const queryHistory = rawQueryHistory.filter((query) => {
