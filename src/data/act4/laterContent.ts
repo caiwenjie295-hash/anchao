@@ -4,7 +4,7 @@ export type LaterStage = 'T06' | 'T07' | 'T08' | 'T09' | 'T10';
 export type LaterScene = { id: string; stage: LaterStage; title: string; text: string; assetId: string; path: string; imageDescription: string };
 const shot = (stage: LaterStage, number: number, id: string, title: string, text: string, imageDescription: string): LaterScene => {
   const assetId = `IMG_A4_${stage}_${String(number).padStart(3, '0')}`;
-  return { id, stage, title, text, assetId, path: `src/第四幕/${stage}/${assetId}.jpg`, imageDescription: `低饱和、手机拍摄、极度写实。${imageDescription}` };
+  return { id, stage, title, text, assetId, path: `src/第四幕/${stage}/${assetId}.png`, imageDescription: `低饱和、手机拍摄、极度写实。${imageDescription}` };
 };
 
 /** 只登记资源槽和可读文字，不生成图片，也不把亲历场景写入当下证据簿。 */
