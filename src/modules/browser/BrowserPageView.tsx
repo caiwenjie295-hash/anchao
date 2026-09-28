@@ -29,7 +29,7 @@ function NewsArticle({ page, identity }: TemplateProps) {
     <header className="browser-page__header">
       <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
       <h1>{page.headline}</h1>
-      <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>{page.publishedAt}</time></p>
+      <p className="browser-page__byline"><span>来源：{identity.name}</span><time dateTime={page.publishedAt}>{page.publishedAt}</time></p>
     </header>
     {pictures[0] && <PageFigure picture={pictures[0]} wide />}
     <div className="browser-prose">
@@ -37,6 +37,7 @@ function NewsArticle({ page, identity }: TemplateProps) {
       {rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
       {pictures.slice(1).map((picture) => <PageFigure key={picture.assetId} picture={picture} />)}
     </div>
+    <aside className="browser-news-related"><h2>相关阅读</h2><p>{page.keywords.length ? page.keywords.join(' · ') : '更多本地报道'}</p></aside>
   </>;
 }
 
@@ -48,10 +49,11 @@ function EncyclopediaEntry({ page, identity }: TemplateProps) {
       <h1>{page.headline}</h1>
       <p className="browser-page__byline"><span>{identity.name}</span><time dateTime={page.publishedAt}>最后更新 {page.publishedAt}</time></p>
     </header>
+    <nav className="browser-entry-toc" aria-label="条目目录"><strong>目录</strong><a href="#entry-overview">概述</a><a href="#entry-details">详细记录</a><a href="#entry-sources">来源</a></nav>
     <div className="browser-page__columns">
       <div className="browser-prose">
-        <p className="browser-prose__lead">{lead}</p>
-        {rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+        <p id="entry-overview" className="browser-prose__lead">{lead}</p>
+        <div id="entry-details">{rest.map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
       </div>
       <aside className="browser-page__aside" aria-label="条目信息">
         <h2>条目信息</h2>
@@ -62,6 +64,7 @@ function EncyclopediaEntry({ page, identity }: TemplateProps) {
         </dl>
       </aside>
     </div>
+    <footer id="entry-sources" className="browser-entry-sources"><strong>来源与修订</strong><p>{identity.name} · 最近更新 {page.publishedAt}</p></footer>
   </>;
 }
 
@@ -73,11 +76,12 @@ function ForumThread({ page, identity }: TemplateProps) {
       <h1>{page.headline}</h1>
       <p className="browser-page__byline"><span>{posts.length} 条发言</span><time dateTime={page.publishedAt}>最后回复 {page.publishedAt}</time></p>
     </header>
+    <nav className="browser-forum-nav" aria-label="社区导航"><span>社区首页</span><span>{identity.board ?? '话题讨论'}</span><span>帖子正文</span></nav>
     <ol className="browser-thread">{posts.map((post, index) => <li className="browser-thread__post" key={index}>
       <span className="browser-thread__avatar" aria-hidden="true">{Array.from(post.author)[0] ?? '·'}</span>
       <div className="browser-thread__body">
         <div className="browser-thread__author">
-          <strong>{post.author}</strong>
+          <strong>{post.author}</strong><span>{index + 1} 楼</span>
           {post.date && <time dateTime={post.date}>{post.date}</time>}
         </div>
         <p className="browser-thread__text">{post.text}</p>

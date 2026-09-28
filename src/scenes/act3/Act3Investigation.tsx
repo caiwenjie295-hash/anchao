@@ -22,14 +22,14 @@ const STAGE_TITLE: Record<Act3ActiveStage, string> = {
 };
 
 const STAGE_LABEL: Record<Act3ActiveStage, string> = {
-  T00: '第三幕 · T00',
-  T01: '第三幕 · T01',
-  T02: '第三幕 · T02',
-  T03: '第三幕 · T03',
-  T04: '第三幕 · T04',
-  T05: '第三幕 · T05',
-  T06: '第三幕 · T06',
-  T07: '第三幕 · T07',
+  T00: '第三幕 · 鸡头岭',
+  T01: '第三幕 · 启明旧址',
+  T02: '第三幕 · 教学区',
+  T03: '第三幕 · 禁闭区',
+  T04: '第三幕 · 档案室',
+  T05: '第三幕 · 广播室',
+  T06: '第三幕 · 地下厨房',
+  T07: '第三幕 · 撤离途中',
 };
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
@@ -141,7 +141,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
                 <figcaption>第一次进山 · 破庙外景</figcaption>
               </figure>
               <figure>
-                {assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头的空木神龛 · 摄影待接入</div>}
+                {assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}
                 <figcaption>启明厨房 · 空神龛与底座</figcaption>
               </figure>
             </aside>

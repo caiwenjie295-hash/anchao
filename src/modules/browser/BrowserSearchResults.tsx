@@ -34,7 +34,7 @@ export function BrowserSearchResults({ query, stage, onOpen }: { query: string; 
   const sourceCount = new Set(results.map((page) => page.domain)).size;
   return <section className="browser-results" aria-live="polite">
     <header className="browser-results__summary">
-      <p>内部索引</p>
+      <p>网页搜索</p>
       <h2>{query}</h2>
       <p className="browser-results__stats">
         <span>{results.length ? `${results.length} 条结果` : '没有完全匹配的结果'}</span>
