@@ -28,3 +28,4 @@
 .act3-investigation__dialog p{line-height:1.7}
 .act3-investigation__empty{padding:2rem}
 @media(max-width:600px){.act3-investigation__header{padding:6px 10px}.act3-investigation__header h1{font-size:1rem}.act3-investigation__header span{display:none}.act3-investigation__caption{max-width:100%;font-size:.75rem}.act3-investigation__action{flex-wrap:wrap;justify-content:center}.act3-investigation__paper-compare,.act3-investigation__temple-compare{grid-template-columns:1fr}}
+.act3-investigation__dialog{background:#182830df;backdrop-filter:blur(18px) saturate(.65);border-color:#a2b9ba9c}
