@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type Keyboa
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
-import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt } from '../../data/act2T07Data';
+import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import '../../act2/t07Finale.css';
 
 export const ACT2_T07_ENTRY_LABEL = act2T07.entryLabel;
@@ -80,6 +80,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
   const photoZoom = photoZoomed || photoConfirmed;
   const segment = segmentAt(timeMs);
   const capturableFrame = keyFrameAt(timeMs);
+  const visualFrame = visualFrameAt(timeMs);
   const watchedCount = video.requiredSegmentIds.filter((id) => t07.playedSegmentIds.includes(id)).length;
   const recapPages = useMemo(() => act2T06RecapPages.filter((page) => state.modules.browser.visitedPageIds.includes(page.id)), [state.modules.browser.visitedPageIds]);
 
@@ -240,7 +241,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
         {!videoFound
           ? <p className="t07-finale__locked">先在“宣传资料”里打开创始人受访视频。</p>
           : <div className="t07-finale__player" onKeyDown={onPlayerKeyDown}>
-            <FrameVisual assetId={segment?.imageId ?? videoMaterial.imageId} altText={segment?.label ?? videoMaterial.altText} note={segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen">
+            <FrameVisual assetId={visualFrame?.imageId ?? videoMaterial.imageId} altText={capturableFrame?.altText ?? segment?.label ?? videoMaterial.altText} note={capturableFrame?.placeholderNote ?? segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen">
               <p className="t07-finale__screen-label">{segment?.label ?? '视频封面'}</p>
             </FrameVisual>
             <p className="t07-finale__subtitle">{segment?.line ?? ''}</p>
