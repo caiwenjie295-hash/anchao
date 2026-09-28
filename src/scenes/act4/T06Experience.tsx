@@ -21,7 +21,7 @@ export function T06Experience({ state, manager }: { state: Act4State; manager: S
       </aside>
     </>}
     {scene === 'A4_T06_CONFINEMENT' && <>
-      <p>铁门上有三个小孔，食物从翻盖口递进来。这里不要求真实等待。</p>
+      <p>铁门上有三个小孔，食物从翻盖口递进来。日夜难辨，我只能一遍遍看着那道门。</p>
       <Puzzle id="A4_P15" title="禁闭室结构（可选）" manager={manager} solved={solved('A4_P15')} choices={[{ id: 'flap', label: '翻盖送餐口' }, { id: 'three-holes', label: '三个小孔' }]} />
     </>}
   </>;

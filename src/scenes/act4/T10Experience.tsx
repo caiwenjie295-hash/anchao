@@ -13,7 +13,7 @@ export function T10Experience({ state, manager }: { state: Act4State; manager: S
       <Puzzle id="A4_P23" title="并列观察两种读法" manager={manager} solved={solved('A4_P23')} choices={[{ id: 'certain', label: '已证实一种机制' }, { id: 'possible', label: '可能有关，尚未证实' }]} />
     </>}
     {state.laterNodeId === 'A4_T10_CAFE' && <>
-      <p>桌上已有两杯。第三杯是给小 A 点的奶茶；不做 P24 也会留下三杯合照与碰杯。</p>
+      <p>桌上已有两杯。我又点了一杯给小 A，把奶茶放在我们之间。小月举起手机，拍下三杯饮料。</p>
       <Puzzle id="A4_P24" title="摆好第三杯（可选）" manager={manager} solved={solved('A4_P24')} choices={[{ id: 'third-cup', label: '把奶茶放在两人之间，拍下三杯' }]} />
     </>}
     {state.laterNodeId === 'A4_T10_MAIL' && <>

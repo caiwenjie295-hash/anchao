@@ -128,7 +128,10 @@ const safeAct4 = (candidate: unknown, flags: AppState['game']['flags']): Act4Sta
   const puzzleStageNumber = (id: string) => { const n = Number(id.slice(-2)); return n <= 3 ? 1 : n <= 5 ? 2 : n <= 8 ? 3 : n <= 10 ? 4 : n <= 12 ? 5 : n <= 15 ? 6 : n <= 17 ? 7 : n <= 20 ? 8 : n <= 22 ? 9 : 10; };
   const solvedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= stageNumber);
   const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'], T06: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'], T07: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13'], T08: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16'], T09: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16', 'A4_P18'], T10: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16', 'A4_P18', 'A4_P21'] };
-  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) return fallback;
+  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) {
+    if (stageNumber >= 6 && flags.FLAG_A4_T05_COMPLETE === true) return safeAct4({ ...candidate, stage: 'T05', solvedPuzzleIds: solvedPuzzleIds.filter((id) => puzzleStageNumber(id) <= 5) }, flags);
+    return fallback;
+  }
   if (stageNumber >= 2 && readNotebookPages.length !== 9) return fallback;
   const unlockedAccountIds = solvedPuzzleIds.includes('A4_P04') ? safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id)) : [];
   if (stageNumber >= 3 && unlockedAccountIds.length !== 2) return fallback;

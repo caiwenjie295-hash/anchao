@@ -6,7 +6,7 @@ export function T07Experience({ state, manager }: { state: Act4State; manager: S
   const solved = (id: string) => state.solvedPuzzleIds.includes(id);
   return <>
     {state.laterNodeId === 'A4_T07_MIRROR' && <>
-      <p><strong>梦中笔记：</strong>黄子山。<br /><strong>醒来时：</strong>我自认王澳。梦里的镜中是“我的脸”，并没有第二张脸可供确认。</p>
+      <p><strong>梦中笔记：</strong>黄子山。<br /><strong>醒来时：</strong>我是王澳。梦里的镜中，我却毫不迟疑地觉得：“这就是我的脸。”</p>
       <Puzzle id="A4_P16" title="姓名与自认身份" manager={manager} solved={solved('A4_P16')} choices={[{ id: 'wangao', label: '现实自认：王澳' }, { id: 'huang', label: '梦中笔记：黄子山' }]} />
       {solved('A4_P16') && <p className="a4-done">两者不一致；不能据此确定发生了什么机制。</p>}
     </>}
