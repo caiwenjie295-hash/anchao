@@ -1,5 +1,6 @@
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
-import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultState, createDefaultWindow } from './defaultState';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type Act4State, type Act4Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
+import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultAct4State, createDefaultState, createDefaultWindow } from './defaultState';
+import { birthdayScenes, timeline } from '../data/act4/content';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
@@ -9,7 +10,7 @@ import { act2T07, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, ACT2_T07_FRAME_ID
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1–6 的有效进度迁移到 schema 7。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7];
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'];
@@ -113,6 +114,29 @@ const safeAct3 = (candidate: unknown): Act3State => {
   const requestedCurrentId = typeof candidate.currentLensId === 'string' && candidate.currentLensId.length > 0 ? candidate.currentLensId : expectedFirstLensId;
   const currentLensId = stage === 'inactive' ? null : (requestedCurrentId && visitedLensIds.includes(requestedCurrentId) && act3LensById(stage, requestedCurrentId) ? requestedCurrentId : expectedFirstLensId);
   return { stage, currentLensId, visitedLensIds, inspectedClueIds, confirmedFlagIds };
+};
+
+const act4Stages: Act4Stage[] = ['inactive', 'T01', 'T02', 'T03', 'T04', 'T05'];
+const act4PuzzleIds = Array.from({ length: 12 }, (_, index) => `A4_P${String(index + 1).padStart(2, '0')}`);
+const safeAct4 = (candidate: unknown, flags: AppState['game']['flags']): Act4State => {
+  const fallback = createDefaultAct4State();
+  if (!isRecord(candidate) || flags.FLAG_A3_COMPLETE !== true || !act4Stages.includes(candidate.stage as Act4Stage)) return fallback;
+  const readNotebookPages = Array.isArray(candidate.readNotebookPages) ? [...new Set(candidate.readNotebookPages.filter((page): page is number => Number.isInteger(page) && page >= 1 && page <= 9))] : [];
+  const stage = candidate.stage as Act4Stage;
+  const stageNumber = stage === 'inactive' ? 0 : Number(stage.slice(1));
+  const puzzleStageNumber = (id: string) => { const n = Number(id.slice(-2)); return n <= 3 ? 1 : n <= 5 ? 2 : n <= 8 ? 3 : n <= 10 ? 4 : 5; };
+  const solvedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= stageNumber);
+  const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'] };
+  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) return fallback;
+  if (stageNumber >= 2 && readNotebookPages.length !== 9) return fallback;
+  const unlockedAccountIds = solvedPuzzleIds.includes('A4_P04') ? safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id)) : [];
+  if (stageNumber >= 3 && unlockedAccountIds.length !== 2) return fallback;
+  const checkedMailRecipients = safeStringIds(candidate.checkedMailRecipients).filter((id) => ['protagonist', 'xiaoyue'].includes(id));
+  const timelineReadDates = safeStringIds(candidate.timelineReadDates).filter((date) => timeline.some(([id]) => id === date));
+  if (stageNumber >= 4 && !timelineReadDates.includes('04-19')) return fallback;
+  if (stageNumber >= 5 && candidate.viewedWakeMail !== true) return fallback;
+  const birthdayNodeId = stage === 'T05' && birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) && (candidate.birthdayNodeId !== 'taken' || solvedPuzzleIds.includes('A4_P11')) ? candidate.birthdayNodeId as string : 'study';
+  return { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stageNumber >= 4, wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId };
 };
 
 export const hydrateState = (candidate: unknown): AppState => {
@@ -220,6 +244,24 @@ export const hydrateState = (candidate: unknown): AppState => {
     || (act3.stage === 'T07' && rawFlags.FLAG_A3_KITCHEN_EXITED !== true))) {
     act3 = createDefaultAct3State();
   }
+  const validAct4Gate = act3.stage === 'T07' && rawFlags.FLAG_A3_KITCHEN_EXITED === true
+    && rawFlags.FLAG_A3_NOTEBOOK_FOUND === true && rawFlags.FLAG_A3_SITE_EXITED === true
+    && rawFlags.FLAG_A3_COMPLETE === true;
+  if (!validAct4Gate && isRecord(modules.act4) && modules.act4.stage !== 'inactive') delete rawFlags.FLAG_A3_COMPLETE;
+  let act4 = safeAct4(modules.act4, validAct4Gate ? rawFlags : {});
+  if (act4.stage !== 'inactive') {
+    const stageNumber = Number(act4.stage.slice(1));
+    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) act4 = createDefaultAct4State();
+  }
+  if (act4.stage === 'inactive') {
+    for (const key of Object.keys(rawFlags)) if (/^FLAG_A4_/.test(key)) delete rawFlags[key];
+  } else {
+    for (let index = 1; index <= 5; index++) {
+      const id = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
+      if (rawFlags[id] === true && !act4.solvedPuzzleIds.includes(`A4_P${String([1, 4, 6, 9, 11][index - 1]).padStart(2, '0')}`)) delete rawFlags[id];
+    }
+    if (act4.birthdayNodeId !== 'taken') delete rawFlags.FLAG_A4_T05_COMPLETE;
+  }
   const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
   const queryHistory = rawQueryHistory.filter((query) => {
     const definition = findSearchQuery(query);
@@ -229,8 +271,8 @@ export const hydrateState = (candidate: unknown): AppState => {
   const phaseForStage: Partial<Record<Act2Stage, string>> = {
     search: 'A2_T01', bridge: 'A2_T02', library: 'A2_T03', tales: 'A2_T04', school: 'A2_T05', qiming: 'A2_T06', finale: 'A2_T07',
   };
-  const safePhase = act3.stage !== 'inactive' ? `A3_${act3.stage}` as AppState['game']['phase'] : phaseForStage[act2Research.stage] ?? (
-    hydratedPhase.startsWith('A2_T') ? fallback.game.phase : hydratedPhase
+  const safePhase = act4.stage !== 'inactive' ? `A4_${act4.stage}` as AppState['game']['phase'] : act3.stage !== 'inactive' ? `A3_${act3.stage}` as AppState['game']['phase'] : phaseForStage[act2Research.stage] ?? (
+    hydratedPhase.startsWith('A2_T') || hydratedPhase.startsWith('A4_T') ? fallback.game.phase : hydratedPhase
   );
   const autoEntryIds = notepad ? safeStringIds(notepad.autoEntryIds).filter((id) => {
     const triggerFlagByNote: Record<string, string> = {
@@ -267,9 +309,9 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 7,
+    schemaVersion: 8,
     game: {
-      act: act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
+      act: act4.stage !== 'inactive' ? 4 : act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,
       flags: rawFlags,
       discoveredClueIds: Array.isArray(game.discoveredClueIds) ? game.discoveredClueIds.filter((id): id is string => typeof id === 'string') : [],
@@ -311,6 +353,7 @@ export const hydrateState = (candidate: unknown): AppState => {
       },
       act2Research,
       act3,
+      act4,
       storyTransitions: { seenIds: [] },
     },
   };

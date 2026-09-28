@@ -17,6 +17,7 @@ import { Act1SceneExperience } from './scenes/act1/Act1SceneExperience';
 import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
 import { Act3Investigation } from './scenes/act3/Act3Investigation';
+import { Act4Experience } from './scenes/act4/Act4Experience';
 import { Act2T07Entry } from './scenes/act2/T07Investigation';
 import { StoryTransition, StoryTransitionLaunch } from './components/StoryTransition';
 import { getPendingStoryTransition } from './data/storyTransitionData';
@@ -34,6 +35,8 @@ export default function App() {
   // “已返回桌面”只是瞬时显示状态；阶段一变或清零即刻失效。
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
   const [dismissedAct3, setDismissedAct3] = useState(false);
+  const [reviewAct3, setReviewAct3] = useState(false);
+  const [dismissedAct4, setDismissedAct4] = useState(false);
   const [openedTransitionId, setOpenedTransitionId] = useState<string | null>(null);
   useEffect(() => {
     const interval = window.setInterval(() => setTime(new Date()), 15_000);
@@ -78,9 +81,11 @@ export default function App() {
   const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
   const act3Stage = state.modules.act3.stage;
   const act3Active = act3Stage !== 'inactive';
-  const act3Open = act3Active && !dismissedAct3;
+  const act4Active = state.modules.act4.stage !== 'inactive';
+  const act4Open = act4Active && !dismissedAct4;
+  const act3Open = act3Active && !dismissedAct3 && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3);
   const act2SceneOpen = act2SceneStage !== null && !act3Active && dismissedAct2Stage !== act2SceneStage;
-  const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open;
+  const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open || act4Open;
   const secondActStarted = act2Stage !== 'inactive';
   const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
   const transition = getPendingStoryTransition(state);
@@ -140,18 +145,18 @@ export default function App() {
         manager={stateManager}
       />
     )}
-    {!act3Active && state.game.flags.FLAG_A2_COMPLETE === true && (
+    {!act3Active && !act4Active && state.game.flags.FLAG_A2_COMPLETE === true && (
       <aside className="story-transition-launch" aria-label="第三幕调查已就绪">
         <span>第三幕 · 再次进山</span>
         <button type="button" onClick={() => { stateManager.startAct3(); setDismissedAct3(false); }}>开始第三幕调查</button>
       </aside>
     )}
-    {act3Active && (
+    {act3Active && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3) && (
       <>
         {act3Open && (
           <Act3Investigation
             manager={stateManager}
-            onReturnToDesktop={() => setDismissedAct3(true)}
+            onReturnToDesktop={() => { setDismissedAct3(true); setReviewAct3(false); }}
           />
         )}
         {dismissedAct3 && (
@@ -162,7 +167,10 @@ export default function App() {
         )}
       </>
     )}
+    {state.game.flags.FLAG_A3_COMPLETE === true && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07' && !act4Active && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><span>第四幕 · 县城夜晚</span><button type="button" onClick={() => { stateManager.startAct4(); setDismissedAct4(false); }}>继续调查小 A 的笔记</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
+    {act4Active && dismissedAct4 && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><span>第四幕 · 王澳</span><button type="button" onClick={() => setDismissedAct4(false)}>继续第四幕调查</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
     </div>
+    {act4Open && <Act4Experience manager={stateManager} onExit={() => setDismissedAct4(true)} />}
     {transitionLayer}
     </>
   );

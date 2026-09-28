@@ -52,7 +52,7 @@ describe('T06 browser acceptance', () => {
     await act(async () => { (host.querySelector('.browser-page__actions button') as HTMLButtonElement).click(); });
     expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).toBe(true);
     const restored = hydrateState(JSON.parse(JSON.stringify(manager.getState())));
-    expect(restored.schemaVersion).toBe(7);
+    expect(restored.schemaVersion).toBe(8);
     expect(restored.modules.act2Research.stage).toBe('qiming');
     expect(restored.modules.browser.visitedPageIds).toContain('PAGE_A2_T06_006');
   });

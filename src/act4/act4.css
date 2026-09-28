@@ -1,0 +1,164 @@
+.a4 {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow: auto;
+  background: #141923;
+  color: #f1ede4;
+  padding: clamp(16px, 3vw, 42px);
+  font-family: inherit;
+  line-height: 1.65;
+}
+.a4 * {
+  box-sizing: border-box;
+}
+.a4-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 20px;
+  max-width: 1280px;
+  margin: 0 auto 22px;
+  border-bottom: 1px solid #65717d;
+  padding-bottom: 16px;
+}
+.a4-header h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+}
+.a4-header small {
+  color: #b7c4d2;
+}
+.a4-grid {
+  max-width: 1280px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.a4-card {
+  background: #242c36;
+  border: 1px solid #4b5a69;
+  border-radius: 12px;
+  padding: clamp(16px, 2vw, 26px);
+  min-width: 0;
+}
+.a4-card h2 {
+  margin-top: 0;
+}
+.a4-paper {
+  background: #eee7d9;
+  color: #231e1a;
+  border-radius: 4px;
+  padding: 22px;
+  margin: 16px 0;
+  white-space: pre-line;
+  min-height: 130px;
+}
+.a4-paper span {
+  font-weight: 700;
+}
+.a4-paper p {
+  margin-bottom: 0;
+}
+.a4-mails {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.a4-puzzle {
+  border-top: 1px solid #627181;
+  margin: 20px 0;
+  padding-top: 14px;
+}
+.a4-puzzle h3 {
+  font-size: 1.05rem;
+  margin: 0 0 10px;
+}
+.a4-done {
+  color: #9ee5be;
+  font-weight: 700;
+}
+.a4-choices,
+.a4-actions,
+.a4-page-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+.a4 button {
+  font: inherit;
+  cursor: pointer;
+  color: #f7f7f3;
+  background: #36495c;
+  border: 1px solid #94aec0;
+  border-radius: 6px;
+  padding: 9px 13px;
+  min-height: 42px;
+}
+.a4 button:hover {
+  background: #48647e;
+}
+.a4 button:focus-visible,
+.a4 input:focus-visible {
+  outline: 3px solid #ffce72;
+  outline-offset: 2px;
+}
+.a4 button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.a4 input {
+  display: block;
+  margin: 8px 0 12px;
+  width: min(100%, 280px);
+  padding: 10px;
+  font: inherit;
+  background: #f7f3e9;
+  color: #241f1b;
+  border-radius: 4px;
+}
+.a4-hint {
+  color: #ffe6ad;
+}
+.a4-selected {
+  min-height: 26px;
+}
+.a4-scene {
+  background: linear-gradient(130deg, #343b43, #20242c);
+  border: 1px dashed #80909e;
+  min-height: 250px;
+  padding: 26px;
+  margin: 14px 0;
+}
+.a4-scene small {
+  color: #bcc8d1;
+}
+.a4-perspective {
+  padding: 10px 14px;
+  border-left: 4px solid #e9bf75;
+  background: #3b342f;
+}
+.a4 blockquote {
+  border-left: 3px solid #e9bf75;
+  margin: 12px 0;
+  padding: 10px 16px;
+  background: #313846;
+}
+@media (max-width: 800px) {
+  .a4-grid,
+  .a4-mails {
+    grid-template-columns: 1fr;
+  }
+  .a4-header {
+    flex-direction: column;
+  }
+  .a4 {
+    padding: 12px;
+  }
+  .a4-card {
+    padding: 16px;
+  }
+}

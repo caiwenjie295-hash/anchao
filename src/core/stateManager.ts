@@ -1,7 +1,9 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
+import { birthdayScenes, timeline } from '../data/act4/content';
+import { answerAct4Puzzle } from '../story/act4/actions';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
@@ -60,7 +62,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 7 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 8 });
   }
 
   private nextZIndex(): number {
@@ -213,7 +215,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 7 });
+    this.bus.emit('progress:reset', { schemaVersion: 8 });
   }
 
   startJourney(sceneId: string): void {
@@ -784,6 +786,88 @@ export class StateManager {
     });
     this.bus.emit('act3:stage-changed', { stage: nextStage });
     this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
+  }
+
+  /** 第三幕终点只是入口；玩家在回看笔记时主动开始第四幕。 */
+  startAct4(): void {
+    if (this.state.game.flags.FLAG_A3_COMPLETE !== true || this.state.game.flags.FLAG_A3_SITE_EXITED !== true
+      || this.state.modules.act3.stage !== 'T07' || this.state.modules.act4.stage !== 'inactive') return;
+    this.commit({ ...this.state, game: { ...this.state.game, act: 4, phase: 'A4_T01' }, modules: { ...this.state.modules, act4: { ...this.state.modules.act4, stage: 'T01' } } });
+  }
+
+  readAct4NotebookPage(page: number): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage === 'inactive' || !Number.isInteger(page) || page < 1 || page > 9 || act4.readNotebookPages.includes(page)) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, readNotebookPages: [...act4.readNotebookPages, page] } } });
+  }
+
+  checkAct4OldMail(recipient: 'protagonist' | 'xiaoyue'): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T02' || act4.checkedMailRecipients.includes(recipient)) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, checkedMailRecipients: [...act4.checkedMailRecipients, recipient] } } });
+  }
+
+  viewAct4WakeMail(): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T04' || !act4.unlockedAccountIds.includes('mail') || act4.viewedWakeMail) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, viewedWakeMail: true } } });
+  }
+
+  /** 答案在控制器中检查；这里只接受语义题目与当前阶段前置。 */
+  solveAct4Puzzle(puzzleId: string, selections: string[]): boolean {
+    const act4 = this.state.modules.act4;
+    const stageByPuzzle: Record<string, Act4Stage> = { A4_P01: 'T01', A4_P02: 'T01', A4_P03: 'T01', A4_P04: 'T02', A4_P05: 'T02', A4_P06: 'T03', A4_P07: 'T03', A4_P08: 'T03', A4_P09: 'T04', A4_P10: 'T04', A4_P11: 'T05', A4_P12: 'T05' };
+    if (stageByPuzzle[puzzleId] !== act4.stage) return false;
+    if (act4.solvedPuzzleIds.includes(puzzleId)) return true;
+    if (!answerAct4Puzzle(puzzleId, selections)) return false;
+    if (puzzleId === 'A4_P01' && ![2, 4, 8].every((page) => act4.readNotebookPages.includes(page))) return false;
+    if (puzzleId === 'A4_P04' && !['protagonist', 'xiaoyue'].every((id) => act4.checkedMailRecipients.includes(id))) return false;
+    if (puzzleId === 'A4_P05' && !act4.solvedPuzzleIds.includes('A4_P04')) return false;
+    if (puzzleId === 'A4_P06' && !act4.unlockedAccountIds.includes('weibo')) return false;
+    if (puzzleId === 'A4_P09' && (!act4.unlockedAccountIds.includes('mail') || !act4.viewedWakeMail)) return false;
+    if (puzzleId === 'A4_P11' && act4.birthdayNodeId !== 'door') return false;
+    if (puzzleId === 'A4_P12' && birthdayScenes.findIndex((scene) => scene.id === act4.birthdayNodeId) < 3) return false;
+    const solvedPuzzleIds = [...act4.solvedPuzzleIds, puzzleId];
+    const wakePaperConfirmed = act4.wakePaperConfirmed || puzzleId === 'A4_P09';
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, solvedPuzzleIds, wakePaperConfirmed } } });
+    return true;
+  }
+
+  loginAct4Accounts(password: string): boolean {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T02' || !act4.solvedPuzzleIds.includes('A4_P04') || password !== '20200419') return false;
+    if (!act4.unlockedAccountIds.includes('weibo') || !act4.unlockedAccountIds.includes('mail')) this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, unlockedAccountIds: ['weibo', 'mail'] } } });
+    return true;
+  }
+
+  readAct4Timeline(date: string): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T03' || !act4.solvedPuzzleIds.includes('A4_P06') || !timeline.some(([id]) => id === date) || act4.timelineReadDates.includes(date)) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, timelineReadDates: [...act4.timelineReadDates, date] } } });
+  }
+
+  visitAct4BirthdayNode(nodeId: string): void {
+    const act4 = this.state.modules.act4;
+    if (act4.stage !== 'T05') return;
+    const currentIndex = birthdayScenes.findIndex((scene) => scene.id === act4.birthdayNodeId);
+    const nextIndex = birthdayScenes.findIndex((scene) => scene.id === nodeId);
+    if (nextIndex !== currentIndex + 1 || (nodeId === 'taken' && !act4.solvedPuzzleIds.includes('A4_P11'))) return;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, birthdayNodeId: nodeId } } });
+  }
+
+  advanceAct4Stage(): void {
+    const act4 = this.state.modules.act4;
+    const sequence: Act4Stage[] = ['T01', 'T02', 'T03', 'T04', 'T05'];
+    const required = ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'];
+    const index = sequence.indexOf(act4.stage);
+    if (index < 0 || !act4.solvedPuzzleIds.includes(required[index])) return;
+    if (act4.stage === 'T01' && !Array.from({ length: 9 }, (_, page) => page + 1).every((page) => act4.readNotebookPages.includes(page))) return;
+    if (act4.stage === 'T02' && act4.unlockedAccountIds.length !== 2) return;
+    if (act4.stage === 'T03' && !act4.timelineReadDates.includes('04-19')) return;
+    if (act4.stage === 'T05' && act4.birthdayNodeId !== 'taken') return;
+    const flagId = `FLAG_A4_T${String(index + 1).padStart(2, '0')}_COMPLETE`;
+    const nextStage = sequence[index + 1];
+    this.commit({ ...this.state, game: { ...this.state.game, flags: { ...this.state.game.flags, [flagId]: true }, phase: nextStage ? `A4_${nextStage}` : 'A4_T05' }, modules: { ...this.state.modules, act4: { ...act4, stage: nextStage ?? act4.stage } } });
   }
 }
 

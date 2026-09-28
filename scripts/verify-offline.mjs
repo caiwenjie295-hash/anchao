@@ -43,7 +43,7 @@ async function settle() {
   await delay();
   // Continue each story card as a player would before testing the next action.
   for (let i = 0; i < 3; i++) {
-    const launch = dom?.window.document.querySelector('.story-transition-launch:not([aria-label="第三幕调查已就绪"]) button');
+    const launch = dom?.window.document.querySelector('.story-transition-launch:not([aria-label="第三幕调查已就绪"]):not([aria-label="第四幕调查已就绪"]) button');
     if (launch) { launch.click(); await delay(); }
     const card = dom?.window.document.querySelector('.story-transition');
     const button = card?.querySelector('button');
@@ -496,11 +496,18 @@ async function investigateAct3() {
     assert.equal(state().game.flags.FLAG_A3_NOTEBOOK_FOUND, true);
     assert.equal(state().game.flags.FLAG_A3_SITE_EXITED, true);
     assert.equal(state().game.flags.FLAG_A3_COMPLETE, true);
+    assert.equal(state().modules.act4.stage, 'inactive', '第四幕必须由玩家主动点击入口');
     assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T07_001'));
-    assert.equal(document().querySelector('[data-act3-stage="T07"]').textContent.includes('进入第四幕'), false);
+    assert.ok([...document().querySelectorAll('.story-transition-launch button')].some((button) => button.textContent.includes('继续调查小 A 的笔记')));
+    await textButton('回看第三幕', '.story-transition-launch button');
+    assert.ok(document().querySelector('[data-act3-stage="T07"]'));
+    await click('.act3-investigation__return');
+    assert.equal(state().modules.act4.stage, 'inactive');
   await mount(save());
     assert.equal(state().modules.act3.stage, 'T07');
     assert.equal(state().game.phase, 'A3_T07');
+    assert.equal(state().modules.act4.stage, 'inactive');
+    assert.ok([...document().querySelectorAll('.story-transition-launch button')].some((button) => button.textContent.includes('继续调查小 A 的笔记')));
 }
 
 async function reset() {
