@@ -515,6 +515,11 @@
     {"id":"FLAG_A3_KITCHEN_EXITED","title":"离开厨房回到楼上","act":3,"phase":"A3_T06","source":"scene","purpose":"厨房对照后准备返程","unlockCondition":["FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED"],"relatedFlags":[],"notes":"玩家确认阶段结论后记录","defaultValue":false},
     {"id":"FLAG_A3_NOTEBOOK_FOUND","title":"找到小 A 的笔记本","act":3,"phase":"A3_T07","source":"scene","purpose":"玩家蹲下后从消防栓背面主动取出包裹","unlockCondition":["FLAG_A3_KITCHEN_EXITED"],"relatedFlags":["FLAG_A3_COMPLETE"],"notes":"不自动展示笔记全文","defaultValue":false},
     {"id":"FLAG_A3_SITE_EXITED","title":"与小月离开启明旧址","act":3,"phase":"A3_T07","source":"scene","purpose":"终幕玩家主动确认撤离","unlockCondition":["FLAG_A3_NOTEBOOK_FOUND"],"relatedFlags":["FLAG_A3_COMPLETE"],"notes":"不自动进入第四幕","defaultValue":false},
-    {"id":"FLAG_A3_COMPLETE","title":"第三幕完成","act":3,"phase":"A3_T07","source":"scene","purpose":"携带笔记与小月离开旧址","unlockCondition":["FLAG_A3_SITE_EXITED"],"relatedFlags":[],"notes":"第四幕内容未在此解锁","defaultValue":false}
+    {"id":"FLAG_A3_COMPLETE","title":"第三幕完成","act":3,"phase":"A3_T07","source":"scene","purpose":"携带笔记与小月离开旧址","unlockCondition":["FLAG_A3_SITE_EXITED"],"relatedFlags":[],"notes":"第四幕内容未在此解锁","defaultValue":false},
+    {"id":"FLAG_A4_T01_COMPLETE","title":"九页笔记路线已整理","act":4,"phase":"A4_T01","source":"scene","purpose":"确认小 A 重走旧路","unlockCondition":["FLAG_A3_COMPLETE"],"relatedFlags":[],"notes":"A4_P01 完成并主动继续","defaultValue":false},
+    {"id":"FLAG_A4_T02_COMPLETE","title":"两个离线账号已进入","act":4,"phase":"A4_T02","source":"scene","purpose":"以共同日期登录","unlockCondition":["FLAG_A4_T01_COMPLETE"],"relatedFlags":[],"notes":"A4_P04 和主动登录","defaultValue":false},
+    {"id":"FLAG_A4_T03_COMPLETE","title":"微博时间线已整理","act":4,"phase":"A4_T03","source":"scene","purpose":"确认清醒记录的顺序","unlockCondition":["FLAG_A4_T02_COMPLETE"],"relatedFlags":[],"notes":"A4_P06 完成并主动继续","defaultValue":false},
+    {"id":"FLAG_A4_T04_COMPLETE","title":"启明邮件与纸片已比对","act":4,"phase":"A4_T04","source":"scene","purpose":"确认 VVaKe 六词同序","unlockCondition":["FLAG_A4_T03_COMPLETE"],"relatedFlags":[],"notes":"A4_P09 完成并主动继续","defaultValue":false},
+    {"id":"FLAG_A4_T05_COMPLETE","title":"生日往事停在家门","act":4,"phase":"A4_T05","source":"scene","purpose":"确认 2014 年小 A 被带走","unlockCondition":["FLAG_A4_T04_COMPLETE"],"relatedFlags":[],"notes":"A4_P11 完成并抵达家门","defaultValue":false}
   ]
 }

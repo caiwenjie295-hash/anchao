@@ -1,4 +1,4 @@
-import { APP_IDS, type Act2ResearchState, type Act3State, type AppId, type AppState, type Bounds, type DesktopWindow } from './types';
+import { APP_IDS, type Act2ResearchState, type Act3State, type Act4State, type AppId, type AppState, type Bounds, type DesktopWindow } from './types';
 import { initiallyStarredMailIds } from '../data/mailData';
 
 const initialBounds: Record<AppId, Bounds> = {
@@ -55,8 +55,10 @@ export const createDefaultAct3State = (): Act3State => ({
   confirmedFlagIds: [],
 });
 
+export const createDefaultAct4State = (): Act4State => ({ stage: 'inactive', readNotebookPages: [], solvedPuzzleIds: [], unlockedAccountIds: [], checkedMailRecipients: [], timelineReadDates: [], viewedWakeMail: false, wakePaperConfirmed: false, birthdayNodeId: 'study' });
+
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 7,
+  schemaVersion: 8,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,
@@ -72,6 +74,7 @@ export const createDefaultState = (): AppState => ({
     photos: { activePhotoId: null, openedPhotoIds: [], adjustments: {}, zoomByPhotoId: {}, inspectedSymbolPhotoIds: [] },
     act2Research: createDefaultAct2ResearchState(),
     act3: createDefaultAct3State(),
+    act4: createDefaultAct4State(),
     storyTransitions: { seenIds: [] },
   },
 });
