@@ -13,7 +13,7 @@
 | IMG_A4_T05_004 | `src/第四幕/T05/IMG_A4_T05_004.png` | 可用。冬日河岸、空椅与远景家庭/孩子构成可辨，人物处于远景。 | 可用 |
 | IMG_A4_T05_005 | `src/第四幕/T05/IMG_A4_T05_005.png` | 可用。三人生日餐桌与生日蛋糕清楚，仅出现手部；餐桌内容不编造关键证据。 | 可用 |
 | IMG_A4_T05_006 | `src/第四幕/T05/IMG_A4_T05_006.png` | 可用。室内卧室门缝、镜中客厅和远景背影可辨；与 T05_003/005 共用公寓空间和暖色调。 | 可用 |
-| IMG_A4_T05_007 | `src/第四幕/T05/IMG_A4_T05_007.png` | 可用。屋内望向窄门厅与金属防盗门，行李箱及远景人物背影可辨；住宅与其余家庭场景连续。 | 可用 |
+| IMG_A4_T05_007 | `src/第四幕/T05/IMG_A4_T05_007.png` | 可用。门槛第一人称朝屋内回望，前景行李箱表明视角正向外迈出；父母留在客厅深处，门边仅有模糊来人局部，未显示接触或暴力。 | 可用 |
 | IMG_A4_T06_001 | `src/第四幕/T06/IMG_A4_T06_001.png` | 可用。清晨操场、两层围栏和灰色教学楼清楚；无人院落，无具体机构标识。 | 可用 |
 | IMG_A4_T06_002 | `src/第四幕/T06/IMG_A4_T06_002.png` | 可用。中国食堂不锈钢分格餐盘、筷子、米饭和普通菜肉可辨；细小浅色碎片自然且未作来源判断。 | 可用 |
 | IMG_A4_T06_003 | `src/第四幕/T06/IMG_A4_T06_003.png` | 可用。2014 年正常使用的教室，课桌、课本、黑板和墙面喇叭齐全，墙面干净。 | 可用 |
@@ -32,7 +32,7 @@
 #### IMG_A4_T01_001
 文件：`src/第四幕/T01/IMG_A4_T01_001.png`
 检查：可用。普通县城低层住宅街景、简朴客房与塑料袋里的褐色笔记本清楚可辨；已按主审意见替换西式旅馆候选。
-参考图：无；重做时按主审反馈独立定向。
+参考图：无；重做时按主审反馈定向生成。
 
 ```text
 Use case: photorealistic-natural
@@ -144,20 +144,20 @@ Constraints: Chinese county-town apartment, narrow interior, no stairs, porch, s
 
 #### IMG_A4_T05_007
 文件：`src/第四幕/T05/IMG_A4_T05_007.png`
-检查：可用。屋内望向窄门厅与金属防盗门，行李箱及远景人物背影可辨；住宅与其余家庭场景连续。
-参考图：`src/第四幕/T05/IMG_A4_T05_003.png`、`IMG_A4_T05_005.png`（同一住宅空间参考）。
+检查：可用。门槛第一人称朝屋内回望，前景行李箱表明视角正向外迈出；父母留在客厅深处，门边仅有模糊来人局部，未显示接触或暴力。
+参考图：`src/第四幕/T05/IMG_A4_T05_003.png`、`src/第四幕/T05/IMG_A4_T05_006.png`（同一住宅空间参考）。
 
 ```text
 Use case: photorealistic-natural
-Asset type: widescreen narrative scene photograph, same home as the approved Chinese apartment reference images.
-Primary request: replacement candidate for IMG_A4_T05_007, a first-person view from inside the family apartment toward the home entrance in 2014.
-Input images: use the references only to match the modest Chinese county apartment's warm lived-in living room, plain wood furniture and tile floor; do not copy the cake or their exact composition.
-Scene/backdrop: viewed from inside the warm living room across a narrow tiled foyer toward an open gray metal security entrance door. Plain shoe cabinet and slippers by the door; the apartment interior is visible behind the viewer.
-Subject: two distant adult figures stand quietly just inside the doorway, seen only from behind and out of focus; no physical contact. A small suitcase is near the threshold.
-Style/medium: extremely realistic, low-saturation smartphone snapshot, understated documentary texture.
-Composition/framing: horizontal wide first-person view from the living room into the entrance, with the security door and narrow foyer clearly recognizable.
-Lighting/mood: warm household lamp light inside, cool evening light near the entrance, restrained.
-Constraints: Chinese county apartment interior, no exterior porch, no detached house, no stairs, no suburban lawn, no Western door frame, no readable text, logos, watermark, violence, or cinematic poster treatment. No identifiable faces.
+Asset type: widescreen narrative scene photograph, same Chinese county apartment as the reference images.
+Primary request: replacement candidate for IMG_A4_T05_007. Show a 2014 first-person moment at the threshold as teenage Wang Ao is leaving the family apartment.
+Input images: use the references only to preserve the same narrow tiled foyer, shoe cabinet, plain metal security door, wood veneer trim and warm modest living room; do not copy their framing or props.
+Scene/backdrop: camera at the apartment threshold, just outside the open metal security door, looking back inward through the same narrow tiled foyer toward the warm living room. The familiar shoe cabinet and slippers are visible.
+Subject: the parents remain far inside the apartment near the living room, only distant soft silhouettes. At the edge of the frame, a partial sleeve or shoulder of another adult is visible just outside the doorway, suggesting an escort without showing contact. A small suitcase remains near the threshold. The camera viewpoint is moving outward.
+Style/medium: extremely realistic low-saturation smartphone snapshot with restrained documentary texture.
+Composition/framing: horizontal wide first-person view across the threshold into the apartment; parents are clearly inside and behind the camera's direction of travel. Keep the entrance frame and floor continuous with the reference home.
+Lighting/mood: warm household light inside, cooler corridor light outside, subdued and observational.
+Constraints: the protagonist is the first-person viewer stepping outward; parents stay inside. No adults pulling or carrying a suitcase, no adults leaving, no visible restraint, violence, injury, identifiable faces, exterior porch, suburban house, readable text, logos, watermark, illustration, or cinematic poster treatment.
 ```
 
 #### IMG_A4_T06_001
@@ -167,12 +167,15 @@ Constraints: Chinese county apartment interior, no exterior porch, no detached h
 
 ```text
 Use case: photorealistic-natural
-Asset type: widescreen scene background for an interactive narrative.
-Style/medium: extremely realistic, low-saturation candid smartphone photography with natural imperfections and documentary restraint. Horizontal framing suitable for a large web scene. Natural overcast daylight, ordinary fluorescent light, or believable night phone exposure as appropriate. Preserve a clean area for exact text overlay where documents or screens appear.
-Constraints: no readable invented words, no watermark, no platform or brand logo, no illustration, no cinematic poster treatment, no sensational horror or graphic violence. Do not invent plot evidence, identity, motive, destination, or the source of food. People, when present, are distant, turned away, or limited to hands; no identifiable faces.
-Primary request: Generate one independent photograph for asset IMG_A4_T06_001.
-Scene/backdrop and key content: quiet institutional school courtyard at dawn, wet concrete, layered plain metal fencing and a gray two-story classroom building, empty yard, cool overcast light.
-Composition/framing: Natural first-person snapshot framing, horizontal wide view; make the main scene recognizable and leave breathing room for interface text.
+Asset type: widescreen immersive narrative background photograph.
+Primary request: IMG_A4_T06_001, a quiet institutional school courtyard at dawn, observed from an ordinary first-person standing viewpoint.
+Scene/backdrop: broad concrete exercise yard, two layers of tall plain metal perimeter fencing, a gray two-story classroom building in the distance, cool overcast early-morning sky.
+Subject: empty yard with a few distant, indistinct figures only if naturally present; no identifiable people or faces.
+Style/medium: candid documentary smartphone photography, natural imperfections, low saturation.
+Composition/framing: horizontal wide frame, eye-level view, open concrete foreground leads toward the building and fences.
+Lighting/mood: dim cool dawn, calm and observational.
+Color palette: muted gray, dusty green, faded concrete.
+Constraints: no readable signs or text, no logo, watermark, weapons, barbed wire, violence, dramatic horror, cinematic poster treatment, or illustration.
 ```
 
 #### IMG_A4_T06_002
@@ -257,9 +260,9 @@ Composition/framing: Natural first-person snapshot framing, horizontal wide view
 
 ## 生成与复核记录
 
-- 14 个最终 PNG 均能由 Windows 图像解码器读取，当前尺寸为横向 1448 × 1086。
+- 14 个最终 PNG 均能由 Windows 图像解码器读取；全部横向构图，尺寸以图像清单对应文件为准。
 - T06 操场的第一版提示词被生成安全审核拒绝；简化为无人普通校园院落后生成成功，没有使用占位或程序绘图。
 - T01 第一版被主审指出偏西式旅馆背景；原始候选保留在 Codex 生成目录，县城低层住宅街景版本通过抽查并替换。
-- T05_003、T05_006、T05_007 初版被主审指出住宅地域不连续；三张都根据 T05_005 的客厅色调与陈设重做，最终图统一为普通县城公寓的窄门厅、瓷砖、防盗门和室内暖光。
+- T05_003、T05_006、T05_007 初版被主审指出住宅地域不连续；按 T05_005 的客厅色调和陈设重做，统一为普通县城公寓。T05_007 后续再次调整为第一人称向外迈出、父母留在屋内的方向。
 - T06_002 初版被指出餐具偏西式；已改为中式分格餐盘和筷子。T06_003/004 初版空间显得废弃；已重做为 2014 年正常使用、维护中的校园环境。
 - 本清单覆盖此分支负责的 14 张；T07–T10 由其他独立 worktree 负责。
