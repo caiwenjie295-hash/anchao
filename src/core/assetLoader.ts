@@ -21,8 +21,8 @@ export class AssetLoader {
 
 const photoFiles = import.meta.glob<string>('../Photo_src/*.png', { eager: true, query: '?url&no-inline', import: 'default' });
 const act2Files = import.meta.glob<string>('../第二幕/*.jpg', { eager: true, query: '?url&no-inline', import: 'default' });
-const act3JpgFiles = import.meta.glob<string>('../第三幕/*.jpg', { eager: true, query: '?url&no-inline', import: 'default' });
-const act3PngFiles = import.meta.glob<string>('../第三幕/*.png', { eager: true, query: '?url&no-inline', import: 'default' });
+const act3JpgFiles = import.meta.glob<string>('../第三幕/IMG_A3_*.jpg', { eager: true, query: '?url&no-inline', import: 'default' });
+const act3PngFiles = import.meta.glob<string>('../第三幕/IMG_A3_*.png', { eager: true, query: '?url&no-inline', import: 'default' });
 const imageRecords = images.items as { id: string; file?: string }[];
 export const assetLoader = new AssetLoader(Object.fromEntries(imageRecords.filter((image) => image.file).map((image) => [image.id, {
   id: image.id, type: 'image', src: photoFiles[`../Photo_src/${image.file}`] ?? act2Files[`../第二幕/${image.file}`]
