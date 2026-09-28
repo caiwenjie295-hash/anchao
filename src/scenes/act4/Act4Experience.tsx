@@ -443,8 +443,7 @@ export function Act4Experience({
         <div className="a4-grid">
           <section className="a4-card">
             <p className="a4-perspective">
-              玩家专属回忆 · 2014 / 王澳（小
-              A）。以下是亲历视角，不是主角取得的影像或证言。
+              2014 年 · 王澳（小 A）的记忆。如今的我与小月尚不知道那天屋里发生了什么。
             </p>
             <div
               className="a4-scene"

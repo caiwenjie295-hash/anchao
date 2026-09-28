@@ -109,8 +109,7 @@ export default function App() {
   </> : null;
   if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
     return <>
-      <div aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending /></div>
-      {transition && !transitionOpen && <StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} />}
+      <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       {transitionLayer}
     </>;
   }

@@ -29,7 +29,7 @@ function NewsArticle({ page, identity }: TemplateProps) {
     <header className="browser-page__header">
       <p className="browser-page__kicker">{identity.host || identity.name} · {PAGE_TYPE_LABEL[page.pageType]}</p>
       <h1>{page.headline}</h1>
-      <p className="browser-page__byline"><span>记者 · {identity.name} 编辑部</span><time dateTime={page.publishedAt}>{page.publishedAt}</time></p>
+      <p className="browser-page__byline"><span>来源：{identity.name}</span><time dateTime={page.publishedAt}>{page.publishedAt}</time></p>
     </header>
     {pictures[0] && <PageFigure picture={pictures[0]} wide />}
     <div className="browser-prose">

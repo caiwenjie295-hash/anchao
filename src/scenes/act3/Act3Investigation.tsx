@@ -141,7 +141,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
                 <figcaption>第一次进山 · 破庙外景</figcaption>
               </figure>
               <figure>
-                {assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头的空木神龛 · 摄影待接入</div>}
+                {assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}
                 <figcaption>启明厨房 · 空神龛与底座</figcaption>
               </figure>
             </aside>
