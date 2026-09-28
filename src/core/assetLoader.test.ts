@@ -9,3 +9,15 @@ describe('second act art registration', () => {
     }
   });
 });
+
+describe('third act art registration', () => {
+  it('resolves every third-act image locally', () => {
+    for (const [scene, count] of [[0, 12], [1, 6], [2, 6], [3, 6], [4, 6], [5, 6], [6, 8], [7, 8]]) {
+      for (let image = 1; image <= count; image += 1) {
+        const id = `IMG_A3_T${String(scene).padStart(2, '0')}_${String(image).padStart(3, '0')}`;
+        expect(assetLoader.get(id)?.src, id).toMatch(/IMG_A3_T/);
+        expect(assetLoader.isAvailable(id), id).toBe(true);
+      }
+    }
+  });
+});
