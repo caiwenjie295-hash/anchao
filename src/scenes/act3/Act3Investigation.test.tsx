@@ -8,6 +8,47 @@ import { act3StageDoc } from '../../data/act3Data';
 import { Act3Investigation } from './Act3Investigation';
 
 describe('Third-act player path', () => {
+  it('guides the player back to missed T00 clues at the outer gate', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.flags.FLAG_A2_COMPLETE = true;
+    const manager = new StateManager(new EventBus(), state);
+    manager.startAct3();
+    const lenses = act3StageDoc('T00').lenses;
+    for (const [index, lens] of lenses.entries()) {
+      manager.enterAct3Lens(lens.id);
+      if (index > 0 && index < lenses.length - 1) manager.inspectAct3Clue(lens.hotspots[0].clueId);
+    }
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    const click = async (selector: string) => {
+      const button = container.querySelector<HTMLButtonElement>(selector);
+      expect(button).not.toBeNull();
+      await act(async () => { button!.click(); });
+    };
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} />); });
+      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('还差 2 条线索');
+      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('前往遗漏画面：再次出发');
+      await click('.act3-investigation__action button');
+      expect(manager.getState().modules.act3.currentLensId).toBe(lenses[0].id);
+      await click(`[data-clue-id="${lenses[0].hotspots[0].clueId}"]`);
+      await click('.act3-investigation__dialog [aria-label="关闭"]');
+      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('前往遗漏画面：外墙锈门');
+      await click('.act3-investigation__action button');
+      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('点击照片中的线索标记');
+      await click(`[data-clue-id="${lenses.at(-1)!.hotspots[0].clueId}"]`);
+      await click('.act3-investigation__dialog [aria-label="关闭"]');
+      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('确认再次进山结论');
+      await click('.act3-investigation__action button');
+      expect(manager.getState().modules.act3.stage).toBe('T01');
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
   it('walks from T00 through the T07 notebook and exit', async () => {
     localStorage.clear();
     const state = createDefaultState();
