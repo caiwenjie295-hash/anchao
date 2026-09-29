@@ -199,3 +199,30 @@
   }
 }
 @media (max-width: 500px) { .a4-mail-shell { grid-template-columns: 1fr; } .a4-mail-folders { display: flex; flex-wrap: wrap; } .a4 .a4-mail-list button { grid-template-columns: 1fr auto; } .a4-mail-list button span { grid-column: 1 / -1; grid-row: 2; } }
+.a4-photo-experience, .a4:has(> .a4-photo-stage) { background: #101719; }
+.a4-photo-stage { width: min(100%, 1280px); height: min(70vh, 760px); min-height: 420px; margin: 0 auto 16px; overflow: hidden; border: 1px solid #5f7273; border-radius: 12px; }
+.a4-photo-stage .photo-viewport__frame { min-height: 100%; }
+.a4-photo-caption { align-self: flex-start; max-width: min(560px, 75%); padding: 10px 14px; border: 1px solid #b7c6c280; border-radius: 8px; background: #152327ba; backdrop-filter: blur(14px); color: #f5f2e9; pointer-events: none; }
+.a4-photo-caption p { margin: 3px 0 0; max-height: 5.5em; overflow: auto; font-size: .88rem; }
+.a4-photo-experience > .a4-perspective, .a4-photo-experience > .a4-recap { max-width: 1280px; margin: 0 auto 12px; }
+.a4-detail-backdrop { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 16px; background: #04080bc9; }
+.a4-detail { width: min(960px, 100%); max-height: min(90vh, 900px); overflow: auto; padding: clamp(16px, 2vw, 28px); border: 1px solid #a5bdba; border-radius: 12px; background: #26343ada; backdrop-filter: blur(20px); box-shadow: 0 12px 60px #0009; }
+.a4-detail .a4-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.a4-detail .a4-card { background: #23333b99; }
+.a4-detail-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.a4-detail-head h2 { margin: 0; }
+.a4-detail-note { padding: 12px 16px; border-left: 3px solid #d5c094; background: #243539bf; color: #f2eee3; border-radius: 0 6px 6px 0; backdrop-filter: blur(14px); }
+.a4-recap { padding: 10px 14px; border: 1px solid #658080; border-radius: 8px; background: #253437a6; }
+.a4-recap summary { cursor: pointer; }
+@media (max-width: 700px) { .a4-photo-stage { height: 70vh; min-height: 460px; } .a4-photo-caption { max-width: 75%; } .a4-photo-caption p { max-height: 4em; } .a4-detail .a4-grid { grid-template-columns: 1fr; } }
+.a4-grid--old-mail { grid-template-columns: minmax(0, 1.45fr) minmax(280px, .8fr); }
+.a4-grid--old-mail > .a4-card:first-child { background: transparent; border: 0; padding: 0; }
+.a4-grid--old-mail .a4-mail-reading p { color: #263342; }
+.a4-grid--old-mail .a4-mail-reading button { color: #fff; }
+.a4-grid--social { grid-template-columns: minmax(0, 1fr); }
+.a4-social-discussion { max-width: 100%; padding: 18px; color: #263342; background: #f7f9fc; border-radius: 10px; }
+.a4-social-discussion .a4-puzzle { border-color: #d9e3ea; }
+.a4-social-discussion .a4-done { color: #276c50; }
+.a4-social-discussion .a4-hint { color: #89551c; }
+.a4-grid--mail > .a4-card:nth-child(2) { background: #26343ac9; backdrop-filter: blur(12px); }
+@media (max-width: 800px) { .a4-grid--old-mail { grid-template-columns: 1fr; } }
