@@ -102,6 +102,11 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
 
   const stageClueIds = act3StageClueIds(stage);
   const allCluesInspected = stageClueIds.length > 0 && stageClueIds.every((id) => state.modules.act3.inspectedClueIds.includes(id));
+  const missingClueIds = stageClueIds.filter((id) => !state.modules.act3.inspectedClueIds.includes(id));
+  const finalLens = [...doc.lenses].reverse().find((item) => !item.id.endsWith('_000'));
+  const reachedFinalLens = finalLens ? state.modules.act3.visitedLensIds.includes(finalLens.id) : false;
+  const missingLens = doc.lenses.find((item) => item.hotspots.some((hotspot) => missingClueIds.includes(hotspot.clueId)));
+  const missingHere = missingLens?.id === lens.id;
   const completionFlag = ACT3_STAGE_COMPLETION_FLAG[stage];
   const nextStage = ACT3_STAGE_NEXT[stage];
   const stageAlreadyConfirmed = state.modules.act3.confirmedFlagIds.includes(completionFlag);
@@ -136,6 +141,10 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
       <main className="act3-investigation__lens" data-asset-id={lens.assetId}>
         <PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lens.title} hotspots={photoHotspots} routes={photoRoutes} transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'}>
           <div className="act3-investigation__caption"><strong>{lens.title}</strong><span>{lens.description}</span></div>
+          {reachedFinalLens && missingClueIds.length > 0 && <div className="act3-investigation__action" role="status">
+            <span>本阶段还差 {missingClueIds.length} 条线索。{missingHere ? '点击照片中的线索标记继续查看。' : ''}</span>
+            {!missingHere && missingLens && <button type="button" onClick={() => { manager.enterAct3Lens(missingLens.id); setHotspotId(null); }}>前往遗漏画面：{missingLens.title}</button>}
+          </div>}
           {allCluesInspected && !stageAlreadyConfirmed && <div className="act3-investigation__action"><span>已检查全部线索</span><button type="button" onClick={() => { manager.confirmAct3Stage(); setHotspotId(null); }}>确认{STAGE_TITLE[stage]}结论</button></div>}
           {stageAlreadyConfirmed && nextStage && <div className="act3-investigation__action"><span>本阶段已确认</span><button type="button" onClick={() => manager.advanceAct3Stage()}>继续{STAGE_TITLE[nextStage]}</button></div>}
           {stageAlreadyConfirmed && !nextStage && <div className="act3-investigation__action" role="status">第三幕已完成。可以回看现场与线索。</div>}
