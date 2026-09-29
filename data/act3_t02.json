@@ -10,9 +10,19 @@
       "assetId": "IMG_A3_T02_001",
       "description": "狭长走廊，左侧连续教室门、右侧旧窗。地面零星碎玻璃；远处右拐角自然出现一个不起眼的消防栓轮廓。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T02_CORRIDOR", "label": "看向左侧教室" }
+        {
+          "clueId": "CLUE_A3_T02_CORRIDOR",
+          "label": "看向左侧教室"
+        }
       ],
-      "links": ["LENS_A3_T02_002"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T02_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T02_002",
+          "label": "前往教室门口"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T02_002",
@@ -21,9 +31,25 @@
       "assetId": "IMG_A3_T02_002",
       "description": "从 001 向左走近一间教室门。门框漆皮脱落，门内东倒西歪的课桌与没有靠背的椅子。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T02_CLASSROOM_DOOR", "label": "走进教室" }
+        {
+          "clueId": "CLUE_A3_T02_CLASSROOM_DOOR",
+          "label": "走进教室"
+        }
       ],
-      "links": ["LENS_A3_T02_003", "LENS_A3_T02_001"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T02_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T02_003",
+          "label": "前往讲台前"
+        },
+        {
+          "actionId": "A3_ROUTE_T02_002_001",
+          "kind": "return",
+          "target": "LENS_A3_T02_001",
+          "label": "返回一层长走廊"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T02_003",
@@ -32,9 +58,19 @@
       "assetId": "IMG_A3_T02_003",
       "description": "站在讲台前回望全室，旧课桌、粉尘与窗外灰光。前缘能看见黑板边框与两只旧广播喇叭。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T02_BLACKBOARD", "label": "看向黑板" }
+        {
+          "clueId": "CLUE_A3_T02_BLACKBOARD",
+          "label": "看向黑板"
+        }
       ],
-      "links": ["LENS_A3_T02_004"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T02_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T02_004",
+          "label": "前往黑板近景"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T02_004",
@@ -43,9 +79,19 @@
       "assetId": "IMG_A3_T02_004",
       "description": "同一块黑板靠得更近，粉尘上有多处歪斜划痕，留位置给后期双 S 叠层。木框裂痕与 003 接得上。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T02_SS_SCRATCH", "label": "检查黑板划痕" }
+        {
+          "clueId": "CLUE_A3_T02_SS_SCRATCH",
+          "label": "检查黑板划痕"
+        }
       ],
-      "links": ["LENS_A3_T02_005"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T02_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T02_005",
+          "label": "前往标语与喇叭"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T02_005",
@@ -54,9 +100,19 @@
       "assetId": "IMG_A3_T02_005",
       "description": "讲台边仰视，墙上标语纸张卷边、胶痕、墙皮剥落；标语留白由网页正文渲染，不让模型生成可读文字。看上一只旧广播喇叭。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T02_SLOGAN_SPEAKER", "label": "记下标语与喇叭" }
+        {
+          "clueId": "CLUE_A3_T02_SLOGAN_SPEAKER",
+          "label": "记下标语与喇叭"
+        }
       ],
-      "links": ["LENS_A3_T02_006"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T02_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T02_006",
+          "label": "前往走廊拐角"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T02_006",
@@ -65,9 +121,12 @@
       "assetId": "IMG_A3_T02_006",
       "description": "从教室出来朝走廊尽头右拐角看，窗下老式消防栓箱在普通构图中自然入画，不显眼也不交互。右转后无窗区变暗，通向 T03。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T02_CORRIDOR_TURN", "label": "走向拐角" }
+        {
+          "clueId": "CLUE_A3_T02_CORRIDOR_TURN",
+          "label": "走向拐角"
+        }
       ],
-      "links": []
+      "routes": []
     }
   ]
 }

@@ -87,9 +87,9 @@ describe('T07 promotion investigation', () => {
     expect(flags().FLAG_A2_PROMO_VIDEO_FOUND).toBe(true);
     expect(container.querySelector('.t07-finale__player')).not.toBeNull();
 
-    // 拖动到关键帧窗口外：不可截，也不算看过。
-    await seek(5000);
-    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_004');
+    // 关键帧窗口外不可截，也不算看过。
+    await seek(2000);
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_003');
     expect(button('.t07-finale__capture').disabled).toBe(true);
     await act(async () => { button('.t07-finale__capture').click(); });
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual([]);
@@ -125,6 +125,7 @@ describe('T07 promotion investigation', () => {
     expect(container.querySelector('[data-asset-id="IMG_A1_I_004"]')).toBeNull();
     await click('.t07-finale__zoom-left');
     await click('.t07-finale__zoom-right');
+    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
     expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
@@ -146,17 +147,18 @@ describe('T07 promotion investigation', () => {
     await clickTab('外景对照');
     await click('.t07-finale__zoom-left');
     await click('.t07-finale__zoom-right');
+    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
     await click('.t07-finale__temple-confirm');
 
     await clickTab('地点结论');
-    await click('.t07-finale__infer');
+    await click('[data-action-id="A2_T07_INFER_LOCATION"]');
     expect(flags().FLAG_A2_QIMING_LOCATION_INFERRED).toBe(true);
     expect(container.textContent).toContain(act2T07.inference.conclusion);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_003');
 
     await clickTab('再次进山');
-    await click('.t07-finale__trip-confirm');
+    await click('[data-action-id="A2_T07_PLAN_TRIP"]');
     expect(flags().FLAG_A2_SECOND_TRIP_PLANNED).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_004');
 

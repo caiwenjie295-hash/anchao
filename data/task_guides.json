@@ -3,151 +3,362 @@
   "items": [
     {
       "id": "GUIDE_A1_001",
-      "phases": ["A", "B"],
+      "phases": [
+        "A",
+        "B"
+      ],
       "prerequisiteFlags": [],
-      "completionFlags": ["FLAG_A1_XIAOA_MISSING_KNOWN"],
+      "completionFlags": [
+        "FLAG_A1_XIAOA_MISSING_KNOWN"
+      ],
       "summary": "看看有没有新的消息",
       "steps": [
-        { "label": "打开微信，留意新消息", "completionFlag": "FLAG_A1_MOM_MSG_TRIGGERED", "appId": "wechat" },
-        { "label": "读一读母亲发来的消息", "completionFlag": "FLAG_A1_XIAOA_MISSING_KNOWN", "appId": "wechat" }
+        {
+          "label": "打开微信，留意新消息",
+          "completionFlag": "FLAG_A1_MOM_MSG_TRIGGERED",
+          "appId": "wechat"
+        },
+        {
+          "label": "读一读母亲发来的消息",
+          "completionFlag": "FLAG_A1_XIAOA_MISSING_KNOWN",
+          "appId": "wechat"
+        }
       ]
     },
     {
       "id": "GUIDE_A1_002",
-      "phases": ["B", "C"],
-      "prerequisiteFlags": ["FLAG_A1_XIAOA_MISSING_KNOWN"],
-      "completionFlags": ["FLAG_A1_MAIL_XIAOA_OPENED"],
+      "phases": [
+        "B",
+        "C"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A1_XIAOA_MISSING_KNOWN"
+      ],
+      "completionFlags": [
+        "FLAG_A1_MAIL_XIAOA_OPENED"
+      ],
       "summary": "找出小A最后留下的线索",
       "steps": [
-        { "label": "在邮箱置顶区域找到小A的旧邮件", "completionFlag": "FLAG_A1_MAIL_XIAOA_FOUND", "appId": "mail" },
-        { "label": "打开邮件，确认时间和地点", "completionFlag": "FLAG_A1_MAIL_XIAOA_OPENED", "appId": "mail" }
+        {
+          "label": "在邮箱置顶区域找到小A的旧邮件",
+          "completionFlag": "FLAG_A1_MAIL_XIAOA_FOUND",
+          "appId": "mail"
+        },
+        {
+          "label": "打开邮件，确认时间和地点",
+          "completionFlag": "FLAG_A1_MAIL_XIAOA_OPENED",
+          "appId": "mail"
+        }
       ]
     },
     {
       "id": "GUIDE_A1_003",
-      "phases": ["C", "D", "E"],
-      "prerequisiteFlags": ["FLAG_A1_MAIL_XIAOA_OPENED"],
-      "completionFlags": ["FLAG_A1_NEWS_FOUND", "FLAG_A1_ROUTE_INFO_FOUND"],
+      "phases": [
+        "C",
+        "D",
+        "E"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A1_MAIL_XIAOA_OPENED"
+      ],
+      "completionFlags": [
+        "FLAG_A1_NEWS_FOUND",
+        "FLAG_A1_ROUTE_INFO_FOUND"
+      ],
       "summary": "核对鸡公岭的公开信息",
       "steps": [
-        { "label": "找到与失踪有关的旧报道", "completionFlag": "FLAG_A1_NEWS_FOUND", "appId": "browser", "hint": "可以试试“XX县失踪”。" },
-        { "label": "确认徒步路线的长度与难度", "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND", "appId": "browser" }
+        {
+          "label": "找到与失踪有关的旧报道",
+          "completionFlag": "FLAG_A1_NEWS_FOUND",
+          "appId": "browser",
+          "hint": "可以试试“XX县失踪”。"
+        },
+        {
+          "label": "确认徒步路线的长度与难度",
+          "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND",
+          "appId": "browser"
+        }
       ]
     },
     {
       "id": "GUIDE_A1_004",
-      "phases": ["I", "J"],
-      "prerequisiteFlags": ["FLAG_A1_TEMPLE_PHOTO_TAKEN"],
-      "completionFlags": ["FLAG_A1_SS_FOUND"],
+      "phases": [
+        "I",
+        "J"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A1_TEMPLE_PHOTO_TAKEN"
+      ],
+      "completionFlags": [
+        "FLAG_A1_SS_FOUND"
+      ],
       "summary": "整理鸡公岭现场照片",
       "steps": [
-        { "label": "从资源管理器打开山洞照片", "completionKind": "cave-photo-opened", "appId": "explorer" },
-        { "label": "调整画面，让暗处细节变得可辨", "completionKind": "cave-symbol-visible", "appId": "photos" },
-        { "label": "检查画面中新出现的痕迹", "completionFlag": "FLAG_A1_SS_FOUND", "appId": "photos" }
+        {
+          "label": "从资源管理器打开山洞照片",
+          "completionKind": "cave-photo-opened",
+          "appId": "explorer"
+        },
+        {
+          "label": "调整画面，让暗处细节变得可辨",
+          "completionKind": "cave-symbol-visible",
+          "appId": "photos"
+        },
+        {
+          "label": "检查画面中新出现的痕迹",
+          "completionFlag": "FLAG_A1_SS_FOUND",
+          "appId": "photos"
+        }
       ]
     },
     {
       "id": "GUIDE_A1_005",
-      "phases": ["K"],
-      "prerequisiteFlags": ["FLAG_A1_SS_FOUND"],
-      "completionFlags": ["FLAG_A1_COMPLETE"],
+      "phases": [
+        "K"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A1_SS_FOUND"
+      ],
+      "completionFlags": [
+        "FLAG_A1_COMPLETE"
+      ],
       "summary": "整理已经找到的线索",
       "steps": [
-        { "label": "确认新线索已记入记事本", "completionFlag": "FLAG_A1_SS_CLUE_RECORDED" },
-        { "label": "回到照片，点击“整理思绪，继续”", "completionFlag": "FLAG_A1_COMPLETE", "appId": "photos" }
+        {
+          "label": "确认新线索已记入记事本",
+          "completionFlag": "FLAG_A1_SS_CLUE_RECORDED"
+        },
+        {
+          "label": "回到照片，点击“整理思绪，继续”",
+          "completionFlag": "FLAG_A1_COMPLETE",
+          "appId": "photos"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T01_001",
-      "phases": ["A2_T01"],
-      "prerequisiteFlags": ["FLAG_A1_COMPLETE"],
-      "completionFlags": ["FLAG_A2_WEB_SEARCH_FAILED"],
-      "summary": "在网上再查一次，看看能查到什么",
+      "phases": [
+        "A2_T01"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A1_COMPLETE"
+      ],
+      "completionFlags": [
+        "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
+      ],
+      "summary": "查一次相关信息，再决定要不要问当地人",
       "steps": [
-        { "label": "用“鸡公岭”配上那个字搜一遍", "completionFlag": "FLAG_A2_SEARCH_BU_ATTEMPTED", "appId": "browser", "hint": "试试“鸡公岭 补”。" },
-        { "label": "再搜一遍那两个字母和那个记号", "completionFlag": "FLAG_A2_SEARCH_SS_ATTEMPTED", "appId": "browser", "hint": "试试“双S 十字”。" },
-        { "label": "确认网上查不出结果，换一种查法", "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED" }
+        {
+          "label": "搜索一次与旧址有关的词",
+          "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED",
+          "appId": "browser",
+          "hint": "试试把鸡公岭和你记下的物件或记号放在一起搜。"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T02_001",
-      "phases": ["A2_T02"],
-      "prerequisiteFlags": ["FLAG_A2_WEB_SEARCH_FAILED"],
-      "completionFlags": ["FLAG_A2_COUNTY_RECORD_HINT_KNOWN"],
+      "phases": [
+        "A2_T02"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
+      ],
+      "completionFlags": [
+        "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
+      ],
       "summary": "去县城桥头，找当地人聊聊",
       "steps": [
-        { "label": "把现场拍到的照片给老人看", "completionFlag": "FLAG_A2_ELDER_PHOTO_SHOWN" },
-        { "label": "听听他们怎么念这个名字", "completionFlag": "FLAG_A2_HEIBUMU_AUDIO_HEARD" },
-        { "label": "确定那三个字到底怎么写", "completionFlag": "FLAG_A2_HEIBUMU_NAME_SOLVED" },
-        { "label": "问问以前有没有人写过", "completionFlag": "FLAG_A2_COUNTY_RECORD_HINT_KNOWN" }
+        {
+          "label": "把现场拍到的照片给老人看",
+          "completionFlag": "FLAG_A2_ELDER_PHOTO_SHOWN"
+        },
+        {
+          "label": "听听他们怎么念这个名字",
+          "completionFlag": "FLAG_A2_HEIBUMU_AUDIO_HEARD"
+        },
+        {
+          "label": "确定那三个字到底怎么写",
+          "completionFlag": "FLAG_A2_HEIBUMU_NAME_SOLVED"
+        },
+        {
+          "label": "问问以前有没有人写过",
+          "completionFlag": "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T03_001",
-      "phases": ["A2_T03"],
-      "prerequisiteFlags": ["FLAG_A2_COUNTY_RECORD_HINT_KNOWN"],
-      "completionFlags": ["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],
+      "phases": [
+        "A2_T03"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
+      ],
+      "completionFlags": [
+        "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
+      ],
       "summary": "去县图书馆查一查旧地方志",
       "steps": [
-        { "label": "进入县图书馆的地方志阅览室", "completionFlag": "FLAG_A2_LIBRARY_ENTERED" },
-        { "label": "在目录里缩小范围，找到相关卷册", "completionFlag": "FLAG_A2_LOCAL_GAZETTE_FOUND" },
-        { "label": "翻到记着这件事的那一页", "completionFlag": "FLAG_A2_BUMUZHI_FOUND" },
-        { "label": "标记关键词，并摘录到记事本", "completionFlag": "FLAG_A2_BUMU_RULE_BASIC_KNOWN" }
+        {
+          "label": "进入县图书馆的地方志阅览室",
+          "completionFlag": "FLAG_A2_LIBRARY_ENTERED"
+        },
+        {
+          "label": "在目录里缩小范围，找到相关卷册",
+          "completionFlag": "FLAG_A2_LOCAL_GAZETTE_FOUND"
+        },
+        {
+          "label": "翻到记着这件事的那一页",
+          "completionFlag": "FLAG_A2_BUMUZHI_FOUND"
+        },
+        {
+          "label": "标记关键词，并摘录到记事本",
+          "completionFlag": "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T04_001",
-      "phases": ["A2_T04"],
-      "prerequisiteFlags": ["FLAG_A2_BUMU_RULE_BASIC_KNOWN"],
-      "completionFlags": ["FLAG_A2_TRANSFER_RULE_INFERRED"],
-      "summary": "读完卷末的旧录，把材料整理出来",
+      "phases": [
+        "A2_T04"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
+      ],
+      "completionFlags": [
+        "FLAG_A2_TRANSFER_RULE_INFERRED"
+      ],
+      "summary": "对照卷末旧录，判断它们共同支持什么",
       "steps": [
-        { "label": "读完三篇夹在卷末的志异", "completionKind": "tales-read" },
-        { "label": "把三篇材料逐一记进记事本", "completionKind": "tales-collected" },
-        { "label": "确认你从材料里看见的问题", "completionFlag": "FLAG_A2_TRANSFER_RULE_INFERRED" }
+        {
+          "label": "阅读至少两篇夹在卷末的志异",
+          "completionKind": "tales-read"
+        },
+        {
+          "label": "从不同旧录中选取支持片段",
+          "completionKind": "tales-two-sources"
+        },
+        {
+          "label": "确认一项有证据支持的暂定判断",
+          "completionFlag": "FLAG_A2_TRANSFER_RULE_INFERRED"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T05_001",
-      "phases": ["A2_T04", "A2_T05"],
-      "prerequisiteFlags": ["FLAG_A2_TRANSFER_RULE_INFERRED"],
-      "completionFlags": ["FLAG_A2_SS_MATCH_CONFIRMED", "FLAG_A2_QIMING_OFFICIAL_FOUND"],
+      "phases": [
+        "A2_T04",
+        "A2_T05"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A2_TRANSFER_RULE_INFERRED"
+      ],
+      "completionFlags": [
+        "FLAG_A2_SS_MATCH_CONFIRMED",
+        "FLAG_A2_QIMING_OFFICIAL_FOUND"
+      ],
       "summary": "回学校看看旧资料，记下你能确认的事",
       "steps": [
-        { "label": "在微信里看看小月发来的消息", "completionFlag": "FLAG_A2_SCHOOL_ENTERED", "appId": "wechat" },
-        { "label": "听听班主任记得的小A", "completionFlag": "FLAG_A2_LEAVE_OF_ABSENCE_KNOWN" },
-        { "label": "查看光荣榜上的历次记录", "completionFlag": "FLAG_A2_SCORE_CHANGE_KNOWN" },
-        { "label": "读一读成绩表下方的文字", "completionFlag": "FLAG_A2_QIMING_NAME_FOUND" },
-        { "label": "翻看以前展示过的学习笔记", "completionFlag": "FLAG_A2_SCHOOL_SS_FOUND" },
-        { "label": "把新旧记号放在一起比一比", "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED" },
-        { "label": "回到浏览器，看看启明的公开资料", "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND", "appId": "browser", "hint": "先搜“启明 投诉”，也可以查“启明 黄子山”。" }
+        {
+          "label": "在微信里看看小月发来的消息",
+          "completionFlag": "FLAG_A2_SCHOOL_ENTERED",
+          "appId": "wechat"
+        },
+        {
+          "label": "听听班主任记得的小A",
+          "completionFlag": "FLAG_A2_LEAVE_OF_ABSENCE_KNOWN"
+        },
+        {
+          "label": "查看光荣榜上的历次记录",
+          "completionFlag": "FLAG_A2_SCORE_CHANGE_KNOWN"
+        },
+        {
+          "label": "读一读成绩表下方的文字",
+          "completionFlag": "FLAG_A2_QIMING_NAME_FOUND"
+        },
+        {
+          "label": "翻看以前展示过的学习笔记",
+          "completionFlag": "FLAG_A2_SCHOOL_SS_FOUND"
+        },
+        {
+          "label": "把新旧记号放在一起比一比",
+          "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED"
+        },
+        {
+          "label": "回到浏览器，看看启明的公开资料",
+          "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND",
+          "appId": "browser",
+          "hint": "先搜“启明 投诉”，也可以查“启明 黄子山”。"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T06_001",
-      "phases": ["A2_T06"],
-      "prerequisiteFlags": ["FLAG_A2_SS_MATCH_CONFIRMED"],
-      "completionFlags": ["FLAG_A2_OTHER_CASES_ABNORMAL"],
+      "phases": [
+        "A2_T06"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A2_SS_MATCH_CONFIRMED"
+      ],
+      "completionFlags": [
+        "FLAG_A2_OTHER_CASES_ABNORMAL"
+      ],
       "summary": "继续核对启明留下的公开资料与不同说法",
       "steps": [
-        { "label": "读一读官网与地方报道", "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND", "appId": "browser" },
-        { "label": "把成功案例与论坛昵称放在一起比较", "completionFlag": "FLAG_A2_HUANG_MATCH_INFERRED" },
-        { "label": "再核对另一组名字和后续记录", "completionFlag": "FLAG_A2_OTHER_CASES_ABNORMAL", "appId": "browser" }
+        {
+          "label": "读一读官网与地方报道",
+          "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND",
+          "appId": "browser"
+        },
+        {
+          "label": "把成功案例与论坛昵称放在一起比较",
+          "completionFlag": "FLAG_A2_HUANG_MATCH_INFERRED"
+        },
+        {
+          "label": "再核对另一组名字和后续记录",
+          "completionFlag": "FLAG_A2_OTHER_CASES_ABNORMAL",
+          "appId": "browser"
+        }
       ]
     },
     {
       "id": "GUIDE_A2_T07_001",
-      "phases": ["A2_T07"],
-      "prerequisiteFlags": ["FLAG_A2_OTHER_CASES_ABNORMAL"],
-      "completionFlags": ["FLAG_A2_SECOND_TRIP_PLANNED"],
+      "phases": [
+        "A2_T07"
+      ],
+      "prerequisiteFlags": [
+        "FLAG_A2_OTHER_CASES_ABNORMAL"
+      ],
+      "completionFlags": [
+        "FLAG_A2_SECOND_TRIP_PLANNED"
+      ],
       "summary": "和小月把启明留下的旧宣传资料再核一遍",
       "steps": [
-        { "label": "和小月一起看校门合影", "completionFlag": "FLAG_A2_PROMO_PHOTO_SS_FOUND" },
-        { "label": "打开创始人受访视频", "completionFlag": "FLAG_A2_PROMO_VIDEO_FOUND" },
-        { "label": "把视频的主要片段看过一遍", "completionFlag": "FLAG_A2_PROMO_VIDEO_WATCHED" },
-        { "label": "截下可疑画面，和破庙外景对照", "completionFlag": "FLAG_A2_TEMPLE_FRAME_FOUND" },
-        { "label": "把两条线放在一起，确认地点", "completionFlag": "FLAG_A2_QIMING_LOCATION_INFERRED" },
-        { "label": "和小月约定第二次进山", "completionFlag": "FLAG_A2_SECOND_TRIP_PLANNED" }
+        {
+          "label": "和小月一起看校门合影",
+          "completionFlag": "FLAG_A2_PROMO_PHOTO_SS_FOUND"
+        },
+        {
+          "label": "打开创始人受访视频",
+          "completionFlag": "FLAG_A2_PROMO_VIDEO_FOUND"
+        },
+        {
+          "label": "把视频的主要片段看过一遍",
+          "completionFlag": "FLAG_A2_PROMO_VIDEO_WATCHED"
+        },
+        {
+          "label": "截下可疑画面，和破庙外景对照",
+          "completionFlag": "FLAG_A2_TEMPLE_FRAME_FOUND"
+        },
+        {
+          "label": "把两条线放在一起，确认地点",
+          "completionFlag": "FLAG_A2_QIMING_LOCATION_INFERRED"
+        },
+        {
+          "label": "和小月约定第二次进山",
+          "completionFlag": "FLAG_A2_SECOND_TRIP_PLANNED"
+        }
       ]
     }
   ]

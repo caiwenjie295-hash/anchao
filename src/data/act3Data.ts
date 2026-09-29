@@ -6,7 +6,7 @@ import t04Document from '../../data/act3_t04.json';
 import t05Document from '../../data/act3_t05.json';
 import t06Document from '../../data/act3_t06.json';
 import t07Document from '../../data/act3_t07.json';
-import type { Act3Hotspot, Act3Lens } from '../core/types';
+import type { Act3Hotspot, Act3Lens, Act3Route } from '../core/types';
 
 export type AuthoredAct3Stage = 'T00' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05' | 'T06' | 'T07';
 export interface Act3StageDocument {
@@ -27,6 +27,20 @@ const toLens = (value: unknown): Act3Lens => {
     ? record.stance as Act3Lens['stance']
     : 'look';
   const rawHotspots = Array.isArray(record.hotspots) ? record.hotspots : [];
+  const rawRoutes = Array.isArray(record.routes) ? record.routes : [];
+  const routes: Act3Route[] = rawRoutes.flatMap((route) => {
+    if (!route || typeof route !== 'object') return [];
+    const item = route as Record<string, unknown>;
+    if (typeof item.actionId !== 'string' || typeof item.target !== 'string' || typeof item.label !== 'string') return [];
+    if (item.kind !== 'move' && item.kind !== 'return') return [];
+    return [{ actionId: item.actionId, kind: item.kind, target: item.target, label: item.label }];
+  });
+  const legacyLinks = Array.isArray(record.links) ? record.links.filter((item): item is string => typeof item === 'string' && item.length > 0) : [];
+  if (routes.length === 0) {
+    for (const [index, target] of legacyLinks.entries()) {
+      routes.push({ actionId: 'A3_ROUTE_LEGACY_' + index + '_' + target, kind: 'move', target, label: '前往相邻位置' });
+    }
+  }
   return {
     id: typeof record.id === 'string' ? record.id : '',
     title: typeof record.title === 'string' ? record.title : '',
@@ -34,7 +48,8 @@ const toLens = (value: unknown): Act3Lens => {
     assetId: typeof record.assetId === 'string' ? record.assetId : '',
     description: typeof record.description === 'string' ? record.description : '',
     hotspots: rawHotspots.filter(isHotspot).map((item) => ({ clueId: item.clueId, label: item.label })),
-    links: Array.isArray(record.links) ? record.links.filter((item): item is string => typeof item === 'string' && item.length > 0) : [],
+    routes,
+    links: routes.map((route) => route.target),
     requiresClueIds: Array.isArray(record.requiresClueIds) ? record.requiresClueIds.filter((item): item is string => typeof item === 'string' && item.length > 0) : undefined,
   };
 };
@@ -78,6 +93,44 @@ export const act3StageClueIds = (stage: AuthoredAct3Stage): string[] => {
   }
   return ids;
 };
+
+/** 核心结论所需证据；其它热点是可选环境观察，不阻止阶段离开。 */
+export const ACT3_REQUIRED_EVIDENCE: Record<AuthoredAct3Stage, Array<{ clueId: string; reason: string }>> = {
+  T00: [
+    { clueId: 'CLUE_A3_T00_CABLE_BREAK', reason: '断裂电缆支持旧路仍与人工设施相连。' },
+    { clueId: 'CLUE_A3_T00_DRAIN_DISCOVERED', reason: '排水沟与规整路基共同支持这里存在旧通行路线。' },
+  ],
+  T01: [
+    { clueId: 'CLUE_A3_T01_GATE_VIEW', reason: '入口结构确立调查者到达围墙内侧。' },
+    { clueId: 'CLUE_A3_T01_SIGN_REVEALED', reason: '露出的标牌把旧址与启明名称联系起来。' },
+    { clueId: 'CLUE_A3_T01_MAIN_BUILDING', reason: '主楼证据确认这不是只有入口遗迹的地点。' },
+  ],
+  T02: [
+    { clueId: 'CLUE_A3_T02_BLACKBOARD', reason: '黑板内容提供现场教育信息的直接记录。' },
+    { clueId: 'CLUE_A3_T02_SLOGAN_SPEAKER', reason: '宣传标语与现场记录形成需要保留的矛盾。' },
+  ],
+  T03: [
+    { clueId: 'CLUE_A3_T03_24H', reason: '二十四小时标记支持这里存在持续管理的安排。' },
+    { clueId: 'CLUE_A3_T03_PEEPHOLES', reason: '观察孔支持空间具有监视用途。' },
+    { clueId: 'CLUE_A3_T03_48_72H', reason: '时长标记补足禁闭区用途判断，不要求检查重复走廊。' },
+  ],
+  T04: [{ clueId: 'CLUE_A3_T04_VVAKE_PAPER', reason: '纸片上的 VVaKe 词表是本阶段需要带走的材料。' }],
+  T05: [{ clueId: 'CLUE_A3_T05_13ACK_PAPER', reason: '纸片上的 13aCK 词表与上一阶段材料构成对照。' }],
+  T06: [
+    { clueId: 'CLUE_A3_T06_SHRINE', reason: '神龛现状支持此处曾有供奉位置。' },
+    { clueId: 'CLUE_A3_T06_EMPTY_BASE', reason: '空底座明确记录原有物件如今不在现场。' },
+    { clueId: 'CLUE_A3_T06_TEMPLE_COMPARE', reason: '与旧庙照片比对后才形成关联迹象，仍不证明来源。' },
+  ],
+  T07: [
+    { clueId: 'CLUE_A3_T07_XIAOYUE_MEMORY', reason: '小月的回忆为选择观察方式提供已有依据。' },
+    { clueId: 'CLUE_A3_T07_BACK_GAP', reason: '胶带痕迹支持消防栓背后曾藏有物品。' },
+    { clueId: 'CLUE_A3_T07_NOTEBOOK_PICKUP', reason: '取出笔记是带走关键材料的实际行动。' },
+    { clueId: 'CLUE_A3_T07_FIRST_PAGE', reason: '扉页 A.W 记录支持小 A 到过这里并留下笔记。' },
+  ],
+};
+
+export const act3RequiredClueIds = (stage: AuthoredAct3Stage): string[] =>
+  ACT3_REQUIRED_EVIDENCE[stage].map(({ clueId }) => clueId);
 
 /** 各阶段的完成 Flag、门槛 Flag 与后续阶段。 */
 export const ACT3_STAGE_COMPLETION_FLAG: Record<AuthoredAct3Stage, string> = {

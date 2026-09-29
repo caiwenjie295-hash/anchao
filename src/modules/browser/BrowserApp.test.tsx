@@ -5,6 +5,7 @@ import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
 import { Act2T06Controller } from '../../story/act2T06Controller';
+import { Act2T01Controller } from '../../story/act2T01Controller';
 import { browserPageById } from '../../data/browserData';
 import { BrowserApp, BrowserPageView } from './BrowserApp';
 
@@ -71,5 +72,42 @@ describe('BrowserApp T06 visibility gates', () => {
     expect(host.textContent).toContain('学员黄子山');
     await expect(act(async () => { root.render(createElement(BrowserPageView, { page: undefined, manager })); })).resolves.toBeUndefined();
     expect(host.textContent).toContain('该内部页面已不可用');
+  });
+});
+
+describe('BrowserApp T01 flexible offline route', () => {
+  it('matches reversed keywords and offers the bridge after one relevant search', async () => {
+    const host = document.createElement('div'); document.body.append(host);
+    const root = createRoot(host);
+    const bus = new EventBus();
+    const state = createDefaultState();
+    state.game.act = 2; state.game.phase = 'A2_T01'; state.game.flags.FLAG_A1_COMPLETE = true;
+    state.modules.act2Research.stage = 'search';
+    const manager = new StateManager(bus, state);
+    const controller = new Act2T01Controller(manager, bus);
+    controller.start();
+    const search = async (query: string) => {
+      await act(async () => {
+        const input = host.querySelector('#browser-search') as HTMLInputElement;
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, query);
+        input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      await act(async () => { host.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
+    };
+    try {
+      await act(async () => { root.render(createElement(BrowserApp, { manager })); });
+      await search('补 鸡公岭');
+      expect(host.textContent).toContain('鸡公岭 补');
+      expect(host.textContent).toContain('这次搜索没有找到能回答问题的资料');
+      expect(host.textContent).toContain('去桥头问问当地人');
+      expect(manager.getState().game.flags.FLAG_A2_SEARCH_BU_ATTEMPTED).toBe(true);
+      expect(manager.getState().game.flags.FLAG_A2_SEARCH_SS_ATTEMPTED).toBeUndefined();
+      expect(manager.getState().game.flags.FLAG_A2_WEB_SEARCH_FAILED).toBeUndefined();
+      await act(async () => { [...host.querySelectorAll('button')].find((button) => button.textContent?.includes('去桥头问问'))?.click(); });
+      expect(manager.getState().modules.act2Research.stage).toBe('bridge');
+    } finally {
+      controller.dispose();
+      await act(async () => root.unmount()); host.remove();
+    }
   });
 });

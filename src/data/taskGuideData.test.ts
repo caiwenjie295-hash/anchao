@@ -60,16 +60,16 @@ describe('act2 desktop task guides', () => {
     expect(() => validateTaskGuideData()).not.toThrow();
   });
 
-  it('points T01 at the browser and tracks both searches', () => {
+  it('points T01 at the browser and allows one related search to complete its step', () => {
     const guide = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true }));
-    expect(guide).toMatchObject({ id: 'GUIDE_A2_T01_001', actionAppId: 'browser', totalCount: 3 });
-    const afterOne = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_SEARCH_BU_ATTEMPTED: true }));
-    expect(afterOne).toMatchObject({ completedCount: 1, actionAppId: 'browser' });
-    expect(getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true }))).toBeNull();
+    expect(guide).toMatchObject({ id: 'GUIDE_A2_T01_001', actionAppId: 'browser', totalCount: 1 });
+    const afterOne = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true }));
+    expect(afterOne).toBeNull();
+    expect(getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true }))).not.toBeNull();
   });
 
   it('gives T02 and T03 step hints without inventing a desktop app', () => {
-    const bridge = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true }, 'A2_T02', 'bridge'));
+    const bridge = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true }, 'A2_T02', 'bridge'));
     expect(bridge?.id).toBe('GUIDE_A2_T02_001');
     expect(bridge?.actionAppId).toBeUndefined();
     expect(bridge?.actionLabel).toBeUndefined();
@@ -127,14 +127,13 @@ describe('act2 desktop task guides', () => {
     expect(done).toBeNull();
   });
 
-  it('tracks T04 reading and collection separately from sorting', () => {
+  it('tracks T04 reading and evidence from distinct sources', () => {
     const base = act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_BUMU_RULE_BASIC_KNOWN: true }, 'A2_T04', 'tales');
     expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([false, false, false]);
-    base.modules.act2Research.tales.readTaleIds = ['TALE_A2_T04_001', 'TALE_A2_T04_002', 'TALE_A2_T04_003'];
+    base.modules.act2Research.tales.readTaleIds = ['TALE_A2_T04_001', 'TALE_A2_T04_002'];
     expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([true, false, false]);
-    base.modules.act2Research.tales.collectedTaleIds = [...base.modules.act2Research.tales.readTaleIds];
+    base.modules.act2Research.tales.supportingEvidenceIds = ['EVIDENCE_A2_T04_001', 'EVIDENCE_A2_T04_002'];
     expect(getCurrentTaskGuide(base)?.steps.map((step) => step.complete)).toEqual([true, true, false]);
-    base.game.flags.FLAG_A2_TALES_SORTED = true;
     base.game.flags.FLAG_A2_TRANSFER_RULE_INFERRED = true;
     expect(getCurrentTaskGuide(base)).toMatchObject({ id: 'GUIDE_A2_T05_001', actionAppId: 'wechat' });
   });

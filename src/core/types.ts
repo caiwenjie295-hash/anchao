@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 9;
+  schemaVersion: 10;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -103,6 +103,7 @@ export interface Act4State {
   seenLaterNodeIds: string[];
   packageStep: number;
   broadcastIndex: number;
+  broadcastPeriodsConfirmed: Array<'morning' | 'night'>;
   finalMailOpened: boolean;
 }
 
@@ -115,7 +116,9 @@ export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02' | 'T03' | 'T04' | 'T0
 
 export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_XIAOYUE_CLASSROOM', 'AREA_A2_T05_RESTROOM_APPROACH', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_NOTICE_BOARD'] as const;
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
-export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[] }
+export type Act2SchoolEvidenceId = 'teacher-account' | 'rank-record' | 'qiming-thankyou';
+export type Act2SchoolInferenceId = 'bounded-timeline' | 'qiming-caused-change';
+export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[]; selectedEvidenceIds: Act2SchoolEvidenceId[]; selectedInferenceId: Act2SchoolInferenceId | null; symbolMatchConfirmed: boolean }
 
 /** T07 只保存可恢复的语义进度：已看资料、实际播放覆盖的片段、有效截图与已比对帧。 */
 export interface Act2T07State {
@@ -154,6 +157,8 @@ export interface Act2ResearchState {
     placedCardIds: string[];
     sorted: boolean;
     inferenceAcknowledged: boolean;
+    supportingEvidenceIds: string[];
+    selectedInferenceId: 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer' | null;
   };
   school: Act2SchoolState;
   t07: Act2T07State;
@@ -185,10 +190,19 @@ export interface Act3Lens {
   description: string;
   /** 镜头上可点选的热点：写为线索 ID + 可见动作标签。 */
   hotspots: Act3Hotspot[];
-  /** 邻近镜头的 ID（沿同一站位/朝向）。 */
+  /** 明确的邻近空间动作；不按列表顺序推断方向。 */
+  routes: Act3Route[];
+  /** 静态迁移辅助索引；运行时导航使用 routes。 */
   links: string[];
   /** 进入此镜头前必须检视的线索；未满足时路线保持可见但不可进入。 */
   requiresClueIds?: string[];
+}
+
+export interface Act3Route {
+  actionId: string;
+  kind: 'move' | 'return';
+  target: string;
+  label: string;
 }
 
 export interface Act3Hotspot {
@@ -240,6 +254,7 @@ export type AnchaoEventMap = {
   'act2:gazette-page-opened': { pageId: string };
   'act2:gazette-keyword-marked': { keywordId: string };
   'act2:gazette-entry-excerpted': { entryId: string };
+  'act2:gazette-entry-read': { entryId: string };
   'act2:tale-read': { taleId: string };
   'act2:tale-collected': { taleId: string };
   'act2:tale-card-placed': { cardId: string };
@@ -265,6 +280,6 @@ export type AnchaoEventMap = {
   'act2:t07-location-inferred': Record<string, never>;
   'act2:t07-trip-planned': Record<string, never>;
   'act2:t07-complete': Record<string, never>;
-  'progress:reset': { schemaVersion: 9 };
-  'save:completed': { schemaVersion: 9 };
+  'progress:reset': { schemaVersion: 10 };
+  'save:completed': { schemaVersion: 10 };
 };

@@ -10,7 +10,7 @@ export function T10Experience({ state, manager }: { state: Act4State; manager: S
     {state.laterNodeId === 'A4_T10_WORDS' && <>
       <p><strong>VVaKe：</strong>{wakeWords.join(' · ')}<br /><strong>13aCK：</strong>{backWords.join(' · ')}</p>
       <p>小月：“VVaKe 和 13aCK，像不像 wake 和 back？”这是我们的联想，不是机构自述。</p>
-      <Puzzle id="A4_P23" title="并列观察两种读法" manager={manager} solved={solved('A4_P23')} choices={[{ id: 'certain', label: '已证实一种机制' }, { id: 'possible', label: '可能有关，尚未证实' }]} />
+      <Puzzle id="A4_P23" title="小月的读法（可选）" manager={manager} solved={solved('A4_P23')} choices={[{ id: 'certain', label: '已证实一种机制' }, { id: 'possible', label: '可能有关，尚未证实' }]} />
     </>}
     {state.laterNodeId === 'A4_T10_CAFE' && <>
       <p>桌上已有两杯。我又点了一杯给小 A，把奶茶放在我们之间。小月举起手机，拍下三杯饮料。</p>

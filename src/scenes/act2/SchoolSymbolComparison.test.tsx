@@ -47,8 +47,9 @@ describe('T05 school symbol comparison', () => {
     expect(schoolSymbol?.style.transform).toContain('translate(calc(-50% + 18px), calc(-50% + 0px))');
     expect(schoolSymbol?.style.transform).toContain('scale(1.4)');
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '确认图案一致')?.click(); });
-    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
-    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T05_004');
-    expect(matches).toEqual([1]);
+    expect(manager.getState().modules.act2Research.school.symbolMatchConfirmed).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).not.toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds).not.toContain('NOTE_A2_T05_004');
+    expect(matches).toEqual([]);
   });
 });

@@ -10,9 +10,19 @@
       "assetId": "IMG_A3_T01_001",
       "description": "走到 T00 那扇锈门外。门缝、右柱裂痕、墙高与藤形须逐一对位。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T01_GATE_VIEW", "label": "查看锈门与右柱" }
+        {
+          "clueId": "CLUE_A3_T01_GATE_VIEW",
+          "label": "查看锈门与右柱"
+        }
       ],
-      "links": ["LENS_A3_T01_002"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T01_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T01_002",
+          "label": "前往右柱近景"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T01_002",
@@ -21,9 +31,25 @@
       "assetId": "IMG_A3_T01_002",
       "description": "走近右柱，手触到湿藤叶。叶下隐约露出黄底金属牌边。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T01_PILLAR_CLOSE", "label": "拨开爬山虎" }
+        {
+          "clueId": "CLUE_A3_T01_PILLAR_CLOSE",
+          "label": "拨开爬山虎"
+        }
       ],
-      "links": ["LENS_A3_T01_003", "LENS_A3_T01_001"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T01_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T01_003",
+          "label": "前往标牌露出"
+        },
+        {
+          "actionId": "A3_ROUTE_T01_002_001",
+          "kind": "return",
+          "target": "LENS_A3_T01_001",
+          "label": "返回外门正面"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T01_003",
@@ -32,9 +58,19 @@
       "assetId": "IMG_A3_T01_003",
       "description": "藤叶被拨到一边，旧黄底红字牌字面空处留给后期覆盖准确名称。可以调出旧宣传合影做比对。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T01_SIGN_REVEALED", "label": "对照旧宣传合影" }
+        {
+          "clueId": "CLUE_A3_T01_SIGN_REVEALED",
+          "label": "对照旧宣传合影"
+        }
       ],
-      "links": ["LENS_A3_T01_004"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T01_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T01_004",
+          "label": "前往门缝内视角"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T01_004",
@@ -43,9 +79,19 @@
       "assetId": "IMG_A3_T01_004",
       "description": "小月先从门缝挤入；镜头仍能看见 001 的右柱作方位锚点。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T01_GATE_ENTERED", "label": "跟着小月进入" }
+        {
+          "clueId": "CLUE_A3_T01_GATE_ENTERED",
+          "label": "跟着小月进入"
+        }
       ],
-      "links": ["LENS_A3_T01_005"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T01_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T01_005",
+          "label": "前往第二层围栏"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T01_005",
@@ -54,9 +100,19 @@
       "assetId": "IMG_A3_T01_005",
       "description": "回头偏左见第二层生锈铁丝围栏。顶端刀片铁丝网，没有上锁的窄门。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T01_INNER_FENCE", "label": "穿过第二层围栏" }
+        {
+          "clueId": "CLUE_A3_T01_INNER_FENCE",
+          "label": "穿过第二层围栏"
+        }
       ],
-      "links": ["LENS_A3_T01_006"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T01_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T01_006",
+          "label": "前往操场配电箱"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T01_006",
@@ -65,10 +121,16 @@
       "assetId": "IMG_A3_T01_006",
       "description": "越过操场接近主楼。楼门口旧配电箱里有被剪断的粗线，与 T00 山坡电缆遥相呼应，但不阻止进入主楼。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T01_BREAKER_OPTIONAL", "label": "查看配电箱断线（可选）" },
-        { "clueId": "CLUE_A3_T01_MAIN_BUILDING", "label": "进入主楼" }
+        {
+          "clueId": "CLUE_A3_T01_BREAKER_OPTIONAL",
+          "label": "查看配电箱断线（可选）"
+        },
+        {
+          "clueId": "CLUE_A3_T01_MAIN_BUILDING",
+          "label": "进入主楼"
+        }
       ],
-      "links": []
+      "routes": []
     }
   ]
 }

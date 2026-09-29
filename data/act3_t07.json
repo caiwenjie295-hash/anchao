@@ -3,13 +3,218 @@
   "stage": "T07",
   "intro": "你和小月从地下回到一层。天色渐暗，窗外的自然光仍比地下手电令人安心。",
   "lenses": [
-    {"id":"LENS_A3_T07_001","title":"回到一层","stance":"look","assetId":"IMG_A3_T07_001","description":"你和小月一起上楼，穿过熟悉的走廊。身后的地下室安静下来，没有追逐声。","hotspots":[{"clueId":"CLUE_A3_T07_UPSTAIRS","label":"确认一层回程"}],"links":["LENS_A3_T07_002"]},
-    {"id":"LENS_A3_T07_002","title":"教室与厕所拐角","stance":"look","assetId":"IMG_A3_T07_002","description":"路过教室和厕所方向，窗下那只旧消防栓还在原处。小月忽然慢下来，似乎想起了什么。","hotspots":[{"clueId":"CLUE_A3_T07_CORNER","label":"听小月停步"}],"links":["LENS_A3_T07_003","LENS_A3_T07_001"]},
-    {"id":"LENS_A3_T07_003","title":"站姿看消防栓","stance":"look","assetId":"IMG_A3_T07_003","description":"站着看，它只是一只普通的旧消防栓。背后的窄缝被栓体挡住，没有显眼标记。","hotspots":[{"clueId":"CLUE_A3_T07_STANDING_HYDRANT","label":"从站姿看消防栓"}],"links":["LENS_A3_T07_004","LENS_A3_T07_002"]},
-    {"id":"LENS_A3_T07_004","title":"小月的系鞋带回忆","stance":"look","assetId":"IMG_A3_T07_004","description":"小月说，小 A 高中时总在相似的窗下位置蹲着系鞋带。她也蹲下比了比高度，提醒你从低处看看。","hotspots":[{"clueId":"CLUE_A3_T07_XIAOYUE_MEMORY","label":"听完小月的回忆"}],"links":["LENS_A3_T07_005","LENS_A3_T07_003"]},
-    {"id":"LENS_A3_T07_005","title":"蹲下看侧背面","stance":"crouch","assetId":"IMG_A3_T07_005","requiresClueIds":["CLUE_A3_T07_XIAOYUE_MEMORY"],"description":"你主动蹲下，视线落到消防栓侧背面。窄缝里露出透明胶的一角；站着时完全看不见。","hotspots":[{"clueId":"CLUE_A3_T07_BACK_GAP","label":"摸索消防栓背后"}],"links":["LENS_A3_T07_006","LENS_A3_T07_004"]},
-    {"id":"LENS_A3_T07_006","title":"取出包裹","stance":"crouch","assetId":"IMG_A3_T07_006","requiresClueIds":["CLUE_A3_T07_BACK_GAP"],"description":"你从缝里取出塑料袋和透明胶包住的褐色笔记本。它被藏在这里，需要带到外面再细看。","hotspots":[{"clueId":"CLUE_A3_T07_NOTEBOOK_PICKUP","label":"主动取出包裹的笔记本"}],"links":["LENS_A3_T07_007","LENS_A3_T07_005"]},
-    {"id":"LENS_A3_T07_007","title":"笔记扉页","stance":"approach","assetId":"IMG_A3_T07_007","requiresClueIds":["CLUE_A3_T07_NOTEBOOK_PICKUP"],"description":"你只掀开扉页：A.W。那是小 A 熟悉的字迹。他曾重新来到启明，并有意把这本笔记留在这里。其余页暂不阅读。","hotspots":[{"clueId":"CLUE_A3_T07_FIRST_PAGE","label":"确认 A.W 与字迹后合上"}],"links":["LENS_A3_T07_008","LENS_A3_T07_006"]},
-    {"id":"LENS_A3_T07_008","title":"晚光中的遗址出口","stance":"look","assetId":"IMG_A3_T07_008","description":"小月提醒天色越来越暗。你带着笔记与她一起穿过主楼、操场和围栏，回到来时的旧址入口。小 A 确实来过，并留下东西；后续仍待查。","hotspots":[{"clueId":"CLUE_A3_T07_EXIT_ROUTE","label":"与小月一起离开旧址"}],"links":["LENS_A3_T07_007"]}
+    {
+      "id": "LENS_A3_T07_001",
+      "title": "回到一层",
+      "stance": "look",
+      "assetId": "IMG_A3_T07_001",
+      "description": "你和小月一起上楼，穿过熟悉的走廊。身后的地下室安静下来，没有追逐声。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_UPSTAIRS",
+          "label": "确认一层回程"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T07_002",
+          "label": "前往教室与厕所拐角"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_002",
+      "title": "教室与厕所拐角",
+      "stance": "look",
+      "assetId": "IMG_A3_T07_002",
+      "description": "路过教室和厕所方向，窗下那只旧消防栓还在原处。小月忽然慢下来，似乎想起了什么。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_CORNER",
+          "label": "听小月停步"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T07_003",
+          "label": "前往站姿看消防栓"
+        },
+        {
+          "actionId": "A3_ROUTE_T07_002_001",
+          "kind": "return",
+          "target": "LENS_A3_T07_001",
+          "label": "返回回到一层"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_003",
+      "title": "站姿看消防栓",
+      "stance": "look",
+      "assetId": "IMG_A3_T07_003",
+      "description": "站着看，它只是一只普通的旧消防栓。背后的窄缝被栓体挡住，没有显眼标记。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_STANDING_HYDRANT",
+          "label": "从站姿看消防栓"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T07_004",
+          "label": "前往小月的系鞋带回忆"
+        },
+        {
+          "actionId": "A3_ROUTE_T07_003_002",
+          "kind": "return",
+          "target": "LENS_A3_T07_002",
+          "label": "返回教室与厕所拐角"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_004",
+      "title": "小月的系鞋带回忆",
+      "stance": "look",
+      "assetId": "IMG_A3_T07_004",
+      "description": "小月说，小 A 高中时总在相似的窗下位置蹲着系鞋带。她也蹲下比了比高度，提醒你从低处看看。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_XIAOYUE_MEMORY",
+          "label": "听完小月的回忆"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T07_005",
+          "label": "前往蹲下看侧背面"
+        },
+        {
+          "actionId": "A3_ROUTE_T07_004_003",
+          "kind": "return",
+          "target": "LENS_A3_T07_003",
+          "label": "返回站姿看消防栓"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_005",
+      "title": "蹲下看侧背面",
+      "stance": "crouch",
+      "assetId": "IMG_A3_T07_005",
+      "requiresClueIds": [
+        "CLUE_A3_T07_XIAOYUE_MEMORY"
+      ],
+      "description": "你主动蹲下，视线落到消防栓侧背面。窄缝里露出透明胶的一角；站着时完全看不见。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_BACK_GAP",
+          "label": "摸索消防栓背后"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T07_006",
+          "label": "前往取出包裹"
+        },
+        {
+          "actionId": "A3_ROUTE_T07_005_004",
+          "kind": "return",
+          "target": "LENS_A3_T07_004",
+          "label": "返回小月的系鞋带回忆"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_006",
+      "title": "取出包裹",
+      "stance": "crouch",
+      "assetId": "IMG_A3_T07_006",
+      "requiresClueIds": [
+        "CLUE_A3_T07_BACK_GAP"
+      ],
+      "description": "你从缝里取出塑料袋和透明胶包住的褐色笔记本。它被藏在这里，需要带到外面再细看。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_NOTEBOOK_PICKUP",
+          "label": "主动取出包裹的笔记本"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_006_007",
+          "kind": "move",
+          "target": "LENS_A3_T07_007",
+          "label": "前往笔记扉页"
+        },
+        {
+          "actionId": "A3_ROUTE_T07_006_005",
+          "kind": "return",
+          "target": "LENS_A3_T07_005",
+          "label": "返回蹲下看侧背面"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_007",
+      "title": "笔记扉页",
+      "stance": "approach",
+      "assetId": "IMG_A3_T07_007",
+      "requiresClueIds": [
+        "CLUE_A3_T07_NOTEBOOK_PICKUP"
+      ],
+      "description": "你只掀开扉页：A.W。那是小 A 熟悉的字迹。他曾重新来到启明，并有意把这本笔记留在这里。其余页暂不阅读。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_FIRST_PAGE",
+          "label": "确认 A.W 与字迹后合上"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_007_008",
+          "kind": "move",
+          "target": "LENS_A3_T07_008",
+          "label": "前往晚光中的遗址出口"
+        },
+        {
+          "actionId": "A3_ROUTE_T07_007_006",
+          "kind": "return",
+          "target": "LENS_A3_T07_006",
+          "label": "返回取出包裹"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T07_008",
+      "title": "晚光中的遗址出口",
+      "stance": "look",
+      "assetId": "IMG_A3_T07_008",
+      "description": "小月提醒天色越来越暗。你带着笔记与她一起穿过主楼、操场和围栏，回到来时的旧址入口。小 A 确实来过，并留下东西；后续仍待查。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T07_EXIT_ROUTE",
+          "label": "与小月一起离开旧址"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T07_008_007",
+          "kind": "return",
+          "target": "LENS_A3_T07_007",
+          "label": "返回笔记扉页"
+        }
+      ]
+    }
   ]
 }

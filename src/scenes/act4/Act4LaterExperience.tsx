@@ -2,6 +2,9 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { assetLoader } from '../../core/assetLoader';
 import { PhotoViewport } from '../../components/PhotoViewport';
+import { InvestigationDetail } from '../../components/investigation/InvestigationDetail';
+import { InvestigationShell } from '../../components/investigation/InvestigationShell';
+import type { InvestigationAction } from '../../components/investigation/types';
 import { backWords, wakeWords } from '../../data/act4/content';
 import { act4PhotoLayout } from '../../data/act4/act4PhotoLayout';
 import { firstLaterSceneId, huangArchive, jayReply, laterSceneById, laterScenesByStage, type LaterStage } from '../../data/act4/laterContent';
@@ -22,15 +25,23 @@ const labels: Record<LaterStage, string> = {
   T10: '当下 / 主角与小月 · 尾声',
 };
 
+const relatedScene: Partial<Record<LaterStage, { id: string; label: string }>> = {
+  T06: { id: 'A4_T06_BROADCAST', label: '早晚广播记录' },
+  T07: { id: 'A4_T07_MIRROR', label: '梦中姓名与镜像' },
+  T08: { id: 'A4_T08_ARCHIVE', label: '2008 年档案架' },
+  T09: { id: 'A4_T09_NOTE', label: '消防栓旁的笔记' },
+  T10: { id: 'A4_T10_WORDS', label: '两张词表' },
+};
+
 export function Act4LaterExperience({ manager = stateManager, onExit }: { manager?: StateManager; onExit: () => void }) {
   const whole = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const state = whole.modules.act4;
   const stage = state.stage as LaterStage;
   const [reviewId, setReviewId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [routeNotice, setRouteNotice] = useState('');
   const [selectedNote, setSelectedNote] = useState('');
-  useEffect(() => { setReviewId(null); setDetailOpen(false); setRouteNotice(''); setSelectedNote(''); }, [stage]);
+  useEffect(() => { setReviewId(null); setDetailOpen(false); setSelectedNote(''); }, [stage]);
+
   const scenes = laterScenesByStage(stage);
   const current = laterSceneById.get(state.laterNodeId ?? '') ?? laterSceneById.get(firstLaterSceneId[stage])!;
   const displayed = reviewId ? laterSceneById.get(reviewId) ?? current : current;
@@ -40,14 +51,28 @@ export function Act4LaterExperience({ manager = stateManager, onExit }: { manage
   const finishBlock = finishAct4Block(stage, state);
   const completed = whole.game.flags.FLAG_A4_COMPLETE === true;
   const layout = act4PhotoLayout[displayed.assetId];
+  const block = next ? nextBlock : finishBlock;
+  const suggestedMaterial = block ? relatedScene[stage] : undefined;
+
   const goForward = () => {
-    if (reviewId) { setReviewId(null); return; }
-    const block = next ? nextBlock : finishBlock;
-    if (block) { setRouteNotice(block); setDetailOpen(true); return; }
-    setRouteNotice(''); setDetailOpen(false);
     if (next) manager.visitAct4LaterNode(next.id);
     else if (!completed) manager.advanceAct4LaterStage();
   };
+
+  const actions: InvestigationAction[] = reviewId
+    ? [{ actionId: 'A4_RETURN_TO_CURRENT_PROGRESS', kind: 'review', label: '返回当前进度', state: 'ready', onActivate: () => { setReviewId(null); setDetailOpen(false); setSelectedNote(''); } }]
+    : [{
+      actionId: `A4_${stage}_CONTINUE`,
+      kind: stage === 'T10' ? 'story' : 'memory',
+      target: next?.id ?? `A4_${stage}_NEXT`,
+      label: completed ? '本段已完成' : next ? (stage === 'T10' ? '继续当下' : '继续这段记忆') : '结束本段，继续之后',
+      state: completed ? 'completed' : block ? 'blocked' : 'ready',
+      reason: block ?? undefined,
+      relatedMaterials: suggestedMaterial ? [{ id: suggestedMaterial.id, label: suggestedMaterial.label }] : undefined,
+      onActivate: goForward,
+      onOpenMaterial: suggestedMaterial ? () => { setReviewId(suggestedMaterial.id); setDetailOpen(false); setSelectedNote(''); } : undefined,
+    }];
+
   const detail = <>
     {stage === 'T06' && <T06Experience state={state} manager={manager} />}
     {stage === 'T07' && <T07Experience state={state} manager={manager} />}
@@ -55,23 +80,38 @@ export function Act4LaterExperience({ manager = stateManager, onExit }: { manage
     {stage === 'T09' && <T09Experience state={state} manager={manager} />}
     {stage === 'T10' && <T10Experience state={state} manager={manager} />}
   </>;
-  return <main className="a4 a4-later a4-photo-experience" aria-label="第四幕">
-    <header className="a4-header"><div><small>第四幕 · 王澳</small><h1>{labels[stage]}</h1></div><button type="button" onClick={onExit}>退出到桌面</button></header>
-    <p className="a4-perspective">{stage === 'T10' ? '如今，我和小月把手中能查到的资料再次摊开。' : '那时我所见、所想的事，只有这段记忆知道。'}</p>
+
+  return <InvestigationShell
+    ariaLabel="第四幕回忆调查"
+    actLabel="第四幕"
+    locationLabel={displayed.title}
+    contextLabel={`${reviewId ? '回看中 · ' : ''}${labels[stage]} · ${stage === 'T10' ? '当下视角' : '王澳的亲历记忆'}`}
+    objective={stage === 'T10' ? '和小月核对手中材料，保留仍然未知的部分。' : '跟随王澳当时看见和做过的事；回看不会改变当前进度。'}
+    helpText="点击照片上的标记查看当前物件；底部行动用于继续剧情或返回当前进度。回看已出现片段只展示材料，不推进故事。"
+    actions={actions}
+    statusMessage={reviewId ? '回看中 · 只读展示，不会推进当前进度。' : undefined}
+    onExit={onExit}
+  >
     <section className="a4-photo-stage" data-asset-id={displayed.assetId} aria-label={displayed.imageDescription}>
       <PhotoViewport sceneKey={displayed.id} imageUrl={assetLoader.get(displayed.assetId)?.src} imageAlt={displayed.imageDescription}
-        hotspots={[{ id: `clue:${displayed.id}`, ...layout.focus, onActivate: () => { setDetailOpen(true); setRouteNotice(''); setSelectedNote(''); } }, ...(layout.details ?? []).map((point, index) => ({ id: `clue:${displayed.id}:${index}`, ...point, onActivate: () => { setDetailOpen(true); setRouteNotice(''); setSelectedNote(point.note ?? ''); } }))]}
-        routes={[{ id: `route:${displayed.id}`, ...layout.route, disabled: completed && !reviewId, onActivate: goForward }]}
+        hotspots={[{ id: `clue:${displayed.id}`, ...layout.focus, onActivate: () => { setDetailOpen(true); setSelectedNote(''); } }, ...(layout.details ?? []).map((point, index) => ({ id: `clue:${displayed.id}:${index}`, ...point, onActivate: () => { setDetailOpen(true); setSelectedNote(point.note ?? ''); } }))]}
+        routes={[]}
         transitionDirection={reviewId ? 'back' : 'forward'}>
         <div className="a4-photo-caption"><strong>{displayed.title}</strong><p>{photoCaptionLead(displayed.text)}</p></div>
       </PhotoViewport>
     </section>
     {completed && <p className="a4-done">第四幕完结。邮件与已见片段可回看；小 A 的最终去向没有确证。</p>}
-    <details className="a4-recap"><summary>回看本阶段已见片段</summary><div className="a4-page-list">{scenes.filter(scene => state.seenLaterNodeIds.includes(scene.id)).map(scene => <button type="button" key={scene.id} aria-current={displayed.id === scene.id ? 'page' : undefined} onClick={() => { setReviewId(scene.id); setDetailOpen(false); }}>{scene.title}</button>)}<button type="button" onClick={() => setReviewId(null)}>回到当前进度</button></div></details>
-    <details className="a4-recap"><summary>重看先前的线索</summary><p>笔记末页：Wangao.weibo.com、Wangao@163.com；两个账号同密，“不要担心那一天”。</p><p>第三幕纸片：13aCK · {backWords.join('、')}；VVaKe · {wakeWords.join('、')}。</p><p>2020-04-19 微博：小 A 决定返山，并把两个账号密码改为这一天。</p>
-      {state.solvedPuzzleIds.includes('A4_P18') && <article className="a4-paper"><strong>那时读过的黄子山档案</strong><p>这几行只留在小 A 当年的记忆里；如今的我和小月没有拿到这份档案。</p>{huangArchive.map(line => <p key={line}>{line}</p>)}</article>}
-      {state.seenLaterNodeIds.includes('A4_T09_REPLY') && <article className="a4-paper"><strong>那时收到的 Jay 的回信</strong><p>小 A 当时在手机上读到了这封信；如今的我还没有见到他的收件箱。</p><p>{jayReply}</p></article>}
-    </details>
-    {detailOpen && <div className="a4-detail-backdrop" onClick={() => setDetailOpen(false)}><section className="a4-detail" role="dialog" aria-modal="true" aria-label={`${displayed.title}的线索`} onKeyDown={event => { if (event.key === 'Escape') setDetailOpen(false); }} onClick={event => event.stopPropagation()}><div className="a4-detail-head"><h2>{displayed.title}</h2><button type="button" autoFocus onClick={() => setDetailOpen(false)}>关闭，返回画面</button></div>{selectedNote ? <p className="a4-detail-note">{selectedNote}</p> : <p>{displayed.text}</p>}{!reviewId && detail}{routeNotice && <p role="status" className="a4-hint">{routeNotice}</p>}</section></div>}
-  </main>;
+    {!reviewId && <>
+      <details className="a4-recap"><summary>回看本阶段已见片段</summary><div className="a4-page-list">{scenes.filter(scene => state.seenLaterNodeIds.includes(scene.id)).map(scene => <button type="button" key={scene.id} aria-current={displayed.id === scene.id ? 'page' : undefined} onClick={() => { setReviewId(scene.id); setDetailOpen(false); }}>
+        {scene.title}</button>)}<button type="button" onClick={() => setReviewId(null)}>回到当前进度</button></div></details>
+      <details className="a4-recap"><summary>重看先前的线索</summary><p>笔记末页：Wangao.weibo.com、Wangao@163.com；两个账号同密，“不要担心那一天”。</p><p>第三幕纸片：13aCK · {backWords.join('、')}；VVaKe · {wakeWords.join('、')}。</p><p>2020-04-19 微博：小 A 决定返山，并把两个账号密码改为这一天。</p>
+        {state.solvedPuzzleIds.includes('A4_P18') && <article className="a4-paper"><strong>那时读过的黄子山档案</strong><p>这几行只留在小 A 当年的记忆里；如今的我和小月没有拿到这份档案。</p>{huangArchive.map(line => <p key={line}>{line}</p>)}</article>}
+        {state.seenLaterNodeIds.includes('A4_T09_REPLY') && <article className="a4-paper"><strong>那时收到的 Jay 的回信</strong><p>小 A 当时在手机上读到了这封信；如今的我还没有见到他的收件箱。</p><p>{jayReply}</p></article>}
+      </details>
+    </>}
+    {detailOpen && <InvestigationDetail title={displayed.title} onClose={() => setDetailOpen(false)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="clue:${displayed.id}"]`)}>
+      {selectedNote ? <p className="a4-detail-note">{selectedNote}</p> : <p>{displayed.text}</p>}
+      {!reviewId && detail}
+    </InvestigationDetail>}
+  </InvestigationShell>;
 }

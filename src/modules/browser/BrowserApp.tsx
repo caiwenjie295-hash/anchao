@@ -100,8 +100,8 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
       {shownView.kind === 'home' && <BrowserHome draft={safeDraft} suggestions={suggestions} onChoose={(query) => { setDraft(query); submitSearch(query); }} />}
       {shownView.kind === 'results' && <BrowserSearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
       {shownView.kind === 'page' && <BrowserPageView page={browserPageById.get(shownView.pageId)} manager={manager} />}
-    {stage === 'search' && state.game.flags.FLAG_A2_WEB_SEARCH_FAILED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
-      <p>现有搜索已经看完。整理好记录后，再去听听当地人的说法。</p>
+    {stage === 'search' && state.game.flags.FLAG_A2_OFFLINE_RESEARCH_NEEDED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
+      <p>这次搜索没有找到能回答问题的资料。可以先把疑问留给当地人。</p>
       <button type="button" onClick={() => manager.setAct2Stage('bridge')}>去桥头问问当地人</button>
     </aside>}
     </div>

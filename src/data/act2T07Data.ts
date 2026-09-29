@@ -46,6 +46,7 @@ export type T07KeyFrame = {
   altText: string;
   placeholderNote: string;
   caption: string;
+  supportsExteriorMatch: boolean;
 };
 
 export type T07VisualFrame = { startMs: number; endMs: number; imageId: string };
@@ -91,6 +92,9 @@ export type Act2T07Data = {
     xiaoyueLine: string;
     replyLine: string;
     lockedHint: string;
+    featureOptions: { id: string; label: string }[];
+    matchFeatureId: string;
+    mismatchNote: string;
   };
   inference: { title: string; jigonglingBranch: string[]; qimingBranch: string[]; conclusion: string; confirmLabel: string; caveat: string; lockedHint: string };
   trip: { title: string; lines: { speaker: string; text: string }[]; gearImageId: string; gearCaption: string; gearAltText: string; gearNote: string; confirmLabel: string; plannedNote: string; lockedHint: string };
@@ -149,7 +153,9 @@ export function validateAct2T07Data(): void {
   const { video } = act2T07;
   if (video.durationMs <= 0 || video.frameMs <= 0 || video.stepMs <= 0) throw new Error('T07 视频时长或步进无效。');
   if (new Set(video.segments.map((segment) => segment.id)).size !== video.segments.length) throw new Error('T07 视频片段 ID 必须唯一。');
-  if (new Set(video.keyFrames.map((frame) => frame.id)).size !== video.keyFrames.length) throw new Error('T07 关键帧 ID 必须唯一。');
+  if (new Set(video.keyFrames.map((frame) => frame.id)).size !== video.keyFrames.length || video.keyFrames.length < 3) throw new Error('T07 截图候选帧 ID 必须唯一且至少有三个可选画面。');
+  if (video.keyFrames.filter((frame) => frame.supportsExteriorMatch).length !== 1) throw new Error('T07 只有一个截图候选画面应与破庙外景轮廓相符。');
+  if (!act2T07.comparison.featureOptions.some((option) => option.id === act2T07.comparison.matchFeatureId)) throw new Error('T07 外景对照特征选项无效。');
   if (video.segments.length === 0 || video.segments[0].startMs !== 0 || video.segments[video.segments.length - 1].endMs !== video.durationMs) throw new Error('T07 视频片段必须覆盖完整时长。');
   for (let index = 1; index < video.segments.length; index += 1) {
     if (video.segments[index].startMs !== video.segments[index - 1].endMs) throw new Error(`T07 视频片段必须首尾相接：${video.segments[index].id}`);
@@ -181,7 +187,7 @@ export function validateAct2T07Data(): void {
     act2T07.intro, act2T07.promoSurfaceNote, ...act2T07.promoSurfaceText,
     ...act2T07.materials.flatMap((material) => [material.title, material.caption, material.placeholderNote, material.xiaoyueLine ?? '', material.symbolNote ?? '', material.logoSpeculation ?? '', material.confirmedNote ?? '']),
     ...video.segments.flatMap((segment) => [segment.label, segment.line, segment.placeholderNote]),
-    video.continuityNote, ...video.keyFrames.flatMap((frame) => [frame.caption, frame.altText, frame.placeholderNote]),
+    video.continuityNote, ...video.keyFrames.flatMap((frame) => [frame.caption, frame.altText, frame.placeholderNote]), ...act2T07.comparison.featureOptions.map((option) => option.label), act2T07.comparison.mismatchNote,
     ...Object.values(act2T07.comparison), act2T07.inference.conclusion, act2T07.inference.caveat, act2T07.inference.lockedHint,
     ...act2T07.trip.lines.map((line) => line.text), act2T07.trip.plannedNote, act2T07.trip.gearNote,
     ...act2T07.finale.lines, act2T07.finale.closingNote,

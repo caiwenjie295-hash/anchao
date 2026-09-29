@@ -18,7 +18,7 @@ export function T09Experience({ state, manager }: { state: Act4State; manager: S
     {state.laterNodeId === 'A4_T09_NOTE' && <>
       <p>笔记末页只留下两个账号、同一密码和那些逐渐错乱的字句。</p>
       <div className="a4-actions">{packageActions.map((action, index) => <button type="button" key={action.id} disabled={state.packageStep !== index} onClick={() => manager.advanceAct4Package(action.id)}>{index + 1}. {action.label} {state.packageStep > index && '✓'}</button>)}</div>
-      {state.packageStep === 3 && <Puzzle id="A4_P21" title="确认笔记已包裹藏好" manager={manager} solved={solved('A4_P21')} choices={packageActions.map((item) => ({ id: item.id, label: item.label }))} />}
+      {state.packageStep === 3 && <p className="a4-done">笔记已经收好并藏在消防栓背后。可以主动尝试离开。</p>}
     </>}
     {state.laterNodeId === 'A4_T09_EXIT' && <>
       <p>门外就是春天。我扶着墙，一步步向光里挪去。走廊的广播逐词传来。</p>

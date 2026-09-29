@@ -13,9 +13,9 @@ describe('T06 browser acceptance', () => {
   beforeEach(() => {
     host = document.createElement('div'); document.body.append(host); root = createRoot(host); bus = new EventBus();
     const state = createDefaultState(); state.game.act = 2; state.game.phase = 'A2_T05';
-    state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
+    state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true };
     state.modules.act2Research.stage = 'school';
-    state.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE'] };
+    state.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true };
     manager = new StateManager(bus, state); controller = new Act2T06Controller(manager, bus); controller.start();
     act(() => root.render(createElement(BrowserApp, { manager })));
   });
@@ -52,7 +52,7 @@ describe('T06 browser acceptance', () => {
     await act(async () => { (host.querySelector('.browser-page__actions button') as HTMLButtonElement).click(); });
     expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).toBe(true);
     const restored = hydrateState(JSON.parse(JSON.stringify(manager.getState())));
-    expect(restored.schemaVersion).toBe(9);
+    expect(restored.schemaVersion).toBe(10);
     expect(restored.modules.act2Research.stage).toBe('qiming');
     expect(restored.modules.browser.visitedPageIds).toContain('PAGE_A2_T06_006');
   });

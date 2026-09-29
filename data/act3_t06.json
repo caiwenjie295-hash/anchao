@@ -3,13 +3,213 @@
   "stage": "T06",
   "intro": "你和小月沿气味走到地下走廊尽头。门牌写着“厨房重地，闲人勿入”。",
   "lenses": [
-    {"id":"LENS_A3_T06_001","title":"厨房门牌","stance":"enter","assetId":"IMG_A3_T06_001","description":"厨房重地，闲人勿入。门后有旧油味与酸臭味，没有人声。","hotspots":[{"clueId":"CLUE_A3_T06_DOOR","label":"查看门牌并进入"}],"links":["LENS_A3_T06_002"]},
-    {"id":"LENS_A3_T06_002","title":"厨房全景","stance":"look","assetId":"IMG_A3_T06_002","description":"墙面斑驳，灶台和工作台都已停用。小月站在门边，你举着手电先扫视这间屋子。","hotspots":[{"clueId":"CLUE_A3_T06_ROOM","label":"扫视厨房全貌"}],"links":["LENS_A3_T06_003","LENS_A3_T06_001"]},
-    {"id":"LENS_A3_T06_003","title":"大锅与砍骨刀","stance":"approach","assetId":"IMG_A3_T06_003","description":"一口生锈的大炖锅里有干硬残渣，旁边放着砍骨刀。这些物件说明这里曾大量处理食物，食材来源无法确认。","hotspots":[{"clueId":"CLUE_A3_T06_POT_KNIFE","label":"检查大锅与砍骨刀"}],"links":["LENS_A3_T06_004","LENS_A3_T06_002"]},
-    {"id":"LENS_A3_T06_004","title":"地上的大骨","stance":"crouch","assetId":"IMG_A3_T06_004","description":"地面散着来源不明的大骨。小月猜可能是猪肉，也想起有人提过难吃的配餐与奖励的鲜肉；你们都无法在这里证实。","hotspots":[{"clueId":"CLUE_A3_T06_BONES","label":"蹲下查看大骨"}],"links":["LENS_A3_T06_005","LENS_A3_T06_003"]},
-    {"id":"LENS_A3_T06_005","title":"上方铁钩","stance":"look","assetId":"IMG_A3_T06_005","description":"抬头后，手电照出几只空的旧挂肉铁钩。铁钩本身不能说明当年挂过什么。","hotspots":[{"clueId":"CLUE_A3_T06_HOOKS","label":"抬头检查铁钩"}],"links":["LENS_A3_T06_006","LENS_A3_T06_004"]},
-    {"id":"LENS_A3_T06_006","title":"尽头木神龛","stance":"approach","assetId":"IMG_A3_T06_006","description":"厨房最深处有一座木神龛，里面空着。小月看见它，突然催你先离开厨房，上去再说。","hotspots":[{"clueId":"CLUE_A3_T06_SHRINE","label":"检查空木神龛"}],"links":["LENS_A3_T06_007","LENS_A3_T06_005"]},
-    {"id":"LENS_A3_T06_007","title":"空底座近景","stance":"approach","assetId":"IMG_A3_T06_007","description":"神龛只剩底座。你拍下空位，没有看到塑像，也无法判断供奉物何时、如何离开。","hotspots":[{"clueId":"CLUE_A3_T06_EMPTY_BASE","label":"拍下空底座"}],"links":["LENS_A3_T06_008","LENS_A3_T06_006"]},
-    {"id":"LENS_A3_T06_008","title":"上楼对照旧照片","stance":"look","assetId":"IMG_A3_T06_008","requiresClueIds":["CLUE_A3_T06_POT_KNIFE","CLUE_A3_T06_BONES","CLUE_A3_T06_HOOKS","CLUE_A3_T06_SHRINE","CLUE_A3_T06_EMPTY_BASE"],"description":"回到较亮的一层，你调出第一次在鸡公岭破庙拍的照片。破庙里黑补母的供奉位置与厨房尽头的空神龛有直接关联；供奉物的去向仍不明。","hotspots":[{"clueId":"CLUE_A3_T06_TEMPLE_COMPARE","label":"对照破庙照片与空神龛并确认关联"}],"links":["LENS_A3_T06_007"]}
+    {
+      "id": "LENS_A3_T06_001",
+      "title": "厨房门牌",
+      "stance": "enter",
+      "assetId": "IMG_A3_T06_001",
+      "description": "厨房重地，闲人勿入。门后有旧油味与酸臭味，没有人声。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_DOOR",
+          "label": "查看门牌并进入"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T06_002",
+          "label": "前往厨房全景"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_002",
+      "title": "厨房全景",
+      "stance": "look",
+      "assetId": "IMG_A3_T06_002",
+      "description": "墙面斑驳，灶台和工作台都已停用。小月站在门边，你举着手电先扫视这间屋子。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_ROOM",
+          "label": "扫视厨房全貌"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T06_003",
+          "label": "前往大锅与砍骨刀"
+        },
+        {
+          "actionId": "A3_ROUTE_T06_002_001",
+          "kind": "return",
+          "target": "LENS_A3_T06_001",
+          "label": "返回厨房门牌"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_003",
+      "title": "大锅与砍骨刀",
+      "stance": "approach",
+      "assetId": "IMG_A3_T06_003",
+      "description": "一口生锈的大炖锅里有干硬残渣，旁边放着砍骨刀。这些物件说明这里曾大量处理食物，食材来源无法确认。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_POT_KNIFE",
+          "label": "检查大锅与砍骨刀"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T06_004",
+          "label": "前往地上的大骨"
+        },
+        {
+          "actionId": "A3_ROUTE_T06_003_002",
+          "kind": "return",
+          "target": "LENS_A3_T06_002",
+          "label": "返回厨房全景"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_004",
+      "title": "地上的大骨",
+      "stance": "crouch",
+      "assetId": "IMG_A3_T06_004",
+      "description": "地面散着来源不明的大骨。小月猜可能是猪肉，也想起有人提过难吃的配餐与奖励的鲜肉；你们都无法在这里证实。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_BONES",
+          "label": "蹲下查看大骨"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T06_005",
+          "label": "前往上方铁钩"
+        },
+        {
+          "actionId": "A3_ROUTE_T06_004_003",
+          "kind": "return",
+          "target": "LENS_A3_T06_003",
+          "label": "返回大锅与砍骨刀"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_005",
+      "title": "上方铁钩",
+      "stance": "look",
+      "assetId": "IMG_A3_T06_005",
+      "description": "抬头后，手电照出几只空的旧挂肉铁钩。铁钩本身不能说明当年挂过什么。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_HOOKS",
+          "label": "抬头检查铁钩"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T06_006",
+          "label": "前往尽头木神龛"
+        },
+        {
+          "actionId": "A3_ROUTE_T06_005_004",
+          "kind": "return",
+          "target": "LENS_A3_T06_004",
+          "label": "返回地上的大骨"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_006",
+      "title": "尽头木神龛",
+      "stance": "approach",
+      "assetId": "IMG_A3_T06_006",
+      "description": "厨房最深处有一座木神龛，里面空着。小月看见它，突然催你先离开厨房，上去再说。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_SHRINE",
+          "label": "检查空木神龛"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_006_007",
+          "kind": "move",
+          "target": "LENS_A3_T06_007",
+          "label": "前往空底座近景"
+        },
+        {
+          "actionId": "A3_ROUTE_T06_006_005",
+          "kind": "return",
+          "target": "LENS_A3_T06_005",
+          "label": "返回上方铁钩"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_007",
+      "title": "空底座近景",
+      "stance": "approach",
+      "assetId": "IMG_A3_T06_007",
+      "description": "神龛只剩底座。你拍下空位，没有看到塑像，也无法判断供奉物何时、如何离开。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_EMPTY_BASE",
+          "label": "拍下空底座"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_007_008",
+          "kind": "move",
+          "target": "LENS_A3_T06_008",
+          "label": "前往上楼对照旧照片"
+        },
+        {
+          "actionId": "A3_ROUTE_T06_007_006",
+          "kind": "return",
+          "target": "LENS_A3_T06_006",
+          "label": "返回尽头木神龛"
+        }
+      ]
+    },
+    {
+      "id": "LENS_A3_T06_008",
+      "title": "上楼对照旧照片",
+      "stance": "look",
+      "assetId": "IMG_A3_T06_008",
+      "requiresClueIds": [
+        "CLUE_A3_T06_SHRINE",
+        "CLUE_A3_T06_EMPTY_BASE"
+      ],
+      "description": "回到较亮的一层，你调出第一次在鸡公岭破庙拍的照片。破庙里黑补母的供奉位置与厨房尽头的空神龛有直接关联；供奉物的去向仍不明。",
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T06_TEMPLE_COMPARE",
+          "label": "对照破庙照片与空神龛并确认关联"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T06_008_007",
+          "kind": "return",
+          "target": "LENS_A3_T06_007",
+          "label": "返回空底座近景"
+        }
+      ]
+    }
   ]
 }

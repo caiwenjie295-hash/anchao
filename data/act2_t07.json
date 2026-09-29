@@ -7,7 +7,9 @@
     "phase": "A2_T07",
     "source": "scene",
     "purpose": "汇合鸡公岭与启明两条线索，只确认过去存在直接地点关联",
-    "unlockCondition": ["FLAG_A2_OTHER_CASES_ABNORMAL"],
+    "unlockCondition": [
+      "FLAG_A2_OTHER_CASES_ABNORMAL"
+    ],
     "relatedFlags": [
       "FLAG_A2_PROMO_VIDEO_FOUND",
       "FLAG_A2_PROMO_VIDEO_WATCHED",
@@ -22,7 +24,12 @@
   "entryLabel": "和小月核对旧资料",
   "resumeLabel": "继续和小月核对资料",
   "intro": "我把查到的材料整理好，约小月在城东的咖啡馆见面。为了方便看材料，我们并排坐下。",
-  "promoSurfaceText": ["科学培养", "行为矫正", "传统文化", "军事化管理"],
+  "promoSurfaceText": [
+    "科学培养",
+    "行为矫正",
+    "传统文化",
+    "军事化管理"
+  ],
   "promoSurfaceNote": "这些说法都来自机构自己的宣传材料，没有第三方核实。",
   "photoMaterialId": "MATERIAL_A2_T07_PHOTO",
   "materials": [
@@ -62,7 +69,10 @@
     "durationMs": 16000,
     "frameMs": 200,
     "stepMs": 5000,
-    "requiredSegmentIds": ["SEG_A2_T07_002", "SEG_A2_T07_003"],
+    "requiredSegmentIds": [
+      "SEG_A2_T07_002",
+      "SEG_A2_T07_003"
+    ],
     "continuityNote": "分镜不多，从光线和对话的流畅度来看，不像是分了好几天拍的。",
     "segments": [
       {
@@ -116,19 +126,64 @@
         "zoomImageId": "IMG_A2_T07_006",
         "altText": "山路背景里短暂出现的石质建筑",
         "placeholderNote": "用石头简易搭成的小石堆，中间留出一个方形缺口。",
-        "caption": "山路背景里的石质建筑"
+        "caption": "山路背景里的石质建筑",
+        "supportsExteriorMatch": true
+      },
+      {
+        "id": "FRAME_A2_T07_002",
+        "segmentId": "SEG_A2_T07_002",
+        "startMs": 4000,
+        "endMs": 6499,
+        "imageId": "IMG_A2_T07_004",
+        "zoomImageId": "IMG_A2_T07_004",
+        "altText": "镜头沿山路移动",
+        "placeholderNote": "画面里是树木和山路，暂时看不清与外景相符的建筑轮廓。",
+        "caption": "山路行进画面",
+        "supportsExteriorMatch": false
+      },
+      {
+        "id": "FRAME_A2_T07_003",
+        "segmentId": "SEG_A2_T07_004",
+        "startMs": 9000,
+        "endMs": 15999,
+        "imageId": "IMG_A2_T07_003",
+        "zoomImageId": "IMG_A2_T07_003",
+        "altText": "视频切回受访者",
+        "placeholderNote": "镜头切回受访者与机构门口，没有出现可供建筑对照的画面。",
+        "caption": "受访者画面",
+        "supportsExteriorMatch": false
       }
     ],
     "visualFrames": [
-      { "startMs": 0, "endMs": 4000, "imageId": "IMG_A2_T07_003" },
-      { "startMs": 4000, "endMs": 6800, "imageId": "IMG_A2_T07_004" },
-      { "startMs": 6800, "endMs": 8601, "imageId": "IMG_A2_T07_005" },
-      { "startMs": 8601, "endMs": 9000, "imageId": "IMG_A2_T07_008" },
-      { "startMs": 9000, "endMs": 16000, "imageId": "IMG_A2_T07_003" }
+      {
+        "startMs": 0,
+        "endMs": 4000,
+        "imageId": "IMG_A2_T07_003"
+      },
+      {
+        "startMs": 4000,
+        "endMs": 6800,
+        "imageId": "IMG_A2_T07_004"
+      },
+      {
+        "startMs": 6800,
+        "endMs": 8601,
+        "imageId": "IMG_A2_T07_005"
+      },
+      {
+        "startMs": 8601,
+        "endMs": 9000,
+        "imageId": "IMG_A2_T07_008"
+      },
+      {
+        "startMs": 9000,
+        "endMs": 16000,
+        "imageId": "IMG_A2_T07_003"
+      }
     ],
-    "captureHint": "刚才好像有什么东西一闪而过。",
-    "captureLabel": "截图",
-    "captureOutsideLabel": "这个画面没有可截取的东西",
+    "captureHint": "可以在不同镜头截图，再挑一张与第一次进山的外景核对。",
+    "captureLabel": "截取这一帧",
+    "captureOutsideLabel": "当前没有可截图的稳定画面",
     "screenshotZoomLabel": "放大截图",
     "watchedNote": "主要片段已经看过一遍。"
   },
@@ -145,28 +200,78 @@
     "structureNote": "石堆的垒法、中空的正面和塌落的石檐，两边都能对上。",
     "xiaoyueLine": "“这张照片你哪来的，我觉得就是一个东西啊！”小月抓住我的手腕，夺过手机仔细对比起来。",
     "replyLine": "“就是小A失踪的地方。前两天我去了一趟，你还记得吗？”",
-    "lockedHint": "先在视频里截到可疑的画面，再拿外景来对照。"
+    "lockedHint": "先在视频里截到可疑的画面，再拿外景来对照。",
+    "featureOptions": [
+      {
+        "id": "square-opening",
+        "label": "石堆中间留有方形缺口"
+      },
+      {
+        "id": "mountain-road",
+        "label": "画面里出现山路与树木"
+      },
+      {
+        "id": "interview-background",
+        "label": "画面里出现受访者与机构门口"
+      }
+    ],
+    "matchFeatureId": "square-opening",
+    "mismatchNote": "这个画面或特征与破庙外景对不上。可以换一张已截画面或另选一个可见特征。"
   },
   "inference": {
     "title": "把两条线放在一起",
-    "jigonglingBranch": ["黑补母", "破庙", "双S", "小A失踪"],
-    "qimingBranch": ["小A曾接受改造", "学霸笔记双S", "多名异常学员", "宣传资料"],
+    "jigonglingBranch": [
+      "黑补母",
+      "破庙",
+      "双S",
+      "小A失踪"
+    ],
+    "qimingBranch": [
+      "小A曾接受改造",
+      "学霸笔记双S",
+      "多名异常学员",
+      "宣传资料"
+    ],
     "conclusion": "启明曾经就在鸡公岭破庙附近。",
     "confirmLabel": "确认启明曾在鸡公岭破庙附近活动",
     "caveat": "这只说明过去存在这样的地点关联。启明现在是否还在山里、这个标志到底代表什么，都还没有证据。",
-    "lockedHint": "合影、视频、破庙外景都要亲自核过，才能下这个结论。"
+    "lockedHint": "先检查合影记号，再从视频截图与第一次进山的外景中选出可互相印证的特征。"
   },
   "trip": {
     "title": "再进一次山",
     "lines": [
-      { "speaker": "小月", "text": "“是不是得再去一趟！我感觉那边肯定和小A的失踪有关系，至少能证明启明青少年成长中心就在那附近！”" },
-      { "speaker": "我", "text": "“确实啊！”我又看了一次视频，分镜不多，从光线和对话流畅度来看，不像是分了好几天拍的。" },
-      { "speaker": "我", "text": "“要不一起去一趟？你会开车吗？这边过去要十个小时左右，一个人开太累了。”" },
-      { "speaker": "小月", "text": "“会，我们轮流开就好。这次我感觉能查出点什么。”" },
-      { "speaker": "我", "text": "“记得带冲锋衣和登山鞋，那边需要徒步一段路，安全第一。”" },
-      { "speaker": "我", "text": "“万一下雨就不好了，冲锋衣还能挡一下水，我们不用一直打着伞。”" },
-      { "speaker": "小月", "text": "“知道了，我明天去买一件，准备一下，咱们后天出发。你工作那边不要紧吗？”" },
-      { "speaker": "我", "text": "“没事，那边我安排过了，调休了。”" }
+      {
+        "speaker": "小月",
+        "text": "“是不是得再去一趟！我感觉那边肯定和小A的失踪有关系，至少能证明启明青少年成长中心就在那附近！”"
+      },
+      {
+        "speaker": "我",
+        "text": "“确实啊！”我又看了一次视频，分镜不多，从光线和对话流畅度来看，不像是分了好几天拍的。"
+      },
+      {
+        "speaker": "我",
+        "text": "“要不一起去一趟？你会开车吗？这边过去要十个小时左右，一个人开太累了。”"
+      },
+      {
+        "speaker": "小月",
+        "text": "“会，我们轮流开就好。这次我感觉能查出点什么。”"
+      },
+      {
+        "speaker": "我",
+        "text": "“记得带冲锋衣和登山鞋，那边需要徒步一段路，安全第一。”"
+      },
+      {
+        "speaker": "我",
+        "text": "“万一下雨就不好了，冲锋衣还能挡一下水，我们不用一直打着伞。”"
+      },
+      {
+        "speaker": "小月",
+        "text": "“知道了，我明天去买一件，准备一下，咱们后天出发。你工作那边不要紧吗？”"
+      },
+      {
+        "speaker": "我",
+        "text": "“没事，那边我安排过了，调休了。”"
+      }
     ],
     "gearImageId": "IMG_A2_T07_007",
     "gearCaption": "冲锋衣与登山鞋",
@@ -178,10 +283,26 @@
   },
   "finale": {
     "cues": [
-      { "id": "CUE_A2_T07_001", "label": "键盘声", "file": null },
-      { "id": "CUE_A2_T07_002", "label": "键盘声淡出", "file": null },
-      { "id": "CUE_A2_T07_003", "label": "雨声", "file": null },
-      { "id": "CUE_A2_T07_004", "label": "风声 / 树叶", "file": null }
+      {
+        "id": "CUE_A2_T07_001",
+        "label": "键盘声",
+        "file": null
+      },
+      {
+        "id": "CUE_A2_T07_002",
+        "label": "键盘声淡出",
+        "file": null
+      },
+      {
+        "id": "CUE_A2_T07_003",
+        "label": "雨声",
+        "file": null
+      },
+      {
+        "id": "CUE_A2_T07_004",
+        "label": "风声 / 树叶",
+        "file": null
+      }
     ],
     "lines": [
       "第一次进山的时候，我只是想找一个失踪的人。",

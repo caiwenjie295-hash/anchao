@@ -13,6 +13,8 @@ import { Puzzle } from "./Act4Puzzle";
 import { Act4LaterExperience } from './Act4LaterExperience';
 import { Act4SceneImage } from './Act4SceneImage';
 import { PhotoViewport } from '../../components/PhotoViewport';
+import { InvestigationShell } from '../../components/investigation/InvestigationShell';
+import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { act4PhotoLayout } from '../../data/act4/act4PhotoLayout';
 import { photoCaptionLead } from './photoCaption';
@@ -65,39 +67,56 @@ export function Act4Experience({
   useEffect(() => { setPhotoDetail(false); setPhotoNotice(''); }, [stage]);
   useEffect(() => {
     if (stage === "T01") manager.readAct4NotebookPage(page);
-    if (stage === "T03" && solved("A4_P06"))
-      manager.readAct4Timeline(openedPost);
-  }, [stage, page, openedPost, act4.solvedPuzzleIds, manager]);
+  }, [stage, page, manager]);
   if (stage === "inactive") return null;
   if (['T06', 'T07', 'T08', 'T09', 'T10'].includes(stage)) return <Act4LaterExperience manager={manager} onExit={onExit} />;
   const advance = () => manager.advanceAct4Stage();
+  const earlyLocation = stage === "T01" ? "县城酒店 · 深夜" : stage === "T02" ? "旧邮件与账号" : stage === "T03" ? "王澳的微博" : stage === "T04" ? "启明来信" : birthday.title;
+  const earlyObjective = stage === "T01" ? "从笔记里的凌晨时刻整理王澳走过的路线。" : stage === "T02" ? "核对两封旧邮件，再用共同日期登录账号。" : stage === "T03" ? "阅读动态并判断关键日期之间的顺序。" : stage === "T04" ? "对照启明来信与第三幕带回的词表。" : "跟随王澳的生日记忆，理解父母安排来人的经过。";
+  const readyToAdvance = stage === "T01" ? solved("A4_P01")
+    : stage === "T02" ? act4.unlockedAccountIds.length === 2
+    : stage === "T03" ? solved("A4_P06") && act4.timelineReadDates.includes("04-19")
+    : stage === "T04" ? solved("A4_P09")
+    : birthday.id === "taken" && solved("A4_P11");
+  const earlyAction: InvestigationAction = stage === "T05" && completedT05
+    ? { actionId: "A4_T05_TO_T06", kind: "memory", target: "A4_T06_WAKE", label: "继续进入 2014 年的机构回忆", state: "ready", onActivate: () => manager.startAct4T06() }
+    : {
+      actionId: "A4_" + stage + "_CONTINUE", kind: stage === "T05" ? "story" : "move",
+      target: stage === "T01" ? "old-mail" : stage === "T02" ? "weibo" : stage === "T03" ? "wake-mail" : stage === "T04" ? "birthday" : "birthday-end",
+      label: stage === "T01" ? "收好笔记，查看旧邮件" : stage === "T02" ? "登录后打开微博" : stage === "T03" ? "继续查看启明来信" : stage === "T04" ? "进入生日回忆" : "确认第五段结束",
+      state: readyToAdvance ? "ready" : "blocked",
+      reason: stage === "T01" ? "还需要对照笔记中的凌晨路线。" : stage === "T02" ? "先核对两封旧邮件，并从登录入口输入日期。" : stage === "T03" ? "先确认日期顺序，并打开 04-19 的动态。" : stage === "T04" ? "先查看启明邮件，并与两张词表核对。" : "先走到生日回忆的家门，并核对父母提前安排来人的对话。",
+      relatedMaterials: stage === "T01" ? [{ id: "A4_T01_NOTE", label: "小 A 的九页笔记" }]
+        : stage === "T02" ? [{ id: "protagonist", label: "主角收到的旧邮件" }, { id: "xiaoyue", label: "小月收到的旧邮件" }]
+        : stage === "T03" ? [{ id: "04-19", label: "04-19 的动态" }]
+        : stage === "T04" ? [{ id: "A4_T04_WAKE", label: "启明的 VVaKe 邮件" }]
+        : [{ id: "A4_T05_BIRTHDAY", label: "生日回忆" }],
+      onActivate: advance,
+      onOpenMaterial: (material) => {
+        if (stage === "T01" || stage === "T05") setPhotoDetail(true);
+        if (stage === "T02") { setOpenedOldMail(material.id === "xiaoyue" ? act4OldMails[1].id : act4OldMails[0].id); setPhotoDetail(true); }
+        if (stage === "T03") { setOpenedPost(material.id); setPhotoDetail(true); manager.readAct4Timeline(material.id); }
+        if (stage === "T04") { setOpenedMail("wake"); manager.viewAct4WakeMail(); setPhotoDetail(true); }
+      },
+    };
   return (
+    <InvestigationShell
+      ariaLabel="第四幕早期调查"
+      actLabel="第四幕 · 王澳（小 A）"
+      locationLabel={earlyLocation}
+      contextLabel="笔记、账号与过去的经历"
+      objective={earlyObjective}
+      helpText="照片热点用于查看物件。底部行动推进阶段；被阻时会说明还需核对的材料。"
+      actions={[earlyAction]}
+      onExit={onExit}
+    >
     <main className="a4" aria-label="第四幕 王澳">
-      <header className="a4-header">
-        <div>
-          <small>第四幕 · 王澳</small>
-          <h1>
-            {stage === "T01"
-              ? "县城夜晚"
-              : stage === "T02"
-                ? "那一天"
-                : stage === "T03"
-                  ? "清醒的十七天"
-                  : stage === "T04"
-                    ? "启明来信"
-                    : "2014 / 王澳（小 A）"}
-          </h1>
-        </div>
-        <button type="button" onClick={onExit}>
-          退出到桌面
-        </button>
-      </header>
       {stage === "T01" && (
         <>
         <section className="a4-photo-stage" data-asset-id="IMG_A4_T01_001">
           <PhotoViewport sceneKey="A4_T01_ROOM" imageUrl={assetLoader.get("IMG_A4_T01_001")?.src} imageAlt="酒店桌面上的小 A 笔记与旧址照片"
             hotspots={[{ id: 'clue:notes', ...act4PhotoLayout.IMG_A4_T01_001.focus, onActivate: () => { setPhotoNotice(''); setPhotoDetail(true); } }, ...(act4PhotoLayout.IMG_A4_T01_001.details ?? []).map((point, index) => ({ id: `clue:room:${index}`, ...point, onActivate: () => { setPhotoNotice(point.note ?? ''); setPhotoDetail(true); } }))]}
-            routes={[{ id: 'route:mail', ...act4PhotoLayout.IMG_A4_T01_001.route, onActivate: () => { if (solved("A4_P01") && act4.readNotebookPages.length === 9) advance(); else { setPhotoDetail(true); setPhotoNotice("先读完九页，并整理凌晨的路线。"); } } }]}>
+            routes={[{ id: 'route:mail', ...act4PhotoLayout.IMG_A4_T01_001.route, onActivate: () => { if (solved("A4_P01")) advance(); else { setPhotoDetail(true); setPhotoNotice("先对照笔记中的凌晨路线。"); } } }]}>
             <div className="a4-photo-caption"><strong>县城酒店 · 深夜</strong><p>小月把照片摊开，我把塑料袋里的笔记放在桌上。</p></div>
           </PhotoViewport>
         </section>
@@ -188,25 +207,7 @@ export function Act4Experience({
             />
             {solved("A4_P01") && (
               <>
-                {act4.readNotebookPages.length < 9 && (
-                  <p role="status">
-                    笔记还有未读页：
-                    {notebookPages
-                      .map((_, index) => index + 1)
-                      .filter(
-                        (number) => !act4.readNotebookPages.includes(number),
-                      )
-                      .join("、")}
-                    。读完再查“那一天”。
-                  </p>
-                )}
-                <button
-                  type="button"
-                  disabled={act4.readNotebookPages.length < 9}
-                  onClick={advance}
-                >
-                  收好笔记，查“那一天”
-                </button>
+
               </>
             )}
           </section>
@@ -224,60 +225,17 @@ export function Act4Experience({
             <p>末页原文：“密码是一样的”“如果真的你们，那么不要担心那一天。”</p>
           </section>
           <section className="a4-card">
-            {act4.checkedMailRecipients.length === 2 ? (
-              <Puzzle
-                id="A4_P04"
-                title="用共同日期组成密码"
-                input
-                manager={manager}
-                solved={solved("A4_P04")}
-              />
-            ) : (
-              <p>先核对两封旧邮件的日期。</p>
-            )}
-            {solved("A4_P04") && (
-              <>
-                <label>
-                  两个离线模拟账号的密码{" "}
-                  <input
-                    inputMode="numeric"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                  />
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const ok = manager.loginAct4Accounts(password);
-                    setLoginMessage(
-                      ok ? "两个账号已解锁。" : "密码不符；没有尝试次数限制。",
-                    );
-                  }}
-                >
-                  确认登录微博与邮箱
-                </button>
-                <p role="status">{loginMessage}</p>
-                <p>
-                  微博：Wangao.weibo.com{" "}
-                  {act4.unlockedAccountIds.includes("weibo") && "✓"}
-                  <br />
-                  邮箱：Wangao@163.com{" "}
-                  {act4.unlockedAccountIds.includes("mail") && "✓"}
-                </p>
-                <Puzzle
-                  id="A4_P05"
-                  title="确认同一密码用于两个账号（可选）"
-                  choices={[{ id: "both", label: "同一日期用于微博和邮箱" }]}
-                  manager={manager}
-                  solved={solved("A4_P05")}
-                />
-              </>
-            )}
-            {act4.unlockedAccountIds.length === 2 && (
-              <button type="button" onClick={advance}>
-                打开微博记录
-              </button>
-            )}
+            <label>用两封旧邮件共同写出的日期登录{" "}
+              <input inputMode="numeric" maxLength={8} value={password} onChange={(event) => setPassword(event.target.value)} />
+            </label>
+            <button type="button" disabled={act4.checkedMailRecipients.length !== 2} onClick={() => {
+              const ok = manager.loginAct4Accounts(password);
+              setLoginMessage(ok ? "两个账号已解锁。" : "日期不符；可以继续核对邮件。");
+            }}>登录微博与邮箱</button>
+            {act4.checkedMailRecipients.length < 2 && <p>先查看两封旧邮件的日期，再从实际登录入口输入密码。</p>}
+            <p role="status">{loginMessage}</p>
+            <p>微博：Wangao.weibo.com {act4.unlockedAccountIds.includes("weibo") && "✓"}<br />邮箱：Wangao@163.com {act4.unlockedAccountIds.includes("mail") && "✓"}</p>
+
           </section>
         </div>
       )}
@@ -292,7 +250,7 @@ export function Act4Experience({
               manager={manager}
               solved={solved("A4_P06")}
             />
-            {solved("A4_P06") && (
+            {(
               <>
                 <div className="a4-social-timeline" aria-label="王澳的动态">
                   {timeline.map(([date]) => (
@@ -340,20 +298,7 @@ export function Act4Experience({
               manager={manager}
               solved={solved("A4_P08")}
             />
-            {solved("A4_P06") && (
-              <>
-                {!act4.timelineReadDates.includes("04-19") && (
-                  <p role="status">请先打开 04-19 的回返与改密码记录。</p>
-                )}
-                <button
-                  type="button"
-                  disabled={!act4.timelineReadDates.includes("04-19")}
-                  onClick={advance}
-                >
-                  继续查看邮箱
-                </button>
-              </>
-            )}
+            {solved("A4_P06") && !act4.timelineReadDates.includes("04-19") && <p role="status">打开 04-19 的回返与改密码记录后，可以继续。</p>}
           </section>
         </div>
       )}
@@ -431,9 +376,7 @@ export function Act4Experience({
                   六个词与 VVaKe
                   纸片完全一致；时间也与清醒记录相邻。因果仍待求证。
                 </p>
-                <button type="button" onClick={advance}>
-                  进入 2014 年的小 A 视角
-                </button>
+
               </>
             )}
           </section>
@@ -557,13 +500,7 @@ export function Act4Experience({
             {birthday.id === "taken" && (
               <>
                 <p>父母忘了我的生日。家门在眼前，故事停在这里。</p>
-                {!completedT05 ? (
-                  <button type="button" onClick={advance}>
-                    确认第五段结束
-                  </button>
-                ) : (
-                  <><p className="a4-done">生日这一天停在家门。可回看、退出，或主动进入后续回忆。</p><button type="button" onClick={() => manager.startAct4T06()}>继续体验 2014 年启明机构</button></>
-                )}
+                <p className="a4-done">生日这一天停在家门。可回看，或从底部行动继续。</p>
               </>
             )}
           </section>
@@ -573,5 +510,6 @@ export function Act4Experience({
         </>
       )}
     </main>
+    </InvestigationShell>
   );
 }

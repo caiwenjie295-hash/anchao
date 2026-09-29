@@ -4,41 +4,157 @@
   "intro": "广播室的门半掩着。设备几乎搬空，旧桌和断线还留在原处。",
   "lenses": [
     {
-      "id": "LENS_A3_T05_001", "title": "广播室门口", "stance": "enter", "assetId": "IMG_A3_T05_001",
+      "id": "LENS_A3_T05_001",
+      "title": "广播室门口",
+      "stance": "enter",
+      "assetId": "IMG_A3_T05_001",
       "description": "门牌褪色，屋内没有播放声。你和小月从地下走廊走进这间广播室。",
-      "hotspots": [{ "clueId": "CLUE_A3_T05_ENTRY", "label": "检查广播室入口" }],
-      "links": ["LENS_A3_T05_002"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T05_ENTRY",
+          "label": "检查广播室入口"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T05_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T05_002",
+          "label": "前往搬空的设备位"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T05_002", "title": "搬空的设备位", "stance": "look", "assetId": "IMG_A3_T05_002",
+      "id": "LENS_A3_T05_002",
+      "title": "搬空的设备位",
+      "stance": "look",
+      "assetId": "IMG_A3_T05_002",
       "description": "原先安放设备的位置只剩灰尘轮廓和几根断开的电线；这里没有仍在运转的机器。",
-      "hotspots": [{ "clueId": "CLUE_A3_T05_EMPTY_EQUIPMENT", "label": "检查空设备位与断线" }],
-      "links": ["LENS_A3_T05_003", "LENS_A3_T05_001"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T05_EMPTY_EQUIPMENT",
+          "label": "检查空设备位与断线"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T05_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T05_003",
+          "label": "前往旧桌"
+        },
+        {
+          "actionId": "A3_ROUTE_T05_002_001",
+          "kind": "return",
+          "target": "LENS_A3_T05_001",
+          "label": "返回广播室门口"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T05_003", "title": "旧桌", "stance": "approach", "assetId": "IMG_A3_T05_003",
+      "id": "LENS_A3_T05_003",
+      "title": "旧桌",
+      "stance": "approach",
+      "assetId": "IMG_A3_T05_003",
       "description": "桌面刮痕很深，下面落着积灰。站着看不清桌脚后面，得改变视角。",
-      "hotspots": [{ "clueId": "CLUE_A3_T05_DESK", "label": "检查旧桌和桌脚" }],
-      "links": ["LENS_A3_T05_004", "LENS_A3_T05_002"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T05_DESK",
+          "label": "检查旧桌和桌脚"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T05_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T05_004",
+          "label": "前往桌脚低处"
+        },
+        {
+          "actionId": "A3_ROUTE_T05_003_002",
+          "kind": "return",
+          "target": "LENS_A3_T05_002",
+          "label": "返回搬空的设备位"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T05_004", "title": "桌脚低处", "stance": "crouch", "assetId": "IMG_A3_T05_004",
+      "id": "LENS_A3_T05_004",
+      "title": "桌脚低处",
+      "stance": "crouch",
+      "assetId": "IMG_A3_T05_004",
       "description": "蹲下后才看见桌脚后卡着一张折起的纸。小月帮你照住光，你伸手把它取出来。",
-      "hotspots": [{ "clueId": "CLUE_A3_T05_PAPER_EDGE", "label": "蹲下取出纸片" }],
-      "links": ["LENS_A3_T05_005", "LENS_A3_T05_003"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T05_PAPER_EDGE",
+          "label": "蹲下取出纸片"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T05_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T05_005",
+          "label": "前往13aCK 纸片"
+        },
+        {
+          "actionId": "A3_ROUTE_T05_004_003",
+          "kind": "return",
+          "target": "LENS_A3_T05_003",
+          "label": "返回旧桌"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T05_005", "title": "13aCK 纸片", "stance": "approach", "assetId": "IMG_A3_T05_005",
-      "requiresClueIds": ["CLUE_A3_T05_PAPER_EDGE"],
+      "id": "LENS_A3_T05_005",
+      "title": "13aCK 纸片",
+      "stance": "approach",
+      "assetId": "IMG_A3_T05_005",
+      "requiresClueIds": [
+        "CLUE_A3_T05_PAPER_EDGE"
+      ],
       "description": "标题是 13aCK，下面依次写着：老鼠、血、草垛、木房子、玫瑰、表。它与档案室的 VVaKe 一样是一组不明词语，暂时看不出对应关系。",
-      "hotspots": [{ "clueId": "CLUE_A3_T05_13ACK_PAPER", "label": "读清并收起 13aCK 纸片" }],
-      "links": ["LENS_A3_T05_006", "LENS_A3_T05_004"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T05_13ACK_PAPER",
+          "label": "读清并收起 13aCK 纸片"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T05_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T05_006",
+          "label": "前往走廊深处的气味"
+        },
+        {
+          "actionId": "A3_ROUTE_T05_005_004",
+          "kind": "return",
+          "target": "LENS_A3_T05_004",
+          "label": "返回桌脚低处"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T05_006", "title": "走廊深处的气味", "stance": "look", "assetId": "IMG_A3_T05_006",
+      "id": "LENS_A3_T05_006",
+      "title": "走廊深处的气味",
+      "stance": "look",
+      "assetId": "IMG_A3_T05_006",
       "description": "退出广播室后，走廊更深处飘来陈油和酸臭味。那里还有一扇通往厨房的门；气味来源尚不能确定。",
-      "hotspots": [{ "clueId": "CLUE_A3_T05_KITCHEN_DIRECTION", "label": "确认厨房方向" }],
-      "links": ["LENS_A3_T05_005"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T05_KITCHEN_DIRECTION",
+          "label": "确认厨房方向"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T05_006_005",
+          "kind": "return",
+          "target": "LENS_A3_T05_005",
+          "label": "返回13aCK 纸片"
+        }
+      ]
     }
   ]
 }

@@ -1,17 +1,19 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
 import { birthdayScenes, timeline } from '../data/act4/content';
 import { answerAct4Puzzle } from '../story/act4/actions';
 import { firstLaterSceneId, lastLaterSceneId, laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
-import { taleById, taleCardById, taleCards, taleNoteIdById } from '../data/act2TalesData';
+import { taleById, taleCardById, taleCards, taleEvidenceById, taleNoteIdById } from '../data/act2TalesData';
 import { isAct2T06PageId } from '../data/browserData';
+import { libraryEntryId, libraryNoteId, libraryTargetPageId, libraryFlagIds } from '../data/act2LibraryData';
 import { getPendingStoryTransition } from '../data/storyTransitionData';
-import { act3FirstLensId, act3LensById, act3StageClueIds, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_GATE_FLAG, ACT3_STAGE_NEXT } from '../data/act3Data';
+import { act3FirstLensId, act3LensById, act3RequiredClueIds, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_GATE_FLAG, ACT3_STAGE_NEXT } from '../data/act3Data';
 import { act2T07, isAct2T07MaterialId, isAct2T07SegmentId, keyFrameById } from '../data/act2T07Data';
+import { getAct3RouteAvailability } from '../story/investigation/act3RoutePolicy';
 
 type StateListener = () => void;
 
@@ -63,7 +65,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 9 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 10 });
   }
 
   private nextZIndex(): number {
@@ -216,7 +218,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 9 });
+    this.bus.emit('progress:reset', { schemaVersion: 10 });
   }
 
   startJourney(sceneId: string): void {
@@ -326,12 +328,13 @@ export class StateManager {
     this.bus.emit('phase:changed', { phase: 'A2_T01' });
   }
 
-  /** 阶段只能沿 search → bridge → library 前进；未启动、重复或回退都无副作用。 */
+  /** 阶段只允许沿主线前进；桥头调查需要至少做过一次相关的 T01 搜索。 */
   setAct2Stage(stage: Act2ActiveStage): void {
     const current = this.act2Research.stage;
     if (!act2ActiveStages.includes(stage)) return;
     if (current === 'inactive' || current === stage) return;
     if (act2StageOrder.indexOf(stage) !== act2StageOrder.indexOf(current) + 1) return;
+    if (current === 'search' && stage === 'bridge' && this.state.game.flags.FLAG_A2_OFFLINE_RESEARCH_NEEDED !== true) return;
     if (stage === 'tales' && this.state.game.flags.FLAG_A2_BUMU_RULE_BASIC_KNOWN !== true) return;
     const phase = act2StagePhases[stage];
     this.commit({
@@ -403,6 +406,15 @@ export class StateManager {
     this.bus.emit('act2:gazette-page-opened', { pageId: id });
   }
 
+  /** 读到目标页即记录来源和表层记载；关键词标注仍是可选回看工具。 */
+  readAct2GazetteTargetPage(): void {
+    if (this.act2Research.stage !== 'library' || this.act2Research.library.currentPageId !== libraryTargetPageId) return;
+    if (this.state.game.flags[libraryFlagIds.bumuzhiFound] !== true) this.setFlag(libraryFlagIds.bumuzhiFound, true);
+    if (this.state.game.flags[libraryFlagIds.ruleKnown] !== true) this.setFlag(libraryFlagIds.ruleKnown, true);
+    this.addNotepadAutoEntry(libraryNoteId);
+    this.bus.emit('act2:gazette-entry-read', { entryId: libraryEntryId });
+  }
+
   /** 只能给正在阅读的页面加书签或取消书签。 */
   toggleGazetteBookmark(pageId: string): void {
     const library = this.act2Research.library;
@@ -446,6 +458,47 @@ export class StateManager {
     this.commitAct2Research({ tales: { collectedTaleIds: [...tales.collectedTaleIds, id] } });
     this.addNotepadAutoEntry(taleNoteIdById.get(id) ?? '');
     this.bus.emit('act2:tale-collected', { taleId: id });
+  }
+
+  /** 阅读志异后主动摘取一条证据；来源笔记随首次摘录自动登记。 */
+  toggleAct2TaleEvidence(evidenceId: string): void {
+    const id = evidenceId.trim();
+    const evidence = taleEvidenceById.get(id);
+    const tales = this.act2Research.tales;
+    if (this.act2Research.stage !== 'tales' || !evidence || !tales.readTaleIds.includes(evidence.taleId)) return;
+    const supportingEvidenceIds = tales.supportingEvidenceIds.includes(id)
+      ? tales.supportingEvidenceIds.filter((savedId) => savedId !== id)
+      : [...tales.supportingEvidenceIds, id];
+    const collectedTaleIds = tales.collectedTaleIds.includes(evidence.taleId)
+      ? tales.collectedTaleIds
+      : [...tales.collectedTaleIds, evidence.taleId];
+    this.commitAct2Research({ tales: { supportingEvidenceIds, collectedTaleIds } });
+    if (!tales.collectedTaleIds.includes(evidence.taleId)) {
+      this.addNotepadAutoEntry(taleNoteIdById.get(evidence.taleId) ?? '');
+      this.bus.emit('act2:tale-collected', { taleId: evidence.taleId });
+    }
+  }
+
+  selectAct2TaleInference(inferenceId: 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer'): void {
+    if (this.act2Research.stage !== 'tales' || !['accompanied-change', 'recovery-or-imitation', 'complete-transfer'].includes(inferenceId) || this.act2Research.tales.inferenceAcknowledged) return;
+    this.commitAct2Research({ tales: { selectedInferenceId: inferenceId } });
+  }
+
+  /** T04 暂定判断只接受跨至少两篇来源的证据，不将推测写成机制定论。 */
+  inferAct2TransferPattern(inferenceId: 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer'): 'blocked' | 'insufficient' | 'overclaim' | 'accepted' {
+    const tales = this.act2Research.tales;
+    if (this.act2Research.stage !== 'tales' || !['accompanied-change', 'recovery-or-imitation', 'complete-transfer'].includes(inferenceId)) return 'blocked';
+    this.commitAct2Research({ tales: { selectedInferenceId: inferenceId } });
+    const supportingSources = new Set(tales.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter((id): id is string => Boolean(id)));
+    if (supportingSources.size < 2) return 'blocked';
+    if (inferenceId === 'recovery-or-imitation') return 'insufficient';
+    if (inferenceId === 'complete-transfer') return 'overclaim';
+    if (tales.inferenceAcknowledged) return 'accepted';
+    this.commitAct2Research({ tales: { inferenceAcknowledged: true } });
+    this.addNotepadAutoEntry('NOTE_A2_T04_004');
+    this.setFlag('FLAG_A2_TRANSFER_RULE_INFERRED', true);
+    this.bus.emit('act2:transfer-inferred', {});
+    return 'accepted';
   }
 
   placeAct2TaleCard(cardId: string): void {
@@ -570,7 +623,37 @@ export class StateManager {
   }
 
   confirmAct2SchoolSymbolMatch(): void {
-    if (this.act2Research.stage !== 'school' || this.state.game.flags.FLAG_A1_SS_FOUND !== true || this.state.game.flags.FLAG_A2_SCHOOL_SS_FOUND !== true || !this.act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') || this.state.game.flags.FLAG_A2_SS_MATCH_CONFIRMED === true) return;
+    const school = this.act2Research.school;
+    if (this.act2Research.stage !== 'school' || this.state.game.flags.FLAG_A1_SS_FOUND !== true || this.state.game.flags.FLAG_A2_SCHOOL_SS_FOUND !== true || !school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') || school.symbolMatchConfirmed) return;
+    this.commitAct2Research({ school: { symbolMatchConfirmed: true } });
+  }
+
+  toggleAct2SchoolEvidence(evidenceId: Act2SchoolEvidenceId): void {
+    const school = this.act2Research.school;
+    if (this.act2Research.stage !== 'school') return;
+    const sourceFlags: Record<Act2SchoolEvidenceId, string> = {
+      'teacher-account': 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN',
+      'rank-record': 'FLAG_A2_SCORE_CHANGE_KNOWN',
+      'qiming-thankyou': 'FLAG_A2_QIMING_NAME_FOUND',
+    };
+    if (this.state.game.flags[sourceFlags[evidenceId]] !== true) return;
+    const selectedEvidenceIds = school.selectedEvidenceIds.includes(evidenceId)
+      ? school.selectedEvidenceIds.filter((id) => id !== evidenceId)
+      : [...school.selectedEvidenceIds, evidenceId];
+    this.commitAct2Research({ school: { selectedEvidenceIds } });
+  }
+
+  selectAct2SchoolInference(inferenceId: Act2SchoolInferenceId): void {
+    if (this.act2Research.stage !== 'school' || !['bounded-timeline', 'qiming-caused-change'].includes(inferenceId)) return;
+    this.commitAct2Research({ school: { selectedInferenceId: inferenceId } });
+  }
+
+  confirmAct2SchoolTimeline(): void {
+    const school = this.act2Research.school;
+    if (this.act2Research.stage !== 'school' || this.state.game.flags.FLAG_A2_SS_MATCH_CONFIRMED === true) return;
+    const sourceFlags: Record<Act2SchoolEvidenceId, string> = { 'teacher-account': 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'rank-record': 'FLAG_A2_SCORE_CHANGE_KNOWN', 'qiming-thankyou': 'FLAG_A2_QIMING_NAME_FOUND' };
+    const supportedEvidence = school.selectedEvidenceIds.filter((id) => this.state.game.flags[sourceFlags[id]] === true);
+    if (!school.symbolMatchConfirmed || supportedEvidence.length < 2 || school.selectedInferenceId !== 'bounded-timeline') return;
     this.setFlag('FLAG_A2_SS_MATCH_CONFIRMED', true);
     this.addNotepadAutoEntry('NOTE_A2_T05_004');
     this.bus.emit('act2:school-symbol-matched', {});
@@ -612,15 +695,18 @@ export class StateManager {
   }
 
   /** 切换当前镜头；不允许跨 T。 */
-  enterAct3Lens(lensId: string): void {
+  enterAct3Lens(lensId: string): boolean {
     const id = lensId.trim();
     const stage = this.act3.stage;
-    if (stage === 'inactive' || !id) return;
+    if (stage === 'inactive' || !id) return false;
     const lens = act3LensById(stage, id);
-    if (!lens || lens.requiresClueIds?.some((required) => !this.act3.inspectedClueIds.includes(required))) return;
+    if (!lens) return false;
+    const availability = getAct3RouteAvailability(stage, this.act3.currentLensId, id, this.act3.inspectedClueIds);
+    if (availability.state !== 'ready') return false;
     const visitedLensIds = this.act3.visitedLensIds.includes(id) ? this.act3.visitedLensIds : [...this.act3.visitedLensIds, id];
     this.commitAct3({ currentLensId: id, visitedLensIds });
     this.bus.emit('act3:lens-entered', { lensId: id });
+    return true;
   }
 
   /** 检视线索；镜头与线索必须属于当前 T。 */
@@ -650,29 +736,22 @@ export class StateManager {
     }
   }
 
-  /** 玩家主动确认阶段结论；线索、Flag 与下一阶段均由当前阶段的固定数据决定。 */
+  /** 玩家确认当前阶段结论；只记录判断，不切换地点或阶段。 */
   confirmAct3Stage(): void {
     const stage = this.act3.stage;
-    if (stage === 'inactive') return;
-    const required = act3StageClueIds(stage);
+    if (stage === 'inactive' || stage === 'T07') return;
+    const required = act3RequiredClueIds(stage);
     const id = ACT3_STAGE_COMPLETION_FLAG[stage];
     if (!required.length || !required.every((clueId) => this.act3.inspectedClueIds.includes(clueId)) || this.act3.confirmedFlagIds.includes(id)) return;
-    const gateId = ACT3_STAGE_GATE_FLAG[stage];
-    const nextStage = ACT3_STAGE_NEXT[stage];
-    const confirmedFlagIds = [...new Set([...this.act3.confirmedFlagIds, id, gateId])];
-    const nextLensId = nextStage ? act3FirstLensId(nextStage) : this.act3.currentLensId;
+    const confirmedFlagIds = [...new Set([...this.act3.confirmedFlagIds, id])];
     this.commit({
       ...this.state,
-      game: { ...this.state.game, flags: { ...this.state.game.flags, [id]: true, [gateId]: true }, phase: nextStage ? `A3_${nextStage}` as GamePhase : this.state.game.phase },
-      modules: { ...this.state.modules, act3: { ...this.act3, confirmedFlagIds, stage: nextStage ?? stage, currentLensId: nextLensId, visitedLensIds: nextLensId && !this.act3.visitedLensIds.includes(nextLensId) ? [...this.act3.visitedLensIds, nextLensId] : this.act3.visitedLensIds } },
+      game: { ...this.state.game, flags: { ...this.state.game.flags, [id]: true } },
+      modules: { ...this.state.modules, act3: { ...this.act3, confirmedFlagIds } },
     });
     this.bus.emit('act3:stage-confirmed', { flagId: id });
     if (stage === 'T03') this.addNotepadAutoEntry('NOTE_A3_T03_001');
     if (stage === 'T04') this.addNotepadAutoEntry('NOTE_A3_T04_001');
-    if (nextStage) {
-      this.bus.emit('act3:stage-changed', { stage: nextStage });
-      this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
-    }
   }
 
   /** 只有 T06 收束且玩家主动点击入口才进入 T07；重复点击无副作用。 */
@@ -722,16 +801,20 @@ export class StateManager {
   }
 
   /** 只能核对已经截到的帧；比对结果持久化，缩放与开合只是瞬时状态。 */
-  compareAct2T07TempleFrame(frameId: string): void {
+  compareAct2T07TempleFrame(frameId: string, featureId: string): boolean {
     const id = frameId.trim();
+    const frame = keyFrameById.get(id);
     const t07 = this.act2Research.t07;
-    if (this.act2Research.stage !== 'finale' || !t07.capturedFrameIds.includes(id) || t07.comparedFrameIds.includes(id)) return;
+    if (this.act2Research.stage !== 'finale' || !frame || !t07.capturedFrameIds.includes(id) || t07.comparedFrameIds.includes(id)) return false;
+    if (!act2T07.comparison.featureOptions.some((option) => option.id === featureId)) return false;
+    if (!frame.supportsExteriorMatch || featureId !== act2T07.comparison.matchFeatureId) return false;
     this.commitAct2Research({ t07: { comparedFrameIds: [...t07.comparedFrameIds, id] } });
     this.bus.emit('act2:t07-frame-compared', { frameId: id });
+    return true;
   }
 
   confirmAct2T07TempleFrame(): void {
-    if (this.act2Research.stage !== 'finale' || this.act2Research.t07.comparedFrameIds.length === 0) return;
+    if (this.act2Research.stage !== 'finale' || !this.act2Research.t07.comparedFrameIds.some((id) => keyFrameById.get(id)?.supportsExteriorMatch === true)) return;
     if (this.state.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND === true) return;
     this.setFlag('FLAG_A2_TEMPLE_FRAME_FOUND', true);
     this.addNotepadAutoEntry('NOTE_A2_T07_002');
@@ -746,11 +829,11 @@ export class StateManager {
     this.addNotepadAutoEntry('NOTE_A2_T07_001');
   }
 
-  /** 地点结论要求合影双 S、有效截图比对与视频主要片段全部亲自完成。 */
+  /** 地点判断需要主动核对合影双 S 与视频截图中的石质轮廓；完整播放保留为可选行为。 */
   inferAct2T07Location(): void {
     const flags = this.state.game.flags;
     if (this.act2Research.stage !== 'finale') return;
-    if (flags.FLAG_A2_PROMO_PHOTO_SS_FOUND !== true || flags.FLAG_A2_TEMPLE_FRAME_FOUND !== true || flags.FLAG_A2_PROMO_VIDEO_WATCHED !== true) return;
+    if (flags.FLAG_A2_PROMO_PHOTO_SS_FOUND !== true || flags.FLAG_A2_TEMPLE_FRAME_FOUND !== true) return;
     if (flags.FLAG_A2_QIMING_LOCATION_INFERRED === true) return;
     this.setFlag('FLAG_A2_QIMING_LOCATION_INFERRED', true);
     this.addNotepadAutoEntry('NOTE_A2_T07_003');
@@ -778,15 +861,31 @@ export class StateManager {
     const stage = this.act3.stage;
     if (stage === 'inactive') return;
     const nextStage = ACT3_STAGE_NEXT[stage];
-    if (!nextStage || this.state.game.flags[ACT3_STAGE_COMPLETION_FLAG[stage]] !== true || this.state.game.flags[ACT3_STAGE_GATE_FLAG[stage]] !== true) return;
+    if (stage === 'T07' || !nextStage || this.state.game.flags[ACT3_STAGE_COMPLETION_FLAG[stage]] !== true
+      || !this.act3.confirmedFlagIds.includes(ACT3_STAGE_COMPLETION_FLAG[stage])) return;
     const nextLensId = act3FirstLensId(nextStage);
+    const gateId = ACT3_STAGE_GATE_FLAG[stage];
     this.commit({
       ...this.state,
-      game: { ...this.state.game, phase: `A3_${nextStage}` as GamePhase },
+      game: { ...this.state.game, flags: { ...this.state.game.flags, [gateId]: true }, phase: `A3_${nextStage}` as GamePhase },
       modules: { ...this.state.modules, act3: { ...this.act3, stage: nextStage, currentLensId: nextLensId, visitedLensIds: this.act3.visitedLensIds.includes(nextLensId) ? this.act3.visitedLensIds : [...this.act3.visitedLensIds, nextLensId] } },
     });
     this.bus.emit('act3:stage-changed', { stage: nextStage });
     this.bus.emit('phase:changed', { phase: `A3_${nextStage}` as GamePhase });
+  }
+
+  /** T07 取出并确认笔记后，玩家主动离开遗址；离开事实只在此时记录。 */
+  leaveAct3Stage(): void {
+    if (this.act3.stage !== 'T07' || this.state.game.flags.FLAG_A3_SITE_EXITED === true) return;
+    if (!act3RequiredClueIds('T07').every((clueId) => this.act3.inspectedClueIds.includes(clueId))) return;
+    const completionId = ACT3_STAGE_COMPLETION_FLAG.T07;
+    const gateId = ACT3_STAGE_GATE_FLAG.T07;
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, flags: { ...this.state.game.flags, [completionId]: true, [gateId]: true } },
+      modules: { ...this.state.modules, act3: { ...this.act3, confirmedFlagIds: [...new Set([...this.act3.confirmedFlagIds, completionId])] } },
+    });
+    this.bus.emit('act3:stage-confirmed', { flagId: completionId });
   }
 
   /** 第三幕终点只是入口；玩家在回看笔记时主动开始第四幕。 */
@@ -821,8 +920,8 @@ export class StateManager {
     if (stageByPuzzle[puzzleId] !== act4.stage) return false;
     if (act4.solvedPuzzleIds.includes(puzzleId)) return true;
     if (!answerAct4Puzzle(puzzleId, selections)) return false;
-    if (puzzleId === 'A4_P01' && ![2, 4, 8].every((page) => act4.readNotebookPages.includes(page))) return false;
-    if (puzzleId === 'A4_P04' && !['protagonist', 'xiaoyue'].every((id) => act4.checkedMailRecipients.includes(id))) return false;
+
+    if (puzzleId === 'A4_P04') return false;
     if (puzzleId === 'A4_P05' && !act4.solvedPuzzleIds.includes('A4_P04')) return false;
     if (puzzleId === 'A4_P06' && !act4.unlockedAccountIds.includes('weibo')) return false;
     if (puzzleId === 'A4_P09' && (!act4.unlockedAccountIds.includes('mail') || !act4.viewedWakeMail)) return false;
@@ -830,7 +929,7 @@ export class StateManager {
     if (puzzleId === 'A4_P12' && birthdayScenes.findIndex((scene) => scene.id === act4.birthdayNodeId) < 3) return false;
     const node = act4.laterNodeId;
     const seen = act4.seenLaterNodeIds;
-    if (puzzleId === 'A4_P13' && !seen.includes('A4_T06_BROADCAST')) return false;
+    if (puzzleId === 'A4_P13') return false;
     if (puzzleId === 'A4_P14' && !seen.includes('A4_T06_BROADCAST')) return false;
     if (puzzleId === 'A4_P15' && node !== 'A4_T06_CONFINEMENT') return false;
     if (puzzleId === 'A4_P16' && node !== 'A4_T07_MIRROR') return false;
@@ -850,15 +949,27 @@ export class StateManager {
 
   loginAct4Accounts(password: string): boolean {
     const act4 = this.state.modules.act4;
-    if (act4.stage !== 'T02' || !act4.solvedPuzzleIds.includes('A4_P04') || password !== '20200419') return false;
-    if (!act4.unlockedAccountIds.includes('weibo') || !act4.unlockedAccountIds.includes('mail')) this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, unlockedAccountIds: ['weibo', 'mail'] } } });
+    if (act4.stage !== 'T02' || !['protagonist', 'xiaoyue'].every((id) => act4.checkedMailRecipients.includes(id)) || password !== '20200419') return false;
+    if (!act4.unlockedAccountIds.includes('weibo') || !act4.unlockedAccountIds.includes('mail') || !act4.solvedPuzzleIds.includes('A4_P04')) this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, solvedPuzzleIds: act4.solvedPuzzleIds.includes('A4_P04') ? act4.solvedPuzzleIds : [...act4.solvedPuzzleIds, 'A4_P04'], unlockedAccountIds: ['weibo', 'mail'] } } });
     return true;
   }
 
   readAct4Timeline(date: string): void {
     const act4 = this.state.modules.act4;
-    if (act4.stage !== 'T03' || !act4.solvedPuzzleIds.includes('A4_P06') || !timeline.some(([id]) => id === date) || act4.timelineReadDates.includes(date)) return;
+    if (act4.stage !== 'T03' || !timeline.some(([id]) => id === date) || act4.timelineReadDates.includes(date)) return;
     this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, timelineReadDates: [...act4.timelineReadDates, date] } } });
+  }
+
+  confirmAct4BroadcastPeriod(period: 'morning' | 'night', groupId: string): boolean {
+    const act4 = this.state.modules.act4;
+    const expected = period === 'morning' ? '13aCK' : 'VVaKe';
+    if (act4.stage !== 'T06' || act4.laterNodeId !== 'A4_T06_BROADCAST' || groupId !== expected) return false;
+    if (act4.broadcastPeriodsConfirmed.includes(period)) return true;
+    const broadcastPeriodsConfirmed = [...act4.broadcastPeriodsConfirmed, period];
+    const solvedPuzzleIds = broadcastPeriodsConfirmed.length === 2 && !act4.solvedPuzzleIds.includes('A4_P13')
+      ? [...act4.solvedPuzzleIds, 'A4_P13'] : act4.solvedPuzzleIds;
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, broadcastPeriodsConfirmed, solvedPuzzleIds } } });
+    return true;
   }
 
   visitAct4BirthdayNode(nodeId: string): void {
@@ -876,7 +987,6 @@ export class StateManager {
     const required = ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'];
     const index = sequence.indexOf(act4.stage);
     if (index < 0 || !act4.solvedPuzzleIds.includes(required[index])) return;
-    if (act4.stage === 'T01' && !Array.from({ length: 9 }, (_, page) => page + 1).every((page) => act4.readNotebookPages.includes(page))) return;
     if (act4.stage === 'T02' && act4.unlockedAccountIds.length !== 2) return;
     if (act4.stage === 'T03' && !act4.timelineReadDates.includes('04-19')) return;
     if (act4.stage === 'T05' && act4.birthdayNodeId !== 'taken') return;
@@ -900,12 +1010,11 @@ export class StateManager {
     const scenes = laterScenesByStage(stage);
     const currentIndex = scenes.findIndex((scene) => scene.id === act4.laterNodeId);
     if (currentIndex < 0 || scenes[currentIndex + 1]?.id !== id) return;
-    if (act4.stage === 'T06' && id === 'A4_T06_ROOMMATE' && !act4.solvedPuzzleIds.includes('A4_P13')) return;
+    if (act4.stage === 'T06' && id === 'A4_T06_ROOMMATE' && !['morning', 'night'].every((period) => act4.broadcastPeriodsConfirmed.includes(period as 'morning' | 'night'))) return;
     if (act4.stage === 'T07' && id === 'A4_T07_KITCHEN' && !act4.solvedPuzzleIds.includes('A4_P16')) return;
     if (act4.stage === 'T08' && id === 'A4_T08_MIRROR' && !act4.solvedPuzzleIds.includes('A4_P18')) return;
-    if (act4.stage === 'T09' && id === 'A4_T09_EXIT' && !act4.solvedPuzzleIds.includes('A4_P21')) return;
+    if (act4.stage === 'T09' && id === 'A4_T09_EXIT' && act4.packageStep !== 3) return;
     if (act4.stage === 'T09' && id === 'A4_T09_BLACKOUT' && act4.broadcastIndex !== 6) return;
-    if (act4.stage === 'T10' && id === 'A4_T10_CAFE' && !act4.solvedPuzzleIds.includes('A4_P23')) return;
     this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, laterNodeId: id, seenLaterNodeIds: act4.seenLaterNodeIds.includes(id) ? act4.seenLaterNodeIds : [...act4.seenLaterNodeIds, id] } } });
   }
 
@@ -930,11 +1039,12 @@ export class StateManager {
   advanceAct4LaterStage(): void {
     const act4 = this.state.modules.act4;
     const sequence: LaterStage[] = ['T06','T07','T08','T09','T10'];
-    const required = ['A4_P13','A4_P16','A4_P18','A4_P21','A4_P23'];
+    const required = ['A4_P13','A4_P16','A4_P18',null,null] as const;
     const index = sequence.indexOf(act4.stage as LaterStage);
-    if (index < 0 || act4.laterNodeId !== lastLaterSceneId[sequence[index]] || !act4.solvedPuzzleIds.includes(required[index])) return;
+    if (index < 0 || act4.laterNodeId !== lastLaterSceneId[sequence[index]] || (required[index] !== null && !act4.solvedPuzzleIds.includes(required[index]))) return;
+    if (act4.stage === 'T06' && !['morning', 'night'].every((period) => act4.broadcastPeriodsConfirmed.includes(period as 'morning' | 'night'))) return;
     if (index > 0 && this.state.game.flags[`FLAG_A4_${sequence[index - 1]}_COMPLETE`] !== true) return;
-    if (act4.stage === 'T09' && act4.broadcastIndex !== 6) return;
+    if (act4.stage === 'T09' && (act4.packageStep !== 3 || act4.broadcastIndex !== 6)) return;
     if (act4.stage === 'T10' && !act4.finalMailOpened) return;
     const stageFlag = `FLAG_A4_${act4.stage}_COMPLETE`;
     const nextStage = sequence[index + 1];

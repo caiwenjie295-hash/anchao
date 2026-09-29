@@ -8,9 +8,13 @@
   --act2-bridge-line: #d8d0bd;
   --act2-bridge-accent: #8a6d3b;
   --act2-bridge-stone: #e6dfcd;
-  max-width: 960px;
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 1120px);
+  max-width: 1120px;
+  min-height: 100%;
   margin: 0 auto;
-  padding: 24px 20px 40px;
+  padding: 18px 20px 28px;
   display: flex;
   flex-direction: column;
   gap: 20px;

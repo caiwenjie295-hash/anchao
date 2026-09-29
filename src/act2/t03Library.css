@@ -2,7 +2,7 @@
    ── 布局模型 ────────────────────────────────────────────────────────────────
    根级 .act2-library 是唯一的主纵向滚动容器（position: fixed; inset: 0; overflow: auto），
    四个直接子行（标题 / 主体 / 完成结论 / 返回按钮）全部内容驱动：
-     grid-template-rows: auto auto auto auto; align-content: start;
+     grid-template-rows: auto auto auto; align-content: start;
    任何断点都不再使用 minmax(0, 1fr) 固定主体行，从根本上消除
    “阅读器内容溢出行高 → 覆盖完成结论与返回按钮”的重叠缺陷。
    主体内部：≥1201px 三栏（目录 / 卷册 / 阅读器），≤1024px 双栏（阅读器独占下一行），
@@ -24,15 +24,18 @@
   --act2-library-muted: #b8a88c;
   --act2-library-paper-grain: repeating-linear-gradient(0deg, rgba(124, 100, 62, .05) 0 1px, transparent 1px 3px),
     repeating-linear-gradient(90deg, rgba(124, 100, 62, .04) 0 1px, transparent 1px 4px);
-  position: fixed;
-  z-index: 12000;
-  inset: 0;
+  position: relative;
+  z-index: auto;
+  inset: auto;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
   display: grid;
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto auto;
   align-content: start;
   gap: clamp(14px, 2vw, 22px);
   padding: clamp(14px, 2.4vw, 30px);
-  overflow: auto;
+  overflow: visible;
   color: var(--act2-library-paper);
   background:
     radial-gradient(ellipse 46% 40% at 62% 6%, var(--act2-library-lamp), transparent 68%),
@@ -373,8 +376,6 @@ img.act2-library__shelf-art { display: block; object-fit: cover; object-position
 }
 .act2-library__conclusion-detail { max-width: 34em; margin: 0; color: var(--act2-library-ink-soft); font-size: 12px; line-height: 1.75; text-align: justify; }
 
-.act2-library__footer { display: flex; justify-content: flex-end; }
-.act2-library__return { min-height: 42px; padding: 0 20px; font-size: 13px; }
 .act2-library__continue-tales { min-height: 44px; margin-top: 14px; padding: 0 16px; border: 1px solid rgba(120, 98, 68, .55); border-radius: 3px; color: var(--act2-library-ink); background: #dac69b; cursor: pointer; font: inherit; font-size: 13px; }
 
 /* ── 断点 ──────────────────────────────────────────────────────────────────
@@ -399,13 +400,11 @@ img.act2-library__shelf-art { display: block; object-fit: cover; object-position
   .act2-library__zoom-in,
   .act2-library__bookmark,
   .act2-library__excerpt-button,
-  .act2-library__return { min-height: 44px; }
   .act2-library__controls { flex-direction: column; align-items: stretch; }
   .act2-library__pager,
   .act2-library__tools { flex-wrap: wrap; }
   .act2-library__keyword-list { grid-template-columns: minmax(0, 1fr); }
   .act2-library__footer { justify-content: stretch; }
-  .act2-library__return { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -419,7 +418,6 @@ img.act2-library__shelf-art { display: block; object-fit: cover; object-position
   .act2-library__zoom-in,
   .act2-library__bookmark,
   .act2-library__excerpt-button,
-  .act2-library__return { transition-duration: .001ms; }
   .act2-library__section:hover,
   .act2-library__section[aria-current="true"] { transform: none; }
 }
