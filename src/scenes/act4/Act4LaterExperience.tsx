@@ -11,6 +11,7 @@ import { T07Experience } from './T07Experience';
 import { T08Experience } from './T08Experience';
 import { T09Experience } from './T09Experience';
 import { T10Experience } from './T10Experience';
+import { photoCaptionLead } from './photoCaption';
 import '../../act4/act4.css';
 
 const labels: Record<LaterStage, string> = {
@@ -62,7 +63,7 @@ export function Act4LaterExperience({ manager = stateManager, onExit }: { manage
         hotspots={[{ id: `clue:${displayed.id}`, ...layout.focus, onActivate: () => { setDetailOpen(true); setRouteNotice(''); setSelectedNote(''); } }, ...(layout.details ?? []).map((point, index) => ({ id: `clue:${displayed.id}:${index}`, ...point, onActivate: () => { setDetailOpen(true); setRouteNotice(''); setSelectedNote(point.note ?? ''); } }))]}
         routes={[{ id: `route:${displayed.id}`, ...layout.route, disabled: completed && !reviewId, onActivate: goForward }]}
         transitionDirection={reviewId ? 'back' : 'forward'}>
-        <div className="a4-photo-caption"><strong>{displayed.title}</strong><p>{displayed.text}</p></div>
+        <div className="a4-photo-caption"><strong>{displayed.title}</strong><p>{photoCaptionLead(displayed.text)}</p></div>
       </PhotoViewport>
     </section>
     {completed && <p className="a4-done">第四幕完结。邮件与已见片段可回看；小 A 的最终去向没有确证。</p>}
