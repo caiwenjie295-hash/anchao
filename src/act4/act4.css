@@ -220,6 +220,9 @@
 .a4-grid--old-mail .a4-mail-reading p { color: #263342; }
 .a4-grid--old-mail .a4-mail-reading button { color: #fff; }
 .a4-grid--social { grid-template-columns: minmax(0, 1fr); }
-.a4-grid--social > .a4-card:nth-child(2) { max-width: 100%; padding: 18px; background: #26343ac9; backdrop-filter: blur(12px); }
+.a4-social-discussion { max-width: 100%; padding: 18px; color: #263342; background: #f7f9fc; border-radius: 10px; }
+.a4-social-discussion .a4-puzzle { border-color: #d9e3ea; }
+.a4-social-discussion .a4-done { color: #276c50; }
+.a4-social-discussion .a4-hint { color: #89551c; }
 .a4-grid--mail > .a4-card:nth-child(2) { background: #26343ac9; backdrop-filter: blur(12px); }
 @media (max-width: 800px) { .a4-grid--old-mail { grid-template-columns: 1fr; } }

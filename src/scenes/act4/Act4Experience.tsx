@@ -312,8 +312,8 @@ export function Act4Experience({
               </>
             )}
           </section>
-          <section className="a4-card">
-            <h2>读完后的讨论</h2>
+          <section className="a4-social-discussion">
+            <h2>时间线里的标记与讨论</h2>
             <p>
               小月：“他想过我们。”
               我们只从这些帖子看见他的生活与记忆变化，还不知道原因。
