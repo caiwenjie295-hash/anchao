@@ -15,6 +15,7 @@ import { Act4SceneImage } from './Act4SceneImage';
 import { PhotoViewport } from '../../components/PhotoViewport';
 import { assetLoader } from '../../core/assetLoader';
 import { act4PhotoLayout } from '../../data/act4/act4PhotoLayout';
+import { photoCaptionLead } from './photoCaption';
 import "../../act4/act4.css";
 
 const routeChoices = [
@@ -449,7 +450,7 @@ export function Act4Experience({
               else if (birthday.id === 'door' && !solved('A4_P11')) { setPhotoDetail(true); setPhotoNotice('先听清门缝里的两句话。'); }
               else manager.visitAct4BirthdayNode(birthdayScenes[birthdayIndex + 1].id);
             } }]}>
-            <div className="a4-photo-caption"><strong>{birthday.title}</strong><p>{birthday.text}</p></div>
+            <div className="a4-photo-caption"><strong>{birthday.title}</strong><p>{photoCaptionLead(birthday.text)}</p></div>
           </PhotoViewport>
         </section>
         {photoDetail && <div className="a4-detail-backdrop" onClick={() => setPhotoDetail(false)}><div className="a4-detail" role="dialog" aria-modal="true" aria-label={birthday.title} onKeyDown={event => { if (event.key === 'Escape') setPhotoDetail(false); }} onClick={event => event.stopPropagation()}><div className="a4-detail-head"><h2>{birthday.title}</h2><button type="button" autoFocus onClick={() => setPhotoDetail(false)}>关闭，返回画面</button></div>{photoNotice && <p role="status" className="a4-hint">{photoNotice}</p>}
