@@ -16,7 +16,7 @@ export function T06Experience({ state, manager }: { state: Act4State; manager: S
         { id: 'day-broadcast', label: '早读后广播' },
       ]} />
       {solved('A4_P13') && <p className="a4-done">早间广播与脑雾同现，睡前播放另一组六词；原因尚不能确认。</p>}
-      <aside className="a4-recap"><strong>玩家回看 / 证据对照</strong><p>以下是玩家对第三幕纸片的回看，并非 2014 年小 A 手中的实物。</p>
+      <aside className="a4-recap"><strong>另一条线索</strong><p>后来在启明旧址找到的两张纸，写着同样的词。那时的我还不知道它们会被人发现。</p>
         <Puzzle id="A4_P14" title="两张纸的回声（可选）" manager={manager} solved={solved('A4_P14')} choices={[{ id: 'paper-match', label: '两组词分别与第三幕纸片相同' }]} />
       </aside>
     </>}

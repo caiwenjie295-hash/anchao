@@ -11,6 +11,11 @@ import { act4OldMails } from "../../data/act4/mail";
 import { birthdayImageSlots } from "../../data/act4/assets";
 import { Puzzle } from "./Act4Puzzle";
 import { Act4LaterExperience } from './Act4LaterExperience';
+import { Act4SceneImage } from './Act4SceneImage';
+import { PhotoViewport } from '../../components/PhotoViewport';
+import { assetLoader } from '../../core/assetLoader';
+import { act4PhotoLayout } from '../../data/act4/act4PhotoLayout';
+import { photoCaptionLead } from './photoCaption';
 import "../../act4/act4.css";
 
 const routeChoices = [
@@ -44,9 +49,12 @@ export function Act4Experience({
   const [loginMessage, setLoginMessage] = useState("");
   const [openedPost, setOpenedPost] = useState("04-03");
   const [openedMail, setOpenedMail] = useState("ordinary");
+  const [openedOldMail, setOpenedOldMail] = useState<string>(act4OldMails[0].id);
   const [reviewBirthdayIndex, setReviewBirthdayIndex] = useState<number | null>(
     null,
   );
+  const [photoDetail, setPhotoDetail] = useState(false);
+  const [photoNotice, setPhotoNotice] = useState('');
   const completedT05 = state.game.flags.FLAG_A4_T05_COMPLETE === true;
   const birthday =
     completedT05 && reviewBirthdayIndex !== null
@@ -54,6 +62,7 @@ export function Act4Experience({
       : (birthdayScenes.find((scene) => scene.id === act4.birthdayNodeId) ??
         birthdayScenes[0]);
   const birthdayIndex = birthdayScenes.indexOf(birthday);
+  useEffect(() => { setPhotoDetail(false); setPhotoNotice(''); }, [stage]);
   useEffect(() => {
     if (stage === "T01") manager.readAct4NotebookPage(page);
     if (stage === "T03" && solved("A4_P06"))
@@ -66,7 +75,7 @@ export function Act4Experience({
     <main className="a4" aria-label="第四幕 王澳">
       <header className="a4-header">
         <div>
-          <small>第四幕 · 王澳 · {stage}</small>
+          <small>第四幕 · 王澳</small>
           <h1>
             {stage === "T01"
               ? "县城夜晚"
@@ -84,6 +93,15 @@ export function Act4Experience({
         </button>
       </header>
       {stage === "T01" && (
+        <>
+        <section className="a4-photo-stage" data-asset-id="IMG_A4_T01_001">
+          <PhotoViewport sceneKey="A4_T01_ROOM" imageUrl={assetLoader.get("IMG_A4_T01_001")?.src} imageAlt="酒店桌面上的小 A 笔记与旧址照片"
+            hotspots={[{ id: 'clue:notes', ...act4PhotoLayout.IMG_A4_T01_001.focus, onActivate: () => { setPhotoNotice(''); setPhotoDetail(true); } }, ...(act4PhotoLayout.IMG_A4_T01_001.details ?? []).map((point, index) => ({ id: `clue:room:${index}`, ...point, onActivate: () => { setPhotoNotice(point.note ?? ''); setPhotoDetail(true); } }))]}
+            routes={[{ id: 'route:mail', ...act4PhotoLayout.IMG_A4_T01_001.route, onActivate: () => { if (solved("A4_P01") && act4.readNotebookPages.length === 9) advance(); else { setPhotoDetail(true); setPhotoNotice("先读完九页，并整理凌晨的路线。"); } } }]}>
+            <div className="a4-photo-caption"><strong>县城酒店 · 深夜</strong><p>小月把照片摊开，我把塑料袋里的笔记放在桌上。</p></div>
+          </PhotoViewport>
+        </section>
+        {photoDetail && <div className="a4-detail-backdrop" onClick={() => setPhotoDetail(false)}><div className="a4-detail" role="dialog" aria-modal="true" aria-label="九页笔记" onKeyDown={event => { if (event.key === 'Escape') setPhotoDetail(false); }} onClick={event => event.stopPropagation()}><div className="a4-detail-head"><h2>小 A 的笔记</h2><button type="button" autoFocus onClick={() => setPhotoDetail(false)}>关闭，返回桌面</button></div>{photoNotice && <p role="status" className="a4-hint">{photoNotice}</p>}
         <div className="a4-grid">
           <section className="a4-card">
             <p>
@@ -91,6 +109,7 @@ export function Act4Experience({
             </p>
             <p>小月：“先把他的笔记看完吧。”</p>
             <div className="a4-paper" data-asset-id="IMG_A4_T01_001">
+              <Act4SceneImage assetId="IMG_A4_T01_001" alt="小 A 留下的笔记" />
               <span>小 A 的笔记 · {page}/9</span>
               <p>{notebookPages[page - 1]}</p>
             </div>
@@ -191,34 +210,17 @@ export function Act4Experience({
               </>
             )}
           </section>
-        </div>
+        </div></div></div>}
+        </>
       )}
       {stage === "T02" && (
-        <div className="a4-grid">
+        <div className="a4-grid a4-grid--old-mail">
           <section className="a4-card">
-            <p>小月和我把各自收到的旧邮件并排打开，核对那一天的日期。</p>
-            <div className="a4-mails">
-              {act4OldMails.map((mail) => (
-                <article key={mail.id} className="a4-paper">
-                  <strong>
-                    {mail.label} · {mail.from}
-                  </strong>
-                  <p>
-                    主题：{mail.subject}
-                    <br />
-                    时间：{mail.sentAt.slice(0, 10)} {mail.sentAt.slice(11, 16)}
-                  </p>
-                  <p>{mail.body}</p>
-                  <button
-                    type="button"
-                    onClick={() => manager.checkAct4OldMail(mail.id)}
-                  >
-                    核对日期 {mail.sentAt.slice(0, 10)}{" "}
-                    {act4.checkedMailRecipients.includes(mail.id) && "✓"}
-                  </button>
-                </article>
-              ))}
-            </div>
+            <p>小月和我各自打开旧收件箱，核对那一天的日期。</p>
+            <div className="a4-mail-brand"><strong>旧邮件</strong><span>2020 年 4 月</span></div>
+            <div className="a4-mail-shell"><nav className="a4-mail-folders" aria-label="邮箱文件夹"><strong>文件夹</strong><span>收件箱</span><span>已发送</span></nav><div className="a4-mail-main"><div className="a4-mail-toolbar">收件箱 <span>2 封来信</span></div><div className="a4-mail-list">
+              {act4OldMails.map(mail => <button type="button" key={mail.id} aria-current={openedOldMail === mail.id ? 'true' : undefined} onClick={() => setOpenedOldMail(mail.id)}><strong>{mail.from}</strong><span>{mail.label} · {mail.subject}</span><time>{mail.sentAt.slice(5, 16)}</time></button>)}
+            </div>{act4OldMails.filter(mail => mail.id === openedOldMail).map(mail => <article key={mail.id} className="a4-mail-reading"><h2>{mail.subject}</h2><p>发件人：{mail.from}<br />收件：{mail.label}</p><p>{mail.body}</p><button type="button" onClick={() => manager.checkAct4OldMail(mail.id)}>核对这封信的时间：{mail.sentAt.slice(0, 10)} {mail.sentAt.slice(11, 16)} {act4.checkedMailRecipients.includes(mail.id) && '✓'}</button></article>)}</div></div>
             <p>末页原文：“密码是一样的”“如果真的你们，那么不要担心那一天。”</p>
           </section>
           <section className="a4-card">
@@ -280,9 +282,9 @@ export function Act4Experience({
         </div>
       )}
       {stage === "T03" && (
-        <div className="a4-grid">
+        <div className="a4-grid a4-grid--social">
           <section className="a4-card">
-            <p>离线微博档案 · 王澳 · 2020 年 4 月</p>
+            <div className="a4-social-profile"><div className="a4-social-cover" /><div className="a4-social-avatar" aria-hidden="true">澳</div><div><strong>王澳</strong><span>@Wangao · 2020 年 4 月加入</span><p>写下最近的事，也许有一天能想明白。</p></div></div>
             <Puzzle
               id="A4_P06"
               title="三篇代表性微博排序"
@@ -292,30 +294,27 @@ export function Act4Experience({
             />
             {solved("A4_P06") && (
               <>
-                <div className="a4-page-list">
+                <div className="a4-social-timeline" aria-label="王澳的动态">
                   {timeline.map(([date]) => (
                     <button
                       type="button"
                       key={date}
+                      className="a4-social-post"
+                      aria-current={openedPost === date ? 'true' : undefined}
                       onClick={() => {
                         setOpenedPost(date);
                         manager.readAct4Timeline(date);
                       }}
                     >
-                      {date}
-                      {act4.timelineReadDates.includes(date) && " ✓"}
+                      <span className="a4-social-post__avatar" aria-hidden="true">澳</span><span><strong>王澳 <small>@Wangao · 2020-{date}</small></strong><span>{timeline.find(([itemDate]) => itemDate === date)?.[1]}</span>{act4.timelineReadDates.includes(date) && <small>已读</small>}</span>
                     </button>
                   ))}
                 </div>
-                <article className="a4-paper">
-                  <strong>2020-{openedPost}</strong>
-                  <p>{timeline.find(([date]) => date === openedPost)?.[1]}</p>
-                </article>
               </>
             )}
           </section>
-          <section className="a4-card">
-            <h2>读完后的讨论</h2>
+          <section className="a4-social-discussion">
+            <h2>时间线里的标记与讨论</h2>
             <p>
               小月：“他想过我们。”
               我们只从这些帖子看见他的生活与记忆变化，还不知道原因。
@@ -359,29 +358,27 @@ export function Act4Experience({
         </div>
       )}
       {stage === "T04" && (
-        <div className="a4-grid">
+        <div className="a4-grid a4-grid--mail">
           <section className="a4-card">
-            <p>离线邮箱 · Wangao@163.com</p>
-            <div className="a4-page-list">
-              <button type="button" onClick={() => setOpenedMail("ordinary")}>
-                普通邮件 · 招聘 / 广告
-              </button>
+            <div className="a4-mail-brand"><strong>王澳的邮箱</strong><span>Wangao@163.com</span></div>
+            <div className="a4-mail-shell"><nav className="a4-mail-folders" aria-label="邮箱文件夹"><strong>文件夹</strong><span>收件箱</span><span>已发送</span><span>草稿箱</span></nav><div className="a4-mail-main"><div className="a4-mail-toolbar">收件箱 <span>按时间排序</span></div><div className="a4-mail-list" role="group" aria-label="邮件列表">
+              <button type="button" aria-current={openedMail === 'ordinary' ? 'true' : undefined} onClick={() => setOpenedMail("ordinary")}><strong>校园招聘通知</strong><span>面试安排与岗位信息</span><time>04-08</time></button>
+              <button type="button" onClick={() => setOpenedMail("ordinary")}><strong>生活服务</strong><span>本月优惠活动</span><time>04-06</time></button>
               <button
                 type="button"
+                aria-current={openedMail === 'wake' ? 'true' : undefined}
                 onClick={() => {
                   setOpenedMail("wake");
                   manager.viewAct4WakeMail();
                 }}
               >
-                启明 · VVaKe · 04-03 00:00
+                <strong>启明</strong><span>VVaKe</span><time>04-03 00:00</time>
               </button>
             </div>
             {openedMail === "ordinary" ? (
-              <p className="a4-paper">
-                收件箱里有招聘通知、面试通知和广告。那封启明来信藏在这些普通邮件间。
-              </p>
+              <article className="a4-mail-reading"><h2>校园招聘通知</h2><p>发件人：校园招聘</p><p>面试时间及岗位安排已经更新，请登录招聘页面查看。</p></article>
             ) : (
-              <article className="a4-paper">
+              <article className="a4-mail-reading">
                 <strong>
                   主题：VVaKe
                   <br />
@@ -391,7 +388,7 @@ export function Act4Experience({
                 </strong>
                 <p>{wakeWords.join(" · ")}</p>
               </article>
-            )}
+            )}</div></div>
           </section>
           <section className="a4-card">
             <h2>第三幕带回的两张纸</h2>
@@ -443,20 +440,33 @@ export function Act4Experience({
         </div>
       )}
       {stage === "T05" && (
+        <>
+        <section className="a4-photo-stage" data-asset-id={birthdayImageSlots[birthdayIndex].assetId}>
+          <PhotoViewport sceneKey={birthday.id} imageUrl={assetLoader.get(birthdayImageSlots[birthdayIndex].assetId)?.src} imageAlt={birthdayImageSlots[birthdayIndex].alt}
+            hotspots={[{ id: `clue:${birthday.id}`, ...act4PhotoLayout[birthdayImageSlots[birthdayIndex].assetId].focus, onActivate: () => { setPhotoNotice(''); setPhotoDetail(true); } }, ...(act4PhotoLayout[birthdayImageSlots[birthdayIndex].assetId].details ?? []).map((point, index) => ({ id: `clue:${birthday.id}:${index}`, ...point, onActivate: () => { setPhotoNotice(point.note ?? ''); setPhotoDetail(true); } }))]}
+            routes={[{ id: `route:${birthday.id}`, ...act4PhotoLayout[birthdayImageSlots[birthdayIndex].assetId].route, onActivate: () => {
+              if (completedT05) { if (reviewBirthdayIndex !== null) setReviewBirthdayIndex(null); else manager.startAct4T06(); }
+              else if (birthday.id === 'taken') advance();
+              else if (birthday.id === 'door' && !solved('A4_P11')) { setPhotoDetail(true); setPhotoNotice('先听清门缝里的两句话。'); }
+              else manager.visitAct4BirthdayNode(birthdayScenes[birthdayIndex + 1].id);
+            } }]}>
+            <div className="a4-photo-caption"><strong>{birthday.title}</strong><p>{photoCaptionLead(birthday.text)}</p></div>
+          </PhotoViewport>
+        </section>
+        {photoDetail && <div className="a4-detail-backdrop" onClick={() => setPhotoDetail(false)}><div className="a4-detail" role="dialog" aria-modal="true" aria-label={birthday.title} onKeyDown={event => { if (event.key === 'Escape') setPhotoDetail(false); }} onClick={event => event.stopPropagation()}><div className="a4-detail-head"><h2>{birthday.title}</h2><button type="button" autoFocus onClick={() => setPhotoDetail(false)}>关闭，返回画面</button></div>{photoNotice && <p role="status" className="a4-hint">{photoNotice}</p>}
         <div className="a4-grid">
           <section className="a4-card">
             <p className="a4-perspective">
-              玩家专属回忆 · 2014 / 王澳（小
-              A）。以下是亲历视角，不是主角取得的影像或证言。
+              2014 年 · 王澳（小 A）的记忆。如今的我与小月尚不知道那天屋里发生了什么。
             </p>
             <div
               className="a4-scene"
               data-asset-id={birthdayImageSlots[birthdayIndex].assetId}
               aria-label={birthdayImageSlots[birthdayIndex].alt}
             >
+              <Act4SceneImage assetId={birthdayImageSlots[birthdayIndex].assetId} alt={birthdayImageSlots[birthdayIndex].alt} />
               <h2>{birthday.title}</h2>
               <p>{birthday.text}</p>
-              <small>场景图片待补 · 文字可完整游玩</small>
             </div>
             {!completedT05 &&
               birthdayIndex < birthdayScenes.length - 1 &&
@@ -558,6 +568,9 @@ export function Act4Experience({
             )}
           </section>
         </div>
+        </div></div>}
+        {completedT05 && <details className="a4-recap"><summary>回看已见生日片段</summary><div className="a4-page-list">{birthdayScenes.map((scene, index) => <button type="button" key={scene.id} onClick={() => setReviewBirthdayIndex(index)}>{scene.title}</button>)}<button type="button" onClick={() => setReviewBirthdayIndex(null)}>回到当前进度</button></div></details>}
+        </>
       )}
     </main>
   );

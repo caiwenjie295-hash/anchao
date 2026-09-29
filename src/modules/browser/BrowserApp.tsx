@@ -85,14 +85,14 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     if (id === activeTabId) { setActiveTabId(next.at(-1)?.id ?? 1); setDraft(null); }
   };
   const addressValue = draft ?? (shownView.kind === 'page' ? browserPageById.get(shownView.pageId)?.url ?? '' : shownView.kind === 'results' ? shownView.query : '');
-  return <section className="browser-app" aria-label="内部浏览器">
+  return <section className="browser-app" aria-label="浏览器">
     <div className="browser-tabs" aria-label="浏览器标签页">
       <div className="browser-tabs__scroll">{tabs.map((tab) => { const tabView = visibleView(tab.view); return <div key={tab.id} className={`browser-tab${tab.id === activeTabId ? ' browser-tab--active' : ''}`}><button type="button" className="browser-tab__select" onClick={() => { setActiveTabId(tab.id); setDraft(null); }} aria-current={tab.id === activeTabId ? 'page' : undefined}>{viewLabel(tabView)}</button><button type="button" className="browser-tab__close" onClick={() => closeTab(tab.id)} aria-label={`关闭 ${viewLabel(tabView)}`}>×</button></div>; })}</div>
       <button type="button" className="browser-new-tab" onClick={newTab} aria-label="新建标签页">＋</button>
     </div>
     <header className="browser-toolbar">
       <div className="browser-toolbar__nav"><button type="button" onClick={() => navigate(-1)} disabled={activeTab.stackIndex === 0} aria-label="后退">←</button><button type="button" onClick={() => navigate(1)} disabled={activeTab.stackIndex === activeTab.stack.length - 1} aria-label="前进">→</button></div>
-      <form className="browser-address" onSubmit={(event) => { event.preventDefault(); submitSearch((event.currentTarget.querySelector('input') as HTMLInputElement).value); }}><label className="sr-only" htmlFor="browser-search">搜索内部网页</label><span aria-hidden="true">⌕</span><input id="browser-search" value={addressValue} onChange={(event) => setDraft(event.target.value)} onFocus={() => setDraft(addressValue)} placeholder="搜索或输入内部地址" autoComplete="off" /></form>
+      <form className="browser-address" onSubmit={(event) => { event.preventDefault(); submitSearch((event.currentTarget.querySelector('input') as HTMLInputElement).value); }}><label className="sr-only" htmlFor="browser-search">搜索网页</label><span aria-hidden="true">⌕</span><input id="browser-search" value={addressValue} onChange={(event) => setDraft(event.target.value)} onFocus={() => setDraft(addressValue)} placeholder="搜索或输入地址" autoComplete="off" /></form>
       <button type="button" className="browser-history-button" onClick={() => setHistoryOpen((open) => !open)} aria-expanded={historyOpen} aria-label="查看搜索历史">◷ <span>历史</span></button>
     </header>
     {historyOpen && <aside className="browser-history" aria-label="搜索历史"><strong>最近搜索</strong>{state.modules.browser.queryHistory.filter((query) => stage === 'qiming' || !findSearchQuery(query) || !isAct2T06Record(findSearchQuery(query)!)).length ? state.modules.browser.queryHistory.filter((query) => stage === 'qiming' || !findSearchQuery(query) || !isAct2T06Record(findSearchQuery(query)!)).map((query) => <button type="button" key={query} onClick={() => submitSearch(query)}>{query}</button>) : <p>还没有搜索记录</p>}</aside>}
@@ -100,14 +100,14 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
       {shownView.kind === 'home' && <BrowserHome draft={safeDraft} suggestions={suggestions} onChoose={(query) => { setDraft(query); submitSearch(query); }} />}
       {shownView.kind === 'results' && <BrowserSearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
       {shownView.kind === 'page' && <BrowserPageView page={browserPageById.get(shownView.pageId)} manager={manager} />}
-    </div>
     {stage === 'search' && state.game.flags.FLAG_A2_WEB_SEARCH_FAILED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
       <p>现有搜索已经看完。整理好记录后，再去听听当地人的说法。</p>
-      <button type="button" onClick={() => manager.setAct2Stage('bridge')}>进行下一步调查</button>
+      <button type="button" onClick={() => manager.setAct2Stage('bridge')}>去桥头问问当地人</button>
     </aside>}
+    </div>
   </section>;
 }
 
 function BrowserHome({ draft, suggestions, onChoose }: { draft: string; suggestions: string[]; onChoose: (query: string) => void }) {
-  return <section className="browser-home"><div><p className="browser-home__eyebrow">本机内部索引</p><h2>查找一些旧信息</h2><p>结果来自这台电脑保存的离线网页索引。</p>{draft && <div className="browser-suggestions" aria-label="搜索建议">{suggestions.map((term) => <button type="button" key={term} onClick={() => onChoose(term)}>{term}</button>)}</div>}</div></section>;
+  return <section className="browser-home"><div><p className="browser-home__eyebrow">网页搜索</p><h2>查找一些旧信息</h2><p>搜索保存下来的网页记录。</p>{draft && <div className="browser-suggestions" aria-label="搜索建议">{suggestions.map((term) => <button type="button" key={term} onClick={() => onChoose(term)}>{term}</button>)}</div>}</div></section>;
 }
