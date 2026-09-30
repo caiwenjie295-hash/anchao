@@ -18,7 +18,7 @@ const expectedBrokenImagePath = '/a34-missing-optional-art.png';
 const expectedBrokenImageFailures = new Set();
 page.on('pageerror', (error) => runtimeErrors.push(error.message));
 page.on('console', (message) => {
-  if (message.type() === 'error') consoleErrors.push(message.text());
+  if (message.type() === 'error') consoleErrors.push({ text: message.text(), url: message.location().url || null });
 });
 page.on('requestfailed', (request) => {
   if (new URL(request.url()).pathname === expectedBrokenImagePath) expectedBrokenImageFailures.add(expectedBrokenImagePath);
@@ -26,6 +26,7 @@ page.on('requestfailed', (request) => {
 page.on('response', (response) => {
   if (new URL(response.url()).pathname === expectedBrokenImagePath && response.status() >= 400) expectedBrokenImageFailures.add(expectedBrokenImagePath);
 });
+await page.route('**/favicon.ico', (route) => route.fulfill({ status: 204, body: '' }));
 
 async function assertStage(stage) {
   await page.waitForFunction((expected) => document.querySelector('.a4-reader')?.getAttribute('data-act4-stage') === expected, stage, { timeout: 5000 }).catch(async (error) => {
@@ -127,6 +128,7 @@ try {
   await page.route(`**${expectedBrokenImagePath}`, (route) => route.abort());
   await page.locator('.a4-reader__art img').evaluate((image, path) => { image.src = path; }, expectedBrokenImagePath);
   await expectImageFallback(page);
+  assert.ok(expectedBrokenImageFailures.has(expectedBrokenImagePath), 'the injected optional art request must fail');
   assert.ok(await page.locator('[data-block-id="T07_ORIGINAL"]').count(), 'T07 text remains available without its optional image');
   await continueSection('T07');
 
@@ -199,8 +201,11 @@ try {
     'Failed to load resource: the server responded with a status of 404 (Not Found)',
     'Failed to load resource: net::ERR_FAILED',
   ]);
-  const unexpectedConsoleErrors = consoleErrors.filter((message) =>
-    !expectedBrokenImageFailures.has(expectedBrokenImagePath) || !expectedBrokenImageConsoleErrors.has(message));
+  const unexpectedConsoleErrors = consoleErrors.filter(({ text, url }) => {
+    let locationPath = null;
+    try { if (url) locationPath = new URL(url).pathname; } catch {}
+    return locationPath !== expectedBrokenImagePath || !expectedBrokenImageConsoleErrors.has(text);
+  });
   assert.deepEqual(runtimeErrors, []);
   assert.deepEqual(unexpectedConsoleErrors, []);
   console.log(JSON.stringify({
