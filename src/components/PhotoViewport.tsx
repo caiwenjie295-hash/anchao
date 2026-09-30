@@ -26,15 +26,28 @@ export interface PhotoViewportProps {
   hotspots: PhotoMarker[];
   routes: PhotoMarker[];
   children?: ReactNode;
+  imageOverlay?: ReactNode;
   transitionDirection?: 'forward' | 'back' | 'fade';
+  onImageAvailabilityChange?: (available: boolean) => void;
 }
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+export const calculatePhotoPanLimits = (planeWidth: number, planeHeight: number, frameWidth: number, frameHeight: number, scale: number) => ({
+  x: Math.max(0, (planeWidth * scale - frameWidth) / 2),
+  y: Math.max(0, (planeHeight * scale - frameHeight) / 2),
+});
 
-export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, transitionDirection = 'forward' }: PhotoViewportProps) {
+export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, transitionDirection = 'forward', onImageAvailabilityChange }: PhotoViewportProps) {
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const resourceKey = `${sceneKey}\u0000${imageUrl ?? ''}`;
+  const latestResourceKey = useRef(resourceKey);
+  latestResourceKey.current = resourceKey;
+  const [loadedResourceKey, setLoadedResourceKey] = useState<string | null>(null);
+  const [failedResourceKey, setFailedResourceKey] = useState<string | null>(null);
+  const imageLoaded = Boolean(imageUrl && loadedResourceKey === resourceKey && imageSize.width > 0 && imageSize.height > 0);
+  const imageFailed = Boolean(imageUrl && failedResourceKey === resourceKey);
   const frame = useRef<HTMLDivElement>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const pinch = useRef<number | null>(null);
@@ -48,7 +61,9 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
       const element = frame.current;
       if (!element) return;
       const bounds = element.getBoundingClientRect();
-      setFrameSize({ width: bounds.width, height: bounds.height });
+      setFrameSize((previous) => previous.width === bounds.width && previous.height === bounds.height
+        ? previous
+        : { width: bounds.width, height: bounds.height });
     };
     update();
     if (typeof ResizeObserver !== 'undefined') {
@@ -67,9 +82,19 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
 
   const bound = (next: { x: number; y: number }, scale = zoom) => {
     const box = frame.current?.getBoundingClientRect();
+    const width = frameSize.width || box?.width || 0;
+    const height = frameSize.height || box?.height || 0;
+    const currentFit = imageLoaded && imageSize.width > 0 && imageSize.height > 0 && width > 0 && height > 0
+      ? Math.min(width / imageSize.width, height / imageSize.height)
+      : 0;
+    const planeWidth = imageSize.width * currentFit;
+    const planeHeight = imageSize.height * currentFit;
+    // 边界必须按 contain 后真正绘制的照片平面计算；宽图在窄 frame 中、
+    // 或高图在矮 frame 中，未被照片覆盖的方向不应继续平移出空白。
+    const { x: maxX, y: maxY } = calculatePhotoPanLimits(planeWidth, planeHeight, width, height, scale);
     return {
-      x: clamp(next.x, -(box?.width ?? 0) * (scale - 1) / 2, (box?.width ?? 0) * (scale - 1) / 2),
-      y: clamp(next.y, -(box?.height ?? 0) * (scale - 1) / 2, (box?.height ?? 0) * (scale - 1) / 2),
+      x: clamp(next.x, -maxX, maxX),
+      y: clamp(next.y, -maxY, maxY),
     };
   };
   const changeZoom = (value: number) => {
@@ -84,20 +109,29 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   }, [sceneKey]);
   // 工单 §16.2：imageUrl 变化时必须使上一张图的尺寸失效，
   // 否则新图会沿用旧图的 content plane，出现拉伸或热点串图。
-  useEffect(() => { setImageSize({ width: 0, height: 0 }); }, [imageUrl]);
+  useEffect(() => {
+    setImageSize({ width: 0, height: 0 });
+    setLoadedResourceKey(null);
+    setFailedResourceKey(null);
+  }, [resourceKey]);
+  useEffect(() => { onImageAvailabilityChange?.(imageLoaded); }, [resourceKey, imageLoaded, onImageAvailabilityChange]);
+  useEffect(() => {
+    setOffset((previous) => {
+      const next = bound(previous, zoom);
+      return next.x === previous.x && next.y === previous.y ? previous : next;
+    });
+  }, [frameSize.width, frameSize.height, imageSize.width, imageSize.height, imageLoaded, zoom]);
 
   const distance = () => {
     const [a, b] = [...pointers.current.values()];
     return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0;
   };
-  const fit = imageSize.width > 0 && imageSize.height > 0 && frameSize.width > 0 && frameSize.height > 0
+  const fit = imageLoaded && imageSize.width > 0 && imageSize.height > 0 && frameSize.width > 0 && frameSize.height > 0
     ? Math.min(frameSize.width / imageSize.width, frameSize.height / imageSize.height)
     : 0;
-  // 工单 §16.2：未取得原图尺寸前不能用 100%×100% + object-fit:fill 兜底，
-  // 那会把 4:3 的调查图纵向压扁。改为按原图比例占位，加载完成后再校正。
   const planeStyle: CSSProperties = fit > 0
     ? { width: imageSize.width * fit, height: imageSize.height * fit }
-    : { width: '100%', aspectRatio: '4 / 3', height: 'auto' };
+    : { width: 0, height: 0, visibility: 'hidden' };
   const routeActions: InvestigationAction[] = routes.map((route) => ({
     actionId: route.id,
     kind: route.actionKind ?? (route.kind === 'direction' ? 'move' : 'story'),
@@ -131,7 +165,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           } else return;
           event.preventDefault();
         }}
-        onWheel={(event) => { if (imageUrl) changeZoom(zoom + (event.deltaY < 0 ? 0.2 : -0.2)); }}
+        onWheel={(event) => { if (imageLoaded) changeZoom(zoom + (event.deltaY < 0 ? 0.2 : -0.2)); }}
         onPointerDown={(event) => {
           if ((event.target as HTMLElement).closest('button')) return;
           frame.current?.setPointerCapture(event.pointerId);
@@ -143,12 +177,12 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           const prior = pointers.current.get(event.pointerId);
           if (!prior) return;
           pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-          if (pointers.current.size >= 2) {
+          if (pointers.current.size >= 2 && imageLoaded) {
             const now = distance();
             if (pinch.current) changeZoom(zoom * now / pinch.current);
             pinch.current = now;
             pointerMoved.current = true;
-          } else if (zoom > 1) {
+          } else if (zoom > 1 && imageLoaded) {
             const dx = event.clientX - prior.x;
             const dy = event.clientY - prior.y;
             if (Math.abs(dx) + Math.abs(dy) > 0) {
@@ -160,21 +194,39 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
         onPointerUp={(event) => {
           pointers.current.delete(event.pointerId);
           pinch.current = null;
-          if (!pointerMoved.current && event.target === frame.current) changeZoom(zoom === 1 ? 1.7 : 1);
+          if (!pointerMoved.current && imageLoaded && event.target === frame.current) changeZoom(zoom === 1 ? 1.7 : 1);
         }}
         onPointerCancel={(event) => { pointers.current.delete(event.pointerId); pinch.current = null; }}
       >
         <div className="photo-viewport__world" style={{ transform: 'translate(' + offset.x + 'px, ' + offset.y + 'px) scale(' + zoom + ')' }}>
-          <div className="photo-viewport__plane" style={planeStyle}>
-            {imageUrl
-              ? <img
-                  src={imageUrl}
-                  alt={imageAlt}
-                  draggable={false}
-                  onLoad={(event) => setImageSize({ width: event.currentTarget.naturalWidth, height: event.currentTarget.naturalHeight })}
-                />
-              : <div className="photo-viewport__missing" role="img" aria-label={imageAlt}>眼前的景象隐入暗处。可从文字线索继续调查</div>}
-            {imageUrl && hotspots.map((marker) => (
+          {imageUrl && <div className="photo-viewport__plane" style={planeStyle}>
+            <img
+              key={resourceKey}
+              src={imageUrl}
+              alt={imageLoaded ? imageAlt : ''}
+              aria-hidden={!imageLoaded}
+              draggable={false}
+              data-resource-key={resourceKey}
+              onLoad={(event) => {
+                if (latestResourceKey.current !== resourceKey || event.currentTarget.dataset.resourceKey !== resourceKey) return;
+                const expectedUrl = new URL(imageUrl!, document.baseURI).href;
+                if (event.currentTarget.currentSrc && event.currentTarget.currentSrc !== expectedUrl) return;
+                const { naturalWidth, naturalHeight } = event.currentTarget;
+                if (naturalWidth <= 0 || naturalHeight <= 0) return;
+                setImageSize({ width: naturalWidth, height: naturalHeight });
+                setLoadedResourceKey(resourceKey);
+                setFailedResourceKey(null);
+              }}
+              onError={(event) => {
+                if (latestResourceKey.current !== resourceKey || event.currentTarget.dataset.resourceKey !== resourceKey) return;
+                const expectedUrl = new URL(imageUrl!, document.baseURI).href;
+                if (event.currentTarget.currentSrc && event.currentTarget.currentSrc !== expectedUrl) return;
+                setFailedResourceKey(resourceKey);
+                setLoadedResourceKey(null);
+                setImageSize({ width: 0, height: 0 });
+              }}
+            />
+            {imageLoaded && hotspots.map((marker) => (
               <button
                 key={marker.id}
                 data-clue-id={marker.id}
@@ -195,8 +247,11 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
                 <span className="photo-viewport__marker-label">{marker.label}</span>
               </button>
             ))}
-          </div>
+            {imageLoaded && imageOverlay && <div className="photo-viewport__image-overlay">{imageOverlay}</div>}
+          </div>}
         </div>
+        {imageUrl && !imageLoaded && <div className="photo-viewport__load-state" role="status">{imageFailed ? `${imageAlt}载入失败。可从下方文字线索继续调查。` : `正在载入${imageAlt}…`}</div>}
+        {!imageUrl && <div className="photo-viewport__missing" role="img" aria-label={imageAlt}>眼前的景象隐入暗处。可从文字线索继续调查</div>}
         <div className="photo-viewport__controls" aria-label="画面操作">
           <button type="button" onClick={() => changeZoom(zoom - 0.25)} aria-label="缩小">−</button>
           <span>{Math.round(zoom * 100)}%</span>
@@ -206,7 +261,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
         {children && <div className="photo-viewport__overlay">{children}</div>}
       </div>
       {routeActions.length > 0 && <div className="photo-viewport__fixed-operations"><InvestigationNavigation actions={routeActions} compact /></div>}
-      {!imageUrl && hotspots.length > 0 && (
+      {(!imageUrl || imageFailed || !imageLoaded) && hotspots.length > 0 && (
         <nav className="photo-viewport__fallback" aria-label="无图文字入口">
           {hotspots.map((marker) => (
             <button key={marker.id} type="button" disabled={marker.disabled} onClick={(event) => marker.onActivate(event.currentTarget)}>{marker.label}</button>

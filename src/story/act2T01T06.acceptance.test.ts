@@ -64,7 +64,7 @@ describe('T06 browser acceptance', () => {
     expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T06_004');
     const restored = hydrateState(JSON.parse(JSON.stringify(manager.getState())));
-    expect(restored.schemaVersion).toBe(12);
+    expect(restored.schemaVersion).toBe(13);
     expect(restored.modules.act2Research.stage).toBe('qiming');
     expect(restored.modules.act2Research.t06.reviewedCases).toHaveLength(2);
     expect(restored.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBe(true);

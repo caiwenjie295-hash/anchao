@@ -47,7 +47,7 @@ export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
   },
   school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
   t06: { reviewedCases: [], nicknameAssessment: null, legacyCompletionMigrated: false },
-  t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [], comparisonFeatureIdByFrameId: {} },
+  t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], capturedAtMsByFrameId: {}, comparedFrameIds: [], comparisonFeatureIdByFrameId: {} },
 });
 
 export const createDefaultAct3State = (): Act3State => ({
@@ -61,7 +61,7 @@ export const createDefaultAct3State = (): Act3State => ({
 export const createDefaultAct4State = (): Act4State => ({ stage: 'inactive', completedNarrativeSectionIds: [], completedNarrativeActionIds: [], readNotebookPages: [], solvedPuzzleIds: [], unlockedAccountIds: [], checkedMailRecipients: [], timelineReadDates: [], viewedWakeMail: false, wakePaperConfirmed: false, birthdayNodeId: 'study', laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, broadcastPeriodsConfirmed: [], finalMailOpened: false });
 
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 12,
+  schemaVersion: 13,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,

@@ -9,6 +9,8 @@ import { Act2T01Controller } from '../../story/act2T01Controller';
 import { browserPageById } from '../../data/browserData';
 import { BrowserApp, BrowserPageView } from './BrowserApp';
 
+(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
 describe('BrowserApp T06 visibility gates', () => {
   let root: Root; let host: HTMLDivElement; let manager: StateManager; let bus: EventBus;
   beforeEach(() => { host = document.createElement('div'); document.body.append(host); root = createRoot(host); bus = new EventBus(); const state = createDefaultState(); state.game.act = 2; state.game.phase = 'A2_T05'; state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SS_MATCH_CONFIRMED: true }; state.modules.act2Research.stage = 'school'; manager = new StateManager(bus, state); });
@@ -53,9 +55,16 @@ describe('BrowserApp T06 visibility gates', () => {
       const button = [...host.querySelectorAll('.browser-case-review button')].find((item) => item.textContent === label) as HTMLButtonElement;
       expect(button).toBeDefined(); await act(async () => button.click());
     };
-    await openFromPanel('打开宣传案例');
+    await openFromPanel('打开启明宣传案例');
     expect(manager.getState().modules.browser.visitedPageIds).toContain('PAGE_A2_T06_004');
-    await openFromPanel('调查黄子山后续');
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
+    expect(host.textContent).toContain('学员黄子山');
+    await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    await openFromPanel('打开黄子山后续报道');
+    expect(host.textContent).toContain('黄子山后续：家属多年未能联系上');
+    await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
     const huangCase = host.querySelector('.browser-case-review__case[aria-label="黄子山材料"]')!;
     await act(async () => (huangCase.querySelectorAll('label')[0] as HTMLLabelElement).click());
     await act(async () => (huangCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());

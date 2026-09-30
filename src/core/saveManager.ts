@@ -12,7 +12,7 @@ import { act4NarrativeActionsSatisfied, act4NarrativeStageSequence } from '../st
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1–6 的有效进度迁移到 schema 7。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'];
@@ -60,6 +60,14 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
   // 只保留可恢复的语义进度；比对过的帧必须是已经截到的帧。
   const capturedFrameIds = t07 ? safeStringIds(t07.capturedFrameIds).filter((id) => ACT2_T07_FRAME_IDS.includes(id)) : [];
+  const rawCapturedTimes = t07 && isRecord(t07.capturedAtMsByFrameId) ? t07.capturedAtMsByFrameId : {};
+  const capturedAtMsByFrameId = Object.fromEntries(capturedFrameIds.flatMap((frameId) => {
+    const frame = act2T07.video.keyFrames.find((item) => item.id === frameId);
+    const time = rawCapturedTimes[frameId];
+    return frame && typeof time === 'number' && Number.isFinite(time) && time >= frame.startMs && time <= frame.endMs
+      ? [[frameId, time]]
+      : [];
+  }));
   const comparedFrameIds = t07 ? safeStringIds(t07.comparedFrameIds).filter((id) => capturedFrameIds.includes(id)) : [];
   const rawComparisonFeatureMap = t07 && isRecord(t07.comparisonFeatureIdByFrameId) ? t07.comparisonFeatureIdByFrameId : {};
   const comparisonFeatureIdByFrameId = Object.fromEntries(Object.entries(rawComparisonFeatureMap).filter(([frameId, featureId]) =>
@@ -130,6 +138,7 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
       viewedMaterialIds: t07 ? safeStringIds(t07.viewedMaterialIds).filter((id) => ACT2_T07_MATERIAL_IDS.includes(id)) : [],
       playedSegmentIds: t07 ? safeStringIds(t07.playedSegmentIds).filter((id) => ACT2_T07_SEGMENT_IDS.includes(id)) : [],
       capturedFrameIds,
+      capturedAtMsByFrameId,
       comparedFrameIds,
       comparisonFeatureIdByFrameId,
     },
@@ -322,7 +331,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const notepad = isRecord(modules.notepad) ? modules.notepad : null;
   const scene = isRecord(modules.scene) ? modules.scene : null;
   const photos = isRecord(modules.photos) ? modules.photos : null;
-  const candidateSchemaVersion = typeof candidate.schemaVersion === 'number' ? candidate.schemaVersion : 12;
+  const candidateSchemaVersion = typeof candidate.schemaVersion === 'number' ? candidate.schemaVersion : 13;
   const act2Research = safeAct2Research(modules.act2Research);
   let act3 = safeAct3(modules.act3);
   const rawFlags = isRecord(game.flags)
@@ -424,16 +433,22 @@ export const hydrateState = (candidate: unknown): AppState => {
   let t07StageValid = act2Research.stage === 'finale' && rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL === true;
   if (act2Research.stage === 'finale' && !t07StageValid) act2Research.stage = 'qiming';
   if (!t07StageValid) {
-    act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [], comparisonFeatureIdByFrameId: {} };
+    act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], capturedAtMsByFrameId: {}, comparedFrameIds: [], comparisonFeatureIdByFrameId: {} };
     for (const flagId of t07FlagIds) delete rawFlags[flagId];
   } else {
     const t07 = act2Research.t07;
     if (rawFlags.FLAG_A2_PROMO_VIDEO_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.video.materialId)) delete rawFlags.FLAG_A2_PROMO_VIDEO_FOUND;
     if (rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED === true && (rawFlags.FLAG_A2_PROMO_VIDEO_FOUND !== true || !act2T07.video.requiredSegmentIds.every((id) => t07.playedSegmentIds.includes(id)))) delete rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED;
     if (rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.photoMaterialId)) delete rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND;
-    if (rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND !== true && candidateSchemaVersion <= 11
-      && t07.comparedFrameIds.some((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true)) {
-      rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
+    if (candidateSchemaVersion <= 11) {
+      const legacyExteriorFrameIds = t07.comparedFrameIds.filter((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true);
+      if (legacyExteriorFrameIds.length > 0) {
+        rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
+        act2Research.t07.comparisonFeatureIdByFrameId = {
+          ...act2Research.t07.comparisonFeatureIdByFrameId,
+          ...Object.fromEntries(legacyExteriorFrameIds.map((id) => [id, act2T07.comparison.matchFeatureId])),
+        };
+      }
     }
     if (rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true && !t07.comparedFrameIds.some((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true)) delete rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND;
     if (rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED === true && !(rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true)) delete rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED;
@@ -515,7 +530,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 12,
+    schemaVersion: 13,
     game: {
       act: act4.stage !== 'inactive' ? 4 : act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,

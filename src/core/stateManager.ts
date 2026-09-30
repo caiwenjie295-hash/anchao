@@ -69,7 +69,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 12 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 13 });
   }
 
   private nextZIndex(): number {
@@ -222,7 +222,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 12 });
+    this.bus.emit('progress:reset', { schemaVersion: 13 });
   }
 
   startJourney(sceneId: string): void {
@@ -846,7 +846,10 @@ export class StateManager {
     if (!Number.isFinite(timeMs) || timeMs < frame.startMs || timeMs > frame.endMs) return;
     const t07 = this.act2Research.t07;
     if (t07.capturedFrameIds.includes(id)) return;
-    this.commitAct2Research({ t07: { capturedFrameIds: [...t07.capturedFrameIds, id] } });
+    this.commitAct2Research({ t07: {
+      capturedFrameIds: [...t07.capturedFrameIds, id],
+      capturedAtMsByFrameId: { ...t07.capturedAtMsByFrameId, [id]: Math.round(timeMs) },
+    } });
     this.bus.emit('act2:t07-frame-captured', { frameId: id });
   }
 
@@ -870,8 +873,8 @@ export class StateManager {
     if (this.act2Research.stage !== 'finale') return 'wrong-stage';
     if (!frame || !this.act2Research.t07.capturedFrameIds.includes(id)) return 'invalid-frame';
     if (!act2T07.comparison.featureOptions.some((option) => option.id === featureId)) return 'invalid-feature';
-    if (this.act2Research.t07.comparedFrameIds.includes(id) || this.state.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND === true) return 'already-recorded';
     if (!frame.supportsExteriorMatch || featureId !== act2T07.comparison.matchFeatureId) return 'insufficient-evidence';
+    if (this.act2Research.t07.comparedFrameIds.includes(id) || this.state.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND === true) return 'already-recorded';
 
     const comparedFrameIds = [...this.act2Research.t07.comparedFrameIds, id];
     const addedNote = !this.state.modules.notepad.autoEntryIds.includes('NOTE_A2_T07_002');

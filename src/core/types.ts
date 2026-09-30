@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 12;
+  schemaVersion: 13;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -138,11 +138,13 @@ export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds
    */
   legacyCompletionMigrated: boolean }
 
-/** T07 只保存可恢复的语义进度：已看资料、实际播放覆盖的片段、有效截图与已比对帧。 */
+/** T07 保存材料查看、真实播放、按时间截取的有效截图与已比对帧。 */
 export interface Act2T07State {
   viewedMaterialIds: string[];
   playedSegmentIds: string[];
   capturedFrameIds: string[];
+  /** 实际截图时刻（媒体播放毫秒）；旧存档只知可截图窗口时可为空。 */
+  capturedAtMsByFrameId: Record<string, number>;
   comparedFrameIds: string[];
   comparisonFeatureIdByFrameId: Record<string, string>;
 }
@@ -303,6 +305,6 @@ export type AnchaoEventMap = {
   'act2:t07-location-inferred': Record<string, never>;
   'act2:t07-trip-planned': Record<string, never>;
   'act2:t07-complete': Record<string, never>;
-  'progress:reset': { schemaVersion: 12 };
-  'save:completed': { schemaVersion: 12 };
+  'progress:reset': { schemaVersion: 13 };
+  'save:completed': { schemaVersion: 13 };
 };

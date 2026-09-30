@@ -74,14 +74,18 @@ const isStepComplete = (step: TaskGuideStepDefinition, state: AppState): boolean
   }
   if (step.completionKind === 'tales-read') return state.modules.act2Research.tales.readTaleIds.length >= 2;
   if (step.completionKind === 'tales-two-sources') return new Set(state.modules.act2Research.tales.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter(Boolean)).size >= 2;
-  if (step.completionKind === 'qiming-case-reviewed' && step.caseId) return state.modules.act2Research.t06.reviewedCases.some((review) => review.caseId === step.caseId);
+  if (step.completionKind === 'qiming-case-reviewed' && step.caseId) {
+    return state.modules.act2Research.t06.reviewedCases.some((review) => review.caseId === step.caseId)
+      || state.modules.act2Research.t06.legacyCompletionMigrated;
+  }
   return false;
 };
 
 const isGuideAvailable = (guide: TaskGuideDefinition, state: AppState): boolean => (
   guide.phases.includes(state.game.phase)
   && guide.prerequisiteFlags.every((flagId) => hasFlag(state, flagId))
-  && !guide.completionFlags.every((flagId) => hasFlag(state, flagId))
+  && (!guide.completionFlags.every((flagId) => hasFlag(state, flagId))
+    || (guide.id === 'GUIDE_A2_T06_001' && state.game.phase === 'A2_T06' && state.modules.act2Research.t06.legacyCompletionMigrated))
 );
 
 export function validateTaskGuideData(): void {

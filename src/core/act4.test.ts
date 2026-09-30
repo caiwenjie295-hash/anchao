@@ -167,7 +167,7 @@ describe('fourth act reading progression', () => {
 
   it('migrates a valid schema 10 T05 save and keeps T05 available until the reader continues', () => {
     const migrated = hydrateState(legacyT05());
-    expect(migrated.schemaVersion).toBe(12);
+    expect(migrated.schemaVersion).toBe(13);
     expect(migrated.modules.act4.stage).toBe('T05');
     expect(migrated.modules.act4.completedNarrativeSectionIds).toEqual([
       'A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04', 'A4_READ_T05',

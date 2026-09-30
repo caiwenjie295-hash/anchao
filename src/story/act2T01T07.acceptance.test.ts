@@ -130,6 +130,22 @@ describe('T07 acceptance', () => {
     expect(events).toEqual(['material:MATERIAL_A2_T07_PHOTO', 'material:MATERIAL_A2_T07_VIDEO', 'frame:FRAME_A2_T07_001', 'compared:FRAME_A2_T07_001', 'temple', 'location', 'trip', 'complete']);
   });
 
+  it('rejects an invalid follow-up comparison after a valid one without relabeling the draft', () => {
+    const { manager } = enterT07();
+    manager.viewAct2T07Material(act2T07.video.materialId);
+    manager.captureAct2T07Frame('FRAME_A2_T07_001', 7000);
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_001', 'square-opening')).toBe('recorded');
+    manager.captureAct2T07Frame('FRAME_A2_T07_002', 5000);
+
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_002', 'square-opening')).toBe('insufficient-evidence');
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_001', 'mountain-road')).toBe('insufficient-evidence');
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_001', 'square-opening')).toBe('already-recorded');
+    expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
+    expect(manager.getState().modules.act2Research.t07.comparisonFeatureIdByFrameId).toEqual({ FRAME_A2_T07_001: 'square-opening' });
+    expect(manager.getState().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND).toBe(true);
+    expect(manager.getState().modules.notepad.autoEntryIds.filter((id) => id === 'NOTE_A2_T07_002')).toHaveLength(1);
+  });
+
   it('migrates a schema 6 legacy T06 save and keeps valid T07 progress across reloads', () => {
     const { manager } = enterT07();
     manager.viewAct2T07Material(act2T07.photoMaterialId);
@@ -147,16 +163,17 @@ describe('T07 acceptance', () => {
     legacyGame.flags.FLAG_A2_HUANG_MATCH_INFERRED = true;
     legacyGame.flags.FLAG_A2_ZHONG_MATCH_INFERRED = true;
     delete (legacy.modules as { act2Research: { t07: { comparisonFeatureIdByFrameId?: Record<string, string> } } }).act2Research.t07.comparisonFeatureIdByFrameId;
+    delete (legacy.modules as { act2Research: { t07: { capturedAtMsByFrameId?: Record<string, number> } } }).act2Research.t07.capturedAtMsByFrameId;
     const restored = hydrateState(legacy);
-    expect(restored.schemaVersion).toBe(12);
+    expect(restored.schemaVersion).toBe(13);
     expect(restored.modules.act2Research.stage).toBe('finale');
     expect(restored.game.phase).toBe('A2_T07');
     expect(restored.modules.act2Research.t07).toEqual({
       viewedMaterialIds: ['MATERIAL_A2_T07_PHOTO', 'MATERIAL_A2_T07_VIDEO'],
       playedSegmentIds: ['SEG_A2_T07_002', 'SEG_A2_T07_003'],
-      capturedFrameIds: ['FRAME_A2_T07_001'],
+      capturedFrameIds: ['FRAME_A2_T07_001'], capturedAtMsByFrameId: {},
       comparedFrameIds: ['FRAME_A2_T07_001'],
-      comparisonFeatureIdByFrameId: {},
+      comparisonFeatureIdByFrameId: { FRAME_A2_T07_001: 'square-opening' },
     });
     expect(restored.game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND).toBe(true);
     expect(restored.game.flags.FLAG_A2_PROMO_VIDEO_WATCHED).toBe(true);
@@ -181,14 +198,14 @@ describe('T07 acceptance', () => {
 
     // 完成后重载：仍停在 finale，可回看资料，但不出现第三幕入口、也不重复触发完成事件。
     const restored = new StateManager(new EventBus(), hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
-    expect(restored.getState().schemaVersion).toBe(12);
+    expect(restored.getState().schemaVersion).toBe(13);
     expect(restored.getState().modules.act2Research.stage).toBe('finale');
     expect(restored.getState().game.phase).toBe('A2_T07');
     expect(restored.getState().game.flags.FLAG_A2_COMPLETE).toBe(true);
     expect(restored.getState().modules.act2Research.t07).toEqual({
       viewedMaterialIds: ['MATERIAL_A2_T07_PHOTO', 'MATERIAL_A2_T07_VIDEO'],
       playedSegmentIds: ['SEG_A2_T07_002', 'SEG_A2_T07_003'],
-      capturedFrameIds: ['FRAME_A2_T07_001'],
+      capturedFrameIds: ['FRAME_A2_T07_001'], capturedAtMsByFrameId: { FRAME_A2_T07_001: 7000 },
       comparedFrameIds: ['FRAME_A2_T07_001'],
       comparisonFeatureIdByFrameId: { FRAME_A2_T07_001: 'square-opening' },
     });
@@ -205,7 +222,7 @@ describe('T07 acceptance', () => {
   it('cleans contradictory T07 stages, flags and progress', () => {
     const state = createQimingState();
     state.modules.act2Research.stage = 'finale';
-    state.modules.act2Research.t07 = { viewedMaterialIds: ['MATERIAL_A2_T07_VIDEO'], playedSegmentIds: ['SEG_A2_T07_002'], capturedFrameIds: ['FRAME_A2_T07_001'], comparedFrameIds: ['FRAME_A2_T07_001'], comparisonFeatureIdByFrameId: { FRAME_A2_T07_001: 'square-opening' } };
+    state.modules.act2Research.t07 = { viewedMaterialIds: ['MATERIAL_A2_T07_VIDEO'], playedSegmentIds: ['SEG_A2_T07_002'], capturedFrameIds: ['FRAME_A2_T07_001'], capturedAtMsByFrameId: { FRAME_A2_T07_001: 7300 }, comparedFrameIds: ['FRAME_A2_T07_001'], comparisonFeatureIdByFrameId: { FRAME_A2_T07_001: 'square-opening' } };
     state.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
     state.game.flags.FLAG_A2_PROMO_VIDEO_FOUND = true;
     state.game.flags.FLAG_A2_PROMO_VIDEO_WATCHED = true;
@@ -230,7 +247,7 @@ describe('T07 acceptance', () => {
     // 有两名实名复核但 T07 证据链矛盾：只保留有证据支撑的部分。
     const withConclusion = createQimingState();
     withConclusion.modules.act2Research.stage = 'finale';
-    withConclusion.modules.act2Research.t07 = { viewedMaterialIds: ['MATERIAL_A2_T07_VIDEO'], playedSegmentIds: ['SEG_A2_T07_002'], capturedFrameIds: ['FRAME_A2_T07_001'], comparedFrameIds: ['FRAME_A2_T07_001'], comparisonFeatureIdByFrameId: { FRAME_A2_T07_001: 'square-opening' } };
+    withConclusion.modules.act2Research.t07 = { viewedMaterialIds: ['MATERIAL_A2_T07_VIDEO'], playedSegmentIds: ['SEG_A2_T07_002'], capturedFrameIds: ['FRAME_A2_T07_001'], capturedAtMsByFrameId: { FRAME_A2_T07_001: 7300 }, comparedFrameIds: ['FRAME_A2_T07_001'], comparisonFeatureIdByFrameId: { FRAME_A2_T07_001: 'square-opening' } };
     withConclusion.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
     withConclusion.game.flags.FLAG_A2_PROMO_VIDEO_FOUND = true;
     withConclusion.game.flags.FLAG_A2_PROMO_VIDEO_WATCHED = true;
@@ -250,7 +267,7 @@ describe('T07 acceptance', () => {
     // 比对过的帧必须是已截到的帧。
     const orphan = createQimingState();
     orphan.modules.act2Research.stage = 'finale';
-    orphan.modules.act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: ['FRAME_A2_T07_001'], comparisonFeatureIdByFrameId: {} };
+    orphan.modules.act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], capturedAtMsByFrameId: {}, comparedFrameIds: ['FRAME_A2_T07_001'], comparisonFeatureIdByFrameId: {} };
     const sanitized = hydrateState(JSON.parse(JSON.stringify(orphan)));
     expect(sanitized.modules.act2Research.t07.comparedFrameIds).toEqual([]);
   });
