@@ -560,110 +560,59 @@ async function investigateAct3() {
   assert.ok([...document().querySelectorAll('.story-transition-launch button')].some((button) => button.textContent.includes('继续调查小 A 的笔记')));
 }
 
-async function choosePuzzle(title, choices) {
-  const puzzle = [...document().querySelectorAll('.a4-puzzle')].find((item) => item.getAttribute('aria-label') === title);
-  assert.ok(puzzle, `Missing puzzle: ${title}`);
-  for (const choice of choices) {
-    const button = [...puzzle.querySelectorAll('.a4-choices button')].find((item) => item.textContent.includes(choice));
-    assert.ok(button, `Missing choice ${choice} in ${title}`);
-    button.click(); await settle();
-  }
-  await textButton('确认线索', `.a4-puzzle[aria-label="${title}"] button`);
-  assert.match(query(`.a4-puzzle[aria-label="${title}"]`).textContent, /已完成/);
-}
-async function photoMarker(kind) {
-  await click(kind === 'route' ? '.photo-viewport__fixed-operations [data-action-id]' : `.a4-photo-stage .photo-viewport__marker--${kind}`);
-}
 async function investigateAct4() {
   await click('.story-transition-launch[aria-label="第四幕调查已就绪"] button:first-child');
   assert.equal(state().modules.act4.stage, 'T01');
-  await photoMarker('object');
-  assert.ok(query('.a4-detail[role="dialog"]'));
-  for (let page = 2; page <= 9; page++) await textButton('下一页', '.a4-detail .a4-actions button');
-  assert.equal(state().modules.act4.readNotebookPages.length, 9);
-  await choosePuzzle('三段凌晨记录的先后', ['02:30', '03:50', '消防栓']);
-  await click('.a4-detail-head button');
-  await click('[data-action-id="A4_T01_CONTINUE"]');
+  const continueSection = async (stage) => {
+    await click(`[data-action-id="A4_${stage}_CONTINUE_READING"]`);
+    const next = { T01: 'T02', T02: 'T03', T03: 'T04', T04: 'T05', T05: 'T06', T06: 'T07', T07: 'T08', T08: 'T09', T09: 'T10', T10: 'T10' }[stage];
+    assert.equal(state().modules.act4.stage, next, `${stage} should advance exactly one reading section`);
+    await new Promise((resolve) => setTimeout(resolve, 510));
+  };
+  await continueSection('T01');
   assert.equal(state().modules.act4.stage, 'T02');
-  await textButton('核对这封信的时间', '.a4-mail-reading button');
-  await textButton('小月', '.a4-mail-list button');
-  await textButton('核对这封信的时间', '.a4-mail-reading button');
+  const oldMailButtons = [...document().querySelectorAll('.a4-reader__mail button')];
+  assert.equal(oldMailButtons.length, 2);
+  for (const button of oldMailButtons) { button.click(); await settle(); }
   assert.equal(state().modules.act4.checkedMailRecipients.length, 2);
-  await setInput('.a4-card > label input', '20200419');
-  await textButton('登录微博与邮箱');
+  await mount(save());
+  assert.equal(state().modules.act4.stage, 'T02', 'T02 reload keeps the date checks');
+  await setInput('#a4-shared-date', '20200419');
+  await textButton('主动登录', '.a4-reader__interaction button');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T02_LOGIN_SUCCEEDED'));
   assert.deepEqual(state().modules.act4.unlockedAccountIds, ['weibo', 'mail']);
-  await click('[data-action-id="A4_T02_CONTINUE"]');
-  assert.equal(state().modules.act4.stage, 'T03');
-  await choosePuzzle('三篇代表性微博排序', ['04-03', '04-09', '04-19']);
-  await textButton('04-19', '.a4-social-post');
-  assert.ok(state().modules.act4.timelineReadDates.includes('04-19'));
-  await click('[data-action-id="A4_T03_CONTINUE"]');
-  assert.equal(state().modules.act4.stage, 'T04');
-  await textButton('VVaKe', '.a4-mail-list button');
-  await choosePuzzle('同词同序的纸片', ['VVaKe · 蜘蛛']);
-  await click('[data-action-id="A4_T04_CONTINUE"]');
-  assert.equal(state().modules.act4.stage, 'T05');
-  for (const node of ['teacher', 'home', 'river', 'dinner', 'door']) {
-    await photoMarker('route');
-    assert.equal(state().modules.act4.birthdayNodeId, node);
-  }
-  await photoMarker('object');
-  await choosePuzzle('确认提前安排的来人', ['父母提前联系', '已经说好两个月']);
-  await click('.a4-detail-head button');
-  await photoMarker('route');
-  assert.equal(state().modules.act4.birthdayNodeId, 'taken');
-  await photoMarker('object');
-  await click('.a4-detail-head button');
-  await click('[data-action-id="A4_T05_CONTINUE"]');
-  assert.equal(state().game.flags.FLAG_A4_T05_COMPLETE, true);
-  await click('[data-action-id="A4_T05_TO_T06"]');
-  assert.equal(state().modules.act4.stage, 'T06');
-  const scenes = {
-    T06: ['WAKE', 'BREAKFAST', 'RECITE', 'BROADCAST', 'ROOMMATE', 'CONFINEMENT'],
-    T07: ['DREAM', 'MATH', 'NOTEBOOK', 'MIRROR', 'KITCHEN', 'SCHOOL'],
-    T08: ['MAIL', 'LAKE', 'DEPART', 'SHOP', 'ROUTE', 'WALL', 'BROADCAST', 'ARCHIVE', 'MIRROR', 'KITCHEN'],
-    T09: ['HYDRANT', 'REPLY', 'NOTE', 'EXIT', 'BLACKOUT'],
-    T10: ['SEARCH', 'WORDS', 'CAFE', 'MONTHS', 'MAIL'],
-  };
-  const solveLaterScene = async (id) => {
-    if (id === 'A4_T06_BROADCAST') {
-      await textButton('13aCK', '.a4-broadcast-period[aria-label="早读后的广播"] button');
-      await textButton('VVaKe', '.a4-broadcast-period[aria-label="睡前广播"] button');
-    }
-    if (id === 'A4_T07_MIRROR') await choosePuzzle('姓名与自认身份', ['梦中笔记：黄子山', '现实自认：王澳']);
-    if (id === 'A4_T08_ARCHIVE') {
-      await textButton('2008 年架', '.a4-archive-search button');
-      await textButton('黄子山', '.a4-archive-search button');
-      await textButton('打开这份档案', '.a4-archive-search button');
-    }
-    if (id === 'A4_T09_NOTE') {
-      for (const label of ['放进塑料袋', '用透明胶缠好', '塞到消防栓背后']) await textButton(label, '.investigation-detail .a4-actions button');
-      assert.equal(state().modules.act4.packageStep, 3);
-    }
-    if (id === 'A4_T09_EXIT') for (let i = 0; i < 6; i++) await textButton('听下一个词', '.investigation-detail button');
-    if (id === 'A4_T10_MAIL') await textButton('打开启明最后一封邮件', '.investigation-detail button');
-  };
-  for (const [stage, names] of Object.entries(scenes)) {
-    assert.equal(state().modules.act4.stage, stage);
-    for (const [index, name] of names.entries()) {
-      const id = `A4_${stage}_${name}`;
-      assert.equal(state().modules.act4.laterNodeId, id);
-      const marker = document().querySelector('.a4-photo-stage [data-clue-id]')
-        ?? document().querySelector('.a4-photo-stage .photo-viewport__fallback button');
-      assert.ok(marker, `Missing scene hotspot or text fallback for ${id}`);
-      marker.click(); await settle();
-      assert.ok(query('.investigation-detail[role="dialog"]'));
-      await solveLaterScene(id);
-      await click('.investigation-detail button');
-      await click(`[data-action-id="A4_${stage}_CONTINUE"]`);
-      if (index + 1 < names.length) assert.equal(state().modules.act4.laterNodeId, `A4_${stage}_${names[index + 1]}`);
-    }
-    assert.equal(state().game.flags[`FLAG_A4_${stage}_COMPLETE`], true);
-  }
+  await continueSection('T02');
+  await continueSection('T03');
+  await textButton('打开 VVaKe 邮件', '.a4-reader__interaction button');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T04_WAKE_MAIL_OPENED'));
+  await continueSection('T04');
+  await continueSection('T05');
+  await continueSection('T06');
+  await continueSection('T07');
+  await textButton('从档案架抽出 2008 年档案', '.a4-reader__interaction button');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T08_ARCHIVE_OPENED'));
+  await mount(save());
+  assert.equal(state().modules.act4.stage, 'T08', 'T08 reload keeps the opened archive');
+  assert.ok(query('[data-block-id="T08_ARCHIVE"]'));
+  await continueSection('T08');
+  await textButton('把笔记藏到消防箱后', '.a4-reader__interaction button');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_NOTE_HIDDEN'));
+  await mount(save());
+  assert.equal(state().modules.act4.stage, 'T09', 'T09 reload keeps the hidden note');
+  assert.ok(query('[data-block-id="T09_NOTE_HIDDEN"]'));
+  await textButton('走到门外，听完广播', '.a4-reader__interaction button');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_DOOR_EXITED'));
+  await continueSection('T09');
+  await textButton('打开启明的最后一封邮件', '.a4-reader__interaction button');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T10_FINAL_MAIL_OPENED'));
+  await mount(save());
+  assert.equal(state().modules.act4.stage, 'T10', 'T10 reload keeps the opened final mail');
+  assert.ok(query('[data-block-id="T10_FINAL_MAIL"]'));
+  await continueSection('T10');
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
   await mount(save());
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
-  assert.match(query('.a4-done').textContent, /第四幕完结/);
+  assert.match(query('.a4-reader__ending').textContent, /第四幕阅读完成/);
 }
 
 async function reset() {
@@ -688,7 +637,7 @@ async function reset() {
     bridge: { talkedElderIds: [], shownEvidenceAssetIds: [], heardPhrase: false, nameChoices: { first: null, middle: null, last: null } },
     library: { visitedSectionIds: [], openedVolumeIds: [], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: [], excerptedEntryIds: [] },
     tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
-    school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false },
+    school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
     t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
   });
   assert.deepEqual(state().modules.act3, { stage: 'inactive', currentLensId: null, visitedLensIds: [], inspectedClueIds: [], confirmedFlagIds: [] });

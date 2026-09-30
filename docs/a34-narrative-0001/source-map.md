@@ -81,7 +81,7 @@ python scripts/extract-novel-text.py <输出路径.txt>
 - [x] 关键锚点逐字核对
 - [x] T01–T10 阅读单元切分：见 [`reading-outline.md`](reading-outline.md) 与结构化数据 `src/data/narrative/act4Narrative.ts`
 - [x] 原文、衔接、剧情解释分区；T02 登录、T08 档案、T09 藏笔记/离开、T10 最终邮件按动作解锁
-- [ ] T01–T10 原文逐段核对与行内数字/拉丁字符复核（以 PDF 页面为准，不通过自动合并推断；N5 收口）
+- [x] T01–T10 原文段落与逐页提取文本严格匹配：`scripts/verify-act4-source.mjs` 仅去空白后匹配 **304/304** 段、覆盖 39 页，不合并拆行数字或改写标点。视觉复核重点包括 P22–23 厨房/庙内描述、P26 邮件日期和发件人，以及六词广播的原始标点；未声称对 PDF 每个字形进行人工重排校对。
 
 ## 7. 第四幕单元索引
 
