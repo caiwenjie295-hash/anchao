@@ -372,8 +372,10 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid #0067c0; out
 .taskbar__system-area { display: flex; grid-column: 3; align-items: center; justify-self: end; gap: 5px; }
 .taskbar__system { display: grid; min-width: 62px; color: #253342; font-size: 11px; line-height: 1.25; text-align: center; }
 .debug-reset { position: relative; }
-.debug-reset__trigger { display: flex; height: 34px; align-items: center; gap: 4px; padding: 0 8px; border: 1px solid rgba(71, 91, 109, .2); border-radius: 5px; color: #40566a; background: rgba(255,255,255,.28); cursor: pointer; font-size: 11px; }
-.debug-reset__trigger:hover, .debug-reset__trigger[aria-expanded="true"] { color: #174f7f; background: rgba(255,255,255,.62); }
+/* 触发器必须自带可读外观：旧实现用半透明白叠加，深色幕末与夜景桌面下会退化成 2.59:1 的
+   “看不见但可点击”。改为不透明底色 + 深色文字，任何背景都满足对比度。 */
+.debug-reset__trigger { display: flex; height: 34px; align-items: center; gap: 4px; padding: 0 8px; border: 1px solid #b7c4d0; border-radius: 5px; color: #2b3a48; background: #e8edf2; cursor: pointer; font-size: 11px; }
+.debug-reset__trigger:hover, .debug-reset__trigger[aria-expanded="true"] { color: #0f3a63; background: #fff; }
 .debug-reset__confirm { position: absolute; right: 0; bottom: 44px; width: 260px; padding: 14px; border: 1px solid #c5d0da; border-radius: 7px; color: #263748; background: #f8fafc; box-shadow: 0 14px 36px rgba(27, 44, 61, .24); text-align: left; }
 .debug-reset__confirm strong { font-size: 13px; }
 .debug-reset__confirm p { margin: 6px 0 13px; color: #657585; font-size: 11px; line-height: 1.45; }
