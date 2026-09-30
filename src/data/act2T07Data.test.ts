@@ -32,10 +32,10 @@ describe('T07 promotion data', () => {
   it('derives playback position, capture windows and clock text from data only', () => {
     expect(ACT2_T07_MATERIAL_IDS).toEqual(['MATERIAL_A2_T07_PHOTO', 'MATERIAL_A2_T07_VIDEO']);
     expect(ACT2_T07_SEGMENT_IDS).toHaveLength(4);
-    expect(ACT2_T07_FRAME_IDS).toEqual(['FRAME_A2_T07_001']);
+    expect(ACT2_T07_FRAME_IDS).toEqual(['FRAME_A2_T07_001', 'FRAME_A2_T07_002', 'FRAME_A2_T07_003']);
     expect(segmentAt(0)?.id).toBe('SEG_A2_T07_001');
     expect(segmentAt(7000)?.id).toBe('SEG_A2_T07_003');
-    expect(keyFrameAt(10000)).toBeUndefined();
+    expect(keyFrameAt(10000)?.id).toBe('FRAME_A2_T07_003');
     expect(keyFrameAt(7000)?.id).toBe('FRAME_A2_T07_001');
     expect(visualFrameAt(0)?.imageId).toBe('IMG_A2_T07_003');
     expect(visualFrameAt(5000)?.imageId).toBe('IMG_A2_T07_004');
@@ -45,6 +45,7 @@ describe('T07 promotion data', () => {
     expect(isFrameCapturableAt('FRAME_A2_T07_001', 7000)).toBe(true);
     expect(isFrameCapturableAt('FRAME_A2_T07_001', 10000)).toBe(false);
     expect(isFrameCapturableAt('FRAME_A2_T07_002', 7000)).toBe(false);
+    expect(isFrameCapturableAt('FRAME_A2_T07_002', 5000)).toBe(true);
     expect(formatClock(7000)).toBe('00:07');
     // 关键画面短暂但容错，窗口不窄于 1 秒。
     const frame = keyFrameById.get('FRAME_A2_T07_001')!;

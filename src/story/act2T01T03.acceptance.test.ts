@@ -65,7 +65,6 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
 
   const completeT01 = async () => {
     await run(() => stateManager.recordBrowserSearch('鸡公岭 补'));
-    await run(() => stateManager.recordBrowserSearch('双S 十字'));
     await run(() => stateManager.setAct2Stage('bridge'));
   };
 
@@ -182,13 +181,14 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
   it.each([
     ['鸡公岭 补', '双S 十字'],
     ['双S 十字', '鸡公岭 补'],
-  ])('converges on the bridge stage for search order %s → %s', async (first, second) => {
+  ])('allows offline inquiry after the first related search: %s → %s', async (first, second) => {
     await mountApp();
     await startSecondAct();
 
     await run(() => stateManager.recordBrowserSearch(first));
     expect(stage()).toBe('search');
     expect(flags().FLAG_A2_WEB_SEARCH_FAILED).toBeUndefined();
+    expect(flags().FLAG_A2_OFFLINE_RESEARCH_NEEDED).toBe(true);
 
     await run(() => stateManager.recordBrowserSearch(second));
     expect(flags().FLAG_A2_SEARCH_BU_ATTEMPTED).toBe(true);
@@ -211,7 +211,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await mountApp();
     await startSecondAct();
     await click(pick('.desktop-task-card__toggle'));
-    expect(pick('.desktop-task-card')?.textContent).toContain('在网上再查一次');
+    expect(pick('.desktop-task-card')?.textContent).toContain('查一次相关信息');
 
     await run(() => stateManager.recordBrowserSearch('随便搜点什么'));
     expect(stage()).toBe('search');
@@ -243,7 +243,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(pick('.act2-bridge__phrase')).toBeNull();
 
     // 返回桌面：恢复桌面，出现中性继续入口。
-    await click(pick('.act2-bridge__return'));
+    await click(pick('.investigation-shell__exit'));
     expect(pick('.act2-bridge')).toBeNull();
     expect(desktop()?.getAttribute('aria-hidden')).toBe('false');
     expect(desktop()?.hasAttribute('inert')).toBe(false);
@@ -274,7 +274,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(autoEntries()).toContain('NOTE_A2_T02_002');
     expect(stage()).toBe('bridge');
 
-    await click(pick('.act2-bridge__continue'));
+    await click(pick('[data-action-id="A2_T02_TO_LIBRARY"]'));
     expect(stage()).toBe('library');
     // bridge → library 后图书馆自动打开。
     expect(pick('.act2-library')).not.toBeNull();
@@ -309,35 +309,27 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await click(pick('.act2-library__next'));
     expect(library().currentPageId).toBe('PAGE_A2_T03_005');
     expect(flags().FLAG_A2_BUMUZHI_FOUND).toBe(true);
-    expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBeUndefined();
-
-    // 少于 3 个核心词不能摘录。
-    expect(pick<HTMLButtonElement>('.act2-library__excerpt-button')?.disabled).toBe(true);
-    await click(pick('[data-keyword-id="KW_A2_T03_001"]'));
-    await click(pick('[data-keyword-id="KW_A2_T03_002"]'));
-    expect(pick<HTMLButtonElement>('.act2-library__excerpt-button')?.disabled).toBe(true);
-    await click(pick('[data-keyword-id="KW_A2_T03_003"]'));
-    expect(pick<HTMLButtonElement>('.act2-library__excerpt-button')?.disabled).toBe(false);
-
-    await click(pick('.act2-library__excerpt-button'));
-    expect(library().markedKeywordIds).toEqual(['KW_A2_T03_001', 'KW_A2_T03_002', 'KW_A2_T03_003']);
-    expect(library().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
-    expect(autoEntries()).toContain('NOTE_A2_T03_001');
     expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
+    expect(autoEntries()).toContain('NOTE_A2_T03_001');
     expect(pick('.act2-library__conclusion')?.textContent).toContain('缺什么，就用某种东西补什么。');
 
-    // 完成态停留，不出现 T04 内容或入口。
+    // 阅读完成后保持在 T03，玩家仍需主动选择前往志异调查。
+    expect(stage()).toBe('library');
+    expect(pick('[data-action-id="A2_T03_TO_TALES"]')?.getAttribute('data-action-state')).toBe('ready');
     const text = container.textContent ?? '';
-    for (const term of ['记忆', '身份', '性格', '转移', '案例一']) expect(text).not.toContain(term);
+    for (const term of ['身份冲突的答案', '案例一']) expect(text).not.toContain(term);
     expect(text).toContain('县志只记到这里');
 
-    // 返回桌面再继续，摘录结果仍在。
-    await click(pick('.act2-library__return'));
+    // 返回桌面再继续，阅读结果仍在。
+    await click(pick('.investigation-shell__exit'));
     expect(desktop()?.hasAttribute('inert')).toBe(false);
     expect(pick('.act2-experience--resume-library')?.textContent).toContain(ACT2_RESUME_LABELS.library);
     await click(pick('.act2-experience__continue'));
     expect(pick('.act2-library')).not.toBeNull();
-    expect(library().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
+    expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
+    await click(pick('[data-action-id="A2_T03_TO_TALES"]'));
+    expect(stage()).toBe('tales');
+    expect(pick('.act2-tales')).not.toBeNull();
   });
 
   it('restores a migrated second-act save mid-second-act and clears everything on reset', async () => {
@@ -349,7 +341,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await click(pick('.act2-library__next'));
 
     const saved = loadState();
-    expect(saved.schemaVersion).toBe(9);
+    expect(saved.schemaVersion).toBe(11);
     expect(saved.game.act).toBe(2);
     expect(saved.modules.act2Research.stage).toBe('library');
     expect(saved.modules.act2Research.library.currentPageId).toBe('PAGE_A2_T03_005');
@@ -372,7 +364,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
 
   it('does not let a stale "returned to desktop" state leak into the next playthrough', async () => {
     await reachLibrary();
-    await click(pick('.act2-library__return'));
+    await click(pick('.investigation-shell__exit'));
     expect(pick('.act2-experience--resume-library')).not.toBeNull();
 
     await run(() => stateManager.resetProgress());

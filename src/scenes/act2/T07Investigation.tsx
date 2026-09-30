@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
+import { InvestigationShell } from '../../components/investigation/InvestigationShell';
+import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt, visualFrameAt } from '../../data/act2T07Data';
@@ -44,9 +46,9 @@ function playCue(file: string | null): void {
   }
 }
 
-export interface T07InvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void }
+export interface T07InvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void; onEnterAct3?: () => void }
 
-export function T07Investigation({ manager = defaultManager, onReturnToDesktop }: T07InvestigationProps) {
+export function T07Investigation({ manager = defaultManager, onReturnToDesktop, onEnterAct3 }: T07InvestigationProps) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const [tab, setTab] = useState<TabId>('materials');
   const [timeMs, setTimeMs] = useState(0);
@@ -54,6 +56,9 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
   const timeRef = useRef(0);
   const [photoZoomed, setPhotoZoomed] = useState(false);
   const [zoomedShotId, setzoomedShotId] = useState<string | null>(null);
+  const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+  const [selectedFeatureId, setSelectedFeatureId] = useState('');
+  const [compareFeedback, setCompareFeedback] = useState('');
   const [zoomLeft, setZoomLeft] = useState(false);
   const [zoomRight, setZoomRight] = useState(false);
   const [cueIndex, setCueIndex] = useState(0);
@@ -75,7 +80,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
   const tripPlanned = flags.FLAG_A2_SECOND_TRIP_PLANNED === true;
   const complete = flags.FLAG_A2_COMPLETE === true;
   const capturedFrames = useMemo(() => video.keyFrames.filter((frame) => t07.capturedFrameIds.includes(frame.id)), [t07.capturedFrameIds]);
-  const activeFrame = capturedFrames[0];
+  const activeFrame = capturedFrames.find((frame) => frame.id === selectedFrameId) ?? capturedFrames[0];
   // 缩放只是瞬时显示状态；已确认的线索由 Flag 记录。
   const photoZoom = photoZoomed || photoConfirmed;
   const segment = segmentAt(timeMs);
@@ -124,6 +129,17 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
     finaleRef.current?.querySelector<HTMLElement>('button')?.focus();
   }, [finaleOpen]);
 
+  const actions: InvestigationAction[] = [
+    { actionId: 'A2_T07_MATERIALS', kind: 'review', target: 'materials', label: '查看宣传资料', state: 'ready', onActivate: () => setTab('materials') },
+    { actionId: 'A2_T07_VIDEO', kind: 'review', target: 'video', label: '查看受访视频', state: 'ready', onActivate: () => setTab('video') },
+    { actionId: 'A2_T07_COMPARE', kind: 'review', target: 'compare', label: '核对截图与旧庙外景', state: 'ready', onActivate: () => setTab('compare') },
+    { actionId: 'A2_T07_INFER_LOCATION', kind: 'story', target: 'location', label: locationInferred ? '地点结论已记下' : '确认地点判断', state: locationInferred ? 'completed' : photoConfirmed && templeConfirmed ? 'ready' : 'blocked', reason: !photoConfirmed ? '先检查合影中的双 S 记号。' : '还要截取视频画面，并从画面和外景中核对相同特征。', relatedMaterials: [
+      ...(!photoConfirmed ? [{ id: 'photo', label: '校门合影' }] : []),
+      ...(!templeConfirmed ? [{ id: 'compare', label: '截图与外景对照' }] : []),
+    ], onActivate: () => { manager.inferAct2T07Location(); setTab('inference'); } },
+    { actionId: 'A2_T07_PLAN_TRIP', kind: 'story', target: 'second-trip', label: tripPlanned ? '再次进山已商定' : trip.confirmLabel, state: tripPlanned ? 'completed' : locationInferred ? 'ready' : 'blocked', reason: '先核对合影和旧庙外景，再商量是否再次进山。', relatedMaterials: locationInferred ? undefined : [{ id: 'compare', label: '截图与外景对照' }], onActivate: () => { manager.planAct2T07SecondTrip(); setTab('trip'); } },
+  ];
+
   useEffect(() => {
     if (!zoomedShotId) return;
     shotDialogRef.current?.querySelector<HTMLElement>('button')?.focus();
@@ -169,16 +185,19 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
   };
 
   return (
-    <section className="t07-finale" aria-label="第二幕 T07 宣传资料调查" data-asset-id={photoMaterial.imageId}>
-      <header className="t07-finale__header">
-        <div>
-          <p>第二幕 · T07</p>
-          <h1>和小月核对旧资料</h1>
-          <span>小月就坐在旁边，我们一起看这些材料。</span>
-        </div>
-        <button type="button" className="t07-finale__return" onClick={onReturnToDesktop}>返回桌面</button>
-      </header>
-
+    <InvestigationShell
+      ariaLabel="第二幕宣传视频与外景核对"
+      actLabel="第二幕 · 与小月一起调查"
+      locationLabel="旧资料对照"
+      contextLabel="时间回看 · 当前调查"
+      objective="核对合影记号和视频画面中的石质轮廓，再决定是否回山确认。"
+      helpText="合影、视频和对照可以按任意顺序查看。视频不必完整播放；在不同镜头截取候选画面，再选择其中的截图和可见特征进行核对。完整播放会保留为真实记录。"
+      actions={actions}
+      statusMessage={compareFeedback}
+      onExit={() => onReturnToDesktop?.()}
+      onOpenMaterial={(_actionId, materialId) => setTab(materialId === 'photo' ? 'materials' : materialId === 'video' ? 'video' : 'compare')}
+    >
+    <section className="t07-finale" aria-label="第二幕宣传资料调查" data-asset-id={photoMaterial.imageId}>
       <p className="t07-finale__intro">{act2T07.intro}</p>
 
       <nav className="t07-finale__tabs" aria-label="调查步骤">
@@ -298,25 +317,34 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
           : <>
             <p className="t07-finale__xiaoyue">{comparison.xiaoyueLine}</p>
             <p className="t07-finale__note">{comparison.replyLine}</p>
-            <div className="t07-finale__compare-grid">
-              <figure className={`t07-finale__compare-side${zoomLeft ? ' is-zoomed' : ''}`}>
-                <FrameVisual assetId={activeFrame!.imageId} altText={activeFrame!.altText} note={activeFrame!.placeholderNote} />
-                <figcaption>{activeFrame!.caption}</figcaption>
-                <button type="button" className="t07-finale__zoom-left" onClick={() => setZoomLeft((value) => !value)}>{comparison.zoomLabel}</button>
-              </figure>
-              <figure className={`t07-finale__compare-side${zoomRight ? ' is-zoomed' : ''}`}>
-                <FrameVisual assetId={comparison.exteriorImageId} altText={comparison.exteriorAltText} note={comparison.exteriorNote} />
-                <figcaption>{comparison.exteriorCaption}</figcaption>
-                <button type="button" className="t07-finale__zoom-right" onClick={() => setZoomRight((value) => !value)}>{comparison.zoomLabel}</button>
-              </figure>
+            <div className="t07-finale__candidate-list" aria-label="选择要核对的截图">
+              {capturedFrames.map((frame) => <button type="button" key={frame.id} aria-pressed={activeFrame?.id === frame.id} onClick={() => { setSelectedFrameId(frame.id); setSelectedFeatureId(''); setCompareFeedback(''); setZoomLeft(false); setZoomRight(false); }}>{frame.caption}</button>)}
             </div>
-            {!zoomLeft || !zoomRight
-              ? <p className="t07-finale__hint">{comparison.zoomBothHint}</p>
-              : t07.comparedFrameIds.includes(activeFrame!.id)
-                ? templeConfirmed
-                  ? <p className="t07-finale__done" aria-live="polite">{comparison.structureNote}</p>
-                  : <button type="button" className="t07-finale__temple-confirm" onClick={() => manager.confirmAct2T07TempleFrame()}>{comparison.confirmLabel}</button>
-                : <button type="button" className="t07-finale__compare" onClick={() => manager.compareAct2T07TempleFrame(activeFrame!.id)}>{comparison.compareLabel}</button>}
+            {activeFrame && <>
+              <div className="t07-finale__compare-grid">
+                <figure className={`t07-finale__compare-side${zoomLeft ? ' is-zoomed' : ''}`}>
+                  <FrameVisual assetId={activeFrame.imageId} altText={activeFrame.altText} note={activeFrame.placeholderNote} />
+                  <figcaption>{activeFrame.caption}</figcaption>
+                  <button type="button" className="t07-finale__zoom-left" onClick={() => setZoomLeft((value) => !value)}>{comparison.zoomLabel}</button>
+                </figure>
+                <figure className={`t07-finale__compare-side${zoomRight ? ' is-zoomed' : ''}`}>
+                  <FrameVisual assetId={comparison.exteriorImageId} altText={comparison.exteriorAltText} note={comparison.exteriorNote} />
+                  <figcaption>{comparison.exteriorCaption}</figcaption>
+                  <button type="button" className="t07-finale__zoom-right" onClick={() => setZoomRight((value) => !value)}>{comparison.zoomLabel}</button>
+                </figure>
+              </div>
+              <fieldset className="t07-finale__feature-choice">
+                <legend>哪项可见特征能与外景互相印证？</legend>
+                {comparison.featureOptions.map((feature) => <label key={feature.id}><input type="radio" name="t07-comparison-feature" value={feature.id} checked={selectedFeatureId === feature.id} onChange={() => setSelectedFeatureId(feature.id)} />{feature.label}</label>)}
+              </fieldset>
+              {!zoomLeft || !zoomRight
+                ? <p className="t07-finale__hint">{comparison.zoomBothHint}</p>
+                : t07.comparedFrameIds.includes(activeFrame.id)
+                  ? templeConfirmed
+                    ? <p className="t07-finale__done" aria-live="polite">{comparison.structureNote}</p>
+                    : <button type="button" className="t07-finale__temple-confirm" onClick={() => manager.confirmAct2T07TempleFrame()}>{comparison.confirmLabel}</button>
+                  : <button type="button" className="t07-finale__compare" disabled={!selectedFeatureId} onClick={() => { const matched = manager.compareAct2T07TempleFrame(activeFrame.id, selectedFeatureId); setCompareFeedback(matched ? comparison.structureNote : comparison.mismatchNote); }}>{comparison.compareLabel}</button>}
+            </>}
           </>}
       </div>}
 
@@ -337,8 +365,8 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
             <p className="t07-finale__conclusion">{inference.conclusion}</p>
             <p className="t07-finale__note">{inference.caveat}</p>
           </>
-          : photoConfirmed && templeConfirmed && videoWatched
-            ? <button type="button" className="t07-finale__infer" onClick={() => manager.inferAct2T07Location()}>{inference.confirmLabel}</button>
+          : photoConfirmed && templeConfirmed
+            ? <p className="t07-finale__locked">合影双 S 和截图外景比对都已具备；在底部操作区确认地点判断。</p>
             : <p className="t07-finale__locked">{inference.lockedHint}</p>}
       </div>}
 
@@ -351,13 +379,21 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
         {tripPlanned
           ? <p className="t07-finale__done" aria-live="polite">{trip.plannedNote}</p>
           : locationInferred
-            ? <button type="button" className="t07-finale__trip-confirm" onClick={() => manager.planAct2T07SecondTrip()}>{trip.confirmLabel}</button>
+            ? <p className="t07-finale__locked">地点判断已记下；在底部操作区确认是否再次进山。</p>
             : <p className="t07-finale__locked">{trip.lockedHint}</p>}
       </div>}
 
       {complete && <aside className="t07-finale__closing">
         <p>{finale.closingNote}</p>
-        <button type="button" className="t07-finale__ending-replay" onClick={() => setTab('materials')}>{finale.replayLabel}</button>
+        {/* 工单 §15.1：第二幕收束页必须直接给出进入第三幕的主操作，
+            玩家不应被迫先退出场景、回桌面，再去猜折叠的任务栏菜单。
+            「进入第三幕」与「完成第二幕」是两个语义：此处只写完成，主按钮才启动第三幕。 */}
+        <div className="t07-finale__closing-actions">
+          {onEnterAct3
+            ? <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>
+            : <p className="t07-finale__locked">回到桌面后，可在任务栏「调查」中开始启明旧址的调查。</p>}
+          <button type="button" className="t07-finale__ending-replay" onClick={() => setTab('materials')}>{finale.replayLabel}</button>
+        </div>
       </aside>}
 
       {zoomedShotId && (() => {
@@ -379,6 +415,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
         <button type="button" className="t07-finale__ending-continue" onClick={finishFinale}>{finale.continueLabel}</button>
       </div>}
     </section>
+    </InvestigationShell>
   );
 }
 

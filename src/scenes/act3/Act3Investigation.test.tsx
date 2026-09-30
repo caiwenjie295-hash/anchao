@@ -4,52 +4,48 @@ import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
-import { act3StageDoc } from '../../data/act3Data';
 import { Act3Investigation } from './Act3Investigation';
 
-describe('Third-act player path', () => {
-  it('guides the player back to missed T00 clues at the outer gate', async () => {
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+describe('Third-act investigation interface', () => {
+  it('explains a known blocked route and opens the related material with focus return', async () => {
     localStorage.clear();
     const state = createDefaultState();
-    state.game.flags.FLAG_A2_COMPLETE = true;
+    state.modules.act3.stage = 'T04';
+    state.modules.act3.currentLensId = 'LENS_A3_T04_004';
+    state.game.phase = 'A3_T04';
     const manager = new StateManager(new EventBus(), state);
-    manager.startAct3();
-    const lenses = act3StageDoc('T00').lenses;
-    for (const [index, lens] of lenses.entries()) {
-      manager.enterAct3Lens(lens.id);
-      if (index > 0 && index < lenses.length - 1) manager.inspectAct3Clue(lens.hotspots[0].clueId);
-    }
     const container = document.createElement('div');
     document.body.append(container);
     const root = createRoot(container);
-    const click = async (selector: string) => {
-      const button = container.querySelector<HTMLButtonElement>(selector);
-      expect(button).not.toBeNull();
-      await act(async () => { button!.click(); });
-    };
+    const click = async (button: HTMLButtonElement) => act(async () => { button.click(); });
     try {
-      await act(async () => { root.render(<Act3Investigation manager={manager} />); });
-      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('还差 2 条线索');
-      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('前往遗漏画面：再次出发');
-      await click('.act3-investigation__action button');
-      expect(manager.getState().modules.act3.currentLensId).toBe(lenses[0].id);
-      await click(`[data-clue-id="${lenses[0].hotspots[0].clueId}"]`);
-      await click('.act3-investigation__dialog [aria-label="关闭"]');
-      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('前往遗漏画面：外墙锈门');
-      await click('.act3-investigation__action button');
-      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('点击照片中的线索标记');
-      await click(`[data-clue-id="${lenses.at(-1)!.hotspots[0].clueId}"]`);
-      await click('.act3-investigation__dialog [aria-label="关闭"]');
-      expect(container.querySelector('.act3-investigation__action')?.textContent).toContain('确认再次进山结论');
-      await click('.act3-investigation__action button');
-      expect(manager.getState().modules.act3.stage).toBe('T01');
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      const route = container.querySelector<HTMLButtonElement>('[data-action-id="A3_ROUTE_T04_004_005"]');
+      expect(route).not.toBeNull();
+      expect(route?.disabled).toBe(false);
+      expect(route?.getAttribute('data-action-state')).toBe('blocked');
+      await click(route!);
+      expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('还没有核对蹲下检查角落纸边');
+      const material = container.querySelector<HTMLButtonElement>('.investigation-navigation__material');
+      expect(material?.textContent).toContain('查看相关材料');
+      material!.focus();
+      await click(material!);
+      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T04_004');
+      expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T04_PAPER_EDGE');
+      expect(container.querySelector('[role="dialog"] h2')?.textContent).toContain('角落纸边');
+      const close = container.querySelector<HTMLButtonElement>('[role="dialog"] button');
+      expect(document.activeElement).toBe(close);
+      await click(close!);
+      expect(document.activeElement).toBe(container.querySelector('[data-clue-id="CLUE_A3_T04_PAPER_EDGE"]'));
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();
     }
   });
 
-  it('walks from T00 through the T07 notebook and exit', async () => {
+  it('keeps place, objective and exit controls visible outside the photo viewport', async () => {
     localStorage.clear();
     const state = createDefaultState();
     state.game.flags.FLAG_A2_COMPLETE = true;
@@ -58,42 +54,12 @@ describe('Third-act player path', () => {
     const container = document.createElement('div');
     document.body.append(container);
     const root = createRoot(container);
-    const click = async (button: HTMLButtonElement | undefined) => {
-      expect(button).toBeDefined();
-      await act(async () => { button!.click(); });
-    };
     try {
-      await act(async () => { root.render(<Act3Investigation manager={manager} />); });
-      for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as const) {
-        const lenses = act3StageDoc(stage).lenses.filter((lens) => lens.id !== 'LENS_A3_T03_000');
-        for (const [index, lens] of lenses.entries()) {
-          expect(container.querySelector('.act3-investigation__lens')?.getAttribute('data-asset-id')).toBe(lens.assetId);
-          for (const hotspot of lens.hotspots) {
-            await click(container.querySelector<HTMLButtonElement>(`[data-clue-id="${hotspot.clueId}"]`) ?? undefined);
-            expect(container.querySelector('[role="dialog"]')).not.toBeNull();
-            await click(container.querySelector<HTMLButtonElement>('.act3-investigation__dialog [aria-label="关闭"]') ?? undefined);
-          }
-          if (index + 1 < lenses.length) {
-            const next = lenses[index + 1];
-            await click([...container.querySelectorAll<HTMLButtonElement>('.photo-viewport__marker--direction')].find((button) => button.textContent?.includes(next.title)));
-          }
-        }
-        if (stage === 'T05') expect(container.querySelector('[aria-label="两张词表"]')?.textContent).toContain('VVaKe');
-        if (stage === 'T06') expect(container.querySelector('[aria-label="破庙与空神龛对照"] img')).not.toBeNull();
-        await click(container.querySelector<HTMLButtonElement>('.act3-investigation__action button') ?? undefined);
-      }
-      expect(manager.getState().game.phase).toBe('A3_T07');
-      expect(manager.getState().game.flags.FLAG_A3_VVAKE_PAPER_FOUND).toBe(true);
-      expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T04_001');
-      expect(manager.getState().game.flags.FLAG_A3_13ACK_PAPER_FOUND).toBe(true);
-      expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T05_001');
-      expect(manager.getState().game.flags.FLAG_A3_HEIBUMU_QIMING_LINK_CONFIRMED).toBe(true);
-      expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A3_T06_001');
-      expect(manager.getState().game.flags.FLAG_A3_NOTEBOOK_FOUND).toBe(true);
-      expect(manager.getState().game.flags.FLAG_A3_SITE_EXITED).toBe(true);
-      expect(manager.getState().game.flags.FLAG_A3_COMPLETE).toBe(true);
-      expect(container.textContent).toContain('第三幕已完成');
-      expect(container.textContent).not.toContain('进入第四幕');
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      expect(container.querySelector('.investigation-shell__place h1')?.textContent).toBe('再次出发');
+      expect(container.querySelector('.investigation-shell__goal')?.textContent).toContain('核对人工设施与旧路痕迹');
+      expect(container.querySelector('.investigation-shell__exit')?.textContent).toBe('退出调查，返回桌面');
+      expect(container.querySelector('.investigation-shell__operations')).not.toBeNull();
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();

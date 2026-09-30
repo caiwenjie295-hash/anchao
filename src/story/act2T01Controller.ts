@@ -7,18 +7,14 @@ const ssSearchFlag = 'FLAG_A2_SEARCH_SS_ATTEMPTED';
 const webFailedFlag = 'FLAG_A2_WEB_SEARCH_FAILED';
 const offlineFlag = 'FLAG_A2_OFFLINE_RESEARCH_NEEDED';
 const conclusionNoteId = 'NOTE_A2_T01_001';
-const weakNoteId = 'NOTE_A2_T01_002';
-/** 长时间没有进展时的弱提示延迟。 */
-const weakPromptDelayMs = 15000;
 
 /**
- * 第二幕 T01：互联网搜索失效。
+ * 第二幕 T01：记录真实的主题搜索，并允许玩家主动转向线下求证。
  * 只在 game.act===2、phase==='A2_T01'、stage==='search' 时响应；
- * 两类模糊搜索都完成后判定互联网无解，记笔记并转入 bridge。
+ * 任一相关搜索即可开放 bridge；两类搜索齐备只留下兼容性的历史记录。
  */
 export class Act2T01Controller {
   private unsubscribe: (() => void)[] = [];
-  private weakPromptTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(private readonly manager: StateManager = stateManager, private readonly bus: EventBus = eventBus) {}
 
@@ -35,7 +31,6 @@ export class Act2T01Controller {
 
   dispose(): void {
     this.unsubscribe.splice(0).forEach((unsubscribe) => unsubscribe());
-    this.clearWeakPromptTimer();
   }
 
   private isSearchWindowOpen(): boolean {
@@ -54,29 +49,15 @@ export class Act2T01Controller {
 
   private sync(): void {
     if (!this.isSearchWindowOpen()) return;
-    this.armWeakPromptTimer();
     const { flags } = this.manager.getState().game;
-    if (flags[buSearchFlag] !== true || flags[ssSearchFlag] !== true) return;
-    if (this.manager.getState().game.flags[webFailedFlag] !== true) this.manager.setFlag(webFailedFlag, true);
-    if (this.manager.getState().game.flags[offlineFlag] !== true) this.manager.setFlag(offlineFlag, true);
-    this.manager.addNotepadAutoEntry(conclusionNoteId);
-    this.clearWeakPromptTimer();
-    // Search evidence is complete; the player chooses when to leave the browser.
-  }
-
-  private armWeakPromptTimer(): void {
-    if (this.weakPromptTimer !== null) return;
-    this.weakPromptTimer = setTimeout(() => {
-      this.weakPromptTimer = null;
-      if (!this.isSearchWindowOpen()) return;
-      if (this.manager.getState().game.flags[webFailedFlag] === true) return;
-      this.manager.addNotepadAutoEntry(weakNoteId);
-    }, weakPromptDelayMs);
-  }
-
-  private clearWeakPromptTimer(): void {
-    if (this.weakPromptTimer === null) return;
-    clearTimeout(this.weakPromptTimer);
-    this.weakPromptTimer = null;
+    const relatedSearchSeen = flags[buSearchFlag] === true || flags[ssSearchFlag] === true;
+    if (relatedSearchSeen) {
+      if (flags[offlineFlag] !== true) this.manager.setFlag(offlineFlag, true);
+      this.manager.addNotepadAutoEntry(conclusionNoteId);
+    }
+    // Retain this historical fact only when both real topic searches happened.
+    if (flags[buSearchFlag] === true && flags[ssSearchFlag] === true && flags[webFailedFlag] !== true) {
+      this.manager.setFlag(webFailedFlag, true);
+    }
   }
 }

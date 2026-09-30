@@ -87,9 +87,9 @@ describe('T07 promotion investigation', () => {
     expect(flags().FLAG_A2_PROMO_VIDEO_FOUND).toBe(true);
     expect(container.querySelector('.t07-finale__player')).not.toBeNull();
 
-    // 拖动到关键帧窗口外：不可截，也不算看过。
-    await seek(5000);
-    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_004');
+    // 关键帧窗口外不可截，也不算看过。
+    await seek(2000);
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_003');
     expect(button('.t07-finale__capture').disabled).toBe(true);
     await act(async () => { button('.t07-finale__capture').click(); });
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual([]);
@@ -125,6 +125,7 @@ describe('T07 promotion investigation', () => {
     expect(container.querySelector('[data-asset-id="IMG_A1_I_004"]')).toBeNull();
     await click('.t07-finale__zoom-left');
     await click('.t07-finale__zoom-right');
+    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
     expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
@@ -146,17 +147,18 @@ describe('T07 promotion investigation', () => {
     await clickTab('外景对照');
     await click('.t07-finale__zoom-left');
     await click('.t07-finale__zoom-right');
+    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
     await click('.t07-finale__temple-confirm');
 
     await clickTab('地点结论');
-    await click('.t07-finale__infer');
+    await click('[data-action-id="A2_T07_INFER_LOCATION"]');
     expect(flags().FLAG_A2_QIMING_LOCATION_INFERRED).toBe(true);
     expect(container.textContent).toContain(act2T07.inference.conclusion);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_003');
 
     await clickTab('再次进山');
-    await click('.t07-finale__trip-confirm');
+    await click('[data-action-id="A2_T07_PLAN_TRIP"]');
     expect(flags().FLAG_A2_SECOND_TRIP_PLANNED).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_004');
 
@@ -169,6 +171,37 @@ describe('T07 promotion investigation', () => {
     expect(flags().FLAG_A2_COMPLETE).toBe(true);
     expect(container.querySelector('.t07-finale__ending')).toBeNull();
     expect(container.querySelector('.t07-finale__ending-replay')).not.toBeNull();
+  });
+
+  // 工单 §15 工作包 H：第二幕收束页必须直接给出进入第三幕的主操作。
+  it('offers a direct act three entry on the closing page instead of forcing the desktop menu', async () => {
+    manager.getState().game.flags = {
+      ...manager.getState().game.flags,
+      FLAG_A2_PROMO_PHOTO_SS_FOUND: true,
+      FLAG_A2_TEMPLE_FRAME_FOUND: true,
+      FLAG_A2_QIMING_LOCATION_INFERRED: true,
+      FLAG_A2_SECOND_TRIP_PLANNED: true,
+      FLAG_A2_COMPLETE: true,
+    };
+    const onEnterAct3 = vi.fn();
+    await act(async () => { root.render(<T07Investigation manager={manager} onEnterAct3={onEnterAct3} />); });
+
+    const entry = container.querySelector('.t07-finale__enter-act3') as HTMLButtonElement;
+    expect(entry).not.toBeNull();
+    expect(entry.textContent).toBe('再次进山，调查启明旧址');
+    // 主操作与「回看资料」并存，且回看仍在。
+    expect(container.querySelector('.t07-finale__ending-replay')).not.toBeNull();
+
+    await act(async () => { entry.click(); });
+    expect(onEnterAct3).toHaveBeenCalledTimes(1);
+  });
+
+  it('falls back to desktop guidance when no act three entry is provided', async () => {
+    manager.getState().game.flags = { ...manager.getState().game.flags, FLAG_A2_COMPLETE: true };
+    await render();
+    // 没有 onEnterAct3 时不能渲染一个空按钮，必须说明去哪继续。
+    expect(container.querySelector('.t07-finale__enter-act3')).toBeNull();
+    expect(container.textContent).toContain('任务栏');
   });
 
   it('never renders a broken T07 image and always offers a text alternative', async () => {

@@ -18,6 +18,8 @@ const createQimingState = (): AppState => {
     FLAG_A2_SCHOOL_ENTERED: true,
     FLAG_A2_SCHOOL_SS_FOUND: true,
     FLAG_A2_SS_MATCH_CONFIRMED: true,
+    FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true,
+    FLAG_A2_SCORE_CHANGE_KNOWN: true,
     FLAG_A2_QIMING_OFFICIAL_FOUND: true,
     FLAG_A2_QIMING_TESTIMONIALS_READ: true,
     FLAG_A2_QIMING_FORUM_FOUND: true,
@@ -26,7 +28,7 @@ const createQimingState = (): AppState => {
     FLAG_A2_OTHER_CASES_ABNORMAL: true,
   };
   state.modules.act2Research.stage = 'qiming';
-  state.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE'] };
+  state.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
   state.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
   state.modules.notepad.autoEntryIds = ['NOTE_A2_T06_004'];
   return state;
@@ -66,7 +68,7 @@ describe('T07 acceptance', () => {
     manager.markAct2T07SegmentPlayed('SEG_UNKNOWN');
     manager.captureAct2T07Frame('FRAME_UNKNOWN', 20000);
     manager.captureAct2T07Frame('FRAME_A2_T07_001', 5000);
-    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001');
+    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001', 'square-opening');
     manager.confirmAct2T07PhotoSymbol();
     manager.confirmAct2T07TempleFrame();
     manager.inferAct2T07Location();
@@ -109,7 +111,7 @@ describe('T07 acceptance', () => {
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_001']);
 
     expect(manager.getState().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
-    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001');
+    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001', 'square-opening');
     manager.confirmAct2T07TempleFrame();
     expect(manager.getState().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_002');
@@ -137,12 +139,12 @@ describe('T07 acceptance', () => {
     manager.markAct2T07SegmentPlayed('SEG_A2_T07_002');
     manager.markAct2T07SegmentPlayed('SEG_A2_T07_003');
     manager.captureAct2T07Frame('FRAME_A2_T07_001', 7000);
-    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001');
+    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001', 'square-opening');
 
     const legacy = JSON.parse(JSON.stringify(manager.getState())) as Record<string, unknown>;
     legacy.schemaVersion = 6;
     const restored = hydrateState(legacy);
-    expect(restored.schemaVersion).toBe(9);
+    expect(restored.schemaVersion).toBe(11);
     expect(restored.modules.act2Research.stage).toBe('finale');
     expect(restored.game.phase).toBe('A2_T07');
     expect(restored.modules.act2Research.t07).toEqual({
@@ -167,7 +169,7 @@ describe('T07 acceptance', () => {
     manager.markAct2T07SegmentPlayed('SEG_A2_T07_002');
     manager.markAct2T07SegmentPlayed('SEG_A2_T07_003');
     manager.captureAct2T07Frame('FRAME_A2_T07_001', 7000);
-    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001');
+    manager.compareAct2T07TempleFrame('FRAME_A2_T07_001', 'square-opening');
     manager.confirmAct2T07TempleFrame();
     manager.inferAct2T07Location();
     manager.planAct2T07SecondTrip();
@@ -175,7 +177,7 @@ describe('T07 acceptance', () => {
 
     // 完成后重载：仍停在 finale，可回看资料，但不出现第三幕入口、也不重复触发完成事件。
     const restored = new StateManager(new EventBus(), hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
-    expect(restored.getState().schemaVersion).toBe(9);
+    expect(restored.getState().schemaVersion).toBe(11);
     expect(restored.getState().modules.act2Research.stage).toBe('finale');
     expect(restored.getState().game.phase).toBe('A2_T07');
     expect(restored.getState().game.flags.FLAG_A2_COMPLETE).toBe(true);

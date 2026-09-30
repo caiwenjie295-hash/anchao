@@ -10,8 +10,6 @@ import { LibraryResearch } from './LibraryResearch';
 const CORRECT_SECTION = 'SECTION_A2_T03_009';
 const WRONG_SECTION = 'SECTION_A2_T03_001';
 const TARGET_VOLUME = 'VOLUME_A2_T03_002';
-const CORE_KEYWORDS = ['KW_A2_T03_001', 'KW_A2_T03_002', 'KW_A2_T03_003'];
-
 describe('LibraryResearch (act2 T03)', () => {
   let container: HTMLDivElement;
   let root: Root;
@@ -96,9 +94,9 @@ describe('LibraryResearch (act2 T03)', () => {
     await click(pick('.act2-library__next'));
     expect(libraryState().currentPageId).toBe(libraryTargetPageId);
     expect(flags().FLAG_A2_BUMUZHI_FOUND).toBe(true);
-    // 到达目标页仍未完成 T03。
-    expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBeUndefined();
-    expect(pick('.act2-library__conclusion')).toBeNull();
+    expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
+    expect(pick('.act2-library__conclusion')).not.toBeNull();
+    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T03_001');
   });
 
   it('requires sequential page turns and never exposes a control that jumps to the gazette page', async () => {
@@ -171,59 +169,33 @@ describe('LibraryResearch (act2 T03)', () => {
     expect(pick<HTMLButtonElement>('.act2-library__zoom-out')?.disabled).toBe(true);
   });
 
-  it('keeps the excerpt locked until three core keywords are marked on the target page', async () => {
+  it('automatically records the target-page source without requiring a keyword checklist', async () => {
     await setup();
     await reachTargetPage();
-    expect(pick<HTMLButtonElement>('.act2-library__excerpt-button')?.disabled).toBe(true);
-
-    await click(pick(`[data-keyword-id="${CORE_KEYWORDS[0]}"]`));
-    await click(pick(`[data-keyword-id="${CORE_KEYWORDS[1]}"]`));
-    expect(pick<HTMLButtonElement>('.act2-library__excerpt-button')?.disabled).toBe(true);
-    expect(pick('.act2-library__keyword-status')?.textContent).toContain('2 / 3');
-
-    await click(pick(`[data-keyword-id="${CORE_KEYWORDS[2]}"]`));
-    expect(pick<HTMLButtonElement>('.act2-library__excerpt-button')?.disabled).toBe(false);
-    expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBeUndefined();
-  });
-
-  it('excerpts to the notepad and completes T03 once the gate is met', async () => {
-    await setup();
-    await reachTargetPage();
-    for (const keywordId of CORE_KEYWORDS) await click(pick(`[data-keyword-id="${keywordId}"]`));
-    for (const keywordId of CORE_KEYWORDS) await click(pick(`[data-keyword-id="${keywordId}"]`));
-
-    await click(pick('.act2-library__excerpt-button'));
-    expect(libraryState().markedKeywordIds).toEqual(CORE_KEYWORDS);
-    expect(libraryState().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
-    expect(manager.getState().modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T03_001']);
+    expect(flags().FLAG_A2_BUMUZHI_FOUND).toBe(true);
     expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
-
-    // 重复操作幂等。
-    await click(pick('.act2-library__excerpt-button'));
-    expect(libraryState().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
-    expect(manager.getState().modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T03_001']);
-
-    expect(pick('.act2-library__conclusion')?.textContent).toContain('缺什么，就用某种东西补什么。');
+    expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T03_001');
+    expect(pick('.act2-library__excerpt-button')).toBeNull();
+    expect(pick('.act2-library__keyword-list')).not.toBeNull();
   });
 
-  it('stays in the T03 completion state and never shows T04 material', async () => {
+  it('keeps T03 and opens T04 only after the player chooses the story action', async () => {
     await setup();
     await reachTargetPage();
-    for (const keywordId of CORE_KEYWORDS) await click(pick(`[data-keyword-id="${keywordId}"]`));
-    await click(pick('.act2-library__excerpt-button'));
-
-    const text = container.textContent ?? '';
-    for (const term of LIBRARY_FORBIDDEN_TERMS) expect(text).not.toContain(term);
-    expect(text).not.toContain('T04');
-    expect(text).toContain('缺什么，就用某种东西补什么。');
     expect(manager.getState().modules.act2Research.stage).toBe('library');
-    expect(container.querySelector('.act2-library__reader')).not.toBeNull();
+    expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
+    expect(pick('.act2-library__conclusion')?.textContent).toContain('缺什么，就用某种东西补什么。');
+    await click(pick('[data-action-id="A2_T03_TO_TALES"]'));
+    expect(manager.getState().modules.act2Research.stage).toBe('tales');
+    expect(container.querySelector('.act2-library')).toBeNull();
+    // stage 变为 T04 后，上层场景宿主会挂载志异调查。
+    for (const term of LIBRARY_FORBIDDEN_TERMS) expect(container.textContent).not.toContain(term);
   });
 
   it('exposes an explicit return-to-desktop callback', async () => {
     const onReturnToDesktop = vi.fn();
     await setup('library', onReturnToDesktop);
-    await click(pick('.act2-library__return'));
+    await click(pick('.investigation-shell__exit'));
     expect(onReturnToDesktop).toHaveBeenCalledTimes(1);
   });
 });

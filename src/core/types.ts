@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 9;
+  schemaVersion: 11;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -89,8 +89,11 @@ export interface AppState {
 }
 
 export type Act4Stage = 'inactive' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05' | 'T06' | 'T07' | 'T08' | 'T09' | 'T10';
+export type Act4NarrativeActionId = 'A4_T02_LOGIN_SUCCEEDED' | 'A4_T04_WAKE_MAIL_OPENED' | 'A4_T08_ARCHIVE_OPENED' | 'A4_T09_NOTE_HIDDEN' | 'A4_T09_DOOR_EXITED' | 'A4_T10_FINAL_MAIL_OPENED';
 export interface Act4State {
   stage: Act4Stage;
+  completedNarrativeSectionIds: string[];
+  completedNarrativeActionIds: Act4NarrativeActionId[];
   readNotebookPages: number[];
   solvedPuzzleIds: string[];
   unlockedAccountIds: string[];
@@ -103,6 +106,7 @@ export interface Act4State {
   seenLaterNodeIds: string[];
   packageStep: number;
   broadcastIndex: number;
+  broadcastPeriodsConfirmed: Array<'morning' | 'night'>;
   finalMailOpened: boolean;
 }
 
@@ -115,7 +119,14 @@ export type Act3Stage = 'inactive' | 'T00' | 'T01' | 'T02' | 'T03' | 'T04' | 'T0
 
 export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_XIAOYUE_CLASSROOM', 'AREA_A2_T05_RESTROOM_APPROACH', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_NOTICE_BOARD'] as const;
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
-export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[] }
+export type Act2SchoolEvidenceId = 'teacher-account' | 'rank-record' | 'qiming-thankyou';
+export type Act2SchoolInferenceId = 'bounded-timeline' | 'qiming-caused-change';
+export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[]; selectedEvidenceIds: Act2SchoolEvidenceId[]; selectedInferenceId: Act2SchoolInferenceId | null; symbolMatchConfirmed: boolean; /**
+ * schema 9 存档中双 S 比对已在旧规则下完成，迁移到当前版本时记录该事实。
+   * 只在旧存档本已带 `FLAG_A2_SS_MATCH_CONFIRMED` 且证据前提成立时写入；
+   * 不为任何存档补写 selectedEvidenceIds / selectedInferenceId 等新证据。
+   */
+  legacyCompletionMigrated: boolean }
 
 /** T07 只保存可恢复的语义进度：已看资料、实际播放覆盖的片段、有效截图与已比对帧。 */
 export interface Act2T07State {
@@ -154,6 +165,8 @@ export interface Act2ResearchState {
     placedCardIds: string[];
     sorted: boolean;
     inferenceAcknowledged: boolean;
+    supportingEvidenceIds: string[];
+    selectedInferenceId: 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer' | null;
   };
   school: Act2SchoolState;
   t07: Act2T07State;
@@ -185,16 +198,27 @@ export interface Act3Lens {
   description: string;
   /** 镜头上可点选的热点：写为线索 ID + 可见动作标签。 */
   hotspots: Act3Hotspot[];
-  /** 邻近镜头的 ID（沿同一站位/朝向）。 */
+  /** 明确的邻近空间动作；不按列表顺序推断方向。 */
+  routes: Act3Route[];
+  /** 静态迁移辅助索引；运行时导航使用 routes。 */
   links: string[];
   /** 进入此镜头前必须检视的线索；未满足时路线保持可见但不可进入。 */
   requiresClueIds?: string[];
+}
+
+export interface Act3Route {
+  actionId: string;
+  kind: 'move' | 'return';
+  target: string;
+  label: string;
 }
 
 export interface Act3Hotspot {
   clueId: string;
   /** 显示动作标签：看向、靠近、蹲下、检查、比对、收集、确认。 */
   label: string;
+  /** 玩家可见的物件观察正文；缺失时界面不得用镜头说明或制作提示兜底。 */
+  observation?: string;
 }
 
 /** 第三幕场景内的事件支持。 */
@@ -240,6 +264,7 @@ export type AnchaoEventMap = {
   'act2:gazette-page-opened': { pageId: string };
   'act2:gazette-keyword-marked': { keywordId: string };
   'act2:gazette-entry-excerpted': { entryId: string };
+  'act2:gazette-entry-read': { entryId: string };
   'act2:tale-read': { taleId: string };
   'act2:tale-collected': { taleId: string };
   'act2:tale-card-placed': { cardId: string };
@@ -265,6 +290,6 @@ export type AnchaoEventMap = {
   'act2:t07-location-inferred': Record<string, never>;
   'act2:t07-trip-planned': Record<string, never>;
   'act2:t07-complete': Record<string, never>;
-  'progress:reset': { schemaVersion: 9 };
-  'save:completed': { schemaVersion: 9 };
+  'progress:reset': { schemaVersion: 11 };
+  'save:completed': { schemaVersion: 11 };
 };

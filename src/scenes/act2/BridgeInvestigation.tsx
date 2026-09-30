@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { EvidenceImage } from '../../components/EvidenceImage';
+import { InvestigationShell } from '../../components/investigation/InvestigationShell';
+import type { InvestigationAction } from '../../components/investigation/types';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import type { AppState, HeibumuNamePart } from '../../core/types';
 import {
@@ -56,7 +58,6 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   if (!isBridgeStage) return null;
 
   const sceneImage = assetLoader.get('IMG_A2_T02_001')?.src;
-
   const selectedElder = bridgeElders.find((elder) => elder.id === selectedElderId) ?? null;
   const isClueElderSelected = selectedElder?.isClueElder === true;
   const locked = wrongAttempts >= bridgePuzzle.maxAttempts;
@@ -96,16 +97,27 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
     manager.setAct2Stage(bridgeResolution.nextStage);
   };
 
+  const actions: InvestigationAction[] = [{
+    actionId: 'A2_T02_TO_LIBRARY', kind: 'move', target: 'county-library', label: bridgeResolution.continueLabel,
+    state: solved ? 'ready' : heard ? 'blocked' : 'unavailable',
+    reason: '先根据老人说出的称呼和出示的照片，辨认这处地名。',
+    onActivate: continueToLibrary,
+  }];
+
+
   return (
+    <InvestigationShell
+      ariaLabel="桥头调查"
+      actLabel="第二幕 · 地方调查"
+      locationLabel={bridgeScene.location}
+      contextLabel={bridgeScene.title}
+      objective="听取当地人的说法，出示相关照片，再核对这处地名。"
+      helpText="先选一位老人交谈；线索人物会在听到相关问题后回应照片。名称判断依据在对话和文字记录里，无需音频。"
+      actions={actions}
+      onExit={() => onReturnDesktop?.()}
+    >
     <section className="act2-bridge" aria-label={bridgeScene.title}>
       {sceneImage && <img className="act2-bridge__ambient" src={sceneImage} alt="" aria-hidden="true" />}
-      <header className="act2-bridge__header">
-        <div>
-          <p className="act2-bridge__location">{bridgeScene.location}</p>
-          <h1 className="act2-bridge__title">{bridgeScene.title}</h1>
-        </div>
-        {onReturnDesktop && <button type="button" className="act2-bridge__return" onClick={onReturnDesktop}>{bridgeScene.returnLabel}</button>}
-      </header>
 
       {!heard && <p className="act2-bridge__intro">{bridgeScene.intro}</p>}
 
@@ -220,11 +232,9 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
           <p className="act2-bridge__entry-body">{bridgeResolution.entryBody}</p>
           <p className="act2-bridge__entry-related">{bridgeResolution.entryRelated}</p>
           <p className="act2-bridge__elder-remark">{bridgeResolution.elderRemark}</p>
-          {state.modules.act2Research.stage === 'bridge' && (
-            <button type="button" className="act2-bridge__continue" onClick={continueToLibrary}>{bridgeResolution.continueLabel}</button>
-          )}
         </div>
       )}
     </section>
+    </InvestigationShell>
   );
 }

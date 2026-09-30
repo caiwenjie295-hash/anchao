@@ -10,9 +10,20 @@
       "assetId": "IMG_A3_T00_001",
       "description": "阴天的公路在挡风玻璃前向远处延伸。坐了将近十小时，小月在副驾翻离线地图。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_DEPART", "label": "继续向县城去" }
+        {
+          "clueId": "CLUE_A3_T00_DEPART",
+          "label": "继续向县城去",
+          "observation": "出发前，我们把宣传视频里出现的那栋建筑和山里的旧照片又对了一遍。车停在山脚，雨还没有停。"
+        }
       ],
-      "links": ["LENS_A3_T00_002"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T00_002",
+          "label": "前往县城补给"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_002",
@@ -21,9 +32,20 @@
       "assetId": "IMG_A3_T00_002",
       "description": "傍晚的小超市门口，几颗核桃、新买的卡其色登山鞋。明早再上山。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_SUPPLIES", "label": "收拾补给，准备进山" }
+        {
+          "clueId": "CLUE_A3_T00_SUPPLIES",
+          "label": "收拾补给，准备进山",
+          "observation": "手电、干电池、雨衣、相机，还有给小月带的热水。东西齐了，才好往山深处走。"
+        }
       ],
-      "links": ["LENS_A3_T00_003"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T00_003",
+          "label": "前往山脚重入"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_003",
@@ -32,9 +54,20 @@
       "assetId": "IMG_A3_T00_003",
       "description": "清晨的鸡公岭山脚。沿旧路向上，小月穿深灰防水外套走在前面。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_APPROACH", "label": "看向前方山口" }
+        {
+          "clueId": "CLUE_A3_T00_APPROACH",
+          "label": "看向前方山口",
+          "observation": "前方山口比上次更难走。雨水把小路冲成两道浅沟，山脊线被雾吃掉了一半。"
+        }
       ],
-      "links": ["LENS_A3_T00_004"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T00_004",
+          "label": "前往山坡电缆"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_004",
@@ -43,9 +76,26 @@
       "assetId": "IMG_A3_T00_004",
       "description": "雨水冲开的泥里横出一截旧电缆。从外形看是人造线，但前方坡面断了。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_CABLE", "label": "靠近看看这段电缆" }
+        {
+          "clueId": "CLUE_A3_T00_CABLE",
+          "label": "靠近看看这段电缆",
+          "observation": "一段旧电缆从坡边露出来，外皮已经硬化开裂。它不是山里该有的东西。"
+        }
       ],
-      "links": ["LENS_A3_T00_005", "LENS_A3_T00_003"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T00_005",
+          "label": "前往电缆断点"
+        },
+        {
+          "actionId": "A3_ROUTE_T00_004_003",
+          "kind": "return",
+          "target": "LENS_A3_T00_003",
+          "label": "返回山脚重入"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_005",
@@ -54,9 +104,20 @@
       "assetId": "IMG_A3_T00_005",
       "description": "蹲下看更清楚：电缆断在泥坡里。它不是引路绳。回头看小月，沿原路继续。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_CABLE_BREAK", "label": "记下电缆在这里断掉" }
+        {
+          "clueId": "CLUE_A3_T00_CABLE_BREAK",
+          "label": "记下电缆在这里断掉",
+          "observation": "电缆在这里断了，断口是剪的，不是被山洪冲断的。有人来过，并且不想让它继续通着。"
+        }
       ],
-      "links": ["LENS_A3_T00_006"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T00_006",
+          "label": "前往回到洞口"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_006",
@@ -65,9 +126,26 @@
       "assetId": "IMG_A3_T00_006",
       "description": "雨又大了，先回第一次避雨的洞。洞口方向与第一幕的山洞轮廓对应。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_CAVE_SHELTER", "label": "进入山洞避雨" }
+        {
+          "clueId": "CLUE_A3_T00_CAVE_SHELTER",
+          "label": "进入山洞避雨",
+          "observation": "雨越下越大，我们躲进上次避雨的山洞。洞口不大，挤两个人刚好。"
+        }
       ],
-      "links": ["LENS_A3_T00_007", "LENS_A3_T00_003"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_006_007",
+          "kind": "move",
+          "target": "LENS_A3_T00_007",
+          "label": "前往洞内谈话"
+        },
+        {
+          "actionId": "A3_ROUTE_T00_006_003",
+          "kind": "return",
+          "target": "LENS_A3_T00_003",
+          "label": "返回山脚重入"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_007",
@@ -76,9 +154,20 @@
       "assetId": "IMG_A3_T00_007",
       "description": "小月谈起小A高中时的习惯，主角拿手机给她看先前拍下的石庙照片。补母的话题被她重新提起。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_CAVE_TALK", "label": "听她说补母" }
+        {
+          "clueId": "CLUE_A3_T00_CAVE_TALK",
+          "label": "听她说补母",
+          "observation": "小月又提起那个名字。她说山里老人讲的是「吃什么补什么」，补进来的东西未必真是自己的。"
+        }
       ],
-      "links": ["LENS_A3_T00_008"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_007_008",
+          "kind": "move",
+          "target": "LENS_A3_T00_008",
+          "label": "前往再访石庙"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_008",
@@ -87,9 +176,20 @@
       "assetId": "IMG_A3_T00_008",
       "description": "雨势转小，回到那座旧石庙。底座边缘露出空位，但只有一尊塑像原本的样子，留下了“这里或许原本有两尊”的疑问。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_TEMPLE_REVISIT", "label": "查看底座空位" }
+        {
+          "clueId": "CLUE_A3_T00_TEMPLE_REVISIT",
+          "label": "查看底座空位",
+          "observation": "破庙还是老样子。神龛底座上积着灰，中间那块空的轮廓比上次更清楚。"
+        }
       ],
-      "links": ["LENS_A3_T00_009"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_008_009",
+          "kind": "move",
+          "target": "LENS_A3_T00_009",
+          "label": "前往山下水痕"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_009",
@@ -98,9 +198,20 @@
       "assetId": "IMG_A3_T00_009",
       "description": "下山途中见一片坡面水流分叉过于整齐。小月指了指那个方向。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_WATER_ODDITY", "label": "看向异常分叉" }
+        {
+          "clueId": "CLUE_A3_T00_WATER_ODDITY",
+          "label": "看向异常分叉",
+          "observation": "水痕在坡面分了叉：左边顺山而下，右边横切进林子。这不是自然流的。"
+        }
       ],
-      "links": ["LENS_A3_T00_010"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_009_010",
+          "kind": "move",
+          "target": "LENS_A3_T00_010",
+          "label": "前往拨泥见沟"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_010",
@@ -109,9 +220,20 @@
       "assetId": "IMG_A3_T00_010",
       "description": "蹲下拨开湿泥，露出旧损但笔直的混凝土排水沟边。水仍沿沟向下流。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_DRAIN_DISCOVERED", "label": "记下排水沟在此" }
+        {
+          "clueId": "CLUE_A3_T00_DRAIN_DISCOVERED",
+          "label": "记下排水沟在此",
+          "observation": "拨开浮土，下面露出一条砌好的排水沟。沟壁平整，人工挖的。"
+        }
       ],
-      "links": ["LENS_A3_T00_011"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_010_011",
+          "kind": "move",
+          "target": "LENS_A3_T00_011",
+          "label": "前往沿沟上行"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_011",
@@ -120,9 +242,20 @@
       "assetId": "IMG_A3_T00_011",
       "description": "沿沟向上走，沟边散落几块红砖；树林间树距近乎等距，草下露出平整旧路。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_OLD_ROAD", "label": "记下残旧路基" }
+        {
+          "clueId": "CLUE_A3_T00_OLD_ROAD",
+          "label": "记下残旧路基",
+          "observation": "沿着沟往上，脚下变成压实的旧路基。碎石被车轮碾过，早已长满杂草。"
+        }
       ],
-      "links": ["LENS_A3_T00_012"]
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T00_011_012",
+          "kind": "move",
+          "target": "LENS_A3_T00_012",
+          "label": "前往外墙锈门"
+        }
+      ]
     },
     {
       "id": "LENS_A3_T00_012",
@@ -131,9 +264,13 @@
       "assetId": "IMG_A3_T00_012",
       "description": "旧路尽头是红砖围墙与一扇锈铁门。门口右侧水泥柱被爬山虎遮住，并不露出标牌全名。停在门外，等下一步。",
       "hotspots": [
-        { "clueId": "CLUE_A3_T00_GATE_REACHED", "label": "记下找到了外墙与锈门" }
+        {
+          "clueId": "CLUE_A3_T00_GATE_REACHED",
+          "label": "记下找到了外墙与锈门",
+          "observation": "红砖外墙和一道锈死的铁门从藤蔓里露出来。有人曾刻意把这里封起来。"
+        }
       ],
-      "links": []
+      "routes": []
     }
   ]
 }

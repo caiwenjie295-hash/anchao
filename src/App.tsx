@@ -77,6 +77,15 @@ export default function App() {
 
   const openApp = (appId: AppId) => stateManager.openApp(appId);
   const taskbarClick = (appId: AppId) => stateManager.toggleTaskbarApp(appId);
+  // 第二幕收尾页与任务栏「调查」共用同一语义：只有第二幕已完成且第三幕未开始时才启动，
+  // 避免出现第二个能改写阶段的入口（工单 §15.2 FLOW-05）。
+  const act2Complete = state.game.flags.FLAG_A2_COMPLETE === true;
+  const startAct3FromInvestigation = () => {
+    if (!act2Complete || state.modules.act3.stage !== 'inactive') return;
+    setDismissedAct2Stage(null);
+    stateManager.startAct3();
+    setDismissedAct3(false);
+  };
   const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
   const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
   const act3Stage = state.modules.act3.stage;
@@ -102,7 +111,7 @@ export default function App() {
   const investigationReady = (transition && !transitionOpen) || (!act3Active && !act4Active && state.game.flags.FLAG_A2_COMPLETE === true) || (act3Active && dismissedAct3) || (state.game.flags.FLAG_A3_COMPLETE === true && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07' && !act4Active && !reviewAct3) || (act4Active && dismissedAct4 && !reviewAct3);
   const investigation = investigationReady ? <>
     {transition && !transitionOpen && <StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} />}
-    {!act3Active && !act4Active && state.game.flags.FLAG_A2_COMPLETE === true && <aside className="story-transition-launch" aria-label="第三幕调查已就绪"><button type="button" onClick={() => { stateManager.startAct3(); setDismissedAct3(false); }}>前往启明旧址</button></aside>}
+    {!act3Active && !act4Active && act2Complete && <aside className="story-transition-launch" aria-label="第三幕调查已就绪"><button type="button" onClick={startAct3FromInvestigation}>前往启明旧址</button></aside>}
     {act3Active && dismissedAct3 && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3) && <aside className="story-transition-launch" aria-label="第三幕调查已就绪"><button type="button" onClick={() => setDismissedAct3(false)}>继续启明遗址调查</button></aside>}
     {state.game.flags.FLAG_A3_COMPLETE === true && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07' && !act4Active && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><button type="button" onClick={() => { stateManager.startAct4(); setDismissedAct4(false); }}>继续调查小 A 的笔记</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
     {act4Active && dismissedAct4 && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><button type="button" onClick={() => setDismissedAct4(false)}>继续第四幕调查</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
@@ -150,6 +159,7 @@ export default function App() {
         sceneOpen={act2SceneOpen}
         onDismissScene={() => setDismissedAct2Stage(act2SceneStage)}
         onResumeScene={() => setDismissedAct2Stage(null)}
+        onEnterAct3={startAct3FromInvestigation}
         manager={stateManager}
       />
     )}

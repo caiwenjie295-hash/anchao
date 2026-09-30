@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import imageDocument from '../../data/images.json';
-import { act3FirstLensId, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage } from './act3Data';
+import { ACT3_REQUIRED_EVIDENCE, act3FirstLensId, act3RequiredClueIds, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage } from './act3Data';
 
 describe('third-act authored lens graph', () => {
   it('keeps each stage navigable with registered resource IDs and unique clues', () => {
@@ -14,9 +14,27 @@ describe('third-act authored lens graph', () => {
       expect(act3StageClueIds(stage).length).toBeGreaterThan(0);
       for (const lens of doc.lenses) {
         expect(imageIds.has(lens.assetId), lens.id).toBe(true);
-        for (const linkId of lens.links) expect(lensIds.has(linkId), `${lens.id} → ${linkId}`).toBe(true);
+        for (const route of lens.routes) {
+          expect(lensIds.has(route.target), `${lens.id} → ${route.target}`).toBe(true);
+          expect(route.actionId).toMatch(/^A3_ROUTE_/);
+          expect(route.label.trim().length).toBeGreaterThan(0);
+          expect(['move', 'return']).toContain(route.kind);
+        }
+        expect(lens.links).toEqual(lens.routes.map((route) => route.target));
         for (const clueId of lens.requiresClueIds ?? []) expect(act3StageClueIds(stage)).toContain(clueId);
       }
+    }
+  });
+
+  it('declares a small, reasoned core evidence set for every stage', () => {
+    for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]) {
+      expect(ACT3_REQUIRED_EVIDENCE[stage].length).toBeGreaterThan(0);
+      expect(act3RequiredClueIds(stage)).toEqual(ACT3_REQUIRED_EVIDENCE[stage].map(({ clueId }) => clueId));
+      for (const item of ACT3_REQUIRED_EVIDENCE[stage]) {
+        expect(act3StageClueIds(stage)).toContain(item.clueId);
+        expect(item.reason.trim().length).toBeGreaterThan(8);
+      }
+      expect(act3RequiredClueIds(stage).length).toBeLessThan(act3StageClueIds(stage).length);
     }
   });
 
@@ -41,9 +59,7 @@ describe('third-act authored lens graph', () => {
   it('gates the upstairs shrine comparison on inspected kitchen evidence', () => {
     const doc = act3StageDoc('T06');
     const compare = doc.lenses.find((lens) => lens.id === 'LENS_A3_T06_008')!;
-    expect(compare.requiresClueIds).toEqual(expect.arrayContaining([
-      'CLUE_A3_T06_POT_KNIFE', 'CLUE_A3_T06_BONES', 'CLUE_A3_T06_HOOKS', 'CLUE_A3_T06_SHRINE', 'CLUE_A3_T06_EMPTY_BASE',
-    ]));
+    expect(compare.requiresClueIds).toEqual(['CLUE_A3_T06_SHRINE', 'CLUE_A3_T06_EMPTY_BASE']);
     expect(compare.description).toContain('破庙');
     expect(compare.description).toContain('仍不明');
   });

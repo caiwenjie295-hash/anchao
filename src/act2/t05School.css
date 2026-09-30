@@ -1,4 +1,4 @@
-.t05-school{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;overflow:auto;background:#dce3df;color:#202724;font-family:var(--font-ui,system-ui,sans-serif)}
+.t05-school{position:relative;inset:auto;z-index:auto;box-sizing:border-box;width:100%;min-height:100%;display:flex;flex-direction:column;overflow:visible;background:#dce3df;color:#202724;font-family:var(--font-ui,system-ui,sans-serif)}
 .t05-school button{min-height:44px;border:1px solid #7d8981;border-radius:7px;background:#f8faf8;color:inherit;padding:.55rem .85rem;font:inherit;cursor:pointer}
 .t05-school button:hover{background:#e5ece6}.t05-school button:focus-visible,.t05-comparison button:focus-visible{outline:3px solid #285c83;outline-offset:2px}
 .t05-school__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:clamp(.8rem,2vw,1.4rem) clamp(1rem,4vw,3rem);background:#26352f;color:#f4f3eb}

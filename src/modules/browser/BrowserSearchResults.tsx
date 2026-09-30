@@ -42,6 +42,6 @@ export function BrowserSearchResults({ query, stage, onOpen }: { query: string; 
       </p>
     </header>
     {results.length > 0 && <ol className="browser-results__list">{results.map((page) => <li key={page.id}><ResultItem page={page} onOpen={onOpen} /></li>)}</ol>}
-    {results.length === 0 && <p className="browser-empty">试试“鸡公岭”“XX县失踪”或其他搜索建议。</p>}
+    {results.length === 0 && <p className="browser-empty">{stage === 'search' ? '可以缩短关键词、交换词序，或先记下疑问再向当地人求证。' : '试试“鸡公岭”“XX县失踪”或其他搜索建议。'}</p>}
   </section>;
 }

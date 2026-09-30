@@ -16,7 +16,7 @@ describe('saveManager', () => {
     state.desktop.windows.mail.status = 'normal';
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated.desktop.windows.mail.status).toBe('normal');
-    expect(hydrated.schemaVersion).toBe(9);
+    expect(hydrated.schemaVersion).toBe(11);
   });
 
   it('falls back safely when storage contains malformed JSON', () => {
@@ -71,7 +71,7 @@ describe('saveManager', () => {
       photos: { activePhotoId: 'IMG_A1_H_003', openedPhotoIds: ['IMG_A1_H_003'], adjustments: { IMG_A1_H_003: { exposure: 55, shadows: 50, contrast: 35 } }, zoomByPhotoId: { IMG_A1_H_003: 1.8 }, inspectedSymbolPhotoIds: ['IMG_A1_H_003'] },
     };
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(9);
+    expect(migrated.schemaVersion).toBe(11);
     expect(migrated.game).toEqual({ act: 1, phase: 'K', flags: { FLAG_A1_SS_FOUND: true, FLAG_A1_COMPLETE: true }, discoveredClueIds: ['CLUE_A1_K_001'] });
     expect(migrated.modules.mail).toEqual({ readIds: ['MAIL_A1_C_001'], starredIds: ['MAIL_A1_C_001'] });
     expect(migrated.modules.browser).toEqual({ queryHistory: ['鸡公岭'], visitedPageIds: ['PAGE_A1_E_001'] });
@@ -90,8 +90,8 @@ describe('saveManager', () => {
       stage: 'library',
       bridge: { talkedElderIds: ['ELDER_A2_T02_001'], shownEvidenceAssetIds: ['IMG_A1_I_002'], heardPhrase: true, nameChoices: { first: '黑', middle: '补', last: '母' } },
       library: { visitedSectionIds: ['SECTION_A2_T03_001'], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: 'PAGE_A2_T03_004', bookmarkedPageIds: ['PAGE_A2_T03_004'], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: ['ENTRY_A2_T03_001'] },
-      tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
-      school: { visitedAreaIds: [], inspectedHotspotIds: [] },
+      tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
+      school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
       t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
     };
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
@@ -120,8 +120,8 @@ describe('saveManager', () => {
       stage: 'inactive',
       bridge: { talkedElderIds: ['ELDER_A2_T02_001'], shownEvidenceAssetIds: ['IMG_A1_I_002'], heardPhrase: false, nameChoices: { first: '黑', middle: null, last: null } },
       library: { visitedSectionIds: [], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: [] },
-      tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false },
-      school: { visitedAreaIds: [], inspectedHotspotIds: [] },
+      tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
+      school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
       t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
     });
     expect(hydrated.game.flags).toEqual({ FLAG_A1_COMPLETE: true });
@@ -135,7 +135,7 @@ describe('saveManager', () => {
     expect(hydrateState(v2).modules.act2Research.tales).toEqual(createDefaultAct2ResearchState().tales);
     const state = createDefaultState(); state.game.flags = { FLAG_A1_COMPLETE: true }; state.modules.notepad.userText = '保留';
     const repaired = hydrateState({ ...state, modules: { ...state.modules, act2Research: { ...state.modules.act2Research, tales: { readTaleIds: ['TALE_A2_T04_001', 'bad'], collectedTaleIds: ['TALE_A2_T04_002', 'TALE_A2_T04_001'], placedCardIds: ['CARD_A2_T04_001', 'bad'], sorted: true, inferenceAcknowledged: true } } } });
-    expect(repaired.modules.act2Research.tales).toEqual({ readTaleIds: ['TALE_A2_T04_001'], collectedTaleIds: ['TALE_A2_T04_001'], placedCardIds: ['CARD_A2_T04_001'], sorted: false, inferenceAcknowledged: false });
+    expect(repaired.modules.act2Research.tales).toMatchObject({ readTaleIds: ['TALE_A2_T04_001'], collectedTaleIds: ['TALE_A2_T04_001'], placedCardIds: ['CARD_A2_T04_001'], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null });
     expect(repaired.game.flags).toEqual({ FLAG_A1_COMPLETE: true }); expect(repaired.modules.notepad.userText).toBe('保留');
   });
 
@@ -148,25 +148,29 @@ describe('saveManager', () => {
     legacy.modules.act2Research.tales = { readTaleIds: ['TALE_A2_T04_001'], collectedTaleIds: ['TALE_A2_T04_001'], placedCardIds: Array.from({ length: 12 }, (_, index) => `CARD_A2_T04_${String(index + 1).padStart(3, '0')}`), sorted: true, inferenceAcknowledged: true };
     legacy.modules.notepad.autoEntryIds = ['NOTE_A1_K_001', 'NOTE_A2_T04_004'];
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(9);
+    expect(migrated.schemaVersion).toBe(11);
     expect(migrated.game.flags).toEqual(legacy.game.flags);
-    expect(migrated.modules.act2Research.tales).toEqual(legacy.modules.act2Research.tales);
+    expect(migrated.modules.act2Research.tales).toMatchObject(legacy.modules.act2Research.tales);
     expect(migrated.modules.notepad.autoEntryIds).toEqual(legacy.modules.notepad.autoEntryIds);
-    expect(migrated.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [] });
+    expect(migrated.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false });
   });
 
   it('restores valid schema 4 school progress and deduplicates only known area and hotspot IDs', () => {
     const school = createDefaultState();
+    school.schemaVersion = 9 as 11;
     school.game.act = 2; school.game.phase = 'A2_T05';
     school.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_FIRE_HYDRANT_SEEN: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_NAME_FOUND: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
     school.modules.act2Research.stage = 'school';
-    school.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_CORRIDOR', 'unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_TEACHER', 'unknown'] };
+    school.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_CORRIDOR', 'unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_TEACHER', 'unknown'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     school.modules.notepad.autoEntryIds = ['NOTE_A2_T05_001', 'NOTE_A2_T05_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(school)));
-    expect(restored.schemaVersion).toBe(9);
+    expect(restored.schemaVersion).toBe(11);
     expect(restored.game.phase).toBe('A2_T05');
     expect(restored.modules.act2Research.stage).toBe('school');
-    expect(restored.modules.act2Research.school).toEqual({ visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] });
+    // schema 9 的双 S 比对在旧规则下已完成，迁移后必须把该事实持久化，
+    // 否则保存后的第二次载入会按新门槛清掉 FLAG_A2_SS_MATCH_CONFIRMED。
+    // 注意不会补写 selectedEvidenceIds / selectedInferenceId 等新证据。
+    expect(restored.modules.act2Research.school).toEqual({ visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: true });
     expect(restored.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
   });
 
@@ -175,13 +179,13 @@ describe('saveManager', () => {
     broken.game.act = 2; broken.game.phase = 'A2_T05';
     broken.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: 'true' as unknown as boolean, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
     broken.modules.act2Research.stage = 'school';
-    broken.modules.act2Research.school = { visitedAreaIds: ['unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER'] };
+    broken.modules.act2Research.school = { visitedAreaIds: ['unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     broken.modules.notepad.autoEntryIds = ['NOTE_A1_K_001', 'NOTE_A2_T05_001', 'NOTE_A2_T05_004'];
     const cleaned = hydrateState(JSON.parse(JSON.stringify(broken)));
     expect(cleaned.modules.act2Research.stage).toBe('tales');
     expect(cleaned.game.phase).toBe('A2_T04');
     expect(Object.keys(cleaned.game.flags).filter((id) => id.startsWith('FLAG_A2_') && /SCHOOL|FIRE_HYDRANT|LEAVE_OF_ABSENCE|SCORE_CHANGE|QIMING|SS_MATCH/.test(id))).toEqual([]);
-    expect(cleaned.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [] });
+    expect(cleaned.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false });
     expect(cleaned.modules.notepad.autoEntryIds).toEqual(['NOTE_A1_K_001']);
     expect(cleaned.game.flags.FLAG_A1_COMPLETE).toBe(true);
 
@@ -197,7 +201,7 @@ describe('saveManager', () => {
     broken.game.act = 2; broken.game.phase = 'A2_T05';
     broken.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_NAME_FOUND: true };
     broken.modules.act2Research.stage = 'school';
-    broken.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_HONOR_ROLL'], inspectedHotspotIds: ['HOTSPOT_A2_T05_QIMING_TEXT'] };
+    broken.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_HONOR_ROLL'], inspectedHotspotIds: ['HOTSPOT_A2_T05_QIMING_TEXT'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     broken.modules.notepad.autoEntryIds = ['NOTE_A2_T05_002', 'NOTE_A2_T05_003'];
     const cleaned = hydrateState(JSON.parse(JSON.stringify(broken)));
     expect(cleaned.game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).not.toBe(true);
@@ -220,14 +224,14 @@ describe('saveManager', () => {
   it('migrates valid qiming progress and strips it when its T05 match prerequisite is missing', () => {
     const qiming = createDefaultState();
     qiming.game.act = 2; qiming.game.phase = 'A2_T06';
-    qiming.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true, FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true, FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true };
+    qiming.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true, FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true, FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true };
     qiming.modules.act2Research.stage = 'qiming';
-    qiming.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE'] };
+    qiming.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
     qiming.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009', 'not-a-page'];
     qiming.modules.browser.queryHistory = ['启明 投诉', '鸡公岭'];
     qiming.modules.notepad.autoEntryIds = ['NOTE_A2_T06_001', 'NOTE_A2_T06_002', 'NOTE_A2_T06_003', 'NOTE_A2_T06_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(qiming)));
-    expect(restored.schemaVersion).toBe(9);
+    expect(restored.schemaVersion).toBe(11);
     expect(restored.modules.act2Research.stage).toBe('qiming');
     expect(restored.game.phase).toBe('A2_T06');
     expect(restored.modules.browser.visitedPageIds).toEqual(['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009']);
@@ -262,7 +266,7 @@ describe('saveManager', () => {
     expect(SAVE_KEY).toBe('anchao.save.v1');
     localStorage.setItem(SAVE_KEY, JSON.stringify(asLegacyFirstActSave()));
     const loaded = loadState(localStorage);
-    expect(loaded.schemaVersion).toBe(9);
+    expect(loaded.schemaVersion).toBe(11);
     expect(loaded.modules.act2Research.stage).toBe('inactive');
   });
 

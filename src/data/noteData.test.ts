@@ -14,7 +14,7 @@ describe('note data', () => {
 describe('act2 note registry', () => {
   it('registers the notes consumed by T01-T06 tasks', () => {
     for (const noteId of ACT2_NOTE_IDS) expect(noteById.get(noteId)?.content).toBeTruthy();
-    expect(noteById.get('NOTE_A2_T01_001')?.content).toContain('只有当地人才知道');
+    expect(noteById.get('NOTE_A2_T01_001')?.content).toContain('当地人才知道');
     expect(noteById.get('NOTE_A2_T01_002')?.content).toBe('这个词太普通了。');
     expect(noteById.get('NOTE_A2_T02_001')?.content).toContain('hei bu mu');
     expect(noteById.get('NOTE_A2_T02_002')?.content).toContain('县志');

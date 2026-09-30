@@ -1,17 +1,15 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { assetLoader } from '../../core/assetLoader';
+import { InvestigationShell } from '../../components/investigation/InvestigationShell';
+import type { InvestigationAction } from '../../components/investigation/types';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import {
-  countMarkedCoreKeywords,
   libraryCompletion,
   libraryCorrectSectionId,
-  libraryEntryId,
   libraryFlagIds,
   libraryKeywordsByPageId,
-  libraryNoteId,
   libraryPageById,
   libraryPagesByVolumeId,
-  libraryRequiredCoreKeywordCount,
   librarySceneCopy,
   librarySections,
   libraryTargetPageId,
@@ -62,7 +60,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
   const targetPageActive = stage === 'library' && library.currentPageId === libraryTargetPageId;
   useEffect(() => {
     if (!targetPageActive || bumuzhiFlag) return;
-    manager.setFlag(libraryFlagIds.bumuzhiFound, true);
+    manager.readAct2GazetteTargetPage();
   }, [manager, targetPageActive, bumuzhiFlag]);
 
   if (stage !== 'library') return null;
@@ -81,10 +79,6 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
 
   const keywords = currentPage ? libraryKeywordsByPageId.get(currentPage.id) ?? [] : [];
   const markedKeywordIds = library.markedKeywordIds;
-  const markedCoreCount = countMarkedCoreKeywords(markedKeywordIds);
-  const onTargetPage = currentPage?.id === libraryTargetPageId;
-  const excerptUnlocked = onTargetPage && markedCoreCount >= libraryRequiredCoreKeywordCount;
-  const excerpted = library.excerptedEntryIds.includes(libraryEntryId);
   const bookmarked = currentPage ? library.bookmarkedPageIds.includes(currentPage.id) : false;
 
   const visitSection = (sectionId: string) => {
@@ -101,19 +95,30 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
     if (firstPage) manager.openGazettePage(firstPage.id);
   };
 
-  const excerpt = () => {
-    if (!excerptUnlocked) return;
-    manager.excerptGazetteEntry(libraryEntryId);
-    manager.addNotepadAutoEntry(libraryNoteId);
-    if (manager.getState().game.flags[libraryFlagIds.ruleKnown] !== true) {
-      manager.setFlag(libraryFlagIds.ruleKnown, true);
-    }
-  };
+
+  const actions: InvestigationAction[] = [{
+    actionId: 'A2_T03_TO_TALES', kind: 'story', target: 'tales', label: '继续对照三篇志异',
+    state: ruleKnown ? 'ready' : 'blocked',
+    reason: '先在《补母志》目标页读完这段记载；阅读会自动登记来源。',
+    relatedMaterials: ruleKnown ? undefined : [{ id: 'catalog', label: '目录、卷册与书页' }],
+    onActivate: () => manager.setAct2Stage('tales'),
+  }];
+  const focusCatalog = () => document.querySelector<HTMLElement>('.act2-library__catalog')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
 
   return (
+    <InvestigationShell
+      ariaLabel="县图书馆地方志调查"
+      actLabel="第二幕 · 地方调查"
+      locationLabel="县图书馆阅览室"
+      contextLabel="地方志目录 · 卷册 · 书页"
+      objective="从县志里找到鸡公岭附近的旧俗记录，读清楚它描述了什么。"
+      helpText="先缩小目录范围，再打开书架上的卷册并逐页翻阅。读到《补母志》后，来源会自动记入笔记；关键词和书签可用于回看，不是额外通关清单。"
+      actions={actions}
+      onExit={() => onReturnToDesktop?.()}
+      onOpenMaterial={() => focusCatalog()}
+    >
     <section className="act2-library" aria-label={`${librarySceneCopy.title} · 地方志检索`}>
       {sceneImage && <img className="act2-library__ambient" src={sceneImage} alt="" aria-hidden="true" />}
-      <a className="act2-library__skip" href="#act2-library-return">跳到返回按钮</a>
 
       <header className="act2-library__header">
         <p className="act2-library__eyebrow">{librarySceneCopy.eyebrow}</p>
@@ -299,26 +304,8 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                     );
                   })}
                 </ul>
-                <p className="act2-library__keyword-status" aria-live="polite">
-                  已标记核心词 {markedCoreCount} / {libraryRequiredCoreKeywordCount}
-                </p>
               </div>
 
-              <div className="act2-library__excerpt">
-                <button
-                  type="button"
-                  className="act2-library__excerpt-button"
-                  disabled={!excerptUnlocked}
-                  onClick={excerpt}
-                >
-                  {excerpted ? '已摘录到记事本' : '摘录到记事本'}
-                </button>
-                {!excerptUnlocked && (
-                  <span className="act2-library__excerpt-hint">
-                    翻到《补母志》正文，并至少标记 3 个核心词。
-                  </span>
-                )}
-              </div>
             </>
           )}
         </section>
@@ -330,24 +317,14 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
             <h2>{libraryCompletion.title}</h2>
             <p className="act2-library__conclusion-line">{libraryCompletion.conclusion}</p>
             <p className="act2-library__conclusion-detail">{libraryCompletion.detail}</p>
-            <button type="button" className="act2-library__continue-tales" onClick={() => manager.setAct2Stage('tales')}>继续查阅三篇志异</button>
           </div>
         ) : (
           <p className="act2-library__ambience">{librarySceneCopy.ambience}</p>
         )}
       </aside>
 
-      <footer className="act2-library__footer">
-        <button
-          type="button"
-          id="act2-library-return"
-          className="act2-library__return"
-          onClick={() => onReturnToDesktop?.()}
-        >
-          {librarySceneCopy.returnLabel}
-        </button>
-      </footer>
     </section>
+    </InvestigationShell>
   );
 }
 

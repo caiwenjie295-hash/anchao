@@ -110,7 +110,24 @@ export function validateBrowserData(): void {
 }
 validateBrowserData();
 
-export const findSearchQuery = (query: string): SearchQuery | undefined => searchQueryByNormalizedTerm.get(normalizeSearchQuery(query));
+const compactSearchTerm = (query: string): string => normalizeSearchQuery(query).replace(/[\s\p{P}\p{Z}]+/gu, '');
+
+/** T01 的自然语言顺序不固定；只在其冻结词组内做去标点、词序归一化。 */
+const findAct2T01SearchQuery = (query: string): SearchQuery | undefined => {
+  const compact = compactSearchTerm(query);
+  if (!compact) return undefined;
+  return searchQueries.find((definition) => {
+    if (!isAct2T01Record(definition)) return false;
+    return [definition.query, ...definition.aliases].some((variant) => {
+      const terms = variant.split(/[\s\p{P}\p{Z}]+/u).filter(Boolean).map(compactSearchTerm);
+      return terms.length > 1 && terms.every((term) => compact.includes(term))
+        && terms.reduce((length, term) => length + term.length, 0) === compact.length;
+    });
+  });
+};
+
+export const findSearchQuery = (query: string): SearchQuery | undefined =>
+  searchQueryByNormalizedTerm.get(normalizeSearchQuery(query)) ?? findAct2T01SearchQuery(query);
 export const isAct2T06Query = (query: string): boolean => {
   const definition = findSearchQuery(query);
   return definition !== undefined && isAct2T06Record(definition);

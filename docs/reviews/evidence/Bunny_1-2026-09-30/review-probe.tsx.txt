@@ -1,0 +1,82 @@
+import { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import { expect, it, vi } from 'vitest';
+import { PhotoViewport } from './PhotoViewport';
+import { createDefaultState } from '../core/defaultState';
+import { hydrateState } from '../core/saveManager';
+
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+
+it('keeps validated schema 9 school completion after a save and second reload', () => {
+  const legacy = createDefaultState();
+  legacy.schemaVersion = 9 as 10;
+  legacy.game.act = 2;
+  legacy.game.phase = 'A2_T05';
+  legacy.game.flags = {
+    FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true,
+    FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true,
+    FLAG_A2_FIRE_HYDRANT_SEEN: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true,
+    FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_NAME_FOUND: true,
+    FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true,
+  };
+  legacy.modules.act2Research.stage = 'school';
+  legacy.modules.act2Research.school.visitedAreaIds = ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM'];
+  legacy.modules.act2Research.school.inspectedHotspotIds = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'];
+  legacy.modules.notepad.autoEntryIds = ['NOTE_A2_T05_004'];
+  const once = hydrateState(JSON.parse(JSON.stringify(legacy)));
+  expect(once.schemaVersion).toBe(10);
+  expect(once.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
+  const twice = hydrateState(JSON.parse(JSON.stringify(once)));
+  expect(twice.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
+  expect(twice.modules.notepad.autoEntryIds).toContain('NOTE_A2_T05_004');
+});
+
+it('observes the current photo frame after a lens changes and resizes', async () => {
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  const observers: Array<{ element?: Element; callback: ResizeObserverCallback; disconnected: boolean }> = [];
+  class FakeObserver {
+    record: typeof observers[number];
+    constructor(callback: ResizeObserverCallback) {
+      this.record = { callback, disconnected: false };
+      observers.push(this.record);
+    }
+    observe(element: Element) { this.record.element = element; }
+    disconnect() { this.record.disconnected = true; }
+    unobserve() {}
+  }
+  vi.stubGlobal('ResizeObserver', FakeObserver);
+  let dimensions = { width: 800, height: 600 };
+  const spy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+    const { width, height } = this.classList.contains('photo-viewport__frame') ? dimensions : { width: 0, height: 0 };
+    return { width, height, top: 0, left: 0, right: width, bottom: height, x: 0, y: 0, toJSON: () => ({}) } as DOMRect;
+  });
+  const render = async (sceneKey: string) => {
+    await act(async () => root.render(<PhotoViewport sceneKey={sceneKey} imageUrl={sceneKey + '.jpg'} imageAlt={sceneKey} hotspots={[]} routes={[]} />));
+    const img = container.querySelector('img')!;
+    Object.defineProperty(img, 'naturalWidth', { value: 1448, configurable: true });
+    Object.defineProperty(img, 'naturalHeight', { value: 1086, configurable: true });
+    await act(async () => img.dispatchEvent(new Event('load')));
+  };
+  try {
+    await render('first');
+    const oldFrame = container.querySelector('.photo-viewport__frame')!;
+    await render('second');
+    const newFrame = container.querySelector('.photo-viewport__frame')!;
+    expect(newFrame).not.toBe(oldFrame);
+    dimensions = { width: 400, height: 300 };
+    await act(async () => {
+      for (const observer of observers) {
+        if (!observer.disconnected && observer.element === newFrame) observer.callback([], {} as ResizeObserver);
+      }
+    });
+    expect(container.querySelector<HTMLElement>('.photo-viewport__plane')!.style.width).toBe('400px');
+    expect(container.querySelector<HTMLElement>('.photo-viewport__plane')!.style.height).toBe('300px');
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    spy.mockRestore();
+    vi.unstubAllGlobals();
+  }
+});

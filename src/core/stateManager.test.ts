@@ -132,7 +132,7 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([9]);
+    expect(resets).toEqual([10]);
   });
 
   it('acknowledges only the current story card and persists the choice', () => {
@@ -167,6 +167,7 @@ describe('StateManager second-act foundation', () => {
 
   const runToBridge = (instance: StateManager): void => {
     instance.startSecondAct();
+    instance.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true);
     instance.setAct2Stage('bridge');
   };
 
@@ -234,6 +235,7 @@ describe('StateManager second-act foundation', () => {
     manager.startSecondAct();
     manager.setAct2Stage('nowhere' as Act2ActiveStage);
     manager.setAct2Stage('search');
+    manager.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true);
     manager.setAct2Stage('bridge');
     manager.setAct2Stage('library');
     manager.setAct2Stage('bridge');
@@ -250,6 +252,7 @@ describe('StateManager second-act foundation', () => {
     manager.talkToAct2Elder('ELDER_A2_T02_001');
     manager.startSecondAct();
     manager.talkToAct2Elder('ELDER_A2_T02_001');
+    manager.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true);
     manager.setAct2Stage('bridge');
     manager.talkToAct2Elder('   ');
     manager.talkToAct2Elder('ELDER_A2_T02_001');
@@ -266,6 +269,7 @@ describe('StateManager second-act foundation', () => {
     manager.setAct2Stage('bridge');
     manager.showAct2Evidence('IMG_A1_I_001');
     manager.startSecondAct();
+    manager.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true);
     manager.showAct2Evidence('IMG_A1_I_001');
     manager.setAct2Stage('bridge');
     manager.showAct2Evidence('   ');
@@ -285,6 +289,7 @@ describe('StateManager second-act foundation', () => {
     manager.setAct2Stage('bridge');
     manager.setHeibumuNameChoice('first', '黑');
     manager.startSecondAct();
+    manager.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true);
     manager.setAct2Stage('bridge');
     manager.setHeibumuNameChoice('first', '黑');
     expect(manager.getState().modules.act2Research.bridge.nameChoices).toEqual({ first: null, middle: null, last: null });
@@ -380,9 +385,25 @@ describe('StateManager second-act foundation', () => {
     expect(manager.getState().game.act).toBe(1);
   });
 
+  it('requires two distinct tale sources for a bounded T04 inference and preserves selected evidence', () => {
+    manager = completedAct1Manager();
+    manager.startSecondAct(); manager.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true); manager.setAct2Stage('bridge'); manager.setAct2Stage('library');
+    manager.setFlag('FLAG_A2_BUMU_RULE_BASIC_KNOWN', true); manager.setAct2Stage('tales');
+    manager.readAct2Tale('TALE_A2_T04_001'); manager.toggleAct2TaleEvidence('EVIDENCE_A2_T04_001');
+    manager.selectAct2TaleInference('accompanied-change');
+    expect(manager.inferAct2TransferPattern('accompanied-change')).toBe('blocked');
+    expect(manager.getState().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED).not.toBe(true);
+    manager.readAct2Tale('TALE_A2_T04_002'); manager.toggleAct2TaleEvidence('EVIDENCE_A2_T04_002');
+    expect(manager.inferAct2TransferPattern('recovery-or-imitation')).toBe('insufficient');
+    expect(manager.getState().modules.act2Research.tales.supportingEvidenceIds).toEqual(['EVIDENCE_A2_T04_001', 'EVIDENCE_A2_T04_002']);
+    expect(manager.inferAct2TransferPattern('complete-transfer')).toBe('overclaim');
+    expect(manager.inferAct2TransferPattern('accompanied-change')).toBe('accepted');
+    expect(manager.getState().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED).toBe(true);
+  });
+
   it('keeps T04 tale reading, collection, sorting and inference idempotent', () => {
     manager = completedAct1Manager();
-    manager.startSecondAct(); manager.setAct2Stage('bridge'); manager.setAct2Stage('library');
+    manager.startSecondAct(); manager.setFlag('FLAG_A2_OFFLINE_RESEARCH_NEEDED', true); manager.setAct2Stage('bridge'); manager.setAct2Stage('library');
     manager.setFlag('FLAG_A2_BUMU_RULE_BASIC_KNOWN', true);
     manager.setAct2Stage('tales');
     manager.readAct2Tale('TALE_A2_T04_001'); manager.readAct2Tale('TALE_A2_T04_001');
@@ -477,6 +498,12 @@ describe('StateManager T05 school investigation', () => {
     manager.inspectAct2SchoolNotebook(); manager.inspectAct2SchoolNotebook();
     manager.confirmAct2SchoolSymbolMatch(); manager.confirmAct2SchoolSymbolMatch();
     expect(manager.getState().game.flags.FLAG_A2_SCHOOL_SS_FOUND).toBe(true);
+    expect(manager.getState().modules.act2Research.school.symbolMatchConfirmed).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).not.toBe(true);
+    manager.toggleAct2SchoolEvidence('rank-record');
+    manager.toggleAct2SchoolEvidence('qiming-thankyou');
+    manager.selectAct2SchoolInference('bounded-timeline');
+    manager.confirmAct2SchoolTimeline();
     expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds.filter((id) => id === 'NOTE_A2_T05_004')).toHaveLength(1);
   });

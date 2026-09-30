@@ -4,41 +4,163 @@
   "intro": "楼梯通向一条狭长地下走廊。手电先扫到档案室门牌，另一端还有一扇旧门。",
   "lenses": [
     {
-      "id": "LENS_A3_T04_001", "title": "地下走廊门牌", "stance": "look", "assetId": "IMG_A3_T04_001",
+      "id": "LENS_A3_T04_001",
+      "title": "地下走廊门牌",
+      "stance": "look",
+      "assetId": "IMG_A3_T04_001",
       "description": "手电光在潮墙上衰减。近处门牌还辨得出“档案室”，走廊更深处另有旧门。小月与主角一同停在这里。",
-      "hotspots": [{ "clueId": "CLUE_A3_T04_SIGN", "label": "照亮档案室门牌" }],
-      "links": ["LENS_A3_T04_002"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T04_SIGN",
+          "label": "照亮档案室门牌",
+          "observation": "手电照到门牌：「档案室」。塑料牌下面还压着一块更小的，写着值班表。"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T04_001_002",
+          "kind": "move",
+          "target": "LENS_A3_T04_002",
+          "label": "前往档案室门口"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T04_002", "title": "档案室门口", "stance": "enter", "assetId": "IMG_A3_T04_002",
+      "id": "LENS_A3_T04_002",
+      "title": "档案室门口",
+      "stance": "enter",
+      "assetId": "IMG_A3_T04_002",
       "description": "门后是一间狭长的旧档案室，几排金属架还在，纸张却几乎被搬空。",
-      "hotspots": [{ "clueId": "CLUE_A3_T04_EMPTY_ROOM", "label": "走进空档案室" }],
-      "links": ["LENS_A3_T04_003", "LENS_A3_T04_001"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T04_EMPTY_ROOM",
+          "label": "走进空档案室",
+          "observation": "档案室是空的。架子在，人不在。"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T04_002_003",
+          "kind": "move",
+          "target": "LENS_A3_T04_003",
+          "label": "前往空架与年份编号"
+        },
+        {
+          "actionId": "A3_ROUTE_T04_002_001",
+          "kind": "return",
+          "target": "LENS_A3_T04_001",
+          "label": "返回地下走廊门牌"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T04_003", "title": "空架与年份编号", "stance": "approach", "assetId": "IMG_A3_T04_003",
+      "id": "LENS_A3_T04_003",
+      "title": "空架与年份编号",
+      "stance": "approach",
+      "assetId": "IMG_A3_T04_003",
       "description": "旧架上留有“2014 年 D”“2015 年 F”等年份字母编号，资料大多不见了。这里找不到小 A 的完整个人档案。",
-      "hotspots": [{ "clueId": "CLUE_A3_T04_LABELS", "label": "核对空架与年份编号" }],
-      "links": ["LENS_A3_T04_004", "LENS_A3_T04_002"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T04_LABELS",
+          "label": "核对空架与年份编号",
+          "observation": "架上只剩标签：2008、2009、2010……每个年份都空着，盒子全被搬走了。有几张标签被撕掉，留下浅色方块。"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T04_003_004",
+          "kind": "move",
+          "target": "LENS_A3_T04_004",
+          "label": "前往架边地面"
+        },
+        {
+          "actionId": "A3_ROUTE_T04_003_002",
+          "kind": "return",
+          "target": "LENS_A3_T04_002",
+          "label": "返回档案室门口"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T04_004", "title": "架边地面", "stance": "crouch", "assetId": "IMG_A3_T04_004",
+      "id": "LENS_A3_T04_004",
+      "title": "架边地面",
+      "stance": "crouch",
+      "assetId": "IMG_A3_T04_004",
       "description": "小月提醒地上似乎还有一小张纸。降低手电，灰尘里的折旧纸边才露出来。",
-      "hotspots": [{ "clueId": "CLUE_A3_T04_PAPER_EDGE", "label": "蹲下检查角落纸边" }],
-      "links": ["LENS_A3_T04_005", "LENS_A3_T04_003"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T04_PAPER_EDGE",
+          "label": "蹲下检查角落纸边",
+          "observation": "蹲下时手电扫到架脚有一角露在纸箱外。是纸，不是标签。"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T04_004_005",
+          "kind": "move",
+          "target": "LENS_A3_T04_005",
+          "label": "前往折旧纸片"
+        },
+        {
+          "actionId": "A3_ROUTE_T04_004_003",
+          "kind": "return",
+          "target": "LENS_A3_T04_003",
+          "label": "返回空架与年份编号"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T04_005", "title": "折旧纸片", "stance": "approach", "assetId": "IMG_A3_T04_005",
-      "requiresClueIds": ["CLUE_A3_T04_PAPER_EDGE"],
+      "id": "LENS_A3_T04_005",
+      "title": "折旧纸片",
+      "stance": "approach",
+      "assetId": "IMG_A3_T04_005",
+      "requiresClueIds": [
+        "CLUE_A3_T04_PAPER_EDGE"
+      ],
       "description": "纸片标题是 VVaKe，下面依次写着：蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗。字能读清，含义仍不知道。",
-      "hotspots": [{ "clueId": "CLUE_A3_T04_VVAKE_PAPER", "label": "读清并收起 VVaKe 纸片" }],
-      "links": ["LENS_A3_T04_006", "LENS_A3_T04_004"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T04_VVAKE_PAPER",
+          "label": "读清并收起 VVaKe 纸片",
+          "observation": "一张折旧清单的边角，上面印着一行词：蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗。纸背面是空白的。"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T04_005_006",
+          "kind": "move",
+          "target": "LENS_A3_T04_006",
+          "label": "前往回到地下走廊"
+        },
+        {
+          "actionId": "A3_ROUTE_T04_005_004",
+          "kind": "return",
+          "target": "LENS_A3_T04_004",
+          "label": "返回架边地面"
+        }
+      ]
     },
     {
-      "id": "LENS_A3_T04_006", "title": "回到地下走廊", "stance": "look", "assetId": "IMG_A3_T04_006",
+      "id": "LENS_A3_T04_006",
+      "title": "回到地下走廊",
+      "stance": "look",
+      "assetId": "IMG_A3_T04_006",
       "description": "你把纸片收好，回到同一条地下走廊。另一端广播室的旧门还开着，纸上的词暂时没有解释。",
-      "hotspots": [{ "clueId": "CLUE_A3_T04_BROADCAST_DOOR", "label": "确认广播室方向" }],
-      "links": ["LENS_A3_T04_005"]
+      "hotspots": [
+        {
+          "clueId": "CLUE_A3_T04_BROADCAST_DOOR",
+          "label": "确认广播室方向",
+          "observation": "走廊另一端那扇门上的漆掉得更多。推一下，是松的。"
+        }
+      ],
+      "routes": [
+        {
+          "actionId": "A3_ROUTE_T04_006_005",
+          "kind": "return",
+          "target": "LENS_A3_T04_005",
+          "label": "返回折旧纸片"
+        }
+      ]
     }
   ]
 }
