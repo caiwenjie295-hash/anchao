@@ -74,6 +74,9 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     setOffset({ x: 0, y: 0 });
     pointers.current.clear();
   }, [sceneKey]);
+  // 工单 §16.2：imageUrl 变化时必须使上一张图的尺寸失效，
+  // 否则新图会沿用旧图的 content plane，出现拉伸或热点串图。
+  useEffect(() => { setImageSize({ width: 0, height: 0 }); }, [imageUrl]);
 
   const distance = () => {
     const [a, b] = [...pointers.current.values()];
@@ -82,9 +85,11 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   const fit = imageSize.width > 0 && imageSize.height > 0 && frameSize.width > 0 && frameSize.height > 0
     ? Math.min(frameSize.width / imageSize.width, frameSize.height / imageSize.height)
     : 0;
+  // 工单 §16.2：未取得原图尺寸前不能用 100%×100% + object-fit:fill 兜底，
+  // 那会把 4:3 的调查图纵向压扁。改为按原图比例占位，加载完成后再校正。
   const planeStyle: CSSProperties = fit > 0
     ? { width: imageSize.width * fit, height: imageSize.height * fit }
-    : { width: '100%', height: '100%' };
+    : { width: '100%', aspectRatio: '4 / 3', height: 'auto' };
   const routeActions: InvestigationAction[] = routes.map((route) => ({
     actionId: route.id,
     kind: route.actionKind ?? (route.kind === 'direction' ? 'move' : 'story'),
