@@ -1,0 +1,85 @@
+{
+  "date": "2026-09-30T20:31:40.333Z",
+  "browser": "Chrome headless via Playwright",
+  "baseUrl": "http://127.0.0.1:5173/",
+  "school": [],
+  "act3Lenses": [],
+  "lifecycle": {
+    "routeDrivenSwitches": [
+      "T00_001→T00_002 (delayed image)",
+      "T00_002→T00_003 (failed image)",
+      "T00_003→T00_004 (recovery)"
+    ],
+    "slowLoadFallbackLabel": "收拾补给，准备进山",
+    "delayedImageRequests": 1,
+    "failedImagePath": "/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_003.jpg",
+    "failedImageRequestObserved": true,
+    "failedImageFallback": "text action available; image hotspots absent",
+    "recoveredLensAndResize": {
+      "viewport": "768x1024",
+      "image": [
+        793.1948852539062,
+        594.8922119140625
+      ],
+      "frame": [
+        775.7239990234375,
+        800.0443115234375
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "src": "http://127.0.0.1:5173/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_004.jpg?no-inline"
+    }
+  },
+  "summary": {
+    "result": "PASS",
+    "school": {
+      "status": "NOT RUN in lifecycle-only mode",
+      "viewportRuns": 0,
+      "locationsPerViewport": 0
+    },
+    "act3": {
+      "status": "DOM geometry sweep NOT RUN in lifecycle-only mode",
+      "lenses": 0,
+      "breakpointsPerLens": 0,
+      "domMeasurements": 0,
+      "maxImageRatioError": null,
+      "everyImageRatioErrorBelow": null,
+      "maxHotspotCenterOffsetPx": null,
+      "hotspotCenterOffsetBelowPx": null
+    },
+    "lifecycle": {
+      "routeDrivenSwitches": [
+        "T00_001→T00_002 (delayed image)",
+        "T00_002→T00_003 (failed image)",
+        "T00_003→T00_004 (recovery)"
+      ],
+      "slowLoadFallbackLabel": "收拾补给，准备进山",
+      "delayedImageRequests": 1,
+      "failedImagePath": "/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_003.jpg",
+      "failedImageRequestObserved": true,
+      "failedImageFallback": "text action available; image hotspots absent",
+      "recoveredLensAndResize": {
+        "viewport": "768x1024",
+        "image": [
+          793.1948852539062,
+          594.8922119140625
+        ],
+        "frame": [
+          775.7239990234375,
+          800.0443115234375
+        ],
+        "natural": [
+          1448,
+          1086
+        ],
+        "src": "http://127.0.0.1:5173/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_004.jpg?no-inline"
+      }
+    },
+    "unexpectedErrors": [],
+    "screenshots": [
+      "lifecycle-act3-image-error-fallback-1920x1080.png"
+    ]
+  }
+}

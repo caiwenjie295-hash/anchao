@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../core/defaultState';
+import { hydrateState } from '../core/saveManager';
 import { getCurrentTaskGuide, validateTaskGuideData } from './taskGuideData';
 
 type State = ReturnType<typeof createDefaultState>;
@@ -155,6 +156,34 @@ describe('act2 desktop task guides', () => {
     expect(getCurrentTaskGuide(base)).toMatchObject({ id: 'GUIDE_A2_T06_001', actionAppId: 'browser', completedCount: 0 });
     base.game.phase = 'A2_T05'; base.modules.act2Research.stage = 'school';
     expect(getCurrentTaskGuide(base)?.id).not.toBe('GUIDE_A2_T06_001');
+  });
+
+  it('shows migrated legacy T06 completion in both task-card steps without inventing review records', () => {
+    const legacy = act2State({
+      FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true,
+      FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true,
+      FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true,
+      FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true,
+      FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true,
+      FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true,
+    }, 'A2_T06', 'qiming');
+    (legacy as unknown as { schemaVersion: number }).schemaVersion = 11;
+    legacy.modules.act2Research.school = {
+      visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'],
+      inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'],
+      selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline',
+      symbolMatchConfirmed: true, legacyCompletionMigrated: true,
+    };
+    legacy.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
+
+    const migrated = hydrateState(JSON.parse(JSON.stringify(legacy)));
+    expect(migrated.modules.act2Research.t06.legacyCompletionMigrated).toBe(true);
+    expect(migrated.modules.act2Research.t06.reviewedCases).toEqual([]);
+    expect(getCurrentTaskGuide(migrated)).toMatchObject({
+      id: 'GUIDE_A2_T06_001',
+      completedCount: 3,
+      steps: [{ complete: true }, { complete: true }, { complete: true }],
+    });
   });
 
   it('never spells the answer in act-two guide text', () => {

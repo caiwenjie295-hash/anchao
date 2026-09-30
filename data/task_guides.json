@@ -312,12 +312,15 @@
           "appId": "browser"
         },
         {
-          "label": "把成功案例与论坛昵称放在一起比较",
-          "completionFlag": "FLAG_A2_HUANG_MATCH_INFERRED"
+          "label": "调查黄子山后续并记录材料差异",
+          "completionKind": "qiming-case-reviewed",
+          "caseId": "huang",
+          "appId": "browser"
         },
         {
-          "label": "再核对另一组名字和后续记录",
-          "completionFlag": "FLAG_A2_OTHER_CASES_ABNORMAL",
+          "label": "调查钟子月后续并记录材料差异",
+          "completionKind": "qiming-case-reviewed",
+          "caseId": "zhong",
           "appId": "browser"
         }
       ]

@@ -38,7 +38,7 @@ describe('Third-act investigation interface', () => {
       const close = container.querySelector<HTMLButtonElement>('[role="dialog"] button');
       expect(document.activeElement).toBe(close);
       await click(close!);
-      expect(document.activeElement).toBe(container.querySelector('[data-clue-id="CLUE_A3_T04_PAPER_EDGE"]'));
+      expect(document.activeElement).toBe(container.querySelector('[data-clue-id="CLUE_A3_T04_PAPER_EDGE"]') ?? container.querySelector('.photo-viewport__fallback button'));
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();

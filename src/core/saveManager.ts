@@ -12,7 +12,7 @@ import { act4NarrativeActionsSatisfied, act4NarrativeStageSequence } from '../st
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1–6 的有效进度迁移到 schema 7。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'];
@@ -55,10 +55,26 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const library = isRecord(candidate.library) ? candidate.library : null;
   const tales = isRecord(candidate.tales) ? candidate.tales : null;
   const school = isRecord(candidate.school) ? candidate.school : null;
+  const t06 = isRecord(candidate.t06) ? candidate.t06 : null;
   const t07 = isRecord(candidate.t07) ? candidate.t07 : null;
   const nameChoices = bridge && isRecord(bridge.nameChoices) ? bridge.nameChoices : null;
   // 只保留可恢复的语义进度；比对过的帧必须是已经截到的帧。
   const capturedFrameIds = t07 ? safeStringIds(t07.capturedFrameIds).filter((id) => ACT2_T07_FRAME_IDS.includes(id)) : [];
+  const rawCapturedTimes = t07 && isRecord(t07.capturedAtMsByFrameId) ? t07.capturedAtMsByFrameId : {};
+  const capturedAtMsByFrameId = Object.fromEntries(capturedFrameIds.flatMap((frameId) => {
+    const frame = act2T07.video.keyFrames.find((item) => item.id === frameId);
+    const time = rawCapturedTimes[frameId];
+    return frame && typeof time === 'number' && Number.isFinite(time) && time >= frame.startMs && time <= frame.endMs
+      ? [[frameId, time]]
+      : [];
+  }));
+  const comparedFrameIds = t07 ? safeStringIds(t07.comparedFrameIds).filter((id) => capturedFrameIds.includes(id)) : [];
+  const rawComparisonFeatureMap = t07 && isRecord(t07.comparisonFeatureIdByFrameId) ? t07.comparisonFeatureIdByFrameId : {};
+  const comparisonFeatureIdByFrameId = Object.fromEntries(Object.entries(rawComparisonFeatureMap).filter(([frameId, featureId]) =>
+    comparedFrameIds.includes(frameId)
+      && act2T07.video.keyFrames.find((frame) => frame.id === frameId)?.supportsExteriorMatch === true
+      && featureId === act2T07.comparison.matchFeatureId,
+  )) as Record<string, string>;
   const readTaleIds = tales ? safeStringIds(tales.readTaleIds).filter((id) => taleById.has(id)) : [];
   const collectedTaleIds = tales ? safeStringIds(tales.collectedTaleIds).filter((id) => readTaleIds.includes(id)) : [];
   const placedCardIds = tales ? safeStringIds(tales.placedCardIds).filter((id) => taleCardById.has(id)) : [];
@@ -66,6 +82,17 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const supportingEvidenceIds = tales ? safeStringIds(tales.supportingEvidenceIds).filter((id) => taleEvidenceById.has(id)) : [];
   const inferenceIds = ['accompanied-change', 'recovery-or-imitation', 'complete-transfer'];
   const selectedInferenceId = typeof tales?.selectedInferenceId === 'string' && inferenceIds.includes(tales.selectedInferenceId) ? tales.selectedInferenceId as 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer' : null;
+  const rawReviewedCases = t06 && Array.isArray(t06.reviewedCases) ? t06.reviewedCases.filter(isRecord) : [];
+  const reviewedCases = rawReviewedCases.flatMap((review) => {
+    const caseId = review.caseId === 'huang' || review.caseId === 'zhong' ? review.caseId : null;
+    const expectedPages = caseId === 'huang' ? ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'] : caseId === 'zhong' ? ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'] : null;
+    const expectedConclusion = caseId === 'huang' || caseId === 'zhong' ? 'public-claims-and-followup-differ' : null;
+    const sourcePageIds = safeStringIds(review.sourcePageIds);
+    return caseId !== null && expectedPages && expectedConclusion && review.conclusionId === expectedConclusion
+      && sourcePageIds.length === expectedPages.length && expectedPages.every((id) => sourcePageIds.includes(id))
+      ? [{ caseId, sourcePageIds: expectedPages, conclusionId: expectedConclusion } as const]
+      : [];
+  }).filter((review, index, all) => all.findIndex((candidate) => candidate.caseId === review.caseId) === index);
   const evidenceSourceCount = new Set(supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter(Boolean)).size;
   return {
     stage: validAct2Stages.includes(candidate.stage as Act2Stage) ? candidate.stage as Act2Stage : fallback.stage,
@@ -104,11 +131,18 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
       symbolMatchConfirmed: school?.symbolMatchConfirmed === true,
     legacyCompletionMigrated: school?.legacyCompletionMigrated === true,
     },
+    t06: {
+      reviewedCases,
+      nicknameAssessment: t06?.nicknameAssessment === 'possible-unverified' || t06?.nicknameAssessment === 'not-enough-evidence' ? t06.nicknameAssessment : null,
+      legacyCompletionMigrated: t06?.legacyCompletionMigrated === true,
+    },
     t07: {
       viewedMaterialIds: t07 ? safeStringIds(t07.viewedMaterialIds).filter((id) => ACT2_T07_MATERIAL_IDS.includes(id)) : [],
       playedSegmentIds: t07 ? safeStringIds(t07.playedSegmentIds).filter((id) => ACT2_T07_SEGMENT_IDS.includes(id)) : [],
       capturedFrameIds,
-      comparedFrameIds: t07 ? safeStringIds(t07.comparedFrameIds).filter((id) => capturedFrameIds.includes(id)) : [],
+      capturedAtMsByFrameId,
+      comparedFrameIds,
+      comparisonFeatureIdByFrameId,
     },
   };
 };
@@ -299,7 +333,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const notepad = isRecord(modules.notepad) ? modules.notepad : null;
   const scene = isRecord(modules.scene) ? modules.scene : null;
   const photos = isRecord(modules.photos) ? modules.photos : null;
-  const candidateSchemaVersion = typeof candidate.schemaVersion === 'number' ? candidate.schemaVersion : 11;
+  const candidateSchemaVersion = typeof candidate.schemaVersion === 'number' ? candidate.schemaVersion : 13;
   const act2Research = safeAct2Research(modules.act2Research);
   let act3 = safeAct3(modules.act3);
   const rawFlags = isRecord(game.flags)
@@ -383,19 +417,56 @@ export const hydrateState = (candidate: unknown): AppState => {
     for (const flagId of ['FLAG_A2_QIMING_TESTIMONIALS_READ','FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL']) delete rawFlags[flagId];
   }
   if (rawFlags.FLAG_A2_QIMING_FORUM_FOUND !== true) for (const flagId of ['FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL']) delete rawFlags[flagId];
-  if (rawFlags.FLAG_A2_HUANG_MATCH_INFERRED !== true || rawFlags.FLAG_A2_ZHONG_MATCH_INFERRED !== true) delete rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL;
+  const validReviewedCases = candidateSchemaVersion >= 12
+    ? act2Research.t06.reviewedCases.filter((review) => review.sourcePageIds.every((id) => setT06.has(id)))
+    : [];
+  act2Research.t06.reviewedCases = validReviewedCases;
+  const bothNewCaseReviewsValid = ['huang', 'zhong'].every((caseId) => validReviewedCases.some((review) => review.caseId === caseId));
+  const completeLegacyT06Pages = ['PAGE_A2_T06_004','PAGE_A2_T06_006','PAGE_A2_T06_007','PAGE_A2_T06_008','PAGE_A2_T06_009'].every((id) => setT06.has(id));
+  const completeLegacyT06Flags = ['FLAG_A2_QIMING_OFFICIAL_FOUND','FLAG_A2_QIMING_TESTIMONIALS_READ','FLAG_A2_QIMING_FORUM_FOUND','FLAG_A2_HUANG_MATCH_INFERRED','FLAG_A2_ZHONG_MATCH_INFERRED','FLAG_A2_OTHER_CASES_ABNORMAL'].every((id) => rawFlags[id] === true);
+  const legacyT06CompletionValid = completeLegacyT06Pages && completeLegacyT06Flags;
+  const migratedLegacyT06Completion = candidateSchemaVersion < 12 && legacyT06CompletionValid;
+  const retainedLegacyT06Completion = candidateSchemaVersion >= 12 && act2Research.t06.legacyCompletionMigrated && legacyT06CompletionValid;
+  act2Research.t06.legacyCompletionMigrated = migratedLegacyT06Completion || retainedLegacyT06Completion;
+  const t06CompletionValid = bothNewCaseReviewsValid || act2Research.t06.legacyCompletionMigrated;
+  if (t06CompletionValid) rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL = true;
+  else delete rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL;
   // T07：只有在 T06 收束后进入的阶段才保留 T07 语义进度与 Flag。
   let t07StageValid = act2Research.stage === 'finale' && rawFlags.FLAG_A2_OTHER_CASES_ABNORMAL === true;
   if (act2Research.stage === 'finale' && !t07StageValid) act2Research.stage = 'qiming';
   if (!t07StageValid) {
-    act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] };
+    act2Research.t07 = { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], capturedAtMsByFrameId: {}, comparedFrameIds: [], comparisonFeatureIdByFrameId: {} };
     for (const flagId of t07FlagIds) delete rawFlags[flagId];
   } else {
     const t07 = act2Research.t07;
     if (rawFlags.FLAG_A2_PROMO_VIDEO_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.video.materialId)) delete rawFlags.FLAG_A2_PROMO_VIDEO_FOUND;
     if (rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED === true && (rawFlags.FLAG_A2_PROMO_VIDEO_FOUND !== true || !act2T07.video.requiredSegmentIds.every((id) => t07.playedSegmentIds.includes(id)))) delete rawFlags.FLAG_A2_PROMO_VIDEO_WATCHED;
     if (rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.photoMaterialId)) delete rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND;
-    if (rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true && !t07.comparedFrameIds.some((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true)) delete rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND;
+    if (candidateSchemaVersion <= 11) {
+      const legacyExteriorFrameIds = t07.comparedFrameIds.filter((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true);
+      if (legacyExteriorFrameIds.length > 0) rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
+    }
+    // schema 12 already recorded a successful exterior comparison, but did not
+    // persist the selected feature. Recover that one known legacy conclusion
+    // only when the original comparison flag and captured-frame chain survive.
+    if (candidateSchemaVersion <= 12 && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true) {
+      const legacyExteriorFrameIds = t07.comparedFrameIds.filter((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true);
+      act2Research.t07.comparisonFeatureIdByFrameId = {
+        ...act2Research.t07.comparisonFeatureIdByFrameId,
+        ...Object.fromEntries(legacyExteriorFrameIds.map((id) => [id, act2T07.comparison.matchFeatureId])),
+      };
+    }
+    // Current saves must pair an exterior-capable captured frame with the
+    // one supported shape. A contradictory or incomplete feature map cannot
+    // unlock location inference or preserve a false success note.
+    const validComparedFrameIds = t07.comparedFrameIds.filter((id) =>
+      act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true
+        && act2Research.t07.comparisonFeatureIdByFrameId[id] === act2T07.comparison.matchFeatureId,
+    );
+    t07.comparedFrameIds = validComparedFrameIds;
+    act2Research.t07.comparisonFeatureIdByFrameId = Object.fromEntries(validComparedFrameIds.map((id) => [id, act2T07.comparison.matchFeatureId]));
+    if (validComparedFrameIds.length > 0) rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
+    else delete rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND;
     if (rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED === true && !(rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true)) delete rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED;
     if (rawFlags.FLAG_A2_SECOND_TRIP_PLANNED === true && rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED !== true) delete rawFlags.FLAG_A2_SECOND_TRIP_PLANNED;
     if (rawFlags.FLAG_A2_COMPLETE === true && rawFlags.FLAG_A2_SECOND_TRIP_PLANNED !== true) delete rawFlags.FLAG_A2_COMPLETE;
@@ -475,7 +546,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 11,
+    schemaVersion: 13,
     game: {
       act: act4.stage !== 'inactive' ? 4 : act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,

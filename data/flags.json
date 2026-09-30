@@ -688,47 +688,46 @@
     },
     {
       "id": "FLAG_A2_HUANG_MATCH_INFERRED",
-      "title": "确认黄子山与黄山可能对应",
+      "title": "旧版昵称对应推测（兼容）",
       "act": 2,
       "phase": "A2_T06",
       "source": "browser",
-      "purpose": "记录玩家主动比较黄子山与论坛昵称黄山",
+      "purpose": "保留旧版玩家对论坛昵称的可疑对应记录，不作为实名个案完成条件",
       "unlockCondition": [
         "FLAG_A2_QIMING_TESTIMONIALS_READ",
         "FLAG_A2_QIMING_FORUM_FOUND"
       ],
       "relatedFlags": [],
-      "notes": "仅表示玩家判断可能为同一人",
+      "notes": "论坛作者身份未独立核实；本 Flag 已退出主线门槛",
       "defaultValue": false
     },
     {
       "id": "FLAG_A2_ZHONG_MATCH_INFERRED",
-      "title": "确认钟子月与月子可能对应",
+      "title": "旧版昵称对应推测（兼容）",
       "act": 2,
       "phase": "A2_T06",
       "source": "browser",
-      "purpose": "记录玩家主动比较钟子月与论坛昵称月子",
+      "purpose": "保留旧版玩家对论坛昵称的可疑对应记录，不作为实名个案完成条件",
       "unlockCondition": [
         "FLAG_A2_QIMING_TESTIMONIALS_READ",
         "FLAG_A2_QIMING_FORUM_FOUND"
       ],
       "relatedFlags": [],
-      "notes": "仅表示玩家判断可能为同一人",
+      "notes": "论坛作者身份未独立核实；本 Flag 已退出主线门槛",
       "defaultValue": false
     },
     {
       "id": "FLAG_A2_OTHER_CASES_ABNORMAL",
-      "title": "确认异常不止发生在小A身上",
+      "title": "两名实名个案后续已复核",
       "act": 2,
       "phase": "A2_T06",
       "source": "notepad",
-      "purpose": "记录玩家阅读两个实名后续后主动收束",
+      "purpose": "记录黄子山与钟子月各自的宣传材料、实名后续来源与有限结论",
       "unlockCondition": [
-        "FLAG_A2_HUANG_MATCH_INFERRED",
-        "FLAG_A2_ZHONG_MATCH_INFERRED"
+        "FLAG_A2_QIMING_TESTIMONIALS_READ"
       ],
       "relatedFlags": [],
-      "notes": "结论只扩展到启明与多名学员，不推断 T07 地点或符号",
+      "notes": "仅在 t06.reviewedCases 含两项经来源清洗的复核后写入；论坛访问或昵称推测不构成前置",
       "defaultValue": false
     },
     {

@@ -9,6 +9,8 @@ import { Act2T01Controller } from '../../story/act2T01Controller';
 import { browserPageById } from '../../data/browserData';
 import { BrowserApp, BrowserPageView } from './BrowserApp';
 
+(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
 describe('BrowserApp T06 visibility gates', () => {
   let root: Root; let host: HTMLDivElement; let manager: StateManager; let bus: EventBus;
   beforeEach(() => { host = document.createElement('div'); document.body.append(host); root = createRoot(host); bus = new EventBus(); const state = createDefaultState(); state.game.act = 2; state.game.phase = 'A2_T05'; state.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SS_MATCH_CONFIRMED: true }; state.modules.act2Research.stage = 'school'; manager = new StateManager(bus, state); });
@@ -45,25 +47,52 @@ describe('BrowserApp T06 visibility gates', () => {
     });
     expect(input.value).toBe('');
   });
-  it('records a page only after opening it and offers explicit comparisons and later-case confirmation', async () => {
+  it('shows search results and tab destinations after navigation from the qiming review workspace', async () => {
+    manager.enterAct2QimingResearch();
+    await render();
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(true);
+
+    await search('启明 黄子山');
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
+    expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(false);
+    expect(host.querySelector('.browser-results')).not.toBeNull();
+
+    await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    await act(async () => (host.querySelector('.browser-new-tab') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
+    expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(false);
+  });
+  it('records bounded named-case evidence without treating forum nicknames as identity proof', async () => {
     manager.enterAct2QimingResearch();
     const controller = new Act2T06Controller(manager, bus); controller.start();
-    await render(); await search('启明 黄子山');
-    const result = [...host.querySelectorAll('button')].find((button) => button.textContent?.includes('成长记录')) as HTMLButtonElement;
-    await act(async () => result.click());
+    await render();
+    const openFromPanel = async (label: string) => {
+      const button = [...host.querySelectorAll('.browser-case-review button')].find((item) => item.textContent === label) as HTMLButtonElement;
+      expect(button).toBeDefined(); await act(async () => button.click());
+    };
+    await openFromPanel('打开启明宣传案例');
     expect(manager.getState().modules.browser.visitedPageIds).toContain('PAGE_A2_T06_004');
-    expect(host.textContent).toContain('复制黄子山');
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
+    expect(host.textContent).toContain('学员黄子山');
+    await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    await openFromPanel('打开黄子山后续报道');
+    expect(host.textContent).toContain('黄子山后续：家属多年未能联系上');
+    await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    const huangCase = host.querySelector('.browser-case-review__case[aria-label="黄子山材料"]')!;
+    await act(async () => (huangCase.querySelectorAll('label')[0] as HTMLLabelElement).click());
+    await act(async () => (huangCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());
+    expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang']);
+    expect(manager.getState().game.flags.FLAG_A2_HUANG_MATCH_INFERRED).toBeUndefined();
     await search('启明 投诉');
-    const forum = [...host.querySelectorAll('button')].find((button) => button.textContent?.includes('旧帖：那阵子')) as HTMLButtonElement;
-    await act(async () => forum.click());
-    expect(host.textContent).toContain('黄山可能对应黄子山');
-    await act(async () => host.querySelector('.browser-page__actions button:nth-of-type(1)')?.dispatchEvent(new MouseEvent('click', { bubbles: true })));
-    expect(manager.getState().game.flags.FLAG_A2_HUANG_MATCH_INFERRED).toBe(true);
-    await search('启明 投诉');
-    const followup = [...host.querySelectorAll('button')].find((button) => button.textContent?.includes('跟帖：有人说')) as HTMLButtonElement;
-    await act(async () => followup.click());
-    await act(async () => (host.querySelector('.browser-page__actions button') as HTMLButtonElement).click());
-    expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).toBe(true);
+    const forum = [...host.querySelectorAll('.browser-results button')].find((button) => button.textContent?.includes('旧帖：那阵子')) as HTMLButtonElement;
+    expect(forum).toBeDefined(); await act(async () => forum.click());
+    expect(host.textContent).toContain('论坛昵称线索（可选，身份未核实）');
+    expect(host.textContent).not.toContain('黄山可能对应黄子山');
+    expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang']);
     controller.dispose();
   });
 

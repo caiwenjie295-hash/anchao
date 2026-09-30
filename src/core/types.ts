@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 11;
+  schemaVersion: 13;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -121,6 +121,16 @@ export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR',
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
 export type Act2SchoolEvidenceId = 'teacher-account' | 'rank-record' | 'qiming-thankyou';
 export type Act2SchoolInferenceId = 'bounded-timeline' | 'qiming-caused-change';
+export type Act2QimingCaseId = 'huang' | 'zhong';
+export type Act2QimingConclusionId = 'public-claims-and-followup-differ';
+export type Act2QimingNicknameAssessment = 'possible-unverified' | 'not-enough-evidence';
+export interface Act2QimingCaseReview { caseId: Act2QimingCaseId; sourcePageIds: string[]; conclusionId: Act2QimingConclusionId }
+export interface Act2T06State {
+  reviewedCases: Act2QimingCaseReview[];
+  nicknameAssessment: Act2QimingNicknameAssessment | null;
+  /** 已完成旧 T06 的完整历史链；与当前两项实名复核分开存放。 */
+  legacyCompletionMigrated: boolean;
+}
 export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[]; selectedEvidenceIds: Act2SchoolEvidenceId[]; selectedInferenceId: Act2SchoolInferenceId | null; symbolMatchConfirmed: boolean; /**
  * schema 9 存档中双 S 比对已在旧规则下完成，迁移到当前版本时记录该事实。
    * 只在旧存档本已带 `FLAG_A2_SS_MATCH_CONFIRMED` 且证据前提成立时写入；
@@ -128,12 +138,15 @@ export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds
    */
   legacyCompletionMigrated: boolean }
 
-/** T07 只保存可恢复的语义进度：已看资料、实际播放覆盖的片段、有效截图与已比对帧。 */
+/** T07 保存材料查看、真实播放、按时间截取的有效截图与已比对帧。 */
 export interface Act2T07State {
   viewedMaterialIds: string[];
   playedSegmentIds: string[];
   capturedFrameIds: string[];
+  /** 实际截图时刻（媒体播放毫秒）；旧存档只知可截图窗口时可为空。 */
+  capturedAtMsByFrameId: Record<string, number>;
   comparedFrameIds: string[];
+  comparisonFeatureIdByFrameId: Record<string, string>;
 }
 
 export type HeibumuNamePart = 'first' | 'middle' | 'last';
@@ -169,6 +182,7 @@ export interface Act2ResearchState {
     selectedInferenceId: 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer' | null;
   };
   school: Act2SchoolState;
+  t06: Act2T06State;
   t07: Act2T07State;
 }
 
@@ -276,6 +290,7 @@ export type AnchaoEventMap = {
   'act2:school-symbol-matched': Record<string, never>;
   'act2:qiming-entered': Record<string, never>;
   'act2:qiming-name-matched': { person: 'huang' | 'zhong' };
+  'act2:qiming-case-reviewed': { caseId: Act2QimingCaseId };
   'act2:qiming-cases-confirmed': Record<string, never>;
   'act3:started': { act: 3 };
   'act3:stage-changed': { stage: Act3ActiveStage };
@@ -290,6 +305,6 @@ export type AnchaoEventMap = {
   'act2:t07-location-inferred': Record<string, never>;
   'act2:t07-trip-planned': Record<string, never>;
   'act2:t07-complete': Record<string, never>;
-  'progress:reset': { schemaVersion: 11 };
-  'save:completed': { schemaVersion: 11 };
+  'progress:reset': { schemaVersion: 13 };
+  'save:completed': { schemaVersion: 13 };
 };

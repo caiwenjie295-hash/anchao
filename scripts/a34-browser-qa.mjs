@@ -81,12 +81,18 @@ try {
       selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline',
       symbolMatchConfirmed: true, legacyCompletionMigrated: false,
     };
+    state.modules.act2Research.t06.reviewedCases = [
+      { caseId: 'huang', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], conclusionId: 'public-claims-and-followup-differ' },
+      { caseId: 'zhong', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], conclusionId: 'public-claims-and-followup-differ' },
+    ];
     state.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
     state.modules.act2Research.t07 = {
       viewedMaterialIds: [act2T07.video.materialId, act2T07.photoMaterialId],
       playedSegmentIds: act2T07.video.requiredSegmentIds,
       capturedFrameIds: [act2T07.video.keyFrames[0].id],
       comparedFrameIds: [act2T07.video.keyFrames[0].id],
+      capturedAtMsByFrameId: { [act2T07.video.keyFrames[0].id]: act2T07.video.keyFrames[0].startMs + 500 },
+      comparisonFeatureIdByFrameId: { [act2T07.video.keyFrames[0].id]: act2T07.comparison.matchFeatureId },
     };
     state.modules.act3.stage = 'T07';
     state.modules.storyTransitions.seenIds = storyTransitions.map((transition) => transition.id);
@@ -191,7 +197,7 @@ try {
   assert.equal(mobileMetrics.width, 390);
   assert.ok(mobileMetrics.documentWidth <= mobileMetrics.width, `mobile horizontal overflow: ${mobileMetrics.documentWidth}px`);
   assert.ok(mobileMetrics.artHeight <= 0.32 * 844 + 2, `mobile art height ${mobileMetrics.artHeight}px exceeds 32vh`);
-  assert.equal(mobileMetrics.navTitleColor, 'rgb(65, 70, 75)');
+  assert.equal(mobileMetrics.navTitleColor, 'rgb(31, 31, 31)');
   await continueSection('T10');
   assert.equal(await page.locator('.a4-reader__ending').count(), 1, 'T10 completion displays the final timeline and cast recap');
   await reload();

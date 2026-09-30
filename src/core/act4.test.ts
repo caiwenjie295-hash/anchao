@@ -11,24 +11,16 @@ import { act2T07 } from '../data/act2T07Data';
 
 const readyState = () => {
   const state = createDefaultState();
+  state.game.act = 2;
+  state.game.phase = 'A2_T06';
   state.game.flags = {
     FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true,
     FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true,
     FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true,
     FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true,
     FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true,
-    FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true,
-    FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true,
-    FLAG_A2_PROMO_VIDEO_FOUND: true, FLAG_A2_PROMO_VIDEO_WATCHED: true,
-    FLAG_A2_PROMO_PHOTO_SS_FOUND: true, FLAG_A2_TEMPLE_FRAME_FOUND: true,
-    FLAG_A2_QIMING_LOCATION_INFERRED: true, FLAG_A2_SECOND_TRIP_PLANNED: true,
-    FLAG_A2_COMPLETE: true, FLAG_A3_GATE_REACHED: true,
-    FLAG_A3_INNER_FENCE_PASSED: true, FLAG_A3_CLASSROOM_TURNED: true,
-    FLAG_A3_STAIRS_DESCENDED: true, FLAG_A3_BROADCAST_DOOR_REACHED: true,
-    FLAG_A3_KITCHEN_DOOR_REACHED: true, FLAG_A3_KITCHEN_EXITED: true,
-    FLAG_A3_NOTEBOOK_FOUND: true, FLAG_A3_SITE_EXITED: true, FLAG_A3_COMPLETE: true,
   };
-  state.modules.act2Research.stage = 'finale';
+  state.modules.act2Research.stage = 'qiming';
   state.modules.act2Research.school = {
     visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'],
     inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'],
@@ -36,20 +28,36 @@ const readyState = () => {
     symbolMatchConfirmed: true, legacyCompletionMigrated: false,
   };
   state.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
-  state.modules.act2Research.t07 = {
-    viewedMaterialIds: [act2T07.video.materialId, act2T07.photoMaterialId],
-    playedSegmentIds: act2T07.video.requiredSegmentIds,
-    capturedFrameIds: [act2T07.video.keyFrames[0].id],
-    comparedFrameIds: [act2T07.video.keyFrames[0].id],
-  };
-  state.modules.act3.stage = 'T07';
-  return state;
+  const manager = new StateManager(new EventBus(), state);
+  manager.reviewAct2QimingCase('huang', ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], 'public-claims-and-followup-differ');
+  manager.reviewAct2QimingCase('zhong', ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], 'public-claims-and-followup-differ');
+  manager.enterAct2FinaleInvestigation();
+  manager.viewAct2T07Material(act2T07.photoMaterialId);
+  manager.confirmAct2T07PhotoSymbol();
+  manager.viewAct2T07Material(act2T07.video.materialId);
+  for (const segmentId of act2T07.video.requiredSegmentIds) manager.markAct2T07SegmentPlayed(segmentId);
+  const frame = act2T07.video.keyFrames[0];
+  manager.captureAct2T07Frame(frame.id, frame.startMs + 500);
+  manager.submitAct2T07Comparison(frame.id, 'square-opening');
+  manager.inferAct2T07Location();
+  manager.planAct2T07SecondTrip();
+  manager.completeAct2T07Finale();
+  const completed = manager.getState();
+  for (const flagId of ['FLAG_A3_GATE_REACHED', 'FLAG_A3_INNER_FENCE_PASSED', 'FLAG_A3_CLASSROOM_TURNED', 'FLAG_A3_STAIRS_DESCENDED', 'FLAG_A3_BROADCAST_DOOR_REACHED', 'FLAG_A3_KITCHEN_DOOR_REACHED', 'FLAG_A3_KITCHEN_EXITED', 'FLAG_A3_NOTEBOOK_FOUND', 'FLAG_A3_SITE_EXITED', 'FLAG_A3_COMPLETE'] as const) completed.game.flags[flagId] = true;
+  completed.modules.act3.stage = 'T07';
+  return completed;
 };
 
 const managerReadyForAct4 = () => new StateManager(new EventBus(), readyState());
 const asLegacy = (state: ReturnType<typeof createDefaultState>, version = 10): Record<string, any> => {
   const result = JSON.parse(JSON.stringify(state)) as Record<string, any>;
   result.schemaVersion = version;
+  if (version < 12) {
+    result.game.flags.FLAG_A2_QIMING_FORUM_FOUND = true;
+    result.game.flags.FLAG_A2_HUANG_MATCH_INFERRED = true;
+    result.game.flags.FLAG_A2_ZHONG_MATCH_INFERRED = true;
+    result.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL = true;
+  }
   return result;
 };
 
@@ -159,7 +167,7 @@ describe('fourth act reading progression', () => {
 
   it('migrates a valid schema 10 T05 save and keeps T05 available until the reader continues', () => {
     const migrated = hydrateState(legacyT05());
-    expect(migrated.schemaVersion).toBe(11);
+    expect(migrated.schemaVersion).toBe(13);
     expect(migrated.modules.act4.stage).toBe('T05');
     expect(migrated.modules.act4.completedNarrativeSectionIds).toEqual([
       'A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04', 'A4_READ_T05',

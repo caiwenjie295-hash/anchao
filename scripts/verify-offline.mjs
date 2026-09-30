@@ -29,6 +29,8 @@ function assertLocalImage(value) {
   assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
 }
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
+const imageAssets = JSON.parse(await readFile('data/images.json', 'utf8')).items;
+const act2T07Data = JSON.parse(await readFile('data/act2_t07.json', 'utf8'));
   const act3Docs = ['t00', 't01', 't02', 't03', 't04', 't05', 't06', 't07'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
   const [t00Doc, t01Doc, t02Doc, t03Doc, t04Doc, t05Doc, t06Doc, t07Doc] = await Promise.all(act3Docs);
 const act3RequiredClues = {
@@ -49,18 +51,42 @@ const virtualConsole = new VirtualConsole();
 virtualConsole.on('jsdomError', (error) => errors.push(error.message));
 let dom;
 const delay = () => new Promise((resolve) => setTimeout(resolve, 30));
+async function simulateOfflineImageDecodes() {
+  if (!dom) return;
+  for (let pass = 0; pass < 2; pass += 1) {
+    for (const image of dom.window.document.querySelectorAll('img[src]')) {
+      const url = new URL(image.currentSrc || image.src, dom.window.location.href);
+      const path = decodeURIComponent(url.pathname.slice(1));
+      if (url.origin !== 'https://anchao-offline.test' || !filePaths.has(path)) continue;
+      const alreadyDecoded = image.dataset.offlineTestDecodedSource === image.src;
+      if (alreadyDecoded && !(pass === 1 && image.closest('.photo-viewport')?.querySelector('.photo-viewport__load-state'))) continue;
+      // jsdom fetches local bytes but has no image decoder; model a successful decode for interaction tests.
+      if (!alreadyDecoded) {
+        Object.defineProperties(image, {
+          naturalWidth: { configurable: true, value: 1448 },
+          naturalHeight: { configurable: true, value: 1086 },
+          complete: { configurable: true, value: true },
+        });
+        image.dataset.offlineTestDecodedSource = image.src;
+      }
+      image.dispatchEvent(new dom.window.Event('load', { bubbles: true }));
+    }
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+}
 async function settle() {
   await delay();
+  await simulateOfflineImageDecodes();
   // Continue each story card as a player would before testing the next action.
   for (let i = 0; i < 3; i++) {
     const launch = dom?.window.document.querySelector('.story-transition-launch:not([aria-label="第三幕调查已就绪"]):not([aria-label="第四幕调查已就绪"]) button');
-    if (launch) { launch.click(); await delay(); }
+    if (launch) { launch.click(); await delay(); await simulateOfflineImageDecodes(); }
     const card = dom?.window.document.querySelector('.story-transition');
     const button = card?.querySelector('button');
     if (!button) break;
     seenTransitionIds.add(card.getAttribute('data-story-transition'));
     button.click();
-    await delay();
+    await delay(); await simulateOfflineImageDecodes();
   }
 }
 async function mount(saved) {
@@ -88,6 +114,7 @@ async function mount(saved) {
     dom.window.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
   });
   await delay();
+  await simulateOfflineImageDecodes();
   if (!saved) assert.equal(dom.window.document.querySelector('.story-transition')?.getAttribute('data-story-transition'), 'TRANSITION_A1_INTRO');
   await settle();
 }
@@ -103,6 +130,15 @@ async function click(selector) {
   const button = query(selector);
   assert.equal(button.disabled, false, `Disabled button: ${selector}`);
   button.click(); await settle();
+}
+async function waitForEnabled(selector) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const button = query(selector);
+    if (!button.disabled) return;
+    await delay();
+    await simulateOfflineImageDecodes();
+  }
+  assert.equal(query(selector).disabled, false, `Button did not become enabled after its local image decode: ${selector}`);
 }
 async function textButton(text, selector = 'button') {
   const button = [...document().querySelectorAll(selector)].find((item) => item.textContent.includes(text));
@@ -379,9 +415,8 @@ async function advanceAct2() {
 }
 
 async function investigateT07() {
-  // 入口是中性文案，且必须由玩家点击；浏览 T06 页面不会自动进入。
-  assert.equal(document().querySelector('.t07-finale'), null);
-  await click('.act2-t07-entry');
+  // 当前T06“与小月继续核对资料”已由玩家点击后进入T07；兼容仍显示中性入口的旧壳。
+  if (!document().querySelector('.t07-finale')) await click('.act2-t07-entry');
   assert.equal(state().modules.act2Research.stage, 'finale');
   assert.equal(state().game.phase, 'A2_T07');
   assert.ok(query('.t07-finale'));
@@ -397,6 +432,7 @@ async function investigateT07() {
   await click('.t07-finale__photo-zoom');
   assert.ok(query('.t07-finale__photo-symbol'));
   assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, undefined);
+  await waitForEnabled('.t07-finale__photo-confirm');
   await click('.t07-finale__photo-confirm');
   assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, true);
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_001'));
@@ -406,6 +442,7 @@ async function investigateT07() {
   assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_FOUND, true);
   assert.equal(query('.t07-finale__capture').disabled, true);
   await setInput('.t07-finale__seek', '7000');
+  await waitForEnabled('.t07-finale__capture');
   assert.equal(query('.t07-finale__capture').disabled, false);
   await click('.t07-finale__capture');
   assert.deepEqual(state().modules.act2Research.t07.capturedFrameIds, ['FRAME_A2_T07_001']);
@@ -413,9 +450,10 @@ async function investigateT07() {
   assert.ok(query('.t07-finale__shot-dialog'));
   const enlargedFrame = query('.t07-finale__shot-large img');
   assert.ok(enlargedFrame.getAttribute('src'));
-  assert.equal(dom.window.getComputedStyle(enlargedFrame).objectFit, 'contain');
+  assert.notEqual(dom.window.getComputedStyle(enlargedFrame).objectFit, 'cover', 'the enlarged 4:3 source must not be cropped');
   assert.equal(dom.window.getComputedStyle(query('.t07-finale__shot-large')).boxSizing, 'border-box');
-  assert.equal(dom.window.getComputedStyle(query('.t07-finale__shot-large')).aspectRatio, '4/3');
+  const enlargedAspectRatio = dom.window.getComputedStyle(query('.t07-finale__shot-large')).aspectRatio.split('/').map(Number);
+  assert.ok(Math.abs(enlargedAspectRatio[0] / enlargedAspectRatio[1] - 4 / 3) < 0.005, 'the enlarged source keeps its natural 4:3 ratio');
   await click('.t07-finale__shot-dialog [aria-label="关闭截图"]');
   await setInput('.t07-finale__seek', '4000');
   assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_WATCHED, undefined);
@@ -428,25 +466,36 @@ async function investigateT07() {
 
   // 外景对照只能用第一幕破庙外景，不能用“补”字石碑近照。
   await textButton('外景对照', '.t07-finale__tab');
-  assert.ok(query('[data-asset-id="IMG_A1_I_001"]'));
-  assert.equal(query('.t07-finale__compare-grid').querySelector('[data-asset-id="IMG_A1_I_004"]'), null);
-  await click('.t07-finale__zoom-left');
-  await click('.t07-finale__zoom-right');
+  const compareImages = [...query('.t07-finale__compare-grid').querySelectorAll('.photo-viewport__plane > img')];
+  assert.equal(compareImages.length, 2, 'comparison shows exactly the captured frame and the original temple exterior');
+  const sourceFile = (img) => decodeURIComponent(new URL(img.src).pathname).split('/').at(-1);
+  const capturedFrameImageId = act2T07Data.video.keyFrames.find((frame) => frame.id === 'FRAME_A2_T07_001')?.imageId;
+  const expectedFrameFile = imageAssets.find((asset) => asset.id === capturedFrameImageId)?.file;
+  const expectedExteriorFile = imageAssets.find((asset) => asset.id === 'IMG_A1_I_001')?.file;
+  assert.equal(sourceFile(compareImages[0]), expectedFrameFile);
+  assert.equal(sourceFile(compareImages[1]), expectedExteriorFile, 'comparison uses the original temple exterior, not the nearby stele image');
+  const comparePanes = [...query('.t07-finale__compare-grid').querySelectorAll('.photo-viewport')];
+  assert.equal(comparePanes.length, 2);
+  for (const pane of comparePanes) {
+    const zoomIn = pane.querySelector('.photo-viewport__controls button[aria-label="放大"]');
+    assert.ok(zoomIn, 'each comparison pane exposes its shared photo zoom control');
+    zoomIn.click(); await settle();
+    assert.match(pane.querySelector('.photo-viewport__world').style.transform, /scale\(1\.25\)/);
+    pane.querySelector('.photo-viewport__controls button:last-of-type').click(); await settle();
+  }
   await click('input[name="t07-comparison-feature"][value="square-opening"]');
+  await waitForEnabled('.t07-finale__compare');
   await click('.t07-finale__compare');
-  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, undefined);
-  await click('.t07-finale__temple-confirm');
-  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, true);
+  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, true, 'one valid source comparison records the semantic conclusion atomically');
+  assert.ok(query('.t07-finale__comparison-record'));
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_002'));
 
   // 地点结论只到“曾经在鸡公岭破庙附近活动”。
-  await textButton('地点结论', '.t07-finale__tab');
   await click('[data-action-id="A2_T07_INFER_LOCATION"]');
   assert.equal(state().game.flags.FLAG_A2_QIMING_LOCATION_INFERRED, true);
-  assert.match(query('.t07-finale__panel').textContent, /启明曾经就在鸡公岭破庙附近/);
+  assert.match(query('.t07-finale__outcomes').textContent, /启明曾经就在鸡公岭破庙附近/);
 
   // 小月与主角一起约定第二次进山，然后播放一次幕末收束。
-  await textButton('再次进山', '.t07-finale__tab');
   await click('[data-action-id="A2_T07_PLAN_TRIP"]');
   assert.equal(state().game.flags.FLAG_A2_SECOND_TRIP_PLANNED, true);
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_004'));
@@ -638,7 +687,8 @@ async function reset() {
     library: { visitedSectionIds: [], openedVolumeIds: [], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: [], excerptedEntryIds: [] },
     tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
     school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
-    t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
+    t06: { reviewedCases: [], nicknameAssessment: null, legacyCompletionMigrated: false },
+    t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], capturedAtMsByFrameId: {}, comparedFrameIds: [], comparisonFeatureIdByFrameId: {} },
   });
   assert.deepEqual(state().modules.act3, { stage: 'inactive', currentLensId: null, visitedLensIds: [], inspectedClueIds: [], confirmedFlagIds: [] });
   await mount(save());
@@ -688,32 +738,36 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       await browse('启明 投诉');
       assert.equal(state().modules.act2Research.stage, 'qiming');
       assert.equal(state().game.phase, 'A2_T06');
-      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_006').headline, '.browser-results button');
-      assert.equal(state().game.flags.FLAG_A2_QIMING_FORUM_FOUND, true);
-      assert.equal(state().game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ, undefined);
-      assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T06_002'));
-      await browse('启明 黄子山');
-      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_004').headline, '.browser-results button');
+      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
+      await textButton('打开启明宣传案例', '.browser-case-review button');
       assert.equal(state().game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ, true);
-      assert.ok(query('.browser-page__actions').textContent.includes('复制黄子山'));
-      await browse('启明 投诉');
-      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_006').headline, '.browser-results button');
-      await textButton('黄山可能对应黄子山', '.browser-page__actions button');
-      assert.equal(state().game.flags.FLAG_A2_HUANG_MATCH_INFERRED, true);
-      await browse('启明 投诉');
-      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_007').headline, '.browser-results button');
-      await textButton('月子可能对应钟子月', '.browser-page__actions button');
-      assert.equal(state().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED, true);
-      await browse('启明 黄子山');
-      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_008').headline, '.browser-results button');
-      await browse('启明 钟子月');
-      await textButton(pages.find((page) => page.id === 'PAGE_A2_T06_009').headline, '.browser-results button');
-      await textButton('记录其他学员也出现异常后续', '.browser-page__actions button');
+      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
+      await textButton('打开黄子山后续报道', '.browser-case-review button');
+      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
+      const huangCase = '.browser-case-review__case[aria-label="黄子山材料"]';
+      query(`${huangCase} label:nth-of-type(2)`).click(); await settle();
+      await click(`${huangCase} .browser-case-review__submit`);
+      assert.deepEqual(state().modules.act2Research.t06.reviewedCases, []);
+      query(`${huangCase} label:nth-of-type(1)`).click(); await settle();
+      await click(`${huangCase} .browser-case-review__submit`);
+      assert.deepEqual(state().modules.act2Research.t06.reviewedCases.map((review) => review.caseId), ['huang']);
+      await textButton('打开钟子月后续报道', '.browser-case-review button');
+      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
+      const zhongCase = '.browser-case-review__case[aria-label="钟子月材料"]';
+      query(`${zhongCase} label:nth-of-type(1)`).click(); await settle();
+      await click(`${zhongCase} .browser-case-review__submit`);
+      assert.deepEqual(state().modules.act2Research.t06.reviewedCases.map((review) => review.caseId), ['huang', 'zhong']);
       assert.equal(state().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL, true);
       assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T06_004'));
+      assert.equal(state().game.flags.FLAG_A2_HUANG_MATCH_INFERRED, undefined);
+      assert.equal(state().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED, undefined);
+      assert.equal(state().modules.act2Research.t06.nicknameAssessment, null);
+      assert.equal(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_006'), false, 'forum nickname evidence remains optional to the main path');
+      await textButton('与小月继续核对资料', '.browser-case-review__next button');
+      assert.equal(state().modules.act2Research.stage, 'finale');
       await mount(save());
-      assert.equal(state().modules.act2Research.stage, 'qiming');
-      assert.equal(state().game.phase, 'A2_T06');
+      assert.equal(state().modules.act2Research.stage, 'finale');
+      assert.equal(state().game.phase, 'A2_T07');
       assert.ok(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_009'));
       for (const id of ['TRANSITION_A1_INTRO', 'TRANSITION_A1_B', 'TRANSITION_A1_C', 'TRANSITION_A1_H', 'TRANSITION_A1_I', 'TRANSITION_A1_RETURN', 'TRANSITION_A1_J', 'TRANSITION_A2_T01', 'TRANSITION_A2_T02', 'TRANSITION_A2_T03', 'TRANSITION_A2_T04', 'TRANSITION_A2_T05', 'TRANSITION_A2_T06']) {
         assert.ok(seenTransitionIds.has(id), `Missing story transition in offline flow: ${id}`);

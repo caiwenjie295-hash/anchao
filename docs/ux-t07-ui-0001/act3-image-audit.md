@@ -1,5 +1,7 @@
 # 第三幕图片比例审计（工作包 I）
 
+> 历史阶段记录：本文较早的浏览器检查只覆盖文中列明的镜头与档位；不得视为最终全幕几何矩阵。当前 59 镜头×5 档实测与生命周期结果见 [test-matrix.md](test-matrix.md) 及 `evidence/browser/ux-t07-ui-qa-report.json`。
+
 > 对应工单 §16。基线 `f448851`（UX-234 衔接后），本轮 `Bunny_1`。
 > 全部结论来自真实 Chromium 实测，非 jsdom 推断。
 

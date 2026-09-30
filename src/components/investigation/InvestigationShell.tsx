@@ -11,6 +11,7 @@ export interface InvestigationShellProps {
   objective: string;
   helpText?: string;
   exitLabel?: string;
+  className?: string;
   actions?: InvestigationAction[];
   statusMessage?: string;
   children: ReactNode;
@@ -26,6 +27,7 @@ export function InvestigationShell({
   objective,
   helpText,
   exitLabel = '退出调查，返回桌面',
+  className,
   actions = [],
   statusMessage,
   children,
@@ -41,7 +43,7 @@ export function InvestigationShell({
   }));
 
   return (
-    <section className="investigation-shell" aria-label={ariaLabel}>
+    <section className={`investigation-shell${className ? ` ${className}` : ''}`} aria-label={ariaLabel}>
       <header className="investigation-shell__header">
         <div className="investigation-shell__place">
           <p>{actLabel}</p>

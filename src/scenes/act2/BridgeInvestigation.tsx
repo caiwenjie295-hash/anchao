@@ -117,8 +117,6 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
       onExit={() => onReturnDesktop?.()}
     >
     <section className="act2-bridge" aria-label={bridgeScene.title}>
-      {sceneImage && <img className="act2-bridge__ambient" src={sceneImage} alt="" aria-hidden="true" />}
-
       {!heard && <p className="act2-bridge__intro">{bridgeScene.intro}</p>}
 
       <div className="act2-bridge__body">

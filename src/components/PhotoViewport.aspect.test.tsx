@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PhotoViewport, type PhotoMarker } from './PhotoViewport';
+import { calculatePhotoPanLimits, PhotoViewport, type PhotoMarker } from './PhotoViewport';
 
 // React 19 需要在测试环境中显式开启 act 支持。
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -47,10 +47,10 @@ describe('PhotoViewport aspect ratio', () => {
       root.render(<PhotoViewport sceneKey="LENS_TEST" imageUrl="test.jpg" imageAlt="测试照片" hotspots={[hotspot]} routes={[]} {...props} />);
     });
   };
-  const reportSize = async () => {
+  const reportSize = async (natural = NATURAL) => {
     const img = container.querySelector<HTMLImageElement>('.photo-viewport__plane > img')!;
-    Object.defineProperty(img, 'naturalWidth', { value: NATURAL.width, configurable: true });
-    Object.defineProperty(img, 'naturalHeight', { value: NATURAL.height, configurable: true });
+    Object.defineProperty(img, 'naturalWidth', { value: natural.width, configurable: true });
+    Object.defineProperty(img, 'naturalHeight', { value: natural.height, configurable: true });
     await act(async () => { img.dispatchEvent(new Event('load')); });
   };
 
@@ -63,11 +63,24 @@ describe('PhotoViewport aspect ratio', () => {
     expect(Math.abs(parseFloat(width) / parseFloat(height) - NATURAL.width / NATURAL.height)).toBeLessThan(0.001);
   });
 
-  it('never falls back to a stretched 100% x 100% plane before the image is measured', async () => {
+  it('limits panning by the actual contained image dimensions per axis and recomputes after resize', () => {
+    // 16:9 图片被 contain 到 800×600 frame 后只有 800×450；2×时纵向允许
+    // 平移 150px，而不是按 frameHeight*(2-1)/2 放大到 300px。
+    expect(calculatePhotoPanLimits(800, 450, 800, 600, 2)).toEqual({ x: 400, y: 150 });
+    expect(calculatePhotoPanLimits(800, 450, 800, 600, 1)).toEqual({ x: 0, y: 0 });
+    // resize 后 fit plane 先按新 frame 重算，再分别约束两个方向。
+    const resizedPlaneWidth = 1920 * Math.min(600 / 1920, 600 / 1080);
+    const resizedPlaneHeight = 1080 * Math.min(600 / 1920, 600 / 1080);
+    expect(calculatePhotoPanLimits(resizedPlaneWidth, resizedPlaneHeight, 600, 600, 2)).toEqual({ x: 300, y: 37.5 });
+  });
+
+  it('keeps the viewport stable and withholds hotspots while the natural dimensions are unknown', async () => {
     await render();
-    // 未测量的兜底必须保持比例，不能是会把 4:3 压扁的 fill。
-    expect(plane().style.height).not.toBe('100%');
-    expect(plane().style.aspectRatio).toBe('4 / 3');
+    expect(plane().style.width).toBe('0px');
+    expect(plane().style.height).toBe('0px');
+    expect(container.querySelector('.photo-viewport__load-state')?.textContent).toContain('正在载入');
+    expect(container.querySelector('[data-clue-id="CLUE_TEST"]')).toBeNull();
+    expect(container.querySelector('.photo-viewport__fallback button')?.textContent).toBe('查看痕迹');
   });
 
   it('drops the previous image size when the scene changes image', async () => {
@@ -77,11 +90,21 @@ describe('PhotoViewport aspect ratio', () => {
     expect(measuredHeight).not.toBe('');
 
     // 换图后必须回到未测量状态，不能沿用上一张图的高度。
+    const staleImage = container.querySelector<HTMLImageElement>('.photo-viewport__plane > img')!;
     await act(async () => {
       root.render(<PhotoViewport sceneKey="LENS_TEST_2" imageUrl="other.jpg" imageAlt="另一张" hotspots={[hotspot]} routes={[]} />);
     });
-    expect(plane().style.aspectRatio).toBe('4 / 3');
+    expect(container.querySelector('.photo-viewport__fallback button')?.textContent).toBe('查看痕迹');
+    expect(plane().style.width).toBe('0px');
+    expect(container.querySelector('.photo-viewport__load-state')?.textContent).toContain('正在载入');
     expect(plane().style.height).not.toBe(measuredHeight);
+    Object.defineProperty(staleImage, 'naturalWidth', { value: 1000, configurable: true });
+    Object.defineProperty(staleImage, 'naturalHeight', { value: 500, configurable: true });
+    await act(async () => { staleImage.dispatchEvent(new Event('load')); });
+    expect(plane().style.width).toBe('0px');
+    await reportSize({ width: 1600, height: 900 });
+    expect(container.querySelector('.photo-viewport__fallback')).toBeNull();
+    expect(container.querySelector('[data-clue-id="CLUE_TEST"]')).not.toBeNull();
   });
 
   it('keeps hotspots available when no image is supplied at all', async () => {
