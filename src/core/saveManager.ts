@@ -1,17 +1,18 @@
 import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, APP_IDS, isAct2EvidenceAssetId, type Act2ResearchState, type Act2Stage, type Act3State, type Act3Stage, type Act4State, type Act4Stage, type AppId, type AppState, type Bounds, type DesktopWindow, type WindowStatus } from './types';
 import { createDefaultAct2ResearchState, createDefaultAct3State, createDefaultAct4State, createDefaultState, createDefaultWindow } from './defaultState';
 import { birthdayScenes, timeline } from '../data/act4/content';
-import { firstLaterSceneId, lastLaterSceneId, laterSceneById, laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
+import { laterSceneById, laterScenesByStage } from '../data/act4/laterContent';
 import { sceneById } from '../data/sceneData';
 import { taleById, taleCardById, taleCards, taleEvidenceById } from '../data/act2TalesData';
 import { browserPageById, findSearchQuery, isAct2T06Record, ACT2_T06_PAGE_IDS } from '../data/browserData';
 import { isStoryTransitionReached, storyTransitions, storyTransitionIds } from '../data/storyTransitionData';
 import { act3LensById } from '../data/act3Data';
 import { act2T07, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, ACT2_T07_FRAME_IDS } from '../data/act2T07Data';
+import { act4NarrativeActionsSatisfied, act4NarrativeStageSequence } from '../story/act4/narrativePolicy';
 
 export const SAVE_KEY = 'anchao.save.v1';
 /** schema 1–6 的有效进度迁移到 schema 7。 */
-const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const supportedSchemaVersions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const validStatuses: WindowStatus[] = ['closed', 'normal', 'minimized', 'maximized'];
 const validAct2Stages: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
 const validAct3Stages: Act3Stage[] = ['inactive', 'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'];
@@ -127,47 +128,163 @@ const safeAct3 = (candidate: unknown): Act3State => {
   return { stage, currentLensId, visitedLensIds, inspectedClueIds, confirmedFlagIds };
 };
 
-const act4Stages: Act4Stage[] = ['inactive', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09', 'T10'];
+const act4Stages: Act4Stage[] = ['inactive', ...act4NarrativeStageSequence];
 const act4PuzzleIds = Array.from({ length: 24 }, (_, index) => `A4_P${String(index + 1).padStart(2, '0')}`);
-const safeAct4 = (candidate: unknown, flags: AppState['game']['flags'], sourceSchemaVersion = 10): Act4State => {
+const safeAct4 = (candidate: unknown, flags: AppState['game']['flags'], sourceSchemaVersion = 11): Act4State => {
   const fallback = createDefaultAct4State();
   if (!isRecord(candidate) || flags.FLAG_A3_COMPLETE !== true || !act4Stages.includes(candidate.stage as Act4Stage)) return fallback;
   const readNotebookPages = Array.isArray(candidate.readNotebookPages) ? [...new Set(candidate.readNotebookPages.filter((page): page is number => Number.isInteger(page) && page >= 1 && page <= 9))] : [];
-  const stage = candidate.stage as Act4Stage;
-  const stageNumber = stage === 'inactive' ? 0 : Number(stage.slice(1));
+  const requestedStage = candidate.stage as Act4Stage;
+  const requestedNumber = requestedStage === 'inactive' ? 0 : Number(requestedStage.slice(1));
+  let stage = requestedStage;
+  let number = requestedNumber;
   const puzzleStageNumber = (id: string) => { const n = Number(id.slice(-2)); return n <= 3 ? 1 : n <= 5 ? 2 : n <= 8 ? 3 : n <= 10 ? 4 : n <= 12 ? 5 : n <= 15 ? 6 : n <= 17 ? 7 : n <= 20 ? 8 : n <= 22 ? 9 : 10; };
-  const solvedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= stageNumber);
-  const broadcastPeriodsConfirmed = safeStringIds(candidate.broadcastPeriodsConfirmed).filter((id): id is 'morning' | 'night' => id === 'morning' || id === 'night');
-  if (sourceSchemaVersion < 10 && solvedPuzzleIds.includes('A4_P13')) broadcastPeriodsConfirmed.push(...(['morning', 'night'] as const).filter((period) => !broadcastPeriodsConfirmed.includes(period)));
-  const requiredByStage: Record<Act4Stage, string[]> = { inactive: [], T01: [], T02: ['A4_P01'], T03: ['A4_P01', 'A4_P04'], T04: ['A4_P01', 'A4_P04', 'A4_P06'], T05: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09'], T06: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'], T07: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13'], T08: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16'], T09: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16', 'A4_P18'], T10: ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11', 'A4_P13', 'A4_P16', 'A4_P18'] };
-  if (stageNumber >= 7 && !['morning', 'night'].every((period) => broadcastPeriodsConfirmed.includes(period as 'morning' | 'night'))) return flags.FLAG_A4_T05_COMPLETE === true ? safeAct4({ ...candidate, stage: 'T05', solvedPuzzleIds: solvedPuzzleIds.filter((id) => puzzleStageNumber(id) <= 5) }, flags, sourceSchemaVersion) : fallback;
-  if (!requiredByStage[stage].every((id) => solvedPuzzleIds.includes(id))) {
-    if (stageNumber >= 6 && flags.FLAG_A4_T05_COMPLETE === true) return safeAct4({ ...candidate, stage: 'T05', solvedPuzzleIds: solvedPuzzleIds.filter((id) => puzzleStageNumber(id) <= 5) }, flags);
-    return fallback;
-  }
-  const unlockedAccountIds = solvedPuzzleIds.includes('A4_P04') ? safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id)) : [];
-  if (stageNumber >= 3 && unlockedAccountIds.length !== 2) return fallback;
+  const storedPuzzleIds = safeStringIds(candidate.solvedPuzzleIds).filter((id) => act4PuzzleIds.includes(id) && puzzleStageNumber(id) <= requestedNumber);
+  const unlockedAccountIds = safeStringIds(candidate.unlockedAccountIds).filter((id) => ['weibo', 'mail'].includes(id));
   const checkedMailRecipients = safeStringIds(candidate.checkedMailRecipients).filter((id) => ['protagonist', 'xiaoyue'].includes(id));
   const timelineReadDates = safeStringIds(candidate.timelineReadDates).filter((date) => timeline.some(([id]) => id === date));
-  if (stageNumber >= 4 && !timelineReadDates.includes('04-19')) return fallback;
-  if (stageNumber >= 5 && candidate.viewedWakeMail !== true) return fallback;
-  const birthdayNodeId = stageNumber >= 5 && birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) && (candidate.birthdayNodeId !== 'taken' || solvedPuzzleIds.includes('A4_P11')) ? candidate.birthdayNodeId as string : 'study';
-  const base = { stage, readNotebookPages, solvedPuzzleIds, unlockedAccountIds, checkedMailRecipients, timelineReadDates, viewedWakeMail: candidate.viewedWakeMail === true && stageNumber >= 4, wakePaperConfirmed: solvedPuzzleIds.includes('A4_P09') && candidate.wakePaperConfirmed === true, birthdayNodeId, broadcastPeriodsConfirmed };
-  const laterStage = stageNumber >= 6 ? stage as LaterStage : null;
-  const seenLaterNodeIds = safeStringIds(candidate.seenLaterNodeIds).filter((id) => {
+  const broadcastPeriodsConfirmed = safeStringIds(candidate.broadcastPeriodsConfirmed).filter((id): id is 'morning' | 'night' => id === 'morning' || id === 'night');
+  if (sourceSchemaVersion < 10 && storedPuzzleIds.includes('A4_P13')) broadcastPeriodsConfirmed.push(...(['morning', 'night'] as const).filter((period) => !broadcastPeriodsConfirmed.includes(period)));
+  const birthdayNodeId = birthdayScenes.some((scene) => scene.id === candidate.birthdayNodeId) ? candidate.birthdayNodeId as string : 'study';
+  const rawSeenLaterNodeIds = safeStringIds(candidate.seenLaterNodeIds).filter((id) => laterSceneById.has(id));
+  const rawLaterNodeId = typeof candidate.laterNodeId === 'string' && laterSceneById.has(candidate.laterNodeId) ? candidate.laterNodeId : null;
+  const rawPackageStep = Number.isInteger(candidate.packageStep) ? Math.max(0, Math.min(3, candidate.packageStep as number)) : 0;
+  const rawBroadcastIndex = Number.isInteger(candidate.broadcastIndex) ? Math.max(0, Math.min(6, candidate.broadcastIndex as number)) : 0;
+  const rawViewedWakeMail = candidate.viewedWakeMail === true;
+  const rawFinalMailOpened = candidate.finalMailOpened === true;
+  const sectionIds = act4Stages.filter((value): value is Exclude<Act4Stage, 'inactive'> => value !== 'inactive').map((value) => `A4_READ_${value}`);
+  const storedSections = sourceSchemaVersion >= 11 ? safeStringIds(candidate.completedNarrativeSectionIds) : [];
+  const validActions: Act4State['completedNarrativeActionIds'] = [
+    'A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED', 'A4_T08_ARCHIVE_OPENED',
+    'A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED', 'A4_T10_FINAL_MAIL_OPENED',
+  ];
+  const storedActions = sourceSchemaVersion >= 11 ? safeStringIds(candidate.completedNarrativeActionIds).filter((id): id is Act4State['completedNarrativeActionIds'][number] => validActions.includes(id as Act4State['completedNarrativeActionIds'][number])) : [];
+
+  // Old saves represent progress through puzzle/material state and scene visits.
+  // Validate those records before migrating flags into the new reading contract.
+  const sceneIsReachable = (id: string): boolean => {
     const scene = laterSceneById.get(id);
-    return scene && Number(scene.stage.slice(1)) <= stageNumber;
+    if (!scene) return false;
+    if (scene.id === 'A4_T06_ROOMMATE' && !['morning', 'night'].every((period) => broadcastPeriodsConfirmed.includes(period as 'morning' | 'night'))) return false;
+    if (scene.id === 'A4_T07_KITCHEN' && !storedPuzzleIds.includes('A4_P16')) return false;
+    if (scene.id === 'A4_T08_MIRROR' && !storedPuzzleIds.includes('A4_P18')) return false;
+    if (scene.id === 'A4_T09_EXIT' && rawPackageStep !== 3) return false;
+    if (scene.id === 'A4_T09_BLACKOUT' && rawBroadcastIndex !== 6) return false;
+    return true;
+  };
+  const seenLaterNodeIds: string[] = [];
+  for (const narrativeStage of ['T06', 'T07', 'T08', 'T09', 'T10'] as const) {
+    if (Number(narrativeStage.slice(1)) > requestedNumber) break;
+    for (const scene of laterScenesByStage(narrativeStage)) {
+      if (!rawSeenLaterNodeIds.includes(scene.id) || !sceneIsReachable(scene.id)) break;
+      seenLaterNodeIds.push(scene.id);
+    }
+  }
+  const requestedLaterNodeId = rawLaterNodeId && seenLaterNodeIds.includes(rawLaterNodeId) ? rawLaterNodeId : null;
+  const legacyDoorExitValid = rawPackageStep === 3 && rawBroadcastIndex === 6
+    && seenLaterNodeIds.includes('A4_T09_NOTE')
+    && seenLaterNodeIds.includes('A4_T09_EXIT')
+    && seenLaterNodeIds.includes('A4_T09_BLACKOUT');
+  const legacyLoginValid = checkedMailRecipients.includes('protagonist') && checkedMailRecipients.includes('xiaoyue')
+    && unlockedAccountIds.includes('weibo') && unlockedAccountIds.includes('mail');
+  const legacyWakeMailOpened = rawViewedWakeMail && unlockedAccountIds.includes('mail');
+  const legacyArchiveOpened = seenLaterNodeIds.includes('A4_T08_ARCHIVE');
+  const legacyFinalMailValid = rawFinalMailOpened;
+  const derivedLegacyActions: Act4State['completedNarrativeActionIds'] = [
+    ...(legacyLoginValid ? ['A4_T02_LOGIN_SUCCEEDED' as const] : []),
+    ...(legacyWakeMailOpened ? ['A4_T04_WAKE_MAIL_OPENED' as const] : []),
+    ...(legacyArchiveOpened ? ['A4_T08_ARCHIVE_OPENED' as const] : []),
+    ...(rawPackageStep === 3 && seenLaterNodeIds.includes('A4_T09_NOTE') ? ['A4_T09_NOTE_HIDDEN' as const] : []),
+    ...(legacyDoorExitValid ? ['A4_T09_DOOR_EXITED' as const] : []),
+    ...(legacyFinalMailValid ? ['A4_T10_FINAL_MAIL_OPENED' as const] : []),
+  ];
+  const validStoredActions = storedActions.filter((id) => {
+    if (id === 'A4_T02_LOGIN_SUCCEEDED') return requestedNumber >= 2 && legacyLoginValid;
+    if (id === 'A4_T04_WAKE_MAIL_OPENED') return requestedNumber >= 4 && rawViewedWakeMail && unlockedAccountIds.includes('mail');
+    if (id === 'A4_T08_ARCHIVE_OPENED') return requestedNumber >= 8;
+    if (id === 'A4_T09_NOTE_HIDDEN') return requestedNumber >= 9 && rawPackageStep === 3;
+    if (id === 'A4_T09_DOOR_EXITED') return requestedNumber >= 9 && storedActions.includes('A4_T09_NOTE_HIDDEN') && rawBroadcastIndex === 6;
+    return id === 'A4_T10_FINAL_MAIL_OPENED' && requestedNumber >= 10 && rawFinalMailOpened;
   });
-  const requestedNode = typeof candidate.laterNodeId === 'string' ? candidate.laterNodeId : null;
-  const validNode = laterStage && requestedNode && laterSceneById.get(requestedNode)?.stage === laterStage && seenLaterNodeIds.includes(requestedNode);
-  const prior = { ...base, stage: 'T05' as const, solvedPuzzleIds: solvedPuzzleIds.filter((id) => puzzleStageNumber(id) <= 5), birthdayNodeId: 'taken', laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, finalMailOpened: false };
-  const stageScenes = laterStage ? laterScenesByStage(laterStage) : [];
-  const currentIndex = stageScenes.findIndex((scene) => scene.id === requestedNode);
-  if (laterStage && (birthdayNodeId !== 'taken' || !validNode || !seenLaterNodeIds.includes(firstLaterSceneId[laterStage]) || !stageScenes.slice(0, currentIndex + 1).every((scene) => seenLaterNodeIds.includes(scene.id)))) return prior;
-  const packageStep = stageNumber >= 9 && seenLaterNodeIds.includes('A4_T09_NOTE') && Number.isInteger(candidate.packageStep) ? Math.max(0, Math.min(3, candidate.packageStep as number)) : 0;
-  const broadcastIndex = stageNumber >= 9 && seenLaterNodeIds.includes('A4_T09_EXIT') && Number.isInteger(candidate.broadcastIndex) ? Math.max(0, Math.min(6, candidate.broadcastIndex as number)) : 0;
-  const finalMailOpened = stage === 'T10' && requestedNode === 'A4_T10_MAIL' && candidate.finalMailOpened === true;
-  return { ...base, laterNodeId: laterStage ? requestedNode : null, seenLaterNodeIds: laterStage ? seenLaterNodeIds : [], packageStep, broadcastIndex, finalMailOpened };
+  const sourceActions = sourceSchemaVersion >= 11 ? validStoredActions : derivedLegacyActions;
+  const legacyCompletionEvidence = (index: number): boolean => {
+    const puzzle = (id: string) => storedPuzzleIds.includes(id);
+    switch (index) {
+      case 1: return puzzle('A4_P01');
+      case 2: return sourceActions.includes('A4_T02_LOGIN_SUCCEEDED');
+      case 3: return puzzle('A4_P06') && timelineReadDates.includes('04-19');
+      case 4: return sourceActions.includes('A4_T04_WAKE_MAIL_OPENED') && storedPuzzleIds.includes('A4_P09');
+      case 5: return puzzle('A4_P11') && birthdayNodeId === 'taken';
+      case 6: return puzzle('A4_P13') && ['morning', 'night'].every((period) => broadcastPeriodsConfirmed.includes(period as 'morning' | 'night')) && seenLaterNodeIds.includes('A4_T06_CONFINEMENT');
+      case 7: return puzzle('A4_P16') && seenLaterNodeIds.includes('A4_T07_SCHOOL');
+      case 8: return sourceActions.includes('A4_T08_ARCHIVE_OPENED') && storedPuzzleIds.includes('A4_P18') && seenLaterNodeIds.includes('A4_T08_KITCHEN');
+      case 9: return sourceActions.includes('A4_T09_NOTE_HIDDEN') && sourceActions.includes('A4_T09_DOOR_EXITED') && legacyDoorExitValid;
+      case 10: return sourceActions.includes('A4_T10_FINAL_MAIL_OPENED') && legacyFinalMailValid;
+      default: return false;
+    }
+  };
+  const completedNarrativeSectionIds: string[] = [];
+  for (let index = 1; index <= requestedNumber; index += 1) {
+    const sectionId = sectionIds[index - 1];
+    const flagId = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
+    const markedComplete = sourceSchemaVersion >= 11
+      ? storedSections.includes(sectionId) && flags[flagId] === true
+      : flags[flagId] === true && legacyCompletionEvidence(index);
+    const requiredActionsValid = act4NarrativeActionsSatisfied(act4NarrativeStageSequence[index - 1], sourceActions);
+    const evidenceValid = sourceSchemaVersion >= 11 || legacyCompletionEvidence(index);
+    if (!markedComplete || !requiredActionsValid || !evidenceValid) {
+      stage = `T${String(index).padStart(2, '0')}` as Act4Stage;
+      number = index;
+      break;
+    }
+    completedNarrativeSectionIds.push(sectionId);
+  }
+  const hasValidCandidateStage = requestedStage !== 'inactive';
+  if (hasValidCandidateStage && completedNarrativeSectionIds.length === requestedNumber) {
+    stage = requestedStage;
+    number = requestedNumber;
+  }
+  const sectionIdsForStage = completedNarrativeSectionIds.filter((id) => sectionIds.indexOf(id) < number);
+  const validCompletedActions = sourceActions.filter((id) => {
+    const actionStage: Record<Act4State['completedNarrativeActionIds'][number], number> = {
+      A4_T02_LOGIN_SUCCEEDED: 2, A4_T04_WAKE_MAIL_OPENED: 4, A4_T08_ARCHIVE_OPENED: 8,
+      A4_T09_NOTE_HIDDEN: 9, A4_T09_DOOR_EXITED: 9, A4_T10_FINAL_MAIL_OPENED: 10,
+    };
+    return actionStage[id] <= number;
+  });
+  const effectivePuzzleIds = storedPuzzleIds.filter((id) => puzzleStageNumber(id) <= number);
+  const effectiveSeenLaterNodeIds = seenLaterNodeIds.filter((id) => Number(laterSceneById.get(id)!.stage.slice(1)) <= number);
+  const effectiveUnlockedAccountIds = number >= 2 && legacyLoginValid ? unlockedAccountIds : [];
+  const effectiveCheckedMailRecipients = number >= 2 ? checkedMailRecipients : [];
+  const effectiveTimelineReadDates = number >= 3 ? timelineReadDates : [];
+  const viewedWakeMail = number >= 4 && validCompletedActions.includes('A4_T04_WAKE_MAIL_OPENED');
+  const effectiveBirthdayNodeId = number >= 5 ? birthdayNodeId : 'study';
+  const noteHidden = validCompletedActions.includes('A4_T09_NOTE_HIDDEN');
+  const doorExited = validCompletedActions.includes('A4_T09_DOOR_EXITED');
+  const packageStep = number >= 9 && noteHidden ? rawPackageStep : 0;
+  const broadcastIndex = number >= 9 && noteHidden ? Math.min(rawBroadcastIndex, doorExited ? 6 : 5) : 0;
+  const finalMailOpened = number >= 10 && validCompletedActions.includes('A4_T10_FINAL_MAIL_OPENED');
+  const effectiveLaterNodeId = requestedLaterNodeId && Number(laterSceneById.get(requestedLaterNodeId)!.stage.slice(1)) <= number
+    ? requestedLaterNodeId : null;
+  return {
+    stage,
+    completedNarrativeSectionIds: sectionIdsForStage,
+    completedNarrativeActionIds: validCompletedActions,
+    readNotebookPages: number > 0 ? readNotebookPages : [],
+    solvedPuzzleIds: effectivePuzzleIds,
+    unlockedAccountIds: effectiveUnlockedAccountIds,
+    checkedMailRecipients: effectiveCheckedMailRecipients,
+    timelineReadDates: effectiveTimelineReadDates,
+    viewedWakeMail,
+    wakePaperConfirmed: number >= 4 && candidate.wakePaperConfirmed === true,
+    birthdayNodeId: effectiveBirthdayNodeId,
+    laterNodeId: effectiveLaterNodeId,
+    seenLaterNodeIds: effectiveSeenLaterNodeIds,
+    packageStep,
+    broadcastIndex,
+    broadcastPeriodsConfirmed: number >= 6 ? [...new Set(broadcastPeriodsConfirmed)] : [],
+    finalMailOpened,
+  };
 };
 
 export const hydrateState = (candidate: unknown): AppState => {
@@ -182,7 +299,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const notepad = isRecord(modules.notepad) ? modules.notepad : null;
   const scene = isRecord(modules.scene) ? modules.scene : null;
   const photos = isRecord(modules.photos) ? modules.photos : null;
-  const candidateSchemaVersion = typeof candidate.schemaVersion === 'number' ? candidate.schemaVersion : 10;
+  const candidateSchemaVersion = typeof candidate.schemaVersion === 'number' ? candidate.schemaVersion : 11;
   const act2Research = safeAct2Research(modules.act2Research);
   let act3 = safeAct3(modules.act3);
   const rawFlags = isRecord(game.flags)
@@ -298,35 +415,18 @@ export const hydrateState = (candidate: unknown): AppState => {
     && rawFlags.FLAG_A3_COMPLETE === true;
   if (!validAct4Gate && isRecord(modules.act4) && modules.act4.stage !== 'inactive') delete rawFlags.FLAG_A3_COMPLETE;
   let act4 = safeAct4(modules.act4, validAct4Gate ? rawFlags : {}, candidate.schemaVersion as number);
-  if (act4.stage !== 'inactive') {
-    const stageNumber = Number(act4.stage.slice(1));
-    for (let index = 1; index < stageNumber; index++) if (rawFlags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] !== true) {
-      act4 = index >= 6 && rawFlags.FLAG_A4_T05_COMPLETE === true ? { ...act4, stage: 'T05', solvedPuzzleIds: act4.solvedPuzzleIds.filter((id) => Number(id.slice(-2)) <= 12), laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, finalMailOpened: false } : createDefaultAct4State();
-      break;
-    }
-  }
   if (act4.stage === 'inactive') {
     for (const key of Object.keys(rawFlags)) if (/^FLAG_A4_/.test(key)) delete rawFlags[key];
   } else {
-    for (let index = 1; index <= 5; index++) {
-      const id = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
-      if (rawFlags[id] === true && !act4.solvedPuzzleIds.includes(`A4_P${String([1, 4, 6, 9, 11][index - 1]).padStart(2, '0')}`)) delete rawFlags[id];
+    const stageNumber = Number(act4.stage.slice(1));
+    for (let index = 1; index <= 10; index += 1) {
+      const sectionId = `A4_READ_T${String(index).padStart(2, '0')}`;
+      const flagId = `FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`;
+      if (index <= stageNumber && act4.completedNarrativeSectionIds.includes(sectionId)) rawFlags[flagId] = true;
+      else delete rawFlags[flagId];
     }
-    if (act4.birthdayNodeId !== 'taken') delete rawFlags.FLAG_A4_T05_COMPLETE;
-    for (let index = 6; index <= 10; index++) {
-      const stage = `T${String(index).padStart(2, '0')}` as LaterStage;
-      const flagId = `FLAG_A4_${stage}_COMPLETE`;
-      const requiredPuzzleId: Partial<Record<LaterStage, string>> = { T06: 'A4_P13', T07: 'A4_P16', T08: 'A4_P18' };
-      const requiredPuzzle = requiredPuzzleId[stage];
-      const requiredActionsComplete = stage === 'T09'
-        ? act4.packageStep === 3 && act4.broadcastIndex === 6
-        : stage === 'T10' ? act4.finalMailOpened : true;
-      if (Number(act4.stage.slice(1)) < index
-        || (requiredPuzzle !== undefined && !act4.solvedPuzzleIds.includes(requiredPuzzle))
-        || !act4.seenLaterNodeIds.includes(lastLaterSceneId[stage])
-        || !requiredActionsComplete) delete rawFlags[flagId];
-    }
-    if (act4.stage !== 'T10' || !act4.finalMailOpened || rawFlags.FLAG_A4_T10_COMPLETE !== true) delete rawFlags.FLAG_A4_COMPLETE;
+    if (act4.stage === 'T10' && act4.finalMailOpened && act4.completedNarrativeSectionIds.includes('A4_READ_T10')) rawFlags.FLAG_A4_COMPLETE = true;
+    else delete rawFlags.FLAG_A4_COMPLETE;
   }
   const rawQueryHistory = browser ? safeStringIds(browser.queryHistory).slice(0, 20) : [];
   const queryHistory = rawQueryHistory.filter((query) => {
@@ -375,7 +475,7 @@ export const hydrateState = (candidate: unknown): AppState => {
   const sceneIsValid = requestedSceneId !== null && sceneById.has(requestedSceneId);
   const journeyStarted = scene?.journeyStarted === true && sceneIsValid;
   const hydrated: AppState = {
-    schemaVersion: 10,
+    schemaVersion: 11,
     game: {
       act: act4.stage !== 'inactive' ? 4 : act3.stage !== 'inactive' ? 3 : finiteNumber(game.act, fallback.game.act),
       phase: safePhase,

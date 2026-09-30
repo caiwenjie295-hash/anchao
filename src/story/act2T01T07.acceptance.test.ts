@@ -28,7 +28,7 @@ const createQimingState = (): AppState => {
     FLAG_A2_OTHER_CASES_ABNORMAL: true,
   };
   state.modules.act2Research.stage = 'qiming';
-  state.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true };
+  state.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
   state.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
   state.modules.notepad.autoEntryIds = ['NOTE_A2_T06_004'];
   return state;
@@ -144,7 +144,7 @@ describe('T07 acceptance', () => {
     const legacy = JSON.parse(JSON.stringify(manager.getState())) as Record<string, unknown>;
     legacy.schemaVersion = 6;
     const restored = hydrateState(legacy);
-    expect(restored.schemaVersion).toBe(10);
+    expect(restored.schemaVersion).toBe(11);
     expect(restored.modules.act2Research.stage).toBe('finale');
     expect(restored.game.phase).toBe('A2_T07');
     expect(restored.modules.act2Research.t07).toEqual({
@@ -177,7 +177,7 @@ describe('T07 acceptance', () => {
 
     // 完成后重载：仍停在 finale，可回看资料，但不出现第三幕入口、也不重复触发完成事件。
     const restored = new StateManager(new EventBus(), hydrateState(JSON.parse(JSON.stringify(manager.getState()))));
-    expect(restored.getState().schemaVersion).toBe(10);
+    expect(restored.getState().schemaVersion).toBe(11);
     expect(restored.getState().modules.act2Research.stage).toBe('finale');
     expect(restored.getState().game.phase).toBe('A2_T07');
     expect(restored.getState().game.flags.FLAG_A2_COMPLETE).toBe(true);

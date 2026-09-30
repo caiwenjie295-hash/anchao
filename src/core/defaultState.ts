@@ -57,10 +57,10 @@ export const createDefaultAct3State = (): Act3State => ({
   confirmedFlagIds: [],
 });
 
-export const createDefaultAct4State = (): Act4State => ({ stage: 'inactive', readNotebookPages: [], solvedPuzzleIds: [], unlockedAccountIds: [], checkedMailRecipients: [], timelineReadDates: [], viewedWakeMail: false, wakePaperConfirmed: false, birthdayNodeId: 'study', laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, broadcastPeriodsConfirmed: [], finalMailOpened: false });
+export const createDefaultAct4State = (): Act4State => ({ stage: 'inactive', completedNarrativeSectionIds: [], completedNarrativeActionIds: [], readNotebookPages: [], solvedPuzzleIds: [], unlockedAccountIds: [], checkedMailRecipients: [], timelineReadDates: [], viewedWakeMail: false, wakePaperConfirmed: false, birthdayNodeId: 'study', laterNodeId: null, seenLaterNodeIds: [], packageStep: 0, broadcastIndex: 0, broadcastPeriodsConfirmed: [], finalMailOpened: false });
 
 export const createDefaultState = (): AppState => ({
-  schemaVersion: 10,
+  schemaVersion: 11,
   game: { act: 1, phase: 'A', flags: {}, discoveredClueIds: [] },
   desktop: {
     windows: Object.fromEntries(APP_IDS.map((appId, index) => [appId, createDefaultWindow(appId, index + 1)])) as Record<AppId, DesktopWindow>,

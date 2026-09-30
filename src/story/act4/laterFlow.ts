@@ -1,6 +1,7 @@
 import type { Act4State } from '../../core/types';
 import type { LaterStage } from '../../data/act4/laterContent';
 
+/** @deprecated Legacy puzzle gate retained for old scene compatibility; the live Act4 reader uses narrativePolicy. */
 export function nextAct4Block(stage: LaterStage, nextId: string, state: Act4State): string | null {
   const solved = (id: string) => state.solvedPuzzleIds.includes(id);
   if (stage === 'T06' && nextId === 'A4_T06_ROOMMATE' && !solved('A4_P13')) return '先整理早晚广播。';
@@ -11,6 +12,7 @@ export function nextAct4Block(stage: LaterStage, nextId: string, state: Act4Stat
   return null;
 }
 
+/** @deprecated Legacy puzzle gate retained for old scene compatibility; the live Act4 reader uses narrativePolicy. */
 export function finishAct4Block(stage: LaterStage, state: Act4State): string | null {
   const required: Partial<Record<LaterStage, string>> = { T06: 'A4_P13', T07: 'A4_P16', T08: 'A4_P18' };
   if (required[stage] && !state.solvedPuzzleIds.includes(required[stage]!)) return '主线判断还未确认。';

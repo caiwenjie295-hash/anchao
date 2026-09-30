@@ -39,7 +39,7 @@ const roundTrip = (state: AppState) => hydrateState(JSON.parse(JSON.stringify(st
 describe('legacy school completion survives repeated reloads', () => {
   it('keeps the verified schema 9 school completion after a save and a second reload', () => {
     const once = roundTrip(legacySchoolCompletion());
-    expect(once.schemaVersion).toBe(10);
+    expect(once.schemaVersion).toBe(11);
     expect(once.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
 
     const twice = roundTrip(once);
@@ -51,7 +51,7 @@ describe('legacy school completion survives repeated reloads', () => {
     let state = roundTrip(legacySchoolCompletion());
     for (let round = 0; round < 2; round += 1) {
       state = roundTrip(state);
-      expect(state.schemaVersion).toBe(10);
+      expect(state.schemaVersion).toBe(11);
       expect(state.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
     }
   });

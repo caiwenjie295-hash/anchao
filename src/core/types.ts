@@ -71,7 +71,7 @@ export interface PhotosState {
 export interface StoryTransitionsState { seenIds: string[] }
 
 export interface AppState {
-  schemaVersion: 10;
+  schemaVersion: 11;
   game: GameState;
   desktop: DesktopState;
   settings: SettingsState;
@@ -89,8 +89,11 @@ export interface AppState {
 }
 
 export type Act4Stage = 'inactive' | 'T01' | 'T02' | 'T03' | 'T04' | 'T05' | 'T06' | 'T07' | 'T08' | 'T09' | 'T10';
+export type Act4NarrativeActionId = 'A4_T02_LOGIN_SUCCEEDED' | 'A4_T04_WAKE_MAIL_OPENED' | 'A4_T08_ARCHIVE_OPENED' | 'A4_T09_NOTE_HIDDEN' | 'A4_T09_DOOR_EXITED' | 'A4_T10_FINAL_MAIL_OPENED';
 export interface Act4State {
   stage: Act4Stage;
+  completedNarrativeSectionIds: string[];
+  completedNarrativeActionIds: Act4NarrativeActionId[];
   readNotebookPages: number[];
   solvedPuzzleIds: string[];
   unlockedAccountIds: string[];
@@ -287,6 +290,6 @@ export type AnchaoEventMap = {
   'act2:t07-location-inferred': Record<string, never>;
   'act2:t07-trip-planned': Record<string, never>;
   'act2:t07-complete': Record<string, never>;
-  'progress:reset': { schemaVersion: 10 };
-  'save:completed': { schemaVersion: 10 };
+  'progress:reset': { schemaVersion: 11 };
+  'save:completed': { schemaVersion: 11 };
 };

@@ -1,10 +1,10 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4NarrativeActionId, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
 import { birthdayScenes, timeline } from '../data/act4/content';
 import { answerAct4Puzzle } from '../story/act4/actions';
-import { firstLaterSceneId, lastLaterSceneId, laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
+import { laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
 import { act1Scenes, hotspotById, hotspotsBySceneId, sceneById } from '../data/sceneData';
 import { isSymbolVisible } from '../data/photoData';
 import { taleById, taleCardById, taleCards, taleEvidenceById, taleNoteIdById } from '../data/act2TalesData';
@@ -14,6 +14,7 @@ import { getPendingStoryTransition } from '../data/storyTransitionData';
 import { act3FirstLensId, act3LensById, act3RequiredClueIds, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_GATE_FLAG, ACT3_STAGE_NEXT } from '../data/act3Data';
 import { act2T07, isAct2T07MaterialId, isAct2T07SegmentId, keyFrameById } from '../data/act2T07Data';
 import { getAct3RouteAvailability } from '../story/investigation/act3RoutePolicy';
+import { act4NarrativeActionsSatisfied, act4NarrativeSectionId, act4NarrativeStageSequence } from '../story/act4/narrativePolicy';
 
 type StateListener = () => void;
 
@@ -65,7 +66,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 10 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 11 });
   }
 
   private nextZIndex(): number {
@@ -218,7 +219,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 10 });
+    this.bus.emit('progress:reset', { schemaVersion: 11 });
   }
 
   startJourney(sceneId: string): void {
@@ -909,8 +910,8 @@ export class StateManager {
 
   viewAct4WakeMail(): void {
     const act4 = this.state.modules.act4;
-    if (act4.stage !== 'T04' || !act4.unlockedAccountIds.includes('mail') || act4.viewedWakeMail) return;
-    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, viewedWakeMail: true } } });
+    if (act4.stage !== 'T04' || !act4.unlockedAccountIds.includes('mail')) return;
+    this.completeAct4NarrativeAction('A4_T04_WAKE_MAIL_OPENED');
   }
 
   /** 答案在控制器中检查；这里只接受语义题目与当前阶段前置。 */
@@ -950,7 +951,12 @@ export class StateManager {
   loginAct4Accounts(password: string): boolean {
     const act4 = this.state.modules.act4;
     if (act4.stage !== 'T02' || !['protagonist', 'xiaoyue'].every((id) => act4.checkedMailRecipients.includes(id)) || password !== '20200419') return false;
-    if (!act4.unlockedAccountIds.includes('weibo') || !act4.unlockedAccountIds.includes('mail') || !act4.solvedPuzzleIds.includes('A4_P04')) this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, solvedPuzzleIds: act4.solvedPuzzleIds.includes('A4_P04') ? act4.solvedPuzzleIds : [...act4.solvedPuzzleIds, 'A4_P04'], unlockedAccountIds: ['weibo', 'mail'] } } });
+    const completedNarrativeActionIds = act4.completedNarrativeActionIds.includes('A4_T02_LOGIN_SUCCEEDED')
+      ? act4.completedNarrativeActionIds
+      : [...act4.completedNarrativeActionIds, 'A4_T02_LOGIN_SUCCEEDED' as const];
+    if (!act4.unlockedAccountIds.includes('weibo') || !act4.unlockedAccountIds.includes('mail') || completedNarrativeActionIds !== act4.completedNarrativeActionIds) {
+      this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, unlockedAccountIds: ['weibo', 'mail'], completedNarrativeActionIds } } });
+    }
     return true;
   }
 
@@ -981,26 +987,14 @@ export class StateManager {
     this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, birthdayNodeId: nodeId } } });
   }
 
-  advanceAct4Stage(): void {
-    const act4 = this.state.modules.act4;
-    const sequence: Act4Stage[] = ['T01', 'T02', 'T03', 'T04', 'T05'];
-    const required = ['A4_P01', 'A4_P04', 'A4_P06', 'A4_P09', 'A4_P11'];
-    const index = sequence.indexOf(act4.stage);
-    if (index < 0 || !act4.solvedPuzzleIds.includes(required[index])) return;
-    if (act4.stage === 'T02' && act4.unlockedAccountIds.length !== 2) return;
-    if (act4.stage === 'T03' && !act4.timelineReadDates.includes('04-19')) return;
-    if (act4.stage === 'T05' && act4.birthdayNodeId !== 'taken') return;
-    const flagId = `FLAG_A4_T${String(index + 1).padStart(2, '0')}_COMPLETE`;
-    const nextStage = sequence[index + 1];
-    this.commit({ ...this.state, game: { ...this.state.game, flags: { ...this.state.game.flags, [flagId]: true }, phase: nextStage ? `A4_${nextStage}` : 'A4_T05' }, modules: { ...this.state.modules, act4: { ...act4, stage: nextStage ?? act4.stage } } });
+  advanceAct4Stage(expectedStage: Exclude<Act4Stage, 'inactive'>): void {
+    this.advanceAct4NarrativeSection(expectedStage);
   }
 
   /** T05 停在家门；玩家再次主动选择才进入机构回忆。 */
   startAct4T06(): void {
-    const act4 = this.state.modules.act4;
-    if (act4.stage !== 'T05' || act4.birthdayNodeId !== 'taken' || this.state.game.flags.FLAG_A4_T05_COMPLETE !== true || act4.laterNodeId) return;
-    const first = firstLaterSceneId.T06;
-    this.commit({ ...this.state, game: { ...this.state.game, phase: 'A4_T06' }, modules: { ...this.state.modules, act4: { ...act4, stage: 'T06', laterNodeId: first, seenLaterNodeIds: [...act4.seenLaterNodeIds, first] } } });
+    if (this.state.modules.act4.stage !== 'T05' || !this.state.modules.act4.completedNarrativeSectionIds.includes('A4_READ_T05')) return;
+    this.advanceAct4NarrativeSection('T05');
   }
 
   visitAct4LaterNode(id: string): void {
@@ -1031,29 +1025,66 @@ export class StateManager {
   }
 
   openAct4FinalMail(): void {
-    const act4 = this.state.modules.act4;
-    if (act4.stage !== 'T10' || act4.laterNodeId !== 'A4_T10_MAIL' || act4.finalMailOpened) return;
-    this.commit({ ...this.state, modules: { ...this.state.modules, act4: { ...act4, finalMailOpened: true } } });
+    this.completeAct4NarrativeAction('A4_T10_FINAL_MAIL_OPENED');
   }
 
-  advanceAct4LaterStage(): void {
+  openAct4Archive(): boolean { return this.completeAct4NarrativeAction('A4_T08_ARCHIVE_OPENED'); }
+
+  hideAct4NarrativeNote(): boolean { return this.completeAct4NarrativeAction('A4_T09_NOTE_HIDDEN'); }
+
+  exitAct4NarrativeDoor(): boolean { return this.completeAct4NarrativeAction('A4_T09_DOOR_EXITED'); }
+
+  private completeAct4NarrativeAction(actionId: Act4NarrativeActionId): boolean {
     const act4 = this.state.modules.act4;
-    const sequence: LaterStage[] = ['T06','T07','T08','T09','T10'];
-    const required = ['A4_P13','A4_P16','A4_P18',null,null] as const;
-    const index = sequence.indexOf(act4.stage as LaterStage);
-    if (index < 0 || act4.laterNodeId !== lastLaterSceneId[sequence[index]] || (required[index] !== null && !act4.solvedPuzzleIds.includes(required[index]))) return;
-    if (act4.stage === 'T06' && !['morning', 'night'].every((period) => act4.broadcastPeriodsConfirmed.includes(period as 'morning' | 'night'))) return;
-    if (index > 0 && this.state.game.flags[`FLAG_A4_${sequence[index - 1]}_COMPLETE`] !== true) return;
-    if (act4.stage === 'T09' && (act4.packageStep !== 3 || act4.broadcastIndex !== 6)) return;
-    if (act4.stage === 'T10' && !act4.finalMailOpened) return;
-    const stageFlag = `FLAG_A4_${act4.stage}_COMPLETE`;
-    const nextStage = sequence[index + 1];
-    if (!nextStage && this.state.game.flags.FLAG_A4_COMPLETE === true) return;
-    const nextNode = nextStage ? firstLaterSceneId[nextStage] : act4.laterNodeId;
-    this.commit({ ...this.state,
-      game: { ...this.state.game, phase: nextStage ? `A4_${nextStage}` : 'A4_T10', flags: { ...this.state.game.flags, [stageFlag]: true, ...(nextStage ? {} : { FLAG_A4_COMPLETE: true }) } },
-      modules: { ...this.state.modules, act4: { ...act4, stage: nextStage ?? act4.stage, laterNodeId: nextNode, seenLaterNodeIds: nextNode && !act4.seenLaterNodeIds.includes(nextNode) ? [...act4.seenLaterNodeIds, nextNode] : act4.seenLaterNodeIds } },
+    const eligible = actionId === 'A4_T04_WAKE_MAIL_OPENED'
+      ? act4.stage === 'T04' && act4.unlockedAccountIds.includes('mail')
+      : actionId === 'A4_T08_ARCHIVE_OPENED'
+        ? act4.stage === 'T08'
+        : actionId === 'A4_T09_NOTE_HIDDEN'
+          ? act4.stage === 'T09'
+          : actionId === 'A4_T09_DOOR_EXITED'
+            ? act4.stage === 'T09' && act4.completedNarrativeActionIds.includes('A4_T09_NOTE_HIDDEN')
+            : actionId === 'A4_T10_FINAL_MAIL_OPENED' && act4.stage === 'T10';
+    if (!eligible) return false;
+    if (act4.completedNarrativeActionIds.includes(actionId)) return true;
+    const completedNarrativeActionIds = [...act4.completedNarrativeActionIds, actionId];
+    this.commit({ ...this.state, modules: { ...this.state.modules, act4: {
+      ...act4,
+      completedNarrativeActionIds,
+      viewedWakeMail: act4.viewedWakeMail || actionId === 'A4_T04_WAKE_MAIL_OPENED',
+      packageStep: actionId === 'A4_T09_NOTE_HIDDEN' ? 3 : act4.packageStep,
+      broadcastIndex: actionId === 'A4_T09_DOOR_EXITED' ? 6 : act4.broadcastIndex,
+      finalMailOpened: act4.finalMailOpened || actionId === 'A4_T10_FINAL_MAIL_OPENED',
+    } } });
+    return true;
+  }
+
+  advanceAct4NarrativeSection(expectedStage: Exclude<Act4Stage, 'inactive'>): void {
+    const act4 = this.state.modules.act4;
+    const sequence = act4NarrativeStageSequence;
+    if (act4.stage !== expectedStage) return;
+    const index = sequence.indexOf(act4.stage as (typeof sequence)[number]);
+    if (index < 0) return;
+    const sectionId = act4NarrativeSectionId(act4.stage as (typeof sequence)[number]);
+    if (index === sequence.length - 1 && act4.completedNarrativeSectionIds.includes(sectionId)) return;
+    const completedNarrativeActionIds = act4.completedNarrativeActionIds;
+    if (!act4NarrativeActionsSatisfied(act4.stage as (typeof sequence)[number], completedNarrativeActionIds)) return;
+    const completedNarrativeSectionIds = act4.completedNarrativeSectionIds.includes(sectionId)
+      ? act4.completedNarrativeSectionIds
+      : [...act4.completedNarrativeSectionIds, sectionId];
+    if (index === sequence.length - 1 && act4.finalMailOpened !== true) return;
+    const nextStage = sequence[index + 1] ?? act4.stage;
+    const flags = { ...this.state.game.flags, [`FLAG_A4_${act4.stage}_COMPLETE`]: true };
+    if (index === sequence.length - 1) flags.FLAG_A4_COMPLETE = true;
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, flags, phase: `A4_${nextStage}` as GamePhase },
+      modules: { ...this.state.modules, act4: { ...act4, stage: nextStage, completedNarrativeSectionIds } },
     });
+  }
+
+  advanceAct4LaterStage(expectedStage: Exclude<Act4Stage, 'inactive'>): void {
+    this.advanceAct4NarrativeSection(expectedStage);
   }
 }
 
