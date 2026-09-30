@@ -40,22 +40,30 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   const pinch = useRef<number | null>(null);
   const pointerMoved = useRef(false);
 
+  // 审查 P1：sceneKey 变化会重建 key={sceneKey} 子树，frame 节点被替换但组件不重挂载。
+  // 依赖 sceneKey 重新绑定观察，并始终读取 ref.current，避免观察已分离的旧节点。
   useEffect(() => {
-    const element = frame.current;
-    if (!element) return;
+    let observer: ResizeObserver | null = null;
     const update = () => {
+      const element = frame.current;
+      if (!element) return;
       const bounds = element.getBoundingClientRect();
       setFrameSize({ width: bounds.width, height: bounds.height });
     };
     update();
     if (typeof ResizeObserver !== 'undefined') {
-      const observer = new ResizeObserver(update);
-      observer.observe(element);
-      return () => observer.disconnect();
+      observer = new ResizeObserver(update);
+      const element = frame.current;
+      if (element) observer.observe(element);
+    } else {
+      window.addEventListener('resize', update);
     }
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
+    return () => {
+      observer?.disconnect();
+      observer = null;
+      window.removeEventListener('resize', update);
+    };
+  }, [sceneKey]);
 
   const bound = (next: { x: number; y: number }, scale = zoom) => {
     const box = frame.current?.getBoundingClientRect();

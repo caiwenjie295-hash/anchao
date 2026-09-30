@@ -101,6 +101,7 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
       selectedEvidenceIds: school ? safeStringIds(school.selectedEvidenceIds).filter((id): id is 'teacher-account' | 'rank-record' | 'qiming-thankyou' => ['teacher-account', 'rank-record', 'qiming-thankyou'].includes(id)) : [],
       selectedInferenceId: school && ['bounded-timeline', 'qiming-caused-change'].includes(String(school.selectedInferenceId)) ? school.selectedInferenceId as 'bounded-timeline' | 'qiming-caused-change' : null,
       symbolMatchConfirmed: school?.symbolMatchConfirmed === true,
+    legacyCompletionMigrated: school?.legacyCompletionMigrated === true,
     },
     t07: {
       viewedMaterialIds: t07 ? safeStringIds(t07.viewedMaterialIds).filter((id) => ACT2_T07_MATERIAL_IDS.includes(id)) : [],
@@ -192,6 +193,18 @@ export const hydrateState = (candidate: unknown): AppState => {
   const t07FlagIds = ['FLAG_A2_PROMO_VIDEO_FOUND', 'FLAG_A2_PROMO_VIDEO_WATCHED', 'FLAG_A2_PROMO_PHOTO_SS_FOUND', 'FLAG_A2_TEMPLE_FRAME_FOUND', 'FLAG_A2_QIMING_LOCATION_INFERRED', 'FLAG_A2_SECOND_TRIP_PLANNED', 'FLAG_A2_COMPLETE'];
   for (const flagId of [...t05FlagIds, ...t06FlagIds, ...t07FlagIds]) if (rawFlags[flagId] !== true && rawFlags[flagId] !== false) delete rawFlags[flagId];
   const schoolPrerequisitesValid = rawFlags.FLAG_A2_SCHOOL_ENTERED === true && rawFlags.FLAG_A2_TRANSFER_RULE_INFERRED === true;
+  // 审查 P1：schema 9 的学校完成事实在旧规则下已核实。迁移时把该事实持久化，
+  // 否则首次载入虽然放行，保存后的第二次载入会按新门槛把它清掉。
+  // 只在旧存档本就带该 Flag、且证据前提成立时记录，不补写任何新证据选择。
+  const legacySchoolCompletion = candidateSchemaVersion < 10
+    && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true
+    && rawFlags.FLAG_A1_SS_FOUND === true
+    && act2Research.school.inspectedHotspotIds.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE');
+  if (legacySchoolCompletion) act2Research.school.legacyCompletionMigrated = true;
+  const schoolCompletionFactsValid = act2Research.school.symbolMatchConfirmed
+    && act2Research.school.selectedEvidenceIds.length >= 2
+    && act2Research.school.selectedInferenceId === 'bounded-timeline';
+  const schoolCompletionAccepted = schoolCompletionFactsValid || act2Research.school.legacyCompletionMigrated;
   // T07 阶段同样保留 T06 已完成的进度；不合格时退回 qiming。
   const act2StageWasFinale = act2Research.stage === 'finale';
   let qimingStageValid = (act2Research.stage === 'qiming' || act2StageWasFinale) && schoolPrerequisitesValid && rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true;
@@ -216,14 +229,14 @@ export const hydrateState = (candidate: unknown): AppState => {
     ['FLAG_A2_SCORE_CHANGE_KNOWN', inspectedHotspots.includes('HOTSPOT_A2_T05_RANKS')],
     ['FLAG_A2_QIMING_NAME_FOUND', inspectedHotspots.includes('HOTSPOT_A2_T05_QIMING_TEXT')],
     ['FLAG_A2_SCHOOL_SS_FOUND', inspectedHotspots.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE')],
-    ['FLAG_A2_SS_MATCH_CONFIRMED', inspectedHotspots.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') && rawFlags.FLAG_A1_SS_FOUND === true && (candidateSchemaVersion < 10 || (act2Research.school.symbolMatchConfirmed && act2Research.school.selectedEvidenceIds.length >= 2 && act2Research.school.selectedInferenceId === 'bounded-timeline'))],
+    ['FLAG_A2_SS_MATCH_CONFIRMED', inspectedHotspots.includes('HOTSPOT_A2_T05_SCHOLAR_NOTE') && rawFlags.FLAG_A1_SS_FOUND === true && (candidateSchemaVersion < 10 || schoolCompletionAccepted)],
   ];
   for (const [flagId, evidencePresent] of t05EvidenceChecks) if (rawFlags[flagId] === true && !evidencePresent) delete rawFlags[flagId];
   // Evidence checks may remove a prerequisite after the first pass; close the
   // dependency chain again so no downstream T05 Flag survives without it.
   for (const [flagId, requiredFlag] of t05Dependencies) if (rawFlags[flagId] === true && rawFlags[requiredFlag] !== true) delete rawFlags[flagId];
   if (rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true && rawFlags.FLAG_A1_SS_FOUND !== true) delete rawFlags.FLAG_A2_SS_MATCH_CONFIRMED;
-  if (rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true && candidateSchemaVersion >= 10) {
+  if (rawFlags.FLAG_A2_SS_MATCH_CONFIRMED === true && candidateSchemaVersion >= 10 && !act2Research.school.legacyCompletionMigrated) {
     const schoolEvidenceFlags: Record<string, string> = { 'teacher-account': 'FLAG_A2_LEAVE_OF_ABSENCE_KNOWN', 'rank-record': 'FLAG_A2_SCORE_CHANGE_KNOWN', 'qiming-thankyou': 'FLAG_A2_QIMING_NAME_FOUND' };
     const supportedSchoolSources = act2Research.school.selectedEvidenceIds.filter((id) => rawFlags[schoolEvidenceFlags[id]] === true);
     if (!act2Research.school.symbolMatchConfirmed || supportedSchoolSources.length < 2 || act2Research.school.selectedInferenceId !== 'bounded-timeline') delete rawFlags.FLAG_A2_SS_MATCH_CONFIRMED;

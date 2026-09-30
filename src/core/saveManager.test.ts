@@ -91,7 +91,7 @@ describe('saveManager', () => {
       bridge: { talkedElderIds: ['ELDER_A2_T02_001'], shownEvidenceAssetIds: ['IMG_A1_I_002'], heardPhrase: true, nameChoices: { first: '黑', middle: '补', last: '母' } },
       library: { visitedSectionIds: ['SECTION_A2_T03_001'], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: 'PAGE_A2_T03_004', bookmarkedPageIds: ['PAGE_A2_T03_004'], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: ['ENTRY_A2_T03_001'] },
       tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
-      school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false },
+      school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
       t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
     };
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
@@ -121,7 +121,7 @@ describe('saveManager', () => {
       bridge: { talkedElderIds: ['ELDER_A2_T02_001'], shownEvidenceAssetIds: ['IMG_A1_I_002'], heardPhrase: false, nameChoices: { first: '黑', middle: null, last: null } },
       library: { visitedSectionIds: [], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: [] },
       tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
-      school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false },
+      school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
       t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
     });
     expect(hydrated.game.flags).toEqual({ FLAG_A1_COMPLETE: true });
@@ -152,7 +152,7 @@ describe('saveManager', () => {
     expect(migrated.game.flags).toEqual(legacy.game.flags);
     expect(migrated.modules.act2Research.tales).toMatchObject(legacy.modules.act2Research.tales);
     expect(migrated.modules.notepad.autoEntryIds).toEqual(legacy.modules.notepad.autoEntryIds);
-    expect(migrated.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false });
+    expect(migrated.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false });
   });
 
   it('restores valid schema 4 school progress and deduplicates only known area and hotspot IDs', () => {
@@ -161,13 +161,16 @@ describe('saveManager', () => {
     school.game.act = 2; school.game.phase = 'A2_T05';
     school.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_FIRE_HYDRANT_SEEN: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_NAME_FOUND: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
     school.modules.act2Research.stage = 'school';
-    school.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_CORRIDOR', 'unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_TEACHER', 'unknown'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false };
+    school.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_CORRIDOR', 'unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_TEACHER', 'unknown'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     school.modules.notepad.autoEntryIds = ['NOTE_A2_T05_001', 'NOTE_A2_T05_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(school)));
     expect(restored.schemaVersion).toBe(10);
     expect(restored.game.phase).toBe('A2_T05');
     expect(restored.modules.act2Research.stage).toBe('school');
-    expect(restored.modules.act2Research.school).toEqual({ visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false });
+    // schema 9 的双 S 比对在旧规则下已完成，迁移后必须把该事实持久化，
+    // 否则保存后的第二次载入会按新门槛清掉 FLAG_A2_SS_MATCH_CONFIRMED。
+    // 注意不会补写 selectedEvidenceIds / selectedInferenceId 等新证据。
+    expect(restored.modules.act2Research.school).toEqual({ visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: true });
     expect(restored.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
   });
 
@@ -176,13 +179,13 @@ describe('saveManager', () => {
     broken.game.act = 2; broken.game.phase = 'A2_T05';
     broken.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: 'true' as unknown as boolean, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
     broken.modules.act2Research.stage = 'school';
-    broken.modules.act2Research.school = { visitedAreaIds: ['unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false };
+    broken.modules.act2Research.school = { visitedAreaIds: ['unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     broken.modules.notepad.autoEntryIds = ['NOTE_A1_K_001', 'NOTE_A2_T05_001', 'NOTE_A2_T05_004'];
     const cleaned = hydrateState(JSON.parse(JSON.stringify(broken)));
     expect(cleaned.modules.act2Research.stage).toBe('tales');
     expect(cleaned.game.phase).toBe('A2_T04');
     expect(Object.keys(cleaned.game.flags).filter((id) => id.startsWith('FLAG_A2_') && /SCHOOL|FIRE_HYDRANT|LEAVE_OF_ABSENCE|SCORE_CHANGE|QIMING|SS_MATCH/.test(id))).toEqual([]);
-    expect(cleaned.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false });
+    expect(cleaned.modules.act2Research.school).toEqual({ visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false });
     expect(cleaned.modules.notepad.autoEntryIds).toEqual(['NOTE_A1_K_001']);
     expect(cleaned.game.flags.FLAG_A1_COMPLETE).toBe(true);
 
@@ -198,7 +201,7 @@ describe('saveManager', () => {
     broken.game.act = 2; broken.game.phase = 'A2_T05';
     broken.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_NAME_FOUND: true };
     broken.modules.act2Research.stage = 'school';
-    broken.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_HONOR_ROLL'], inspectedHotspotIds: ['HOTSPOT_A2_T05_QIMING_TEXT'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false };
+    broken.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_HONOR_ROLL'], inspectedHotspotIds: ['HOTSPOT_A2_T05_QIMING_TEXT'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     broken.modules.notepad.autoEntryIds = ['NOTE_A2_T05_002', 'NOTE_A2_T05_003'];
     const cleaned = hydrateState(JSON.parse(JSON.stringify(broken)));
     expect(cleaned.game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).not.toBe(true);
@@ -223,7 +226,7 @@ describe('saveManager', () => {
     qiming.game.act = 2; qiming.game.phase = 'A2_T06';
     qiming.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true, FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true, FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true };
     qiming.modules.act2Research.stage = 'qiming';
-    qiming.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true };
+    qiming.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
     qiming.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009', 'not-a-page'];
     qiming.modules.browser.queryHistory = ['启明 投诉', '鸡公岭'];
     qiming.modules.notepad.autoEntryIds = ['NOTE_A2_T06_001', 'NOTE_A2_T06_002', 'NOTE_A2_T06_003', 'NOTE_A2_T06_004'];

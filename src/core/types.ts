@@ -118,7 +118,12 @@ export const ACT2_SCHOOL_AREA_IDS = ['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR',
 export const ACT2_SCHOOL_HOTSPOT_IDS = ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE'] as const;
 export type Act2SchoolEvidenceId = 'teacher-account' | 'rank-record' | 'qiming-thankyou';
 export type Act2SchoolInferenceId = 'bounded-timeline' | 'qiming-caused-change';
-export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[]; selectedEvidenceIds: Act2SchoolEvidenceId[]; selectedInferenceId: Act2SchoolInferenceId | null; symbolMatchConfirmed: boolean }
+export interface Act2SchoolState { visitedAreaIds: string[]; inspectedHotspotIds: string[]; selectedEvidenceIds: Act2SchoolEvidenceId[]; selectedInferenceId: Act2SchoolInferenceId | null; symbolMatchConfirmed: boolean; /**
+ * schema 9 存档中双 S 比对已在旧规则下完成，迁移到当前版本时记录该事实。
+   * 只在旧存档本已带 `FLAG_A2_SS_MATCH_CONFIRMED` 且证据前提成立时写入；
+   * 不为任何存档补写 selectedEvidenceIds / selectedInferenceId 等新证据。
+   */
+  legacyCompletionMigrated: boolean }
 
 /** T07 只保存可恢复的语义进度：已看资料、实际播放覆盖的片段、有效截图与已比对帧。 */
 export interface Act2T07State {

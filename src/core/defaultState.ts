@@ -45,7 +45,7 @@ export const createDefaultAct2ResearchState = (): Act2ResearchState => ({
     supportingEvidenceIds: [],
     selectedInferenceId: null,
   },
-  school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false },
+  school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
   t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
 });
 
