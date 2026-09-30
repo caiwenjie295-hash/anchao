@@ -1,0 +1,11 @@
+{
+  "stage": "T06",
+  "completed": [
+    "A4_READ_T01",
+    "A4_READ_T02",
+    "A4_READ_T03",
+    "A4_READ_T04",
+    "A4_READ_T05"
+  ],
+  "errors": []
+}
