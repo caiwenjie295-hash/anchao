@@ -47,6 +47,23 @@ describe('BrowserApp T06 visibility gates', () => {
     });
     expect(input.value).toBe('');
   });
+  it('shows search results and tab destinations after navigation from the qiming review workspace', async () => {
+    manager.enterAct2QimingResearch();
+    await render();
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(true);
+
+    await search('启明 黄子山');
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
+    expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(false);
+    expect(host.querySelector('.browser-results')).not.toBeNull();
+
+    await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    await act(async () => (host.querySelector('.browser-new-tab') as HTMLButtonElement).click());
+    expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
+    expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(false);
+  });
   it('records bounded named-case evidence without treating forum nicknames as identity proof', async () => {
     manager.enterAct2QimingResearch();
     const controller = new Act2T06Controller(manager, bus); controller.start();

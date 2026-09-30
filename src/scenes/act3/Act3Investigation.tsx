@@ -68,7 +68,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
   }, [stage, state.modules.act3.currentLensId, manager]);
 
   if (stage === 'inactive') {
-    return <InvestigationShell ariaLabel="第三幕调查" actLabel="第三幕" locationLabel="启明遗址调查" objective="第三幕尚未开始。" onExit={onReturnToDesktop ?? (() => {})}>
+    return <InvestigationShell className="act3-investigation" ariaLabel="第三幕调查" actLabel="第三幕" locationLabel="启明遗址调查" objective="第三幕尚未开始。" onExit={onReturnToDesktop ?? (() => {})}>
       <p className="act3-investigation__empty">第三幕尚未开始。</p>
     </InvestigationShell>;
   }
@@ -76,7 +76,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
   const doc = act3StageDoc(stage);
   const currentLensId = state.modules.act3.currentLensId;
   const lens: Act3Lens | null = currentLensId ? act3LensById(stage, currentLensId) : null;
-  if (!lens) return <InvestigationShell ariaLabel="第三幕调查" actLabel={STAGE_LABEL[stage]} locationLabel={STAGE_TITLE[stage]} objective={OBJECTIVE[stage]} onExit={onReturnToDesktop ?? (() => {})}><p className="act3-investigation__empty">当前镜头暂时无法显示，可从已知地点返回。</p></InvestigationShell>;
+  if (!lens) return <InvestigationShell className="act3-investigation" ariaLabel="第三幕调查" actLabel={STAGE_LABEL[stage]} locationLabel={STAGE_TITLE[stage]} objective={OBJECTIVE[stage]} onExit={onReturnToDesktop ?? (() => {})}><p className="act3-investigation__empty">当前镜头暂时无法显示，可从已知地点返回。</p></InvestigationShell>;
 
   const assetSrc = assetLoader.get(lens.assetId)?.src;
   const lensHotspot = hotspotId ? lens.hotspots.find((item) => item.clueId === hotspotId) : undefined;
@@ -158,6 +158,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
   }
 
   return <InvestigationShell
+    className="act3-investigation"
     ariaLabel="第三幕调查"
     actLabel={STAGE_LABEL[stage]}
     locationLabel={lens.title}
@@ -169,7 +170,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
     onExit={onReturnToDesktop ?? (() => {})}
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
-    <main className="act3-investigation__lens" data-act3-stage={stage} data-asset-id={lens.assetId}>
+    <main className={`act3-investigation__lens${lens.id === 'LENS_A3_T06_008' ? ' act3-investigation__lens--temple-compare' : ''}`} data-act3-stage={stage} data-asset-id={lens.assetId}>
       <PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lens.title} hotspots={photoHotspots} routes={[]} transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'}>
         <div className="act3-investigation__caption"><strong>{lens.title}</strong><span>{lens.description}</span></div>
       </PhotoViewport>
@@ -181,7 +182,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
         <figure>{assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房尽头空木神龛的石质底座" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}<figcaption>启明厨房 · 空神龛与底座</figcaption></figure>
       </aside>}
     </main>
-    {lensHotspot && <InvestigationDetail title={lensHotspot.label} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`)}>
+    {lensHotspot && <InvestigationDetail title={lensHotspot.label} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`) ?? [...document.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent === lensHotspot.label) ?? null}>
       {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。
           没有正文时宁可说明缺什么，也不回退到整段镜头说明。 */}
       {lensHotspot.observation

@@ -71,7 +71,9 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const comparedFrameIds = t07 ? safeStringIds(t07.comparedFrameIds).filter((id) => capturedFrameIds.includes(id)) : [];
   const rawComparisonFeatureMap = t07 && isRecord(t07.comparisonFeatureIdByFrameId) ? t07.comparisonFeatureIdByFrameId : {};
   const comparisonFeatureIdByFrameId = Object.fromEntries(Object.entries(rawComparisonFeatureMap).filter(([frameId, featureId]) =>
-    comparedFrameIds.includes(frameId) && typeof featureId === 'string' && act2T07.comparison.featureOptions.some((option) => option.id === featureId),
+    comparedFrameIds.includes(frameId)
+      && act2T07.video.keyFrames.find((frame) => frame.id === frameId)?.supportsExteriorMatch === true
+      && featureId === act2T07.comparison.matchFeatureId,
   )) as Record<string, string>;
   const readTaleIds = tales ? safeStringIds(tales.readTaleIds).filter((id) => taleById.has(id)) : [];
   const collectedTaleIds = tales ? safeStringIds(tales.collectedTaleIds).filter((id) => readTaleIds.includes(id)) : [];
@@ -82,11 +84,11 @@ const safeAct2Research = (candidate: unknown): Act2ResearchState => {
   const selectedInferenceId = typeof tales?.selectedInferenceId === 'string' && inferenceIds.includes(tales.selectedInferenceId) ? tales.selectedInferenceId as 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer' : null;
   const rawReviewedCases = t06 && Array.isArray(t06.reviewedCases) ? t06.reviewedCases.filter(isRecord) : [];
   const reviewedCases = rawReviewedCases.flatMap((review) => {
-    const caseId = review.caseId;
+    const caseId = review.caseId === 'huang' || review.caseId === 'zhong' ? review.caseId : null;
     const expectedPages = caseId === 'huang' ? ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'] : caseId === 'zhong' ? ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'] : null;
     const expectedConclusion = caseId === 'huang' || caseId === 'zhong' ? 'public-claims-and-followup-differ' : null;
     const sourcePageIds = safeStringIds(review.sourcePageIds);
-    return expectedPages && expectedConclusion && review.conclusionId === expectedConclusion
+    return caseId !== null && expectedPages && expectedConclusion && review.conclusionId === expectedConclusion
       && sourcePageIds.length === expectedPages.length && expectedPages.every((id) => sourcePageIds.includes(id))
       ? [{ caseId, sourcePageIds: expectedPages, conclusionId: expectedConclusion } as const]
       : [];
@@ -442,15 +444,29 @@ export const hydrateState = (candidate: unknown): AppState => {
     if (rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && !t07.viewedMaterialIds.includes(act2T07.photoMaterialId)) delete rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND;
     if (candidateSchemaVersion <= 11) {
       const legacyExteriorFrameIds = t07.comparedFrameIds.filter((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true);
-      if (legacyExteriorFrameIds.length > 0) {
-        rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
-        act2Research.t07.comparisonFeatureIdByFrameId = {
-          ...act2Research.t07.comparisonFeatureIdByFrameId,
-          ...Object.fromEntries(legacyExteriorFrameIds.map((id) => [id, act2T07.comparison.matchFeatureId])),
-        };
-      }
+      if (legacyExteriorFrameIds.length > 0) rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
     }
-    if (rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true && !t07.comparedFrameIds.some((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true)) delete rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND;
+    // schema 12 already recorded a successful exterior comparison, but did not
+    // persist the selected feature. Recover that one known legacy conclusion
+    // only when the original comparison flag and captured-frame chain survive.
+    if (candidateSchemaVersion <= 12 && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true) {
+      const legacyExteriorFrameIds = t07.comparedFrameIds.filter((id) => act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true);
+      act2Research.t07.comparisonFeatureIdByFrameId = {
+        ...act2Research.t07.comparisonFeatureIdByFrameId,
+        ...Object.fromEntries(legacyExteriorFrameIds.map((id) => [id, act2T07.comparison.matchFeatureId])),
+      };
+    }
+    // Current saves must pair an exterior-capable captured frame with the
+    // one supported shape. A contradictory or incomplete feature map cannot
+    // unlock location inference or preserve a false success note.
+    const validComparedFrameIds = t07.comparedFrameIds.filter((id) =>
+      act2T07.video.keyFrames.find((frame) => frame.id === id)?.supportsExteriorMatch === true
+        && act2Research.t07.comparisonFeatureIdByFrameId[id] === act2T07.comparison.matchFeatureId,
+    );
+    t07.comparedFrameIds = validComparedFrameIds;
+    act2Research.t07.comparisonFeatureIdByFrameId = Object.fromEntries(validComparedFrameIds.map((id) => [id, act2T07.comparison.matchFeatureId]));
+    if (validComparedFrameIds.length > 0) rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND = true;
+    else delete rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND;
     if (rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED === true && !(rawFlags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true && rawFlags.FLAG_A2_TEMPLE_FRAME_FOUND === true)) delete rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED;
     if (rawFlags.FLAG_A2_SECOND_TRIP_PLANNED === true && rawFlags.FLAG_A2_QIMING_LOCATION_INFERRED !== true) delete rawFlags.FLAG_A2_SECOND_TRIP_PLANNED;
     if (rawFlags.FLAG_A2_COMPLETE === true && rawFlags.FLAG_A2_SECOND_TRIP_PLANNED !== true) delete rawFlags.FLAG_A2_COMPLETE;

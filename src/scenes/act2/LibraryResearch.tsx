@@ -118,8 +118,6 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
       onOpenMaterial={() => focusCatalog()}
     >
     <section className="act2-library" aria-label={`${librarySceneCopy.title} · 地方志检索`}>
-      {sceneImage && <img className="act2-library__ambient" src={sceneImage} alt="" aria-hidden="true" />}
-
       <header className="act2-library__header">
         <p className="act2-library__eyebrow">{librarySceneCopy.eyebrow}</p>
         <h1 className="act2-library__title">{librarySceneCopy.title}</h1>

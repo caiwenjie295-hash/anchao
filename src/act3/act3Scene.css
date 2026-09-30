@@ -1,35 +1,40 @@
-.act3-investigation{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;overflow:auto;background:#11191c;color:#e8f0f0;font-family:"Segoe UI","Microsoft YaHei",sans-serif}
-.act3-investigation button{font:inherit;cursor:pointer;border:1px solid #aabec0;border-radius:7px;background:#dae5e5;color:#162126;padding:.45rem .7rem;min-height:44px}
-.act3-investigation button:focus-visible{outline:3px solid #96d9ec;outline-offset:2px}
-.act3-investigation__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 20px;background:#17252abe;backdrop-filter:blur(15px)}
-.act3-investigation__header p{margin:0;color:#a9c1c4;font-size:.74rem;letter-spacing:.1em}
-.act3-investigation__header h1{margin:0;font-size:1.15rem}
-.act3-investigation__header span{font-size:.82rem;color:#d0dddd}
-.act3-investigation__header button{flex:none;background:#283d43c9;color:white}
-.act3-investigation__lens{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
-.act3-investigation__lens>.photo-viewport{flex:1}
-.act3-investigation__caption{align-self:flex-start;max-width:min(70ch,75%);display:grid;gap:3px;padding:9px 12px;border:1px solid #a7c3c45e;border-radius:9px;background:#17292bc2;backdrop-filter:blur(14px);line-height:1.45;text-shadow:0 1px 3px #000}
+.act3-investigation{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;overflow:auto;background:var(--ui-page,#f5f5f5);color:var(--ui-text,#1f1f1f);font-family:var(--font-ui,"Segoe UI","Microsoft YaHei",sans-serif)}
+.act3-investigation button{font:inherit;cursor:pointer;border:1px solid var(--ui-interactive-border,#8c8c8c);border-radius:7px;background:var(--ui-surface,#fff);color:var(--ui-text,#1f1f1f);padding:.45rem .7rem;min-height:44px}
+.act3-investigation button:hover:not(:disabled){border-color:var(--ui-accent,#165dcc);background:var(--ui-accent-soft,#eaf2ff)}
+.act3-investigation button:focus-visible{outline:3px solid var(--ui-accent,#165dcc);outline-offset:2px}
+.act3-investigation__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 20px;background:var(--ui-surface,#fff);border-bottom:1px solid var(--ui-border,#d9d9d9)}
+.act3-investigation__header p{margin:0;color:var(--ui-text-muted,#595959);font-size:.74rem;letter-spacing:.1em}
+.act3-investigation__header h1{margin:0;color:var(--ui-text,#1f1f1f);font-size:1.15rem}
+.act3-investigation__header span{font-size:.82rem;color:var(--ui-text-muted,#595959)}
+.act3-investigation__header button{flex:none}
+.act3-investigation__lens{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;background:var(--ui-page,#f5f5f5)}
+.act3-investigation__lens>.photo-viewport{flex:1;min-height:0}
+.act3-investigation__lens--temple-compare{overflow-y:auto}
+.act3-investigation__lens--temple-compare>.photo-viewport{flex:0 0 clamp(280px,44vh,500px);min-height:280px}
+.act3-investigation .photo-viewport__frame{min-height:0;background:var(--ui-surface-muted,#f0f0f0)}
+.act3-investigation .photo-viewport__controls{border:1px solid rgb(255 255 255 / 45%);background:rgb(25 31 35 / 82%);color:#fff}
+.act3-investigation .photo-viewport__controls button{color:#1f1f1f!important;background:#fff!important}
+.act3-investigation .photo-viewport__controls button:hover:not(:disabled){background:#eaf2ff!important}
+.act3-investigation__caption{align-self:flex-start;max-width:min(70ch,75%);display:grid;gap:3px;padding:9px 12px;border:1px solid rgb(255 255 255 / 45%);border-radius:8px;background:rgb(25 31 35 / 86%);backdrop-filter:blur(10px);color:#fff;line-height:1.45;text-shadow:0 1px 3px #000}
 .act3-investigation__caption strong{font-size:1rem}
 .act3-investigation__caption span{font-size:.84rem}
-.act3-investigation__action{align-self:center;display:flex;align-items:center;gap:10px;max-width:100%;padding:7px 10px;border-radius:10px;background:#17292bd9;backdrop-filter:blur(14px);font-size:.85rem}
-.act3-investigation__action button{background:#d6e5e2}
-.act3-investigation__paper-compare,.act3-investigation__temple-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;padding:.7rem;background:#1b2729}
-.act3-investigation__paper-compare article{padding:.7rem;background:#eee6d2;color:#273039;border-radius:4px}
+.act3-investigation__action{align-self:center;display:flex;align-items:center;gap:10px;max-width:100%;padding:7px 10px;border:1px solid var(--ui-border,#d9d9d9);border-radius:8px;background:rgb(255 255 255 / 94%);color:var(--ui-text,#1f1f1f);box-shadow:0 4px 18px rgb(0 0 0 / 16%);font-size:.85rem}
+.act3-investigation__action button{background:var(--ui-surface,#fff)}
+.act3-investigation__paper-compare,.act3-investigation__temple-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;padding:.7rem;border:1px solid var(--ui-border,#d9d9d9);border-radius:8px;background:var(--ui-surface-muted,#f0f0f0);color:var(--ui-text,#1f1f1f)}
+.act3-investigation__paper-compare article{padding:.7rem;border:1px solid var(--ui-border,#d9d9d9);border-radius:5px;background:#fff;color:var(--ui-text,#1f1f1f)}
 .act3-investigation__paper-compare h2{margin:0 0 .4rem;font:700 1.1rem Georgia,serif}
 .act3-investigation__paper-compare p{margin:0;line-height:1.6}
 .act3-investigation__paper-compare>p{grid-column:1/-1}
 .act3-investigation__temple-compare figure{min-width:0;margin:0}
-.act3-investigation__compare-note{flex-basis:100%;margin:0 0 .5rem;font-size:.9rem;line-height:1.6;color:#cfe0e2}
-/* 工单 §16.3：破庙/空神龛对照不再用定高 160px + cover 裁掉判读区域。
-   改为按原图自然比例完整呈现，只设最大高度，证据不被裁切。 */
-.act3-investigation__temple-compare img{width:100%;height:auto;max-height:min(46vh,420px);object-fit:contain;display:block;background:#38494b}
-.act3-investigation__comparison-placeholder{width:100%;height:auto;min-height:160px;aspect-ratio:4/3;display:grid;place-items:center;background:#38494b}
-.act3-investigation__temple-compare figcaption{font-size:.85rem}
-.act3-investigation__dialog-backdrop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1rem;background:#080e10d9}
-.act3-investigation__dialog{width:min(100%,560px);max-height:80vh;overflow:auto;padding:1.2rem;border:1px solid #7b9296;border-radius:12px;background:#172330;box-shadow:0 24px 80px #0009}
+.act3-investigation__compare-note{flex-basis:100%;margin:0 0 .5rem;font-size:.9rem;line-height:1.6;color:var(--ui-text-muted,#595959)}
+/* Keep both comparison images uncropped so their evidence regions remain inspectable. */
+.act3-investigation__temple-compare img{width:100%;height:auto;max-height:min(46vh,420px);object-fit:contain;display:block;background:var(--ui-surface-muted,#f0f0f0)}
+.act3-investigation__comparison-placeholder{width:100%;height:auto;min-height:160px;aspect-ratio:4/3;display:grid;place-items:center;background:var(--ui-surface-muted,#f0f0f0)}
+.act3-investigation__temple-compare figcaption{font-size:.85rem;color:var(--ui-text-muted,#595959)}
+.act3-investigation__dialog-backdrop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1rem;background:rgb(0 0 0 / 62%)}
+.act3-investigation__dialog{width:min(100%,560px);max-height:80vh;overflow:auto;padding:1.2rem;border:1px solid var(--ui-border,#d9d9d9);border-radius:12px;background:#fff;color:var(--ui-text,#1f1f1f);box-shadow:0 24px 80px rgb(0 0 0 / 24%)}
 .act3-investigation__dialog>header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
 .act3-investigation__dialog h2{margin:0;font:600 1.3rem Georgia,serif}
 .act3-investigation__dialog p{line-height:1.7}
-.act3-investigation__empty{padding:2rem}
+.act3-investigation__empty{padding:2rem;color:var(--ui-text-muted,#595959)}
 @media(max-width:600px){.act3-investigation__header{padding:6px 10px}.act3-investigation__header h1{font-size:1rem}.act3-investigation__header span{display:none}.act3-investigation__caption{max-width:100%;font-size:.75rem}.act3-investigation__action{flex-wrap:wrap;justify-content:center}.act3-investigation__paper-compare,.act3-investigation__temple-compare{grid-template-columns:1fr}}
-.act3-investigation__dialog{background:#182830df;backdrop-filter:blur(18px) saturate(.65);border-color:#a2b9ba9c}

@@ -861,7 +861,10 @@ export class StateManager {
     if (this.act2Research.stage !== 'finale' || !frame || !t07.capturedFrameIds.includes(id) || t07.comparedFrameIds.includes(id)) return false;
     if (!act2T07.comparison.featureOptions.some((option) => option.id === featureId)) return false;
     if (!frame.supportsExteriorMatch || featureId !== act2T07.comparison.matchFeatureId) return false;
-    this.commitAct2Research({ t07: { comparedFrameIds: [...t07.comparedFrameIds, id] } });
+    this.commitAct2Research({ t07: {
+      comparedFrameIds: [...t07.comparedFrameIds, id],
+      comparisonFeatureIdByFrameId: { ...t07.comparisonFeatureIdByFrameId, [id]: featureId },
+    } });
     this.bus.emit('act2:t07-frame-compared', { frameId: id });
     return true;
   }

@@ -1,5 +1,7 @@
 # 隐形入口与可读性复现记录（工作包 E / COL-01）
 
+> 历史阶段记录：本文记录早期 800×656 的 VIS-01/VIS-02 检查，不代表当前完整响应式矩阵。最新视口、场景和交互范围见 [test-matrix.md](test-matrix.md)。
+
 > 对应工单 §12（E）、§13.5（COL-01）。全部为 800×656 真实 Chromium 实测，非 jsdom 推断。
 > 证据：`evidence/VIS-01-act1-ending-reset-contrast.png`。
 

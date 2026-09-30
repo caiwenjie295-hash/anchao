@@ -64,6 +64,8 @@
 .browser-case-review summary:focus-visible { outline: 3px solid #165dcc; outline-offset: 2px; }
 .browser-case-review .browser-case-review__submit,
 .browser-case-review__next button { color: #fff; background: #165dcc; border-color: #165dcc; font-weight: 650; }
+.browser-case-review .browser-case-review__submit:hover:not(:disabled),
+.browser-case-review__next button:hover:not(:disabled) { color: #fff; background: #0f477f; border-color: #0f477f; }
 .browser-case-review .browser-case-review__submit:disabled { color: #595959; background: #f0f0f0; border-color: #bfbfbf; cursor: not-allowed; }
 .browser-case-review__choices { display: grid; gap: 12px; margin: 16px 0 0; padding: 12px; border: 1px solid #d9d9d9; border-radius: 8px; }
 .browser-case-review__choices legend { padding-inline: 5px; font-weight: 650; }

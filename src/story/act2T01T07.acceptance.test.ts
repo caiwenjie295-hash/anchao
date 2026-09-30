@@ -219,6 +219,53 @@ describe('T07 acceptance', () => {
     expect(completed).toEqual([]);
   });
 
+  it('restores schema 12 exterior comparisons and keeps them stable after another save cycle', () => {
+    const { manager } = enterT07();
+    manager.viewAct2T07Material(act2T07.photoMaterialId);
+    manager.confirmAct2T07PhotoSymbol();
+    manager.viewAct2T07Material(act2T07.video.materialId);
+    manager.captureAct2T07Frame('FRAME_A2_T07_001', 7000);
+    manager.submitAct2T07Comparison('FRAME_A2_T07_001', 'square-opening');
+    manager.inferAct2T07Location();
+
+    const schema12 = JSON.parse(JSON.stringify(manager.getState())) as AppState;
+    (schema12 as { schemaVersion: number }).schemaVersion = 12;
+    delete (schema12.modules.act2Research.t07 as { comparisonFeatureIdByFrameId?: Record<string, string> }).comparisonFeatureIdByFrameId;
+    const once = hydrateState(schema12);
+    expect(once.modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
+    expect(once.modules.act2Research.t07.comparisonFeatureIdByFrameId).toEqual({ FRAME_A2_T07_001: 'square-opening' });
+    expect(once.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND).toBe(true);
+    expect(once.game.flags.FLAG_A2_QIMING_LOCATION_INFERRED).toBe(true);
+    const twice = hydrateState(JSON.parse(JSON.stringify(once)));
+    expect(twice.modules.act2Research.t07).toEqual(once.modules.act2Research.t07);
+    expect(twice.game.flags.FLAG_A2_QIMING_LOCATION_INFERRED).toBe(true);
+  });
+
+  it('removes a schema 13 comparison whose recorded feature contradicts the supported frame', () => {
+    const { manager } = enterT07();
+    manager.viewAct2T07Material(act2T07.photoMaterialId);
+    manager.confirmAct2T07PhotoSymbol();
+    manager.viewAct2T07Material(act2T07.video.materialId);
+    manager.captureAct2T07Frame('FRAME_A2_T07_001', 7000);
+    manager.submitAct2T07Comparison('FRAME_A2_T07_001', 'square-opening');
+    manager.inferAct2T07Location();
+    manager.planAct2T07SecondTrip();
+    manager.completeAct2T07Finale();
+    const forged = JSON.parse(JSON.stringify(manager.getState())) as AppState;
+    forged.modules.act2Research.t07.comparisonFeatureIdByFrameId['FRAME_A2_T07_001'] = 'mountain-road';
+
+    const restored = hydrateState(forged);
+    expect(restored.modules.act2Research.stage).toBe('finale');
+    expect(restored.modules.act2Research.t07.comparedFrameIds).toEqual([]);
+    expect(restored.modules.act2Research.t07.comparisonFeatureIdByFrameId).toEqual({});
+    expect(restored.game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND).toBe(true);
+    expect(restored.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND).toBeUndefined();
+    expect(restored.game.flags.FLAG_A2_QIMING_LOCATION_INFERRED).toBeUndefined();
+    expect(restored.game.flags.FLAG_A2_SECOND_TRIP_PLANNED).toBeUndefined();
+    expect(restored.game.flags.FLAG_A2_COMPLETE).toBeUndefined();
+    expect(restored.modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T06_004', 'NOTE_A2_T07_001']);
+  });
+
   it('cleans contradictory T07 stages, flags and progress', () => {
     const state = createQimingState();
     state.modules.act2Research.stage = 'finale';

@@ -101,7 +101,7 @@ describe('T07 promotion investigation', () => {
     await render();
     await loadPendingImages();
     await click('.t07-finale__photo-zoom');
-    const image = container.querySelector('.t07-finale__photo img')!;
+    const image = container.querySelector<HTMLImageElement>('.t07-finale__photo img')!;
     image.dataset.testLoaded = 'true';
     await act(async () => { image.dispatchEvent(new Event('error')); });
     expect(container.querySelector('.t07-finale__photo .photo-viewport__load-state')?.textContent).toContain('载入失败');

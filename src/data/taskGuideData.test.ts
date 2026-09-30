@@ -167,7 +167,7 @@ describe('act2 desktop task guides', () => {
       FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true,
       FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true,
     }, 'A2_T06', 'qiming');
-    legacy.schemaVersion = 11;
+    (legacy as unknown as { schemaVersion: number }).schemaVersion = 11;
     legacy.modules.act2Research.school = {
       visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'],
       inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'],

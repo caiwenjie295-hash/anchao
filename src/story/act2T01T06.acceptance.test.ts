@@ -28,10 +28,6 @@ describe('T06 browser acceptance', () => {
     });
     await act(async () => { host.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
   };
-  const open = async (text: string) => {
-    const button = [...host.querySelectorAll('.browser-results button')].find((item) => item.textContent?.includes(text)) as HTMLButtonElement;
-    expect(button).toBeDefined(); await act(async () => button.click());
-  };
   it('opens实名 source pages directly, records bounded findings once and keeps nickname optional', async () => {
     await search('启明');
     expect(manager.getState().modules.act2Research.stage).toBe('school');
@@ -39,14 +35,18 @@ describe('T06 browser acceptance', () => {
     await search('启明 投诉');
     expect(manager.getState().modules.act2Research.stage).toBe('qiming');
     expect(manager.getState().game.phase).toBe('A2_T06');
+    const returnToReview = async () => act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
     const openSource = async (label: string) => {
       const button = [...host.querySelectorAll('.browser-case-review button')].find((item) => item.textContent === label) as HTMLButtonElement;
       expect(button).toBeDefined(); await act(async () => button.click());
     };
-    await openSource('打开宣传案例');
+    await returnToReview();
+    await openSource('打开启明宣传案例');
     expect(manager.getState().game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ).toBe(true);
     expect(manager.getState().game.flags.FLAG_A2_QIMING_FORUM_FOUND).not.toBe(true);
-    await openSource('调查黄子山后续');
+    await returnToReview();
+    await openSource('打开黄子山后续报道');
+    await returnToReview();
     const huangCase = host.querySelector('.browser-case-review__case[aria-label="黄子山材料"]')!;
     await act(async () => (huangCase.querySelectorAll('label')[1] as HTMLLabelElement).click());
     await act(async () => (huangCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());
@@ -56,7 +56,8 @@ describe('T06 browser acceptance', () => {
     await act(async () => (huangCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());
     expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang']);
     expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).not.toBe(true);
-    await openSource('调查钟子月后续');
+    await openSource('打开钟子月后续报道');
+    await returnToReview();
     const zhongCase = host.querySelector('.browser-case-review__case[aria-label="钟子月材料"]')!;
     await act(async () => (zhongCase.querySelectorAll('label')[0] as HTMLLabelElement).click());
     await act(async () => (zhongCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());

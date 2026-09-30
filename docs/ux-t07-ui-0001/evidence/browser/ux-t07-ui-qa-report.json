@@ -1,0 +1,8407 @@
+{
+  "date": "2026-09-30T21:00:46.539Z",
+  "browser": "Chrome headless via Playwright",
+  "baseUrl": "http://127.0.0.1:5173/",
+  "school": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "sceneWidth": 1920,
+      "places": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "selectedSources": 2,
+      "selectedInference": true,
+      "image": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          880.84375,
+          660.125
+        ],
+        "ratioError": 0.0007692671842454146
+      },
+      "clickedPlaces": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "fixture": "synthetic state fixture; real location and evidence controls"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "sceneWidth": 1440,
+      "places": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "selectedSources": 2,
+      "selectedInference": true,
+      "image": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          616.46875,
+          461.84375
+        ],
+        "ratioError": 0.0010995331213208281
+      },
+      "clickedPlaces": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "fixture": "synthetic state fixture; real location and evidence controls"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "sceneWidth": 1024,
+      "places": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "selectedSources": 2,
+      "selectedInference": true,
+      "image": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          658.46875,
+          493.34375
+        ],
+        "ratioError": 0.001029327928042223
+      },
+      "clickedPlaces": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "fixture": "synthetic state fixture; real location and evidence controls"
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "sceneWidth": 768,
+      "places": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "selectedSources": 2,
+      "selectedInference": true,
+      "image": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          508,
+          380.5
+        ],
+        "ratioError": 0.0013140604467805073
+      },
+      "clickedPlaces": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "fixture": "synthetic state fixture; real location and evidence controls"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "sceneWidth": 390,
+      "places": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "selectedSources": 2,
+      "selectedInference": true,
+      "image": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          346,
+          259
+        ],
+        "ratioError": 0.0019305019305020377
+      },
+      "clickedPlaces": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "fixture": "synthetic state fixture; real location and evidence controls"
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 920
+      },
+      "documentWidth": 1920,
+      "sceneWidth": 1920,
+      "places": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "selectedSources": 2,
+      "selectedInference": true,
+      "image": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          789.1875,
+          591.390625
+        ],
+        "ratioError": 0.000845464873576729
+      },
+      "clickedPlaces": [
+        "校门",
+        "走廊",
+        "小A旧教室",
+        "小月旧教室",
+        "厕所方向",
+        "光荣榜",
+        "老师办公室",
+        "宣传栏"
+      ],
+      "fixture": "synthetic state fixture; real location and evidence controls"
+    }
+  ],
+  "act3Lenses": [
+    {
+      "id": "LENS_A3_T00_001",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014062500000022737
+    },
+    {
+      "id": "LENS_A3_T00_001",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010937500000011369
+    },
+    {
+      "id": "LENS_A3_T00_001",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T00_001",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00687500000003638
+    },
+    {
+      "id": "LENS_A3_T00_001",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031250000000113687
+    },
+    {
+      "id": "LENS_A3_T00_002",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_002",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T00_002",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00687500000003638
+    },
+    {
+      "id": "LENS_A3_T00_002",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.007499999999993179
+    },
+    {
+      "id": "LENS_A3_T00_002",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T00_003",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031249999999545253
+    },
+    {
+      "id": "LENS_A3_T00_003",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T00_003",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_003",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01125000000001819
+    },
+    {
+      "id": "LENS_A3_T00_003",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T00_004",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T00_004",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T00_004",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.011093749999986358
+    },
+    {
+      "id": "LENS_A3_T00_004",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008125000000006821
+    },
+    {
+      "id": "LENS_A3_T00_004",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        457.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T00_005",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_005",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014062500000022737
+    },
+    {
+      "id": "LENS_A3_T00_005",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01312499999994543
+    },
+    {
+      "id": "LENS_A3_T00_005",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010625000000004547
+    },
+    {
+      "id": "LENS_A3_T00_005",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T00_006",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013281249999977263
+    },
+    {
+      "id": "LENS_A3_T00_006",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00937500000009095
+    },
+    {
+      "id": "LENS_A3_T00_006",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00828124999998181
+    },
+    {
+      "id": "LENS_A3_T00_006",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014375000000029559
+    },
+    {
+      "id": "LENS_A3_T00_006",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        457.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T00_007",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_007",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014062499999965894
+    },
+    {
+      "id": "LENS_A3_T00_007",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.011562499999968168
+    },
+    {
+      "id": "LENS_A3_T00_007",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013750000000015916
+    },
+    {
+      "id": "LENS_A3_T00_007",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T00_008",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01171875
+    },
+    {
+      "id": "LENS_A3_T00_008",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.011718750000056843
+    },
+    {
+      "id": "LENS_A3_T00_008",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T00_008",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031249999999545253
+    },
+    {
+      "id": "LENS_A3_T00_008",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031250000000113687
+    },
+    {
+      "id": "LENS_A3_T00_009",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_009",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0062499999999090505
+    },
+    {
+      "id": "LENS_A3_T00_009",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_009",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.004687500000045475
+    },
+    {
+      "id": "LENS_A3_T00_009",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_009",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01125000000001819
+    },
+    {
+      "id": "LENS_A3_T00_009",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_009",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009999999999990905
+    },
+    {
+      "id": "LENS_A3_T00_009",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_009",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_010",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_010",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T00_010",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_010",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_010",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_010",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.015468750000025011
+    },
+    {
+      "id": "LENS_A3_T00_010",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_010",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01375000000007276
+    },
+    {
+      "id": "LENS_A3_T00_010",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_010",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T00_011",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_011",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_011",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_011",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008593750000045475
+    },
+    {
+      "id": "LENS_A3_T00_011",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_011",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01312499999994543
+    },
+    {
+      "id": "LENS_A3_T00_011",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_011",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.011874999999918145
+    },
+    {
+      "id": "LENS_A3_T00_011",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_011",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T00_012",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_012",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T00_012",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_012",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T00_012",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_012",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01375000000007276
+    },
+    {
+      "id": "LENS_A3_T00_012",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_012",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008750000000020464
+    },
+    {
+      "id": "LENS_A3_T00_012",
+      "stage": "T00",
+      "assetId": "IMG_A3_T00_012",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        559.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000017053
+    },
+    {
+      "id": "LENS_A3_T01_001",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0062499999999090505
+    },
+    {
+      "id": "LENS_A3_T01_001",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014062499999965894
+    },
+    {
+      "id": "LENS_A3_T01_001",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.011562499999968168
+    },
+    {
+      "id": "LENS_A3_T01_001",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013749999999959073
+    },
+    {
+      "id": "LENS_A3_T01_001",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T01_002",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010937500000011369
+    },
+    {
+      "id": "LENS_A3_T01_002",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0015624999999772626
+    },
+    {
+      "id": "LENS_A3_T01_002",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013437500000009095
+    },
+    {
+      "id": "LENS_A3_T01_002",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T01_002",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T01_003",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00937500000009095
+    },
+    {
+      "id": "LENS_A3_T01_003",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T01_003",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.007499999999936335
+    },
+    {
+      "id": "LENS_A3_T01_003",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013125000000002274
+    },
+    {
+      "id": "LENS_A3_T01_003",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T01_004",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T01_004",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T01_004",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00874999999996362
+    },
+    {
+      "id": "LENS_A3_T01_004",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T01_004",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T01_005",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T01_005",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013281250000034106
+    },
+    {
+      "id": "LENS_A3_T01_005",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01375000000007276
+    },
+    {
+      "id": "LENS_A3_T01_005",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T01_005",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000017053
+    },
+    {
+      "id": "LENS_A3_T01_006",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_006",
+      "hotspotCount": 2,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 2,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T01_006",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_006",
+      "hotspotCount": 2,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 2,
+      "maxMarkerOffsetPx": 0.012499999999931788
+    },
+    {
+      "id": "LENS_A3_T01_006",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_006",
+      "hotspotCount": 2,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 2,
+      "maxMarkerOffsetPx": 0.011093749999986358
+    },
+    {
+      "id": "LENS_A3_T01_006",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_006",
+      "hotspotCount": 2,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 2,
+      "maxMarkerOffsetPx": 0.01125000000001819
+    },
+    {
+      "id": "LENS_A3_T01_006",
+      "stage": "T01",
+      "assetId": "IMG_A3_T01_006",
+      "hotspotCount": 2,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        576.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 2,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T02_001",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T02_001",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T02_001",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00687500000003638
+    },
+    {
+      "id": "LENS_A3_T02_001",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.007499999999993179
+    },
+    {
+      "id": "LENS_A3_T02_001",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T02_002",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013281249999977263
+    },
+    {
+      "id": "LENS_A3_T02_002",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T02_002",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013750000000015916
+    },
+    {
+      "id": "LENS_A3_T02_002",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008750000000020464
+    },
+    {
+      "id": "LENS_A3_T02_002",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        457.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000017053
+    },
+    {
+      "id": "LENS_A3_T02_003",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T02_003",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T02_003",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T02_003",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0012500000000272848
+    },
+    {
+      "id": "LENS_A3_T02_003",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T02_004",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T02_004",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T02_004",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.004531249999956799
+    },
+    {
+      "id": "LENS_A3_T02_004",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T02_004",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T02_005",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.004687499999988631
+    },
+    {
+      "id": "LENS_A3_T02_005",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014062500000022737
+    },
+    {
+      "id": "LENS_A3_T02_005",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.005312500000002274
+    },
+    {
+      "id": "LENS_A3_T02_005",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0012500000000272848
+    },
+    {
+      "id": "LENS_A3_T02_005",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        508.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T02_006",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0078125
+    },
+    {
+      "id": "LENS_A3_T02_006",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0078125
+    },
+    {
+      "id": "LENS_A3_T02_006",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T02_006",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        792.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009375000000034106
+    },
+    {
+      "id": "LENS_A3_T02_006",
+      "stage": "T02",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        559.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 2.842170943040401E-14
+    },
+    {
+      "id": "LENS_A3_T03_001",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T03_001",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0062499999999090505
+    },
+    {
+      "id": "LENS_A3_T03_001",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01312499999994543
+    },
+    {
+      "id": "LENS_A3_T03_001",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T03_001",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006249999999994316
+    },
+    {
+      "id": "LENS_A3_T03_002",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01171875
+    },
+    {
+      "id": "LENS_A3_T03_002",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T03_002",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013750000000015916
+    },
+    {
+      "id": "LENS_A3_T03_002",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008750000000020464
+    },
+    {
+      "id": "LENS_A3_T03_002",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000017053
+    },
+    {
+      "id": "LENS_A3_T03_003",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T03_003",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T03_003",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T03_003",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01125000000001819
+    },
+    {
+      "id": "LENS_A3_T03_003",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T03_004",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00390625
+    },
+    {
+      "id": "LENS_A3_T03_004",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T03_004",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T03_004",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T03_004",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009375000000005684
+    },
+    {
+      "id": "LENS_A3_T03_005",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010937499999954525
+    },
+    {
+      "id": "LENS_A3_T03_005",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0015624999999772626
+    },
+    {
+      "id": "LENS_A3_T03_005",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T03_005",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009375000000034106
+    },
+    {
+      "id": "LENS_A3_T03_005",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T03_006",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T03_006",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T03_006",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00687500000003638
+    },
+    {
+      "id": "LENS_A3_T03_006",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.007499999999993179
+    },
+    {
+      "id": "LENS_A3_T03_006",
+      "stage": "T03",
+      "assetId": "IMG_A3_T03_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T03_000",
+      "stage": "T03",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 0,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 0,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T03_000",
+      "stage": "T03",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 0,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 0,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T03_000",
+      "stage": "T03",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 0,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 0,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T03_000",
+      "stage": "T03",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 0,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 0,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T03_000",
+      "stage": "T03",
+      "assetId": "IMG_A3_T02_006",
+      "hotspotCount": 0,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 0,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T04_001",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00390625
+    },
+    {
+      "id": "LENS_A3_T04_001",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00390625
+    },
+    {
+      "id": "LENS_A3_T04_001",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010156250000022737
+    },
+    {
+      "id": "LENS_A3_T04_001",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T04_001",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        549.015625
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T04_002",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T04_002",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T04_002",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0078125
+    },
+    {
+      "id": "LENS_A3_T04_002",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T04_002",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        498.015625
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T04_003",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T04_003",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T04_003",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00874999999996362
+    },
+    {
+      "id": "LENS_A3_T04_003",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01125000000001819
+    },
+    {
+      "id": "LENS_A3_T04_003",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        498.015625
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T04_004",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013281249999977263
+    },
+    {
+      "id": "LENS_A3_T04_004",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0007812500000454747
+    },
+    {
+      "id": "LENS_A3_T04_004",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01453124999989086
+    },
+    {
+      "id": "LENS_A3_T04_004",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0062499999999090505
+    },
+    {
+      "id": "LENS_A3_T04_004",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        498.015625
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T04_005",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T04_005",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T04_005",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013125000000059117
+    },
+    {
+      "id": "LENS_A3_T04_005",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.005625000000009095
+    },
+    {
+      "id": "LENS_A3_T04_005",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        498.015625
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T04_006",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0078125
+    },
+    {
+      "id": "LENS_A3_T04_006",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0078125
+    },
+    {
+      "id": "LENS_A3_T04_006",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T04_006",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009375000000034106
+    },
+    {
+      "id": "LENS_A3_T04_006",
+      "stage": "T04",
+      "assetId": "IMG_A3_T04_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        549.015625
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 2.842170943040401E-14
+    },
+    {
+      "id": "LENS_A3_T05_001",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0023437500000227374
+    },
+    {
+      "id": "LENS_A3_T05_001",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T05_001",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00734375000001819
+    },
+    {
+      "id": "LENS_A3_T05_001",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009999999999990905
+    },
+    {
+      "id": "LENS_A3_T05_001",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031250000000113687
+    },
+    {
+      "id": "LENS_A3_T05_002",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031249999999545253
+    },
+    {
+      "id": "LENS_A3_T05_002",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00937500000009095
+    },
+    {
+      "id": "LENS_A3_T05_002",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.015312500000050022
+    },
+    {
+      "id": "LENS_A3_T05_002",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.011875000000031832
+    },
+    {
+      "id": "LENS_A3_T05_002",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T05_003",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T05_003",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T05_003",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T05_003",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0062499999999090505
+    },
+    {
+      "id": "LENS_A3_T05_003",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0
+    },
+    {
+      "id": "LENS_A3_T05_004",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00390625
+    },
+    {
+      "id": "LENS_A3_T05_004",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T05_004",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.005625000000009095
+    },
+    {
+      "id": "LENS_A3_T05_004",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00937500000009095
+    },
+    {
+      "id": "LENS_A3_T05_004",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009375000000034106
+    },
+    {
+      "id": "LENS_A3_T05_005",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T05_005",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T05_005",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013125000000059117
+    },
+    {
+      "id": "LENS_A3_T05_005",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009999999999990905
+    },
+    {
+      "id": "LENS_A3_T05_005",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T05_006",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031249999999545253
+    },
+    {
+      "id": "LENS_A3_T05_006",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T05_006",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00874999999996362
+    },
+    {
+      "id": "LENS_A3_T05_006",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01125000000001819
+    },
+    {
+      "id": "LENS_A3_T05_006",
+      "stage": "T05",
+      "assetId": "IMG_A3_T05_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T06_001",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01171875
+    },
+    {
+      "id": "LENS_A3_T06_001",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999931788
+    },
+    {
+      "id": "LENS_A3_T06_001",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843749999954525
+    },
+    {
+      "id": "LENS_A3_T06_001",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T06_001",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T06_002",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T06_002",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T06_002",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01375000000007276
+    },
+    {
+      "id": "LENS_A3_T06_002",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009999999999990905
+    },
+    {
+      "id": "LENS_A3_T06_002",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000017053
+    },
+    {
+      "id": "LENS_A3_T06_003",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T06_003",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T06_003",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T06_003",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008125000000006821
+    },
+    {
+      "id": "LENS_A3_T06_003",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T06_004",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T06_004",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01171875
+    },
+    {
+      "id": "LENS_A3_T06_004",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01171875
+    },
+    {
+      "id": "LENS_A3_T06_004",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013750000000015916
+    },
+    {
+      "id": "LENS_A3_T06_004",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006249999999994316
+    },
+    {
+      "id": "LENS_A3_T06_005",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T06_005",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010156250000022737
+    },
+    {
+      "id": "LENS_A3_T06_005",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T06_005",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010625000000004547
+    },
+    {
+      "id": "LENS_A3_T06_005",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T06_006",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013281249999977263
+    },
+    {
+      "id": "LENS_A3_T06_006",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T06_006",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00828124999998181
+    },
+    {
+      "id": "LENS_A3_T06_006",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.005625000000009095
+    },
+    {
+      "id": "LENS_A3_T06_006",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T06_007",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T06_007",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013281250000034106
+    },
+    {
+      "id": "LENS_A3_T06_007",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006406249999997726
+    },
+    {
+      "id": "LENS_A3_T06_007",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T06_007",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009374999999977263
+    },
+    {
+      "id": "LENS_A3_T06_008",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        475.1875
+      ],
+      "image": [
+        633.578125,
+        475.1875
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 8.220439300266058E-06,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00015624999991814548,
+      "templeComparisonLayout": {
+        "lens": {
+          "rect": [
+            1920,
+            865.078125
+          ],
+          "scroll": [
+            1920,
+            1387
+          ],
+          "client": [
+            1920,
+            865
+          ],
+          "overflowY": "auto"
+        },
+        "viewport": {
+          "rect": [
+            1920,
+            475.1875
+          ],
+          "scroll": [
+            1920,
+            475
+          ],
+          "client": [
+            1920,
+            475
+          ],
+          "overflowY": "visible"
+        },
+        "frame": {
+          "rect": [
+            1920,
+            475.1875
+          ],
+          "scroll": [
+            1920,
+            475
+          ],
+          "client": [
+            1920,
+            475
+          ],
+          "overflowY": "hidden"
+        },
+        "comparison": {
+          "rect": [
+            1920,
+            911.96875
+          ],
+          "scroll": [
+            1918,
+            910
+          ],
+          "client": [
+            1918,
+            910
+          ],
+          "overflowY": "visible"
+        }
+      }
+    },
+    {
+      "id": "LENS_A3_T06_008",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        396
+      ],
+      "image": [
+        528,
+        396
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0012500000000272848,
+      "templeComparisonLayout": {
+        "lens": {
+          "rect": [
+            1440,
+            685.078125
+          ],
+          "scroll": [
+            1440,
+            1296
+          ],
+          "client": [
+            1440,
+            685
+          ],
+          "overflowY": "auto"
+        },
+        "viewport": {
+          "rect": [
+            1440,
+            396
+          ],
+          "scroll": [
+            1440,
+            396
+          ],
+          "client": [
+            1440,
+            396
+          ],
+          "overflowY": "visible"
+        },
+        "frame": {
+          "rect": [
+            1440,
+            396
+          ],
+          "scroll": [
+            1440,
+            396
+          ],
+          "client": [
+            1440,
+            396
+          ],
+          "overflowY": "hidden"
+        },
+        "comparison": {
+          "rect": [
+            1440,
+            899.96875
+          ],
+          "scroll": [
+            1438,
+            898
+          ],
+          "client": [
+            1438,
+            898
+          ],
+          "overflowY": "visible"
+        }
+      }
+    },
+    {
+      "id": "LENS_A3_T06_008",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        337.90625
+      ],
+      "image": [
+        450.53125,
+        337.90625
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 2.3120318135561035E-05,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010312499999997726,
+      "templeComparisonLayout": {
+        "lens": {
+          "rect": [
+            1024,
+            553.078125
+          ],
+          "scroll": [
+            1024,
+            1116
+          ],
+          "client": [
+            1024,
+            553
+          ],
+          "overflowY": "auto"
+        },
+        "viewport": {
+          "rect": [
+            1024,
+            337.90625
+          ],
+          "scroll": [
+            1024,
+            338
+          ],
+          "client": [
+            1024,
+            338
+          ],
+          "overflowY": "visible"
+        },
+        "frame": {
+          "rect": [
+            1024,
+            337.90625
+          ],
+          "scroll": [
+            1024,
+            338
+          ],
+          "client": [
+            1024,
+            338
+          ],
+          "overflowY": "hidden"
+        },
+        "comparison": {
+          "rect": [
+            1024,
+            778.5
+          ],
+          "scroll": [
+            1022,
+            777
+          ],
+          "client": [
+            1022,
+            777
+          ],
+          "overflowY": "visible"
+        }
+      }
+    },
+    {
+      "id": "LENS_A3_T06_008",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        450.546875
+      ],
+      "image": [
+        600.71875,
+        450.546875
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 1.73400381480171E-05,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.008437500000013642,
+      "templeComparisonLayout": {
+        "lens": {
+          "rect": [
+            768,
+            809.078125
+          ],
+          "scroll": [
+            768,
+            1073
+          ],
+          "client": [
+            768,
+            809
+          ],
+          "overflowY": "auto"
+        },
+        "viewport": {
+          "rect": [
+            768,
+            450.546875
+          ],
+          "scroll": [
+            768,
+            451
+          ],
+          "client": [
+            768,
+            451
+          ],
+          "overflowY": "visible"
+        },
+        "frame": {
+          "rect": [
+            768,
+            450.546875
+          ],
+          "scroll": [
+            768,
+            451
+          ],
+          "client": [
+            768,
+            451
+          ],
+          "overflowY": "hidden"
+        },
+        "comparison": {
+          "rect": [
+            768,
+            622.46875
+          ],
+          "scroll": [
+            766,
+            620
+          ],
+          "client": [
+            766,
+            620
+          ],
+          "overflowY": "visible"
+        }
+      }
+    },
+    {
+      "id": "LENS_A3_T06_008",
+      "stage": "T06",
+      "assetId": "IMG_A3_T06_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        371.359375
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006249999999994316,
+      "templeComparisonLayout": {
+        "lens": {
+          "rect": [
+            390,
+            525.828125
+          ],
+          "scroll": [
+            390,
+            1358
+          ],
+          "client": [
+            390,
+            526
+          ],
+          "overflowY": "auto"
+        },
+        "viewport": {
+          "rect": [
+            390,
+            371.359375
+          ],
+          "scroll": [
+            390,
+            371
+          ],
+          "client": [
+            390,
+            371
+          ],
+          "overflowY": "visible"
+        },
+        "frame": {
+          "rect": [
+            390,
+            371.359375
+          ],
+          "scroll": [
+            390,
+            371
+          ],
+          "client": [
+            390,
+            371
+          ],
+          "overflowY": "hidden"
+        },
+        "comparison": {
+          "rect": [
+            390,
+            986.90625
+          ],
+          "scroll": [
+            388,
+            985
+          ],
+          "client": [
+            388,
+            985
+          ],
+          "overflowY": "visible"
+        }
+      }
+    },
+    {
+      "id": "LENS_A3_T07_001",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0023437500000227374
+    },
+    {
+      "id": "LENS_A3_T07_001",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T07_001",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_001",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009999999999990905
+    },
+    {
+      "id": "LENS_A3_T07_001",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_001",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031250000000113687
+    },
+    {
+      "id": "LENS_A3_T07_002",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T07_002",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00390625
+    },
+    {
+      "id": "LENS_A3_T07_002",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010156250000022737
+    },
+    {
+      "id": "LENS_A3_T07_002",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T07_002",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_002",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.003124999999997158
+    },
+    {
+      "id": "LENS_A3_T07_003",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999818101
+    },
+    {
+      "id": "LENS_A3_T07_003",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014062500000022737
+    },
+    {
+      "id": "LENS_A3_T07_003",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0037499999999681677
+    },
+    {
+      "id": "LENS_A3_T07_003",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013749999999959073
+    },
+    {
+      "id": "LENS_A3_T07_003",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_003",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T07_004",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.010937499999954525
+    },
+    {
+      "id": "LENS_A3_T07_004",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_004",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00437499999998181
+    },
+    {
+      "id": "LENS_A3_T07_004",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.005625000000009095
+    },
+    {
+      "id": "LENS_A3_T07_004",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_004",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012499999999988631
+    },
+    {
+      "id": "LENS_A3_T07_005",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00937500000009095
+    },
+    {
+      "id": "LENS_A3_T07_005",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_005",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.005937500000015916
+    },
+    {
+      "id": "LENS_A3_T07_005",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.00874999999996362
+    },
+    {
+      "id": "LENS_A3_T07_005",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_005",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_006",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_006",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01015624999990905
+    },
+    {
+      "id": "LENS_A3_T07_006",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.004531249999956799
+    },
+    {
+      "id": "LENS_A3_T07_006",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.013750000000015916
+    },
+    {
+      "id": "LENS_A3_T07_006",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_006",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T07_007",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_007",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_007",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.01312499999994543
+    },
+    {
+      "id": "LENS_A3_T07_007",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014999999999986358
+    },
+    {
+      "id": "LENS_A3_T07_007",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_007",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        474.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.012500000000045475
+    },
+    {
+      "id": "LENS_A3_T07_008",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "documentWidth": 1920,
+      "frame": [
+        1920,
+        865.078125
+      ],
+      "image": [
+        1153.4375,
+        865.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.006250000000022737
+    },
+    {
+      "id": "LENS_A3_T07_008",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "documentWidth": 1440,
+      "frame": [
+        1440,
+        685.078125
+      ],
+      "image": [
+        913.4375,
+        685.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014843750000011369
+    },
+    {
+      "id": "LENS_A3_T07_008",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "documentWidth": 1024,
+      "frame": [
+        1024,
+        553.078125
+      ],
+      "image": [
+        737.4375,
+        553.078125
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.014374999999972715
+    },
+    {
+      "id": "LENS_A3_T07_008",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "documentWidth": 768,
+      "frame": [
+        768,
+        809.078125
+      ],
+      "image": [
+        768,
+        576
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.009999999999990905
+    },
+    {
+      "id": "LENS_A3_T07_008",
+      "stage": "T07",
+      "assetId": "IMG_A3_T07_008",
+      "hotspotCount": 1,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "frame": [
+        390,
+        525.828125
+      ],
+      "image": [
+        390,
+        292.5
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "ratioError": 0,
+      "markerCount": 1,
+      "maxMarkerOffsetPx": 0.0031250000000113687
+    }
+  ],
+  "representativeZoom": {
+    "cssViewport": "960x540",
+    "deviceScaleFactor": 2,
+    "equivalentLayout": "1920x1080 at 200% layout scale; CSS viewport simulation, not native browser-menu zoom",
+    "t07PhotoMaxZoom": {
+      "natural": [
+        1448,
+        1086
+      ],
+      "rect": [
+        756,
+        567
+      ],
+      "fit": "fill"
+    },
+    "act3T07MaxZoom": {
+      "natural": [
+        1448,
+        1086
+      ],
+      "rect": [
+        1420.5,
+        1065.375
+      ],
+      "fit": "fill"
+    },
+    "act3T07HotspotOffsetPx": 0.013125000000059117,
+    "act4ReaderIllustration": {
+      "fit": "contain",
+      "natural": [
+        1672,
+        941
+      ],
+      "rect": [
+        931.96875,
+        524.515625
+      ],
+      "escapeRestoredFocus": true
+    }
+  },
+  "lifecycle": {
+    "routeDrivenSwitches": [
+      "T00_001→T00_002 (delayed image)",
+      "T00_002→T00_003 (failed image)",
+      "T00_003→T00_004 (recovery)"
+    ],
+    "slowLoadFallbackLabel": "收拾补给，准备进山",
+    "delayedImageRequests": 1,
+    "failedImagePath": "/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_003.jpg",
+    "failedImageRequestObserved": true,
+    "failedImageFallback": "text action available; image hotspots absent",
+    "recoveredLensAndResize": {
+      "viewport": "768x1024",
+      "image": [
+        796.158935546875,
+        597.1231689453125
+      ],
+      "frame": [
+        778.096435546875,
+        802.4910888671875
+      ],
+      "natural": [
+        1448,
+        1086
+      ],
+      "src": "http://127.0.0.1:5173/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_004.jpg?no-inline"
+    }
+  },
+  "summary": {
+    "result": "PASS",
+    "school": {
+      "viewportRuns": 6,
+      "locationsPerViewport": 8,
+      "timelineEvidenceAndInference": "clicked and selected at all 6 viewport runs, including a 1920x920 viewport simulation"
+    },
+    "act3": {
+      "status": "PASS",
+      "lenses": 59,
+      "breakpointsPerLens": 5,
+      "domMeasurements": 295,
+      "maxImageRatioError": 2.3120318135561035E-05,
+      "everyImageRatioErrorBelow": 0.005,
+      "maxHotspotCenterOffsetPx": 0.015468750000025011,
+      "hotspotCenterOffsetBelowPx": 1.5
+    },
+    "lifecycle": {
+      "routeDrivenSwitches": [
+        "T00_001→T00_002 (delayed image)",
+        "T00_002→T00_003 (failed image)",
+        "T00_003→T00_004 (recovery)"
+      ],
+      "slowLoadFallbackLabel": "收拾补给，准备进山",
+      "delayedImageRequests": 1,
+      "failedImagePath": "/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_003.jpg",
+      "failedImageRequestObserved": true,
+      "failedImageFallback": "text action available; image hotspots absent",
+      "recoveredLensAndResize": {
+        "viewport": "768x1024",
+        "image": [
+          796.158935546875,
+          597.1231689453125
+        ],
+        "frame": [
+          778.096435546875,
+          802.4910888671875
+        ],
+        "natural": [
+          1448,
+          1086
+        ],
+        "src": "http://127.0.0.1:5173/src/%E7%AC%AC%E4%B8%89%E5%B9%95/IMG_A3_T00_004.jpg?no-inline"
+      }
+    },
+    "representativeZoom": {
+      "cssViewport": "960x540",
+      "deviceScaleFactor": 2,
+      "equivalentLayout": "1920x1080 at 200% layout scale; CSS viewport simulation, not native browser-menu zoom",
+      "t07PhotoMaxZoom": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          756,
+          567
+        ],
+        "fit": "fill"
+      },
+      "act3T07MaxZoom": {
+        "natural": [
+          1448,
+          1086
+        ],
+        "rect": [
+          1420.5,
+          1065.375
+        ],
+        "fit": "fill"
+      },
+      "act3T07HotspotOffsetPx": 0.013125000000059117,
+      "act4ReaderIllustration": {
+        "fit": "contain",
+        "natural": [
+          1672,
+          941
+        ],
+        "rect": [
+          931.96875,
+          524.515625
+        ],
+        "escapeRestoredFocus": true
+      }
+    },
+    "unexpectedErrors": [],
+    "screenshots": [
+      "school-1920x1080.png",
+      "school-390x844.png",
+      "school-1920x920.png",
+      "act3-1920x1080.png",
+      "act3-390x844.png",
+      "act3-image-error-fallback-1920x1080.png",
+      "t07-photo-zoom-300-dpr2-960x540.png",
+      "act3-t07-zoom-300-dpr2-960x540.png",
+      "act4-reader-zoom-dpr2-960x540.png"
+    ]
+  }
+}

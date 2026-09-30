@@ -60,6 +60,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     replaceActive(finalView);
     setDraft(finalView.kind === 'results' ? finalView.query : value);
     setHistoryOpen(false);
+    if (currentStage === 'qiming') setQimingView('browser');
   };
   const openPage = (pageId: string) => {
     manager.recordBrowserPageVisit(pageId);
@@ -74,6 +75,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     const nextView = visibleView(activeTab.stack[nextIndex]);
     setTabs((current) => current.map((tab) => tab.id === activeTabId ? { ...tab, view: nextView, stackIndex: nextIndex } : tab));
     setDraft(null);
+    if (stage === 'qiming') setQimingView('browser');
     if (nextView.kind === 'page') manager.recordBrowserPageVisit(nextView.pageId);
   };
   const newTab = () => {
@@ -81,17 +83,19 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     setTabs((current) => [...current, { id, view: { kind: 'home' }, stack: [{ kind: 'home' }], stackIndex: 0 }]);
     setActiveTabId(id);
     setDraft(null);
+    if (stage === 'qiming') setQimingView('browser');
   };
   const closeTab = (id: number) => {
-    if (tabs.length === 1) { replaceActive({ kind: 'home' }); setDraft(null); return; }
+    if (tabs.length === 1) { replaceActive({ kind: 'home' }); setDraft(null); if (stage === 'qiming') setQimingView('browser'); return; }
     const next = tabs.filter((tab) => tab.id !== id);
     setTabs(next);
     if (id === activeTabId) { setActiveTabId(next.at(-1)?.id ?? 1); setDraft(null); }
+    if (stage === 'qiming') setQimingView('browser');
   };
   const addressValue = draft ?? (shownView.kind === 'page' ? browserPageById.get(shownView.pageId)?.url ?? '' : shownView.kind === 'results' ? shownView.query : '');
   return <section className="browser-app" aria-label="浏览器" data-qiming-view={stage === 'qiming' ? qimingView : 'none'}>
     <div className="browser-tabs" aria-label="浏览器标签页">
-      <div className="browser-tabs__scroll">{tabs.map((tab) => { const tabView = visibleView(tab.view); return <div key={tab.id} className={`browser-tab${tab.id === activeTabId ? ' browser-tab--active' : ''}`}><button type="button" className="browser-tab__select" onClick={() => { setActiveTabId(tab.id); setDraft(null); }} aria-current={tab.id === activeTabId ? 'page' : undefined}>{viewLabel(tabView)}</button><button type="button" className="browser-tab__close" onClick={() => closeTab(tab.id)} aria-label={`关闭 ${viewLabel(tabView)}`}>×</button></div>; })}</div>
+      <div className="browser-tabs__scroll">{tabs.map((tab) => { const tabView = visibleView(tab.view); return <div key={tab.id} className={`browser-tab${tab.id === activeTabId ? ' browser-tab--active' : ''}`}><button type="button" className="browser-tab__select" onClick={() => { setActiveTabId(tab.id); setDraft(null); if (stage === 'qiming') setQimingView('browser'); }} aria-current={tab.id === activeTabId ? 'page' : undefined}>{viewLabel(tabView)}</button><button type="button" className="browser-tab__close" onClick={() => closeTab(tab.id)} aria-label={`关闭 ${viewLabel(tabView)}`}>×</button></div>; })}</div>
       <button type="button" className="browser-new-tab" onClick={newTab} aria-label="新建标签页">＋</button>
     </div>
     <header className="browser-toolbar">

@@ -1,13 +1,13 @@
 /* 第二幕 T02 桥头老人，独立 .act2-bridge 作用域。 */
 
 .act2-bridge {
-  --act2-bridge-paper: #f4f0e6;
-  --act2-bridge-card: #fffdf7;
-  --act2-bridge-ink: #35312a;
-  --act2-bridge-muted: #7a7466;
-  --act2-bridge-line: #d8d0bd;
-  --act2-bridge-accent: #8a6d3b;
-  --act2-bridge-stone: #e6dfcd;
+  --act2-bridge-paper: var(--ui-page, #f5f5f5);
+  --act2-bridge-card: var(--ui-surface, #fff);
+  --act2-bridge-ink: var(--ui-text, #1f1f1f);
+  --act2-bridge-muted: var(--ui-text-muted, #595959);
+  --act2-bridge-line: var(--ui-border, #d9d9d9);
+  --act2-bridge-accent: var(--ui-accent, #165dcc);
+  --act2-bridge-stone: var(--ui-surface-muted, #f0f0f0);
   position: relative;
   box-sizing: border-box;
   width: min(100%, 1120px);
@@ -24,7 +24,7 @@
     var(--act2-bridge-paper);
   border: 1px solid var(--act2-bridge-line);
   border-radius: 14px;
-  font-family: "Songti SC", "Noto Serif SC", serif, system-ui;
+  font-family: var(--font-ui, system-ui, sans-serif);
 }
 
 .act2-bridge__header {
@@ -424,63 +424,64 @@
   }
 }
 
-/* 桥头照片是交互画面；文字面板浮在照片前，保留足够的阅读对比。 */
+/* 场景、交谈与调查记录共用调查壳层的可用空间。 */
 .act2-bridge {
-  position: fixed;
-  z-index: 12000;
-  inset: 0;
+  position: relative;
+  z-index: 0;
   box-sizing: border-box;
+  width: 100%;
   max-width: none;
+  min-height: 100%;
+  flex: 1 0 auto;
   margin: 0;
-  padding: clamp(22px, 3vw, 48px);
+  padding: clamp(12px, 1.8vw, 24px);
   overflow: auto;
   border: 0;
   border-radius: 0;
-  background: #272820;
-  gap: 16px;
-}
-.act2-bridge__ambient {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(18px) brightness(.56);
-  transform: scale(1.04);
-  pointer-events: none;
+  background: var(--ui-page, #f5f5f5);
+  gap: 12px;
 }
 .act2-bridge__header,
 .act2-bridge__intro,
 .act2-bridge__body,
 .act2-bridge__puzzle,
 .act2-bridge__resolution { position: relative; z-index: 1; }
-.act2-bridge__header,
 .act2-bridge__intro,
 .act2-bridge__dialogue,
 .act2-bridge__puzzle,
 .act2-bridge__resolution {
-  border: 1px solid rgba(255, 252, 240, .6);
-  border-radius: 12px;
-  background: rgba(250, 247, 238, .89);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: 0 14px 40px rgba(13, 16, 12, .22);
+  border: 1px solid var(--ui-border, #d9d9d9);
+  border-radius: 10px;
+  color: var(--ui-text, #1f1f1f);
+  background: var(--ui-surface, #fff);
+  box-shadow: 0 2px 8px rgb(15 23 42 / 7%);
 }
-.act2-bridge__header { padding: 13px 18px; }
-.act2-bridge__intro { padding: 10px 18px; color: #443d31; }
-.act2-bridge__body { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, .8fr); align-items: start; flex-wrap: nowrap; }
-.act2-bridge__stage { position: relative; min-width: 0; overflow: hidden; border: 1px solid #d7c6a7; border-radius: 12px; box-shadow: 0 18px 48px #0006; }
-.act2-bridge__scene-image { width: 100%; height: min(62vh, 620px); min-height: 420px; border: 0; border-radius: 0; object-fit: cover; object-position: center; }
-.act2-bridge__elder { position: absolute; z-index: 2; width: 44px; height: 44px; padding: 0; transform: translate(-50%, -50%); border: 2px solid #fff6d8; border-radius: 50%; background: rgba(43, 37, 23, .7); box-shadow: 0 0 0 7px rgba(245, 221, 158, .28), 0 4px 18px #0008; color: #fff; text-align: center; }
+.act2-bridge__intro { margin: 0; padding: 10px 14px; }
+.act2-bridge__body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr); align-items: start; gap: 16px; }
+.act2-bridge__stage { position: relative; align-self: start; justify-self: center; width: min(100%, 96vh); aspect-ratio: 4 / 3; min-width: 0; overflow: hidden; border: 1px solid var(--ui-border, #d9d9d9); border-radius: 10px; background: var(--ui-surface-muted, #f0f0f0); }
+.act2-bridge__scene-image { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border: 0; border-radius: 0; object-fit: contain; object-position: center; }
+.act2-bridge__elder { position: absolute; z-index: 2; width: 44px; height: 44px; padding: 0; transform: translate(-50%, -50%); border: 2px solid #fff; border-radius: 50%; background: rgba(31, 31, 31, .78); box-shadow: 0 0 0 5px rgba(255, 255, 255, .72), 0 2px 8px #0008; color: #fff; text-align: center; }
 .act2-bridge__elder:hover,
-.act2-bridge__elder--active { background: #82623b; box-shadow: 0 0 0 9px rgba(245, 221, 158, .48), 0 4px 18px #0008; }
+.act2-bridge__elder--active { background: var(--ui-accent, #165dcc); box-shadow: 0 0 0 5px var(--ui-accent-soft, #eaf2ff), 0 2px 8px #0008; }
 .act2-bridge__elder-dot { display: grid; place-items: center; width: 100%; height: 100%; font-size: 15px; }
-.act2-bridge__elder-label { position: absolute; bottom: calc(100% + 15px); left: 50%; width: max-content; max-width: 170px; transform: translateX(-50%); padding: 7px 10px; border-radius: 6px; background: rgba(33, 28, 21, .9); color: #fff; font-size: 12px; line-height: 1.4; opacity: 0; pointer-events: none; }
+.act2-bridge__elder-label { position: absolute; bottom: calc(100% + 15px); left: 50%; width: max-content; max-width: 170px; transform: translateX(-50%); padding: 7px 10px; border-radius: 6px; border: 1px solid rgb(255 255 255 / 24%); background: #1f1f1f; color: #fff; font-size: 12px; line-height: 1.4; opacity: 0; pointer-events: none; }
 .act2-bridge__elder:hover .act2-bridge__elder-label,
 .act2-bridge__elder:focus-visible .act2-bridge__elder-label,
 .act2-bridge__elder--active .act2-bridge__elder-label { opacity: 1; }
-.act2-bridge__dialogue { min-width: 0; max-height: min(69vh, 690px); overflow: auto; padding: 16px 18px; }
-.act2-bridge__portrait { height: 185px; margin: -4px -6px 14px; border-radius: 8px; background-repeat: no-repeat; background-size: 260% auto; border: 1px solid #c9b994; }
+.act2-bridge__dialogue { min-width: 0; max-height: min(68vh, 700px); overflow: auto; padding: 16px 18px; }
+.act2-bridge__portrait { height: 185px; margin: -4px -6px 14px; border-radius: 8px; background-repeat: no-repeat; background-size: 260% auto; border: 1px solid var(--ui-border, #d9d9d9); }
 .act2-bridge__puzzle,
-.act2-bridge__resolution { width: min(100%, 900px); box-sizing: border-box; }
-@media (max-width: 900px) { .act2-bridge__body { grid-template-columns: 1fr; } .act2-bridge__dialogue { max-height: none; } }
+.act2-bridge__resolution { width: min(100%, 1120px); box-sizing: border-box; margin-inline: auto; }
+.act2-bridge__ask,
+.act2-bridge__replay,
+.act2-bridge__show,
+.act2-bridge__confirm,
+.act2-bridge__continue { color: var(--ui-text, #1f1f1f); background: #fff; border-color: var(--ui-interactive-border, #8c8c8c); }
+.act2-bridge__ask:hover,
+.act2-bridge__replay:hover,
+.act2-bridge__show:hover,
+.act2-bridge__confirm:hover,
+.act2-bridge__continue:hover { color: var(--ui-accent, #165dcc); border-color: var(--ui-accent, #165dcc); background: var(--ui-accent-soft, #eaf2ff); }
+.act2-bridge__confirm:disabled { color: #595959; background: #f0f0f0; border-color: #bfbfbf; opacity: 1; }
+.act2-bridge__entry-title { letter-spacing: .04em; }
+@media (max-width: 900px) { .act2-bridge__body { grid-template-columns: minmax(0, 1fr); } .act2-bridge__stage { width: min(100%, 86vh); } .act2-bridge__dialogue { max-height: none; } }
