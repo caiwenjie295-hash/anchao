@@ -83,9 +83,76 @@
 - [ ] 「继续调查」类入口在 1920×1080 下的浮层位置与命中测试（用户报告为「右下角」，
       本轮 800×656 视口下该入口未出现在右下角，需在目标尺寸复现）。
 - [ ] 弹窗打开时底层入口不可穿透（VIS-04）。
-- [ ] 工作包 H（二幕结束→第三幕直连）与 I（第三幕图片比例）尚未开始。
+- [ ] 工作包 I（第三幕图片比例）尚未开始。
 
-## 4. 复现方法（供后续复用）
+## 4. 工作包 H：第二幕收束页直连第三幕（已完成）
+
+### 4.1 复现
+
+第二幕 finale 且 `FLAG_A2_COMPLETE=true` 时，收束区（`.t07-finale__closing`）
+修复前**只有一个按钮**：
+
+```text
+第二幕完
+回看资料
+```
+
+玩家必须先「退出调查」→ 回桌面 → 展开任务栏折叠的「调查」details → 才能点「前往启明旧址」。
+实测确认 `.t07-finale__closing` 内按钮列表为 `["回看资料"]`，直连入口缺失。
+
+### 4.2 修复
+
+`T07Investigation.tsx` 收束区增加主操作，`Act2Experience` → `App.tsx` 逐层透传：
+
+```tsx
+{onEnterAct3
+  ? <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>
+  : <p className="t07-finale__locked">回到桌面后，可在任务栏「调查」中开始启明旧址的调查。</p>}
+<button type="button" className="t07-finale__ending-replay" …>{finale.replayLabel}</button>
+```
+
+`App.tsx` 用**同一个受保护处理器**同时驱动收束页与任务栏入口，
+避免出现第二个能改写阶段的入口（工单 §15.2 FLOW-05）：
+
+```tsx
+const startAct3FromInvestigation = () => {
+  if (!act2Complete || state.modules.act3.stage !== 'inactive') return;
+  setDismissedAct2Stage(null);
+  stateManager.startAct3();
+  setDismissedAct3(false);
+};
+```
+
+「完成第二幕」与「进入第三幕」保持语义区分：收束区仍只写完成状态，
+启动第三幕只发生在玩家点击主按钮时；`StateManager.startAct3` 自身也要求
+`act3.stage === 'inactive'`，双重保护。
+
+### 4.3 实测结果
+
+| 测试 ID | 操作 | 结果 |
+| --- | --- | --- |
+| FLOW-01 | 合影+外景→地点判断→第二幕结束 | 收束页同屏可见「第二幕完」+「再次进山，调查启明旧址」+「回看资料」 |
+| FLOW-02 | 点击主按钮 | **PASS**。一次进入第三幕：`act 3` / `phase A3_T00` / `act3.stage T00` / `lens LENS_A3_T00_001`；`.act2-experience--scene` 已卸载，第三幕 UI 真实挂载（截图 `evidence/FLOW-02-act3-entered-from-closing.png`） |
+| FLOW-04 | 第三幕推进后刷新 | **PASS**。刷新后恢复 `act 3 / T00 / LENS_A3_T00_001`，未重置或重复开场 |
+| FLOW-03 | 第二幕完成、第三幕未开始时刷新 | **PASS**。任务栏「调查」内可见「前往启明旧址」，展开后按钮 289×40 全部在视口内且 `elementFromPoint` 命中自身 |
+| FLOW-05 | 连点/双击主按钮 | **PASS**。同节点连续 3 次 `click()` 后仍为 `act 3 / T00`，第二幕场景已卸载，无重复初始化 |
+| — | 收束页与任务栏恢复条并存 | **PASS**。两者无重叠（任务栏按钮 x=335，`.act2-experience__continue` x=14），命中各自目标 |
+
+按钮可读性：白字 `#ffffff` / 蓝底 `#285c83`，对比度 **12.9:1**，`min-height:44px`，键盘可聚焦。
+
+### 4.4 新增测试
+
+`T07Investigation.test.tsx` 新增 2 项（均通过，文件共 7 项）：
+
+- 收束页渲染直连主操作、保留「回看资料」、点击只调用一次 `onEnterAct3`；
+- 未提供 `onEnterAct3` 时**不渲染空按钮**，改为说明回桌面后的继续路径。
+
+### 4.5 本阶段遗留
+
+- FLOW-06（离线入口完成 T06→T07→第三幕并保存重载）**NOT RUN**，待离线构建后补。
+- §15.1 要求的「旧 actionId 路由映射」未新增：本次只增入口，未改旧 actionId 契约。
+
+## 5. 复现方法（供后续复用）
 
 存档键 `anchao.save.v1`、schema 10。直接写入 localStorage 后刷新即可到达目标状态，
 无需从头游玩。注意 `saveManager` 会按 `t05FlagIds` / `t06FlagIds` / `t07FlagIds`

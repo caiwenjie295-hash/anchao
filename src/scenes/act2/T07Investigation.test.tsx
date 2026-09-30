@@ -173,6 +173,37 @@ describe('T07 promotion investigation', () => {
     expect(container.querySelector('.t07-finale__ending-replay')).not.toBeNull();
   });
 
+  // 工单 §15 工作包 H：第二幕收束页必须直接给出进入第三幕的主操作。
+  it('offers a direct act three entry on the closing page instead of forcing the desktop menu', async () => {
+    manager.getState().game.flags = {
+      ...manager.getState().game.flags,
+      FLAG_A2_PROMO_PHOTO_SS_FOUND: true,
+      FLAG_A2_TEMPLE_FRAME_FOUND: true,
+      FLAG_A2_QIMING_LOCATION_INFERRED: true,
+      FLAG_A2_SECOND_TRIP_PLANNED: true,
+      FLAG_A2_COMPLETE: true,
+    };
+    const onEnterAct3 = vi.fn();
+    await act(async () => { root.render(<T07Investigation manager={manager} onEnterAct3={onEnterAct3} />); });
+
+    const entry = container.querySelector('.t07-finale__enter-act3') as HTMLButtonElement;
+    expect(entry).not.toBeNull();
+    expect(entry.textContent).toBe('再次进山，调查启明旧址');
+    // 主操作与「回看资料」并存，且回看仍在。
+    expect(container.querySelector('.t07-finale__ending-replay')).not.toBeNull();
+
+    await act(async () => { entry.click(); });
+    expect(onEnterAct3).toHaveBeenCalledTimes(1);
+  });
+
+  it('falls back to desktop guidance when no act three entry is provided', async () => {
+    manager.getState().game.flags = { ...manager.getState().game.flags, FLAG_A2_COMPLETE: true };
+    await render();
+    // 没有 onEnterAct3 时不能渲染一个空按钮，必须说明去哪继续。
+    expect(container.querySelector('.t07-finale__enter-act3')).toBeNull();
+    expect(container.textContent).toContain('任务栏');
+  });
+
   it('never renders a broken T07 image and always offers a text alternative', async () => {
     await render();
     for (const image of container.querySelectorAll('img')) expect(image.getAttribute('src')).toBeTruthy();

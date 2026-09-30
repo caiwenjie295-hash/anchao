@@ -46,9 +46,9 @@ function playCue(file: string | null): void {
   }
 }
 
-export interface T07InvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void }
+export interface T07InvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void; onEnterAct3?: () => void }
 
-export function T07Investigation({ manager = defaultManager, onReturnToDesktop }: T07InvestigationProps) {
+export function T07Investigation({ manager = defaultManager, onReturnToDesktop, onEnterAct3 }: T07InvestigationProps) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const [tab, setTab] = useState<TabId>('materials');
   const [timeMs, setTimeMs] = useState(0);
@@ -385,7 +385,15 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop }
 
       {complete && <aside className="t07-finale__closing">
         <p>{finale.closingNote}</p>
-        <button type="button" className="t07-finale__ending-replay" onClick={() => setTab('materials')}>{finale.replayLabel}</button>
+        {/* 工单 §15.1：第二幕收束页必须直接给出进入第三幕的主操作，
+            玩家不应被迫先退出场景、回桌面，再去猜折叠的任务栏菜单。
+            「进入第三幕」与「完成第二幕」是两个语义：此处只写完成，主按钮才启动第三幕。 */}
+        <div className="t07-finale__closing-actions">
+          {onEnterAct3
+            ? <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>
+            : <p className="t07-finale__locked">回到桌面后，可在任务栏「调查」中开始启明旧址的调查。</p>}
+          <button type="button" className="t07-finale__ending-replay" onClick={() => setTab('materials')}>{finale.replayLabel}</button>
+        </div>
       </aside>}
 
       {zoomedShotId && (() => {

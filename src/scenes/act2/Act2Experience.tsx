@@ -25,6 +25,8 @@ export interface Act2ExperienceProps {
   sceneOpen: boolean;
   onDismissScene: () => void;
   onResumeScene: () => void;
+  /** 第二幕收束后由收尾页直接启动第三幕；缺省时不渲染直连入口。 */
+  onEnterAct3?: () => void;
   manager?: StateManager;
 }
 
@@ -32,7 +34,7 @@ export interface Act2ExperienceProps {
  * 第二幕场景壳：只按 stage 连接 BridgeInvestigation 与 LibraryResearch，
  * 不硬编码任何剧情正文；场景关闭与恢复都只是瞬时显示状态。
  */
-export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene, manager = defaultManager }: Act2ExperienceProps) {
+export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene, onEnterAct3, manager = defaultManager }: Act2ExperienceProps) {
   const isBridge = stage === 'bridge';
   const isLibrary = stage === 'library';
   const isSchool = stage === 'school';
@@ -50,7 +52,7 @@ export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene
           ? <BridgeInvestigation manager={manager} onReturnDesktop={onDismissScene} />
           : isLibrary ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} />
             : isSchool ? <SchoolInvestigation manager={manager} onReturnToDesktop={onDismissScene} />
-              : isFinale ? <T07Investigation manager={manager} onReturnToDesktop={onDismissScene} />
+              : isFinale ? <T07Investigation manager={manager} onReturnToDesktop={onDismissScene} onEnterAct3={onEnterAct3} />
                 : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
       </div>
     );

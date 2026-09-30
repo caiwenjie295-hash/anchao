@@ -68,6 +68,13 @@
 .t07-finale__gear{width:min(100%,380px);min-height:150px}
 .t07-finale__closing{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;width:min(100% - 2rem,1100px);margin:0 auto 2rem;padding:.85rem 1rem;border:1px solid #8d9a97;border-radius:10px;background:#eef0ea}
 .t07-finale__closing p{margin:0;font:600 1.05rem Georgia,serif}
+/* 收束页主操作：进入第三幕。与「回看资料」分为主次两级，窄屏时整行换行。 */
+.t07-finale__closing-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-left:auto}
+.t07-finale__closing-actions .t07-finale__locked{margin:0;font:400 .95rem var(--font-ui,system-ui,sans-serif);color:#4a5654}
+.t07-finale__enter-act3{font-weight:600!important;border-color:#285c83!important;background:#285c83!important;color:#fff!important}
+.t07-finale__enter-act3:hover:not(:disabled){background:#1d4767!important}
+.t07-finale__ending-replay{background:transparent!important}
+@media(max-width:640px){.t07-finale__closing-actions{margin-left:0;width:100%}.t07-finale__enter-act3{width:100%}}
 .t07-finale__shot-backdrop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;overflow:auto;padding:1rem;background:#18211fcc}
 .t07-finale__shot-dialog{box-sizing:border-box;width:min(100%,900px);max-height:min(94dvh,1000px);overflow:auto;padding:clamp(1rem,3vw,1.4rem);border:1px solid #b3bcb9;border-radius:14px;background:#f7f6f0;box-shadow:0 25px 80px #0006}
 .t07-finale__shot-dialog header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
