@@ -92,8 +92,8 @@ export function Act4LaterExperience({ manager = stateManager, onExit }: { manage
     statusMessage={reviewId ? '回看中 · 只读展示，不会推进当前进度。' : undefined}
     onExit={onExit}
   >
-    <section className="a4-photo-stage" data-asset-id={displayed.assetId} aria-label={displayed.imageDescription}>
-      <PhotoViewport sceneKey={displayed.id} imageUrl={assetLoader.get(displayed.assetId)?.src} imageAlt={displayed.imageDescription}
+    <section className="a4-photo-stage" data-asset-id={displayed.assetId} aria-label={displayed.alt}>
+      <PhotoViewport sceneKey={displayed.id} imageUrl={assetLoader.get(displayed.assetId)?.src} imageAlt={displayed.alt}
         hotspots={[{ id: `clue:${displayed.id}`, ...layout.focus, onActivate: () => { setDetailOpen(true); setSelectedNote(''); } }, ...(layout.details ?? []).map((point, index) => ({ id: `clue:${displayed.id}:${index}`, ...point, onActivate: () => { setDetailOpen(true); setSelectedNote(point.note ?? ''); } }))]}
         routes={[]}
         transitionDirection={reviewId ? 'back' : 'forward'}>

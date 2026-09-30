@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_DOOR",
-          "label": "查看门牌并进入"
+          "label": "查看门牌并进入",
+          "observation": "门牌写着「厨房重地，闲人勿入」，红字掉了一半。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_ROOM",
-          "label": "扫视厨房全貌"
+          "label": "扫视厨房全貌",
+          "observation": "厨房比想象的大。中央是灶台，四周挂着不锈钢，地面有拖洗过的水痕。"
         }
       ],
       "routes": [
@@ -60,7 +62,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_POT_KNIFE",
-          "label": "检查大锅与砍骨刀"
+          "label": "检查大锅与砍骨刀",
+          "observation": "灶上架着一口大得离谱的锅，锅沿磨得发亮。旁边挂着一把砍骨刀，刀口卷了。"
         }
       ],
       "routes": [
@@ -87,7 +90,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_BONES",
-          "label": "蹲下查看大骨"
+          "label": "蹲下查看大骨",
+          "observation": "地上一堆大骨，啃得很干净，摆得整整齐齐。不像乱扔，更像有人分好堆放。"
         }
       ],
       "routes": [
@@ -114,7 +118,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_HOOKS",
-          "label": "抬头检查铁钩"
+          "label": "抬头检查铁钩",
+          "observation": "抬头是一排铁钩，间距均匀。有的钩上还挂着褪色的布条。"
         }
       ],
       "routes": [
@@ -141,7 +146,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_SHRINE",
-          "label": "检查空木神龛"
+          "label": "检查空木神龛",
+          "observation": "厨房尽头是一座木神龛，龛里空的。积灰很厚，只有底座被擦过。"
         }
       ],
       "routes": [
@@ -168,7 +174,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_EMPTY_BASE",
-          "label": "拍下空底座"
+          "label": "拍下空底座",
+          "observation": "底座是石头凿的，中间有一圈颜色更深的水痕，正好是放塑像的形状。"
         }
       ],
       "routes": [
@@ -199,7 +206,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T06_TEMPLE_COMPARE",
-          "label": "对照破庙照片与空神龛并确认关联"
+          "label": "对照破庙照片与空神龛并确认关联",
+          "observation": "我把第一幕拍下的破庙照片摊在灶台上。庙里那座石座和这里的底座一样是石头凿的、一样空着、一样有一圈深色水痕；庙的外墙和门在这里却找不到对应。相同的不是那栋房子，是放东西的方式。"
         }
       ],
       "routes": [

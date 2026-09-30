@@ -174,10 +174,19 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
         <div className="act3-investigation__caption"><strong>{lens.title}</strong><span>{lens.description}</span></div>
       </PhotoViewport>
       {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && <aside className="act3-investigation__paper-compare" aria-label="两张词表"><article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article><article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article><p>两张词表。含义暂时不明。</p></aside>}
-      {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <aside className="act3-investigation__temple-compare" aria-label="破庙与空神龛对照"><figure>{assetLoader.get('IMG_A1_I_001')?.src && <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" />}<figcaption>第一次进山 · 破庙外景</figcaption></figure><figure>{assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房空神龛" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}<figcaption>启明厨房 · 空神龛与底座</figcaption></figure></aside>}
+      {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <aside className="act3-investigation__temple-compare" aria-label="破庙塑像与厨房空神龛对照">
+        <p className="act3-investigation__compare-note">外景只说明地点。真正能对上的，是庙里那尊塑像和这里空着的底座。</p>
+        <figure>{assetLoader.get('IMG_A1_I_001')?.src && <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" />}<figcaption>第一次进山 · 破庙外景（仅作地点背景）</figcaption></figure>
+        <figure>{assetLoader.get('IMG_A1_I_003')?.src ? <img src={assetLoader.get('IMG_A1_I_003')!.src} alt="破庙内残缺的黑补母塑像" /> : <div className="act3-investigation__comparison-placeholder">第一次进山时，庙里那尊塑像已经残缺，只剩底座和半截身子。</div>}<figcaption>第一次进山 · 庙内黑补母塑像</figcaption></figure>
+        <figure>{assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房尽头空木神龛的石质底座" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}<figcaption>启明厨房 · 空神龛与底座</figcaption></figure>
+      </aside>}
     </main>
     {lensHotspot && <InvestigationDetail title={lensHotspot.label} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`)}>
-      <p>{lens.description}</p>
+      {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。
+          没有正文时宁可说明缺什么，也不回退到整段镜头说明。 */}
+      {lensHotspot.observation
+        ? <p>{lensHotspot.observation}</p>
+        : <p className="act3-investigation__empty">这里暂时没有可记的观察文字。</p>}
       <p>这项观察已记入调查记录。</p>
     </InvestigationDetail>}
   </InvestigationShell>;

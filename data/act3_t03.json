@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T03_CORRIDOR",
-          "label": "看向成排的窄门"
+          "label": "看向成排的窄门",
+          "observation": "一排窄门，没有一扇装窗。门牌是后来钉上去的，钉得很随意。"
         }
       ],
       "routes": [
@@ -39,7 +40,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T03_24H",
-          "label": "辨认二十四小时标记"
+          "label": "辨认二十四小时标记",
+          "observation": "最靠里的那扇门写着「24」。门缝下面磨得很亮，像有人反复从里面摸过。"
         }
       ],
       "routes": [
@@ -66,7 +68,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T03_PEEPHOLES",
-          "label": "蹲下检查三个窥孔与外侧挡板"
+          "label": "蹲下检查三个窥孔与外侧挡板",
+          "observation": "蹲下来才看清：每扇门外侧都开了三个指头粗的孔，正对着里面的铺位。孔外钉着挡板，从里面看不见。"
         }
       ],
       "routes": [
@@ -93,7 +96,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T03_48_72H",
-          "label": "逐扇核对四十八与七十二小时标记"
+          "label": "逐扇核对四十八与七十二小时标记",
+          "observation": "中间两扇分别写着「48」和「72」。数字越大，门上划痕越多，72 那扇划到几乎看不清。"
         }
       ],
       "routes": [
@@ -120,7 +124,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T03_STAIRS",
-          "label": "用手电照向楼梯"
+          "label": "用手电照向楼梯",
+          "observation": "走廊尽头是往下的楼梯，水泥踏步上没有灰。有人在不久前走过。"
         }
       ],
       "routes": [
@@ -147,7 +152,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T03_DESCEND",
-          "label": "确认和小月一起下楼"
+          "label": "确认和小月一起下楼",
+          "observation": "小月握着手电的手心是汗。她说再往下看一遍，天黑前必须上去。"
         }
       ],
       "routes": [

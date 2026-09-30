@@ -214,6 +214,8 @@ export interface Act3Hotspot {
   clueId: string;
   /** 显示动作标签：看向、靠近、蹲下、检查、比对、收集、确认。 */
   label: string;
+  /** 玩家可见的物件观察正文；缺失时界面不得用镜头说明或制作提示兜底。 */
+  observation?: string;
 }
 
 /** 第三幕场景内的事件支持。 */

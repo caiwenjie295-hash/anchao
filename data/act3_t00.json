@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_DEPART",
-          "label": "继续向县城去"
+          "label": "继续向县城去",
+          "observation": "出发前，我们把宣传视频里出现的那栋建筑和山里的旧照片又对了一遍。车停在山脚，雨还没有停。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_SUPPLIES",
-          "label": "收拾补给，准备进山"
+          "label": "收拾补给，准备进山",
+          "observation": "手电、干电池、雨衣、相机，还有给小月带的热水。东西齐了，才好往山深处走。"
         }
       ],
       "routes": [
@@ -54,7 +56,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_APPROACH",
-          "label": "看向前方山口"
+          "label": "看向前方山口",
+          "observation": "前方山口比上次更难走。雨水把小路冲成两道浅沟，山脊线被雾吃掉了一半。"
         }
       ],
       "routes": [
@@ -75,7 +78,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_CABLE",
-          "label": "靠近看看这段电缆"
+          "label": "靠近看看这段电缆",
+          "observation": "一段旧电缆从坡边露出来，外皮已经硬化开裂。它不是山里该有的东西。"
         }
       ],
       "routes": [
@@ -102,7 +106,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_CABLE_BREAK",
-          "label": "记下电缆在这里断掉"
+          "label": "记下电缆在这里断掉",
+          "observation": "电缆在这里断了，断口是剪的，不是被山洪冲断的。有人来过，并且不想让它继续通着。"
         }
       ],
       "routes": [
@@ -123,7 +128,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_CAVE_SHELTER",
-          "label": "进入山洞避雨"
+          "label": "进入山洞避雨",
+          "observation": "雨越下越大，我们躲进上次避雨的山洞。洞口不大，挤两个人刚好。"
         }
       ],
       "routes": [
@@ -150,7 +156,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_CAVE_TALK",
-          "label": "听她说补母"
+          "label": "听她说补母",
+          "observation": "小月又提起那个名字。她说山里老人讲的是「吃什么补什么」，补进来的东西未必真是自己的。"
         }
       ],
       "routes": [
@@ -171,7 +178,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_TEMPLE_REVISIT",
-          "label": "查看底座空位"
+          "label": "查看底座空位",
+          "observation": "破庙还是老样子。神龛底座上积着灰，中间那块空的轮廓比上次更清楚。"
         }
       ],
       "routes": [
@@ -192,7 +200,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_WATER_ODDITY",
-          "label": "看向异常分叉"
+          "label": "看向异常分叉",
+          "observation": "水痕在坡面分了叉：左边顺山而下，右边横切进林子。这不是自然流的。"
         }
       ],
       "routes": [
@@ -213,7 +222,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_DRAIN_DISCOVERED",
-          "label": "记下排水沟在此"
+          "label": "记下排水沟在此",
+          "observation": "拨开浮土，下面露出一条砌好的排水沟。沟壁平整，人工挖的。"
         }
       ],
       "routes": [
@@ -234,7 +244,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_OLD_ROAD",
-          "label": "记下残旧路基"
+          "label": "记下残旧路基",
+          "observation": "沿着沟往上，脚下变成压实的旧路基。碎石被车轮碾过，早已长满杂草。"
         }
       ],
       "routes": [
@@ -255,7 +266,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T00_GATE_REACHED",
-          "label": "记下找到了外墙与锈门"
+          "label": "记下找到了外墙与锈门",
+          "observation": "红砖外墙和一道锈死的铁门从藤蔓里露出来。有人曾刻意把这里封起来。"
         }
       ],
       "routes": []

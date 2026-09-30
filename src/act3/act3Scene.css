@@ -19,6 +19,7 @@
 .act3-investigation__paper-compare p{margin:0;line-height:1.6}
 .act3-investigation__paper-compare>p{grid-column:1/-1}
 .act3-investigation__temple-compare figure{min-width:0;margin:0}
+.act3-investigation__compare-note{flex-basis:100%;margin:0 0 .5rem;font-size:.9rem;line-height:1.6;color:#cfe0e2}
 /* 工单 §16.3：破庙/空神龛对照不再用定高 160px + cover 裁掉判读区域。
    改为按原图自然比例完整呈现，只设最大高度，证据不被裁切。 */
 .act3-investigation__temple-compare img{width:100%;height:auto;max-height:min(46vh,420px);object-fit:contain;display:block;background:#38494b}

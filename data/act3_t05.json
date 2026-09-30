@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T05_ENTRY",
-          "label": "检查广播室入口"
+          "label": "检查广播室入口",
+          "observation": "广播室门半掩着，锁被拆下来挂在门把上。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T05_EMPTY_EQUIPMENT",
-          "label": "检查空设备位与断线"
+          "label": "检查空设备位与断线",
+          "observation": "设备位空着，只剩台面上的划痕和几个插孔。有人把机器整个搬走了。"
         }
       ],
       "routes": [
@@ -60,7 +62,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T05_DESK",
-          "label": "检查旧桌和桌脚"
+          "label": "检查旧桌和桌脚",
+          "observation": "一张旧桌，抽屉被拉开一半，桌脚垫着一片铁皮。"
         }
       ],
       "routes": [
@@ -87,7 +90,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T05_PAPER_EDGE",
-          "label": "蹲下取出纸片"
+          "label": "蹲下取出纸片",
+          "observation": "桌脚和地面之间夹着一角发黄的纸。"
         }
       ],
       "routes": [
@@ -117,7 +121,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T05_13ACK_PAPER",
-          "label": "读清并收起 13aCK 纸片"
+          "label": "读清并收起 13aCK 纸片",
+          "observation": "同一批纸，格式一样，上面还是六个词：老鼠、血、草垛、木房子、玫瑰、表。和前一张不是同一组。"
         }
       ],
       "routes": [
@@ -144,7 +149,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T05_KITCHEN_DIRECTION",
-          "label": "确认厨房方向"
+          "label": "确认厨房方向",
+          "observation": "走廊深处飘来一股甜腥味，越往里越重。这不是陈旧的味道。"
         }
       ],
       "routes": [

@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_UPSTAIRS",
-          "label": "确认一层回程"
+          "label": "确认一层回程",
+          "observation": "楼梯上来，一层的空气一下就干了。我先在门口站了一会儿，才敢往前。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_CORNER",
-          "label": "听小月停步"
+          "label": "听小月停步",
+          "observation": "走到教室和厕所之间的拐角，小月忽然停住。"
         }
       ],
       "routes": [
@@ -60,7 +62,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_STANDING_HYDRANT",
-          "label": "从站姿看消防栓"
+          "label": "从站姿看消防栓",
+          "observation": "墙角立着消防栓箱，玻璃早就碎了。站着看只是个锈盒子，箱子和墙之间却有条缝。"
         }
       ],
       "routes": [
@@ -87,7 +90,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_XIAOYUE_MEMORY",
-          "label": "听完小月的回忆"
+          "label": "听完小月的回忆",
+          "observation": "小月说，他以前也是这样，每次路过都要蹲下去系一次鞋带。「我那时候还笑他。」"
         }
       ],
       "routes": [
@@ -117,7 +121,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_BACK_GAP",
-          "label": "摸索消防栓背后"
+          "label": "摸索消防栓背后",
+          "observation": "蹲下来才看得见缝里有东西：一角透明胶带，在手电下反着光。"
         }
       ],
       "routes": [
@@ -147,7 +152,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_NOTEBOOK_PICKUP",
-          "label": "主动取出包裹的笔记本"
+          "label": "主动取出包裹的笔记本",
+          "observation": "用小刀挑开胶带，掉出一个塑料袋，里面是一本被包了两层的笔记本。外面那层已经发脆。"
         }
       ],
       "routes": [
@@ -173,11 +179,12 @@
       "requiresClueIds": [
         "CLUE_A3_T07_NOTEBOOK_PICKUP"
       ],
-      "description": "你只掀开扉页：A.W。那是小 A 熟悉的字迹。他曾重新来到启明，并有意把这本笔记留在这里。其余页暂不阅读。",
+      "description": "你只掀开扉页：A.W。那是小 A 熟悉的字迹——他曾重新来过这里，并有意把本子留在这个位置。后面几页的字开始变得歪斜，末页还能看见两个账号，其余要等有灯的地方再读。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_FIRST_PAGE",
-          "label": "确认 A.W 与字迹后合上"
+          "label": "确认 A.W 与字迹后合上",
+          "observation": "扉页只有两个字母：A.W。是他的字迹。我把小月叫过来，她一眼就认出来了。"
         }
       ],
       "routes": [
@@ -204,7 +211,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T07_EXIT_ROUTE",
-          "label": "与小月一起离开旧址"
+          "label": "与小月一起离开旧址",
+          "observation": "外面天已经开始发暗。雨停了，山路比来时好走一些。"
         }
       ],
       "routes": [

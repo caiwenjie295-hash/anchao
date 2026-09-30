@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_CORRIDOR",
-          "label": "看向左侧教室"
+          "label": "看向左侧教室",
+          "observation": "走廊很长，惨白的光从侧窗斜进来。地上是碎玻璃和翻倒的课桌。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_CLASSROOM_DOOR",
-          "label": "走进教室"
+          "label": "走进教室",
+          "observation": "教室门虚掩着。门牌歪了，写着「高一（三）班」。"
         }
       ],
       "routes": [
@@ -60,7 +62,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_BLACKBOARD",
-          "label": "看向黑板"
+          "label": "看向黑板",
+          "observation": "黑板擦得很干净，槽里还留着粉笔灰。整块板被人从中间横着划了一道。"
         }
       ],
       "routes": [
@@ -81,7 +84,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_SS_SCRATCH",
-          "label": "检查黑板划痕"
+          "label": "检查黑板划痕",
+          "observation": "那道划痕不是黑板留下的，是有人用硬物刻上去的：一个双 S，十字交叉，和山洞照片里那个一模一样。"
         }
       ],
       "routes": [
@@ -98,11 +102,12 @@
       "title": "标语与喇叭",
       "stance": "look",
       "assetId": "IMG_A3_T02_005",
-      "description": "讲台边仰视，墙上标语纸张卷边、胶痕、墙皮剥落；标语留白由网页正文渲染，不让模型生成可读文字。看上一只旧广播喇叭。",
+      "description": "讲台边仰视。墙上几条标语已经卷边，胶痕把纸固定在剥落的墙皮上；讲台上方吊着两只旧喇叭，垂下来的线还接着电。看清楚上面写了什么。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_SLOGAN_SPEAKER",
-          "label": "记下标语与喇叭"
+          "label": "记下标语与喇叭",
+          "observation": "墙上贴着几条标语，纸边卷起来留着胶痕：「改变，从服从开始」「听父母的话，都是为了你好」。讲台正上方吊着两只旧喇叭，线还接着。"
         }
       ],
       "routes": [
@@ -123,7 +128,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_CORRIDOR_TURN",
-          "label": "走向拐角"
+          "label": "走向拐角",
+          "observation": "走廊尽头要右转，窗光一下子退到身后。小月的手电停了一下。"
         }
       ],
       "routes": []

@@ -1,10 +1,16 @@
 import { backWords, wakeWords } from './content';
 
 export type LaterStage = 'T06' | 'T07' | 'T08' | 'T09' | 'T10';
-export type LaterScene = { id: string; stage: LaterStage; title: string; text: string; assetId: string; path: string; imageDescription: string };
-const shot = (stage: LaterStage, number: number, id: string, title: string, text: string, imageDescription: string): LaterScene => {
+/**
+ * A34-NARRATIVE-0001 D-4：`imageDescription` 原本是画图用的生成指令，
+ * 却被当作 alt / aria-label 读给屏幕阅读器。
+ * 这里拆成两个字段：`artDirection` 只作美术记录，永不进入 DOM；
+ * `alt` 是客观、简短的画面描述，供无障碍名称使用。
+ */
+export type LaterScene = { id: string; stage: LaterStage; title: string; text: string; assetId: string; path: string; alt: string; artDirection: string };
+const shot = (stage: LaterStage, number: number, id: string, title: string, text: string, artDirection: string, alt?: string): LaterScene => {
   const assetId = `IMG_A4_${stage}_${String(number).padStart(3, '0')}`;
-  return { id, stage, title, text, assetId, path: `src/第四幕/${stage}/${assetId}.png`, imageDescription: `低饱和、手机拍摄、极度写实。${imageDescription}` };
+  return { id, stage, title, text, assetId, path: `src/第四幕/${stage}/${assetId}.png`, alt: alt ?? `${title}的配图`, artDirection: `低饱和、手机拍摄、极度写实。${artDirection}` };
 };
 
 /** 只登记资源槽和可读文字，不生成图片，也不把亲历场景写入当下证据簿。 */
@@ -30,7 +36,7 @@ export const laterScenes: LaterScene[] = [
   shot('T08', 5, 'A4_T08_ROUTE', '旧路与排水沟', '沿石洞、排水沟上行，砖红围墙就在前方。我计算四点前进去，仍没想好怎样出来。', '夜间石洞外旧路与排水沟，空间对应第三幕母图，手电照明。'),
   shot('T08', 6, 'A4_T08_WALL', '两层围栏', '翻砖墙时玻璃划伤了手；我用 T 恤和胶带包住伤口。冲锋衣搭在刀片网，越过去却踩空，右腿撞上石头，仍勉强能走。', '夜间砖红外墙与内层刀片网，裂开的冲锋衣和受伤腿的克制视角。'),
   shot('T08', 7, 'A4_T08_BROADCAST', '仍在运转的广播室', `地下广播室设备齐整。桌上纸条写着 ${wakeWords.join('、')}，看见词时头疼似乎稍缓。我收起纸条继续走。`, '运营中的地下广播室、整齐设备与桌面纸条，位置对应第三幕废室。'),
-  shot('T08', 8, 'A4_T08_ARCHIVE', '档案馆 · 2008 年架', '灯光照到标有年份的书架。我先找 2008 年，再在书脊中找“黄子山”。档案只在我这一段经历中出现。', '运营中的地下档案馆，2008 年架和书脊有清楚文字层可点列表。'),
+  shot('T08', 8, 'A4_T08_ARCHIVE', '档案馆 · 2008 年架', '灯光照到标有年份的书架。我先找 2008 年，再在书脊中找“黄子山”。抽出那一册的时候，我的手一直在抖——我以为我会读到一个陌生人，结果每一行都像是替我写的。', '运营中的地下档案馆，2008 年架和书脊有清楚文字层可点列表。'),
   shot('T08', 9, 'A4_T08_MIRROR', '档案馆镜面', '档案写黄子山。我抬头望向不锈钢架的镜面，忽然意识到：镜中的不是档案照片里的人。我是王澳，为什么刚才以为自己是黄子山？', '不锈钢书架镜面与手中档案并列，第一人称身份冲突，不作超自然图解。'),
   shot('T08', 10, 'A4_T08_KITCHEN', '仍在使用的厨房', '门缝后有人备菜。铁钩上的肉看不清来源，我用手机摄像头看向最深处：一尊黑色掉漆塑像。胃里反酸，必须上楼离开。', '运营中的地下厨房门缝、手机取景框里的深处神龛黑像，肉不作来源判定。'),
 

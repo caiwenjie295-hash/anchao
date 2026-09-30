@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_GATE_VIEW",
-          "label": "查看锈门与右柱"
+          "label": "查看锈门与右柱",
+          "observation": "铁门锈死在门框里，右边立柱上的编号被人为凿掉了一半。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_PILLAR_CLOSE",
-          "label": "拨开爬山虎"
+          "label": "拨开爬山虎",
+          "observation": "爬山虎缠死了立柱。拨开叶子，柱面刻着「启明」两个字，刻痕很深。"
         }
       ],
       "routes": [
@@ -60,7 +62,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_SIGN_REVEALED",
-          "label": "对照旧宣传合影"
+          "label": "对照旧宣传合影",
+          "observation": "叶子底下压着一块搪瓷标牌，「启明青少年成长中心」几个字缺了角。和宣传片里的合影能对上。"
         }
       ],
       "routes": [
@@ -81,7 +84,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_GATE_ENTERED",
-          "label": "跟着小月进入"
+          "label": "跟着小月进入",
+          "observation": "锈门只推开一条缝，够侧身进去。小月先进去，回头等我。"
         }
       ],
       "routes": [
@@ -102,7 +106,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_INNER_FENCE",
-          "label": "穿过第二层围栏"
+          "label": "穿过第二层围栏",
+          "observation": "里面还有第二层围栏，比外面那道新。两道门之间站着人，就跑不掉。"
         }
       ],
       "routes": [
@@ -123,11 +128,13 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_BREAKER_OPTIONAL",
-          "label": "查看配电箱断线（可选）"
+          "label": "查看配电箱断线（可选）",
+          "observation": "配电箱的门敞着，里面的线被人整齐剪断，不是损坏。旁边的绝缘胶带还很新。"
         },
         {
           "clueId": "CLUE_A3_T01_MAIN_BUILDING",
-          "label": "进入主楼"
+          "label": "进入主楼",
+          "observation": "主楼三层，窗户全用报纸糊死。二楼有几扇玻璃是新的，糊法和别处不一样。"
         }
       ],
       "routes": []

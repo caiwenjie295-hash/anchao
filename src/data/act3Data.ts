@@ -47,7 +47,12 @@ const toLens = (value: unknown): Act3Lens => {
     stance,
     assetId: typeof record.assetId === 'string' ? record.assetId : '',
     description: typeof record.description === 'string' ? record.description : '',
-    hotspots: rawHotspots.filter(isHotspot).map((item) => ({ clueId: item.clueId, label: item.label })),
+    hotspots: rawHotspots.filter(isHotspot).map((item) => ({
+      clueId: item.clueId,
+      label: item.label,
+      // A34-NARRATIVE-0001：玩家可见的物件正文必须从数据透传到运行时类型。
+      observation: typeof item.observation === 'string' ? item.observation : undefined,
+    })),
     routes,
     links: routes.map((route) => route.target),
     requiresClueIds: Array.isArray(record.requiresClueIds) ? record.requiresClueIds.filter((item): item is string => typeof item === 'string' && item.length > 0) : undefined,

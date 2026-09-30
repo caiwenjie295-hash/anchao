@@ -12,7 +12,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T04_SIGN",
-          "label": "照亮档案室门牌"
+          "label": "照亮档案室门牌",
+          "observation": "手电照到门牌：「档案室」。塑料牌下面还压着一块更小的，写着值班表。"
         }
       ],
       "routes": [
@@ -33,7 +34,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T04_EMPTY_ROOM",
-          "label": "走进空档案室"
+          "label": "走进空档案室",
+          "observation": "档案室是空的。架子在，人不在。"
         }
       ],
       "routes": [
@@ -60,7 +62,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T04_LABELS",
-          "label": "核对空架与年份编号"
+          "label": "核对空架与年份编号",
+          "observation": "架上只剩标签：2008、2009、2010……每个年份都空着，盒子全被搬走了。有几张标签被撕掉，留下浅色方块。"
         }
       ],
       "routes": [
@@ -87,7 +90,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T04_PAPER_EDGE",
-          "label": "蹲下检查角落纸边"
+          "label": "蹲下检查角落纸边",
+          "observation": "蹲下时手电扫到架脚有一角露在纸箱外。是纸，不是标签。"
         }
       ],
       "routes": [
@@ -117,7 +121,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T04_VVAKE_PAPER",
-          "label": "读清并收起 VVaKe 纸片"
+          "label": "读清并收起 VVaKe 纸片",
+          "observation": "一张折旧清单的边角，上面印着一行词：蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗。纸背面是空白的。"
         }
       ],
       "routes": [
@@ -144,7 +149,8 @@
       "hotspots": [
         {
           "clueId": "CLUE_A3_T04_BROADCAST_DOOR",
-          "label": "确认广播室方向"
+          "label": "确认广播室方向",
+          "observation": "走廊另一端那扇门上的漆掉得更多。推一下，是松的。"
         }
       ],
       "routes": [
