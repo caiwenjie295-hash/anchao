@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { act4NarrativeExplanations, act4NarrativeSections, act4NarrativeSources } from './act4Narrative';
-import type { Act4Stage } from '../../core/types';
+import type { ActiveAct4NarrativeStage } from '../../story/act4/narrativePolicy';
 
 const sectionsByStage = new Map(act4NarrativeSections.map((section) => [section.stage, section]));
-const block = (stage: Act4Stage, id: string) => sectionsByStage.get(stage)?.blocks.find((item) => item.id === id);
+const block = (stage: ActiveAct4NarrativeStage, id: string) => sectionsByStage.get(stage)?.blocks.find((item) => item.id === id);
 
 describe('fourth act source-mapped narrative', () => {
   it('keeps ten uniquely identified reading sections with source references for every excerpt', () => {
