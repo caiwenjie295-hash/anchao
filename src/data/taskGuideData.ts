@@ -4,13 +4,14 @@ import { APP_IDS, type AppId, type AppState } from '../core/types';
 import { isSymbolVisible } from './photoData';
 import { taleEvidenceById } from './act2TalesData';
 
-type CompletionKind = 'cave-photo-opened' | 'cave-symbol-visible' | 'tales-read' | 'tales-two-sources';
+type CompletionKind = 'cave-photo-opened' | 'cave-symbol-visible' | 'tales-read' | 'tales-two-sources' | 'qiming-case-reviewed';
 
 type TaskGuideStepDefinition = {
   label: string;
   hint?: string;
   completionFlag?: string;
   completionKind?: CompletionKind;
+  caseId?: 'huang' | 'zhong';
   appId?: AppId;
 };
 
@@ -73,6 +74,7 @@ const isStepComplete = (step: TaskGuideStepDefinition, state: AppState): boolean
   }
   if (step.completionKind === 'tales-read') return state.modules.act2Research.tales.readTaleIds.length >= 2;
   if (step.completionKind === 'tales-two-sources') return new Set(state.modules.act2Research.tales.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter(Boolean)).size >= 2;
+  if (step.completionKind === 'qiming-case-reviewed' && step.caseId) return state.modules.act2Research.t06.reviewedCases.some((review) => review.caseId === step.caseId);
   return false;
 };
 

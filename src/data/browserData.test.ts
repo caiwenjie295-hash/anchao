@@ -81,7 +81,8 @@ describe('act2 T06 gated search data', () => {
     expect(getResultsForQuery('启明 投诉', 'qiming')[0]?.id).toBe('PAGE_A2_T06_006');
     expect(getResultsForQuery('启明青少年成长中心', 'qiming')[0]?.id).toBe('PAGE_A2_T06_001');
     expect(browserPages.find((page) => page.id === 'PAGE_A2_T06_004')?.interactions?.[0]).toMatchObject({ type: 'copy-names', names: [{ value: '黄子山' }, { value: '钟子月' }] });
-    expect(browserPages.find((page) => page.id === 'PAGE_A2_T06_006')?.interactions?.[0]).toMatchObject({ type: 'qiming-name-match', person: 'huang' });
-    expect(browserPages.find((page) => page.id === 'PAGE_A2_T06_007')?.interactions?.[0]).toMatchObject({ type: 'qiming-name-match', person: 'zhong' });
+    expect(browserPages.find((page) => page.id === 'PAGE_A2_T06_006')?.interactions).toBeUndefined();
+    expect(browserPages.find((page) => page.id === 'PAGE_A2_T06_007')?.interactions).toBeUndefined();
+    expect(browserPages.find((page) => page.id === 'PAGE_A2_T06_009')?.interactions).toBeUndefined();
   });
 });

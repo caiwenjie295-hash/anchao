@@ -16,7 +16,7 @@ describe('saveManager', () => {
     state.desktop.windows.mail.status = 'normal';
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated.desktop.windows.mail.status).toBe('normal');
-    expect(hydrated.schemaVersion).toBe(11);
+    expect(hydrated.schemaVersion).toBe(12);
   });
 
   it('falls back safely when storage contains malformed JSON', () => {
@@ -71,7 +71,7 @@ describe('saveManager', () => {
       photos: { activePhotoId: 'IMG_A1_H_003', openedPhotoIds: ['IMG_A1_H_003'], adjustments: { IMG_A1_H_003: { exposure: 55, shadows: 50, contrast: 35 } }, zoomByPhotoId: { IMG_A1_H_003: 1.8 }, inspectedSymbolPhotoIds: ['IMG_A1_H_003'] },
     };
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(11);
+    expect(migrated.schemaVersion).toBe(12);
     expect(migrated.game).toEqual({ act: 1, phase: 'K', flags: { FLAG_A1_SS_FOUND: true, FLAG_A1_COMPLETE: true }, discoveredClueIds: ['CLUE_A1_K_001'] });
     expect(migrated.modules.mail).toEqual({ readIds: ['MAIL_A1_C_001'], starredIds: ['MAIL_A1_C_001'] });
     expect(migrated.modules.browser).toEqual({ queryHistory: ['鸡公岭'], visitedPageIds: ['PAGE_A1_E_001'] });
@@ -92,7 +92,8 @@ describe('saveManager', () => {
       library: { visitedSectionIds: ['SECTION_A2_T03_001'], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: 'PAGE_A2_T03_004', bookmarkedPageIds: ['PAGE_A2_T03_004'], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: ['ENTRY_A2_T03_001'] },
       tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
       school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
-      t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
+      t06: { reviewedCases: [], nicknameAssessment: null, legacyCompletionMigrated: false },
+      t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [], comparisonFeatureIdByFrameId: {} },
     };
     const hydrated = hydrateState(JSON.parse(JSON.stringify(state)));
     expect(hydrated).toEqual(state);
@@ -122,7 +123,8 @@ describe('saveManager', () => {
       library: { visitedSectionIds: [], openedVolumeIds: ['VOLUME_A2_T03_001'], currentPageId: null, bookmarkedPageIds: [], markedKeywordIds: ['KEYWORD_A2_T03_001'], excerptedEntryIds: [] },
       tales: { readTaleIds: [], collectedTaleIds: [], placedCardIds: [], sorted: false, inferenceAcknowledged: false, supportingEvidenceIds: [], selectedInferenceId: null },
       school: { visitedAreaIds: [], inspectedHotspotIds: [], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false },
-      t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [] },
+      t06: { reviewedCases: [], nicknameAssessment: null, legacyCompletionMigrated: false },
+      t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], comparedFrameIds: [], comparisonFeatureIdByFrameId: {} },
     });
     expect(hydrated.game.flags).toEqual({ FLAG_A1_COMPLETE: true });
     expect(hydrated.modules.notepad.userText).toBe('第一幕笔记');
@@ -148,7 +150,7 @@ describe('saveManager', () => {
     legacy.modules.act2Research.tales = { readTaleIds: ['TALE_A2_T04_001'], collectedTaleIds: ['TALE_A2_T04_001'], placedCardIds: Array.from({ length: 12 }, (_, index) => `CARD_A2_T04_${String(index + 1).padStart(3, '0')}`), sorted: true, inferenceAcknowledged: true };
     legacy.modules.notepad.autoEntryIds = ['NOTE_A1_K_001', 'NOTE_A2_T04_004'];
     const migrated = hydrateState(legacy);
-    expect(migrated.schemaVersion).toBe(11);
+    expect(migrated.schemaVersion).toBe(12);
     expect(migrated.game.flags).toEqual(legacy.game.flags);
     expect(migrated.modules.act2Research.tales).toMatchObject(legacy.modules.act2Research.tales);
     expect(migrated.modules.notepad.autoEntryIds).toEqual(legacy.modules.notepad.autoEntryIds);
@@ -157,14 +159,14 @@ describe('saveManager', () => {
 
   it('restores valid schema 4 school progress and deduplicates only known area and hotspot IDs', () => {
     const school = createDefaultState();
-    school.schemaVersion = 9 as 11;
+    school.schemaVersion = 9 as 12;
     school.game.act = 2; school.game.phase = 'A2_T05';
     school.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_FIRE_HYDRANT_SEEN: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_NAME_FOUND: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
     school.modules.act2Research.stage = 'school';
     school.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_CORRIDOR', 'unknown'], inspectedHotspotIds: ['HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_TEACHER', 'unknown'], selectedEvidenceIds: [], selectedInferenceId: null, symbolMatchConfirmed: false, legacyCompletionMigrated: false };
     school.modules.notepad.autoEntryIds = ['NOTE_A2_T05_001', 'NOTE_A2_T05_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(school)));
-    expect(restored.schemaVersion).toBe(11);
+    expect(restored.schemaVersion).toBe(12);
     expect(restored.game.phase).toBe('A2_T05');
     expect(restored.modules.act2Research.stage).toBe('school');
     // schema 9 的双 S 比对在旧规则下已完成，迁移后必须把该事实持久化，
@@ -223,7 +225,7 @@ describe('saveManager', () => {
 
   it('migrates valid qiming progress and strips it when its T05 match prerequisite is missing', () => {
     const qiming = createDefaultState();
-    qiming.game.act = 2; qiming.game.phase = 'A2_T06';
+    qiming.schemaVersion = 11; qiming.game.act = 2; qiming.game.phase = 'A2_T06';
     qiming.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true, FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true, FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true };
     qiming.modules.act2Research.stage = 'qiming';
     qiming.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
@@ -231,10 +233,13 @@ describe('saveManager', () => {
     qiming.modules.browser.queryHistory = ['启明 投诉', '鸡公岭'];
     qiming.modules.notepad.autoEntryIds = ['NOTE_A2_T06_001', 'NOTE_A2_T06_002', 'NOTE_A2_T06_003', 'NOTE_A2_T06_004'];
     const restored = hydrateState(JSON.parse(JSON.stringify(qiming)));
-    expect(restored.schemaVersion).toBe(11);
+    expect(restored.schemaVersion).toBe(12);
     expect(restored.modules.act2Research.stage).toBe('qiming');
     expect(restored.game.phase).toBe('A2_T06');
     expect(restored.modules.browser.visitedPageIds).toEqual(['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009']);
+    expect(restored.modules.act2Research.t06.legacyCompletionMigrated).toBe(true);
+    expect(restored.modules.act2Research.t06.reviewedCases).toEqual([]);
+    expect(hydrateState(JSON.parse(JSON.stringify(restored))).modules.act2Research.t06.legacyCompletionMigrated).toBe(true);
     expect(restored.modules.browser.queryHistory).toEqual(['启明 投诉', '鸡公岭']);
     const broken = JSON.parse(JSON.stringify(qiming));
     delete broken.game.flags.FLAG_A2_SS_MATCH_CONFIRMED;
@@ -247,6 +252,43 @@ describe('saveManager', () => {
     expect(cleaned.game.flags.FLAG_A2_QIMING_FORUM_FOUND).toBeUndefined();
     expect(cleaned.game.flags.FLAG_A2_SCHOOL_ENTERED).toBe(true);
     expect(cleaned.game.flags.FLAG_A2_SCHOOL_SS_FOUND).toBe(true);
+  });
+
+  it('round-trips new实名 case reviews without any forum or nickname flags', () => {
+    const current = createDefaultState();
+    current.game.act = 2; current.game.phase = 'A2_T06';
+    current.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_OTHER_CASES_ABNORMAL: true };
+    current.modules.act2Research.stage = 'qiming';
+    current.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
+    current.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
+    current.modules.act2Research.t06.reviewedCases = [
+      { caseId: 'huang', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], conclusionId: 'public-claims-and-followup-differ' },
+      { caseId: 'zhong', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], conclusionId: 'public-claims-and-followup-differ' },
+    ];
+    const once = hydrateState(JSON.parse(JSON.stringify(current)));
+    const twice = hydrateState(JSON.parse(JSON.stringify(once)));
+    expect(once.modules.act2Research.t06.reviewedCases).toHaveLength(2);
+    expect(twice.modules.act2Research.t06.reviewedCases).toHaveLength(2);
+    expect(twice.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBe(true);
+    expect(twice.game.flags.FLAG_A2_QIMING_FORUM_FOUND).toBeUndefined();
+    expect(twice.game.flags.FLAG_A2_HUANG_MATCH_INFERRED).toBeUndefined();
+    expect(twice.modules.browser.visitedPageIds).toEqual(['PAGE_A2_T06_004', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009']);
+  });
+
+  it('does not promote a naked future T06 flag or old nickname-only progress', () => {
+    const forged = createDefaultState();
+    forged.schemaVersion = 11; forged.game.act = 2; forged.game.phase = 'A2_T06';
+    forged.game.flags = { FLAG_A1_COMPLETE: true, FLAG_A1_SS_FOUND: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true, FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true, FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true, FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true };
+    forged.modules.act2Research.stage = 'qiming';
+    forged.modules.act2Research.school = { visitedAreaIds: ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'], inspectedHotspotIds: ['HOTSPOT_A2_T05_SCHOLAR_NOTE', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_TEACHER'], selectedEvidenceIds: ['rank-record', 'teacher-account'], selectedInferenceId: 'bounded-timeline', symbolMatchConfirmed: true, legacyCompletionMigrated: false };
+    forged.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
+    const once = hydrateState(JSON.parse(JSON.stringify(forged)));
+    const twice = hydrateState(JSON.parse(JSON.stringify(once)));
+    expect(once.modules.act2Research.stage).toBe('qiming');
+    expect(once.modules.act2Research.t06.legacyCompletionMigrated).toBe(false);
+    expect(once.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBeUndefined();
+    expect(twice.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBeUndefined();
+    expect(twice.modules.act2Research.t06.reviewedCases).toEqual([]);
   });
 
   it('derives a phase from the validated Act2 stage instead of preserving a forged T06 phase', () => {
@@ -266,7 +308,7 @@ describe('saveManager', () => {
     expect(SAVE_KEY).toBe('anchao.save.v1');
     localStorage.setItem(SAVE_KEY, JSON.stringify(asLegacyFirstActSave()));
     const loaded = loadState(localStorage);
-    expect(loaded.schemaVersion).toBe(11);
+    expect(loaded.schemaVersion).toBe(12);
     expect(loaded.modules.act2Research.stage).toBe('inactive');
   });
 

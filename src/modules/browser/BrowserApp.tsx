@@ -3,6 +3,7 @@ import { stateManager, type StateManager } from '../../core/stateManager';
 import { browserPageById, findSearchQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible } from '../../data/browserData';
 import { BrowserPageView } from './BrowserPageView';
 import { BrowserSearchResults } from './BrowserSearchResults';
+import './browserApp.css';
 
 /** 页面版式已拆到独立组件，这里保留既有导出路径。 */
 export { BrowserPageView } from './BrowserPageView';
@@ -100,12 +101,82 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
       {shownView.kind === 'home' && <BrowserHome draft={safeDraft} suggestions={suggestions} onChoose={(query) => { setDraft(query); submitSearch(query); }} />}
       {shownView.kind === 'results' && <BrowserSearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
       {shownView.kind === 'page' && <BrowserPageView page={browserPageById.get(shownView.pageId)} manager={manager} />}
+      {stage === 'qiming' && <Act2QimingCaseReview state={state} manager={manager} onOpenPage={openPage} />}
     {stage === 'search' && state.game.flags.FLAG_A2_OFFLINE_RESEARCH_NEEDED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
       <p>这次搜索没有找到能回答问题的资料。可以先把疑问留给当地人。</p>
       <button type="button" onClick={() => manager.setAct2Stage('bridge')}>去桥头问问当地人</button>
     </aside>}
     </div>
   </section>;
+}
+
+const CASE_PAGES = {
+  huang: { followup: 'PAGE_A2_T06_008', validText: '宣传记录称成绩提升；后续旧闻却称家属多年未能联系上。', overclaimText: '这些材料已经证明启明导致他失联。' },
+  zhong: { followup: 'PAGE_A2_T06_009', validText: '宣传记录称她恢复学习；后续报道转述家属说她后来离家，之后没有确切消息。', overclaimText: '论坛里的“月子”已经确认就是钟子月。' },
+} as const;
+
+function Act2QimingCaseReview({ state, manager, onOpenPage }: { state: ReturnType<StateManager['getState']>; manager: StateManager; onOpenPage: (pageId: string) => void }) {
+  const [selected, setSelected] = useState<Record<'huang' | 'zhong', 'supported' | 'overclaim' | ''>>({ huang: '', zhong: '' });
+  const [feedback, setFeedback] = useState<Record<'huang' | 'zhong', string>>({ huang: '', zhong: '' });
+  const visited = new Set(state.modules.browser.visitedPageIds);
+  const reviews = state.modules.act2Research.t06.reviewedCases;
+  const reviewed = (caseId: 'huang' | 'zhong') => reviews.some((item) => item.caseId === caseId);
+  const isComplete = reviewed('huang') && reviewed('zhong') || state.modules.act2Research.t06.legacyCompletionMigrated;
+  const reviewCase = (caseId: 'huang' | 'zhong') => {
+    const sources = ['PAGE_A2_T06_004', CASE_PAGES[caseId].followup];
+    if (selected[caseId] !== 'supported') {
+      setFeedback((current) => ({ ...current, [caseId]: '这组材料支持的是宣传与后续说法之间的落差；不能据此认定因果或确认论坛昵称身份。' }));
+      return;
+    }
+    const result = manager.reviewAct2QimingCase(caseId, sources, 'public-claims-and-followup-differ');
+    const messages = {
+      recorded: '已记录这组实名材料与后续报道的差异。',
+      'already-recorded': '这组材料已经记入调查记录。',
+      'wrong-stage': '当前不是实名材料复核阶段。',
+      'missing-source': '请先打开启明旧站宣传案例和这位学员的后续报道。',
+      'invalid-source': '来源不属于这位学员的实名材料。',
+      'unsupported-conclusion': '现有材料不足以支持这个结论；已读资料仍保留。',
+    } as const;
+    setFeedback((current) => ({ ...current, [caseId]: messages[result] }));
+  };
+  const saveNickname = (assessment: 'possible-unverified' | 'not-enough-evidence') => {
+    const saved = manager.recordAct2QimingNicknameAssessment(assessment);
+    if (saved) setFeedback((current) => ({ ...current, [visited.has('PAGE_A2_T06_007') ? 'zhong' : 'huang']: '论坛昵称线索已单独记为未核实；它不会代替实名材料复核。' }));
+  };
+  return <aside className="browser-case-review" aria-label="实名个案材料复核">
+    <header className="browser-case-review__header"><div><p className="browser-case-review__eyebrow">第二幕 · 启明后续</p><h2>核对实名个案</h2><p>宣传案例与后续旧闻分别来自不同页面。打开两份来源后，记录它们之间的差异；论坛昵称只作为待核线索。</p></div><span className="browser-case-review__progress">{Number(reviewed('huang')) + Number(reviewed('zhong'))} / 2 已记录</span></header>
+    {!visited.has('PAGE_A2_T06_004') && <p className="browser-case-review__source"><span>共用来源：启明旧站的学员成长记录</span><button type="button" onClick={() => onOpenPage('PAGE_A2_T06_004')}>打开宣传案例</button></p>}
+    <div className="browser-case-review__cases">
+      {(['huang', 'zhong'] as const).map((caseId) => {
+        const name = caseId === 'huang' ? '黄子山' : '钟子月';
+        const followupId = CASE_PAGES[caseId].followup;
+        const sourcesReady = visited.has('PAGE_A2_T06_004') && visited.has(followupId);
+        return <section key={caseId} className="browser-case-review__case" aria-label={`${name}材料`}>
+          <div className="browser-case-review__case-heading"><h3>{name}</h3><span>{reviewed(caseId) ? '材料已记录' : sourcesReady ? '两份来源已读' : '尚缺来源'}</span></div>
+          <div className="browser-case-review__sources">
+            <button type="button" onClick={() => onOpenPage('PAGE_A2_T06_004')}>{visited.has('PAGE_A2_T06_004') ? '回看启明宣传案例' : '打开启明宣传案例'}</button>
+            <button type="button" onClick={() => onOpenPage(followupId)}>{visited.has(followupId) ? `回看${name}后续报道` : `调查${name}后续`}</button>
+          </div>
+          {sourcesReady && !reviewed(caseId) && <fieldset className="browser-case-review__choices">
+            <legend>选择这两份来源能支持的发现</legend>
+            <label><input type="radio" name={`case-${caseId}`} checked={selected[caseId] === 'supported'} onChange={() => setSelected((current) => ({ ...current, [caseId]: 'supported' }))} />{CASE_PAGES[caseId].validText}</label>
+            <label><input type="radio" name={`case-${caseId}`} checked={selected[caseId] === 'overclaim'} onChange={() => setSelected((current) => ({ ...current, [caseId]: 'overclaim' }))} />{CASE_PAGES[caseId].overclaimText}</label>
+            <button type="button" className="browser-case-review__submit" disabled={!selected[caseId]} onClick={() => reviewCase(caseId)}>记录这组材料差异</button>
+          </fieldset>}
+          {reviewed(caseId) && <p className="browser-case-review__record">已记录：{CASE_PAGES[caseId].validText} <a href="#browser-case-review" onClick={(event) => { event.preventDefault(); onOpenPage(followupId); }}>回到来源</a></p>}
+          {feedback[caseId] && <p className="browser-case-review__feedback" role="status">{feedback[caseId]}</p>}
+        </section>;
+      })}
+    </div>
+    {(visited.has('PAGE_A2_T06_006') || visited.has('PAGE_A2_T06_007')) && <details className="browser-case-review__nickname">
+      <summary>论坛昵称线索（可选，身份未核实）</summary>
+      <p>“黄山”“月子”的发言和转述缺少可核实身份材料。记录相似处或暂不能对应，都不会影响实名个案调查。</p>
+      <button type="button" aria-pressed={state.modules.act2Research.t06.nicknameAssessment === 'possible-unverified'} onClick={() => saveNickname('possible-unverified')}>有相似处，但身份待核实</button>
+      <button type="button" aria-pressed={state.modules.act2Research.t06.nicknameAssessment === 'not-enough-evidence'} onClick={() => saveNickname('not-enough-evidence')}>现有材料不足以对应</button>
+      {state.modules.act2Research.t06.nicknameAssessment && <span role="status">已记录为{state.modules.act2Research.t06.nicknameAssessment === 'possible-unverified' ? '可能有相似处、身份待核实' : '证据不足以对应'}。</span>}
+    </details>}
+    {isComplete && <footer className="browser-case-review__next"><p>两名学员的实名后续已分别记录。论坛昵称仍未证实，可以与小月继续核对宣传照片和受访视频。</p><button type="button" onClick={() => manager.enterAct2FinaleInvestigation()}>与小月继续核对资料</button></footer>}
+  </aside>;
 }
 
 function BrowserHome({ draft, suggestions, onChoose }: { draft: string; suggestions: string[]; onChoose: (query: string) => void }) {

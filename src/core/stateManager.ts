@@ -1,7 +1,7 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
 import { loadState, saveState } from './saveManager';
-import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2ResearchState, type Act2Stage, type Act3State, type Act4NarrativeActionId, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
+import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2QimingCaseId, type Act2QimingConclusionId, type Act2QimingNicknameAssessment, type Act2ResearchState, type Act2Stage, type Act3State, type Act4NarrativeActionId, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
 import { birthdayScenes, timeline } from '../data/act4/content';
 import { answerAct4Puzzle } from '../story/act4/actions';
 import { laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
@@ -24,8 +24,11 @@ type Act2ResearchPatch = {
   library?: Partial<Act2ResearchState['library']>;
   tales?: Partial<Act2ResearchState['tales']>;
   school?: Partial<Act2ResearchState['school']>;
+  t06?: Partial<Act2ResearchState['t06']>;
   t07?: Partial<Act2ResearchState['t07']>;
 };
+
+export type Act2QimingCaseReviewResult = 'recorded' | 'already-recorded' | 'wrong-stage' | 'missing-source' | 'invalid-source' | 'unsupported-conclusion';
 
 const act2ActiveStages: Act2ActiveStage[] = ['search', 'bridge', 'library', 'tales'];
 const act2StageOrder: Act2Stage[] = ['inactive', 'search', 'bridge', 'library', 'tales', 'school', 'qiming', 'finale'];
@@ -66,7 +69,7 @@ export class StateManager {
   private commit(next: AppState): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 11 });
+    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 12 });
   }
 
   private nextZIndex(): number {
@@ -219,7 +222,7 @@ export class StateManager {
 
   resetProgress(): void {
     this.commit(createDefaultState());
-    this.bus.emit('progress:reset', { schemaVersion: 11 });
+    this.bus.emit('progress:reset', { schemaVersion: 12 });
   }
 
   startJourney(sceneId: string): void {
@@ -311,6 +314,7 @@ export class StateManager {
       library: patch.library ? { ...current.library, ...patch.library } : current.library,
       tales: patch.tales ? { ...current.tales, ...patch.tales } : current.tales,
       school: patch.school ? { ...current.school, ...patch.school } : current.school,
+      t06: patch.t06 ? { ...current.t06, ...patch.t06 } : current.t06,
       t07: patch.t07 ? { ...current.t07, ...patch.t07 } : current.t07,
     };
     this.commit({ ...this.state, modules: { ...this.state.modules, act2Research: next } });
@@ -569,13 +573,58 @@ export class StateManager {
     if (nextFlags.FLAG_A2_HUANG_MATCH_INFERRED === true && nextFlags.FLAG_A2_ZHONG_MATCH_INFERRED === true) this.addNotepadAutoEntry('NOTE_A2_T06_003');
   }
 
-  confirmAct2OtherCasesAbnormal(): void {
-    const { flags } = this.state.game;
+  /** Optional nickname reading. It records uncertainty only and never gates the main route. */
+  recordAct2QimingNicknameAssessment(assessment: Act2QimingNicknameAssessment): boolean {
+    if (this.act2Research.stage !== 'qiming') return false;
     const pages = this.state.modules.browser.visitedPageIds;
-    if (this.act2Research.stage !== 'qiming' || flags.FLAG_A2_HUANG_MATCH_INFERRED !== true || flags.FLAG_A2_ZHONG_MATCH_INFERRED !== true || !pages.includes('PAGE_A2_T06_008') || !pages.includes('PAGE_A2_T06_009') || flags.FLAG_A2_OTHER_CASES_ABNORMAL === true) return;
-    this.setFlag('FLAG_A2_OTHER_CASES_ABNORMAL', true);
-    this.addNotepadAutoEntry('NOTE_A2_T06_004');
-    this.bus.emit('act2:qiming-cases-confirmed', {});
+    if (!pages.includes('PAGE_A2_T06_006') && !pages.includes('PAGE_A2_T06_007')) return false;
+    if (assessment !== 'possible-unverified' && assessment !== 'not-enough-evidence') return false;
+    if (this.act2Research.t06.nicknameAssessment === assessment) return true;
+    this.commitAct2Research({ t06: { nicknameAssessment: assessment } });
+    return true;
+  }
+
+  /** Records one实名个案 in a single persistent action after both cited pages were opened. */
+  reviewAct2QimingCase(caseId: Act2QimingCaseId, sourcePageIds: string[], conclusionId: Act2QimingConclusionId): Act2QimingCaseReviewResult {
+    if (this.act2Research.stage !== 'qiming') return 'wrong-stage';
+    if (caseId !== 'huang' && caseId !== 'zhong') return 'invalid-source';
+    const requiredPages = caseId === 'huang'
+      ? ['PAGE_A2_T06_004', 'PAGE_A2_T06_008']
+      : ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'];
+    const supplied = [...new Set(sourcePageIds)];
+    if (supplied.length !== requiredPages.length || supplied.some((id) => !requiredPages.includes(id))) return 'invalid-source';
+    if (!requiredPages.every((id) => this.state.modules.browser.visitedPageIds.includes(id))) return 'missing-source';
+    if (conclusionId !== 'public-claims-and-followup-differ') return 'unsupported-conclusion';
+    if (this.act2Research.t06.reviewedCases.some((review) => review.caseId === caseId)) return 'already-recorded';
+
+    const reviewedCases = [...this.act2Research.t06.reviewedCases, { caseId, sourcePageIds: requiredPages, conclusionId }];
+    const allCasesReviewed = ['huang', 'zhong'].every((id) => reviewedCases.some((review) => review.caseId === id));
+    const wasComplete = this.state.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL === true;
+    const addedCompletionNote = allCasesReviewed && !this.state.modules.notepad.autoEntryIds.includes('NOTE_A2_T06_004');
+    const noteIds = allCasesReviewed && !this.state.modules.notepad.autoEntryIds.includes('NOTE_A2_T06_004')
+      ? [...this.state.modules.notepad.autoEntryIds, 'NOTE_A2_T06_004']
+      : this.state.modules.notepad.autoEntryIds;
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, flags: allCasesReviewed ? { ...this.state.game.flags, FLAG_A2_OTHER_CASES_ABNORMAL: true } : this.state.game.flags },
+      modules: {
+        ...this.state.modules,
+        act2Research: { ...this.act2Research, t06: { ...this.act2Research.t06, reviewedCases } },
+        notepad: { ...this.state.modules.notepad, autoEntryIds: noteIds },
+      },
+    });
+    this.bus.emit('act2:qiming-case-reviewed', { caseId });
+    if (allCasesReviewed && !wasComplete) {
+      this.bus.emit('act2:qiming-cases-confirmed', {});
+      this.bus.emit('flag:changed', { flagId: 'FLAG_A2_OTHER_CASES_ABNORMAL', value: true });
+      if (addedCompletionNote) this.bus.emit('notepad:auto-entry-added', { entryId: 'NOTE_A2_T06_004' });
+    }
+    return 'recorded';
+  }
+
+  confirmAct2OtherCasesAbnormal(): void {
+    // Legacy action ID retained for old UI routes. New completion is minted only
+    // by reviewAct2QimingCase after both实名 source pairs and conclusions validate.
   }
 
   visitAct2SchoolArea(areaId: string): void {
@@ -812,6 +861,35 @@ export class StateManager {
     this.commitAct2Research({ t07: { comparedFrameIds: [...t07.comparedFrameIds, id] } });
     this.bus.emit('act2:t07-frame-compared', { frameId: id });
     return true;
+  }
+
+  /** Compare and record the matching exterior evidence atomically. */
+  submitAct2T07Comparison(frameId: string, featureId: string): 'recorded' | 'already-recorded' | 'invalid-frame' | 'invalid-feature' | 'insufficient-evidence' | 'wrong-stage' {
+    const id = frameId.trim();
+    const frame = keyFrameById.get(id);
+    if (this.act2Research.stage !== 'finale') return 'wrong-stage';
+    if (!frame || !this.act2Research.t07.capturedFrameIds.includes(id)) return 'invalid-frame';
+    if (!act2T07.comparison.featureOptions.some((option) => option.id === featureId)) return 'invalid-feature';
+    if (this.act2Research.t07.comparedFrameIds.includes(id) || this.state.game.flags.FLAG_A2_TEMPLE_FRAME_FOUND === true) return 'already-recorded';
+    if (!frame.supportsExteriorMatch || featureId !== act2T07.comparison.matchFeatureId) return 'insufficient-evidence';
+
+    const comparedFrameIds = [...this.act2Research.t07.comparedFrameIds, id];
+    const addedNote = !this.state.modules.notepad.autoEntryIds.includes('NOTE_A2_T07_002');
+    const noteIds = addedNote ? [...this.state.modules.notepad.autoEntryIds, 'NOTE_A2_T07_002'] : this.state.modules.notepad.autoEntryIds;
+    this.commit({
+      ...this.state,
+      game: { ...this.state.game, flags: { ...this.state.game.flags, FLAG_A2_TEMPLE_FRAME_FOUND: true } },
+      modules: {
+        ...this.state.modules,
+        act2Research: { ...this.act2Research, t07: { ...this.act2Research.t07, comparedFrameIds, comparisonFeatureIdByFrameId: { ...this.act2Research.t07.comparisonFeatureIdByFrameId, [id]: featureId } } },
+        notepad: { ...this.state.modules.notepad, autoEntryIds: noteIds },
+      },
+    });
+    this.bus.emit('act2:t07-frame-compared', { frameId: id });
+    this.bus.emit('act2:t07-temple-confirmed', {});
+    this.bus.emit('flag:changed', { flagId: 'FLAG_A2_TEMPLE_FRAME_FOUND', value: true });
+    if (addedNote) this.bus.emit('notepad:auto-entry-added', { entryId: 'NOTE_A2_T07_002' });
+    return 'recorded';
   }
 
   confirmAct2T07TempleFrame(): void {

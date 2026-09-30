@@ -132,7 +132,7 @@ describe('StateManager window behaviour', () => {
     manager.setNotepadUserText('临时记录');
     manager.resetProgress();
     expect(manager.getState()).toEqual(createDefaultState());
-    expect(resets).toEqual([10]);
+    expect(resets).toEqual([12]);
   });
 
   it('acknowledges only the current story card and persists the choice', () => {
@@ -510,7 +510,7 @@ describe('StateManager T05 school investigation', () => {
 });
 
 describe('StateManager T06 qiming research', () => {
-  it('enters only with the T05 match and requires explicit comparisons plus both later cases', () => {
+  it('records实名 cases once from their exact source pairs without forum or nickname prerequisites', () => {
     const state = createDefaultState();
     state.modules.act2Research.stage = 'school';
     state.game.flags = { FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SS_MATCH_CONFIRMED: true };
@@ -520,23 +520,20 @@ describe('StateManager T06 qiming research', () => {
     expect(manager.getState().modules.act2Research.stage).toBe('qiming');
     expect(manager.getState().game.phase).toBe('A2_T06');
     expect(entered).toEqual(['entered']);
-    manager.recordBrowserPageVisit('PAGE_A2_T06_004'); manager.recordBrowserPageVisit('PAGE_A2_T06_006');
-    manager.setFlag('FLAG_A2_QIMING_TESTIMONIALS_READ', true); manager.setFlag('FLAG_A2_QIMING_FORUM_FOUND', true);
-    manager.inferAct2QimingNameMatch('huang'); manager.inferAct2QimingNameMatch('huang');
-    expect(manager.getState().game.flags.FLAG_A2_HUANG_MATCH_INFERRED).toBe(true);
-    expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).not.toBe(true);
-    manager.recordBrowserPageVisit('PAGE_A2_T06_008');
+    expect(manager.reviewAct2QimingCase('huang', ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], 'public-claims-and-followup-differ')).toBe('missing-source');
+    manager.recordBrowserPageVisit('PAGE_A2_T06_004'); manager.recordBrowserPageVisit('PAGE_A2_T06_008');
+    expect(manager.reviewAct2QimingCase('huang', ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], 'public-claims-and-followup-differ')).toBe('invalid-source');
+    expect(manager.reviewAct2QimingCase('huang', ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], 'public-claims-and-followup-differ')).toBe('recorded');
+    expect(manager.reviewAct2QimingCase('huang', ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], 'public-claims-and-followup-differ')).toBe('already-recorded');
+    expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).not.toBe(true);
+    expect(manager.getState().modules.act2Research.t06.reviewedCases).toHaveLength(1);
     manager.confirmAct2OtherCasesAbnormal();
     expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).not.toBe(true);
-    manager.inferAct2QimingNameMatch('zhong');
-    expect(manager.getState().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED).not.toBe(true);
-    manager.recordBrowserPageVisit('PAGE_A2_T06_007');
-    manager.inferAct2QimingNameMatch('zhong');
-    manager.confirmAct2OtherCasesAbnormal();
-    expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).not.toBe(true);
-    manager.recordBrowserPageVisit('PAGE_A2_T06_009'); manager.confirmAct2OtherCasesAbnormal();
+    manager.recordBrowserPageVisit('PAGE_A2_T06_009');
+    expect(manager.reviewAct2QimingCase('zhong', ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], 'public-claims-and-followup-differ')).toBe('recorded');
     expect(manager.getState().game.flags.FLAG_A2_OTHER_CASES_ABNORMAL).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T06_004');
+    expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang', 'zhong']);
   });
 });
 

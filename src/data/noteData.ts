@@ -31,7 +31,7 @@ const act2NoteRequiredText: Record<string, string[]> = {
   NOTE_A2_T06_001: ['搜索结果几乎都是宣传材料', '孝顺'],
   NOTE_A2_T06_002: ['强行送入训练中心', '没有独立核实'],
   NOTE_A2_T06_003: ['黄子山', '黄山', '钟子月', '月子'],
-  NOTE_A2_T06_004: ['下落不明', '精神状态异常', '不止发生在小A身上'],
+  NOTE_A2_T06_004: ['黄子山家属多年未能联系上', '钟子月离家后没有确切消息', '现有材料没有说明原因'],
 };
 /** T04 才揭示的结论不得提前出现在第二幕摘录里。 */
 const act2NoteForbiddenText: Record<string, string[]> = { NOTE_A2_T03_001: ['记忆', '身份'] };

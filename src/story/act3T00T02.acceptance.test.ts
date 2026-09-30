@@ -17,8 +17,6 @@ function completedT06() {
     FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_SS_MATCH_CONFIRMED: true,
     FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true,
     FLAG_A2_QIMING_OFFICIAL_FOUND: true, FLAG_A2_QIMING_TESTIMONIALS_READ: true,
-    FLAG_A2_QIMING_FORUM_FOUND: true, FLAG_A2_HUANG_MATCH_INFERRED: true,
-    FLAG_A2_ZHONG_MATCH_INFERRED: true, FLAG_A2_OTHER_CASES_ABNORMAL: true,
   };
   state.modules.act2Research.stage = 'qiming';
   state.modules.act2Research.school.visitedAreaIds = ['AREA_A2_T05_XIAOA_CLASSROOM', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_TEACHER_OFFICE'];
@@ -27,7 +25,10 @@ function completedT06() {
   state.modules.act2Research.school.selectedInferenceId = 'bounded-timeline';
   state.modules.act2Research.school.symbolMatchConfirmed = true;
   state.modules.browser.visitedPageIds = ['PAGE_A2_T06_004', 'PAGE_A2_T06_006', 'PAGE_A2_T06_007', 'PAGE_A2_T06_008', 'PAGE_A2_T06_009'];
-  return state;
+  const manager = new StateManager(undefined, state);
+  manager.reviewAct2QimingCase('huang', ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], 'public-claims-and-followup-differ');
+  manager.reviewAct2QimingCase('zhong', ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], 'public-claims-and-followup-differ');
+  return manager.getState();
 }
 
 function completedT07() {
@@ -39,8 +40,7 @@ function completedT07() {
   for (const id of act2T07.video.requiredSegmentIds) manager.markAct2T07SegmentPlayed(id);
   const frame = act2T07.video.keyFrames[0];
   manager.captureAct2T07Frame(frame.id, frame.startMs);
-  manager.compareAct2T07TempleFrame(frame.id, 'square-opening');
-  manager.confirmAct2T07TempleFrame();
+  manager.submitAct2T07Comparison(frame.id, 'square-opening');
   manager.inferAct2T07Location();
   manager.planAct2T07SecondTrip();
   manager.completeAct2T07Finale();
