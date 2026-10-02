@@ -1,12 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { stateManager, type StateManager } from '../../core/stateManager';
-import { act4NarrativeSections, act4NarrativeExplanations, act4NarrativeEnding } from '../../data/narrative/act4Narrative';
+import { act4NarrativeSections, act4NarrativeExplanations, act4NarrativeEnding, act4NarrativeSources } from '../../data/narrative/act4Narrative';
 import { act4OldMails } from '../../data/act4/mail';
 import { assetLoader } from '../../core/assetLoader';
 import { act4NarrativeActionsSatisfied, type ActiveAct4NarrativeStage } from '../../story/act4/narrativePolicy';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
+import { act4DateTimeValue, act4ParagraphKind, act4PresentationKind, act4TextSegments } from '../../data/narrative/act4Presentation';
 import '../../act4/act4.css';
 
 const blockedReason: Partial<Record<ActiveAct4NarrativeStage, string>> = {
@@ -31,6 +32,8 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const [passwordHintLevel, setPasswordHintLevel] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
   const [failedIllustrationStage, setFailedIllustrationStage] = useState<ActiveAct4NarrativeStage | null>(null);
+  const [paragraphPageByBlock, setParagraphPageByBlock] = useState<Record<string, number>>({});
+  const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
   const readerRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
@@ -105,8 +108,15 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
       window.requestAnimationFrame(() => returnFocusRef.current?.focus());
     };
   }, [zoomOpen]);
+  useEffect(() => {
+    if (section?.stage !== 'T01' || reviewing) return;
+    const pageIndex = paragraphPageByBlock['T01:T01_ORIGINAL'] ?? 0;
+    manager.readAct4NotebookPage(pageIndex + 1);
+  }, [manager, paragraphPageByBlock, reviewing, section?.stage]);
   if (!section) return null;
   const stage = section.stage;
+  const presentationKind = act4PresentationKind(stage);
+  const isWangaoMemory = ['T05', 'T06', 'T07', 'T08', 'T09'].includes(stage);
   const actionCompleted = act4NarrativeActionsSatisfied(stage, actions);
   const sectionCompleted = state.completedNarrativeSectionIds.includes(section.id);
   const finalCompleted = stage === 'T10' && sectionCompleted && whole.game.flags.FLAG_A4_COMPLETE === true;
@@ -181,26 +191,26 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     }
     if (stage === 'T04' && blockId === 'T04_CONTEXT' && !hasAction('A4_T04_WAKE_MAIL_OPENED')) {
       return <section className="a4-reader__interaction" aria-label="打开 VVaKe 邮件" key="T04_WAKE_MAIL_INTERACTION">
-        <p>邮箱里有一封发件人为启明、主题为 VVaKe 的邮件。</p>
-        <button type="button" onClick={() => manager.viewAct4WakeMail()}>打开 VVaKe 邮件</button>
+        <p>主动打开这封旧邮件，查看原文内容。</p>
+        <button type="button" onClick={() => manager.viewAct4WakeMail()}>打开这封邮件</button>
       </section>;
     }
     if (stage === 'T08' && blockId === 'T08_RETURN' && !hasAction('A4_T08_ARCHIVE_OPENED')) {
       return <section className="a4-reader__interaction" aria-label="打开档案" key="T08_ARCHIVE_INTERACTION">
-        <p>王澳走进档案馆，找到 2008 年的书架。</p>
-        <button type="button" onClick={() => manager.openAct4Archive()}>从档案架抽出 2008 年档案</button>
+        <p>他停在档案架前。可以选一份档案继续查看。</p>
+        <button type="button" onClick={() => manager.openAct4Archive()}>查看 2008 年档案</button>
       </section>;
     }
     if (stage === 'T09' && blockId === 'T09_REPLY_AND_LAST_PAGE' && !hasAction('A4_T09_NOTE_HIDDEN')) {
       return <section className="a4-reader__interaction" aria-label="藏好最后一页笔记" key="T09_HIDE_NOTE_INTERACTION">
-        <p>最后一页写完了。王澳把笔记放进塑料袋，用透明胶缠好。</p>
+        <p>接下来，按他当时的做法安放写好的本子。</p>
         <button type="button" onClick={() => manager.hideAct4NarrativeNote()}>把笔记藏到消防箱后</button>
       </section>;
     }
     if (stage === 'T09' && blockId === 'T09_WALK_TO_DOOR' && !hasAction('A4_T09_DOOR_EXITED')) {
       return <section className="a4-reader__interaction" aria-label="走向门外" key="T09_EXIT_DOOR_INTERACTION">
-        <p>藏好笔记后，王澳挣扎着站起来，朝门外走去。</p>
-        <button type="button" onClick={() => manager.exitAct4NarrativeDoor()}>走到门外，听完广播</button>
+        <p>准备继续走向门外。</p>
+        <button type="button" onClick={() => manager.exitAct4NarrativeDoor()}>走向门外，听完广播</button>
       </section>;
     }
     if (stage === 'T10' && blockId === 'T10_AFTERMATH' && !hasAction('A4_T10_FINAL_MAIL_OPENED')) {
@@ -231,22 +241,58 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     }
   };
 
+  const renderExplanationPanels = (ids: Iterable<string>) => [...ids].map((id) => {
+    const explanation = act4NarrativeExplanations[id as keyof typeof act4NarrativeExplanations];
+    if (!explanation) return null;
+    return <aside className="a4-reader__explanation" data-explanation-id={id} key={id}>
+      <h3>{explanation.heading}</h3>
+      <p>{explanation.text}</p>
+      {explanation.connections.map((connection) => <p className="a4-reader__connection" key={connection}>{connection}</p>)}
+      {explanation.replaySectionIds.some((replayId) => completedSectionIds.includes(replayId)) && <nav className="a4-reader__previous" aria-label="回看前文">
+        {explanation.replaySectionIds.filter((replayId) => completedSectionIds.includes(replayId)).map((replayId) => {
+          const prior = act4NarrativeSections.find((item) => item.id === replayId);
+          return prior && <button type="button" key={replayId} data-review-trigger={`replay-${stage}-${replayId}`} onClick={() => openReview(prior.stage, `replay-${stage}-${replayId}`)}>回看前文：{textBySection.get(replayId)}</button>;
+        })}
+      </nav>}
+    </aside>;
+  });
+
+  const renderEndingRecap = () => <>
+    {renderExplanationPanels(visibleExplanationIds)}
+    <section className="a4-reader__ending" aria-label="第四幕完结回顾">
+      <h3>第四幕阅读完成</h3>
+      <p>这段故事留下了已知的经历，也留下没有答案的部分。</p>
+      <h4>时间线</h4>
+      <ol>
+        {act4NarrativeEnding.timeline.map((item) => <li key={item.when}><strong>{item.when}：</strong>{item.text}</li>)}
+      </ol>
+      <h4>人物与资料</h4>
+      {act4NarrativeEnding.people.map((person) => <p key={person.name}><strong>{person.name}：</strong>{person.text}</p>)}
+    </section>
+  </>;
+
   return <InvestigationShell
     ariaLabel="第四幕原文阅读器"
     actLabel="第四幕 · 暗潮"
     locationLabel={section.title}
+    className="investigation-shell--reading"
     contextLabel={`${section.periodLabel} · ${perspectiveLabel(section.perspective)}${reviewing ? ' · 只读回看' : ''}`}
     objective={stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。' : '直接阅读这一段原文；故事动作会在对应段落后出现。'}
-    helpText="原文摘录、叙事衔接与故事回顾分开标明。配图只作阅读辅助，目录回看不会改变当前进度。"
+    helpText="按原文段落翻阅，出处与叙事衔接有单独标记。回看不会改变当前进度；跨章节需要主动继续。"
     actions={[continueAction]}
     onExit={onExit}
   >
-    <main className="a4-reader" data-act4-stage={currentStage} data-reading-stage={stage} ref={readerRef} tabIndex={-1}>
+    <main className={`a4-reader a4-reader--${presentationKind}`} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>
       <article className="a4-reader__story" aria-label={`${section.title}原文`}>
         <header className="a4-reader__heading">
           <p className="a4-reader__eyebrow">{section.periodLabel}</p>
           <h2>{section.title}</h2>
-          <p>{perspectiveLabel(section.perspective)}{reviewing ? ' · 只读回看' : ''}</p>
+          <p className="a4-reader__perspective" data-perspective={section.perspective}>
+            {isWangaoMemory
+              ? '王澳 · 小说中的亲历回忆'
+              : perspectiveLabel(section.perspective)}{reviewing ? ' · 只读回看' : ''}
+          </p>
+          {isWangaoMemory && <p className="a4-reader__evidence-boundary">这里呈现王澳当时的记忆；主角与小月没有亲历这些场景。</p>}
         </header>
 
         <details className="a4-reader__index">
@@ -259,43 +305,88 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
         </details>
 
         <div className="a4-reader__blocks">
-          {visibleBlocks.map((block) => <div className="a4-reader__block-stack" key={block.id}>
-            <section className={`a4-reader__block a4-reader__block--${block.kind}`} data-block-id={block.id} data-source-ref-id={block.sourceRefId} data-content-kind={block.kind}>
-              <h3>{block.kind === 'novel-excerpt' ? '原文摘录' : '叙事衔接'}</h3>
-              <div className="a4-reader__paragraphs">{block.paragraphs.map((paragraph, index) => <p key={`${block.id}-${index}`}>{paragraph}</p>)}</div>
-            </section>
-            {renderInteractionAfter(block.id)}
-          </div>)}
+          {visibleBlocks.map((block) => {
+            const key = `${stage}:${block.id}`;
+            const segments = act4TextSegments(stage, block.id, block.paragraphs.length);
+            const pages = segments.filter((item) => item.role === 'page' || item.role === 'whole');
+            const pageIndex = Math.max(0, Math.min(pages.length - 1, paragraphPageByBlock[key] ?? 0));
+            const currentPage = pages[pageIndex];
+            const visibleSegments = [
+              ...segments.filter((item) => item.role === 'lead'),
+              currentPage,
+              ...(pageIndex === pages.length - 1 ? segments.filter((item) => item.role === 'ending') : []),
+            ].filter((item): item is NonNullable<typeof item> => Boolean(item));
+            const source = block.sourceRefId ? act4NarrativeSources[block.sourceRefId] : undefined;
+            const isMailBlock = ['T02_ORIGINAL', 'T04_ORIGINAL', 'T08_RETURN', 'T09_REPLY_AND_LAST_PAGE', 'T10_FINAL_MAIL'].includes(block.id);
+            const navLabel = stage === 'T01' && block.id === 'T01_ORIGINAL'
+              ? '九页笔记页码'
+              : stage === 'T03' && block.id === 'T03_ORIGINAL'
+                ? '微博日期'
+                : `${section.title}原文分段`;
+            const mayContinueBlock = pageIndex === pages.length - 1;
+            return <div className="a4-reader__block-stack" key={block.id}>
+              <section
+                className={`a4-reader__block a4-reader__block--${block.kind}${stage === 'T03' ? ' a4-reader__block--timeline' : ''}${isMailBlock ? ' a4-reader__block--email' : ''}`}
+                data-block-id={block.id}
+                data-source-ref-id={block.sourceRefId}
+                data-content-kind={block.kind}
+                data-presentation-kind={presentationKind}
+                data-paragraph-count={block.paragraphs.length}
+              >
+                <h3>{block.kind === 'novel-excerpt' ? '原文摘录' : '叙事衔接'}</h3>
+                {source && <details className="a4-reader__source">
+                  <summary>查看原文出处</summary>
+                  <p>{source.sourceDocument} · {source.sourceChapter} · 校订稿 PDF 第 {source.sourcePages.join('、')} 页</p>
+                  <p>起句：{source.startAnchor}</p>
+                  <p>止句：{source.endAnchor}</p>
+                </details>}
+                {pages.length > 1 && <nav className="a4-reader__page-index" aria-label={navLabel}>
+                  {pages.map((item, index) => {
+                    const dateLabel = stage === 'T03' && block.id === 'T03_ORIGINAL' ? block.paragraphs[item.from] : item.label;
+                    const label = stage === 'T01' ? `第 ${index + 1} 页` : dateLabel;
+                    return <button type="button" key={item.id} aria-current={pageIndex === index ? 'page' : undefined} onClick={() => setParagraphPageByBlock((previous) => ({ ...previous, [key]: index }))}>
+                      {label}
+                    </button>;
+                  })}
+                </nav>}
+                <div className="a4-reader__segment-pages" data-active-segment-id={currentPage?.id} data-active-page={pageIndex + 1} data-page-count={pages.length}>
+                  {visibleSegments.map((contentSegment) => {
+                    const isActivePage = contentSegment.id === currentPage?.id;
+                    const segmentParagraphs = block.paragraphs.slice(contentSegment.from, contentSegment.to);
+                    const dateHeading = stage === 'T03' && block.id === 'T03_ORIGINAL' && isActivePage
+                      ? act4DateTimeValue(segmentParagraphs[0] ?? '')
+                      : undefined;
+                    const firstParagraphIsDate = Boolean(dateHeading);
+                    return <section className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`} data-segment-id={contentSegment.id} key={contentSegment.id}>
+                      {contentSegment.label && !['T01', 'T03'].includes(stage) && <h4>{contentSegment.label}</h4>}
+                      {dateHeading && <h4 className="a4-reader__social-date"><time dateTime={dateHeading}>{segmentParagraphs[0]}</time></h4>}
+                      <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
+                        const index = contentSegment.from + localIndex;
+                        if (firstParagraphIsDate && localIndex === 0) return null;
+                        const kind = act4ParagraphKind(stage, block.id, index, paragraph);
+                        const dateTime = kind === 'social-date' ? act4DateTimeValue(paragraph) : undefined;
+                        const paragraphClass = kind ? `a4-reader__paragraph a4-reader__paragraph--${kind}` : 'a4-reader__paragraph';
+                        return dateTime
+                          ? <time className={paragraphClass} dateTime={dateTime} key={`${block.id}-${index}`}>{paragraph}</time>
+                          : <p className={paragraphClass} key={`${block.id}-${index}`}>{paragraph}</p>;
+                      })}</div>
+                    </section>;
+                  })}
+                </div>
+              </section>
+              {mayContinueBlock && renderInteractionAfter(block.id)}
+            </div>;
+          })}
         </div>
 
-        {visibleExplanationIds.size > 0 && <div className="a4-reader__explanations" aria-label="故事回顾">
-          {[...visibleExplanationIds].map((id) => {
-            const explanation = act4NarrativeExplanations[id as keyof typeof act4NarrativeExplanations];
-            if (!explanation) return null;
-            return <aside className="a4-reader__explanation" data-explanation-id={id} key={id}>
-              <h3>{explanation.heading}</h3>
-              <p>{explanation.text}</p>
-              {explanation.connections.map((connection) => <p className="a4-reader__connection" key={connection}>{connection}</p>)}
-              {explanation.replaySectionIds.some((id) => completedSectionIds.includes(id)) && <nav className="a4-reader__previous" aria-label="回看前文">
-                {explanation.replaySectionIds.filter((id) => completedSectionIds.includes(id)).map((id) => {
-                  const prior = act4NarrativeSections.find((item) => item.id === id);
-                  return prior && <button type="button" key={id} data-review-trigger={`replay-${stage}-${id}`} onClick={() => openReview(prior.stage, `replay-${stage}-${id}`)}>回看前文：{textBySection.get(id)}</button>;
-                })}
-              </nav>}
-            </aside>;
-          })}
+        {stage !== 'T10' && visibleExplanationIds.size > 0 && <div className="a4-reader__explanations" aria-label="故事回顾">
+          {renderExplanationPanels(visibleExplanationIds)}
         </div>}
 
-        {!reviewing && finalCompleted && <section className="a4-reader__ending" aria-label="第四幕完结回顾">
-          <h3>第四幕阅读完成</h3>
-          <p>这段故事留下了已知的经历，也留下没有答案的部分。</p>
-          <h4>时间线</h4>
-          <ol>
-            {act4NarrativeEnding.timeline.map((item) => <li key={item.when}><strong>{item.when}：</strong>{item.text}</li>)}
-          </ol>
-          <h4>人物与资料</h4>
-          {act4NarrativeEnding.people.map((person) => <p key={person.name}><strong>{person.name}：</strong>{person.text}</p>)}
-        </section>}
+        {!reviewing && finalCompleted && <details className="a4-reader__final-recap" onToggle={(event) => setEndingRecapExpanded(event.currentTarget.open)}>
+          <summary>展开人物、时间线与解释回顾</summary>
+          {endingRecapExpanded && <div className="a4-reader__final-recap-content">{renderEndingRecap()}</div>}
+        </details>}
       </article>
 
       <aside className="a4-reader__art" aria-label="配图">
