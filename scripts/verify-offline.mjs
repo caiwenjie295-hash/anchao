@@ -350,6 +350,7 @@ async function advanceAct2() {
   // T04：打开两篇原文、选取跨篇片段，并确认有边界的暂定判断。
   await click('[data-action-id="A2_T03_TO_TALES"]');
   assert.equal(state().modules.act2Research.stage, 'tales');
+  await click('details.act2-tales__index > summary');
   for (const title of ['石工补指', '书生遗事']) {
     await textButton(title, '.act2-tales__record');
     await click('.act2-tales__evidence > summary');
