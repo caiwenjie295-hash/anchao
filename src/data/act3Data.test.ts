@@ -61,7 +61,9 @@ describe('third-act authored lens graph', () => {
     const compare = doc.lenses.find((lens) => lens.id === 'LENS_A3_T06_008')!;
     expect(compare.requiresClueIds).toEqual(['CLUE_A3_T06_SHRINE', 'CLUE_A3_T06_EMPTY_BASE']);
     expect(compare.description).toContain('破庙');
-    expect(compare.description).toContain('仍不明');
+    expect(compare.description).toContain('仍是当时的联想');
+    expect(compare.description).toContain('塑像的去向没有答案');
+    expect(compare.description).not.toContain('塑像的去向已经确认');
   });
 
   it('reveals the notebook only after Xiaoyue’s hint and crouched inspection', () => {

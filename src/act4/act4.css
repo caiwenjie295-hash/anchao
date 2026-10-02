@@ -320,3 +320,37 @@
   .a4-reader__mail-list { grid-template-columns: 1fr; }
   .a4-reader__paragraphs { font-size: 1.02rem; line-height: 1.85; }
 }
+
+/* Integrated A34 reader: contained widths, on-demand context, and first-person scene art. */
+.a4-reader, .a4-reader * { box-sizing: border-box; min-width: 0; }
+.a4-reader { width: min(100%, 1420px); max-width: 100%; overflow-x: clip; }
+.a4-reader__story, .a4-reader__block, .a4-reader__art, .a4-reader__source, .a4-reader__explanations { max-width: 100%; }
+.a4-reader__paragraphs, .a4-reader__source p, .a4-reader__boundary p, .a4-reader__bridge { overflow-wrap: anywhere; }
+.a4-reader__page-index { width: 100%; max-width: 100%; }
+.a4-reader__source summary, .a4-reader__boundary summary, .a4-reader__bridge summary, .a4-reader__explanation summary, .a4-reader__final-recap > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+.a4-reader__boundary, .a4-reader__bridge { margin: 10px 0 0; color: #51575b; font-size: .88rem; line-height: 1.6; }
+.a4-reader__boundary summary, .a4-reader__bridge summary { width: fit-content; max-width: 100%; color: #48504c; }
+.a4-reader__boundary .a4-reader__evidence-boundary { margin-top: 0 !important; }
+.a4-reader__bridge { padding: 0 10px; border-left: 2px solid #c1c5c8; }
+.a4-reader__explanation { margin: 0; padding: 0; border: 1px solid #c7cbce; border-radius: 8px; color: #454b4f; background: #eceeef; line-height: 1.7; }
+.a4-reader__explanation > summary { padding: 8px 12px; color: #343a3f; font-size: .92rem; font-weight: 650; }
+.a4-reader__explanation[open] { padding-bottom: 12px; }
+.a4-reader__explanation-content { padding: 0 14px; }
+.a4-reader__explanation-content > :first-child { margin-top: 6px; }
+.a4-reader__explanation h3 { display: none; }
+.a4-reader__art img { width: auto; max-width: 100%; height: auto; background: transparent; }
+.a4-reader--first-person { grid-template-columns: minmax(0, 1fr); width: 100%; max-width: 100%; padding: clamp(14px, 3vw, 34px); gap: 18px; }
+.a4-reader--first-person .a4-reader__art { grid-row: 1; width: min(100%, 1200px); max-width: 100%; margin: 0 auto; padding: 0; border: 0; border-radius: 0; background: transparent; text-align: center; }
+.a4-reader--first-person .a4-reader__story { grid-row: 2; width: min(100%, 760px); max-width: 760px; margin: 0 auto; }
+.a4-reader--first-person[data-illustration-available="true"] .a4-reader__art img { max-height: min(56dvh, 680px); margin: 0 auto; object-fit: contain; }
+.a4-reader--first-person .a4-reader__art p { width: min(100%, 76ch); margin: 8px auto 0; text-align: left; }
+.a4-reader--first-person .a4-reader__heading { margin-bottom: 18px; padding-bottom: 12px; }
+.a4-reader--first-person .a4-reader__perspective { margin: 0 !important; }
+.a4-reader--first-person .a4-reader__art-placeholder { min-height: 120px; background: #e5e7e9; }
+.a4-reader__zoom img { width: auto; max-width: 100%; height: auto; }
+@media (max-width: 760px) {
+  .a4-reader--first-person { grid-template-columns: minmax(0, 1fr); padding: 12px; gap: 12px; }
+  .a4-reader--first-person .a4-reader__art { width: 100%; max-width: 100%; margin: 0 auto; }
+  .a4-reader--first-person[data-illustration-available="true"] .a4-reader__art img { max-height: min(54dvh, 500px); }
+  .a4-reader--first-person .a4-reader__story { width: 100%; max-width: 760px; }
+}

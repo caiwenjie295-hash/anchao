@@ -128,8 +128,13 @@ function query(selector) {
 }
 async function click(selector) {
   const button = query(selector);
-  assert.equal(button.disabled, false, `Disabled button: ${selector}`);
+  if ('disabled' in button) assert.equal(button.disabled, false, `Disabled button: ${selector}`);
   button.click(); await settle();
+}
+async function lastPage(blockId) {
+  const buttons = query(`[data-block-id="${blockId}"] .a4-reader__page-index`).querySelectorAll('button');
+  assert.ok(buttons.length > 0, `${blockId} should expose a paged reading control`);
+  await click(`[data-block-id="${blockId}"] .a4-reader__page-index button:last-child`);
 }
 async function waitForEnabled(selector) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
@@ -310,6 +315,7 @@ async function advanceAct2() {
   assert.equal(query('main.desktop').hasAttribute('inert'), true);
 
   // 错误目录无推进。
+  await click('details.act2-library__catalog > summary');
   await click('[data-section-id="SECTION_A2_T03_001"]');
   assert.equal(state().game.flags.FLAG_A2_LOCAL_GAZETTE_FOUND, undefined);
   assert.equal(document().querySelector('[data-volume-id="VOLUME_A2_T03_002"]'), null);
@@ -317,8 +323,7 @@ async function advanceAct2() {
   // 正确目录 → 目标卷册。
   await click('[data-section-id="SECTION_A2_T03_009"]');
   assert.equal(state().game.flags.FLAG_A2_LOCAL_GAZETTE_FOUND, true);
-  await click('.act2-library__shelf-hotspot');
-  await click('[data-volume-id="VOLUME_A2_T03_002"]');
+  await click('[data-shelf-entry-id="VOLUME_A2_T03_002"]');
 
   // 只能逐页到达目标页：页序不是可激活控件。
   assert.equal(document().querySelectorAll('.act2-library__leaves button, .act2-library__leaves a, [data-page-id][role="button"]').length, 0);
@@ -347,8 +352,12 @@ async function advanceAct2() {
   assert.equal(state().modules.act2Research.stage, 'tales');
   for (const title of ['石工补指', '书生遗事']) {
     await textButton(title, '.act2-tales__record');
+    await click('.act2-tales__evidence > summary');
     await click('.act2-tales__evidence button');
   }
+  await click('details.act2-tales__comparison > summary');
+  assert.ok(query('.act2-tales__comparison').textContent.includes('石工补指'));
+  await click('details.act2-tales__hypotheses > summary');
   await click('[data-inference-id="accompanied-change"]');
   await click('[data-action-id="A2_T04_CONFIRM_PATTERN"]');
   assert.equal(state().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED, true);
@@ -581,8 +590,9 @@ async function investigateAct3() {
       assert.equal(state().game.flags.FLAG_A3_SITE_EXITED, true);
       assert.equal(state().game.flags.FLAG_A3_COMPLETE, true);
     } else {
-      await click(`[data-action-id="A3_${stage}_CONFIRM"]`);
-      await click(`[data-action-id="A3_${stage}_LEAVE_STAGE"]`);
+      const nextStage = stages[stages.findIndex(([id]) => id === stage) + 1]?.[0];
+      await click(`[data-action-id="A3_${stage}_LEAVE_AND_CONTINUE"]`);
+      assert.equal(state().modules.act3.stage, nextStage, `${stage} should confirm and advance in one deliberate exit action`);
     }
   }
   assert.equal(state().game.phase, 'A3_T07');
@@ -620,38 +630,44 @@ async function investigateAct4() {
   };
   await continueSection('T01');
   assert.equal(state().modules.act4.stage, 'T02');
+  assert.equal(document().querySelectorAll('.a4-reader__mail button').length, 0, 'old-mail actions remain behind the final T02 page');
+  await lastPage('T02_ORIGINAL');
   const oldMailButtons = [...document().querySelectorAll('.a4-reader__mail button')];
   assert.equal(oldMailButtons.length, 2);
   for (const button of oldMailButtons) { button.click(); await settle(); }
   assert.equal(state().modules.act4.checkedMailRecipients.length, 2);
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T02', 'T02 reload keeps the date checks');
+  await lastPage('T02_ORIGINAL');
   await setInput('#a4-shared-date', '20200419');
   await textButton('主动登录', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T02_LOGIN_SUCCEEDED'));
   assert.deepEqual(state().modules.act4.unlockedAccountIds, ['weibo', 'mail']);
   await continueSection('T02');
   await continueSection('T03');
-  await textButton('打开 VVaKe 邮件', '.a4-reader__interaction button');
+  await textButton('打开这封邮件', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T04_WAKE_MAIL_OPENED'));
   await continueSection('T04');
   await continueSection('T05');
   await continueSection('T06');
   await continueSection('T07');
-  await textButton('从档案架抽出 2008 年档案', '.a4-reader__interaction button');
+  await lastPage('T08_RETURN');
+  await textButton('查看 2008 年档案', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T08_ARCHIVE_OPENED'));
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T08', 'T08 reload keeps the opened archive');
   assert.ok(query('[data-block-id="T08_ARCHIVE"]'));
   await continueSection('T08');
+  await lastPage('T09_REPLY_AND_LAST_PAGE');
   await textButton('把笔记藏到消防箱后', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_NOTE_HIDDEN'));
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T09', 'T09 reload keeps the hidden note');
   assert.ok(query('[data-block-id="T09_NOTE_HIDDEN"]'));
-  await textButton('走到门外，听完广播', '.a4-reader__interaction button');
+  await textButton('走向门外，听完广播', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_DOOR_EXITED'));
   await continueSection('T09');
+  await lastPage('T10_AFTERMATH');
   await textButton('打开启明的最后一封邮件', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T10_FINAL_MAIL_OPENED'));
   await mount(save());
@@ -659,8 +675,13 @@ async function investigateAct4() {
   assert.ok(query('[data-block-id="T10_FINAL_MAIL"]'));
   await continueSection('T10');
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
+  assert.equal(document().querySelector('.a4-reader__ending'), null, 'the recap stays behind its explicit disclosure');
   await mount(save());
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
+  const recap = query('.a4-reader__final-recap');
+  assert.equal(recap.open, false);
+  assert.equal(recap.querySelector('.a4-reader__ending'), null);
+  await click('.a4-reader__final-recap > summary');
   assert.match(query('.a4-reader__ending').textContent, /第四幕阅读完成/);
 }
 

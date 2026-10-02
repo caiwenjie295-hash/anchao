@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { act4NarrativeSections } from './act4Narrative';
-import { act4TextSegments } from './act4Presentation';
+import { act4PagePresentation, act4TextSegments } from './act4Presentation';
 
 describe('Act4 reading presentation', () => {
   it('partitions every source block contiguously and reconstructs the exact original paragraphs', () => {
@@ -39,5 +39,19 @@ describe('Act4 reading presentation', () => {
     const segments = act4TextSegments('T09', broadcast.id, broadcast.paragraphs.length);
     expect(segments).toHaveLength(1);
     expect(broadcast.paragraphs.slice(segments[0].from, segments[0].to).at(-1)).toBe('“回收完成。”');
+  });
+
+  it('changes the T05 title, date, and scene image only with the selected semantic page', () => {
+    expect(act4PagePresentation('T05', 0)).toEqual({
+      title: '晚自习', periodLabel: '2014 年 12 月 28 日',
+      illustrationAssetId: 'IMG_A4_T05_001', illustrationAlt: '王澳在晚自习时把日记藏在练习册下',
+    });
+    expect(act4PagePresentation('T05', 1)?.title).toBe('李老师的办公室');
+    expect(act4PagePresentation('T05', 1)?.periodLabel).toBe('2014 年 12 月 28 日');
+    expect(act4PagePresentation('T05', 2)?.title).toBe('生日白天');
+    expect(act4PagePresentation('T05', 2)?.periodLabel).toBe('2014 年 12 月 29 日');
+    expect(act4PagePresentation('T05', 4)?.illustrationAssetId).toBe('IMG_A4_T05_006');
+    expect(act4PagePresentation('T06', 3)?.illustrationAssetId).toBe('IMG_A4_T06_006');
+    expect(act4PagePresentation('T07', 2)?.illustrationAssetId).toBe('IMG_A4_T07_005');
   });
 });

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
-import { act4NarrativeSections } from '../../data/narrative/act4Narrative';
+import { act4NarrativeSections, act4NarrativeSources } from '../../data/narrative/act4Narrative';
 import { Act4Experience } from './Act4Experience';
 import { Act4LaterExperience } from './Act4LaterExperience';
 
@@ -168,7 +168,8 @@ describe('Act4 reading experience', () => {
     const manager = new StateManager(new EventBus(), state);
     const { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
     try {
-      expect(host.querySelector('.investigation-shell__place span')?.textContent).toContain('2014 年');
+      expect(host.querySelector('.a4-reader__perspective')?.textContent).toContain('2014 年');
+      expect(host.querySelector('.investigation-shell__place span')).toBeNull();
       expect(host.querySelector('.a4-reader__perspective')?.textContent).toContain('王澳 · 小说中的亲历回忆');
       expect(host.querySelector('.a4-reader__evidence-boundary')?.textContent).toContain('主角与小月没有亲历');
       expect(host.querySelector('[data-block-id="T05_ORIGINAL"] .a4-reader__source summary')?.textContent).toBe('查看原文出处');
@@ -182,6 +183,76 @@ describe('Act4 reading experience', () => {
         allPages.push(...paragraphsInBlock(host, 'T05_ORIGINAL'));
       }
       expect(allPages).toEqual(block.paragraphs);
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
+  it('keeps T05 future scenes and recap clauses out of the current semantic page', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'A4_T05';
+    state.modules.act4.stage = 'T05';
+    state.modules.act4.completedNarrativeSectionIds = ['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04'];
+    state.modules.act4.completedNarrativeActionIds = ['A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED'];
+    const manager = new StateManager(new EventBus(), state);
+    const { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
+    const forbiddenBeforeReached = ['生日与门外来人', '生日白天', '家庭晚餐', '门外来人', '被带走以前', '晚饭中父亲又恢复', '他不愿离开'];
+    try {
+      expect(host.querySelector('.investigation-shell__place h1')?.textContent).toBe('晚自习');
+      expect(host.querySelector('.a4-reader__heading h2')?.textContent).toBe('晚自习');
+      expect(host.querySelector('.a4-reader__perspective')?.textContent).toBe('2014 年 12 月 28 日 · 王澳 · 小说中的亲历回忆');
+      expect(host.querySelectorAll('.a4-reader__perspective')).toHaveLength(1);
+      expect(host.querySelector('.a4-reader__eyebrow')).toBeNull();
+      expect(host.querySelector('.a4-reader__art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_001');
+      const eveningText = host.textContent ?? '';
+      for (const term of forbiddenBeforeReached) expect(eveningText).not.toContain(term);
+      expect(host.querySelector('.a4-reader__explanation')).toBeNull();
+      const sourceDetails = host.querySelector<HTMLDetailsElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__source')!;
+      expect(sourceDetails.open).toBe(false);
+      const t05Source = act4NarrativeSources[act4NarrativeSections.find((section) => section.stage === 'T05')!.blocks.find((item) => item.id === 'T05_ORIGINAL')!.sourceRefId!]!;
+      await act(async () => { sourceDetails.querySelector('summary')!.click(); });
+      expect(sourceDetails.textContent).toContain(t05Source.sourceDocument);
+      expect(sourceDetails.textContent).toContain(t05Source.sourceChapter);
+      expect(sourceDetails.textContent).toContain(t05Source.startAnchor);
+      expect(sourceDetails.textContent).toContain(t05Source.endAnchor);
+      expect([...host.querySelectorAll<HTMLButtonElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__page-index button')].map((button) => button.textContent))
+        .toEqual(['第 1 段', '第 2 段', '第 3 段', '第 4 段', '第 5 段']);
+
+      const boundary = host.querySelector<HTMLDetailsElement>('.a4-reader__boundary')!;
+      expect(boundary.open).toBe(false);
+      await act(async () => { boundary.querySelector('summary')!.click(); });
+      expect(boundary.open).toBe(true);
+      expect(boundary.textContent).toContain('主角与小月没有亲历这些场景');
+      const bridge = host.querySelector<HTMLDetailsElement>('.a4-reader__bridge')!;
+      expect(bridge.open).toBe(false);
+      await act(async () => { bridge.querySelector('summary')!.click(); });
+      expect(bridge.textContent).toContain('当下的调查者没有亲历这些事');
+
+      await selectPage(host, 'T05_ORIGINAL', 3);
+      const birthdayRecap = host.querySelector<HTMLDetailsElement>('.a4-reader__explanation')!;
+      expect(birthdayRecap.open).toBe(false);
+      expect(birthdayRecap.querySelector('summary')?.textContent).toBe('当前阅读页回顾');
+      expect(birthdayRecap.textContent).toContain('生日白天里，王澳短暂觉得自己被家人理解');
+      expect(birthdayRecap.textContent).not.toContain('晚饭中父亲又恢复');
+      expect(birthdayRecap.textContent).not.toContain('他不愿离开');
+      expect(host.querySelector('.a4-reader__art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_003');
+      expect(host.querySelector('.a4-reader__perspective')?.textContent).toContain('2014 年 12 月 29 日');
+
+      await selectPage(host, 'T05_ORIGINAL', 4);
+      const dinnerRecap = host.querySelector<HTMLDetailsElement>('.a4-reader__explanation')!;
+      expect(dinnerRecap.querySelector('summary')?.textContent).toBe('当前阅读页回顾');
+      expect(dinnerRecap.textContent).toContain('晚饭中父亲又恢复原来的态度');
+      expect(dinnerRecap.textContent).not.toContain('父母仍让来人把他带走');
+      expect(host.querySelector('.a4-reader__art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_005');
+
+      await selectPage(host, 'T05_ORIGINAL', 5);
+      const takenRecap = host.querySelector<HTMLDetailsElement>('.a4-reader__explanation')!;
+      expect(takenRecap.querySelector('summary')?.textContent).toBe('被带走以前');
+      expect(takenRecap.textContent).toContain('父母仍让来人把他带走');
+      expect(host.querySelector('.a4-reader__art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_006');
+      await selectPage(host, 'T05_ORIGINAL', 1);
+      expect(host.querySelector('.a4-reader__explanation')).toBeNull();
     } finally {
       await act(async () => root.unmount());
       host.remove();

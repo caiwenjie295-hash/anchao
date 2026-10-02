@@ -7,7 +7,7 @@ import { assetLoader } from '../../core/assetLoader';
 import { act4NarrativeActionsSatisfied, type ActiveAct4NarrativeStage } from '../../story/act4/narrativePolicy';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
-import { act4DateTimeValue, act4ParagraphKind, act4PresentationKind, act4TextSegments } from '../../data/narrative/act4Presentation';
+import { act4DateTimeValue, act4PagePresentation, act4ParagraphKind, act4PresentationKind, act4TextSegments, type Act4TextSegment } from '../../data/narrative/act4Presentation';
 import '../../act4/act4.css';
 
 const blockedReason: Partial<Record<ActiveAct4NarrativeStage, string>> = {
@@ -31,7 +31,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const [loginMessage, setLoginMessage] = useState('');
   const [passwordHintLevel, setPasswordHintLevel] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
-  const [failedIllustrationStage, setFailedIllustrationStage] = useState<ActiveAct4NarrativeStage | null>(null);
+  const [failedIllustrationAssetId, setFailedIllustrationAssetId] = useState<string | undefined>();
   const [paragraphPageByBlock, setParagraphPageByBlock] = useState<Record<string, number>>({});
   const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
   const readerRef = useRef<HTMLElement>(null);
@@ -117,6 +117,21 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const stage = section.stage;
   const presentationKind = act4PresentationKind(stage);
   const isWangaoMemory = ['T05', 'T06', 'T07', 'T08', 'T09'].includes(stage);
+  const primaryBlock = section.blocks.find((block) => block.id === `${stage}_ORIGINAL`)
+    ?? section.blocks.find((block) => block.kind === 'novel-excerpt');
+  const primaryPages = primaryBlock
+    ? act4TextSegments(stage, primaryBlock.id, primaryBlock.paragraphs.length).filter((item) => item.role === 'page' || item.role === 'whole')
+    : [];
+  const primaryPageKey = primaryBlock ? `${stage}:${primaryBlock.id}` : '';
+  const primaryPageIndex = primaryBlock && primaryPages.length
+    ? Math.max(0, Math.min(primaryPages.length - 1, paragraphPageByBlock[primaryPageKey] ?? 0))
+    : 0;
+  const pagePresentation = act4PagePresentation(stage, primaryPageIndex);
+  const displayTitle = pagePresentation?.title ?? section.title;
+  const displayPeriodLabel = pagePresentation?.periodLabel ?? section.periodLabel;
+  const illustrationAssetId = pagePresentation?.illustrationAssetId ?? section.illustrationAssetId;
+  const illustrationAlt = pagePresentation?.illustrationAlt ?? section.illustrationAlt ?? '';
+  const t05RecapSentenceLimit = stage === 'T05' ? Math.max(0, primaryPageIndex - 1) : undefined;
   const actionCompleted = act4NarrativeActionsSatisfied(stage, actions);
   const sectionCompleted = state.completedNarrativeSectionIds.includes(section.id);
   const finalCompleted = stage === 'T10' && sectionCompleted && whole.game.flags.FLAG_A4_COMPLETE === true;
@@ -138,11 +153,11 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const visibleBlocks = section.blocks.filter((block) => !block.revealAfterActionId || hasAction(block.revealAfterActionId));
   const visibleExplanationIds = new Set(visibleBlocks.flatMap((block) => block.explanationId ? [block.explanationId] : []));
   if ((!section.explanationRevealAfterActionId || hasAction(section.explanationRevealAfterActionId)) && section.explanationId) visibleExplanationIds.add(section.explanationId);
-  const illustration = section.illustrationAssetId ? assetLoader.get(section.illustrationAssetId)?.src : undefined;
-  const illustrationAvailable = Boolean(illustration) && failedIllustrationStage !== stage;
+  const illustration = illustrationAssetId ? assetLoader.get(illustrationAssetId)?.src : undefined;
+  const illustrationAvailable = Boolean(illustration) && failedIllustrationAssetId !== illustrationAssetId;
   const completedSectionIds = state.completedNarrativeSectionIds;
   const availableSections = act4NarrativeSections.filter((item) => completedSectionIds.includes(item.id) || item.stage === currentStage);
-  const textBySection = new Map(act4NarrativeSections.map((item) => [item.id, item.title]));
+  const textBySection = new Map(act4NarrativeSections.map((item) => [item.id, item.id === section.id ? displayTitle : item.title]));
 
   const renderInteractionAfter = (blockId: string): ReactNode => {
     if (reviewing) return null;
@@ -244,18 +259,57 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const renderExplanationPanels = (ids: Iterable<string>) => [...ids].map((id) => {
     const explanation = act4NarrativeExplanations[id as keyof typeof act4NarrativeExplanations];
     if (!explanation) return null;
-    return <aside className="a4-reader__explanation" data-explanation-id={id} key={id}>
-      <h3>{explanation.heading}</h3>
-      <p>{explanation.text}</p>
-      {explanation.connections.map((connection) => <p className="a4-reader__connection" key={connection}>{connection}</p>)}
-      {explanation.replaySectionIds.some((replayId) => completedSectionIds.includes(replayId)) && <nav className="a4-reader__previous" aria-label="回看前文">
-        {explanation.replaySectionIds.filter((replayId) => completedSectionIds.includes(replayId)).map((replayId) => {
+    const t05Recap = stage === 'T05' && id === 'A4_EXPLAIN_T05';
+    if (t05Recap && !t05RecapSentenceLimit) return null;
+    const explanationSentences = explanation.text.match(/[^；。]+[；。]?/gu) ?? [explanation.text];
+    const visibleRecapClauses = t05RecapSentenceLimit ?? 0;
+    const explanationText = t05Recap
+      ? explanationSentences.slice(0, visibleRecapClauses).join('')
+      : explanation.text;
+    const explanationHeading = t05Recap && visibleRecapClauses < explanationSentences.length
+      ? '当前阅读页回顾'
+      : explanation.heading;
+    return <details className="a4-reader__explanation" data-explanation-id={id} key={id}>
+      <summary>{explanationHeading}</summary>
+      <div className="a4-reader__explanation-content">
+        <p>{explanationText}</p>
+        {explanation.connections.map((connection) => <p className="a4-reader__connection" key={connection}>{connection}</p>)}
+        {explanation.replaySectionIds.some((replayId) => completedSectionIds.includes(replayId)) && <nav className="a4-reader__previous" aria-label="回看前文">
+          {explanation.replaySectionIds.filter((replayId) => completedSectionIds.includes(replayId)).map((replayId) => {
           const prior = act4NarrativeSections.find((item) => item.id === replayId);
           return prior && <button type="button" key={replayId} data-review-trigger={`replay-${stage}-${replayId}`} onClick={() => openReview(prior.stage, `replay-${stage}-${replayId}`)}>回看前文：{textBySection.get(replayId)}</button>;
-        })}
-      </nav>}
-    </aside>;
+          })}
+        </nav>}
+      </div>
+    </details>;
   });
+
+  const renderVisibleSegments = (blockId: string, paragraphs: string[], currentPage: Act4TextSegment | undefined, visibleSegments: Act4TextSegment[], pageIndex: number, pageCount: number) => (
+    <div className="a4-reader__segment-pages" data-active-segment-id={currentPage?.id} data-active-page={pageIndex + 1} data-page-count={pageCount}>
+      {visibleSegments.map((contentSegment) => {
+        const isActivePage = contentSegment.id === currentPage?.id;
+        const segmentParagraphs = paragraphs.slice(contentSegment.from, contentSegment.to);
+        const dateHeading = stage === 'T03' && blockId === 'T03_ORIGINAL' && isActivePage
+          ? act4DateTimeValue(segmentParagraphs[0] ?? '')
+          : undefined;
+        const firstParagraphIsDate = Boolean(dateHeading);
+        return <section className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`} data-segment-id={contentSegment.id} key={contentSegment.id}>
+          {contentSegment.label && !['T01', 'T03', 'T05'].includes(stage) && <h4>{contentSegment.label}</h4>}
+          {dateHeading && <h4 className="a4-reader__social-date"><time dateTime={dateHeading}>{segmentParagraphs[0]}</time></h4>}
+          <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
+            const index = contentSegment.from + localIndex;
+            if (firstParagraphIsDate && localIndex === 0) return null;
+            const kind = act4ParagraphKind(stage, blockId, index, paragraph);
+            const dateTime = kind === 'social-date' ? act4DateTimeValue(paragraph) : undefined;
+            const paragraphClass = kind ? `a4-reader__paragraph a4-reader__paragraph--${kind}` : 'a4-reader__paragraph';
+            return dateTime
+              ? <time className={paragraphClass} dateTime={dateTime} key={`${blockId}-${index}`}>{paragraph}</time>
+              : <p className={paragraphClass} key={`${blockId}-${index}`}>{paragraph}</p>;
+          })}</div>
+        </section>;
+      })}
+    </div>
+  );
 
   const renderEndingRecap = () => <>
     {renderExplanationPanels(visibleExplanationIds)}
@@ -274,32 +328,31 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   return <InvestigationShell
     ariaLabel="第四幕原文阅读器"
     actLabel="第四幕 · 暗潮"
-    locationLabel={section.title}
+    locationLabel={displayTitle}
     className="investigation-shell--reading"
-    contextLabel={`${section.periodLabel} · ${perspectiveLabel(section.perspective)}${reviewing ? ' · 只读回看' : ''}`}
     objective={stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。' : '直接阅读这一段原文；故事动作会在对应段落后出现。'}
     helpText="按原文段落翻阅，出处与叙事衔接有单独标记。回看不会改变当前进度；跨章节需要主动继续。"
     actions={[continueAction]}
     onExit={onExit}
   >
-    <main className={`a4-reader a4-reader--${presentationKind}`} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>
-      <article className="a4-reader__story" aria-label={`${section.title}原文`}>
+    <main className={`a4-reader a4-reader--${presentationKind}`} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} data-illustration-available={illustrationAvailable} ref={readerRef} tabIndex={-1}>
+      <article className="a4-reader__story" aria-label={`${displayTitle}原文`}>
         <header className="a4-reader__heading">
-          <p className="a4-reader__eyebrow">{section.periodLabel}</p>
-          <h2>{section.title}</h2>
+          <h2 className="sr-only">{displayTitle}</h2>
           <p className="a4-reader__perspective" data-perspective={section.perspective}>
-            {isWangaoMemory
-              ? '王澳 · 小说中的亲历回忆'
-              : perspectiveLabel(section.perspective)}{reviewing ? ' · 只读回看' : ''}
+            {displayPeriodLabel}{isWangaoMemory && !displayPeriodLabel.includes('王澳') ? ' · 王澳' : ''} · {isWangaoMemory ? '小说中的亲历回忆' : perspectiveLabel(section.perspective)}{reviewing ? ' · 只读回看' : ''}
           </p>
-          {isWangaoMemory && <p className="a4-reader__evidence-boundary">这里呈现王澳当时的记忆；主角与小月没有亲历这些场景。</p>}
+          {isWangaoMemory && <details className="a4-reader__boundary">
+            <summary>关于亲历与调查材料的边界</summary>
+            <p className="a4-reader__evidence-boundary">这里呈现王澳当时的记忆；主角与小月没有亲历这些场景。</p>
+          </details>}
         </header>
 
         <details className="a4-reader__index">
           <summary>已读目录与前文（{completedSectionIds.length}/10）</summary>
           <nav aria-label="已读章节目录">
             {availableSections.map((item) => <button type="button" key={item.id} data-review-trigger={`index-${item.stage}`} aria-current={stage === item.stage ? 'page' : undefined} onClick={() => openReview(item.stage, `index-${item.stage}`)}>
-              {item.stage === currentStage ? '当前：' : ''}{item.title}
+              {item.stage === currentStage ? '当前：' : ''}{item.stage === stage ? displayTitle : item.title}
             </button>)}
           </nav>
         </details>
@@ -322,7 +375,9 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
               ? '九页笔记页码'
               : stage === 'T03' && block.id === 'T03_ORIGINAL'
                 ? '微博日期'
-                : `${section.title}原文分段`;
+                : stage === 'T05' && block.id === 'T05_ORIGINAL'
+                  ? '原文分段'
+                  : `${displayTitle}原文分段`;
             const mayContinueBlock = pageIndex === pages.length - 1;
             return <div className="a4-reader__block-stack" key={block.id}>
               <section
@@ -343,36 +398,22 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
                 {pages.length > 1 && <nav className="a4-reader__page-index" aria-label={navLabel}>
                   {pages.map((item, index) => {
                     const dateLabel = stage === 'T03' && block.id === 'T03_ORIGINAL' ? block.paragraphs[item.from] : item.label;
-                    const label = stage === 'T01' ? `第 ${index + 1} 页` : dateLabel;
+                    const label = stage === 'T01'
+                      ? `第 ${index + 1} 页`
+                      : stage === 'T05' && block.id === 'T05_ORIGINAL'
+                        ? `第 ${index + 1} 段`
+                        : dateLabel;
                     return <button type="button" key={item.id} aria-current={pageIndex === index ? 'page' : undefined} onClick={() => setParagraphPageByBlock((previous) => ({ ...previous, [key]: index }))}>
                       {label}
                     </button>;
                   })}
                 </nav>}
-                <div className="a4-reader__segment-pages" data-active-segment-id={currentPage?.id} data-active-page={pageIndex + 1} data-page-count={pages.length}>
-                  {visibleSegments.map((contentSegment) => {
-                    const isActivePage = contentSegment.id === currentPage?.id;
-                    const segmentParagraphs = block.paragraphs.slice(contentSegment.from, contentSegment.to);
-                    const dateHeading = stage === 'T03' && block.id === 'T03_ORIGINAL' && isActivePage
-                      ? act4DateTimeValue(segmentParagraphs[0] ?? '')
-                      : undefined;
-                    const firstParagraphIsDate = Boolean(dateHeading);
-                    return <section className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`} data-segment-id={contentSegment.id} key={contentSegment.id}>
-                      {contentSegment.label && !['T01', 'T03'].includes(stage) && <h4>{contentSegment.label}</h4>}
-                      {dateHeading && <h4 className="a4-reader__social-date"><time dateTime={dateHeading}>{segmentParagraphs[0]}</time></h4>}
-                      <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
-                        const index = contentSegment.from + localIndex;
-                        if (firstParagraphIsDate && localIndex === 0) return null;
-                        const kind = act4ParagraphKind(stage, block.id, index, paragraph);
-                        const dateTime = kind === 'social-date' ? act4DateTimeValue(paragraph) : undefined;
-                        const paragraphClass = kind ? `a4-reader__paragraph a4-reader__paragraph--${kind}` : 'a4-reader__paragraph';
-                        return dateTime
-                          ? <time className={paragraphClass} dateTime={dateTime} key={`${block.id}-${index}`}>{paragraph}</time>
-                          : <p className={paragraphClass} key={`${block.id}-${index}`}>{paragraph}</p>;
-                      })}</div>
-                    </section>;
-                  })}
-                </div>
+                {block.kind === 'adaptation-bridge'
+                  ? <details className="a4-reader__bridge">
+                    <summary>查看亲历视角说明</summary>
+                    {renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
+                  </details>
+                  : renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
               </section>
               {mayContinueBlock && renderInteractionAfter(block.id)}
             </div>;
@@ -389,16 +430,16 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
         </details>}
       </article>
 
-      <aside className="a4-reader__art" aria-label="配图">
+      <aside className="a4-reader__art" aria-label="配图" data-illustration-id={illustrationAssetId}>
         {illustrationAvailable ? <>
-          <img src={illustration} alt={section.illustrationAlt ?? ''} onError={() => setFailedIllustrationStage(stage)} />
+          <img src={illustration} alt={illustrationAlt} onError={() => setFailedIllustrationAssetId(illustrationAssetId)} />
           <button ref={zoomButtonRef} type="button" onClick={() => setZoomOpen(true)}>放大配图</button>
         </> : <div className="a4-reader__art-placeholder" aria-hidden="true">本段没有配图</div>}
         <p>配图仅作阅读辅助，叙事内容以标明的原文摘录为准。</p>
       </aside>
       {zoomOpen && illustrationAvailable && illustration && createPortal(<div ref={dialogRef} className="a4-reader__zoom" role="dialog" aria-modal="true" aria-label="放大配图" onKeyDown={handleZoomKeyDown}>
         <button type="button" onClick={() => setZoomOpen(false)}>关闭配图，回到正文</button>
-        <img src={illustration} alt={section.illustrationAlt ?? ''} />
+        <img src={illustration} alt={illustrationAlt} />
       </div>, document.body)}
     </main>
   </InvestigationShell>;

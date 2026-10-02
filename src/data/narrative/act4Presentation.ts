@@ -11,6 +11,13 @@ export interface Act4TextSegment {
   role: Act4SegmentRole;
 }
 
+export interface Act4PagePresentation {
+  title?: string;
+  periodLabel?: string;
+  illustrationAssetId?: string;
+  illustrationAlt?: string;
+}
+
 type Stage = Exclude<Act4Stage, 'inactive'>;
 const segment = (id: string, label: string, from: number, to: number, role: Act4SegmentRole = 'page'): Act4TextSegment => ({ id, label, from, to, role });
 
@@ -89,8 +96,45 @@ const PRESENTATION_BY_STAGE: Record<Stage, Act4PresentationKind> = {
 
 const CONTINUOUS_BLOCKS = new Set(['T09:T09_BROADCAST']);
 
+const FIRST_PERSON_PAGE_ART: Partial<Record<Stage, readonly { assetId: string; alt: string }[]>> = {
+  T05: [
+    { assetId: 'IMG_A4_T05_001', alt: '王澳在晚自习时把日记藏在练习册下' },
+    { assetId: 'IMG_A4_T05_002', alt: '李老师办公室里的茶杯与桌面' },
+    { assetId: 'IMG_A4_T05_003', alt: '王澳生日当天回家的门厅与早饭' },
+    { assetId: 'IMG_A4_T05_005', alt: '生日晚餐中父母交换眼色' },
+    { assetId: 'IMG_A4_T05_006', alt: '王澳从房门缝边的镜面观察门外来人' },
+  ],
+  T06: [
+    { assetId: 'IMG_A4_T06_002', alt: '王澳在机构吃到的固定早餐' },
+    { assetId: 'IMG_A4_T06_004', alt: '机构走廊中的早晚广播设备' },
+    { assetId: 'IMG_A4_T06_005', alt: '床铺上的纸团与逃离计划' },
+    { assetId: 'IMG_A4_T06_006', alt: '禁闭室铁门上的观察孔与送餐口' },
+  ],
+  T07: [
+    { assetId: 'IMG_A4_T07_001', alt: '王澳梦中陌生城市的校园' },
+    { assetId: 'IMG_A4_T07_004', alt: '王澳在梦里的镜前视角' },
+    { assetId: 'IMG_A4_T07_005', alt: '机构地下厨房深处的黑色塑像' },
+  ],
+};
+
 export function act4PresentationKind(stage: Stage): Act4PresentationKind {
   return PRESENTATION_BY_STAGE[stage];
+}
+
+export function act4PagePresentation(stage: Stage, pageIndex: number): Act4PagePresentation | undefined {
+  const art = FIRST_PERSON_PAGE_ART[stage];
+  if (!art?.length) return undefined;
+  const index = Math.max(0, Math.min(art.length - 1, pageIndex));
+  const presentation: Act4PagePresentation = {
+    illustrationAssetId: art[index].assetId,
+    illustrationAlt: art[index].alt,
+  };
+  if (stage === 'T05') {
+    const pages = EXPLICIT_SEGMENTS['T05:T05_ORIGINAL'].filter((item) => item.role === 'page');
+    presentation.title = pages[index].label;
+    presentation.periodLabel = index < 2 ? '2014 年 12 月 28 日' : '2014 年 12 月 29 日';
+  }
+  return presentation;
 }
 
 export function act4TextSegments(stage: Stage, blockId: string, paragraphCount: number): readonly Act4TextSegment[] {
