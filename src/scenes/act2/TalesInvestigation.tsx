@@ -87,7 +87,7 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
       ariaLabel="县图书馆地方志卷末阅读空间"
       eyebrow={act2Tales.scene.eyebrow}
       title="地方志 · 卷末旧录"
-      description="三篇带有书签痕迹的旧录列在本卷末页与散页索引中；它们不是三本独立的新档案。照片上的区域与文字索引会打开同一篇原文。"
+      description="卷末三篇旧录留有书签痕迹。可从书架标记入手，也可翻开散页索引，逐篇读下去。"
       archive={<>
         <section className="act2-tales__shelf" aria-label="地方志书架">
           <h3>书架与旧录入口</h3>

@@ -6,7 +6,34 @@
     <title>《暗潮》A2 本地验收片段</title>
   </head>
   <body>
+    <div id="a2-fixture-storage-status" role="status" data-state="pending">正在隔离浏览器存档…</div>
     <div id="a2-browser-check"></div>
+    <script>
+      (() => {
+        const status = document.getElementById('a2-fixture-storage-status');
+        try {
+          const records = new Map();
+          const memoryStorage = {
+            get length() { return records.size; },
+            clear() { records.clear(); },
+            getItem(key) { return records.has(String(key)) ? records.get(String(key)) : null; },
+            key(index) { return [...records.keys()][index] ?? null; },
+            removeItem(key) { records.delete(String(key)); },
+            setItem(key, value) { records.set(String(key), String(value)); },
+          };
+          Object.defineProperty(window, 'localStorage', { configurable: true, value: memoryStorage });
+          if (window.localStorage !== memoryStorage) throw new Error('localStorage override did not take effect');
+          document.documentElement.dataset.a2FixtureStorage = 'isolated';
+          status.dataset.state = 'isolated';
+          status.textContent = '存档隔离：独立内存（不会写入浏览器存档）';
+        } catch (error) {
+          document.documentElement.dataset.a2FixtureStorage = 'failed';
+          status.dataset.state = 'failed';
+          status.textContent = '验收片段已停止：无法在加载游戏模块前隔离 localStorage。';
+          console.error(error);
+        }
+      })();
+    </script>
     <script type="module" src="./browser-check.tsx"></script>
   </body>
 </html>

@@ -20,7 +20,9 @@ describe('TalesInvestigation', () => {
     expect(container.querySelector('.act2-reading-room__archive .act2-shelf-map[data-asset-id="IMG_A2_T03_001"]')).not.toBeNull();
     expect(container.querySelector('.act2-reading-room__reader .act2-tales__idle')?.textContent).toContain('三处带书签痕迹的卷末旧录');
     expect(container.querySelector('[data-tale-id]')).toBeNull();
-    expect(container.textContent).toContain('不是三本独立的新档案');
+    expect(container.textContent).toContain('卷末三篇旧录留有书签痕迹');
+    expect(container.textContent).not.toContain('不是三本独立的新档案');
+    expect(container.textContent).not.toContain('照片上的区域与文字索引');
     expect(container.querySelectorAll('.act2-shelf-map__text-links [data-shelf-entry-id]')).toHaveLength(3);
   });
 

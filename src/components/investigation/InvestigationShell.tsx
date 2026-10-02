@@ -35,6 +35,9 @@ export function InvestigationShell({
   onOpenMaterial,
 }: InvestigationShellProps) {
   const [helpOpen, setHelpOpen] = useState(false);
+  const onDemandGuidance = (className ?? '').split(/\s+/).some((name) =>
+    name === 'investigation-shell--reading' || name === 'investigation-shell--exploration' || name === 'investigation-shell--memory',
+  );
   const navigationActions = actions.map((action) => ({
     ...action,
     onOpenMaterial: action.relatedMaterials && onOpenMaterial
@@ -52,15 +55,27 @@ export function InvestigationShell({
         </div>
         <button type="button" className="investigation-shell__exit" onClick={onExit}>{exitLabel}</button>
       </header>
-      <div className="investigation-shell__goal">
-        <p><strong>当前目标</strong><span>{objective}</span></p>
-        {helpText && (
-          <button type="button" aria-expanded={helpOpen} onClick={() => setHelpOpen((open) => !open)}>
-            {helpOpen ? '收起操作帮助' : '操作帮助'}
-          </button>
+      <div className={`investigation-shell__goal${onDemandGuidance ? ' investigation-shell__goal--on-demand' : ''}`}>
+        {onDemandGuidance ? (
+          <details className="investigation-shell__goal-details">
+            <summary>当前目标与操作提示</summary>
+            <div className="investigation-shell__goal-content">
+              <p><strong>当前目标</strong><span>{objective}</span></p>
+              {helpText && <p><strong>操作提示</strong><span>{helpText}</span></p>}
+            </div>
+          </details>
+        ) : (
+          <>
+            <p><strong>当前目标</strong><span>{objective}</span></p>
+            {helpText && (
+              <button type="button" aria-expanded={helpOpen} onClick={() => setHelpOpen((open) => !open)}>
+                {helpOpen ? '收起操作帮助' : '操作帮助'}
+              </button>
+            )}
+          </>
         )}
       </div>
-      {helpOpen && <p className="investigation-shell__help" role="status">{helpText}</p>}
+      {!onDemandGuidance && helpOpen && <p className="investigation-shell__help" role="status">{helpText}</p>}
       <main className="investigation-shell__scene">{children}</main>
       {actions.length > 0 && (
         <div className="investigation-shell__operations">

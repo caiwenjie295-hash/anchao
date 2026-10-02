@@ -30,7 +30,7 @@ describe('Second-act T05 acceptance: Xiaoyue to school scene', () => {
     for (let index = 1; index <= 12; index += 1) stateManager.placeAct2TaleCard(`CARD_A2_T04_${String(index).padStart(3, '0')}`);
     stateManager.finishAct2TaleSorting(); stateManager.acknowledgeAct2TransferInference();
     await act(async () => { root.render(createElement(App)); });
-    expect(container.querySelector('.act2-tales')).not.toBeNull();
+    expect(container.querySelector('.act2-tales__shelf')).not.toBeNull();
     await click('.investigation-shell__exit');
     await act(async () => { stateManager.openApp('wechat'); });
     await clickText('小月', '.wechat-conversation');
