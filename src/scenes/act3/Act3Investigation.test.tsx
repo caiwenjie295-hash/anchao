@@ -57,6 +57,12 @@ describe('Third-act investigation interface', () => {
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
       expect(container.querySelector('.investigation-shell__place h1')?.textContent).toBe('再次出发');
+      const goalDetails = container.querySelector<HTMLDetailsElement>('.investigation-shell__goal-details');
+      if (goalDetails) {
+        expect(goalDetails.open).toBe(false);
+        await act(async () => { goalDetails.querySelector('summary')?.click(); });
+        expect(goalDetails.open).toBe(true);
+      }
       expect(container.querySelector('.investigation-shell__goal')?.textContent).toContain('核对山路上的人工痕迹');
       expect(container.querySelector('.investigation-shell__exit')?.textContent).toBe('退出调查，返回桌面');
       expect(container.querySelector('.investigation-shell__operations')).not.toBeNull();
