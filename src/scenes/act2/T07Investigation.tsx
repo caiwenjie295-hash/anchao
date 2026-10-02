@@ -211,7 +211,8 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   return (
     <InvestigationShell
       ariaLabel="第二幕宣传视频与外景核对"
-      actLabel="第二幕 · 与小月一起调查"
+      className="investigation-shell--exploration"
+      actLabel="第二幕 · 启明地点与出发"
       locationLabel="旧资料对照"
       contextLabel="时间回看 · 当前调查"
       objective="核对合影记号和视频画面中的石质轮廓，再决定是否回山确认。"

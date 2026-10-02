@@ -52,6 +52,24 @@
 .investigation-shell .investigation-navigation__action--ready:hover:not(:disabled) { border-color: #0f4fae; color: #fff; background: #0f4fae; }
 .investigation-shell .investigation-navigation__action--blocked { border-style: dashed; color: var(--ui-text, #1f1f1f); background: #fff; }
 .investigation-shell .investigation-navigation__action--completed { border-color: var(--ui-border, #d9d9d9); color: var(--ui-text-muted, #595959); background: var(--ui-surface-muted, #f0f0f0); }
+.investigation-shell--reading,
+.investigation-shell--exploration,
+.investigation-shell--memory { --ui-accent: #315b45; --ui-accent-soft: #e9eee9; --ui-success: #315b45; --ui-interactive-border: #828a82; }
+.investigation-shell--reading .investigation-shell__goal,
+.investigation-shell--exploration .investigation-shell__goal,
+.investigation-shell--memory .investigation-shell__goal { background: #f2f3f0; }
+.investigation-shell--reading .investigation-shell__operations,
+.investigation-shell--exploration .investigation-shell__operations,
+.investigation-shell--memory .investigation-shell__operations { background: #f2f3f0; }
+.investigation-shell--reading .investigation-navigation__action--ready,
+.investigation-shell--exploration .investigation-navigation__action--ready,
+.investigation-shell--memory .investigation-navigation__action--ready { border-color: #315b45; background: #315b45; }
+.investigation-shell--reading .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--exploration .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--memory .investigation-navigation__action--ready:hover:not(:disabled) { border-color: #254b37; background: #254b37; }
+.investigation-shell--reading .investigation-shell__scene { background: #f5f5f2; }
+.investigation-shell--exploration .investigation-shell__scene { background: #f2f3f0; }
+.investigation-shell--memory .investigation-shell__scene { background: #f5f3ed; }
 .investigation-navigation__action small { flex: none; font-size: .72rem; color: inherit; }
 .investigation-navigation__reason { margin-top: 5px; padding: 8px 10px; border-left: 3px solid var(--ui-accent, #165dcc); color: var(--ui-text, #1f1f1f); background: #fff; line-height: 1.5; box-shadow: 0 1px 4px rgb(15 23 42 / 7%); }
 .investigation-navigation__reason p { margin: 0 0 6px; }

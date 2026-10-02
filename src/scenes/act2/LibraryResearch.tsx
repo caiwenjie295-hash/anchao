@@ -3,6 +3,7 @@ import { assetLoader } from '../../core/assetLoader';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { ACT2_SHELF_ROW_RECTS } from '../../data/act2Presentation';
 import {
   libraryCompletion,
   libraryCorrectSectionId,
@@ -15,6 +16,9 @@ import {
   libraryTargetPageId,
   libraryVolumes,
 } from '../../data/act2LibraryData';
+import { Act2ReadingRoom } from './Act2ReadingRoom';
+import { Act2ShelfMap } from './Act2ShelfMap';
+import '../../act2/act2ReadingRoom.css';
 import '../../act2/t03Library.css';
 
 /** 放大倍率：组件瞬时状态，明确上下界与步进。 */
@@ -30,19 +34,20 @@ export interface LibraryResearchProps {
   manager?: StateManager;
   /** 明确的返回桌面出口。 */
   onReturnToDesktop?: () => void;
+  /** Optional local-preview image source; the regular game always uses the registered asset. */
+  shelfImageSrc?: string;
 }
 
 /**
  * 第二幕 T03：县图书馆地方志检索。
  * 只通过冻结的 StateManager 方法推进状态；故事 Flag 由本内容控制器在对应节点写入。
  */
-export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: LibraryResearchProps) {
+export function LibraryResearch({ manager = stateManager, onReturnToDesktop, shelfImageSrc }: LibraryResearchProps) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const stage = state.modules.act2Research.stage;
   const library = state.modules.act2Research.library;
   const flags = state.game.flags;
   const [zoom, setZoom] = useState(LIBRARY_MIN_ZOOM);
-  const [shelfFocused, setShelfFocused] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(() => library.visitedSectionIds.includes(libraryCorrectSectionId) ? libraryCorrectSectionId : null);
 
   const enteredFlag = flags[libraryFlagIds.entered] === true;
@@ -64,7 +69,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
   }, [manager, targetPageActive, bumuzhiFlag]);
 
   if (stage !== 'library') return null;
-  const sceneImage = assetLoader.get(librarySceneCopy.placeholderAssetId)?.src;
+  const sceneImage = shelfImageSrc ?? assetLoader.get(librarySceneCopy.placeholderAssetId)?.src;
 
   const correctSectionVisited = library.visitedSectionIds.includes(libraryCorrectSectionId);
   const gazetteFound = gazetteFlag || correctSectionVisited;
@@ -73,6 +78,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
   const currentPage = library.currentPageId ? libraryPageById.get(library.currentPageId) ?? null : null;
   const currentVolume = currentPage ? libraryVolumes.find((volume) => volume.id === currentPage.volumeId) ?? null : null;
   const volumePages = currentPage ? libraryPagesByVolumeId.get(currentPage.volumeId) ?? [] : [];
+  const shelfEntries = libraryVolumes.map((volume, index) => ({ id: volume.id, label: volume.title, rect: ACT2_SHELF_ROW_RECTS[index] }));
   const currentIndex = currentPage ? volumePages.findIndex((page) => page.id === currentPage.id) : -1;
   const prevPage = currentIndex > 0 ? volumePages[currentIndex - 1] : null;
   const nextPage = currentIndex >= 0 && currentIndex < volumePages.length - 1 ? volumePages[currentIndex + 1] : null;
@@ -103,12 +109,17 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
     relatedMaterials: ruleKnown ? undefined : [{ id: 'catalog', label: '目录、卷册与书页' }],
     onActivate: () => manager.setAct2Stage('tales'),
   }];
-  const focusCatalog = () => document.querySelector<HTMLElement>('.act2-library__catalog')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  const focusCatalog = () => {
+    const catalog = document.querySelector<HTMLDetailsElement>('.act2-library__catalog');
+    if (catalog) catalog.open = true;
+    catalog?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  };
 
   return (
     <InvestigationShell
       ariaLabel="县图书馆地方志调查"
-      actLabel="第二幕 · 地方调查"
+      className="investigation-shell--reading"
+      actLabel="第二幕 · 民俗疑问"
       locationLabel="县图书馆阅览室"
       contextLabel="地方志目录 · 卷册 · 书页"
       objective="从县志里找到鸡公岭附近的旧俗记录，读清楚它描述了什么。"
@@ -118,15 +129,15 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
       onOpenMaterial={() => focusCatalog()}
     >
     <section className="act2-library" aria-label={`${librarySceneCopy.title} · 地方志检索`}>
-      <header className="act2-library__header">
-        <p className="act2-library__eyebrow">{librarySceneCopy.eyebrow}</p>
-        <h1 className="act2-library__title">{librarySceneCopy.title}</h1>
-        <p className="act2-library__intro">{librarySceneCopy.intro}</p>
-      </header>
-
-      <div className="act2-library__body">
-        <section className="act2-library__catalog" aria-labelledby="act2-library-catalog-title">
-          <h2 id="act2-library-catalog-title" className="act2-library__subtitle">{librarySceneCopy.catalogTitle}</h2>
+      <Act2ReadingRoom
+        ariaLabel="县图书馆地方志阅读空间"
+        eyebrow={librarySceneCopy.eyebrow}
+        title={librarySceneCopy.title}
+        description={librarySceneCopy.intro}
+        archive={<>
+        <details className="act2-library__catalog">
+          <summary id="act2-library-catalog-title"><span>{librarySceneCopy.catalogTitle}</span><small>九类目录 · 按需查阅</small></summary>
+          <div className="act2-library__catalog-body">
           <p className="act2-library__hint">{librarySceneCopy.catalogHint}</p>
           <ul className="act2-library__sections">
             {librarySections.map((section) => {
@@ -161,44 +172,31 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
               <p>选一门类，先看目录怎么说。</p>
             )}
           </div>
-        </section>
+          </div>
+        </details>
 
         <section className="act2-library__shelf" aria-labelledby="act2-library-shelf-title">
           <h2 id="act2-library-shelf-title" className="act2-library__subtitle">{librarySceneCopy.shelfTitle}</h2>
-          <div className="act2-library__shelf-scene" data-asset-id={librarySceneCopy.placeholderAssetId}>
-            {sceneImage && <img src={sceneImage} alt="县图书馆的书架与阅览区" />}
-            <button type="button" className="act2-library__shelf-hotspot" aria-expanded={shelfFocused} onClick={() => setShelfFocused((value) => !value)}>查看左侧书架局部</button>
-          </div>
-          {shelfFocused && <div className="act2-library__shelf-focus" aria-label="地方志书架局部特写" style={sceneImage ? { backgroundImage: `url(${sceneImage})` } : undefined}>
-            <span>地方志与县志 · 书脊区</span>
-          </div>}
-          {gazetteFound && shelfFocused ? (
-            <ul className="act2-library__volumes">
-              {libraryVolumes.map((volume) => (
-                <li key={volume.id}>
-                  <button
-                    type="button"
-                    className="act2-library__volume"
-                    data-volume-id={volume.id}
-                    aria-current={currentVolume?.id === volume.id ? 'true' : undefined}
-                    onClick={() => openVolume(volume.id)}
-                  >
-                    <span className="act2-library__spine">{volume.spine}</span>
-                    <span className="act2-library__volume-title">{volume.title}</span>
-                    <span className="act2-library__volume-summary">{volume.summary}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : gazetteFound ? <p className="act2-library__shelf-locked">目录已缩小范围。点击照片里有光照的左侧书架，辨认书脊。</p> : (
-            <p className="act2-library__shelf-locked">范围还没收窄到册。先在上面选定一门类。</p>
-          )}
+          <Act2ShelfMap
+            assetId={librarySceneCopy.placeholderAssetId}
+            source={sceneImage}
+            imageAlt="县图书馆阅览区，左侧书架上有多层地方志和县志"
+            label="县图书馆书架照片"
+            entries={shelfEntries}
+            selectedId={currentVolume?.id}
+            disabled={!gazetteFound}
+            lockedHint="先在目录里选择地方传说，再辨认书架上的现有卷册。"
+            onSelect={openVolume}
+          />
+          {currentVolume && <p className="act2-library__volume-context"><span>{currentVolume.spine}</span> · {currentVolume.title} — {currentVolume.summary}</p>}
         </section>
+        </>}
+        reader={<>
 
         <section className="act2-library__reader" aria-labelledby="act2-library-reader-title">
-          <h2 id="act2-library-reader-title" className="act2-library__subtitle">卷册</h2>
+          <h3 id="act2-library-reader-title" className="act2-library__reader-title">{currentVolume?.title ?? '卷内阅读'}</h3>
           {!currentPage ? (
-            <p className="act2-library__reader-idle">从架上取一册，逐页翻。</p>
+            <div className="act2-library__paper-empty"><p className="act2-library__reader-idle">{gazetteFound ? '从书架选择一册，逐页翻阅。' : '先从目录找到地方传说，再查看书架上的卷册。'}</p></div>
           ) : (
             <>
               <p className="act2-library__reader-instruction">{librarySceneCopy.readerInstruction}</p>
@@ -281,8 +279,8 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                 </div>
               </div>
 
-              <div className="act2-library__keywords" aria-label="可标记关键词">
-                <h4 className="act2-library__keywords-title">标记关键词</h4>
+              <details className="act2-library__keywords">
+                <summary className="act2-library__keywords-title">可选标记关键词</summary>
                 <ul className="act2-library__keyword-list">
                   {keywords.map((keyword) => {
                     const marked = markedKeywordIds.includes(keyword.id);
@@ -302,14 +300,12 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
                     );
                   })}
                 </ul>
-              </div>
+              </details>
 
             </>
           )}
         </section>
-      </div>
-
-      <aside className="act2-library__result" aria-live="polite">
+        <aside className="act2-library__result" aria-live="polite">
         {ruleKnown ? (
           <div className="act2-library__conclusion">
             <h2>{libraryCompletion.title}</h2>
@@ -319,7 +315,9 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop }: L
         ) : (
           <p className="act2-library__ambience">{librarySceneCopy.ambience}</p>
         )}
-      </aside>
+        </aside>
+        </>}
+      />
 
     </section>
     </InvestigationShell>

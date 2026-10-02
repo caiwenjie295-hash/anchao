@@ -8,8 +8,8 @@
   position: relative;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: minmax(190px, 220px) minmax(0, 1fr) minmax(390px, .78fr);
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(190px, 220px) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 12px;
   width: 100%;
   height: 100%;
@@ -38,7 +38,18 @@
 .t05-comparison button:disabled { color: #595959; border-color: #bfbfbf; background: #f0f0f0; cursor: not-allowed; }
 .t05-school button:focus-visible,
 .t05-comparison button:focus-visible { outline: 3px solid var(--school-accent); outline-offset: 2px; }
-.t05-school__intro { grid-column: 1 / -1; max-width: 72ch; margin: 0; color: var(--school-muted); font-size: 14px; line-height: 1.55; }
+.t05-school__intro { grid-column: 1 / -1; display: grid; gap: 8px; min-width: 0; margin: 0; color: var(--school-muted); font-size: 14px; line-height: 1.55; }
+.t05-school__memory { display: grid; grid-template-columns: minmax(190px, .7fr) minmax(0, 1.3fr); gap: 10px; min-width: 0; padding: 10px; border: 1px solid var(--school-border); background: var(--school-surface); }
+.t05-school__memory-chat { display: grid; align-content: start; gap: 7px; }
+.t05-school__memory-chat > p { margin: 0; color: var(--school-muted); font-size: 11px; letter-spacing: .04em; }
+.t05-school__memory-chat blockquote { margin: 0; padding: 8px 10px; border-left: 2px solid var(--school-accent); color: var(--school-ink); background: var(--school-muted-surface); font-size: 13px; line-height: 1.55; }
+.t05-school__memory-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-width: 0; }
+.t05-school__memory-photo { display: grid; align-content: start; gap: 5px; min-width: 0; margin: 0; }
+.t05-school__memory-photo > img { display: block; width: 100%; height: clamp(130px, 15vw, 210px); object-fit: contain; border: 1px solid var(--school-border); background: var(--school-muted-surface); }
+.t05-school__memory-photo > div { display: grid; min-height: 130px; place-items: center; padding: 8px; border: 1px dashed var(--school-border); color: var(--school-muted); background: var(--school-muted-surface); text-align: center; font-size: 12px; }
+.t05-school__memory-photo figcaption { display: grid; gap: 3px; color: var(--school-muted); font-size: 11px; line-height: 1.45; }
+.t05-school__memory-photo figcaption strong { color: var(--school-ink); font-size: 12px; }
+.t05-school__route-intro { max-width: 72ch; margin: 0; color: var(--school-muted); font-size: 13px; line-height: 1.55; }
 .t05-school__layout { display: contents; }
 .t05-school__map,
 .t05-school__room,
@@ -62,18 +73,18 @@
 .t05-school__backdrop--area-a2-t05-honor-roll > img,
 .t05-school__backdrop--area-a2-t05-notice-board > img { object-position: center 32%; }
 .t05-school__backdrop p { position: absolute; z-index: 2; top: 10px; left: 10px; margin: 0; padding: 6px 9px; border: 1px solid rgb(255 255 255 / 28%); border-radius: 5px; color: #fff; background: rgb(31 31 31 / 90%); font-weight: 650; }
-.t05-school button.t05-school__image-hotspot { position: absolute; z-index: 3; width: max-content; max-width: min(220px, 40%); min-height: 44px; transform: translate(-50%, -50%); border: 2px solid #fff; border-radius: 22px; padding: .45rem .8rem; color: #fff; background: rgb(22 93 204 / 90%); box-shadow: 0 1px 4px #0008; font-size: .88rem; font-weight: 650; text-align: center; overflow-wrap: anywhere; }
+.t05-school button.t05-school__image-hotspot { position: absolute; z-index: 3; width: max-content; max-width: min(220px, 40%); min-height: 44px; transform: translate(-50%, -50%); border: 2px solid #fff; border-radius: 22px; padding: .45rem .8rem; color: #fff; background: rgb(49 91 69 / 94%); box-shadow: 0 1px 4px #0008; font-size: .88rem; font-weight: 650; text-align: center; overflow-wrap: anywhere; }
 .t05-school button.t05-school__image-hotspot:hover,
-.t05-school button.t05-school__image-hotspot:focus-visible { color: #fff; background: #0f4fae; box-shadow: 0 0 0 3px #fff, 0 1px 4px #0008; }
+.t05-school button.t05-school__image-hotspot:focus-visible { color: #fff; background: #254b37; box-shadow: 0 0 0 3px #fff, 0 1px 4px #0008; }
 .t05-school__image-routes { position: absolute; z-index: 3; right: 0; bottom: 0; left: 0; display: flex; gap: 6px; overflow-x: auto; padding: 8px; background: rgb(31 31 31 / 94%); }
 .t05-school__image-routes button { flex: 0 0 auto; min-height: 38px; color: var(--school-ink); background: #fff; }
 .t05-school__room > h2 { margin: 10px 0 4px; color: var(--school-ink); font-size: 19px; }
 .t05-school__description { max-width: 52ch; margin: 4px 0; color: var(--school-muted); line-height: 1.6; }
 .t05-school__soft-hint { margin: 10px 0 0; padding: 9px 11px; border-left: 3px solid var(--school-accent); color: var(--school-ink); background: var(--school-muted-surface); line-height: 1.55; }
-.t05-school__timeline { grid-column: 3; grid-row: 2; overflow: auto; padding: clamp(12px, 1.1vw, 18px); }
+.t05-school__timeline { grid-column: 1 / -1; grid-row: 3; overflow: auto; padding: clamp(12px, 1.1vw, 18px); }
 .t05-school__timeline h2 { margin: 0 0 5px; color: var(--school-ink); font-size: 17px; }
 .t05-school__timeline > p { margin: 5px 0 9px; color: var(--school-muted); line-height: 1.55; }
-.t05-school__evidence-options { display: grid; gap: 7px; }
+.t05-school__evidence-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .t05-school__evidence-options button { display: grid; gap: 3px; width: 100%; min-height: 0; padding: 9px 10px; text-align: left; }
 .t05-school__evidence-options button[aria-pressed="true"] { border-color: var(--school-accent); background: var(--ui-accent-soft, #eaf2ff); }
 .t05-school__evidence-options strong { font-size: 14px; }
@@ -81,7 +92,7 @@
 .t05-school__evidence-options small { color: var(--school-muted); font-size: 11px; }
 .t05-school__evidence-count { color: var(--school-muted); font-size: 12px; }
 .t05-school__timeline h3 { margin: 14px 0 6px; color: var(--school-ink); font-size: 15px; }
-.t05-school__inferences { display: grid; gap: 7px; }
+.t05-school__inferences { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
 .t05-school__inferences button { min-height: 0; text-align: left; line-height: 1.5; }
 .t05-school__inferences button[aria-pressed="true"] { border-color: var(--school-accent); background: var(--ui-accent-soft, #eaf2ff); }
 .t05-school__ending { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0; padding: 12px 14px; border: 1px solid var(--school-border); border-radius: 8px; color: var(--school-ink); background: #fff; }
@@ -153,6 +164,9 @@
 }
 @media (max-width: 760px) {
   .t05-school { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: max-content; align-content: start; height: auto; min-height: 0; flex: 0 0 auto; overflow: visible; }
+  .t05-school__memory { grid-template-columns: minmax(0, 1fr); }
+  .t05-school__evidence-options,
+  .t05-school__inferences { grid-template-columns: minmax(0, 1fr); }
   .t05-school__intro,
   .t05-school__map,
   .t05-school__room,
@@ -177,6 +191,7 @@
 }
 @media (max-width: 420px) {
   .t05-school { padding: 10px; gap: 8px; }
+  .t05-school__memory-photos { grid-template-columns: minmax(0, 1fr); }
   .t05-school__map nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .t05-school__map button { padding: .5rem .3rem; font-size: .88rem; }
   .t05-school__dialog-backdrop { padding: .5rem; }

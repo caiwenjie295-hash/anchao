@@ -11,23 +11,47 @@ describe('TalesInvestigation', () => {
   beforeEach(async () => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; container = document.createElement('div'); document.body.append(container); root = createRoot(container); const state = createDefaultState(); state.modules.act2Research.stage = 'tales'; manager = new StateManager(new EventBus(), state); await act(async () => { root.render(<TalesInvestigation manager={manager} />); }); });
   afterEach(() => { act(() => root.unmount()); container.remove(); });
   const click = async (selector: string) => { const node = container.querySelector<HTMLButtonElement>(selector); expect(node).not.toBeNull(); await act(async () => { node?.click(); }); };
-  const openTale = async (title: string) => { const node = [...container.querySelectorAll<HTMLButtonElement>('.act2-tales__record')].find((button) => button.textContent?.includes(title)); expect(node).toBeTruthy(); await act(async () => { node?.click(); }); };
+  const openIndex = async () => { const detail = container.querySelector<HTMLDetailsElement>('.act2-tales__index'); if (detail && !detail.open) await act(async () => { detail.querySelector('summary')?.click(); }); };
+  const openTale = async (title: string) => { await openIndex(); const node = [...container.querySelectorAll<HTMLButtonElement>('.act2-tales__record')].find((button) => button.textContent?.includes(title)); expect(node).toBeTruthy(); await act(async () => { node?.click(); }); };
+  const selectFirstEvidence = async () => { const detail = container.querySelector<HTMLDetailsElement>('.act2-tales__evidence'); if (detail && !detail.open) await act(async () => { detail.querySelector('summary')?.click(); }); await click('.act2-tales__evidence button'); };
+
+  it('keeps the same library location and volume visible, with stories hidden until a player opens one', async () => {
+    expect(container.querySelector('.investigation-shell--reading')).not.toBeNull();
+    expect(container.querySelector('.act2-reading-room__archive .act2-shelf-map[data-asset-id="IMG_A2_T03_001"]')).not.toBeNull();
+    expect(container.querySelector('.act2-reading-room__reader .act2-tales__idle')?.textContent).toContain('三处带书签痕迹的卷末旧录');
+    expect(container.querySelector('[data-tale-id]')).toBeNull();
+    expect(container.textContent).toContain('不是三本独立的新档案');
+    expect(container.querySelectorAll('.act2-shelf-map__text-links [data-shelf-entry-id]')).toHaveLength(3);
+  });
+
+  it('routes a shelf text entry to its matching original and remains usable when the photograph is missing', async () => {
+    await act(async () => { root.render(<TalesInvestigation manager={manager} shelfImageSrc="/missing-shelf.jpg" />); });
+    const image = container.querySelector<HTMLImageElement>('.act2-shelf-map img');
+    await act(async () => image?.dispatchEvent(new Event('error')));
+    expect(container.querySelector('.act2-shelf-map__fallback')?.textContent).toContain('文字入口');
+    const entry = container.querySelector<HTMLButtonElement>('[data-shelf-entry-id="TALE_A2_T04_001"]');
+    expect(entry?.textContent).toContain('石工补指');
+    await act(async () => entry?.click());
+    expect(container.querySelector('[data-tale-id="TALE_A2_T04_001"] h3')?.textContent).toBe('石工补指');
+    expect(manager.getState().modules.act2Research.tales.readTaleIds).toEqual(['TALE_A2_T04_001']);
+  });
 
   it('registers a tale source as soon as it is opened and keeps noise pages inert', async () => {
+    await openIndex();
     await click('.act2-tales__record');
     expect(manager.getState().modules.act2Research.tales.readTaleIds).toEqual([]);
     await openTale('石工补指');
     expect(manager.getState().modules.act2Research.tales.readTaleIds).toEqual(['TALE_A2_T04_001']);
     expect(manager.getState().game.flags.FLAG_A2_TALE_01_READ).toBe(true);
     expect(container.textContent).toContain('现代文说明');
-    await click('.act2-tales__evidence button');
+    await selectFirstEvidence();
     expect(manager.getState().modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T04_001']);
     expect(manager.getState().modules.act2Research.tales.supportingEvidenceIds).toEqual(['EVIDENCE_A2_T04_001']);
   });
 
   it('keeps evidence after an insufficient theory, then confirms the bounded cross-tale inference', async () => {
-    await openTale('石工补指'); await click('.act2-tales__evidence button');
-    await openTale('书生遗事'); await click('.act2-tales__evidence button');
+    await openTale('石工补指'); await selectFirstEvidence();
+    await openTale('书生遗事'); await selectFirstEvidence();
     expect(manager.getState().modules.act2Research.tales.supportingEvidenceIds).toHaveLength(2);
     const alternative = container.querySelector<HTMLInputElement>('button[data-inference-id="recovery-or-imitation"]');
     await act(async () => { alternative?.click(); });
