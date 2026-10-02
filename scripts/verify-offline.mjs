@@ -59,7 +59,9 @@ async function simulateOfflineImageDecodes() {
       const path = decodeURIComponent(url.pathname.slice(1));
       if (url.origin !== 'https://anchao-offline.test' || !filePaths.has(path)) continue;
       const alreadyDecoded = image.dataset.offlineTestDecodedSource === image.src;
-      if (alreadyDecoded && !(pass === 1 && image.closest('.photo-viewport')?.querySelector('.photo-viewport__load-state'))) continue;
+      const stillLoading = image.closest('.photo-viewport')?.querySelector('.photo-viewport__load-state')
+        || image.closest('.t07-frame')?.querySelector('.t07-frame__placeholder');
+      if (alreadyDecoded && !(pass === 1 && stillLoading)) continue;
       // jsdom fetches local bytes but has no image decoder; model a successful decode for interaction tests.
       if (!alreadyDecoded) {
         Object.defineProperties(image, {
@@ -443,6 +445,7 @@ async function investigateT07() {
   assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, undefined);
 
   // 合影右下角的双 S：放大后才由玩家主动确认。
+  await waitForEnabled('.t07-finale__photo-zoom');
   await click('.t07-finale__photo-zoom');
   assert.ok(query('.t07-finale__photo-symbol'));
   assert.equal(state().game.flags.FLAG_A2_PROMO_PHOTO_SS_FOUND, undefined);
