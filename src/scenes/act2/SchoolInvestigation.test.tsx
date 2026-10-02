@@ -37,4 +37,21 @@ describe('T05 school exploration', () => {
     expect(container.querySelector('[role="dialog"]')).toBeNull();
     expect((document.activeElement as HTMLElement)?.textContent).toBe('听听老师回忆');
   });
+
+  it('places existing daily messages and high-school photos before the anomaly timeline', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    const memory = container.querySelector('.t05-school__memory');
+    const timeline = container.querySelector('.t05-school__timeline');
+    expect(memory).not.toBeNull();
+    expect([...memory!.querySelectorAll('blockquote[data-message-id]')].map((node) => node.getAttribute('data-message-id'))).toEqual([
+      'CHAT_A2_T05_001',
+      'CHAT_A2_T05_011',
+    ]);
+    expect([...memory!.querySelectorAll('figure[data-message-id]')].map((node) => node.getAttribute('data-message-id'))).toEqual([
+      'CHAT_A2_T05_004',
+      'CHAT_A2_T05_007',
+    ]);
+    expect(memory?.textContent).toContain('想起');
+    expect(memory!.compareDocumentPosition(timeline!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });

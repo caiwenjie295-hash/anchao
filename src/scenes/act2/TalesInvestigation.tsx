@@ -1,15 +1,21 @@
 import { useMemo, useState, useSyncExternalStore } from 'react';
-import { stateManager, type StateManager } from '../../core/stateManager';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
+import { assetLoader } from '../../core/assetLoader';
+import { stateManager, type StateManager } from '../../core/stateManager';
+import { ACT2_SHELF_ROW_RECTS } from '../../data/act2Presentation';
+import { librarySceneCopy } from '../../data/act2LibraryData';
 import { act2Tales, taleById, taleEvidenceById, tales } from '../../data/act2TalesData';
+import { Act2ReadingRoom } from './Act2ReadingRoom';
+import { Act2ShelfMap } from './Act2ShelfMap';
+import '../../act2/act2ReadingRoom.css';
 import '../../act2/t04Tales.css';
 
-export interface TalesInvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void; }
+export interface TalesInvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void; shelfImageSrc?: string; }
 type InferenceId = 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer';
 
-/** T04：读原文即登记来源，跨篇选证据，比较后形成有边界的暂定判断。 */
-export function TalesInvestigation({ manager = stateManager, onReturnToDesktop }: TalesInvestigationProps) {
+/** T04: the three marked old records stay in the same reading room and volume as the gazette pages. */
+export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, shelfImageSrc }: TalesInvestigationProps) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const progress = state.modules.act2Research.tales;
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -22,6 +28,8 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop }
 
   if (state.modules.act2Research.stage !== 'tales') return null;
 
+  const sceneImage = shelfImageSrc ?? assetLoader.get(librarySceneCopy.placeholderAssetId)?.src;
+  const shelfEntries = tales.map((tale, index) => ({ id: tale.id, label: tale.title, rect: ACT2_SHELF_ROW_RECTS[index] }));
   const openRecord = (id: string) => {
     setSelectedId(id);
     setStatus('');
@@ -56,63 +64,94 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop }
       actionId: 'A2_T04_TO_SCHOOL', kind: 'move', target: 'school', label: '前往高中调查',
       state: hasJudgment ? 'ready' : 'blocked',
       reason: '先把两篇旧录共同支持的暂定判断记下来。',
-      relatedMaterials: hasJudgment ? undefined : [{ id: 'RECORD_A2_T04_000', label: '三篇志异索引' }],
+      relatedMaterials: hasJudgment ? undefined : [{ id: 'RECORD_A2_T04_000', label: '卷末散页索引' }],
       onActivate: () => manager.enterAct2School(),
     },
   ];
 
   return <InvestigationShell
     ariaLabel="三篇志异调查"
-    actLabel="第二幕 · 民俗与人物调查"
-    locationLabel="县志阅览室"
-    contextLabel="卷末散页 · 当前调查"
+    className="investigation-shell--reading"
+    actLabel="第二幕 · 民俗疑问"
+    locationLabel="县图书馆阅览室"
+    contextLabel="地方志目录 · 卷册 · 卷末旧录"
     objective="对照旧录里获得的能力与随之出现的变化，判断这些记载能支持到哪一步。"
-    helpText="点开任一条志异会自动登记阅读来源。读过至少两篇后，可选择支持性片段并比较；白话说明只作辅助。"
+    helpText="点开照片上的三处旧录入口，或使用卷末索引。阅读会自动登记来源；选自至少两篇的支持片段后，再记录有边界的暂定判断。"
     exitLabel="退出调查，返回桌面"
     actions={actions}
     statusMessage={status}
     onExit={() => onReturnToDesktop?.()}
     onOpenMaterial={(_actionId, materialId) => openMaterial(materialId)}
   >
-    <section className="act2-tales" aria-label="三篇志异材料">
-      <div className="act2-tales__intro"><p>{act2Tales.scene.eyebrow}</p><h2>{act2Tales.scene.title}</h2><p>{act2Tales.scene.intro}</p></div>
-      <div className="act2-tales__layout">
-        <aside className="act2-tales__index" aria-label="卷末索引"><h3>卷末索引</h3><ul>{act2Tales.records.map((record) => {
-          const isTale = taleById.has(record.id); const read = progress.readTaleIds.includes(record.id);
-          return <li key={record.id}><button type="button" className={`act2-tales__record${isTale ? ' act2-tales__record--tale' : ''}`} aria-current={selectedId === record.id ? 'true' : undefined} onClick={() => openRecord(record.id)}>
-            <span>{record.title}</span><small>{record.era} · {record.page}</small><em>{record.summary}</em>{isTale && <i>{read ? '来源已登记' : '旧录'}</i>}
-          </button></li>;
-        })}</ul></aside>
-        <main className="act2-tales__reader">
-          {!selected ? <p className="act2-tales__idle">从索引中选择一页。三篇有书签痕迹的旧录夹在普通杂记之间。</p> : taleById.has(selected.id) ? <article className="act2-tales__paper" data-tale-id={selected.id}>
+    <Act2ReadingRoom
+      ariaLabel="县图书馆地方志卷末阅读空间"
+      eyebrow={act2Tales.scene.eyebrow}
+      title="地方志 · 卷末旧录"
+      description="三篇带有书签痕迹的旧录列在本卷末页与散页索引中；它们不是三本独立的新档案。照片上的区域与文字索引会打开同一篇原文。"
+      archive={<>
+        <section className="act2-tales__shelf" aria-label="地方志书架">
+          <h3>书架与旧录入口</h3>
+          <Act2ShelfMap
+            assetId={librarySceneCopy.placeholderAssetId}
+            source={sceneImage}
+            imageAlt="县图书馆阅览区，左侧书架上有多层地方志和县志"
+            label="县图书馆书架照片"
+            entries={shelfEntries}
+            selectedId={selectedId}
+            onSelect={openRecord}
+          />
+        </section>
+        <details className="act2-tales__index">
+          <summary>卷末散页索引 · {act2Tales.records.length} 条</summary>
+          <ul>{act2Tales.records.map((record) => {
+            const isTale = taleById.has(record.id);
+            const read = progress.readTaleIds.includes(record.id);
+            return <li key={record.id}><button type="button" className={`act2-tales__record${isTale ? ' act2-tales__record--tale' : ''}`} aria-current={selectedId === record.id ? 'true' : undefined} onClick={() => openRecord(record.id)}>
+              <span>{record.title}</span><small>{record.era} · {record.page}</small><em>{record.summary}</em>{isTale && <i>{read ? '来源已登记' : '旧录'}</i>}
+            </button></li>;
+          })}</ul>
+        </details>
+        <details className="act2-tales__evidence-list">
+          <summary>已选支持片段 · {selectedSourceCount}/2 篇来源</summary>
+          {progress.supportingEvidenceIds.length === 0 ? <p>读过旧录后，可在原文下方选取片段。</p> : <ul>{progress.supportingEvidenceIds.map((id) => {
+            const evidence = taleEvidenceById.get(id);
+            const source = evidence ? taleById.get(evidence.taleId) : null;
+            return evidence && source ? <li key={id}><strong>{source.title} · {evidence.label}</strong><p>{evidence.excerpt}</p><button type="button" onClick={() => openRecord(source.id)}>回看原文</button></li> : null;
+          })}</ul>}
+        </details>
+      </>}
+      reader={<>
+        <section className="act2-tales__reader" aria-label="旧录原文">
+          {!selected ? <div className="act2-tales__paper act2-tales__idle"><p>书架上有三处带书签痕迹的卷末旧录。选择一处，打开完整原文。</p></div> : taleById.has(selected.id) ? <article className="act2-tales__paper" data-tale-id={selected.id}>
             <header><p>{selected.era} · {selected.page}</p><h3>{selected.title}</h3></header>
             <div className="act2-tales__original" aria-label="原文">{(selected.paragraphs ?? []).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             <details className="act2-tales__explanation"><summary>现代文说明（辅助阅读）</summary><p>{selected.modernExplanation}</p></details>
-            {selected.evidence?.map((evidence) => <div className="act2-tales__evidence" key={evidence.id}>
-              <strong>{evidence.label}</strong><blockquote>{evidence.excerpt}</blockquote>
+            {selected.evidence?.map((evidence) => <details className="act2-tales__evidence" key={evidence.id}>
+              <summary>{evidence.label} · 查看可支持的原文片段</summary>
+              <blockquote>{evidence.excerpt}</blockquote>
               <button type="button" aria-pressed={progress.supportingEvidenceIds.includes(evidence.id)} onClick={() => manager.toggleAct2TaleEvidence(evidence.id)}>{progress.supportingEvidenceIds.includes(evidence.id) ? '移出支持片段' : '选作支持片段'}</button>
-            </div>)}
-          </article> : <article className="act2-tales__noise"><h3>{selected.title}</h3><p>{selected.era} · {selected.page}</p><p>{selected.summary}</p></article>}
-        </main>
-        <aside className="act2-tales__evidence-list" aria-label="已选支持片段"><h3>已选支持片段 <span>{selectedSourceCount}/2 篇来源</span></h3>
-          {progress.supportingEvidenceIds.length === 0 ? <p>读过旧录后，可在原文下方选取片段。</p> : <ul>{progress.supportingEvidenceIds.map((id) => { const evidence = taleEvidenceById.get(id); const source = evidence ? taleById.get(evidence.taleId) : null; return evidence && source ? <li key={id}><strong>{source.title} · {evidence.label}</strong><p>{evidence.excerpt}</p><button type="button" onClick={() => openRecord(source.id)}>回看原文</button></li> : null; })}</ul>}
-        </aside>
-      </div>
-      <section className="act2-tales__comparison" aria-labelledby="tale-comparison-title">
-        <h3 id="tale-comparison-title">跨篇对照</h3><p>这里只列出已经读过的来源；第三篇可作补充核验。</p>
-        <div className="act2-tales__table-wrap"><table><thead><tr><th>人物</th><th>原先缺少</th><th>获得或恢复</th><th>同时出现的变化</th></tr></thead><tbody>
-          {readTales.map((tale) => <tr key={tale.id}><th scope="row"><button type="button" onClick={() => openRecord(tale.id)}>{tale.comparison.person}</button></th><td>{tale.comparison.missing}</td><td>{tale.comparison.gain}</td><td>{tale.comparison.accompaniedChange}</td></tr>)}
-          {readTales.length === 0 && <tr><td colSpan={4}>阅读任一旧录后，这里会出现可核对的对照项。</td></tr>}
-        </tbody></table></div>
-      </section>
-      <section className="act2-tales__hypotheses" aria-label="暂定判断选项">
-        <h3>你认为这些记载目前支持哪种说法？</h3>
-        <button type="button" data-inference-id="accompanied-change" aria-pressed={progress.selectedInferenceId === 'accompanied-change'} disabled={hasJudgment} onClick={() => chooseInference('accompanied-change')}>获得之外，同时出现原本不属于当事人的习惯或记忆</button>
-        <button type="button" data-inference-id="recovery-or-imitation" aria-pressed={progress.selectedInferenceId === 'recovery-or-imitation'} disabled={hasJudgment} onClick={() => chooseInference('recovery-or-imitation')}>能力恢复后，当事人只是模仿了供物的习性</button>
-        <button type="button" data-inference-id="complete-transfer" aria-pressed={progress.selectedInferenceId === 'complete-transfer'} disabled={hasJudgment} onClick={() => chooseInference('complete-transfer')}>供物原主的完整人格已经转移给当事人</button>
-      </section>
-      {hasJudgment && <p className="act2-tales__recorded">暂定判断已记入调查笔记；旧录尚不能说明来源或机制。</p>}
-    </section>
+            </details>)}
+          </article> : <article className="act2-tales__paper act2-tales__noise"><h3>{selected.title}</h3><p>{selected.era} · {selected.page}</p><p>{selected.summary}</p></article>}
+        </section>
+        <details className="act2-tales__comparison" aria-labelledby="tale-comparison-title">
+          <summary id="tale-comparison-title">跨篇对照 · {readTales.length}/3 篇已读</summary>
+          <p>这里只列出已经读过的来源；第三篇可作补充核验。</p>
+          <div className="act2-tales__table-wrap"><table><thead><tr><th>人物</th><th>原先缺少</th><th>获得或恢复</th><th>同时出现的变化</th></tr></thead><tbody>
+            {readTales.map((tale) => <tr key={tale.id}><th scope="row"><button type="button" onClick={() => openRecord(tale.id)}>{tale.comparison.person}</button></th><td>{tale.comparison.missing}</td><td>{tale.comparison.gain}</td><td>{tale.comparison.accompaniedChange}</td></tr>)}
+            {readTales.length === 0 && <tr><td colSpan={4}>阅读任一旧录后，这里会出现可核对的对照项。</td></tr>}
+          </tbody></table></div>
+        </details>
+        <details className="act2-tales__hypotheses" aria-label="暂定判断选项">
+          <summary>比较支持片段后，选择暂定判断</summary>
+          <div className="act2-tales__hypothesis-options">
+            <button type="button" data-inference-id="accompanied-change" aria-pressed={progress.selectedInferenceId === 'accompanied-change'} disabled={hasJudgment} onClick={() => chooseInference('accompanied-change')}>获得之外，同时出现原本不属于当事人的习惯或记忆</button>
+            <button type="button" data-inference-id="recovery-or-imitation" aria-pressed={progress.selectedInferenceId === 'recovery-or-imitation'} disabled={hasJudgment} onClick={() => chooseInference('recovery-or-imitation')}>能力恢复后，当事人只是模仿了供物的习性</button>
+            <button type="button" data-inference-id="complete-transfer" aria-pressed={progress.selectedInferenceId === 'complete-transfer'} disabled={hasJudgment} onClick={() => chooseInference('complete-transfer')}>供物原主的完整人格已经转移给当事人</button>
+          </div>
+        </details>
+        {hasJudgment && <p className="act2-tales__recorded" aria-live="polite">暂定判断已记入调查笔记；旧录尚不能说明来源或机制。</p>}
+      </>}
+    />
   </InvestigationShell>;
 }
 

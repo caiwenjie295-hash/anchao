@@ -4,12 +4,25 @@ import { InvestigationShell } from '../../components/investigation/Investigation
 import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
+import { messageById, type WechatMessage } from '../../data/wechatData';
 import type { Act2SchoolEvidenceId } from '../../core/types';
 import { act2School, schoolAreaById } from '../../data/act2SchoolData';
 import { SchoolSymbolComparison } from './SchoolSymbolComparison';
 import '../../act2/t05School.css';
 
 export interface SchoolInvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void }
+
+const schoolMemoryMessages = [messageById.get('CHAT_A2_T05_001'), messageById.get('CHAT_A2_T05_011')].filter((message): message is WechatMessage => Boolean(message));
+const schoolMemoryPhotos = [messageById.get('CHAT_A2_T05_004'), messageById.get('CHAT_A2_T05_007')].filter((message): message is WechatMessage => Boolean(message && message.kind === 'image' && message.assetId));
+
+function SchoolMemoryPhoto({ message }: { message: WechatMessage }) {
+  const source = message.assetId ? assetLoader.get(message.assetId)?.src : undefined;
+  const [failed, setFailed] = useState(false);
+  return <figure className="t05-school__memory-photo" data-message-id={message.id}>
+    {source && !failed ? <img src={source} alt={message.title} onError={() => setFailed(true)} /> : <div role="img" aria-label={message.title}>{message.content}</div>}
+    <figcaption><strong>{message.title}</strong><span>{message.content}</span></figcaption>
+  </figure>;
+}
 
 export function SchoolInvestigation({ manager = defaultManager, onReturnToDesktop }: SchoolInvestigationProps) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
@@ -62,7 +75,8 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
 
   return <InvestigationShell
     ariaLabel="高中调查"
-    actLabel="第二幕 · 人物调查"
+    className="investigation-shell--memory"
+    actLabel="第二幕 · 小 A 的变化"
     locationLabel={area.title}
     contextLabel="回到高中 · 沿记忆中的路线核对"
     objective="确认休学前后的变化，并把学校记录与双 S 记号放在一起判断。"
@@ -72,7 +86,18 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     onExit={() => onReturnToDesktop?.()}
   >
   <section className="t05-school" aria-label="高中调查" data-asset-id={area.imageId}>
-    <div className="t05-school__intro">{act2School.intro}</div>
+    <div className="t05-school__intro">
+      <section className="t05-school__memory" aria-label="小月的日常回忆与高中旧照片">
+        <div className="t05-school__memory-chat">
+          <p>小月先想起的日常</p>
+          {schoolMemoryMessages.map((message) => <blockquote key={message.id} data-message-id={message.id}>{message.content}</blockquote>)}
+        </div>
+        <div className="t05-school__memory-photos">
+          {schoolMemoryPhotos.map((message) => <SchoolMemoryPhoto key={message.id} message={message} />)}
+        </div>
+      </section>
+      <p className="t05-school__route-intro">{act2School.intro}</p>
+    </div>
     <div className="t05-school__layout">
       <aside className="t05-school__map" aria-label="学校地点">
         <h2>学校</h2>

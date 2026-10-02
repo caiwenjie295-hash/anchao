@@ -108,7 +108,8 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   return (
     <InvestigationShell
       ariaLabel="桥头调查"
-      actLabel="第二幕 · 地方调查"
+      className="investigation-shell--exploration"
+      actLabel="第二幕 · 民俗疑问"
       locationLabel={bridgeScene.location}
       contextLabel={bridgeScene.title}
       objective="听取当地人的说法，出示相关照片，再核对这处地名。"
