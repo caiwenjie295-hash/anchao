@@ -357,7 +357,11 @@ async function advanceAct2() {
     await click('.act2-tales__evidence button');
   }
   await click('details.act2-tales__comparison > summary');
-  assert.ok(query('.act2-tales__comparison').textContent.includes('石工补指'));
+  const comparisonRows = [...query('.act2-tales__comparison tbody').querySelectorAll('tr')];
+  assert.equal(comparisonRows.length, 2, 'the two read records appear as two cross-source character comparisons');
+  assert.deepEqual(comparisonRows.map((row) => row.querySelector('th[scope="row"]')?.textContent.trim()), ['周三，石匠', '六儿']);
+  assert.equal(state().modules.act2Research.tales.supportingEvidenceIds.length, 2);
+  assert.match(query('.act2-tales__evidence-list summary').textContent, /2\/2 篇来源/);
   await click('details.act2-tales__hypotheses > summary');
   await click('[data-inference-id="accompanied-change"]');
   await click('[data-action-id="A2_T04_CONFIRM_PATTERN"]');
