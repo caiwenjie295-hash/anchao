@@ -21,6 +21,10 @@
 - `npx tsc --ignoreConfig --noEmit --target ES2022 --lib ES2022,DOM,DOM.Iterable --module ESNext --moduleResolution Bundler --jsx react-jsx --strict --skipLibCheck --allowSyntheticDefaultImports --esModuleInterop --resolveJsonModule --types vite/client docs/ux-narr-20261002/a2/browser-check.tsx`：standalone fixture 类型检查通过。
 - 单独以 `browser-check.html` 为 HTML 入口调用 Vite build：206 个模块编译通过；临时产物已删除，不进入提交。
 
-## 尚待父代理验收
+## 父级集成验收与审查
 
-本分支没有启动浏览器，也没有执行整合后的 offline 门禁。fixture 的宽屏/窄屏真实浏览器抽查、整合构建和 offline 验收由父代理统一完成；当前测试/build 结果仅代表 A2 分支定向范围。父代理可在 Vite 开发服务器中打开 `docs/ux-narr-20261002/a2/browser-check.html`：选择“书架入口已开放”后点“继续对照三篇志异”，阶段状态会跟随 manager 转至 T04；直接选“同一阅读空间”可检查卷末索引、三处入口与原文区。
+A2 本地定向验证见上节；该分支未启动浏览器，也未执行集成 offline 门禁。父级最终验收已完成：`npm test` 58 文件 / 317 项通过，`npm run build` 通过，`npm run build:offline` 产出 143 文件 / 197.40 MiB，`npm run test:offline` 默认两轮全通过（T07 Finale、A3 T00–T07、A4 T01–T10、本地资源和零运行时错误）。1440×900 与 390×844 真实浏览器抽查覆盖书架键盘/点击/缺图回退、A3 回忆门槛、A4 当前页与回看焦点、T09 连续广播、T10 完成回顾，结果通过。
+
+主审最终结论为 `APPROVED`。所有权、返修、离线与浏览器验收细节见 `docs/reviews/UX-NARR-20261002.md`。该记录说明文档收尾后执行本地 main 合并；截至本次交付，main 尚未合并，后续合并状态和 SHA 由主审更新到该记录。本分支交付不推定合并 SHA。
+
+fixture 路径为 `docs/ux-narr-20261002/a2/browser-check.html`。父级已用正式组件/资产及隔离状态 fixture 完成宽窄屏代表路径验收；可选“地方志·未缩小目录”“书架入口已开放”或“同一阅读空间”检查相应状态。
