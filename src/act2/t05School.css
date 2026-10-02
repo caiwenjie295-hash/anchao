@@ -198,3 +198,56 @@
   .t05-comparison { padding: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .t05-school *, .t05-comparison * { scroll-behavior: auto; animation: none; transition: none; } }
+
+/* T05 keeps the school photo and location choices at their natural size; only the shell scene scrolls. */
+.t05-school {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  max-width: 1440px;
+  height: auto;
+  min-height: 100%;
+  margin-inline: auto;
+  overflow: visible;
+}
+.t05-school__intro { display: grid; gap: 8px; }
+.t05-school__memory { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 10px 12px; }
+.t05-school__memory-lead { display: grid; gap: 3px; margin: 0; color: var(--school-ink); line-height: 1.5; }
+.t05-school__memory-lead strong { color: var(--school-muted); font-size: .82rem; }
+.t05-school__memory-lead span { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.t05-school__memory-disclosure,
+.t05-school__timeline-disclosure { min-width: 0; border: 1px solid var(--school-border); border-radius: 7px; background: var(--school-surface); }
+.t05-school__memory-disclosure > summary,
+.t05-school__timeline-disclosure > summary { display: flex; min-height: 44px; align-items: center; gap: 8px; padding: 7px 10px; color: var(--school-ink); cursor: pointer; font-weight: 600; line-height: 1.4; }
+.t05-school__memory-disclosure > summary:focus-visible,
+.t05-school__timeline-disclosure > summary:focus-visible { outline: 3px solid var(--school-accent); outline-offset: 2px; }
+.t05-school__memory-disclosure[open] > summary,
+.t05-school__timeline-disclosure[open] > summary { border-bottom: 1px solid var(--school-border); }
+.t05-school__memory-content { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr); align-items: start; gap: 12px; padding: 10px; }
+.t05-school__memory-chat { min-width: 0; }
+.t05-school__memory-photos { min-width: 0; }
+.t05-school__route-intro { max-width: 80ch; }
+.t05-school__layout { display: grid; grid-template-columns: minmax(190px, 220px) minmax(0, 1fr); align-items: start; gap: 12px; min-width: 0; }
+.t05-school__map,
+.t05-school__room { min-width: 0; min-height: 0; grid-column: auto; grid-row: auto; align-self: start; overflow: visible; }
+.t05-school__map { padding: 12px; }
+.t05-school__map button { min-height: 44px; }
+.t05-school__room { padding: clamp(10px, 1vw, 16px); }
+.t05-school__backdrop { width: min(100%, 70vh, 920px); aspect-ratio: 4 / 3; height: auto; flex: 0 0 auto; }
+.t05-school__timeline-disclosure { width: 100%; }
+.t05-school__timeline { box-sizing: border-box; width: 100%; min-height: 0; grid-column: auto; grid-row: auto; overflow: visible; margin: 0; padding: 12px; border: 0; border-radius: 0 0 7px 7px; box-shadow: none; }
+.t05-school__timeline > p { max-width: 76ch; }
+.t05-school__evidence-options button,
+.t05-school__inferences button { min-height: 44px; }
+
+@media (max-width: 760px) {
+  .t05-school__memory-content { grid-template-columns: minmax(0, 1fr); }
+  .t05-school__layout { grid-template-columns: minmax(0, 1fr); }
+  .t05-school__map nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .t05-school__map button { text-align: center; }
+  .t05-school__evidence-options,
+  .t05-school__inferences { grid-template-columns: minmax(0, 1fr); }
+}

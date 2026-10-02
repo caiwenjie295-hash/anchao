@@ -485,3 +485,36 @@
 .act2-bridge__confirm:disabled { color: #595959; background: #f0f0f0; border-color: #bfbfbf; opacity: 1; }
 .act2-bridge__entry-title { letter-spacing: .04em; }
 @media (max-width: 900px) { .act2-bridge__body { grid-template-columns: minmax(0, 1fr); } .act2-bridge__stage { width: min(100%, 86vh); } .act2-bridge__dialogue { max-height: none; } }
+
+/* The shell scene is the only vertical scroller; dialogue growth never compresses the photo. */
+.act2-bridge {
+  width: min(100%, 1360px);
+  max-width: 1360px;
+  height: auto;
+  min-height: 100%;
+  flex: 0 0 auto;
+  overflow: visible;
+  gap: 14px;
+  padding: clamp(12px, 1.5vw, 20px);
+}
+.act2-bridge__intro { width: min(100%, 1120px); box-sizing: border-box; margin-inline: auto; line-height: 1.65; }
+.act2-bridge__body { width: 100%; grid-template-columns: minmax(0, 1fr) minmax(340px, min(40%, 560px)); align-items: start; gap: clamp(14px, 1.5vw, 22px); }
+.act2-bridge__stage { width: min(100%, 70vh, 920px); min-height: 0; aspect-ratio: 4 / 3; height: auto; align-self: start; }
+.act2-bridge__dialogue { box-sizing: border-box; width: min(100%, 640px); max-height: none; overflow: visible; justify-self: start; padding: clamp(14px, 1.6vw, 20px); }
+.act2-bridge__dialogue p { max-width: 58ch; }
+.act2-bridge__portrait { height: clamp(130px, 18vh, 185px); max-width: 260px; }
+.act2-bridge__ask,
+.act2-bridge__replay,
+.act2-bridge__show,
+.act2-bridge__confirm,
+.act2-bridge__continue { min-height: 44px; }
+.act2-bridge__elder { box-sizing: border-box; min-width: 44px; min-height: 44px; }
+.act2-bridge__puzzle,
+.act2-bridge__resolution { flex: 0 0 auto; }
+
+@media (max-width: 900px) {
+  .act2-bridge { width: 100%; max-width: none; }
+  .act2-bridge__body { grid-template-columns: minmax(0, 1fr); }
+  .act2-bridge__stage { width: min(100%, 70vh, 920px); margin-inline: auto; }
+  .act2-bridge__dialogue { width: min(100%, 680px); justify-self: center; }
+}
