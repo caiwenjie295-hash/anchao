@@ -295,8 +295,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     // 正确目录 → 目标卷册可见。
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBe(true);
-    await click(pick('.act2-library__shelf-hotspot'));
-    await click(pick('[data-volume-id="VOLUME_A2_T03_002"]'));
+    await click(pick('[data-shelf-entry-id="VOLUME_A2_T03_002"]'));
     expect(library().openedVolumeIds).toEqual(['VOLUME_A2_T03_002']);
     expect(library().currentPageId).toBe('PAGE_A2_T03_003');
 
@@ -329,14 +328,13 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
     await click(pick('[data-action-id="A2_T03_TO_TALES"]'));
     expect(stage()).toBe('tales');
-    expect(pick('.act2-tales')).not.toBeNull();
+    expect(pick('.act2-tales__shelf')).not.toBeNull();
   });
 
   it('restores a migrated second-act save mid-second-act and clears everything on reset', async () => {
     await reachLibrary();
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
-    await click(pick('.act2-library__shelf-hotspot'));
-    await click(pick('[data-volume-id="VOLUME_A2_T03_002"]'));
+    await click(pick('[data-shelf-entry-id="VOLUME_A2_T03_002"]'));
     await click(pick('.act2-library__next'));
     await click(pick('.act2-library__next'));
 
