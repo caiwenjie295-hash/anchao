@@ -30,11 +30,15 @@ describe('LibraryResearch (act2 T03)', () => {
   };
   const libraryState = () => manager.getState().modules.act2Research.library;
   const flags = () => manager.getState().game.flags;
+  const openCatalog = async () => {
+    const detail = pick<HTMLDetailsElement>('.act2-library__catalog');
+    if (detail && !detail.open) await click(detail.querySelector('summary'));
+  };
 
   const reachTargetPage = async () => {
+    await openCatalog();
     await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
-    await click(pick('.act2-library__shelf-hotspot'));
-    await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
+    await click(pick(`[data-shelf-entry-id="${TARGET_VOLUME}"]`));
     await click(pick('.act2-library__next'));
     await click(pick('.act2-library__next'));
     expect(libraryState().currentPageId).toBe(libraryTargetPageId);
@@ -67,24 +71,24 @@ describe('LibraryResearch (act2 T03)', () => {
 
   it('shows only the ordinary catalog note for a wrong section without advancing', async () => {
     await setup();
+    await openCatalog();
     await click(pick(`[data-section-id="${WRONG_SECTION}"]`));
 
     expect(libraryState().visitedSectionIds).toEqual([WRONG_SECTION]);
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBeUndefined();
     expect(container.querySelector('.act2-library__section-note')?.textContent).toContain('建置');
-    expect(pick('.act2-library__shelf-locked')).not.toBeNull();
-    expect(pick(`[data-volume-id="${TARGET_VOLUME}"]`)).toBeNull();
+    expect(pick('.act2-shelf-map__locked')).not.toBeNull();
+    expect(pick<HTMLButtonElement>(`[data-shelf-entry-id="${TARGET_VOLUME}"]`)?.disabled).toBe(true);
   });
 
   it('narrows the catalog, opens the volume and turns pages to reach the gazette', async () => {
     await setup();
+    await openCatalog();
     await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBe(true);
-    expect(pick(`[data-volume-id="${TARGET_VOLUME}"]`)).toBeNull();
-    await click(pick('.act2-library__shelf-hotspot'));
-    expect(pick(`[data-volume-id="${TARGET_VOLUME}"]`)).not.toBeNull();
+    expect(pick(`[data-shelf-entry-id="${TARGET_VOLUME}"]`)).not.toBeNull();
 
-    await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
+    await click(pick(`[data-shelf-entry-id="${TARGET_VOLUME}"]`));
     expect(libraryState().openedVolumeIds).toEqual([TARGET_VOLUME]);
 
     await click(pick('.act2-library__next'));
@@ -101,9 +105,9 @@ describe('LibraryResearch (act2 T03)', () => {
 
   it('requires sequential page turns and never exposes a control that jumps to the gazette page', async () => {
     await setup();
+    await openCatalog();
     await click(pick(`[data-section-id="${CORRECT_SECTION}"]`));
-    await click(pick('.act2-library__shelf-hotspot'));
-    await click(pick(`[data-volume-id="${TARGET_VOLUME}"]`));
+    await click(pick(`[data-shelf-entry-id="${TARGET_VOLUME}"]`));
     expect(libraryState().currentPageId).toBe('PAGE_A2_T03_003');
 
     // 页序只作静态进度展示：不存在可直接激活的页控件，更没有直达目标页的入口。

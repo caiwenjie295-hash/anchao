@@ -52,6 +52,24 @@
 .investigation-shell .investigation-navigation__action--ready:hover:not(:disabled) { border-color: #0f4fae; color: #fff; background: #0f4fae; }
 .investigation-shell .investigation-navigation__action--blocked { border-style: dashed; color: var(--ui-text, #1f1f1f); background: #fff; }
 .investigation-shell .investigation-navigation__action--completed { border-color: var(--ui-border, #d9d9d9); color: var(--ui-text-muted, #595959); background: var(--ui-surface-muted, #f0f0f0); }
+.investigation-shell--reading,
+.investigation-shell--exploration,
+.investigation-shell--memory { --ui-accent: #315b45; --ui-accent-soft: #e9eee9; --ui-success: #315b45; --ui-interactive-border: #828a82; }
+.investigation-shell--reading .investigation-shell__goal,
+.investigation-shell--exploration .investigation-shell__goal,
+.investigation-shell--memory .investigation-shell__goal { background: #f2f3f0; }
+.investigation-shell--reading .investigation-shell__operations,
+.investigation-shell--exploration .investigation-shell__operations,
+.investigation-shell--memory .investigation-shell__operations { background: #f2f3f0; }
+.investigation-shell--reading .investigation-navigation__action--ready,
+.investigation-shell--exploration .investigation-navigation__action--ready,
+.investigation-shell--memory .investigation-navigation__action--ready { border-color: #315b45; background: #315b45; }
+.investigation-shell--reading .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--exploration .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--memory .investigation-navigation__action--ready:hover:not(:disabled) { border-color: #254b37; background: #254b37; }
+.investigation-shell--reading .investigation-shell__scene { background: #f5f5f2; }
+.investigation-shell--exploration .investigation-shell__scene { background: #f2f3f0; }
+.investigation-shell--memory .investigation-shell__scene { background: #f5f3ed; }
 .investigation-navigation__action small { flex: none; font-size: .72rem; color: inherit; }
 .investigation-navigation__reason { margin-top: 5px; padding: 8px 10px; border-left: 3px solid var(--ui-accent, #165dcc); color: var(--ui-text, #1f1f1f); background: #fff; line-height: 1.5; box-shadow: 0 1px 4px rgb(15 23 42 / 7%); }
 .investigation-navigation__reason p { margin: 0 0 6px; }
@@ -81,3 +99,61 @@
   .investigation-shell__scene { min-height: 120px; }
 }
 @media (prefers-reduced-motion: reduce) { .investigation-shell *, .investigation-detail * { scroll-behavior: auto; animation: none; transition: none; } }
+
+/* The reading/exploration/memory variants keep guidance available without reserving a permanent banner. */
+.investigation-shell--reading .investigation-shell__goal--on-demand,
+.investigation-shell--exploration .investigation-shell__goal--on-demand,
+.investigation-shell--memory .investigation-shell__goal--on-demand { display: block; padding: 3px 16px; background: #f2f3f0; }
+.investigation-shell--reading .investigation-shell__goal-details,
+.investigation-shell--exploration .investigation-shell__goal-details,
+.investigation-shell--memory .investigation-shell__goal-details { width: 100%; }
+.investigation-shell--reading .investigation-shell__goal-details > summary,
+.investigation-shell--exploration .investigation-shell__goal-details > summary,
+.investigation-shell--memory .investigation-shell__goal-details > summary { display: flex; min-height: 36px; align-items: center; gap: 8px; color: #465149; cursor: pointer; font-size: .8rem; list-style: none; }
+.investigation-shell--reading .investigation-shell__goal-details > summary::-webkit-details-marker,
+.investigation-shell--exploration .investigation-shell__goal-details > summary::-webkit-details-marker,
+.investigation-shell--memory .investigation-shell__goal-details > summary::-webkit-details-marker { display: none; }
+.investigation-shell--reading .investigation-shell__goal-details > summary::after,
+.investigation-shell--exploration .investigation-shell__goal-details > summary::after,
+.investigation-shell--memory .investigation-shell__goal-details > summary::after { content: '＋'; margin-left: auto; color: #315b45; }
+.investigation-shell--reading .investigation-shell__goal-details[open] > summary::after,
+.investigation-shell--exploration .investigation-shell__goal-details[open] > summary::after,
+.investigation-shell--memory .investigation-shell__goal-details[open] > summary::after { content: '−'; }
+.investigation-shell--reading .investigation-shell__goal-content,
+.investigation-shell--exploration .investigation-shell__goal-content,
+.investigation-shell--memory .investigation-shell__goal-content { display: grid; gap: 7px; padding: 0 0 8px; }
+.investigation-shell--reading .investigation-shell__goal-content p,
+.investigation-shell--exploration .investigation-shell__goal-content p,
+.investigation-shell--memory .investigation-shell__goal-content p { display: flex; align-items: baseline; gap: 8px; margin: 0; color: #323a34; font-size: .86rem; line-height: 1.5; }
+.investigation-shell--reading .investigation-shell__goal-content strong,
+.investigation-shell--exploration .investigation-shell__goal-content strong,
+.investigation-shell--memory .investigation-shell__goal-content strong { flex: none; color: #465149; font-size: .78rem; }
+.investigation-shell--reading .investigation-navigation__title,
+.investigation-shell--exploration .investigation-navigation__title,
+.investigation-shell--memory .investigation-navigation__title { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
+.investigation-shell--reading .investigation-navigation__actions,
+.investigation-shell--exploration .investigation-navigation__actions,
+.investigation-shell--memory .investigation-navigation__actions { align-items: center; justify-content: flex-end; }
+.investigation-shell--reading .investigation-navigation__item,
+.investigation-shell--exploration .investigation-navigation__item,
+.investigation-shell--memory .investigation-navigation__item { min-width: min(100%, 190px); max-width: 400px; flex: 0 1 260px; }
+.investigation-shell--reading .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"],
+.investigation-shell--exploration .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"],
+.investigation-shell--memory .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"] { border-color: #315b45; color: #fff; background: #315b45; }
+.investigation-shell--reading .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled),
+.investigation-shell--exploration .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled),
+.investigation-shell--memory .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled) { border-color: #254b37; color: #fff; background: #254b37; }
+.investigation-shell--reading .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"],
+.investigation-shell--exploration .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"],
+.investigation-shell--memory .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"] { border-color: #828a82; color: #33463a; background: #fff; }
+.investigation-shell--reading .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled),
+.investigation-shell--exploration .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled),
+.investigation-shell--memory .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled) { border-color: #315b45; color: #1f3827; background: #e9eee9; }
+@media (max-width: 600px) {
+  .investigation-shell--reading .investigation-shell__goal--on-demand,
+  .investigation-shell--exploration .investigation-shell__goal--on-demand,
+  .investigation-shell--memory .investigation-shell__goal--on-demand { padding: 2px 10px; }
+  .investigation-shell--reading .investigation-navigation__item,
+  .investigation-shell--exploration .investigation-navigation__item,
+  .investigation-shell--memory .investigation-navigation__item { width: 100%; max-width: none; flex: 1 1 100%; }
+}
