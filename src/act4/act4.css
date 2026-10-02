@@ -226,6 +226,43 @@
 .a4-social-discussion .a4-hint { color: #89551c; }
 .a4-grid--mail > .a4-card:nth-child(2) { background: #26343ac9; backdrop-filter: blur(12px); }
 @media (max-width: 800px) { .a4-grid--old-mail { grid-template-columns: 1fr; } }
+
+/* A34 reading identities, source notes, and reversible page position. */
+.a4-reader__perspective { width: fit-content; max-width: 100%; margin: 12px 0 0 !important; padding: 5px 9px; border: 1px solid #aeb7b3; border-radius: 5px; color: #263a33 !important; background: #e8eeeb; font-weight: 700; }
+.a4-reader__evidence-boundary { margin: 9px 0 0 !important; padding: 8px 11px; border-left: 3px solid #737e78; color: #4e5652 !important; background: #e8eaeb; font-size: .9rem; line-height: 1.55; }
+.a4-reader__source { margin: 12px 0 16px; padding: 8px 10px; border: 1px solid #c7cbce; border-radius: 6px; color: #4e5459; background: #eceeef; font-size: .82rem; line-height: 1.55; }
+.a4-reader__source summary { min-height: 32px; display: flex; align-items: center; cursor: pointer; color: #343a3f; font-weight: 700; }
+.a4-reader__source p { margin: 6px 0 0; overflow-wrap: anywhere; }
+.a4-reader__page-index { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 18px; padding: 8px; border: 1px solid #c8cccf; border-radius: 7px; background: #e8eaec; }
+.a4-reader__page-index button { flex: 0 0 auto; min-height: 40px; max-width: 100%; padding: 6px 10px; border: 1px solid #a7adb2; border-radius: 5px; color: #2d3236; background: #fafbfb; font: inherit; text-align: left; cursor: pointer; }
+.a4-reader__page-index button[aria-current="page"] { border-color: #52685e; background: #dce6e0; color: #1e3329; font-weight: 700; }
+.a4-reader__page-index button:focus-visible, .a4-reader__source summary:focus-visible, .a4-reader__final-recap summary:focus-visible { outline: 3px solid #52685e; outline-offset: 2px; }
+.a4-reader__segment { min-width: 0; margin: 14px 0; }
+.a4-reader__segment > h4 { margin: 0 0 9px; color: #48504c; font-size: .92rem; letter-spacing: .02em; }
+.a4-reader__paragraphs .a4-reader__paragraph { margin: 0 0 1.15em; white-space: pre-wrap; }
+.a4-reader__paragraphs .a4-reader__paragraph:last-child { margin-bottom: 0; }
+.a4-reader__paragraph--mail-field { color: #384640; font-family: var(--font-ui, sans-serif); font-size: .95em; font-weight: 700; }
+.a4-reader__paragraph--mail-body { color: #242c31; }
+.a4-reader__block--email .a4-reader__segment--whole { padding: 16px clamp(14px, 3vw, 26px); border: 1px solid #c5cbd0; border-radius: 8px; background: #fbfbfa; }
+.a4-reader__block--email .a4-reader__paragraph--mail-field { margin-top: .45em; padding-top: .45em; border-top: 1px solid #e0e3e5; }
+.a4-reader__social-date { margin: 0 0 8px !important; padding: 8px 10px; border-left: 3px solid #667a70; color: #37463f; background: #e8ece9; font-family: var(--font-ui, sans-serif); font-variant-numeric: tabular-nums; }
+.a4-reader__social-date time { display: block; }
+.a4-reader__block--timeline .a4-reader__segment--page { margin: 12px 0; padding: 12px 14px; border: 1px solid #d0d4d6; border-radius: 7px; background: #fafafa; }
+.a4-reader__paragraphs .a4-reader__paragraph--social-post { margin: 0; color: #30383d; }
+.a4-reader__paragraphs > time.a4-reader__paragraph--social-date { display: block; }
+.a4-reader__paragraph--broadcast-word { margin: 14px 0 6px !important; padding: 9px 14px; border-left: 4px solid #68786f; color: #27352e; background: #e6ebe8; font-size: 1.13em; font-weight: 700; letter-spacing: .04em; }
+.a4-reader__paragraph--broadcast-response { padding-left: clamp(12px, 3vw, 30px); color: #4c5154; }
+.a4-reader__paragraph--broadcast-ending { padding: 10px 14px; border-left: 3px solid #777d81; color: #454b4f; background: #e6e8e9; font-weight: 600; }
+.a4-reader__final-recap { margin-top: 20px; border: 1px solid #bfc5c8; border-radius: 8px; background: #e7e9ea; }
+.a4-reader__final-recap > summary { min-height: 48px; display: flex; align-items: center; padding: 10px 14px; color: #2f3934; font-weight: 700; cursor: pointer; }
+.a4-reader__final-recap-content { padding: 0 14px 14px; }
+.a4-reader__final-recap-content .a4-reader__explanation { margin-top: 10px; }
+@media (max-width: 600px) {
+  .a4-reader__page-index { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; }
+  .a4-reader__page-index button { white-space: nowrap; }
+  .a4-reader__source { font-size: .78rem; }
+  .a4-reader__segment--page { padding-inline: 0; }
+}
 .a4-reader { width: min(100%, 1420px); margin: 0 auto; padding: clamp(16px, 3vw, 38px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 340px); gap: clamp(20px, 4vw, 52px); align-items: start; color: #202328; background: #f2f3f4; }
 .a4-reader__story { min-width: 0; max-width: 850px; }
 .a4-reader__heading { margin: 0 0 24px; padding-bottom: 18px; border-bottom: 1px solid #c5c9cd; }
