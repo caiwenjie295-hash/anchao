@@ -211,7 +211,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await mountApp();
     await startSecondAct();
     await click(pick('.desktop-task-card__toggle'));
-    expect(pick('.desktop-task-card')?.textContent).toContain('查一次相关信息');
+    expect(pick('.desktop-task-card')?.textContent).toContain('打开浏览器，搜索一次与鸡公岭旧址有关的词');
 
     await run(() => stateManager.recordBrowserSearch('随便搜点什么'));
     expect(stage()).toBe('search');
@@ -221,7 +221,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
 
     await completeT01();
     expect(stage()).toBe('bridge');
-    expect(pick('.desktop-task-card')?.textContent).toContain('去县城桥头');
+    expect(pick('.desktop-task-card')?.textContent).toContain('在桥头选择老人交谈；向回应鸡公岭问题的老人出示现场照片');
     expect(pick('.desktop-task-card')?.textContent).not.toContain('黑补母');
   });
 

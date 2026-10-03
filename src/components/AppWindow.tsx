@@ -54,11 +54,11 @@ export function AppWindow({ app, windowState, active, onFocus, onMinimize, onTog
           type="button"
           className="window-titlebar__progress"
           aria-label={`打开调查进度；当前建议：${progressContext.progress.nextAction}`}
-          title={progressContext.progress.nextAction}
+          title="点击查看当前路线与剧情回顾"
           onPointerDown={(event) => event.stopPropagation()}
           onDoubleClick={(event) => event.stopPropagation()}
           onClick={(event) => progressContext.openProgress(event.currentTarget)}
-        ><strong>当前下一步</strong><span>{progressContext.progress.nextAction}</span></button>}
+        ><strong>调查进度</strong><span>{progressContext.progress.nextAction}</span></button>}
         <div className="window-controls" onPointerDown={(event) => event.stopPropagation()}>
           <button type="button" onClick={onMinimize} aria-label={`最小化 ${app.title}`} title="最小化"><SpriteIcon name="window-minimize" /></button>
           <button type="button" onClick={onToggleMaximize} aria-label={`${windowState.status === 'maximized' ? '还原' : '最大化'} ${app.title}`} title={windowState.status === 'maximized' ? '还原' : '最大化'}><SpriteIcon name={windowState.status === 'maximized' ? 'window-restore' : 'window-maximize'} /></button>
