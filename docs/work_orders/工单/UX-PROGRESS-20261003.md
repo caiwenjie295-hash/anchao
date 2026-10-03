@@ -34,6 +34,7 @@
 - 新建`src/components/InvestigationProgressDrawer.test.tsx`。
 - 修改`src/App.tsx`：仅接入显示Provider/抽屉及必要传入当前状态/转场可见性。保留既有controllers、判断、阶段入口、sceneOpen、dismiss、inert和转场行为；第一幕收尾早return也接入。
 - 修改`src/components/DesktopTaskCard.tsx`、`.test.tsx`：当前步骤直白可见、指引名称、调查进度入口；保留旧props兼容与开应用语义。
+- 可修改`src/components/AppWindow.tsx`及既有`.test.tsx`（若存在）：仅窗口标题栏的调查进度触发入口，不改拖动/缩放/最小化/关闭/业务props。用于活动/最大化应用时避免浮在桌面上的提示卡覆盖窗口控件；桌面提示仍清楚，窗口/场景入口也清楚，不出现两个重叠入口。
 - 修改`src/components/investigation/InvestigationShell.tsx`、`.test.tsx`：仅页头右侧调查进度触发入口/可访问性接入，不改props契约、目标折叠、actions、导航或滚动结构。
 - 修改`src/scenes/act1/Act1SceneExperience.tsx`、`src/scenes/act1/Act1Ending.tsx`：仅现有页头/收尾的抽屉入口，不改剧情/动作/热点逻辑。
 - 修改`data/task_guides.json`：仅已有记录的summary、steps.label、steps.hint等显示文案。保持所有ID、phases、prerequisiteFlags、completionFlags、completionKind、caseId、appId及记录数量/顺序不变。纠正T07“完整播放视频”被误当门槛的提示；实际允许截帧比对，不新增播放门槛。
