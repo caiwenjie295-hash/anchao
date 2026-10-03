@@ -160,4 +160,4 @@
 
 /* T02 bridge and T05 school share one content scroller while keeping the action rail fixed. */
 .investigation-shell--act2-spacious { overflow: hidden; }
-.investigation-shell--act2-spacious .investigation-shell__scene { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.investigation-shell--act2-spacious .investigation-shell__scene { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
