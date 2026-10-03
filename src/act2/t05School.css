@@ -221,7 +221,13 @@
 .t05-school__memory-disclosure,
 .t05-school__timeline-disclosure { min-width: 0; border: 1px solid var(--school-border); border-radius: 7px; background: var(--school-surface); }
 .t05-school__memory-disclosure > summary,
-.t05-school__timeline-disclosure > summary { display: flex; min-height: 44px; align-items: center; gap: 8px; padding: 7px 10px; color: var(--school-ink); cursor: pointer; font-weight: 600; line-height: 1.4; }
+.t05-school__timeline-disclosure > summary { display: flex; min-width: 0; min-height: 44px; flex-wrap: wrap; align-items: center; gap: 8px; padding: 7px 10px; color: var(--school-ink); cursor: pointer; font-weight: 600; line-height: 1.4; list-style: none; overflow-wrap: anywhere; white-space: normal; }
+.t05-school__memory-disclosure > summary::-webkit-details-marker,
+.t05-school__timeline-disclosure > summary::-webkit-details-marker { display: none; }
+.t05-school__memory-disclosure > summary::after,
+.t05-school__timeline-disclosure > summary::after { content: ""; flex: 0 0 8px; width: 8px; height: 8px; margin: 0 3px 0 auto; border-right: 2px solid var(--school-accent); border-bottom: 2px solid var(--school-accent); transform: rotate(-45deg); }
+.t05-school__memory-disclosure[open] > summary::after,
+.t05-school__timeline-disclosure[open] > summary::after { transform: rotate(45deg); }
 .t05-school__memory-disclosure > summary:focus-visible,
 .t05-school__timeline-disclosure > summary:focus-visible { outline: 3px solid var(--school-accent); outline-offset: 2px; }
 .t05-school__memory-disclosure[open] > summary,
