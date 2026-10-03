@@ -1,41 +1,61 @@
 import { useState } from 'react';
 import type { AppId, AppState } from '../core/types';
 import { getCurrentTaskGuide } from '../data/taskGuideData';
+import { getDesktopTaskPresentation } from '../data/investigationProgressData';
+import { useInvestigationProgress } from './InvestigationProgressContext';
 
-export function DesktopTaskCard({ state, onOpenApp }: { state: AppState; onOpenApp: (appId: AppId) => void }) {
-  const guide = getCurrentTaskGuide(state);
+export function DesktopTaskCard({
+  state,
+  onOpenApp,
+  showProgressTrigger = true,
+}: {
+  state: AppState;
+  onOpenApp: (appId: AppId) => void;
+  /** Retained as an optional display switch; existing callers need no changes. */
+  showProgressTrigger?: boolean;
+}) {
   const [expanded, setExpanded] = useState(false);
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
-  if (!guide) return null;
+  const progressContext = useInvestigationProgress();
+  const legacyGuide = getCurrentTaskGuide(state);
+  if (!progressContext && !legacyGuide) return null;
 
-  const bodyId = `desktop-task-card-${guide.id}`;
-  const actionAppId = guide.actionAppId;
-  const actionLabel = guide.actionLabel;
-  return <aside className={`desktop-task-card${expanded ? ' desktop-task-card--expanded' : ''}`} aria-label={guide.title}>
-    <button
-      type="button"
-      className="desktop-task-card__toggle"
-      aria-expanded={expanded}
-      aria-controls={bodyId}
-      onClick={() => setExpanded((current) => !current)}
-    >
-      <span className="desktop-task-card__toggle-title">{guide.title}</span>
-      <span className="desktop-task-card__count" aria-label={`已完成 ${guide.completedCount} / ${guide.totalCount}`}>{guide.completedCount}/{guide.totalCount}</span>
-      <span className="desktop-task-card__chevron" aria-hidden="true">⌄</span>
-    </button>
+  const presentation = getDesktopTaskPresentation(state);
+  const bodyId = `desktop-task-card-${state.game.phase}`;
+  return <aside className={`desktop-task-card${expanded ? ' desktop-task-card--expanded' : ''}`} aria-label={presentation.title}>
+    <div className="desktop-task-card__heading">
+      <button
+        type="button"
+        className="desktop-task-card__toggle"
+        aria-expanded={expanded}
+        aria-controls={bodyId}
+        onClick={() => setExpanded((current) => !current)}
+      >
+        <span className="desktop-task-card__toggle-title">{presentation.title}</span>
+        <span className="desktop-task-card__count" aria-label={`已完成 ${presentation.completedCount} / ${presentation.totalCount}`}>{presentation.completedCount}/{presentation.totalCount}</span>
+        <span className="desktop-task-card__chevron" aria-hidden="true">⌄</span>
+      </button>
+      {progressContext && showProgressTrigger && <button
+        type="button"
+        className="desktop-task-card__progress"
+        aria-label="打开调查进度"
+        onClick={(event) => progressContext.openProgress(event.currentTarget)}
+      >调查进度</button>}
+    </div>
+    <p className="desktop-task-card__next"><strong>下一步</strong><span>{presentation.nextAction}</span></p>
     {expanded && <div className="desktop-task-card__body" id={bodyId}>
-      <p className="desktop-task-card__summary">{guide.summary}</p>
+      <p className="desktop-task-card__summary">{presentation.summary}</p>
       <ol className="desktop-task-card__steps">
-        {guide.steps.map((step, index) => <li key={step.label} className={`desktop-task-card__step${step.complete ? ' desktop-task-card__step--complete' : ''}${step.current ? ' desktop-task-card__step--current' : ''}`}>
+        {presentation.steps.map((step) => <li key={step.id} className={`desktop-task-card__step${step.complete ? ' desktop-task-card__step--complete' : ''}${step.current ? ' desktop-task-card__step--current' : ''}`}>
           <span className="desktop-task-card__status" aria-hidden="true">{step.complete ? '✓' : ''}</span>
           <span className="desktop-task-card__step-label">{step.hint ? <>
-            <button type="button" className="desktop-task-card__hint-toggle" aria-expanded={revealedHints.includes(`${guide.id}:${index}`)} onClick={() => setRevealedHints((current) => current.includes(`${guide.id}:${index}`) ? current.filter((id) => id !== `${guide.id}:${index}`) : [...current, `${guide.id}:${index}`])}>{step.label} <small>{revealedHints.includes(`${guide.id}:${index}`) ? '收起暗示' : '查看暗示'}</small></button>
-            {revealedHints.includes(`${guide.id}:${index}`) && <span className="desktop-task-card__hint">{step.hint}</span>}
+            <button type="button" className="desktop-task-card__hint-toggle" aria-expanded={revealedHints.includes(`${step.id}`)} onClick={() => setRevealedHints((current) => current.includes(step.id) ? current.filter((id) => id !== step.id) : [...current, step.id])}>{step.label} <small>{revealedHints.includes(step.id) ? '收起暗示' : '查看暗示'}</small></button>
+            {revealedHints.includes(step.id) && <span className="desktop-task-card__hint">{step.hint}</span>}
           </> : step.label}</span>
           {step.current && <span className="desktop-task-card__current">当前</span>}
         </li>)}
       </ol>
-      {actionAppId && actionLabel && <button type="button" className="desktop-task-card__action" onClick={() => onOpenApp(actionAppId)}>{actionLabel}</button>}
+      {presentation.actionAppId && presentation.actionLabel && <button type="button" className="desktop-task-card__action" onClick={() => onOpenApp(presentation.actionAppId!)}>{presentation.actionLabel}</button>}
     </div>}
   </aside>;
 }

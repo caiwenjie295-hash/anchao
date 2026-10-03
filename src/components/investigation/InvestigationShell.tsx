@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { InvestigationAction } from './types';
 import { InvestigationNavigation } from './InvestigationNavigation';
+import { useInvestigationProgress } from '../InvestigationProgressContext';
 import './investigation.css';
 
 export interface InvestigationShellProps {
@@ -35,6 +36,7 @@ export function InvestigationShell({
   onOpenMaterial,
 }: InvestigationShellProps) {
   const [helpOpen, setHelpOpen] = useState(false);
+  const progressContext = useInvestigationProgress();
   const onDemandGuidance = (className ?? '').split(/\s+/).some((name) =>
     name === 'investigation-shell--reading' || name === 'investigation-shell--exploration' || name === 'investigation-shell--memory',
   );
@@ -53,7 +55,10 @@ export function InvestigationShell({
           <h1>{locationLabel}</h1>
           {contextLabel && <span>{contextLabel}</span>}
         </div>
-        <button type="button" className="investigation-shell__exit" onClick={onExit}>{exitLabel}</button>
+        <div className="investigation-shell__header-actions">
+          {progressContext && <button type="button" className="investigation-progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
+          <button type="button" className="investigation-shell__exit" onClick={onExit}>{exitLabel}</button>
+        </div>
       </header>
       <div className={`investigation-shell__goal${onDemandGuidance ? ' investigation-shell__goal--on-demand' : ''}`}>
         {onDemandGuidance ? (
