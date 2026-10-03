@@ -490,6 +490,7 @@
 .act2-bridge {
   width: min(100%, 1360px);
   max-width: 1360px;
+  margin-inline: auto;
   height: auto;
   min-height: 100%;
   flex: 0 0 auto;
