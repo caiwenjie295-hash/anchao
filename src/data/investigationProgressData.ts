@@ -305,6 +305,17 @@ function act3Stage(state: AppState): { location: string; objective: string; next
     }
   }
 
+  const visiblePendingHotspot = lens?.hotspots.find((hotspot) => !inspected.includes(hotspot.clueId));
+  if (visiblePendingHotspot) {
+    const safeLabel = act3HotspotLabelFor(stage, visiblePendingHotspot.clueId, visiblePendingHotspot.label, inspected);
+    return { location, objective, nextAction: `检查当前画面里已出现的“${safeLabel}”。` };
+  }
+
+  const readyRoute = lens?.routes.find((route) => getAct3RouteAvailability(stage, lens?.id ?? null, route.target, inspected).state === 'ready');
+  if (readyRoute) {
+    return { location, objective, nextAction: `按底部“${act3RouteLabelFor(stage, readyRoute, inspected)}”前往已出现的相邻位置，再检查那里的现场痕迹。` };
+  }
+
   const blockedRoute = lens?.routes.find((route) => getAct3RouteAvailability(stage, lens.id, route.target, inspected).state === 'blocked');
   if (blockedRoute) {
     return { location, objective, nextAction: '查看底部相邻路线的阻塞说明，先完成其中要求的现场观察。' };
@@ -326,6 +337,16 @@ function act3RouteLabelFor(
   if (stage === 'T07' && route.target === 'LENS_A3_T07_006') return '继续查看窄缝';
   if (stage === 'T07' && route.target === 'LENS_A3_T07_007' && !inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP')) return '继续核对这一物件';
   return route.label || `${route.kind === 'return' ? '返回' : '前往'}相邻位置`;
+}
+
+type Act4NarrativeSection = (typeof act4NarrativeSections)[number];
+
+function act4SectionTitleForDisplay(section: Act4NarrativeSection, isComplete: boolean): string {
+  return section.stage === 'T05' && !isComplete ? '王澳的 2014 年亲历' : section.title;
+}
+
+function act4SectionPeriodForDisplay(section: Act4NarrativeSection, isComplete: boolean): string {
+  return section.stage === 'T05' && !isComplete ? '2014 年' : section.periodLabel;
 }
 
 function act4Stage(state: AppState): { location: string; objective: string; nextAction: string } {
@@ -350,11 +371,19 @@ function act4Stage(state: AppState): { location: string; objective: string; next
     T10: actions.includes('A4_T10_FINAL_MAIL_OPENED') ? '继续阅读当前结尾并完成第四幕。' : '读到邮件入口后，主动打开启明的最后一封邮件。',
   };
   const perspective = section?.perspective === 'wangao' ? '王澳亲历' : '调查者阅读';
-  const period = section?.periodLabel ? ` · ${section.periodLabel}` : '';
+  const sectionComplete = Boolean(section && state.modules.act4.completedNarrativeSectionIds.includes(section.id));
+  const displayTitle = section ? act4SectionTitleForDisplay(section, sectionComplete) : '第四幕当前篇章';
+  const displayPeriod = section ? act4SectionPeriodForDisplay(section, sectionComplete) : '';
+  const period = displayPeriod ? ` · ${displayPeriod}` : '';
+  const objective = stage === 'T05' && !sectionComplete
+    ? '王澳亲历 · 2014 年。当前篇章仍在阅读。'
+    : `${perspective}${period}。${displayTitle}`.trim();
   return {
-    location: section?.title ?? '第四幕当前篇章',
-    objective: `${perspective}${period}。${section?.title ?? ''}`.trim(),
-    nextAction: actionSteps[stage] ?? '继续阅读当前篇章，并完成页面上明确要求的操作。',
+    location: displayTitle,
+    objective,
+    nextAction: stage === 'T05'
+      ? '按王澳的 2014 年亲历原文分段阅读当前内容；读完后点击“收好这一段，继续阅读”。'
+      : actionSteps[stage] ?? '继续阅读当前篇章，并完成页面上明确要求的操作。',
   };
 }
 
@@ -435,14 +464,16 @@ function act4Route(state: AppState): InvestigationProgressNode[] {
     const actionSatisfied = act4NarrativeActionsSatisfied(section.stage, state.modules.act4.completedNarrativeActionIds);
     const current = section.stage === currentStage && !isComplete;
     const perspective = section.perspective === 'wangao' ? '王澳亲历' : '调查者阅读';
+    const displayTitle = act4SectionTitleForDisplay(section, isComplete);
+    const displayPeriod = act4SectionPeriodForDisplay(section, isComplete);
     const detail = isComplete
       ? `${perspective} · 正文已读${act4NarrativeRequiredActions[section.stage]?.some((action) => !state.modules.act4.completedNarrativeActionIds.includes(action)) ? '，相关动作仍待核对' : ''}`
       : section.stage === currentStage
-        ? `${perspective} · ${actionSatisfied ? '当前动作已完成，正文尚未收好' : '当前阅读与操作'}`
+        ? `${perspective}${section.stage === 'T05' ? ` · ${displayPeriod}` : ''} · ${actionSatisfied ? '当前动作已完成，正文尚未收好' : '当前阅读与操作'}`
         : undefined;
     return {
       id: section.id,
-      label: section.title,
+      label: displayTitle,
       status: isComplete ? 'complete' as const : current ? 'current' as const : 'known' as const,
       ...(detail ? { detail } : {}),
     };

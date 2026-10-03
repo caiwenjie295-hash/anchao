@@ -139,6 +139,60 @@ describe('investigation progress display model', () => {
     expect(serialized).not.toContain('老鼠、血、草垛');
   });
 
+  it('points to the visible T04 door sign before an unknown paper or later room', () => {
+    const state = createDefaultState();
+    state.game.act = 3;
+    state.game.phase = 'A3_T04';
+    state.game.flags.FLAG_A2_COMPLETE = true;
+    state.modules.act3.stage = 'T04';
+    state.modules.act3.currentLensId = 'LENS_A3_T04_001';
+
+    const result = deriveInvestigationProgress(state);
+    const serialized = JSON.stringify(result);
+
+    expect(result.nextAction).toContain('照亮档案室门牌');
+    expect(result.nextAction).not.toContain('沿当前调查路线');
+    expect(result.nextAction).not.toContain('前往档案室门口');
+    expect(serialized).not.toContain('VVAKE');
+    expect(serialized).not.toContain('纸片');
+  });
+
+  it('keeps the unfinished T05 chapter title and date span neutral until the whole section is read', () => {
+    const state = createDefaultState();
+    state.game.act = 4;
+    state.game.phase = 'A4_T05';
+    state.game.flags.FLAG_A3_COMPLETE = true;
+    state.modules.act4.stage = 'T05';
+    state.modules.act4.completedNarrativeSectionIds = ['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04'];
+    state.modules.act4.completedNarrativeActionIds = ['A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED'];
+
+    const result = deriveInvestigationProgress(state);
+    const serialized = JSON.stringify(result);
+    const desktop = getDesktopTaskPresentation(state);
+    const currentRoute = result.route.find((node) => node.id === 'A4_READ_T05');
+    const forbiddenBeforeReached = [
+      '生日与门外来人', '生日白天', '家庭晚餐', '门外来人', '被带走以前',
+      '28 日至 29 日', '28日至29日', '晚饭中父亲又恢复', '他不愿离开',
+    ];
+
+    expect(result.location).toBe('王澳的 2014 年亲历');
+    expect(result.currentObjective).toContain('王澳亲历');
+    expect(result.nextAction).toContain('收好这一段，继续阅读');
+    expect(desktop.summary).toContain('王澳亲历');
+    expect(desktop.nextAction).toContain('收好这一段，继续阅读');
+    expect(currentRoute?.label).toBe('王澳的 2014 年亲历');
+    expect(currentRoute?.detail).toContain('2014 年');
+    expect(result.knownFacts.map((fact) => fact.id)).toEqual(['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04']);
+    for (const term of forbiddenBeforeReached) expect(serialized).not.toContain(term);
+    expect(serialized).not.toContain('晚自习');
+
+    state.modules.act4.completedNarrativeSectionIds.push('A4_READ_T05');
+    const completed = deriveInvestigationProgress(state);
+    expect(completed.location).toBe('生日与门外来人');
+    expect(completed.route.find((node) => node.id === 'A4_READ_T05')?.label).toBe('生日与门外来人');
+    expect(completed.knownFacts.find((fact) => fact.id === 'A4_READ_T05')?.source).toContain('2014 年 12 月 28 日至 29 日');
+  });
+
   it('limits the act four route and recap to completed sections and the current Wang Ao chapter', () => {
     const state = createDefaultState();
     state.game.act = 4;
