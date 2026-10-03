@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { EvidenceImage } from '../../components/EvidenceImage';
 import type { StateManager } from '../../core/stateManager';
 import { type BrowserPage, type BrowserPageInteraction, type BrowserPageType } from '../../data/browserData';
@@ -212,8 +212,60 @@ function SiteMasthead({ identity, crumbs }: { identity: SiteIdentity; crumbs: st
   </div>;
 }
 
-export function BrowserPageView({ page, manager }: { page: BrowserPage | undefined; manager: StateManager }) {
-  const [copyStatus, setCopyStatus] = useState<string | null>(null);
+type QimingCaseId = 'huang' | 'zhong';
+type BrowserPageViewProps = {
+  page: BrowserPage | undefined;
+  manager: StateManager;
+  copyContextKey?: string;
+  casePerson?: QimingCaseId;
+  onStartQimingCase?: (person: QimingCaseId) => void;
+  onReturnToQimingCase?: (person: QimingCaseId) => void;
+  onOpenQimingSource?: (person: QimingCaseId, pageId: string) => void;
+};
+
+function QimingCasePath({ page, person, onStart, onReturn, onOpenSource, manager }: {
+  page: BrowserPage;
+  person?: QimingCaseId;
+  onStart?: (person: QimingCaseId) => void;
+  onReturn?: (person: QimingCaseId) => void;
+  onOpenSource?: (person: QimingCaseId, pageId: string) => void;
+  manager: StateManager;
+}) {
+  const relatedPerson = person ?? (page.id === 'PAGE_A2_T06_008' ? 'huang' : page.id === 'PAGE_A2_T06_009' ? 'zhong' : undefined);
+  if (page.id !== 'PAGE_A2_T06_004' && page.id !== 'PAGE_A2_T06_008' && page.id !== 'PAGE_A2_T06_009') return null;
+  if (page.id === 'PAGE_A2_T06_004' && !relatedPerson && onStart) return <aside className="browser-page__case-path" aria-label="启明实名调查入口">
+    <h2>从宣传案例开始核对</h2>
+    <p>这份宣传记录同时提到黄子山和钟子月。选择一人进入材料核对；复制姓名只用于手动搜索，也可以直接开始调查。</p>
+    <div className="browser-page__case-entries">
+      <button type="button" className="browser-page__case-entry" onClick={() => onStart('huang')}>调查黄子山材料</button>
+      <button type="button" className="browser-page__case-entry" onClick={() => onStart('zhong')}>调查钟子月材料</button>
+    </div>
+  </aside>;
+  if (!relatedPerson || !onReturn) return null;
+  const name = relatedPerson === 'huang' ? '黄子山' : '钟子月';
+  const followupId = relatedPerson === 'huang' ? 'PAGE_A2_T06_008' : 'PAGE_A2_T06_009';
+  const visited = new Set(manager.getState().modules.browser.visitedPageIds);
+  const officialVisited = visited.has('PAGE_A2_T06_004');
+  const followupVisited = visited.has(followupId);
+  const currentLabel = page.id === 'PAGE_A2_T06_004' ? '共用宣传案例' : `${name}后续报道`;
+  const nextSourceId = !officialVisited ? 'PAGE_A2_T06_004' : !followupVisited ? followupId : undefined;
+  const nextSourceLabel = nextSourceId === 'PAGE_A2_T06_004' ? '打开共用宣传案例' : `打开${name}后续报道`;
+  return <aside className="browser-page__case-path" aria-label={`正在调查${name}`}>
+    <div className="browser-page__case-path-heading"><div><p className="browser-page__case-path-eyebrow">实名材料核对</p><h2>正在调查：{name}</h2></div><span>当前来源：{currentLabel}</span></div>
+    <ul className="browser-page__case-path-sources" aria-label={`${name}来源状态`}>
+      <li><span>共用宣传案例</span><strong>{officialVisited ? '已打开' : '待打开'}</strong></li>
+      <li><span>{name}后续报道</span><strong>{followupVisited ? '已打开' : '待打开'}</strong></li>
+    </ul>
+    <div className="browser-page__case-path-actions">
+      {nextSourceId && onOpenSource && <button type="button" onClick={() => onOpenSource(relatedPerson, nextSourceId)}>{nextSourceLabel}</button>}
+      <button type="button" className="browser-page__case-context-return" onClick={() => onReturn(relatedPerson)}>{`返回${name}材料核对`}</button>
+    </div>
+  </aside>;
+}
+
+export function BrowserPageView({ page, manager, copyContextKey, casePerson, onStartQimingCase, onReturnToQimingCase, onOpenQimingSource }: BrowserPageViewProps) {
+  const [copyStatus, setCopyStatus] = useState<{ tone: 'success' | 'failure'; text: string } | null>(null);
+  useEffect(() => setCopyStatus(null), [page?.id, copyContextKey]);
   const visited = manager.getState().modules.browser.visitedPageIds;
   if (!page) return <p className="browser-empty">该内部页面已不可用。</p>;
   const interactions = (page.interactions ?? []).filter((interaction) => (
@@ -223,9 +275,9 @@ export function BrowserPageView({ page, manager }: { page: BrowserPage | undefin
   const copyName = async (interaction: Extract<BrowserPageInteraction, { type: 'copy-names' }>, name: string) => {
     try {
       await navigator.clipboard.writeText(name);
-      setCopyStatus(interaction.successMessage.replaceAll('{name}', name));
+      setCopyStatus({ tone: 'success', text: interaction.successMessage.replaceAll('{name}', name) });
     } catch {
-      setCopyStatus(interaction.failureMessage.replaceAll('{name}', name));
+      setCopyStatus({ tone: 'failure', text: interaction.failureMessage.replaceAll('{name}', name) });
     }
   };
   const runInteraction = (interaction: BrowserPageInteraction) => {
@@ -237,7 +289,8 @@ export function BrowserPageView({ page, manager }: { page: BrowserPage | undefin
   return <article className={`browser-page browser-page--${page.pageType}`} style={{ '--browser-site-hue': identity.hue } as unknown as CSSProperties}>
     <SiteMasthead identity={identity} crumbs={urlCrumbs(page.url)} />
     <Template page={page} identity={identity} />
+    <QimingCasePath page={page} person={casePerson} onStart={onStartQimingCase} onReturn={onReturnToQimingCase} onOpenSource={onOpenQimingSource} manager={manager} />
     <footer className="browser-page__footer"><p className="browser-page__url">{page.url}</p></footer>
-    {interactions.map((interaction, index) => <div className="browser-page__actions" key={`${page.id}-interaction-${index}`}><p>{interaction.prompt}</p>{interaction.type === 'copy-names' ? <>{copyStatus && <p role="status">{copyStatus}</p>}{interaction.names.map((name) => <button type="button" key={name.value} onClick={() => void copyName(interaction, name.value)}>{name.buttonLabel}</button>)}</> : <button type="button" onClick={() => runInteraction(interaction)}>{interaction.buttonLabel}</button>}</div>)}
+    {interactions.map((interaction, index) => <div className="browser-page__actions" key={`${page.id}-interaction-${index}`}><p>{interaction.prompt}</p>{interaction.type === 'copy-names' ? <>{copyStatus && <p className={`browser-page__copy-feedback browser-page__copy-feedback--${copyStatus.tone}`} role="status">{copyStatus.text}</p>}{interaction.names.map((name) => <button type="button" key={name.value} onClick={() => void copyName(interaction, name.value)}>{name.buttonLabel}</button>)}</> : <button type="button" onClick={() => runInteraction(interaction)}>{interaction.buttonLabel}</button>}</div>)}
   </article>;
 }

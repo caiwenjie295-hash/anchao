@@ -64,6 +64,63 @@ describe('BrowserApp T06 visibility gates', () => {
     expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
     expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(false);
   });
+  it('keeps the named case through source pages, preserves an unsubmitted finding and continues by choice', async () => {
+    manager.enterAct2QimingResearch();
+    await render();
+    const click = async (element: Element | null) => {
+      expect(element).not.toBeNull();
+      await act(async () => { (element as HTMLElement).click(); });
+    };
+    const zhongChoice = [...host.querySelectorAll('.browser-case-review__person')].find((button) => button.textContent?.includes('钟子月')) ?? null;
+    await click(zhongChoice);
+    expect(host.querySelector('.browser-case-review__case')?.getAttribute('aria-label')).toBe('钟子月材料');
+    await click(host.querySelector('[data-case-action="open-official"]'));
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('正在调查：钟子月');
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('钟子月后续报道');
+    await click([...host.querySelectorAll('.browser-page__case-path button')].find((button) => button.textContent === '打开钟子月后续报道') ?? null);
+    expect(manager.getState().modules.browser.visitedPageIds).toEqual(expect.arrayContaining(['PAGE_A2_T06_004', 'PAGE_A2_T06_009']));
+    expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
+    const returnButton = host.querySelector('.browser-page__case-context-return');
+    await click(returnButton);
+    await act(async () => { await new Promise<void>((resolve) => requestAnimationFrame(() => resolve())); });
+    expect((document.activeElement as HTMLElement).textContent).toBe('钟子月材料');
+
+    const radios = [...host.querySelectorAll('.browser-case-review__choices input[type="radio"]')];
+    await click(radios[1] ?? null);
+    expect((radios[1] as HTMLInputElement).checked).toBe(true);
+    await click(host.querySelector('[data-case-action="open-followup"]'));
+    await click(host.querySelector('.browser-page__case-context-return'));
+    const returnedRadios = [...host.querySelectorAll('.browser-case-review__choices input[type="radio"]')] as HTMLInputElement[];
+    expect(returnedRadios[1]?.checked).toBe(true);
+    await click(host.querySelector('[data-case-action="record"]'));
+    expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
+    expect(host.querySelector('.browser-case-review__feedback--error')?.textContent).toContain('不能据此认定因果');
+    await click(returnedRadios[0] ?? null);
+    await click(host.querySelector('[data-case-action="record"]'));
+    expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['zhong']);
+    expect(host.querySelector('[data-case-action="next-person"]')?.textContent).toBe('继续核对黄子山');
+    await click(host.querySelector('[data-case-action="next-person"]'));
+    expect(host.querySelector('.browser-case-review__case')?.getAttribute('aria-label')).toBe('黄子山材料');
+    expect(host.querySelector('[data-case-action="open-followup"]')?.textContent).toBe('打开黄子山后续报道');
+    expect(manager.getState().modules.browser.visitedPageIds).not.toContain('PAGE_A2_T06_008');
+    expect(manager.getState().modules.browser.visitedPageIds).not.toContain('PAGE_A2_T06_006');
+  });
+  it('offers a direct named-person path from the shared official page and keeps it on return', async () => {
+    manager.enterAct2QimingResearch();
+    await render();
+    await search('启明 钟子月');
+    const officialResult = [...host.querySelectorAll('.browser-result')].find((button) => button.textContent?.includes('学员黄子山、钟子月的成长记录')) as HTMLButtonElement | undefined;
+    expect(officialResult).toBeDefined();
+    await act(async () => { officialResult?.click(); });
+    expect(host.querySelectorAll('.browser-page__case-entry')).toHaveLength(2);
+    await act(async () => { (host.querySelectorAll('.browser-page__case-entry')[1] as HTMLButtonElement).click(); });
+    expect(host.querySelector('.browser-case-review__case')?.getAttribute('aria-label')).toBe('钟子月材料');
+    expect(manager.getState().modules.browser.visitedPageIds).toContain('PAGE_A2_T06_004');
+    await act(async () => { (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click(); });
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('正在调查：钟子月');
+    expect(host.querySelector('.browser-qiming-toolbar button')?.textContent).toBe('返回钟子月材料核对');
+    expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
+  });
   it('records bounded named-case evidence without treating forum nicknames as identity proof', async () => {
     manager.enterAct2QimingResearch();
     const controller = new Act2T06Controller(manager, bus); controller.start();
@@ -72,7 +129,7 @@ describe('BrowserApp T06 visibility gates', () => {
       const button = [...host.querySelectorAll('.browser-case-review button')].find((item) => item.textContent === label) as HTMLButtonElement;
       expect(button).toBeDefined(); await act(async () => button.click());
     };
-    await openFromPanel('打开启明宣传案例');
+    await openFromPanel('打开共用宣传案例（黄子山）');
     expect(manager.getState().modules.browser.visitedPageIds).toContain('PAGE_A2_T06_004');
     expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
     expect(host.textContent).toContain('学员黄子山');
