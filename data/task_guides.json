@@ -11,15 +11,15 @@
       "completionFlags": [
         "FLAG_A1_XIAOA_MISSING_KNOWN"
       ],
-      "summary": "看看有没有新的消息",
+      "summary": "打开微信读母亲的新消息，按消息内容确认小 A 的情况",
       "steps": [
         {
-          "label": "打开微信，留意新消息",
+          "label": "打开微信，查看母亲刚发来的消息",
           "completionFlag": "FLAG_A1_MOM_MSG_TRIGGERED",
           "appId": "wechat"
         },
         {
-          "label": "读一读母亲发来的消息",
+          "label": "读完母亲发来的消息，确认小 A 的情况",
           "completionFlag": "FLAG_A1_XIAOA_MISSING_KNOWN",
           "appId": "wechat"
         }
@@ -37,7 +37,7 @@
       "completionFlags": [
         "FLAG_A1_MAIL_XIAOA_OPENED"
       ],
-      "summary": "找出小A最后留下的线索",
+      "summary": "打开邮箱置顶的小 A 旧邮件，核对她最后联系的时间和提到的地点",
       "steps": [
         {
           "label": "在邮箱置顶区域找到小A的旧邮件",
@@ -65,16 +65,16 @@
         "FLAG_A1_NEWS_FOUND",
         "FLAG_A1_ROUTE_INFO_FOUND"
       ],
-      "summary": "核对鸡公岭的公开信息",
+      "summary": "打开浏览器搜索“XX县失踪”并读一篇旧报道，再查鸡公岭徒步路线的长度和难度",
       "steps": [
         {
-          "label": "找到与失踪有关的旧报道",
+          "label": "在浏览器搜索“XX县失踪”，打开并阅读旧报道",
           "completionFlag": "FLAG_A1_NEWS_FOUND",
           "appId": "browser",
           "hint": "可以试试“XX县失踪”。"
         },
         {
-          "label": "确认徒步路线的长度与难度",
+          "label": "在浏览器打开徒步路线资料，核对长度和难度",
           "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND",
           "appId": "browser"
         }
@@ -92,7 +92,7 @@
       "completionFlags": [
         "FLAG_A1_SS_FOUND"
       ],
-      "summary": "整理鸡公岭现场照片",
+      "summary": "从资源管理器打开山洞照片；把曝光量调到至少 35、阴影调到至少 30、对比度调到至少 20，再检查新出现的痕迹",
       "steps": [
         {
           "label": "从资源管理器打开山洞照片",
@@ -100,9 +100,10 @@
           "appId": "explorer"
         },
         {
-          "label": "调整画面，让暗处细节变得可辨",
+          "label": "在照片应用调整曝光量、阴影和对比度，让暗处细节可辨",
           "completionKind": "cave-symbol-visible",
-          "appId": "photos"
+          "appId": "photos",
+          "hint": "达到曝光量至少 35、阴影至少 30、对比度至少 20 即可；不需要追求单一的最佳数值。"
         },
         {
           "label": "检查画面中新出现的痕迹",
@@ -122,7 +123,7 @@
       "completionFlags": [
         "FLAG_A1_COMPLETE"
       ],
-      "summary": "整理已经找到的线索",
+      "summary": "在记事本确认现场新线索已记录，再回到照片点击“整理思绪，继续”",
       "steps": [
         {
           "label": "确认新线索已记入记事本",
@@ -146,10 +147,10 @@
       "completionFlags": [
         "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
       ],
-      "summary": "查一次相关信息，再决定要不要问当地人",
+      "summary": "在浏览器搜索一次与旧址有关的词；结果没有回答问题后，点击“去桥头问问当地人”继续",
       "steps": [
         {
-          "label": "搜索一次与旧址有关的词",
+          "label": "打开浏览器，搜索一次与鸡公岭旧址有关的词",
           "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED",
           "appId": "browser",
           "hint": "试试把鸡公岭和你记下的物件或记号放在一起搜。"
@@ -167,22 +168,22 @@
       "completionFlags": [
         "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
       ],
-      "summary": "去县城桥头，找当地人聊聊",
+      "summary": "在桥头选择老人交谈，追问鸡公岭、出示现场照片，并根据对话确认地名后询问当地记录",
       "steps": [
         {
-          "label": "把现场拍到的照片给老人看",
+          "label": "在桥头选择老人交谈；向回应鸡公岭问题的老人出示现场照片",
           "completionFlag": "FLAG_A2_ELDER_PHOTO_SHOWN"
         },
         {
-          "label": "听听他们怎么念这个名字",
+          "label": "追问鸡公岭，听线索老人读出三字称呼",
           "completionFlag": "FLAG_A2_HEIBUMU_AUDIO_HEARD"
         },
         {
-          "label": "确定那三个字到底怎么写",
+          "label": "按对话提示选择三个字，再确认地名拼写",
           "completionFlag": "FLAG_A2_HEIBUMU_NAME_SOLVED"
         },
         {
-          "label": "问问以前有没有人写过",
+          "label": "向线索老人继续询问当地过去是否有相关记载",
           "completionFlag": "FLAG_A2_COUNTY_RECORD_HINT_KNOWN"
         }
       ]
@@ -198,7 +199,7 @@
       "completionFlags": [
         "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
       ],
-      "summary": "去县图书馆查一查旧地方志",
+      "summary": "在县图书馆打开地方志目录，筛选相关门类并从书架开卷，逐页读到目标页后摘录关键词",
       "steps": [
         {
           "label": "进入县图书馆的地方志阅览室",
@@ -206,14 +207,15 @@
         },
         {
           "label": "在目录里缩小范围，找到相关卷册",
-          "completionFlag": "FLAG_A2_LOCAL_GAZETTE_FOUND"
+          "completionFlag": "FLAG_A2_LOCAL_GAZETTE_FOUND",
+          "hint": "打开地方志目录并逐项筛查；按目录里的门类说明，再选择书架上对应卷册。"
         },
         {
           "label": "翻到记着这件事的那一页",
           "completionFlag": "FLAG_A2_BUMUZHI_FOUND"
         },
         {
-          "label": "标记关键词，并摘录到记事本",
+          "label": "标记目标页关键词，并把摘录保存到记事本",
           "completionFlag": "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
         }
       ]
@@ -229,7 +231,7 @@
       "completionFlags": [
         "FLAG_A2_TRANSFER_RULE_INFERRED"
       ],
-      "summary": "对照卷末旧录，判断它们共同支持什么",
+      "summary": "在县图书馆打开卷末旧录，读至少两篇并分别选取支持片段，再确认有证据支持的暂定判断",
       "steps": [
         {
           "label": "阅读至少两篇夹在卷末的志异",
@@ -258,31 +260,31 @@
         "FLAG_A2_SS_MATCH_CONFIRMED",
         "FLAG_A2_QIMING_OFFICIAL_FOUND"
       ],
-      "summary": "回学校看看旧资料，记下你能确认的事",
+      "summary": "打开微信查看小月的回忆，再回到高中核对班主任回忆、成绩记录、感谢文字和旧学习笔记；选两种来源记录暂定时间线",
       "steps": [
         {
-          "label": "在微信里看看小月发来的消息",
+          "label": "打开微信，阅读小月发来的高中回忆，并使用消息里的入口回到学校",
           "completionFlag": "FLAG_A2_SCHOOL_ENTERED",
           "appId": "wechat"
         },
         {
-          "label": "听听班主任记得的小A",
+          "label": "在高中班主任办公室查看她对小 A 的回忆",
           "completionFlag": "FLAG_A2_LEAVE_OF_ABSENCE_KNOWN"
         },
         {
-          "label": "查看光荣榜上的历次记录",
+          "label": "在高中光荣榜查看历次成绩记录",
           "completionFlag": "FLAG_A2_SCORE_CHANGE_KNOWN"
         },
         {
-          "label": "读一读成绩表下方的文字",
+          "label": "在成绩表下方阅读感谢文字",
           "completionFlag": "FLAG_A2_QIMING_NAME_FOUND"
         },
         {
-          "label": "翻看以前展示过的学习笔记",
+          "label": "在教室翻看以前展示过的学习笔记",
           "completionFlag": "FLAG_A2_SCHOOL_SS_FOUND"
         },
         {
-          "label": "把新旧记号放在一起比一比",
+          "label": "在页面中并排查看旧笔记与第一幕照片，确认可见共同记号",
           "completionFlag": "FLAG_A2_SS_MATCH_CONFIRMED"
         },
         {
@@ -304,7 +306,7 @@
       "completionFlags": [
         "FLAG_A2_OTHER_CASES_ABNORMAL"
       ],
-      "summary": "继续核对启明留下的公开资料与不同说法",
+      "summary": "在浏览器核对已经出现的启明公开案例与后续报道，按人物逐组记录材料差异；无需复制姓名或查看论坛",
       "steps": [
         {
           "label": "读一读官网与地方报道",
@@ -336,26 +338,26 @@
       "completionFlags": [
         "FLAG_A2_SECOND_TRIP_PLANNED"
       ],
-      "summary": "和小月把启明留下的旧宣传资料再核一遍",
+      "summary": "和小月在资料核对页查看校门合影与受访视频；截取清晰画面和第一次徒步拍下的破庙外景比对，再记录地点判断并商量是否再次进山",
       "steps": [
         {
           "label": "和小月一起看校门合影",
           "completionFlag": "FLAG_A2_PROMO_PHOTO_SS_FOUND"
         },
         {
-          "label": "打开创始人受访视频",
+          "label": "打开创始人受访视频，找到可与破庙外景比对的画面",
           "completionFlag": "FLAG_A2_PROMO_VIDEO_FOUND"
         },
         {
-          "label": "把视频的主要片段看过一遍",
+          "label": "可选：继续看视频，找到可比对画面即可截取，不必完整播放",
           "completionFlag": "FLAG_A2_PROMO_VIDEO_WATCHED"
         },
         {
-          "label": "截下可疑画面，和破庙外景对照",
+          "label": "截取清晰画面，并和第一次徒步拍下的破庙外景对照",
           "completionFlag": "FLAG_A2_TEMPLE_FRAME_FOUND"
         },
         {
-          "label": "把两条线放在一起，确认地点",
+          "label": "在比较页选择视频截图与破庙外景共有的可见特征，记录地点判断",
           "completionFlag": "FLAG_A2_QIMING_LOCATION_INFERRED"
         },
         {

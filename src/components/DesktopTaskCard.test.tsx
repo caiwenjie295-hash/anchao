@@ -3,12 +3,14 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultState } from '../core/defaultState';
 import { DesktopTaskCard } from './DesktopTaskCard';
+import { InvestigationProgressProvider } from './InvestigationProgressContext';
 
 describe('DesktopTaskCard', () => {
   let container: HTMLDivElement;
   let root: Root;
 
   beforeEach(() => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     container = document.createElement('div');
     document.body.append(container);
     root = createRoot(container);
@@ -28,7 +30,7 @@ describe('DesktopTaskCard', () => {
     const onOpenApp = vi.fn();
     await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={onOpenApp} />); });
 
-    expect(container.textContent).toContain('当前待办');
+    expect(container.textContent).toContain('当前步骤');
     await act(async () => { (container.querySelector('.desktop-task-card__toggle') as HTMLButtonElement).click(); });
     expect(container.querySelectorAll('.desktop-task-card__step--complete')).toHaveLength(1);
     expect(container.querySelectorAll('.desktop-task-card__step--current')).toHaveLength(1);
@@ -60,5 +62,16 @@ describe('DesktopTaskCard', () => {
     state.game.phase = 'F';
     await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={vi.fn()} />); });
     expect(container.innerHTML).toBe('');
+  });
+
+  it('keeps a direct next step and progress entry available in a no-guide desktop phase', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'F';
+    await act(async () => root.render(<InvestigationProgressProvider state={state}>
+      <DesktopTaskCard state={state} onOpenApp={vi.fn()} />
+    </InvestigationProgressProvider>));
+
+    expect(container.textContent).toContain('点击“继续”开始现场调查。');
+    expect(container.querySelector('[aria-label="打开调查进度"]')).not.toBeNull();
   });
 });

@@ -2,6 +2,8 @@
 
 ## 当前待办
 
+- [x] UX-CASEPATH / UX-PROGRESS / UX-WALLPAPER-20261003 同批功能、进度抽屉、实名路径和本地壁纸验收通过；`npm test` 65文件/350项、最终定向测试、生产构建及 `52626ef` 默认两轮离线验收通过，真实IAB覆盖默认窗/最大化/手机与关键四幕状态。两份审查均为 `APPROVED`，详见 `docs/reviews/UX-CASEPATH-20261003.md`、`docs/reviews/UX-PROGRESS-20261003.md`。
+- [ ] 主审把已批准批次合并到本地 `main` 后，重建单文件离线入口、核对 manifest 与 `main` HEAD 一致，并复核原用户30项工作区状态。当前 `main` 为 `81fafb1`，仓库无 remote；合并尚未执行，合并 SHA 尚不存在。
 - [x] UX-LAYOUT-20261003 高中与桥头布局返修已完成：集成测试60文件/321项、生产与离线构建、默认两轮 offline 及2556×1370/1440×900/1366×768/390×844真实浏览器验收通过。照片尺寸、展开不挤压、桥头滚动条稳定、触控目标和剧情门槛见 `docs/ux-layout-20261003/implementation.md`；主审验收与 main 合并记录见 `docs/reviews/UX-LAYOUT-20261003.md`。
 - [x] UX-NARR-20261002 父级集成与验收完成：`npm test` 58 文件/317 项、生产构建、143 文件/197.40 MiB 离线包、默认两轮 offline，以及 1440×900/390×844 真实浏览器抽查均通过；主审结论 `APPROVED`。验收细节及 main 合并状态见 `docs/reviews/UX-NARR-20261002.md`。
 - [x] A34 第三幕玩家文本清理、第四幕原文阅读器与schema11迁移完成；定向验收范围见 `docs/a34-narrative-0001/test-matrix.md`。

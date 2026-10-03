@@ -1,6 +1,9 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createDefaultState } from '../../core/defaultState';
+import { InvestigationProgressProvider } from '../InvestigationProgressContext';
+import { InvestigationProgressDrawer } from '../InvestigationProgressDrawer';
 import { InvestigationShell } from './InvestigationShell';
 import type { InvestigationAction } from './types';
 
@@ -73,5 +76,20 @@ describe('InvestigationShell guidance variants', () => {
     await act(async () => blocked.click());
     expect(host.querySelector('.investigation-navigation__reason')?.textContent).toContain('先读完目标书页。');
     expect(host.querySelector('.investigation-navigation__material')?.textContent).toContain('《补母志》目标页');
+  });
+
+  it('offers the shared progress drawer from the shell header without changing shell props', async () => {
+    const state = createDefaultState();
+    await act(async () => root.render(<InvestigationProgressProvider state={state}>
+      <>
+        <InvestigationShell ariaLabel="调查" actLabel="第二幕" locationLabel="阅览室" objective="继续阅读。" onExit={vi.fn()}>场景内容</InvestigationShell>
+        <InvestigationProgressDrawer state={state} />
+      </>
+    </InvestigationProgressProvider>));
+
+    const trigger = host.querySelector<HTMLButtonElement>('.investigation-shell__header-actions [aria-label="打开调查进度"]')!;
+    expect(trigger.textContent).toContain('调查进度');
+    await act(async () => trigger.click());
+    expect(host.querySelector<HTMLDialogElement>('.investigation-progress')?.open).toBe(true);
   });
 });

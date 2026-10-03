@@ -257,9 +257,17 @@ async function advanceAct2() {
   assert.equal(state().game.flags.FLAG_A1_COMPLETE, true);
   assert.equal(state().game.flags.FLAG_A1_BU_FOUND, true);
   assert.deepEqual(state().modules.scene.capturedPhotoIds, ['IMG_A1_H_003', 'IMG_A1_I_004']);
-  // jsdom 不评估媒体查询，桌面任务卡默认折叠；展开后再断言文案。
-  if (!document().querySelector('.desktop-task-card__body')) await click('.desktop-task-card__toggle');
-  assert.match(query('.desktop-task-card').textContent, /查一次相关信息/);
+  // The current step stays visible either on the desktop card or the active app titlebar.
+  const taskCard = document().querySelector('.desktop-task-card');
+  const activeWindowStep = document().querySelector('.app-window--active .window-titlebar__progress');
+  assert.ok(taskCard || activeWindowStep, 'T01 should expose the next step on the desktop card or active-window titlebar');
+  const surfacedStep = [
+    taskCard?.querySelector('.desktop-task-card__next')?.textContent,
+    activeWindowStep?.textContent,
+    activeWindowStep?.getAttribute('aria-label'),
+  ].filter(Boolean).join(' ');
+  assert.match(surfacedStep, /浏览器/);
+  assert.match(surfacedStep, /搜索/);
 
   // T01：两类冻结查询，复用现有浏览器。
   await openOrFocusApp('浏览器');
@@ -771,12 +779,14 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       await browse('启明 投诉');
       assert.equal(state().modules.act2Research.stage, 'qiming');
       assert.equal(state().game.phase, 'A2_T06');
-      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
-      await textButton('打开启明宣传案例', '.browser-case-review button');
+      await textButton('返回实名个案核对', '.browser-qiming-toolbar button');
+      await textButton('核对黄子山', '.browser-case-review__person');
+      await textButton('打开共用宣传案例（黄子山）', '.browser-case-review__step-action[data-case-action="open-official"]');
+      assert.match(query('.browser-page__case-path').textContent, /正在调查：黄子山/);
       assert.equal(state().game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ, true);
-      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
-      await textButton('打开黄子山后续报道', '.browser-case-review button');
-      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
+      await textButton('打开黄子山后续报道', '.browser-page__case-path-actions button');
+      assert.ok(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_008'));
+      await textButton('返回黄子山材料核对', '.browser-page__case-context-return');
       const huangCase = '.browser-case-review__case[aria-label="黄子山材料"]';
       query(`${huangCase} label:nth-of-type(2)`).click(); await settle();
       await click(`${huangCase} .browser-case-review__submit`);
@@ -784,8 +794,10 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       query(`${huangCase} label:nth-of-type(1)`).click(); await settle();
       await click(`${huangCase} .browser-case-review__submit`);
       assert.deepEqual(state().modules.act2Research.t06.reviewedCases.map((review) => review.caseId), ['huang']);
-      await textButton('打开钟子月后续报道', '.browser-case-review button');
-      await textButton('返回个案材料复核', '.browser-qiming-toolbar button');
+      await textButton('继续核对钟子月', '.browser-case-review__next-person [data-case-action="next-person"]');
+      await textButton('打开钟子月后续报道', '.browser-case-review__step-action[data-case-action="open-followup"]');
+      assert.match(query('.browser-page__case-path').textContent, /正在调查：钟子月/);
+      await textButton('返回钟子月材料核对', '.browser-page__case-context-return');
       const zhongCase = '.browser-case-review__case[aria-label="钟子月材料"]';
       query(`${zhongCase} label:nth-of-type(1)`).click(); await settle();
       await click(`${zhongCase} .browser-case-review__submit`);
@@ -796,7 +808,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       assert.equal(state().game.flags.FLAG_A2_ZHONG_MATCH_INFERRED, undefined);
       assert.equal(state().modules.act2Research.t06.nicknameAssessment, null);
       assert.equal(state().modules.browser.visitedPageIds.includes('PAGE_A2_T06_006'), false, 'forum nickname evidence remains optional to the main path');
-      await textButton('与小月继续核对资料', '.browser-case-review__next button');
+      await textButton('与小月继续核对资料', '.browser-case-review__next [data-case-action="continue"]');
       assert.equal(state().modules.act2Research.stage, 'finale');
       await mount(save());
       assert.equal(state().modules.act2Research.stage, 'finale');

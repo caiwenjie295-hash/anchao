@@ -5,6 +5,7 @@ import type { AppDefinition } from '../data/apps';
 import { AppIcon } from './AppIcon';
 import { AppShell } from './AppShell';
 import { SpriteIcon } from './SpriteIcon';
+import { useInvestigationProgress } from './InvestigationProgressContext';
 import '../sprites.css';
 
 interface AppWindowProps {
@@ -22,6 +23,7 @@ type Gesture = { kind: 'move' | 'resize'; startX: number; startY: number; bounds
 
 export function AppWindow({ app, windowState, active, onFocus, onMinimize, onToggleMaximize, onClose, onBoundsChange }: AppWindowProps) {
   const gestureRef = useRef<Gesture | null>(null);
+  const progressContext = useInvestigationProgress();
   const beginGesture = (event: ReactPointerEvent<HTMLDivElement>, kind: Gesture['kind']) => {
     if (windowState.status === 'maximized') return;
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -48,6 +50,15 @@ export function AppWindow({ app, windowState, active, onFocus, onMinimize, onTog
     >
       <div className="window-titlebar" onPointerDown={(event) => beginGesture(event, 'move')} onPointerMove={moveGesture} onPointerUp={endGesture} onDoubleClick={onToggleMaximize}>
         <div className="window-titlebar__name"><AppIcon app={app} compact /><span>{app.title}</span></div>
+        {active && progressContext && <button
+          type="button"
+          className="window-titlebar__progress"
+          aria-label={`打开调查进度；当前建议：${progressContext.progress.nextAction}`}
+          title="点击查看当前路线与剧情回顾"
+          onPointerDown={(event) => event.stopPropagation()}
+          onDoubleClick={(event) => event.stopPropagation()}
+          onClick={(event) => progressContext.openProgress(event.currentTarget)}
+        ><strong>调查进度</strong><span>{progressContext.progress.nextAction}</span></button>}
         <div className="window-controls" onPointerDown={(event) => event.stopPropagation()}>
           <button type="button" onClick={onMinimize} aria-label={`最小化 ${app.title}`} title="最小化"><SpriteIcon name="window-minimize" /></button>
           <button type="button" onClick={onToggleMaximize} aria-label={`${windowState.status === 'maximized' ? '还原' : '最大化'} ${app.title}`} title={windowState.status === 'maximized' ? '还原' : '最大化'}><SpriteIcon name={windowState.status === 'maximized' ? 'window-restore' : 'window-maximize'} /></button>

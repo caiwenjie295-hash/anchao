@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { EvidenceImage } from '../../components/EvidenceImage';
+import { useInvestigationProgress } from '../../components/InvestigationProgressContext';
 import { stateManager } from '../../core/stateManager';
 import type { AppState } from '../../core/types';
 import { act1Scenes, hotspotsBySceneId, sceneById, type SceneHotspot, type SceneRecord } from '../../data/sceneData';
@@ -9,8 +10,10 @@ import { SceneClueFocus } from './SceneClueFocus';
 const startScene = act1Scenes[0];
 
 function SceneTransition() {
+  const progressContext = useInvestigationProgress();
   return (
     <section className="journey-transition" aria-label="前往鸡公岭">
+      {progressContext && <button type="button" className="investigation-progress-trigger journey-transition__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
       <div className="journey-transition__copy">
         <p>{startScene.journeyIntro}</p>
         <button type="button" autoFocus onClick={() => stateManager.startJourney(startScene.id)}>继续</button>
@@ -37,6 +40,7 @@ function Hotspot({ hotspot, onInspect }: { hotspot: SceneHotspot; onInspect: (ho
 }
 
 function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
+  const progressContext = useInvestigationProgress();
   const [activeHotspot, setActiveHotspot] = useState<SceneHotspot | null>(null);
   const hotspots = hotspotsBySceneId.get(scene.id) ?? [];
   const background = assetLoader.get(scene.backgroundAssetId)?.src;
@@ -59,7 +63,10 @@ function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
     <section className="act1-scene" aria-label={`${scene.title}场景`}>
       <header className="act1-scene__header">
         <div><p className="act1-scene__eyebrow">鸡公岭</p><h1>{scene.title}</h1></div>
-        <p className="act1-scene__progress" aria-label={`当前位置：${scene.title}`}>{act1Scenes.findIndex((item) => item.id === scene.id) + 1} / {act1Scenes.length}</p>
+        <div className="act1-scene__header-actions">
+          <p className="act1-scene__progress" aria-label={`当前位置：${scene.title}`}>{act1Scenes.findIndex((item) => item.id === scene.id) + 1} / {act1Scenes.length}</p>
+          {progressContext && <button type="button" className="investigation-progress-trigger act1-scene__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
+        </div>
       </header>
       <div className={`act1-scene__canvas act1-scene__canvas--${scene.visualVariant}${background ? ' act1-scene__canvas--image' : ''}`} data-asset-id={scene.backgroundAssetId}>
         {background ? <div className="scene-image-frame">

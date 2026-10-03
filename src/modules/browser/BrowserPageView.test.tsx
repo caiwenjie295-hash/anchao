@@ -85,6 +85,62 @@ describe('WB-0009 browser page layouts', () => {
     expect(article.querySelector('.browser-page__url')?.textContent).toBe('https://qiming-old.local/about/education');
     expect(article.querySelector('.browser-page__crumb')?.textContent).toBe('about › education');
   });
+
+  it('keeps copy feedback honest while providing direct case entry and person-specific return context', async () => {
+    const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+    const started: string[] = [];
+    const returned: string[] = [];
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined });
+    try {
+      await act(async () => { root.render(createElement(BrowserPageView, {
+        page: browserPageById.get('PAGE_A2_T06_004'),
+        manager,
+        onStartQimingCase: (person) => started.push(person),
+      })); });
+      expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('复制姓名只用于手动搜索');
+      expect(host.querySelectorAll('.browser-page__case-entry')).toHaveLength(2);
+      expect(host.querySelector('.browser-page__actions button')?.textContent).toBe('复制黄子山');
+      await act(async () => {
+        (host.querySelector('.browser-page__actions button') as HTMLButtonElement).click();
+        await Promise.resolve();
+      });
+      expect(host.querySelector('.browser-page__copy-feedback--failure')?.textContent).toContain('复制不可用');
+      await act(async () => { (host.querySelectorAll('.browser-page__case-entry')[1] as HTMLButtonElement).click(); });
+      expect(started).toEqual(['zhong']);
+      expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
+
+      Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: () => Promise.resolve() } });
+      await act(async () => {
+        (host.querySelector('.browser-page__actions button') as HTMLButtonElement).click();
+        await Promise.resolve();
+      });
+      expect(host.querySelector('.browser-page__copy-feedback--success')?.textContent).toContain('已复制');
+      await act(async () => { root.render(createElement(BrowserPageView, {
+        page: browserPageById.get('PAGE_A2_T06_004'),
+        manager,
+        copyContextKey: 'review:zhong',
+        casePerson: 'zhong',
+        onReturnToQimingCase: (person) => returned.push(person),
+      })); });
+      expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('正在调查：钟子月');
+      expect(host.querySelector('.browser-page__copy-feedback')).toBeNull();
+      await act(async () => { root.render(createElement(BrowserPageView, {
+        page: browserPageById.get('PAGE_A2_T06_009'),
+        manager,
+        copyContextKey: 'browser:zhong',
+        casePerson: 'zhong',
+        onReturnToQimingCase: (person) => returned.push(person),
+      })); });
+      expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('正在调查：钟子月');
+      expect(host.querySelector('.browser-page__case-context-return')?.textContent).toBe('返回钟子月材料核对');
+      expect(host.querySelector('.browser-page__copy-feedback')).toBeNull();
+      await act(async () => { (host.querySelector('.browser-page__case-context-return') as HTMLButtonElement).click(); });
+      expect(returned).toEqual(['zhong']);
+    } finally {
+      if (originalClipboard) Object.defineProperty(navigator, 'clipboard', originalClipboard);
+      else Reflect.deleteProperty(navigator, 'clipboard');
+    }
+  });
 });
 
 describe('WB-0009 search result structure', () => {

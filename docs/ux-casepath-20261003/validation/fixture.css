@@ -1,0 +1,85 @@
+html,
+body,
+#fixture-root {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+#fixture-root {
+  min-height: 100vh;
+}
+
+.casepath-fixture {
+  position: fixed;
+  z-index: 10000;
+  inset: 8px auto auto 8px;
+  width: min(390px, calc(100vw - 16px));
+  max-height: min(48vh, 360px);
+  overflow: auto;
+  color: #142234;
+  font: 13px/1.45 system-ui, sans-serif;
+}
+
+.casepath-fixture > summary {
+  width: fit-content;
+  padding: 6px 10px;
+  border: 1px solid #778496;
+  border-radius: 6px;
+  background: #f4f7fa;
+  cursor: pointer;
+}
+
+.casepath-fixture__panel {
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #778496;
+  border-radius: 6px;
+  background: rgb(248 250 252 / 96%);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 20%);
+}
+
+.casepath-fixture__controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+.casepath-fixture__controls label {
+  display: grid;
+  gap: 3px;
+}
+
+.casepath-fixture select,
+.casepath-fixture button {
+  min-height: 34px;
+  font: inherit;
+}
+
+.casepath-fixture__controls button {
+  grid-column: 1 / -1;
+}
+
+.casepath-fixture__state {
+  max-height: 18vh;
+  margin: 8px 0 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#fixture-error:not([hidden]) {
+  position: fixed;
+  z-index: 10001;
+  inset: 16px;
+  display: block;
+  max-height: 50vh;
+  overflow: auto;
+  padding: 16px;
+  border: 2px solid #a51d2d;
+  background: #fff;
+  color: #63131d;
+  font: 14px/1.5 system-ui, sans-serif;
+}

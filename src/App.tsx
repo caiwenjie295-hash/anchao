@@ -5,6 +5,8 @@ import { apps, appById } from './data/apps';
 import { AppWindow } from './components/AppWindow';
 import { DesktopIcon } from './components/DesktopIcon';
 import { DesktopTaskCard } from './components/DesktopTaskCard';
+import { InvestigationProgressDrawer } from './components/InvestigationProgressDrawer';
+import { InvestigationProgressProvider } from './components/InvestigationProgressContext';
 import { Taskbar } from './components/Taskbar';
 import { Act1PhaseBController } from './story/act1PhaseBController';
 import { Act1PhaseCController } from './story/act1PhaseCController';
@@ -117,12 +119,17 @@ export default function App() {
     {act4Active && dismissedAct4 && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><button type="button" onClick={() => setDismissedAct4(false)}>继续第四幕调查</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
   </> : null;
   if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
-    return <>
+    return <InvestigationProgressProvider state={state} suppressed={transitionOpen} onOpenApp={openApp}><>
       <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
+      <InvestigationProgressDrawer state={state} />
       {transitionLayer}
-    </>;
+    </></InvestigationProgressProvider>;
   }
+  const activeWindowId = state.desktop.activeAppId;
+  const activeWindowState = activeWindowId ? state.desktop.windows[activeWindowId] : null;
+  const taskCardVisible = !activeWindowState || activeWindowState.status === 'closed' || activeWindowState.status === 'minimized';
   return (
+    <InvestigationProgressProvider state={state} suppressed={transitionOpen} onOpenApp={openApp}>
     <>
     <div aria-hidden={transitionOpen} inert={transitionOpen}>
     <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
@@ -131,7 +138,7 @@ export default function App() {
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <DesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} />)}
       </div>
-      <DesktopTaskCard state={state} onOpenApp={openApp} />
+      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} />}
       {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
       <Act2T07Entry manager={stateManager} />
       {apps.map((app) => {
@@ -175,7 +182,9 @@ export default function App() {
     )}
     </div>
     {act4Open && <Act4Experience manager={stateManager} onExit={() => setDismissedAct4(true)} />}
+    <InvestigationProgressDrawer state={state} />
     {transitionLayer}
     </>
+    </InvestigationProgressProvider>
   );
 }
