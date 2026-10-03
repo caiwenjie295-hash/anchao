@@ -1,5 +1,12 @@
 # 《暗潮》开发记录
 
+## 2026-10-03 UX-LAYOUT-20261003 高中与桥头调查排版返修
+
+- A2 实现提交 `7854e04`，摘要箭头/窄屏换行 follow-up `340875c`：T05 旧照/完整回忆和材料判断以原生折叠按需查看；摘要保留可见已读 N/3、已选 X/2 进度和键盘状态箭头。完整地点照片维持4:3画布，学校限宽1440px居中。
+- T02 桥头维持既有老人会话、出示照片、口述与拆字顺序；移除场景/对话内部纵向滚动，保留照片独立稳定尺寸、合理行宽和44px左右操作目标。两页增加专用 `investigation-shell--act2-spacious` modifier，固定壳层操作栏不变。
+- 定向命令 `npx vitest run src/scenes/act2/SchoolInvestigation.test.tsx src/scenes/act2/BridgeInvestigation.test.tsx src/components/investigation/InvestigationShell.test.tsx src/components/investigation/InvestigationNavigation.test.tsx`：4文件/19项通过（在纯CSS箭头/换行follow-up之前）。该follow-up之后的最终 `npm run build`：280 modules通过；只有既有大chunk提示。`git diff --check` 通过。
+- A34隔离fixture/新增回归、父级2556×1370/1440×900/1366×768/390×844真实浏览器几何和最终整合门禁待完成；本记录不代表这些验收已通过。实施边界及交付范围见 `docs/ux-layout-20261003/implementation.md`。
+
 ## 2026-10-02 UX-NARR-20261002 第二至四幕叙事整理
 
 - A2 实现提交 `e1438e8` 与返修提交 `d89aac5`：T03/T04 共用图书馆阅览空间和书架照片，虚线热点对应现有卷册及同一卷末旧录；保留文字入口、缺图回退、原文与既有门槛。T05 先展示既有日常材料；语义壳层按需展开目标，并依 story、memory、move 顺序选择唯一主动作。返修定向 Vitest 为 9 个文件、41 项通过（含 Act3/Act4 壳层消费者），`npm run build`、fixture 类型检查与独立构建（206 modules）通过。
