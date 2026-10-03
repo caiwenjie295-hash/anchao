@@ -1,4 +1,5 @@
 import images from '../../data/images.json';
+import compressedAssetMap from '../assets/compressed/asset-map.json';
 
 export interface AssetReference {
   id: string;
@@ -19,18 +20,19 @@ export class AssetLoader {
   }
 }
 
-const photoFiles = import.meta.glob<string>('../Photo_src/*.png', { eager: true, query: '?url&no-inline', import: 'default' });
-const act2Files = import.meta.glob<string>('../第二幕/*.jpg', { eager: true, query: '?url&no-inline', import: 'default' });
-const act3JpgFiles = import.meta.glob<string>('../第三幕/IMG_A3_*.jpg', { eager: true, query: '?url&no-inline', import: 'default' });
-const act3PngFiles = import.meta.glob<string>('../第三幕/IMG_A3_*.png', { eager: true, query: '?url&no-inline', import: 'default' });
-const act4PngFiles = import.meta.glob<string>('../第四幕/T*/*.png', { eager: true, query: '?url&no-inline', import: 'default' });
+const compressedFiles = import.meta.glob<string>('../assets/compressed/**/*.{webp,png,jpg,jpeg}', { eager: true, query: '?url&no-inline', import: 'default' });
+const compressedEntries = compressedAssetMap.entries as Record<string, string>;
+const compressedSource = (sourcePath: string | null): string | undefined => {
+  if (!sourcePath) return undefined;
+  const outputPath = compressedEntries[sourcePath];
+  return outputPath ? compressedFiles[`../assets/compressed/${outputPath}`] : undefined;
+};
 const imageRecords = images.items as { id: string; file?: string }[];
 export const act4AssetPath = (id: string, file: string): string | null => {
   const match = /^IMG_A4_(T(?:01|05|06|07|08|09|10))_\d{3}$/.exec(id);
   return match && file === `${id}.png` ? `../第四幕/${match[1]}/${file}` : null;
 };
 export const assetLoader = new AssetLoader(Object.fromEntries(imageRecords.filter((image) => image.file).map((image) => [image.id, {
-  id: image.id, type: 'image', src: photoFiles[`../Photo_src/${image.file}`] ?? act2Files[`../第二幕/${image.file}`]
-    ?? act3JpgFiles[`../第三幕/${image.file}`] ?? act3PngFiles[`../第三幕/${image.file}`]
-    ?? act4PngFiles[act4AssetPath(image.id, image.file!) ?? ''],
+  id: image.id, type: 'image', src: compressedSource(`../Photo_src/${image.file}`) ?? compressedSource(`../第二幕/${image.file}`)
+    ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!)),
 }])));

@@ -1,9 +1,20 @@
-import ui1 from '../UI_src/UI1.png?url&no-inline';
-import ui2 from '../UI_src/UI2.png?url&no-inline';
-import ui3 from '../UI_src/UI3.png?url&no-inline';
-import ui4 from '../UI_src/UI4.png?url&no-inline';
-import wechat1 from '../Wechat_src/Wechat1.png?url&no-inline';
-import wechat2 from '../Wechat_src/Wechat2.png?url&no-inline';
+import compressedAssetMap from '../assets/compressed/asset-map.json';
+
+const compressedFiles = import.meta.glob<string>('../assets/compressed/**/*.{webp,png,jpg,jpeg}', { eager: true, query: '?url&no-inline', import: 'default' });
+const compressedEntries = compressedAssetMap.entries as Record<string, string>;
+const compressedSource = (sourcePath: string): string => {
+  const outputPath = compressedEntries[sourcePath];
+  const url = outputPath ? compressedFiles[`../assets/compressed/${outputPath}`] : undefined;
+  if (!url) throw new Error(`Missing compressed sprite asset for ${sourcePath}`);
+  return url;
+};
+
+const ui1 = compressedSource('../UI_src/UI1.png');
+const ui2 = compressedSource('../UI_src/UI2.png');
+const ui3 = compressedSource('../UI_src/UI3.png');
+const ui4 = compressedSource('../UI_src/UI4.png');
+const wechat1 = compressedSource('../Wechat_src/Wechat1.png');
+const wechat2 = compressedSource('../Wechat_src/Wechat2.png');
 
 export type SpriteName = 'app-wechat' | 'app-mail' | 'app-browser' | 'app-explorer' | 'app-notepad' | 'app-photos' | 'window-minimize' | 'window-maximize' | 'window-restore' | 'window-close' | 'file-image' | 'file-document' | 'attachment';
 type Sprite = { source: string; x: number; y: number; width: number; height: number; imageWidth: number; imageHeight: number };

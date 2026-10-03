@@ -30,7 +30,7 @@
 /* Center the user-provided desktop photo at its natural proportions with cover framing. */
 .desktop {
   background-color: #a9c2ad;
-  background-image: url('./assets/desktop-wallpaper.jpg');
+  background-image: url('./assets/compressed/assets/desktop-wallpaper.webp?no-inline');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
