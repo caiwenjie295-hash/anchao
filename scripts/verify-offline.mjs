@@ -419,6 +419,10 @@ async function advanceAct2() {
   assert.equal(state().modules.act2Research.school.symbolMatchConfirmed, true);
   assert.notEqual(state().game.flags.FLAG_A2_SS_MATCH_CONFIRMED, true);
 
+  const schoolMaterials = query('details.t05-school__timeline-disclosure');
+  assert.equal(schoolMaterials.open, false, 'school materials are initially collapsed');
+  await click('details.t05-school__timeline-disclosure > summary');
+  assert.equal(schoolMaterials.open, true, 'player explicitly expands school materials before selecting support');
   await textButton('班主任的回忆', '.t05-school__evidence-options button');
   await textButton('历次成绩记录', '.t05-school__evidence-options button');
   await textButton('休学后他的表现和成绩都有明显变化', '.t05-school__inferences button');
