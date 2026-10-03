@@ -2,11 +2,13 @@
 
 ## 当前待办
 
-- [x] AS-COMPRESS-20261003 子分支实现、16份样图审阅和两种构建完成：141张发布副本、逐图账本及138个登记ID映射见 `docs/as-compress-20261003/`；按用户要求游戏测试未运行。主审后续整合以父审查记录为准。
+- [x] AS-COMPRESS-20261003 子分支实现、16份样图审阅和两种构建完成：141张发布副本、逐图账本及138个登记ID映射见 `docs/as-compress-20261003/`；按用户要求游戏测试未运行。父审查通过并合入本地 `main` `6856ecb`。
 - [x] UX-CASEPATH / UX-PROGRESS / UX-WALLPAPER-20261003 同批功能、进度抽屉、实名路径和本地壁纸验收通过；`npm test` 65文件/350项、最终定向测试、生产构建及 `52626ef` 默认两轮离线验收通过，真实IAB覆盖默认窗/最大化/手机与关键四幕状态。两份审查均为 `APPROVED`，详见 `docs/reviews/UX-CASEPATH-20261003.md`、`docs/reviews/UX-PROGRESS-20261003.md`。
 - [x] UX-CASEPATH / UX-PROGRESS / UX-WALLPAPER-20261003 已以 `--no-ff` 合入本地 `main`；功能合并节点 `2773c6a274fb1b4d6e6ba93de5dc194afe61a379` 的离线入口与资源包（`暗潮离线/index.html` + `assets`）为143文件/199.49 MiB，默认两轮 offline 通过，manifest.gitSha与该节点一致。父复核29项保护哈希/存在性无差异、30项原dirty状态完全一致，两份用户JPG及产品壁纸哈希一致。最终交付版本以 `main` 的 `git rev-parse HEAD` 与 `暗潮离线/manifest.json` 的 `gitSha` 核对为准。验收详情见两份 `APPROVED` 评审。
 - [x] UX-LAYOUT-20261003 高中与桥头布局返修已完成：集成测试60文件/321项、生产与离线构建、默认两轮 offline 及2556×1370/1440×900/1366×768/390×844真实浏览器验收通过。照片尺寸、展开不挤压、桥头滚动条稳定、触控目标和剧情门槛见 `docs/ux-layout-20261003/implementation.md`；主审验收与 main 合并记录见 `docs/reviews/UX-LAYOUT-20261003.md`。
 - [x] UX-NARR-20261002 父级集成与验收完成：`npm test` 58 文件/317 项、生产构建、143 文件/197.40 MiB 离线包、默认两轮 offline，以及 1440×900/390×844 真实浏览器抽查均通过；主审结论 `APPROVED`。验收细节及 main 合并状态见 `docs/reviews/UX-NARR-20261002.md`。
+- [x] UX-FLOW-20261004 功能已合入本地 `main`，合并节点 `dd6258a7df7459cac47508fda7e2cf15e4bf7821`；调查入口、幕间直达、A4场景封面/正文分页、已读伏笔回顾和结束字幕交付。原文及剧情状态未改。网页 288 modules、离线入口与资源包 144 文件/40.92 MiB 构建通过；游戏测试、Vitest、offline验收和浏览器试玩均按要求 NOT RUN。记录见 `docs/ux-flow-20261004/implementation.md`。
+- [ ] UX-FLOW-20261004 的真实视觉实测与完整通关未执行；后续若安排试玩，再单独关闭此项。本批构建通过不代表已完成浏览器验收。
 - [x] A34 第三幕玩家文本清理、第四幕原文阅读器与schema11迁移完成；定向验收范围见 `docs/a34-narrative-0001/test-matrix.md`。
 - [x] 补完 UX-T07-UI-0001 的全站白灰主题、第二幕照片/外景确认、实名材料复核与宽窄调查布局；交付与主审证据见 `docs/ux-t07-ui-0001/delivery.md`。
 - [x] 第三幕59镜头完成1920/1440/1024/768/390默认DOM比例与热点投影测量，代表镜头加载/失败/恢复和resize经真实Chrome检查。
