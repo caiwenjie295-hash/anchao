@@ -157,3 +157,7 @@
   .investigation-shell--exploration .investigation-navigation__item,
   .investigation-shell--memory .investigation-navigation__item { width: 100%; max-width: none; flex: 1 1 100%; }
 }
+
+/* T02 bridge and T05 school share one content scroller while keeping the action rail fixed. */
+.investigation-shell--act2-spacious { overflow: hidden; }
+.investigation-shell--act2-spacious .investigation-shell__scene { min-height: 0; overflow: auto; overscroll-behavior: contain; }
