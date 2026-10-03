@@ -18,3 +18,9 @@
 - 普通受限执行第一次因 Vite 配置加载的 Windows `spawn EPERM` 在测试启动前失败；同一授权定向命令在提升执行环境下完成并通过。
 
 A34 的 T06 独立回归、fixture、acceptance 与 offline 驱动适配，以及全局进度抽屉尚待合入。父代理统一运行整批集成门禁并检查真实浏览器宽屏/窄屏，本地记录不替代这些验收；此节点没有运行全量测试、offline 或真实浏览器。
+
+## 调查桌面壁纸
+
+按用户提供的原图字节复制 `D:\暗潮开发\暗潮-跨电脑开发包-2026-09-24\bd764bb25d49a05105060185774ba14cd2c846f7.jpg` 至 `src/assets/desktop-wallpaper.jpg`；副本 SHA-256 为 `86316098369820B22CE0265E8D0149EBB321FF5F1D33B4ACA004F6F7D74D3642`（1,601,144 字节）。原图未修改。只在 `src/imageAssets.css` 的 `.desktop`、`.desktop::after`、`.desktop-icon`、`.desktop-icon span:last-child` 作用域设置居中 cover 壁纸、关闭旧斜线伪元素，并为图标标签加白字阴影。
+
+壁纸添加后 `npm run build` 通过（280 modules；保留既有大 chunk 提示），`git diff --check` 通过。未新增测试或运行 offline；父代理的最终桌面浏览器检查仍待执行。
