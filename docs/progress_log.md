@@ -8,7 +8,7 @@
 - A2节点：T06 `72c8fff`、壁纸 `076f47e`、隔离 whole-App fixture / 精确offline驱动 `59aec65`、legacy显示返修 `89cf4ff`；A34节点：进度抽屉 `80c1ee8`、legacy/提示模型 `af160ab`、标题栏反馈 `f336ce8`、A3/A4当前场景文案 `e8d428c`；父整合功能节点 `52626ef`。主审提交 `e6a44fd`，CASEPATH 与 PROGRESS 两项审查均为 `APPROVED`。
 - 父级 `npm test` 65文件/350项通过。最后A3/A4模型显示修正后，2文件/16项定向测试及生产构建284 modules通过；T06 legacy 0/1 review 显示修正后 `npx vitest run src/modules/browser/BrowserApp.test.tsx src/data/investigationProgressData.test.ts` 2文件/20项通过。隔离fixture测试2文件/8项、严格TS、单入口构建、脚本语法检查通过。最终父功能节点 `52626ef` 的离线包为143文件/199.49 MiB，默认两轮 `test:offline` 全通过，使用本地资源、无网络依赖、零运行时错误。
 - 真实IAB验收覆盖1440默认860×560、1366最大化1366×716、390窗口390×792；钟子月先于黄子山、无复制/论坛、返回焦点和未提交选择保留、越界判断纠正、存档快照恢复和显式进入finale通过。另验A1F/Ending入口、A3 T04当前门牌且未知纸片未泄露、A4 T05王澳2014年视角与前四节回顾、School/Bridge窄屏照片尺寸和抽屉不挤压。细节、截图与DOM证据见 `docs/reviews/UX-CASEPATH-20261003.md`、`docs/reviews/UX-PROGRESS-20261003.md` 及 `C:/Users/Jay Cai/.codex/visualizations/2026/10/02/01a0fc77-8fce-79b1-b43c-8e7c4039e99b/ux-casepath-20261003/`。
-- 主审合并前检查确认29项保护内容的存在性/哈希一致、原用户30项dirty状态不变，原两份JPG哈希一致。文档收尾时本地 `main` 仍是 `81fafb1`，没有 remote；审查已通过，主审待执行本地合并。合并后仍需由主审重建与 `main` HEAD 一致的离线入口并复核保护项，不预写合并 SHA。
+- 父已以 `--no-ff` 将功能批次合入本地 `main`，功能合并节点为 `2773c6a274fb1b4d6e6ba93de5dc194afe61a379`。该节点 `npm run build:offline` 生成离线入口与资源包（`暗潮离线/index.html` + `assets`，143文件/199.49 MiB），默认两轮 `npm run test:offline` 全通过；覆盖T07/A3/A4、A–K、编辑、存档重载、重置、本地资源、无网络与零运行时错误，`manifest.gitSha`与功能合并节点一致。父逐项核对29项保护内容存在性/哈希无差异、30项原dirty状态完全一致，两份用户JPG与产品副本SHA一致。主审审查结论 `APPROVED`。最终交付版本以 `main` 的 `git rev-parse HEAD` 与 `暗潮离线/manifest.json` 的 `gitSha` 核对为准。
 
 ## 2026-10-03 UX-LAYOUT-20261003 高中与桥头调查排版返修
 
