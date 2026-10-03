@@ -62,6 +62,42 @@ describe('investigation progress display model', () => {
     expect(deriveInvestigationProgress(state).knownFacts.some((fact) => fact.id.startsWith('review-'))).toBe(false);
   });
 
+  it('uses the specific shared publicity page visit and preserves valid T06 completion paths', () => {
+    const state = qimingState();
+    state.game.flags.FLAG_A2_QIMING_OFFICIAL_FOUND = true;
+    const pageStillNeeded = getDesktopTaskPresentation(state);
+    expect(pageStillNeeded.steps.find((step) => step.id === 't06-official')?.complete).toBe(false);
+    expect(pageStillNeeded.nextAction).toContain('打开启明旧站学员成长记录');
+
+    state.modules.act2Research.t06.legacyCompletionMigrated = true;
+    const legacy = deriveInvestigationProgress(state);
+    expect(legacy.knownFacts.some((fact) => fact.id.startsWith('review-'))).toBe(false);
+    expect(legacy.nextAction).toContain('与小月继续核对资料');
+    expect(getDesktopTaskPresentation(state).nextAction).toContain('与小月继续核对资料');
+    expect(getDesktopTaskPresentation(state).nextAction).not.toContain('黄子山');
+    expect(getDesktopTaskPresentation(state).nextAction).not.toContain('钟子月');
+
+    state.modules.act2Research.t06.reviewedCases = [
+      { caseId: 'huang', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], conclusionId: 'public-claims-and-followup-differ' },
+    ];
+    const legacyWithOptionalReview = deriveInvestigationProgress(state);
+    expect(legacyWithOptionalReview.nextAction).toContain('与小月继续核对资料');
+    expect(legacyWithOptionalReview.knownFacts.map((fact) => fact.id)).toContain('review-huang');
+    expect(legacyWithOptionalReview.knownFacts.map((fact) => fact.id)).not.toContain('review-zhong');
+    expect(getDesktopTaskPresentation(state).nextAction).toContain('与小月继续核对资料');
+    expect(getDesktopTaskPresentation(state).nextAction).not.toContain('钟子月');
+
+    state.modules.act2Research.t06.legacyCompletionMigrated = false;
+    state.modules.act2Research.t06.reviewedCases = [
+      { caseId: 'huang', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_008'], conclusionId: 'public-claims-and-followup-differ' },
+      { caseId: 'zhong', sourcePageIds: ['PAGE_A2_T06_004', 'PAGE_A2_T06_009'], conclusionId: 'public-claims-and-followup-differ' },
+    ];
+    expect(deriveInvestigationProgress(state).nextAction).toContain('与小月继续核对资料');
+    expect(getDesktopTaskPresentation(state).nextAction).toContain('与小月继续核对资料');
+    expect(getDesktopTaskPresentation(state).nextAction).not.toContain('黄子山');
+    expect(getDesktopTaskPresentation(state).nextAction).not.toContain('钟子月');
+  });
+
   it('keeps act three observations separate from confirmed stage conclusions', () => {
     const state = createDefaultState();
     state.game.act = 3;

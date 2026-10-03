@@ -142,7 +142,7 @@ function act2Stage(state: AppState): { location: string; objective: string; next
   if (stage === 'qiming') {
     const visited = new Set(state.modules.browser.visitedPageIds);
     const reviewed = new Set(state.modules.act2Research.t06.reviewedCases.map((entry) => entry.caseId));
-    if (state.modules.act2Research.t06.legacyCompletionMigrated && reviewed.size === 0) return {
+    if (state.modules.act2Research.t06.legacyCompletionMigrated) return {
       location: '启明实名个案复核',
       objective: '旧存档中的个案调查已恢复。',
       nextAction: '在浏览器个案复核区，主动点击“与小月继续核对资料”。',
@@ -630,8 +630,11 @@ const appLabel: Record<AppId, string> = {
 function t06DesktopSteps(state: AppState): DesktopTaskStep[] {
   const visited = new Set(state.modules.browser.visitedPageIds);
   const reviewed = new Set(state.modules.act2Research.t06.reviewedCases.map((item) => item.caseId));
+  if (state.modules.act2Research.t06.legacyCompletionMigrated || (reviewed.has('huang') && reviewed.has('zhong'))) {
+    return [{ id: 't06-continue', label: '在浏览器个案复核区点击“与小月继续核对资料”进入宣传资料核对', complete: false, current: true, appId: 'browser' }];
+  }
   const steps: DesktopTaskStep[] = [];
-  const officialRead = visited.has('PAGE_A2_T06_004') || state.game.flags.FLAG_A2_QIMING_OFFICIAL_FOUND === true;
+  const officialRead = visited.has('PAGE_A2_T06_004');
   steps.push({ id: 't06-official', label: '打开启明旧站学员成长记录，查看宣传原文', complete: officialRead, current: false, appId: 'browser' });
   const knownCases: readonly { id: 'huang' | 'zhong'; label: string; pageId: string }[] = [
     { id: 'huang', label: '核对黄子山的后续报道并记录材料差异', pageId: 'PAGE_A2_T06_008' },
