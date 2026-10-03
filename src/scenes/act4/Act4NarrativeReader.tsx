@@ -1,22 +1,25 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { stateManager, type StateManager } from '../../core/stateManager';
-import { act4NarrativeSections, act4NarrativeExplanations, act4NarrativeEnding, act4NarrativeSources } from '../../data/narrative/act4Narrative';
+import { act4NarrativeSections, act4NarrativeExplanations, act4NarrativeEnding, type Act4NarrativeBlock } from '../../data/narrative/act4Narrative';
 import { act4OldMails } from '../../data/act4/mail';
 import { assetLoader } from '../../core/assetLoader';
 import { act4NarrativeActionsSatisfied, type ActiveAct4NarrativeStage } from '../../story/act4/narrativePolicy';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
-import { act4DateTimeValue, act4PagePresentation, act4ParagraphKind, act4PresentationKind, act4TextSegments, type Act4TextSegment } from '../../data/narrative/act4Presentation';
+import { act4DateTimeValue, act4PagePresentation, act4ParagraphKind, act4PresentationKind, act4ReaderTextPages, type Act4TextSegment } from '../../data/narrative/act4Presentation';
 import '../../act4/act4.css';
 
 const blockedReason: Partial<Record<ActiveAct4NarrativeStage, string>> = {
   T02: '先分别核对两封邮件的日期，再用这一天登录。',
-  T04: '读完情境后打开 VVaKe 邮件，再继续后面的原文。',
+  T04: '读完情境后打开 VVaKe 邮件，再继续阅读。',
   T08: '到达档案馆后，打开 2008 年的档案。',
   T09: '先把笔记藏好，再走到门外听完广播。',
   T10: '读完当下的故事后打开最后一封邮件。',
 };
+
+const readerPagesForBlock = (stage: ActiveAct4NarrativeStage, block: Act4NarrativeBlock) =>
+  act4ReaderTextPages(stage, block.id, block.paragraphs, block.kind === 'novel-excerpt');
 
 const perspectiveLabel = (perspective: 'investigator' | 'wangao') => perspective === 'wangao'
   ? '王澳当时的亲历'
@@ -31,8 +34,12 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const [loginMessage, setLoginMessage] = useState('');
   const [passwordHintLevel, setPasswordHintLevel] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [zoomedIllustration, setZoomedIllustration] = useState<{ assetId: string; alt: string } | null>(null);
   const [failedIllustrationAssetId, setFailedIllustrationAssetId] = useState<string | undefined>();
   const [paragraphPageByBlock, setParagraphPageByBlock] = useState<Record<string, number>>({});
+  const [activeBlockByReadingSpace, setActiveBlockByReadingSpace] = useState<Record<string, string>>({});
+  const [openedCoverKeys, setOpenedCoverKeys] = useState<Set<string>>(() => new Set());
+  const [hotelBackgroundExpanded, setHotelBackgroundExpanded] = useState(true);
   const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
   const readerRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -41,6 +48,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const reviewTriggerRef = useRef<string | null>(null);
   const savedCurrentPositionRef = useRef<{ scrollTop: number } | null>(null);
   const returningToCurrentRef = useRef(false);
+  const skipPageAutoScrollRef = useRef(false);
   const continueClickLockRef = useRef(false);
   const actions = state.completedNarrativeActionIds;
   const hasAction = (actionId: string | undefined) => actionId !== undefined && actions.includes(actionId as typeof actions[number]);
@@ -63,6 +71,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
 
   function returnToCurrent(): void {
     returningToCurrentRef.current = true;
+    skipPageAutoScrollRef.current = true;
     setReviewStage(null);
   }
 
@@ -97,6 +106,20 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     }
   }, [section?.stage, reviewing]);
 
+  useLayoutEffect(() => {
+    if (skipPageAutoScrollRef.current) {
+      skipPageAutoScrollRef.current = false;
+      return;
+    }
+    const page = readerRef.current?.querySelector<HTMLElement>('.a4-reader__segment[data-reader-active="true"], .a4-reader__cover[data-reader-active="true"]');
+    const scene = readerRef.current?.closest<HTMLElement>('.investigation-shell__scene');
+    if (!page || !scene) return;
+    page.focus({ preventScroll: true });
+    const pageRect = page.getBoundingClientRect();
+    const sceneRect = scene.getBoundingClientRect();
+    scene.scrollTop += pageRect.top - sceneRect.top - 18;
+  }, [paragraphPageByBlock, activeBlockByReadingSpace, openedCoverKeys, reviewStage, state.stage]);
+
   useEffect(() => {
     if (!zoomOpen) return;
     const shell = readerRef.current?.closest<HTMLElement>('.investigation-shell');
@@ -109,10 +132,14 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     };
   }, [zoomOpen]);
   useEffect(() => {
-    if (section?.stage !== 'T01' || reviewing) return;
-    const pageIndex = paragraphPageByBlock['T01:T01_ORIGINAL'] ?? 0;
+    if (state.stage !== 'T01' || reviewStage !== null) return;
+    if (!openedCoverKeys.has('T01:current:T01_ORIGINAL:cover')) return;
+    const pageIndex = paragraphPageByBlock['T01:current:T01_ORIGINAL'] ?? 0;
     manager.readAct4NotebookPage(pageIndex + 1);
-  }, [manager, paragraphPageByBlock, reviewing, section?.stage]);
+  }, [manager, openedCoverKeys, paragraphPageByBlock, reviewStage, state.stage]);
+  useEffect(() => {
+    if (state.stage === 'T10' && state.completedNarrativeSectionIds.includes('A4_READ_T10') && whole.game.flags.FLAG_A4_COMPLETE === true) setEndingRecapExpanded(true);
+  }, [state.completedNarrativeSectionIds, state.stage, whole.game.flags.FLAG_A4_COMPLETE]);
   if (!section) return null;
   const stage = section.stage;
   const presentationKind = act4PresentationKind(stage);
@@ -120,41 +147,100 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const primaryBlock = section.blocks.find((block) => block.id === `${stage}_ORIGINAL`)
     ?? section.blocks.find((block) => block.kind === 'novel-excerpt');
   const primaryPages = primaryBlock
-    ? act4TextSegments(stage, primaryBlock.id, primaryBlock.paragraphs.length).filter((item) => item.role === 'page' || item.role === 'whole')
+    ? readerPagesForBlock(stage, primaryBlock).filter((item) => item.role === 'page' || item.role === 'whole')
     : [];
-  const primaryPageKey = primaryBlock ? `${stage}:${primaryBlock.id}` : '';
+  const primaryPageKey = primaryBlock ? `${stage}:${reviewing ? 'review' : 'current'}:${primaryBlock.id}` : '';
   const primaryPageIndex = primaryBlock && primaryPages.length
     ? Math.max(0, Math.min(primaryPages.length - 1, paragraphPageByBlock[primaryPageKey] ?? 0))
     : 0;
-  const pagePresentation = act4PagePresentation(stage, primaryPageIndex);
+  const primaryPage = primaryPages[primaryPageIndex];
+  const pagePresentation = act4PagePresentation(stage, primaryPageIndex, primaryBlock?.id, primaryPage?.label, primaryPage?.sceneIndex);
   const displayTitle = pagePresentation?.title ?? section.title;
   const displayPeriodLabel = pagePresentation?.periodLabel ?? section.periodLabel;
-  const illustrationAssetId = pagePresentation?.illustrationAssetId ?? section.illustrationAssetId;
-  const illustrationAlt = pagePresentation?.illustrationAlt ?? section.illustrationAlt ?? '';
-  const t05RecapSentenceLimit = stage === 'T05' ? Math.max(0, primaryPageIndex - 1) : undefined;
+  const t05RecapSentenceLimit = stage === 'T05' && primaryPage
+    ? primaryPage.from < 8 ? 0 : primaryPage.from < 13 ? 1 : primaryPage.to >= 23 ? 3 : 2
+    : stage === 'T05' ? 0 : undefined;
   const actionCompleted = act4NarrativeActionsSatisfied(stage, actions);
   const sectionCompleted = state.completedNarrativeSectionIds.includes(section.id);
   const finalCompleted = stage === 'T10' && sectionCompleted && whole.game.flags.FLAG_A4_COMPLETE === true;
-  const continueAction: InvestigationAction = reviewing
-    ? {
-      actionId: 'A4_RETURN_TO_CURRENT_PROGRESS', kind: 'return', label: '返回当前阅读进度', state: 'ready',
-      onActivate: returnToCurrent,
-    }
-    : {
+  const visibleBlocks = section.blocks.filter((block) => !block.revealAfterActionId || hasAction(block.revealAfterActionId));
+  const needsCover = (kind: string) => (stage === 'T01' || isWangaoMemory || stage === 'T10') && kind === 'novel-excerpt';
+  const readingSpaceKey = `${stage}:${reviewing ? 'review' : 'current'}`;
+  const pageTargets = visibleBlocks.flatMap((block) => {
+    if (block.kind === 'adaptation-bridge') return [];
+    const pages = readerPagesForBlock(stage, block).filter((item) => item.role === 'page' || item.role === 'whole');
+    if (!pages.length) return [];
+    const key = `${stage}:${reviewing ? 'review' : 'current'}:${block.id}`;
+    const pageIndex = Math.max(0, Math.min(pages.length - 1, paragraphPageByBlock[key] ?? 0));
+    const page = pages[pageIndex];
+    const currentKey = `${stage}:${reviewing ? 'review' : 'current'}:${block.id}`;
+    const coverKey = stage === 'T01' || stage === 'T10'
+      ? `${currentKey}:cover`
+      : `${currentKey}:${page.sceneId ?? block.id}:cover`;
+    return [{ blockId: block.id, blockKind: block.kind, pages, pageIndex, page, coverKey, coverRequired: needsCover(block.kind), coverOpen: openedCoverKeys.has(coverKey) }];
+  });
+  const rememberedBlockId = activeBlockByReadingSpace[readingSpaceKey];
+  const activeReadingTarget = pageTargets.find((target) => target.blockId === rememberedBlockId) ?? pageTargets.find((target) => target.blockId === `${stage}_ORIGINAL`) ?? pageTargets[0];
+  const activeReadingBlockIndex = activeReadingTarget ? visibleBlocks.findIndex((block) => block.id === activeReadingTarget.blockId) : -1;
+  const nextReadingTarget = activeReadingTarget ? pageTargets.find((target) => visibleBlocks.findIndex((block) => block.id === target.blockId) === activeReadingBlockIndex + 1) : undefined;
+  const t01PageControls = stage === 'T01' && activeReadingTarget?.coverOpen === true && activeReadingTarget.blockId === 'T01_ORIGINAL';
+  const continueAction: InvestigationAction = activeReadingTarget && activeReadingTarget.coverRequired && !activeReadingTarget.coverOpen
+      ? {
+        actionId: `A4_${stage}_OPEN_COVER_${activeReadingTarget.blockId}_${activeReadingTarget.pageIndex + 1}`, kind: 'memory', target: activeReadingTarget.blockId,
+        label: stage === 'T01' ? '翻开小 A 的笔记' : `翻开：${activeReadingTarget.page.sceneLabel || activeReadingTarget.page.label || '这一段'}`, state: 'ready',
+        onActivate: () => {
+          if (stage === 'T01') setHotelBackgroundExpanded(false);
+          setOpenedCoverKeys((previous) => new Set(previous).add(activeReadingTarget.coverKey));
+        },
+      }
+      : activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1
+        ? {
+          actionId: `A4_${stage}_NEXT_PAGE_${activeReadingTarget.blockId}_${activeReadingTarget.pageIndex + 1}`, kind: 'memory', target: activeReadingTarget.blockId,
+          label: stage === 'T01' ? `继续阅读 · ${activeReadingTarget.pageIndex + 1} / ${activeReadingTarget.pages.length}` : activeReadingTarget.pages[activeReadingTarget.pageIndex + 1]?.sceneId !== activeReadingTarget.page.sceneId
+            ? `继续到：${activeReadingTarget.pages[activeReadingTarget.pageIndex + 1]?.sceneLabel || '下一段'}`
+            : `下一页 · ${activeReadingTarget.pageIndex + 1} / ${activeReadingTarget.pages.length}`, state: 'ready',
+          onActivate: () => setParagraphPageByBlock((previous) => ({ ...previous, [`${stage}:${reviewing ? 'review' : 'current'}:${activeReadingTarget.blockId}`]: activeReadingTarget.pageIndex + 1 })),
+        }
+    : activeReadingTarget && nextReadingTarget
+      ? {
+        actionId: `A4_${stage}_NEXT_BLOCK_${nextReadingTarget.blockId}`, kind: 'memory', target: nextReadingTarget.blockId,
+        label: `继续到：${nextReadingTarget.page.sceneLabel || nextReadingTarget.page.label || '下一段'}`, state: 'ready',
+        onActivate: () => setActiveBlockByReadingSpace((previous) => ({ ...previous, [readingSpaceKey]: nextReadingTarget.blockId })),
+      }
+    : reviewing
+      ? {
+        actionId: 'A4_RETURN_TO_CURRENT_PROGRESS', kind: 'return', label: '返回当前阅读进度', state: 'ready',
+        onActivate: returnToCurrent,
+      }
+      : {
       actionId: `A4_${stage}_CONTINUE_READING`,
       kind: stage === 'T10' ? 'story' : 'memory',
       target: stage === 'T10' ? 'A4_COMPLETE' : `A4_READ_T${String(Number(stage.slice(1)) + 1).padStart(2, '0')}`,
-      label: finalCompleted ? '第四幕已完成' : stage === 'T10' ? '完成第四幕' : '收好这一段，继续阅读',
+      label: finalCompleted ? '第四幕已完成' : stage === 'T10' ? '完成第四幕' : '读完这一段，继续',
       state: finalCompleted ? 'completed' : actionCompleted ? 'ready' : 'blocked',
-      reason: actionCompleted ? undefined : blockedReason[stage] ?? '先读完这一段原文。',
+      reason: actionCompleted ? undefined : blockedReason[stage] ?? '先读完这一段，再继续。',
       onActivate: () => continueCurrentSection(stage),
     };
 
-  const visibleBlocks = section.blocks.filter((block) => !block.revealAfterActionId || hasAction(block.revealAfterActionId));
-  const visibleExplanationIds = new Set(visibleBlocks.flatMap((block) => block.explanationId ? [block.explanationId] : []));
-  if ((!section.explanationRevealAfterActionId || hasAction(section.explanationRevealAfterActionId)) && section.explanationId) visibleExplanationIds.add(section.explanationId);
-  const illustration = illustrationAssetId ? assetLoader.get(illustrationAssetId)?.src : undefined;
-  const illustrationAvailable = Boolean(illustration) && failedIllustrationAssetId !== illustrationAssetId;
+  const displayedEnds = new Map(pageTargets.map((target) => {
+    const coverAllowsText = !target.coverRequired || target.coverOpen;
+    const atEnd = target.pageIndex === target.pages.length - 1;
+    return [target.blockId, !coverAllowsText ? 0 : atEnd ? visibleBlocks.find((block) => block.id === target.blockId)?.paragraphs.length ?? 0 : target.page.to] as const;
+  }));
+  const hasDisplayedBlock = (block: Act4NarrativeBlock) => (displayedEnds.get(block.id) ?? 0) >= block.paragraphs.length;
+  const allVisibleTextDisplayed = visibleBlocks.filter((block) => block.kind !== 'adaptation-bridge').every(hasDisplayedBlock);
+  const t05PartialRecapAvailable = stage === 'T05' && Boolean(primaryPage && primaryPage.from >= 8)
+    && activeReadingTarget?.blockId === primaryBlock?.id && activeReadingTarget.coverOpen;
+  const visibleExplanationIds = new Set<string>();
+  for (const block of visibleBlocks) {
+    if (!block.explanationId) continue;
+    if (block.explanationId === section.explanationId && !allVisibleTextDisplayed && !t05PartialRecapAvailable) continue;
+    if (block.explanationId !== section.explanationId && !hasDisplayedBlock(block)) continue;
+    visibleExplanationIds.add(block.explanationId);
+  }
+  if ((allVisibleTextDisplayed || t05PartialRecapAvailable) && (!section.explanationRevealAfterActionId || hasAction(section.explanationRevealAfterActionId)) && section.explanationId) {
+    visibleExplanationIds.add(section.explanationId);
+  }
   const completedSectionIds = state.completedNarrativeSectionIds;
   const availableSections = act4NarrativeSections.filter((item) => completedSectionIds.includes(item.id) || item.stage === currentStage);
   const textBySection = new Map(act4NarrativeSections.map((item) => [item.id, item.id === section.id ? displayTitle : item.title]));
@@ -206,7 +292,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     }
     if (stage === 'T04' && blockId === 'T04_CONTEXT' && !hasAction('A4_T04_WAKE_MAIL_OPENED')) {
       return <section className="a4-reader__interaction" aria-label="打开 VVaKe 邮件" key="T04_WAKE_MAIL_INTERACTION">
-        <p>主动打开这封旧邮件，查看原文内容。</p>
+        <p>打开这封旧邮件，查看邮件内容。</p>
         <button type="button" onClick={() => manager.viewAct4WakeMail()}>打开这封邮件</button>
       </section>;
     }
@@ -284,17 +370,29 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     </details>;
   });
 
-  const renderVisibleSegments = (blockId: string, paragraphs: string[], currentPage: Act4TextSegment | undefined, visibleSegments: Act4TextSegment[], pageIndex: number, pageCount: number) => (
+  const renderVisibleSegments = (blockId: string, paragraphs: string[], currentPage: Act4TextSegment | undefined, visibleSegments: Act4TextSegment[], pageIndex: number, pageCount: number, focusCurrentPage = true) => (
     <div className="a4-reader__segment-pages" data-active-segment-id={currentPage?.id} data-active-page={pageIndex + 1} data-page-count={pageCount}>
       {visibleSegments.map((contentSegment) => {
-        const isActivePage = contentSegment.id === currentPage?.id;
+        const isSelectedPage = contentSegment.id === currentPage?.id;
+        const isActivePage = focusCurrentPage && isSelectedPage;
         const segmentParagraphs = paragraphs.slice(contentSegment.from, contentSegment.to);
-        const dateHeading = stage === 'T03' && blockId === 'T03_ORIGINAL' && isActivePage
+        const dateHeading = stage === 'T03' && blockId === 'T03_ORIGINAL' && isSelectedPage
           ? act4DateTimeValue(segmentParagraphs[0] ?? '')
           : undefined;
         const firstParagraphIsDate = Boolean(dateHeading);
-        return <section className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`} data-segment-id={contentSegment.id} key={contentSegment.id}>
-          {contentSegment.label && !['T01', 'T03', 'T05'].includes(stage) && <h4>{contentSegment.label}</h4>}
+        const pageHeading = contentSegment.sceneId
+          ? `${contentSegment.sceneLabel || ''}${(contentSegment.scenePageCount ?? 1) > 1 ? ` · 第 ${(contentSegment.scenePageIndex ?? 0) + 1} 页` : ''}`
+          : contentSegment.label;
+        const showSegmentHeading = Boolean(pageHeading) && (stage === 'T01' || Boolean(contentSegment.sceneId) || !['T03', 'T05'].includes(stage));
+        return <section
+          className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`}
+          data-segment-id={contentSegment.id}
+          data-reader-active={isActivePage ? 'true' : undefined}
+          aria-label={isActivePage && pageHeading ? pageHeading : undefined}
+          tabIndex={isActivePage ? -1 : undefined}
+          key={contentSegment.id}
+        >
+          {showSegmentHeading && <h4>{pageHeading}</h4>}
           {dateHeading && <h4 className="a4-reader__social-date"><time dateTime={dateHeading}>{segmentParagraphs[0]}</time></h4>}
           <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
             const index = contentSegment.from + localIndex;
@@ -320,32 +418,29 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
       <ol>
         {act4NarrativeEnding.timeline.map((item) => <li key={item.when}><strong>{item.when}：</strong>{item.text}</li>)}
       </ol>
-      <h4>人物与资料</h4>
+      <h4>人物和线索</h4>
       {act4NarrativeEnding.people.map((person) => <p key={person.name}><strong>{person.name}：</strong>{person.text}</p>)}
     </section>
   </>;
 
   return <InvestigationShell
-    ariaLabel="第四幕原文阅读器"
+    ariaLabel="第四幕故事阅读"
     actLabel="第四幕 · 暗潮"
     locationLabel={displayTitle}
     className="investigation-shell--reading"
-    objective={stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。' : '直接阅读这一段原文；故事动作会在对应段落后出现。'}
-    helpText="按原文段落翻阅，出处与叙事衔接有单独标记。回看不会改变当前进度；跨章节需要主动继续。"
-    actions={[continueAction]}
+    objective={stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。' : activeReadingTarget ? '继续读完当前内容；需要行动时，会在这里出现。' : '这一部分已经读完，可以继续。'}
+    helpText="先看这一段的场景，再读文字。已读内容可以回看；需要做的事仍由你决定。"
+    actions={t01PageControls && !reviewing && activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1 ? [] : [continueAction]}
     onExit={onExit}
   >
-    <main className={`a4-reader a4-reader--${presentationKind}`} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} data-illustration-available={illustrationAvailable} ref={readerRef} tabIndex={-1}>
-      <article className="a4-reader__story" aria-label={`${displayTitle}原文`}>
+    <main className={`a4-reader a4-reader--${presentationKind}`} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>
+      <article className="a4-reader__story" aria-label={`${displayTitle}故事`}>
         <header className="a4-reader__heading">
           <h2 className="sr-only">{displayTitle}</h2>
           <p className="a4-reader__perspective" data-perspective={section.perspective}>
-            {displayPeriodLabel}{isWangaoMemory && !displayPeriodLabel.includes('王澳') ? ' · 王澳' : ''} · {isWangaoMemory ? '小说中的亲历回忆' : perspectiveLabel(section.perspective)}{reviewing ? ' · 只读回看' : ''}
+            {displayPeriodLabel}{isWangaoMemory && !displayPeriodLabel.includes('王澳') ? ' · 王澳' : ''} · {isWangaoMemory ? '王澳当时的回忆' : perspectiveLabel(section.perspective)}{reviewing ? ' · 回看' : ''}
           </p>
-          {isWangaoMemory && <details className="a4-reader__boundary">
-            <summary>关于亲历与调查材料的边界</summary>
-            <p className="a4-reader__evidence-boundary">这里呈现王澳当时的记忆；主角与小月没有亲历这些场景。</p>
-          </details>}
+          {reviewing && <button type="button" className="a4-reader__return-current" onClick={returnToCurrent}>回到当前阅读</button>}
         </header>
 
         <details className="a4-reader__index">
@@ -358,27 +453,54 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
         </details>
 
         <div className="a4-reader__blocks">
-          {visibleBlocks.map((block) => {
-            const key = `${stage}:${block.id}`;
-            const segments = act4TextSegments(stage, block.id, block.paragraphs.length);
+          {visibleBlocks.map((block, blockOrder) => {
+            if (blockOrder > activeReadingBlockIndex) return null;
+            const key = `${stage}:${reviewing ? 'review' : 'current'}:${block.id}`;
+            const segments = readerPagesForBlock(stage, block);
             const pages = segments.filter((item) => item.role === 'page' || item.role === 'whole');
             const pageIndex = Math.max(0, Math.min(pages.length - 1, paragraphPageByBlock[key] ?? 0));
+            if (blockOrder < activeReadingBlockIndex) {
+              const previousPage = pages[pages.length - 1];
+              const previousSegments = [...pages, ...segments.filter((item) => item.role === 'ending')];
+              return <details className="a4-reader__past-block" key={block.id}>
+                <summary>{block.kind === 'adaptation-bridge' ? '关于王澳的回忆' : `回看已读内容：${previousPage?.sceneLabel || previousPage?.label || section.title}`}</summary>
+                {renderVisibleSegments(block.id, block.paragraphs, previousPage, previousSegments, Math.max(0, pages.length - 1), pages.length, false)}
+              </details>;
+            }
             const currentPage = pages[pageIndex];
+            const currentKey = `${stage}:${reviewing ? 'review' : 'current'}:${block.id}`;
+            const coverKey = stage === 'T01' || stage === 'T10'
+              ? `${currentKey}:cover`
+              : `${currentKey}:${currentPage?.sceneId ?? block.id}:cover`;
+            const coverRequired = needsCover(block.kind);
+            const coverOpen = openedCoverKeys.has(coverKey);
+            const showCover = coverRequired && !coverOpen;
+            const blockPagePresentation = act4PagePresentation(stage, pageIndex, block.id, currentPage?.label, currentPage?.sceneIndex);
+            const coverTitle = stage === 'T01' ? '小 A 的笔记' : blockPagePresentation?.title ?? currentPage?.sceneLabel ?? currentPage?.label ?? section.title;
+            const scenePage = Boolean(currentPage?.sceneId);
+            const coverAssetId = scenePage
+              ? blockPagePresentation?.illustrationAssetId
+              : blockPagePresentation?.illustrationAssetId ?? ((block.id === primaryBlock?.id || stage === 'T10') ? section.illustrationAssetId : undefined);
+            const coverAlt = blockPagePresentation?.illustrationAlt
+              ?? (scenePage ? coverTitle : ((block.id === primaryBlock?.id || stage === 'T10') ? section.illustrationAlt : undefined))
+              ?? `${section.title}场景`;
+            const coverSource = coverAssetId ? assetLoader.get(coverAssetId)?.src : undefined;
+            const coverAvailable = Boolean(coverSource) && failedIllustrationAssetId !== coverAssetId;
+            const coverPeriod = blockPagePresentation?.periodLabel ?? section.periodLabel;
             const visibleSegments = [
-              ...segments.filter((item) => item.role === 'lead'),
               currentPage,
               ...(pageIndex === pages.length - 1 ? segments.filter((item) => item.role === 'ending') : []),
             ].filter((item): item is NonNullable<typeof item> => Boolean(item));
-            const source = block.sourceRefId ? act4NarrativeSources[block.sourceRefId] : undefined;
             const isMailBlock = ['T02_ORIGINAL', 'T04_ORIGINAL', 'T08_RETURN', 'T09_REPLY_AND_LAST_PAGE', 'T10_FINAL_MAIL'].includes(block.id);
             const navLabel = stage === 'T01' && block.id === 'T01_ORIGINAL'
-              ? '九页笔记页码'
+              ? '笔记页码'
               : stage === 'T03' && block.id === 'T03_ORIGINAL'
-                ? '微博日期'
+                ? '日期索引'
                 : stage === 'T05' && block.id === 'T05_ORIGINAL'
-                  ? '原文分段'
-                  : `${displayTitle}原文分段`;
-            const mayContinueBlock = pageIndex === pages.length - 1;
+                  ? '阅读分段'
+                  : `${displayTitle}分段`;
+            const mayContinueBlock = pageIndex === pages.length - 1 && (!coverRequired || coverOpen);
+            const leadSegments = segments.filter((item) => item.role === 'lead');
             return <div className="a4-reader__block-stack" key={block.id}>
               <section
                 className={`a4-reader__block a4-reader__block--${block.kind}${stage === 'T03' ? ' a4-reader__block--timeline' : ''}${isMailBlock ? ' a4-reader__block--email' : ''}`}
@@ -388,20 +510,29 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
                 data-presentation-kind={presentationKind}
                 data-paragraph-count={block.paragraphs.length}
               >
-                <h3>{block.kind === 'novel-excerpt' ? '原文摘录' : '叙事衔接'}</h3>
-                {source && <details className="a4-reader__source">
-                  <summary>查看原文出处</summary>
-                  <p>{source.sourceDocument} · {source.sourceChapter} · 校订稿 PDF 第 {source.sourcePages.join('、')} 页</p>
-                  <p>起句：{source.startAnchor}</p>
-                  <p>止句：{source.endAnchor}</p>
+                {stage === 'T01' && block.id === 'T01_ORIGINAL' && leadSegments.length > 0 && <details className="a4-reader__background-note" open={hotelBackgroundExpanded} onToggle={(event) => setHotelBackgroundExpanded(event.currentTarget.open)}>
+                  <summary>回到酒店 · 故事开端</summary>
+                  {renderVisibleSegments(block.id, block.paragraphs, undefined, leadSegments, 0, pages.length)}
                 </details>}
-                {pages.length > 1 && <nav className="a4-reader__page-index" aria-label={navLabel}>
-                  {pages.map((item, index) => {
+                {stage !== 'T01' && leadSegments.length > 0 && renderVisibleSegments(block.id, block.paragraphs, undefined, leadSegments, 0, pages.length)}
+                {showCover ? <section className="a4-reader__cover" data-cover-for={block.id} data-reader-active="true" aria-label={`${coverTitle}封面`} tabIndex={-1}>
+                  <div className="a4-reader__cover-art" data-illustration-id={coverAssetId}>
+                    {coverAvailable && coverSource ? <img src={coverSource} alt={coverAlt} onError={() => { if (coverAssetId) setFailedIllustrationAssetId(coverAssetId); }} /> : <div className="a4-reader__art-placeholder">{coverAlt}</div>}
+                    {coverAvailable && coverSource && <button ref={zoomButtonRef} type="button" onClick={() => { setZoomedIllustration({ assetId: coverAssetId!, alt: coverAlt }); setZoomOpen(true); }}>放大配图</button>}
+                  </div>
+                  <div className="a4-reader__cover-copy">
+                    <p>{coverPeriod}{isWangaoMemory ? ' · 王澳当时的亲历' : ''}</p>
+                    <h3>{coverTitle}</h3>
+                    <span>按下方按钮，翻开这一段。</span>
+                  </div>
+                </section> : <>
+                {pages.length > 1 && stage !== 'T01' && <nav className="a4-reader__page-index" aria-label={navLabel}>
+                  {pages.slice(0, pageIndex + 1).map((item, index) => {
                     const dateLabel = stage === 'T03' && block.id === 'T03_ORIGINAL' ? block.paragraphs[item.from] : item.label;
-                    const label = stage === 'T01'
-                      ? `第 ${index + 1} 页`
+                    const label = item.scenePageCount && item.scenePageCount > 1
+                      ? `${item.sceneLabel} · ${item.scenePageIndex! + 1}/${item.scenePageCount}`
                       : stage === 'T05' && block.id === 'T05_ORIGINAL'
-                        ? `第 ${index + 1} 段`
+                        ? `${item.label || `第 ${index + 1} 段`}`
                         : dateLabel;
                     return <button type="button" key={item.id} aria-current={pageIndex === index ? 'page' : undefined} onClick={() => setParagraphPageByBlock((previous) => ({ ...previous, [key]: index }))}>
                       {label}
@@ -410,10 +541,16 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
                 </nav>}
                 {block.kind === 'adaptation-bridge'
                   ? <details className="a4-reader__bridge">
-                    <summary>查看亲历视角说明</summary>
+                    <summary>王澳当时记得的事</summary>
                     {renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
                   </details>
                   : renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
+                {stage === 'T01' && block.id === 'T01_ORIGINAL' && coverOpen && <nav className="a4-reader__notebook-pager" aria-label="小 A 笔记页码">
+                  <button type="button" disabled={pageIndex === 0} onClick={() => setParagraphPageByBlock((previous) => ({ ...previous, [key]: Math.max(0, pageIndex - 1) }))}>上一页</button>
+                  <span aria-live="polite">{pageIndex + 1} / {pages.length}</span>
+                  <button type="button" disabled={pageIndex >= pages.length - 1} onClick={() => setParagraphPageByBlock((previous) => ({ ...previous, [key]: Math.min(pages.length - 1, pageIndex + 1) }))}>下一页</button>
+                </nav>}
+                </>}
               </section>
               {mayContinueBlock && renderInteractionAfter(block.id)}
             </div>;
@@ -430,16 +567,9 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
         </details>}
       </article>
 
-      <aside className="a4-reader__art" aria-label="配图" data-illustration-id={illustrationAssetId}>
-        {illustrationAvailable ? <>
-          <img src={illustration} alt={illustrationAlt} onError={() => setFailedIllustrationAssetId(illustrationAssetId)} />
-          <button ref={zoomButtonRef} type="button" onClick={() => setZoomOpen(true)}>放大配图</button>
-        </> : <div className="a4-reader__art-placeholder" aria-hidden="true">本段没有配图</div>}
-        <p>配图仅作阅读辅助，叙事内容以标明的原文摘录为准。</p>
-      </aside>
-      {zoomOpen && illustrationAvailable && illustration && createPortal(<div ref={dialogRef} className="a4-reader__zoom" role="dialog" aria-modal="true" aria-label="放大配图" onKeyDown={handleZoomKeyDown}>
+      {zoomOpen && zoomedIllustration && assetLoader.get(zoomedIllustration.assetId)?.src && createPortal(<div ref={dialogRef} className="a4-reader__zoom" role="dialog" aria-modal="true" aria-label="放大配图" onKeyDown={handleZoomKeyDown}>
         <button type="button" onClick={() => setZoomOpen(false)}>关闭配图，回到正文</button>
-        <img src={illustration} alt={illustrationAlt} />
+        <img src={assetLoader.get(zoomedIllustration.assetId)?.src} alt={zoomedIllustration.alt} />
       </div>, document.body)}
     </main>
   </InvestigationShell>;

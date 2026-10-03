@@ -123,10 +123,10 @@
       "completionFlags": [
         "FLAG_A1_COMPLETE"
       ],
-      "summary": "在记事本确认现场新线索已记录，再回到照片点击“整理思绪，继续”",
+      "summary": "在调查中确认现场新线索已记录，再回到照片点击“整理思绪，继续”",
       "steps": [
         {
-          "label": "确认新线索已记入记事本",
+          "label": "确认新线索已记入调查记录",
           "completionFlag": "FLAG_A1_SS_CLUE_RECORDED"
         },
         {
@@ -215,7 +215,7 @@
           "completionFlag": "FLAG_A2_BUMUZHI_FOUND"
         },
         {
-          "label": "标记目标页关键词，并把摘录保存到记事本",
+          "label": "标记目标页关键词，并把摘录保存到调查记录",
           "completionFlag": "FLAG_A2_BUMU_RULE_BASIC_KNOWN"
         }
       ]

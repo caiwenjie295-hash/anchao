@@ -89,6 +89,12 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const finaleRef = useRef<HTMLDivElement>(null);
   const previousTriggerRef = useRef<HTMLElement | null>(null);
   const outcomesRef = useRef<HTMLElement>(null);
+  const photoArticleRef = useRef<HTMLElement>(null);
+  const videoArticleRef = useRef<HTMLElement>(null);
+  const videoPlayerRef = useRef<HTMLDivElement>(null);
+  const comparisonPanelRef = useRef<HTMLDivElement>(null);
+  const tripArticleRef = useRef<HTMLElement>(null);
+  const [tripConversationPresented, setTripConversationPresented] = useState(false);
 
   const videoFound = flags.FLAG_A2_PROMO_VIDEO_FOUND === true;
   const photoConfirmed = flags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true;
@@ -153,16 +159,55 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     finaleRef.current?.querySelector<HTMLElement>('button')?.focus();
   }, [finaleOpen]);
 
-  const actions: InvestigationAction[] = [
-    { actionId: 'A2_T07_MATERIALS', kind: 'review', target: 'materials', label: '查看宣传资料', state: 'ready', onActivate: () => setTab('materials') },
-    { actionId: 'A2_T07_VIDEO', kind: 'review', target: 'video', label: '查看受访视频', state: 'ready', onActivate: () => setTab('video') },
-    { actionId: 'A2_T07_COMPARE', kind: 'review', target: 'compare', label: '核对截图与旧庙外景', state: 'ready', onActivate: () => setTab('compare') },
-    { actionId: 'A2_T07_INFER_LOCATION', kind: 'story', target: 'location', label: locationInferred ? '地点结论已记下' : '确认地点判断', state: locationInferred ? 'completed' : photoConfirmed && templeConfirmed ? 'ready' : 'blocked', reason: !photoConfirmed ? '先查看合影中的双 S 记号。' : '还要截取视频画面，并从画面和外景中核对相同特征。', relatedMaterials: [
-      ...(!photoConfirmed ? [{ id: 'photo', label: '校门合影' }] : []),
-      ...(!templeConfirmed ? [{ id: 'compare', label: '截图与外景对照' }] : []),
-    ], onActivate: () => { manager.inferAct2T07Location(); if (typeof outcomesRef.current?.scrollIntoView === 'function') outcomesRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } },
-    { actionId: 'A2_T07_PLAN_TRIP', kind: 'story', target: 'second-trip', label: tripPlanned ? '再次进山已商定' : trip.confirmLabel, state: tripPlanned ? 'completed' : locationInferred ? 'ready' : 'blocked', reason: '先核对合影和旧庙外景、记下地点判断，再商量是否再次进山。', relatedMaterials: locationInferred ? undefined : [{ id: 'compare', label: '截图与外景对照' }], onActivate: () => { manager.planAct2T07SecondTrip(); if (typeof outcomesRef.current?.scrollIntoView === 'function') outcomesRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } },
-  ];
+  const focusAfterTab = (nextTab: TabId, getTarget: () => HTMLElement | null) => {
+    setTab(nextTab);
+    window.setTimeout(() => {
+      const target = getTarget();
+      target?.scrollIntoView({ block: 'center', behavior: reducedMotion ? 'auto' : 'smooth' });
+      target?.focus({ preventScroll: true });
+    }, 0);
+  };
+  const focusTripConversation = () => {
+    setTripConversationPresented(true);
+    if (typeof outcomesRef.current?.scrollIntoView === 'function') outcomesRef.current.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+    window.setTimeout(() => tripArticleRef.current?.focus({ preventScroll: true }), 0);
+  };
+  const completeAndEnterAct3 = () => {
+    manager.completeAct2T07Finale();
+    setFinaleOpen(false);
+    onEnterAct3?.();
+  };
+  const currentStep = complete || tripPlanned ? 6
+    : !photoConfirmed ? 1
+      : !videoFound ? 2
+        : capturedFrames.length === 0 ? 2
+          : !templeConfirmed ? 3
+            : !locationInferred ? 4
+              : 5;
+  const currentStepName = complete || tripPlanned ? '再次进山，调查启明旧址'
+    : currentStep === 1 ? '查看校门合影'
+      : currentStep === 2 && !videoFound ? '打开受访视频'
+        : currentStep === 2 ? '截取清晰视频画面'
+          : currentStep === 3 ? '并排核对视频截图与旧庙外景'
+            : currentStep === 4 ? '记下地点判断'
+              : tripConversationPresented ? '与小月商量是否再次进山' : '听听与小月的出发商量';
+  const actions: InvestigationAction[] = complete
+    ? onEnterAct3 ? [{ actionId: 'A2_T07_ENTER_ACT3', kind: 'story', target: 'A3_T00', label: '再次进山，调查启明旧址', state: 'ready', onActivate: onEnterAct3 }] : []
+    : tripPlanned
+      ? [{ actionId: 'A2_T07_COMPLETE_AND_ENTER_ACT3', kind: 'story', target: 'A3_T00', label: '再次进山，调查启明旧址', state: 'ready', onActivate: completeAndEnterAct3 }]
+      : currentStep === 1
+        ? [{ actionId: 'A2_T07_CURRENT_PHOTO', kind: 'review', target: 'promo-photo', label: '第 1 步 · 查看校门合影', state: 'ready', onActivate: () => focusAfterTab('materials', () => photoArticleRef.current) }]
+        : currentStep === 2 && !videoFound
+          ? [{ actionId: 'A2_T07_CURRENT_VIDEO_OPEN', kind: 'review', target: 'promo-video', label: '第 2 步 · 在宣传资料中打开受访视频', state: 'ready', onActivate: () => focusAfterTab('materials', () => videoArticleRef.current) }]
+          : currentStep === 2
+            ? [{ actionId: 'A2_T07_CURRENT_VIDEO_CAPTURE', kind: 'review', target: 'video', label: '第 2 步 · 截取一张清晰视频画面', state: 'ready', onActivate: () => focusAfterTab('video', () => videoPlayerRef.current) }]
+            : currentStep === 3
+              ? [{ actionId: 'A2_T07_CURRENT_COMPARE', kind: 'review', target: 'compare', label: '第 3 步 · 并排核对截图与旧庙外景', state: 'ready', onActivate: () => focusAfterTab('compare', () => comparisonPanelRef.current) }]
+              : currentStep === 4
+                ? [{ actionId: 'A2_T07_CURRENT_INFER', kind: 'story', target: 'location', label: '第 4 步 · 记下地点判断', state: 'ready', onActivate: () => { manager.inferAct2T07Location(); if (typeof outcomesRef.current?.scrollIntoView === 'function') outcomesRef.current.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' }); } }]
+                : tripConversationPresented
+                  ? [{ actionId: 'A2_T07_CURRENT_PLAN_TRIP', kind: 'story', target: 'second-trip', label: `第 5 步 · ${trip.confirmLabel}`, state: 'ready', onActivate: () => { manager.planAct2T07SecondTrip(); if (typeof outcomesRef.current?.scrollIntoView === 'function') outcomesRef.current.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' }); } }]
+                  : [{ actionId: 'A2_T07_CURRENT_TRIP_CONVERSATION', kind: 'review', target: 'second-trip', label: '第 5 步 · 和小月商量下一步', state: 'ready', onActivate: focusTripConversation }];
 
   useEffect(() => {
     if (!zoomedShotId) return;
@@ -203,10 +248,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     setzoomedShotId(null);
     previousTriggerRef.current?.focus();
   };
-  const finishFinale = () => {
-    manager.completeAct2T07Finale();
-    setFinaleOpen(false);
-  };
+  const reviewMaterials = () => { setFinaleOpen(false); setTab('materials'); };
 
   return (
     <InvestigationShell
@@ -215,14 +257,15 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       actLabel="第二幕 · 启明地点与出发"
       locationLabel="旧资料对照"
       contextLabel="时间回看 · 当前调查"
-      objective="核对合影记号和视频画面中的石质轮廓，再决定是否回山确认。"
-      helpText="合影、视频和对照可以按任意顺序查看。视频不必完整播放；在不同镜头截取候选画面，再选择其中的截图和可见特征进行核对。完整播放会保留为真实记录。"
+      objective={complete ? '第二幕调查已经收束。可以再次进山，直接开始启明旧址调查。' : `当前步骤 ${Math.min(currentStep, 5)} / 5：${currentStepName}。已读资料可以从上方标签回看。`}
+      helpText="按当前步骤继续即可；已读资料仍可回看。视频不必完整播放，只有清晰截图与已选特征匹配后才会记录对照。"
       actions={actions}
       statusMessage={compareFeedback}
       onExit={() => onReturnToDesktop?.()}
       onOpenMaterial={(_actionId, materialId) => setTab(materialId === 'photo' ? 'materials' : materialId === 'video' ? 'video' : 'compare')}
     >
     <section className="t07-finale" aria-label="第二幕宣传资料调查" data-asset-id={photoMaterial.imageId}>
+      <p className="t07-finale__step-indicator" aria-live="polite">{complete ? `第二幕已收束 · ${currentStepName}` : `当前步骤 · ${Math.min(currentStep, 5)} / 5 · ${currentStepName}`}</p>
       <p className="t07-finale__intro">{act2T07.intro}</p>
 
       <nav className="t07-finale__tabs" aria-label="调查步骤">
@@ -246,7 +289,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
           <small>{act2T07.promoSurfaceNote}</small>
         </div>
 
-        <article className="t07-finale__material">
+        <article ref={photoArticleRef} className="t07-finale__material" tabIndex={-1}>
           <h2>{photoMaterial.title}</h2>
           <p className="t07-finale__xiaoyue">{photoMaterial.xiaoyueLine}</p>
           <div className="t07-finale__photo">
@@ -276,7 +319,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
           {photoConfirmed && <p className="t07-finale__done" aria-live="polite">{photoMaterial.confirmedNote}</p>}
         </article>
 
-        <article className="t07-finale__material">
+        <article ref={videoArticleRef} className="t07-finale__material" tabIndex={-1}>
           <h2>{videoMaterial.title}</h2>
           <FrameVisual assetId={videoMaterial.imageId} altText={videoMaterial.altText} note={videoMaterial.placeholderNote} className="t07-finale__cover" />
           <p className="t07-finale__note">{videoMaterial.caption}</p>
@@ -294,7 +337,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       {tab === 'video' && <div className="t07-finale__panel">
         {!videoFound
           ? <p className="t07-finale__locked">先在“宣传资料”里打开创始人受访视频。</p>
-          : <div className="t07-finale__player" onKeyDown={onPlayerKeyDown}>
+          : <div ref={videoPlayerRef} className="t07-finale__player" tabIndex={-1} onKeyDown={onPlayerKeyDown}>
             <FrameVisual key={currentVideoImageId} assetId={currentVideoImageId} altText={capturableFrame?.altText ?? segment?.label ?? videoMaterial.altText} note={capturableFrame?.placeholderNote ?? segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen" onImageAvailabilityChange={(available) => setLoadedVideoAssetId(available ? currentVideoImageId : '')}>
               <p className="t07-finale__screen-label">{segment?.label ?? '视频封面'}</p>
             </FrameVisual>
@@ -346,7 +389,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
         </div>}
       </div>}
 
-      {tab === 'compare' && <div className="t07-finale__panel">
+      {tab === 'compare' && <div ref={comparisonPanelRef} className="t07-finale__panel" tabIndex={-1}>
         {capturedFrames.length === 0
           ? <p className="t07-finale__locked">{comparison.lockedHint}</p>
           : <>
@@ -406,7 +449,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             </>
             : <p className="t07-finale__locked">{inference.lockedHint}</p>}
         </article>
-        <article className="t07-finale__outcome" aria-labelledby="t07-trip-title">
+        <article ref={tripArticleRef} className="t07-finale__outcome" aria-labelledby="t07-trip-title" tabIndex={-1}>
           <h2 id="t07-trip-title">{trip.title}</h2>
           {!locationInferred
             ? <p className="t07-finale__locked">先完成合影与外景核对，并记下地点判断，再决定是否再次进山。</p>
@@ -420,14 +463,8 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
 
       {complete && <aside className="t07-finale__closing">
         <p>{finale.closingNote}</p>
-        {/* 工单 §15.1：第二幕收束页必须直接给出进入第三幕的主操作，
-            玩家不应被迫先退出场景、回桌面，再去猜折叠的任务栏菜单。
-            「进入第三幕」与「完成第二幕」是两个语义：此处只写完成，主按钮才启动第三幕。 */}
         <div className="t07-finale__closing-actions">
-          {onEnterAct3
-            ? <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>
-            : <p className="t07-finale__locked">回到桌面后，可在任务栏「调查」中开始启明旧址的调查。</p>}
-          <button type="button" className="t07-finale__ending-replay" onClick={() => setTab('materials')}>{finale.replayLabel}</button>
+          <button type="button" className="t07-finale__ending-replay" onClick={reviewMaterials}>{finale.replayLabel}</button>
         </div>
       </aside>}
 
@@ -447,7 +484,8 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
         {finale.lines.map((line, index) => (
           <p key={line} className={`t07-finale__narration${index <= cueIndex ? ' is-shown' : ''}`}>{index <= cueIndex ? line : ''}</p>
         ))}
-        <button type="button" className="t07-finale__ending-continue" onClick={finishFinale}>{finale.continueLabel}</button>
+        <button type="button" className="t07-finale__ending-continue" onClick={completeAndEnterAct3}>再次进山，调查启明旧址</button>
+        <button type="button" className="t07-finale__ending-replay" onClick={reviewMaterials}>回看资料</button>
       </div>}
     </section>
     </InvestigationShell>

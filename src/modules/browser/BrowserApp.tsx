@@ -265,7 +265,7 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
                 <blockquote>{excerpt.map((line) => <p key={line}>{line}</p>)}</blockquote>
                 {!caseReviewed && <button type="button" className="browser-case-review__source-link" data-case-action={action} onClick={() => onOpenPage(page.id, caseId)}>回看{label}</button>}
               </>
-              : <p className="browser-case-review__source-locked">打开来源后显示原文摘录、出处和日期。</p>}
+              : <p className="browser-case-review__source-locked">打开后可查看网页内容和发布时间。</p>}
           </article>;
         })}
       </div>

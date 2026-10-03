@@ -15,6 +15,7 @@ import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/i
 export interface Act3InvestigationProps {
   manager?: StateManager;
   onReturnToDesktop?: () => void;
+  onOpenAct4?: () => void;
 }
 
 const STAGE_TITLE: Record<Act3ActiveStage, string> = {
@@ -35,7 +36,22 @@ const STANCE_LABEL: Record<Act3Lens['stance'], string> = {
   enter: '进入室内',
 };
 
-export function Act3Investigation({ manager = defaultManager, onReturnToDesktop }: Act3InvestigationProps) {
+function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: string; alt: string; caption: string; placeholder: string }) {
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const src = assetLoader.get(assetId)?.src;
+  return <>
+    <figure>
+      {src ? <img src={src} alt={alt} /> : <div className="act3-investigation__comparison-placeholder">{placeholder}</div>}
+      <figcaption>{caption}</figcaption>
+      <button type="button" disabled={!src} onClick={() => setZoomOpen(true)}>放大查看</button>
+    </figure>
+    {zoomOpen && src && <InvestigationDetail title={caption} onClose={() => setZoomOpen(false)}>
+      <img className="act3-investigation__comparison-zoom" src={src} alt={alt} />
+    </InvestigationDetail>}
+  </>;
+}
+
+export function Act3Investigation({ manager = defaultManager, onReturnToDesktop, onOpenAct4 }: Act3InvestigationProps) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const stage = state.modules.act3.stage;
   const [hotspotId, setHotspotId] = useState<string | null>(null);
@@ -110,7 +126,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
           ? '继续查看窄缝'
           : stage === 'T07' && route.target === 'LENS_A3_T07_007' && !inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP')
             ? '继续核对这一物件'
-      : route.label || `${route.kind === 'return' ? '返回' : '前往'}${target.title}`;
+      : route.kind === 'return' || state.modules.act3.visitedLensIds.includes(route.target)
+        ? `返回${target.title}`
+        : '继续探索';
     const routeReason = stage === 'T07' && route.target === 'LENS_A3_T07_007' && !inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP')
       ? '还没有先完成当前取物动作。'
       : availability.reason;
@@ -127,19 +145,27 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
   });
 
   if (stage === 'T07') {
-    const readyToLeave = missingRequiredIds.length === 0;
-    actions.push({
-      actionId: 'A3_T07_LEAVE_SITE', kind: 'story', target: 'A3_EXIT', label: '与小月一起离开旧址',
-      state: state.game.flags.FLAG_A3_SITE_EXITED ? 'completed' : readyToLeave ? 'ready' : 'blocked',
-      reason: readyToLeave ? undefined : act3ExitReason(stage, missingRequiredIds),
-      relatedMaterials: findMaterialLinks(missingRequiredIds),
-      onActivate: () => { manager.leaveAct3Stage(); setHotspotId(null); },
-    });
+    if (state.game.flags.FLAG_A3_SITE_EXITED === true) {
+      actions.push({
+        actionId: 'A3_T07_OPEN_NOTEBOOK', kind: 'memory', target: 'A4_T01', label: '翻开笔记，继续调查',
+        state: onOpenAct4 ? 'ready' : 'blocked',
+        reason: onOpenAct4 ? undefined : '笔记阅读入口暂不可用。',
+        onActivate: () => onOpenAct4?.(),
+      });
+    } else {
+      const readyToLeave = missingRequiredIds.length === 0;
+      actions.push({
+        actionId: 'A3_T07_LEAVE_SITE', kind: 'story', target: 'A3_EXIT', label: '与小月一起离开旧址',
+        state: readyToLeave ? 'ready' : 'blocked',
+        reason: readyToLeave ? undefined : act3ExitReason(stage, missingRequiredIds),
+        relatedMaterials: findMaterialLinks(missingRequiredIds),
+        onActivate: () => { manager.leaveAct3Stage(); setHotspotId(null); },
+      });
+    }
   } else {
-    const destinationLabel = nextStage ? STAGE_TITLE[nextStage] : '后续地点';
     actions.push({
       actionId: `A3_${stage}_LEAVE_AND_CONTINUE`, kind: 'story', target: nextStage ?? undefined,
-      label: `离开本处，前往${destinationLabel}`,
+      label: '继续探索',
       state: missingRequiredIds.length ? 'blocked' : 'ready',
       reason: missingRequiredIds.length ? `还没有核对${findMaterialLinks(missingRequiredIds).map(({ label }) => label).join('、') || act3ExitReason(stage, missingRequiredIds)}` : undefined,
       relatedMaterials: findMaterialLinks(missingRequiredIds),
@@ -159,10 +185,14 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
     actLabel={`第三幕 · ${movement}`}
     locationLabel={act3PlaceForLens(lens.id, lens.title)}
     contextLabel={`${lensTitle} · ${STANCE_LABEL[lens.stance]} · ${doc.intro}`}
-    objective={act3ObjectiveFor(stage, inspected)}
+    objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
+      ? '已和小月离开旧址，手边的笔记还有内容可读。'
+      : act3ObjectiveFor(stage, inspected)}
     helpText="点击照片上的标记查看物件；底部地点按钮用于移动或返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
     actions={actions}
-    statusMessage={stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
+    statusMessage={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
+      ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
+      : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
     onExit={onReturnToDesktop ?? (() => {})}
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
@@ -171,12 +201,17 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop 
         <div className="act3-investigation__caption"><strong>{lensTitle}</strong><span>{lensDescription}</span></div>
       </PhotoViewport>
       {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && <aside className="act3-investigation__paper-compare" aria-label="两张词表"><article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article><article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article><p>两张词表。含义暂时不明。</p></aside>}
-      {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <aside className="act3-investigation__temple-compare" aria-label="破庙塑像与厨房空神龛对照">
-        <p className="act3-investigation__compare-note">外景只说明地点。真正能对上的，是庙里那尊塑像和这里空着的底座。</p>
-        <figure>{assetLoader.get('IMG_A1_I_001')?.src && <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" />}<figcaption>第一次进山 · 破庙外景（仅作地点背景）</figcaption></figure>
-        <figure>{assetLoader.get('IMG_A1_I_003')?.src ? <img src={assetLoader.get('IMG_A1_I_003')!.src} alt="破庙内残缺的黑补母塑像" /> : <div className="act3-investigation__comparison-placeholder">第一次进山时，庙里那尊塑像已经残缺，只剩底座和半截身子。</div>}<figcaption>第一次进山 · 庙内黑补母塑像</figcaption></figure>
-        <figure>{assetLoader.get('IMG_A3_T06_007')?.src ? <img src={assetLoader.get('IMG_A3_T06_007')!.src} alt="厨房尽头空木神龛的石质底座" /> : <div className="act3-investigation__comparison-placeholder">厨房尽头只剩一座空木神龛，边角积着灰。</div>}<figcaption>启明厨房 · 空神龛与底座</figcaption></figure>
-      </aside>}
+      {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <>
+        <details className="act3-investigation__exterior-photo">
+          <summary>查看当时的环境照片</summary>
+          <figure>{assetLoader.get('IMG_A1_I_001')?.src ? <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" /> : <div className="act3-investigation__comparison-placeholder">第一次进山时拍下的破庙外景。</div>}<figcaption>第一次进山 · 破庙外景</figcaption></figure>
+        </details>
+        <aside className="act3-investigation__temple-compare" aria-label="破庙塑像与厨房空神龛照片对照">
+          <p className="act3-investigation__compare-note">把这两张照片放在一起看看。</p>
+          <ComparisonPhoto assetId="IMG_A1_I_003" alt="第一次进山拍下的破庙塑像" caption="第一次进山 · 庙内塑像" placeholder="第一次进山时，庙里那尊塑像已经残缺，只剩底座和半截身子。" />
+          <ComparisonPhoto assetId="IMG_A3_T06_007" alt="厨房尽头空木神龛的石质底座" caption="启明厨房 · 空神龛" placeholder="厨房尽头只剩一座空木神龛，边角积着灰。" />
+        </aside>
+      </>}
     </main>
     {lensHotspot && <InvestigationDetail title={act3HotspotLabelFor(stage, lensHotspot.clueId, lensHotspot.label, inspected)} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`) ?? [...document.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent === act3HotspotLabelFor(stage, lensHotspot.clueId, lensHotspot.label, inspected)) ?? null}>
       {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。

@@ -59,7 +59,7 @@ const actionLabels: Record<AppId, string> = {
   mail: '打开邮箱',
   browser: '打开浏览器',
   explorer: '打开资源管理器',
-  notepad: '打开记事本',
+  notepad: '打开调查',
   photos: '打开照片',
 };
 

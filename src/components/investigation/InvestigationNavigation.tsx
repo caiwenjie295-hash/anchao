@@ -13,9 +13,11 @@ const idPart = (value: string) => value.replace(/[^a-zA-Z0-9_-]/g, '-');
 export function InvestigationNavigation({ actions, label = '可前往地点与主要行动', compact = false }: InvestigationNavigationProps) {
   const [expandedActionId, setExpandedActionId] = useState<string | null>(null);
   const visibleActions = actions.filter((action) => action.state !== 'unavailable');
-  const primaryAction = visibleActions.find((action) => action.state === 'ready' && action.kind === 'story')
+  const preferredPrimaryAction = visibleActions.find((action) => action.state === 'ready' && action.kind === 'story')
     ?? visibleActions.find((action) => action.state === 'ready' && action.kind === 'memory')
     ?? visibleActions.find((action) => action.state === 'ready' && action.kind === 'move');
+  const soleReadyAction = visibleActions.filter((action) => action.state === 'ready');
+  const primaryAction = preferredPrimaryAction ?? (soleReadyAction.length === 1 ? soleReadyAction[0] : undefined);
 
   if (!visibleActions.length) return null;
 

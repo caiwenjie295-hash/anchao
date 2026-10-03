@@ -58,10 +58,10 @@ export function InvestigationProgressDrawer({ state }: { state: AppState }) {
         <p>{model.currentObjective}</p>
         <h3>下一步</h3>
         <p id="investigation-progress-next-action" className="investigation-progress__next-action">{model.nextAction}</p>
-        {model.nextActionAppId && <button type="button" className="investigation-progress__open-app" onClick={() => {
+        {onOpenApp && <button type="button" className="investigation-progress__open-app" onClick={() => {
           closeProgress();
-          onOpenApp?.(model.nextActionAppId!);
-        }}>打开对应应用</button>}
+          onOpenApp('notepad');
+        }}>打开调查</button>}
       </section>
 
       <section className="investigation-progress__route" aria-labelledby="investigation-progress-route-title">
