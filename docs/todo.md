@@ -2,6 +2,7 @@
 
 ## 当前待办
 
+- [ ] UX-LAYOUT-20261003 等 A34 fixture/回归和父级四视口浏览器与集成验收；A2提交 `7854e04`、CSS摘要修正 `340875c`，定向测试4文件/19项、最终生产构建和 `git diff --check` 已通过。结果边界见 `docs/ux-layout-20261003/implementation.md`。
 - [x] UX-NARR-20261002 父级集成与验收完成：`npm test` 58 文件/317 项、生产构建、143 文件/197.40 MiB 离线包、默认两轮 offline，以及 1440×900/390×844 真实浏览器抽查均通过；主审结论 `APPROVED`。验收细节及 main 合并状态见 `docs/reviews/UX-NARR-20261002.md`。
 - [x] A34 第三幕玩家文本清理、第四幕原文阅读器与schema11迁移完成；定向验收范围见 `docs/a34-narrative-0001/test-matrix.md`。
 - [x] 补完 UX-T07-UI-0001 的全站白灰主题、第二幕照片/外景确认、实名材料复核与宽窄调查布局；交付与主审证据见 `docs/ux-t07-ui-0001/delivery.md`。
