@@ -188,6 +188,7 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
   const reviewed = (caseId: QimingCaseId) => reviews.some((item) => item.caseId === caseId);
   const legacyComplete = state.modules.act2Research.t06.legacyCompletionMigrated;
   const isComplete = reviewed('huang') && reviewed('zhong') || legacyComplete;
+  const legacyCompletionCopy = '此前个案调查已完成，可回看材料或点击“与小月继续核对资料”。';
   const caseName = (caseId: QimingCaseId) => caseId === 'huang' ? '黄子山' : '钟子月';
   const caseIds: QimingCaseId[] = ['huang', 'zhong'];
   const reviewedCount = Number(reviewed('huang')) + Number(reviewed('zhong'));
@@ -229,13 +230,15 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
     if (saved) setFeedback((current) => ({ ...current, [caseId]: { tone: 'success', text: '论坛昵称线索已单独记为未核实；它不会代替实名材料复核。' } }));
   };
   const nextCase = caseIds.find((id) => id !== caseId && !reviewed(id));
-  const nextStep = caseReviewed
-    ? nextCase ? `下一步：明确开始核对${caseName(nextCase)}` : '两人的实名材料都已记录，可主动继续下一阶段。'
-    : !officialVisited ? `下一步：先打开共用宣传案例，为${name}建立对照。`
-      : !followupVisited ? `下一步：打开${name}的后续报道。`
-        : '两份来源均已打开；选择有材料支持的发现后记录。';
+  const nextStep = legacyComplete
+    ? legacyCompletionCopy
+    : caseReviewed
+      ? nextCase ? `下一步：明确开始核对${caseName(nextCase)}` : '两人的实名材料都已记录，可主动继续下一阶段。'
+      : !officialVisited ? `下一步：先打开共用宣传案例，为${name}建立对照。`
+        : !followupVisited ? `下一步：打开${name}的后续报道。`
+          : '两份来源均已打开；选择有材料支持的发现后记录。';
   return <aside className="browser-case-review" aria-label="实名个案材料复核">
-    <header className="browser-case-review__header"><div><p className="browser-case-review__eyebrow">第二幕 · 启明后续</p><h2>核对实名个案</h2><p>一次核对一位学员：先看共用宣传案例，再看该人的后续报道，返回这里比较两份来源。论坛昵称是可选线索，不是主链条件。</p></div><span className="browser-case-review__progress">{legacyComplete && reviews.length === 0 ? '此前调查已完成' : `${reviewedCount} / 2 已记录`}</span></header>
+    <header className="browser-case-review__header"><div><p className="browser-case-review__eyebrow">第二幕 · 启明后续</p><h2>核对实名个案</h2><p>一次核对一位学员：先看共用宣传案例，再看该人的后续报道，返回这里比较两份来源。论坛昵称是可选线索，不是主链条件。</p></div><span className="browser-case-review__progress">{legacyComplete ? '此前调查已完成' : `${reviewedCount} / 2 已记录`}</span></header>
     <nav className="browser-case-review__person-switcher" aria-label="选择当前实名个案">
       {caseIds.map((person) => {
         const personOfficialRead = officialVisited;
@@ -247,9 +250,9 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
       })}
     </nav>
     <section className="browser-case-review__case" aria-label={`${name}材料`} data-qiming-case={caseId}>
-      <div className="browser-case-review__case-heading"><h3 tabIndex={-1}>{name}材料</h3><span>{caseReviewed ? '已记录' : legacyComplete ? '此前已完成' : `${Number(officialVisited) + Number(followupVisited)} / 2 来源已读`}</span></div>
+      <div className="browser-case-review__case-heading"><h3 tabIndex={-1}>{name}材料</h3><span>{caseReviewed ? '已记录' : legacyComplete ? '旧版调查已完成' : `${Number(officialVisited) + Number(followupVisited)} / 2 来源已读`}</span></div>
       <p className="browser-case-review__next-step" aria-live="polite">{nextStep}</p>
-      {legacyComplete && !caseReviewed && <p className="browser-case-review__legacy-note">此前完成的调查已恢复。可以回看这些材料，也可以继续与小月核对资料。</p>}
+      {legacyComplete && !caseReviewed && <p className="browser-case-review__legacy-note">{legacyCompletionCopy}</p>}
       <div className="browser-case-review__source-cards" aria-label={`${name}宣传与后续来源对照`}>
         {[{ page: officialPage, sourceVisited: officialVisited, label: '共用宣传案例', action: 'open-official' as const }, { page: followupPage, sourceVisited: followupVisited, label: `${name}后续报道`, action: 'open-followup' as const }].map(({ page, sourceVisited, label, action }, index) => {
           const excerpt = index === 0 ? [page.body[CASE_PAGES[caseId].officialExcerptIndex]] : page.body;
@@ -285,7 +288,7 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
       <button type="button" aria-pressed={state.modules.act2Research.t06.nicknameAssessment === 'not-enough-evidence'} onClick={() => saveNickname('not-enough-evidence')}>现有材料不足以对应</button>
       {state.modules.act2Research.t06.nicknameAssessment && <span role="status">已记录为{state.modules.act2Research.t06.nicknameAssessment === 'possible-unverified' ? '可能有相似处、身份待核实' : '证据不足以对应'}。</span>}
     </details>}
-    {isComplete && <footer className="browser-case-review__next"><p>{legacyComplete && reviews.length === 0 ? '此前的个案调查已完成；可以继续与小月核对宣传照片和受访视频。' : '两名学员的实名后续已分别记录。论坛昵称仍未证实，可以与小月继续核对宣传照片和受访视频。'}</p><button type="button" data-case-action="continue" onClick={onContinueToFinale}>与小月继续核对资料</button></footer>}
+    {isComplete && <footer className="browser-case-review__next"><p>{legacyComplete ? legacyCompletionCopy : '两名学员的实名后续已分别记录。论坛昵称仍未证实，可以与小月继续核对宣传照片和受访视频。'}</p><button type="button" data-case-action="continue" onClick={onContinueToFinale}>与小月继续核对资料</button></footer>}
   </aside>;
 }
 

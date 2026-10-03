@@ -105,6 +105,29 @@ describe('BrowserApp T06 visibility gates', () => {
     expect(manager.getState().modules.browser.visitedPageIds).not.toContain('PAGE_A2_T06_008');
     expect(manager.getState().modules.browser.visitedPageIds).not.toContain('PAGE_A2_T06_006');
   });
+  it('keeps legacy T06 completion accurate after one additional case review', async () => {
+    manager.getState().modules.act2Research.t06.legacyCompletionMigrated = true;
+    manager.enterAct2QimingResearch();
+    await render();
+    const click = async (element: Element | null) => {
+      expect(element).not.toBeNull();
+      await act(async () => { (element as HTMLElement).click(); });
+    };
+
+    await click(host.querySelector('[data-case-action="open-official"]'));
+    await click(host.querySelector('.browser-qiming-toolbar button'));
+    await click(host.querySelector('[data-case-action="open-followup"]'));
+    await click(host.querySelector('.browser-qiming-toolbar button'));
+    await click(host.querySelector('.browser-case-review__choices label'));
+    await click(host.querySelector('[data-case-action="record"]'));
+
+    expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang']);
+    expect(host.querySelector('.browser-case-review__progress')?.textContent).toBe('此前调查已完成');
+    expect(host.querySelector('.browser-case-review__next-step')?.textContent).toBe('此前个案调查已完成，可回看材料或点击“与小月继续核对资料”。');
+    expect(host.querySelector('.browser-case-review__next p')?.textContent).toBe('此前个案调查已完成，可回看材料或点击“与小月继续核对资料”。');
+    expect(host.querySelector('.browser-case-review__next p')?.textContent).not.toContain('两名学员');
+    expect(host.querySelector('.browser-case-review__next-step')?.textContent).not.toContain('钟子月');
+  });
   it('offers a direct named-person path from the shared official page and keeps it on return', async () => {
     manager.enterAct2QimingResearch();
     await render();
