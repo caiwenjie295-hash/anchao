@@ -43,6 +43,12 @@ describe('T05 school exploration', () => {
     const memory = container.querySelector('.t05-school__memory');
     const timeline = container.querySelector('.t05-school__timeline');
     expect(memory).not.toBeNull();
+    const memoryDisclosure = memory?.querySelector<HTMLDetailsElement>('.t05-school__memory-disclosure');
+    const timelineDisclosure = container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure');
+    expect(memoryDisclosure?.open).toBe(false);
+    expect(memoryDisclosure?.querySelector('summary')?.textContent).toContain('展开小月的日常消息与两张旧照片');
+    expect(timelineDisclosure?.open).toBe(false);
+    expect(timelineDisclosure?.querySelector('summary')?.textContent).toContain('已读 0 / 3 · 已选不同来源 0 / 2');
     expect([...memory!.querySelectorAll('blockquote[data-message-id]')].map((node) => node.getAttribute('data-message-id'))).toEqual([
       'CHAT_A2_T05_001',
       'CHAT_A2_T05_011',
@@ -53,5 +59,14 @@ describe('T05 school exploration', () => {
     ]);
     expect(memory?.textContent).toContain('想起');
     expect(memory!.compareDocumentPosition(timeline!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+    const flagsBeforeDisclosure = { ...manager.getState().game.flags };
+    await act(async () => { memoryDisclosure!.querySelector('summary')?.click(); });
+    await act(async () => { timelineDisclosure!.querySelector('summary')?.click(); });
+    expect(memoryDisclosure?.open).toBe(true);
+    expect(timelineDisclosure?.open).toBe(true);
+    expect(manager.getState().game.flags).toEqual(flagsBeforeDisclosure);
+    expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual([]);
+    expect(manager.getState().modules.act2Research.school.selectedInferenceId).toBeNull();
   });
 });
