@@ -66,3 +66,5 @@ a34先单独提交Drawer/提示产品节点，再按a2T06最终节点完善独�
 两个子任务结束后父只跑同一批全量门禁一次：diffcheck、npm test、build、build:offline、默认两轮test:offline。真实IAB结合CASEPATH四幕代表checkpoint、1440默认窗/1366最大化/390窄屏检查：入口不遮挡、抽屉开关/键盘/不剧透、默认关闭不压缩原场景、手机可达，保存新截图。两份审查都APPROVED后才合并main，最后重建main离线manifest并核对原改动。发现新失败可补针对性检查，不重复无关全章试玩。
 
 交付提交SHA、实际路径、真实定向验证、fixture场景/URL、已知限制；未经父完成不得标整批完成。
+
+执行再分工以CASEPATH工单“2026-10-03执行再分工”段为准：a34保留全部PROGRESS产品和测试、独立T06回归/acceptance；尚未开始写入的`docs/ux-casepath-20261003/validation/**`与精准`verify-offline.mjs`T06适配由a2唯一写入。既有隔离/真实桌面/四幕/默认窗口验收合同不降低；双方均不跑父的全量/offline/真实浏览器门禁。

@@ -75,4 +75,13 @@ T06宣传案例页的复制按钮只调用系统剪贴板，成功/失败后没�
 
 原工作区保护记录：工作区根目录`UX-CASEPATH-20261003-protected-workspace.json`，开工已与上轮29项保护逐项核对一致。
 
+## 2026-10-03 执行再分工（本段优先于上文相应路径所有权）
+
+T06 产品节点 `72c8fff` 和壁纸节点 `076f47e` 已由 a2 提交，局部验证完成；a34新增全局进度产品工作量较大，经双方确认尚未写入fixture/offline，父将这两部分明确转交a2。仍仅复用原两个luna/max子代理，父不写功能或测试。
+
+- **a2唯一写入** `docs/ux-casepath-20261003/validation/**`：实现上文同等隔离、真实AppWindow/四幕代表checkpoint、无控制条clean URL、同临时存档恢复与860×560/default/max/mobile的fixture；可读旧fixture helper，禁止修改旧helper。UI checkpoint必须通过夹具公开控件或明确query初始化，正式UI不含调试入口，隔离安装失败停止，不读取或清空真实存档。给父README、URL、起始事实与恢复方式；对fixture执行严格类型检查/定向helper测试/单入口编译，不运行真实浏览器、全量或offline。
+- **a2唯一写入** `scripts/verify-offline.mjs`：只T06浏览器可见动作/人物切换/返回定位段，通用wait/click、其他幕、默认两轮设置、资源/状态校验冻结。执行`node --check`，不运行offline。全局PROGRESS尚未合入前可按App/UI集成合同准备夹具，a34产品提交后安全合入并做最终定向验证。
+- **a34保留** PROGRESS工单全部全局显示产品/测试职责，`src/modules/browser/Act2CasePath.test.tsx`独立回归及`src/story/act2T01T06.acceptance.test.ts`仅T06导航适配。a34对fixture/offline路径改为只读；报告需要的起始状态给a2，不代写。新增独立回归必须验证真实界面行为和状态边界，保留已有acceptance门槛/恢复断言。
+- a2全局维护文档仍在父统一验收后docs-only收尾。跨分支依赖通过已提交节点单向cherry-pick，不互相合并形成循环；父最后在review统一整合并跑一次必要门禁。主工作区现在为原29项加用户同名jpg共30项dirty状态，均保护，不暂存/清理。
+
 交付格式：执行角色、实现结果、提交SHA、实际路径、运行验证/结果、未决或跨边界请求；a34另给fixture URL与真实起始/恢复方式。不得虚构手工全章试玩或主审尚未完成的门禁。
