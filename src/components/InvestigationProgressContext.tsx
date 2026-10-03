@@ -7,6 +7,8 @@ export interface InvestigationProgressContextValue {
   closeProgress: () => void;
   isOpen: boolean;
   onOpenApp?: (appId: AppId) => void;
+  onContinueInvestigation?: () => void;
+  onReviewAct3?: () => void;
   progress: InvestigationProgressModel;
 }
 
@@ -21,11 +23,15 @@ export function InvestigationProgressProvider({
   state,
   suppressed = false,
   onOpenApp,
+  onContinueInvestigation,
+  onReviewAct3,
 }: {
   children: ReactNode;
   state: AppState;
   suppressed?: boolean;
   onOpenApp?: (appId: AppId) => void;
+  onContinueInvestigation?: () => void;
+  onReviewAct3?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const progress = deriveInvestigationProgress(state);
@@ -54,7 +60,7 @@ export function InvestigationProgressProvider({
     wasOpenRef.current = isOpen;
   }, [isOpen]);
 
-  return <InvestigationProgressContext.Provider value={{ openProgress, closeProgress, isOpen, onOpenApp, progress }}>
+  return <InvestigationProgressContext.Provider value={{ openProgress, closeProgress, isOpen, onOpenApp, onContinueInvestigation, onReviewAct3, progress }}>
     {children}
   </InvestigationProgressContext.Provider>;
 }

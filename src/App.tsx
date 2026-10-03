@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { stateManager } from './core/stateManager';
 import type { Act2Stage, AppId } from './core/types';
 import { apps, appById } from './data/apps';
@@ -20,9 +20,12 @@ import { Act1Ending } from './scenes/act1/Act1Ending';
 import { Act2Experience } from './scenes/act2/Act2Experience';
 import { Act3Investigation } from './scenes/act3/Act3Investigation';
 import { Act4Experience } from './scenes/act4/Act4Experience';
+import { Act4Ending } from './scenes/act4/Act4Ending';
 import { Act2T07Entry } from './scenes/act2/T07Investigation';
 import { StoryTransition, StoryTransitionLaunch } from './components/StoryTransition';
 import { getPendingStoryTransition } from './data/storyTransitionData';
+import { deriveInvestigationProgress } from './data/investigationProgressData';
+import { act1Scenes } from './data/sceneData';
 import './styles.css';
 import './imageAssets.css';
 
@@ -39,7 +42,14 @@ export default function App() {
   const [dismissedAct3, setDismissedAct3] = useState(false);
   const [reviewAct3, setReviewAct3] = useState(false);
   const [dismissedAct4, setDismissedAct4] = useState(false);
+  const [showAct4Ending, setShowAct4Ending] = useState(false);
   const [openedTransitionId, setOpenedTransitionId] = useState<string | null>(null);
+  const act4WasCompleteRef = useRef(state.game.flags.FLAG_A4_COMPLETE === true);
+  useEffect(() => {
+    const completeNow = state.game.flags.FLAG_A4_COMPLETE === true;
+    if (!act4WasCompleteRef.current && completeNow) setShowAct4Ending(true);
+    act4WasCompleteRef.current = completeNow;
+  }, [state.game.flags.FLAG_A4_COMPLETE]);
   useEffect(() => {
     const interval = window.setInterval(() => setTime(new Date()), 15_000);
     return () => window.clearInterval(interval);
@@ -81,12 +91,62 @@ export default function App() {
   const taskbarClick = (appId: AppId) => stateManager.toggleTaskbarApp(appId);
   // 第二幕收尾页与任务栏「调查」共用同一语义：只有第二幕已完成且第三幕未开始时才启动，
   // 避免出现第二个能改写阶段的入口（工单 §15.2 FLOW-05）。
-  const act2Complete = state.game.flags.FLAG_A2_COMPLETE === true;
   const startAct3FromInvestigation = () => {
-    if (!act2Complete || state.modules.act3.stage !== 'inactive') return;
+    const current = stateManager.getState();
+    if (current.game.flags.FLAG_A2_COMPLETE !== true || current.modules.act3.stage !== 'inactive') return;
     setDismissedAct2Stage(null);
     stateManager.startAct3();
     setDismissedAct3(false);
+  };
+  const startAct4FromInvestigation = () => {
+    const current = stateManager.getState();
+    if (current.game.flags.FLAG_A3_COMPLETE !== true || current.game.flags.FLAG_A3_SITE_EXITED !== true || current.modules.act3.stage !== 'T07') return;
+    if (current.modules.act4.stage === 'inactive') stateManager.startAct4();
+    setReviewAct3(false);
+    setDismissedAct3(false);
+    setDismissedAct4(false);
+  };
+  const reviewAct3FromInvestigation = () => {
+    const current = stateManager.getState();
+    if (current.game.flags.FLAG_A3_COMPLETE !== true || current.modules.act3.stage !== 'T07') return;
+    setReviewAct3(true);
+    setDismissedAct3(false);
+    if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
+  };
+  const continueInvestigation = () => {
+    const current = stateManager.getState();
+    const pending = getPendingStoryTransition(current);
+    if (pending && pending.presentation !== 'immediate') {
+      setOpenedTransitionId(pending.id);
+      return;
+    }
+    if (current.modules.act4.stage !== 'inactive') {
+      setReviewAct3(false);
+      setDismissedAct4(false);
+      return;
+    }
+    if (current.modules.act3.stage !== 'inactive') {
+      if (current.game.flags.FLAG_A3_COMPLETE === true && current.game.flags.FLAG_A3_SITE_EXITED === true) startAct4FromInvestigation();
+      else { setReviewAct3(false); setDismissedAct3(false); }
+      return;
+    }
+    if (current.game.flags.FLAG_A2_COMPLETE === true) {
+      startAct3FromInvestigation();
+      return;
+    }
+    const act2StageNow = current.modules.act2Research.stage;
+    if (act2StageNow !== 'inactive') {
+      if (isAct2SceneStage(act2StageNow)) setDismissedAct2Stage(null);
+      else openApp('browser');
+      return;
+    }
+    if (current.game.phase === 'F' && !current.modules.scene.journeyStarted) {
+      const firstScene = act1Scenes[0];
+      if (firstScene) stateManager.startJourney(firstScene.id);
+      return;
+    }
+    const currentProgress = deriveInvestigationProgress(current);
+    if (currentProgress.nextActionAppId) openApp(currentProgress.nextActionAppId);
   };
   const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
   const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
@@ -94,7 +154,7 @@ export default function App() {
   const act3Active = act3Stage !== 'inactive';
   const act4Active = state.modules.act4.stage !== 'inactive';
   const act4Open = act4Active && !dismissedAct4;
-  const act3Open = act3Active && !dismissedAct3 && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3);
+  const act3Open = act3Active && !dismissedAct3 && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3 || (!act4Active && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07'));
   const act2SceneOpen = act2SceneStage !== null && !act3Active && dismissedAct2Stage !== act2SceneStage;
   const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open || act4Open;
   const secondActStarted = act2Stage !== 'inactive';
@@ -110,16 +170,8 @@ export default function App() {
   const transitionLayer = transition && (transitionOpen
     ? <StoryTransition transition={transition} onContinue={continueTransition} />
     : null);
-  const investigationReady = (transition && !transitionOpen) || (!act3Active && !act4Active && state.game.flags.FLAG_A2_COMPLETE === true) || (act3Active && dismissedAct3) || (state.game.flags.FLAG_A3_COMPLETE === true && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07' && !act4Active && !reviewAct3) || (act4Active && dismissedAct4 && !reviewAct3);
-  const investigation = investigationReady ? <>
-    {transition && !transitionOpen && <StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} />}
-    {!act3Active && !act4Active && act2Complete && <aside className="story-transition-launch" aria-label="第三幕调查已就绪"><button type="button" onClick={startAct3FromInvestigation}>前往启明旧址</button></aside>}
-    {act3Active && dismissedAct3 && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3) && <aside className="story-transition-launch" aria-label="第三幕调查已就绪"><button type="button" onClick={() => setDismissedAct3(false)}>继续启明遗址调查</button></aside>}
-    {state.game.flags.FLAG_A3_COMPLETE === true && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07' && !act4Active && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><button type="button" onClick={() => { stateManager.startAct4(); setDismissedAct4(false); }}>继续调查小 A 的笔记</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
-    {act4Active && dismissedAct4 && !reviewAct3 && <aside className="story-transition-launch" aria-label="第四幕调查已就绪"><button type="button" onClick={() => setDismissedAct4(false)}>继续第四幕调查</button><button type="button" onClick={() => { setReviewAct3(true); setDismissedAct3(false); }}>回看第三幕</button></aside>}
-  </> : null;
   if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
-    return <InvestigationProgressProvider state={state} suppressed={transitionOpen} onOpenApp={openApp}><>
+    return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
       <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
       {transitionLayer}
@@ -128,10 +180,23 @@ export default function App() {
   const activeWindowId = state.desktop.activeAppId;
   const activeWindowState = activeWindowId ? state.desktop.windows[activeWindowId] : null;
   const taskCardVisible = !activeWindowState || activeWindowState.status === 'closed' || activeWindowState.status === 'minimized';
+  const openProgressApp = (appId: AppId) => {
+    if (appId !== 'notepad') { openApp(appId); return; }
+    const current = stateManager.getState();
+    if (current.modules.scene.currentSceneId !== null || (current.game.phase === 'F' && !current.modules.scene.journeyStarted)) return;
+    const currentAct2Stage = current.modules.act2Research.stage;
+    if (isAct2SceneStage(currentAct2Stage)) setDismissedAct2Stage(currentAct2Stage);
+    if (current.modules.act3.stage !== 'inactive') {
+      setDismissedAct3(true);
+      setReviewAct3(false);
+    }
+    if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
+    stateManager.openApp('notepad');
+  };
   return (
-    <InvestigationProgressProvider state={state} suppressed={transitionOpen} onOpenApp={openApp}>
+    <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>
-    <div aria-hidden={transitionOpen} inert={transitionOpen}>
+    <div aria-hidden={transitionOpen || showAct4Ending} inert={transitionOpen || showAct4Ending}>
     <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
@@ -157,7 +222,7 @@ export default function App() {
           />
         );
       })}
-      <div id="taskbar"><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={() => stateManager.resetProgress()} time={time} investigation={investigation} /></div>
+      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={() => stateManager.resetProgress()} time={time} /></div>
     </main>
     {act1SceneOpen && <Act1SceneExperience state={state} />}
     {act2SceneStage !== null && !act3Active && (
@@ -170,18 +235,20 @@ export default function App() {
         manager={stateManager}
       />
     )}
-    {act3Active && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3) && (
+    {act3Active && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3 || (state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07')) && (
       <>
         {act3Open && (
           <Act3Investigation
             manager={stateManager}
             onReturnToDesktop={() => { setDismissedAct3(true); setReviewAct3(false); }}
+            onOpenAct4={startAct4FromInvestigation}
           />
         )}
       </>
     )}
-    </div>
     {act4Open && <Act4Experience manager={stateManager} onExit={() => setDismissedAct4(true)} />}
+    </div>
+    {showAct4Ending && <Act4Ending onReview={() => setShowAct4Ending(false)} onReturnToDesktop={() => { setShowAct4Ending(false); setDismissedAct4(true); }} />}
     <InvestigationProgressDrawer state={state} />
     {transitionLayer}
     </>

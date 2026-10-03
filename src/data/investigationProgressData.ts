@@ -185,7 +185,7 @@ function act2Stage(state: AppState): { location: string; objective: string; next
     if (flags.FLAG_A2_COMPLETE === true && state.modules.act3.stage === 'inactive') return {
       location: '第二幕资料核对完成',
       objective: '第二幕调查已完成。',
-      nextAction: '从桌面调查入口选择“前往启明旧址”开始下一幕。',
+      nextAction: '点击“继续调查”，前往启明旧址开始下一幕。',
     };
     const nextAction = flags.FLAG_A2_PROMO_PHOTO_SS_FOUND !== true
       ? '和小月打开校门合影，核对照片中的双 S。'
@@ -197,11 +197,11 @@ function act2Stage(state: AppState): { location: string; objective: string; next
             ? '把已截取的画面与第一次徒步拍下的破庙外景并排核对，再记录能支持的地点结论。'
             : flags.FLAG_A2_SECOND_TRIP_PLANNED !== true
               ? '和小月商量是否安排第二次进山。'
-              : '在资料核对页完成当前结尾动作。';
+              : '点击黑幕中的“再次进山，调查启明旧址”完成第二幕并直接开始下一幕。';
     return {
       location: '与小月核对宣传资料',
       objective: '把已读资料与现场照片放在一起核对；只有满足条件的操作才会记录阶段进度。',
-      nextAction: flags.FLAG_A2_SECOND_TRIP_PLANNED === true ? '点击“再次进山，调查启明旧址”继续现场调查。' : nextAction,
+      nextAction: flags.FLAG_A2_SECOND_TRIP_PLANNED === true ? '点击黑幕中的“再次进山，调查启明旧址”记录完成并直接开始第三幕。' : nextAction,
     };
   }
 
@@ -269,7 +269,7 @@ function act3Stage(state: AppState): { location: string; objective: string; next
     if (hasFlag(state, 'FLAG_A3_SITE_EXITED') && hasFlag(state, 'FLAG_A3_COMPLETE') && state.modules.act4.stage === 'inactive') return {
       location,
       objective: '第三幕现场调查已经收束。',
-      nextAction: '在桌面点击“继续调查小 A 的笔记”开始第四幕，或选择“回看第三幕”。',
+      nextAction: '点击“翻开笔记，继续调查”开始阅读第四幕；也可以回看启明旧址。',
     };
     const missing = (id: string) => !inspected.includes(id);
     const nextAction = missing('CLUE_A3_T07_XIAOYUE_MEMORY')
@@ -655,7 +655,7 @@ export function deriveInvestigationProgress(state: AppState): InvestigationProgr
 }
 
 const appLabel: Record<AppId, string> = {
-  wechat: '打开微信', mail: '打开邮箱', browser: '打开浏览器', explorer: '打开资源管理器', notepad: '打开记事本', photos: '打开照片',
+  wechat: '打开微信', mail: '打开邮箱', browser: '打开浏览器', explorer: '打开资源管理器', notepad: '打开调查', photos: '打开照片',
 };
 
 function t06DesktopSteps(state: AppState): DesktopTaskStep[] {
