@@ -42,3 +42,9 @@
 截图与DOM/几何/状态证据：`C:/Users/Jay Cai/.codex/visualizations/2026/10/02/01a0fc77-8fce-79b1-b43c-8e7c4039e99b/ux-casepath-20261003/`，含 `desktop-wallpaper.png`、`progress-drawer.png`、`mobile-drawer.png`、`default-zhong.png`、学校/桥头窄屏截图和 `browser-evidence.json`。四幕代表检查已完成，未宣称从头手动通关全章。
 
 批准父以 `--no-ff` 合并本批评审分支到本地main；合并后重建main离线入口、执行默认两轮验收并核对manifest.gitSha=HEAD。回退用 `git revert -m 1 <main合并SHA>`。
+
+## 本地 main 实际合并与验收
+
+功能批次已以 `--no-ff` 合并到本地 main：`2773c6a274fb1b4d6e6ba93de5dc194afe61a379`。该节点 `build:offline` 通过，143文件 / 199.49 MiB，manifest.gitSha与HEAD一致；默认两轮 `test:offline` 全部通过，覆盖T07、A3/A4及A–K、编辑、存档重载、结尾和重置，资源本地化、无网络请求、零运行时错误。原29项保护的存在性/哈希无差异，30项用户dirty状态精确不变；两份用户JPG与产品壁纸哈希仍一致。仓库无remote，本批交付为本地main。
+
+后续只收尾维护文档，不改运行代码。最终HEAD的离线manifest须重新生成，并与本节点已验收的全部运行资源逐项比对哈希；资源完全一致时不重复全量测试。结论保持 `APPROVED`。
