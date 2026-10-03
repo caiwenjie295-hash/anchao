@@ -2,6 +2,7 @@
 
 ## 当前待办
 
+- [x] AS-COMPRESS-20261003 子分支实现、16份样图审阅和两种构建完成：141张发布副本、逐图账本及138个登记ID映射见 `docs/as-compress-20261003/`；按用户要求游戏测试未运行。主审后续整合以父审查记录为准。
 - [x] UX-CASEPATH / UX-PROGRESS / UX-WALLPAPER-20261003 同批功能、进度抽屉、实名路径和本地壁纸验收通过；`npm test` 65文件/350项、最终定向测试、生产构建及 `52626ef` 默认两轮离线验收通过，真实IAB覆盖默认窗/最大化/手机与关键四幕状态。两份审查均为 `APPROVED`，详见 `docs/reviews/UX-CASEPATH-20261003.md`、`docs/reviews/UX-PROGRESS-20261003.md`。
 - [x] UX-CASEPATH / UX-PROGRESS / UX-WALLPAPER-20261003 已以 `--no-ff` 合入本地 `main`；功能合并节点 `2773c6a274fb1b4d6e6ba93de5dc194afe61a379` 的离线入口与资源包（`暗潮离线/index.html` + `assets`）为143文件/199.49 MiB，默认两轮 offline 通过，manifest.gitSha与该节点一致。父复核29项保护哈希/存在性无差异、30项原dirty状态完全一致，两份用户JPG及产品壁纸哈希一致。最终交付版本以 `main` 的 `git rev-parse HEAD` 与 `暗潮离线/manifest.json` 的 `gitSha` 核对为准。验收详情见两份 `APPROVED` 评审。
 - [x] UX-LAYOUT-20261003 高中与桥头布局返修已完成：集成测试60文件/321项、生产与离线构建、默认两轮 offline 及2556×1370/1440×900/1366×768/390×844真实浏览器验收通过。照片尺寸、展开不挤压、桥头滚动条稳定、触控目标和剧情门槛见 `docs/ux-layout-20261003/implementation.md`；主审验收与 main 合并记录见 `docs/reviews/UX-LAYOUT-20261003.md`。

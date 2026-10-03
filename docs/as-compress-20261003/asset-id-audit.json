@@ -1,0 +1,876 @@
+{
+  "summary": {
+    "registryRecords": 138,
+    "resolvedRecords": 138,
+    "uniqueResolvedSources": 134,
+    "unresolvedRecords": 0,
+    "duplicateSourceGroups": [
+      {
+        "source": "Photo_src/A.W刻字黑暗.png",
+        "ids": [
+          "IMG_A1_H_002",
+          "IMG_A1_H_003"
+        ]
+      },
+      {
+        "source": "Photo_src/初中合照1.png",
+        "ids": [
+          "IMG_A1_D_002",
+          "IMG_A1_B_012"
+        ]
+      },
+      {
+        "source": "Photo_src/补字碑.png",
+        "ids": [
+          "IMG_A1_I_002",
+          "IMG_A1_I_004"
+        ]
+      },
+      {
+        "source": "第二幕/IMG_A2_T07_005.jpg",
+        "ids": [
+          "IMG_A2_T07_005",
+          "IMG_A2_T07_006"
+        ]
+      }
+    ],
+    "resolutionOrder": [
+      "Photo_src/*.png",
+      "第二幕/*.jpg",
+      "第三幕/IMG_A3_*.jpg",
+      "第三幕/IMG_A3_*.png",
+      "第四幕/{act4AssetPath}.png"
+    ],
+    "legacyAct4PathSemanticsPreserved": true
+  },
+  "records": [
+    {
+      "id": "IMG_A1_D_001",
+      "file": "小学合照1.png",
+      "legacySource": "Photo_src/小学合照1.png",
+      "compressedOutput": "Photo_src/小学合照1.webp"
+    },
+    {
+      "id": "IMG_A2_T05_001",
+      "file": "IMG_A2_T05_001.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_001.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_001.webp"
+    },
+    {
+      "id": "IMG_A2_T05_002",
+      "file": "IMG_A2_T05_002.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_002.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_002.webp"
+    },
+    {
+      "id": "IMG_A2_T05_003",
+      "file": "IMG_A2_T05_003.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_003.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_003.webp"
+    },
+    {
+      "id": "IMG_A2_T05_004",
+      "file": "IMG_A2_T05_004.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_004.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_004.webp"
+    },
+    {
+      "id": "IMG_A2_T05_005",
+      "file": "IMG_A2_T05_005.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_005.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_005.webp"
+    },
+    {
+      "id": "IMG_A2_T05_006",
+      "file": "IMG_A2_T05_006.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_006.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_006.webp"
+    },
+    {
+      "id": "IMG_A2_T05_007",
+      "file": "IMG_A2_T05_007.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_007.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_007.webp"
+    },
+    {
+      "id": "IMG_A2_T05_008",
+      "file": "IMG_A2_T05_008.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_008.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_008.webp"
+    },
+    {
+      "id": "IMG_A2_T05_009",
+      "file": "IMG_A2_T05_009.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_009.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_009.webp"
+    },
+    {
+      "id": "IMG_A2_T05_010",
+      "file": "IMG_A2_T05_010.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_010.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_010.webp"
+    },
+    {
+      "id": "IMG_A2_T05_011",
+      "file": "IMG_A2_T05_011.jpg",
+      "legacySource": "第二幕/IMG_A2_T05_011.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T05_011.webp"
+    },
+    {
+      "id": "IMG_A1_D_002",
+      "file": "初中合照1.png",
+      "legacySource": "Photo_src/初中合照1.png",
+      "compressedOutput": "Photo_src/初中合照1.webp"
+    },
+    {
+      "id": "IMG_A1_G_001",
+      "file": "鸡公岭入口.png",
+      "legacySource": "Photo_src/鸡公岭入口.png",
+      "compressedOutput": "Photo_src/鸡公岭入口.webp"
+    },
+    {
+      "id": "IMG_A1_G_002",
+      "file": "鸡公岭_旧林道.png",
+      "legacySource": "Photo_src/鸡公岭_旧林道.png",
+      "compressedOutput": "Photo_src/鸡公岭_旧林道.webp"
+    },
+    {
+      "id": "IMG_A1_G_003",
+      "file": "鸡公岭_溪谷近洞口.png",
+      "legacySource": "Photo_src/鸡公岭_溪谷近洞口.png",
+      "compressedOutput": "Photo_src/鸡公岭_溪谷近洞口.webp"
+    },
+    {
+      "id": "IMG_A1_H_001",
+      "file": "山洞内整体景.png",
+      "legacySource": "Photo_src/山洞内整体景.png",
+      "compressedOutput": "Photo_src/山洞内整体景.webp"
+    },
+    {
+      "id": "IMG_A1_H_002",
+      "file": "A.W刻字黑暗.png",
+      "legacySource": "Photo_src/A.W刻字黑暗.png",
+      "compressedOutput": "Photo_src/A.W刻字黑暗.webp"
+    },
+    {
+      "id": "IMG_A1_H_003",
+      "file": "A.W刻字黑暗.png",
+      "legacySource": "Photo_src/A.W刻字黑暗.png",
+      "compressedOutput": "Photo_src/A.W刻字黑暗.webp"
+    },
+    {
+      "id": "IMG_A1_I_001",
+      "file": "石庙外景1.png",
+      "legacySource": "Photo_src/石庙外景1.png",
+      "compressedOutput": "Photo_src/石庙外景1.webp"
+    },
+    {
+      "id": "IMG_A1_I_002",
+      "file": "补字碑.png",
+      "legacySource": "Photo_src/补字碑.png",
+      "compressedOutput": "Photo_src/补字碑.webp"
+    },
+    {
+      "id": "IMG_A1_I_003",
+      "file": "黑补母特写1.png",
+      "legacySource": "Photo_src/黑补母特写1.png",
+      "compressedOutput": "Photo_src/黑补母特写1.webp"
+    },
+    {
+      "id": "IMG_A1_I_004",
+      "file": "补字碑.png",
+      "legacySource": "Photo_src/补字碑.png",
+      "compressedOutput": "Photo_src/补字碑.webp"
+    },
+    {
+      "id": "IMG_A1_B_012",
+      "file": "初中合照1.png",
+      "legacySource": "Photo_src/初中合照1.png",
+      "compressedOutput": "Photo_src/初中合照1.webp"
+    },
+    {
+      "id": "IMG_A1_B_011",
+      "file": "生活_母亲厨房午饭.png",
+      "legacySource": "Photo_src/生活_母亲厨房午饭.png",
+      "compressedOutput": "Photo_src/生活_母亲厨房午饭.webp"
+    },
+    {
+      "id": "IMG_A1_B_013",
+      "file": "生活_翻新后的学校操场.png",
+      "legacySource": "Photo_src/生活_翻新后的学校操场.png",
+      "compressedOutput": "Photo_src/生活_翻新后的学校操场.webp"
+    },
+    {
+      "id": "IMG_A1_B_014",
+      "file": "生活_傍晚的窗.png",
+      "legacySource": "Photo_src/生活_傍晚的窗.png",
+      "compressedOutput": "Photo_src/生活_傍晚的窗.webp"
+    },
+    {
+      "id": "IMG_A1_E_001",
+      "file": "救援队1.png",
+      "legacySource": "Photo_src/救援队1.png",
+      "compressedOutput": "Photo_src/救援队1.webp"
+    },
+    {
+      "id": "IMG_A1_E_002",
+      "file": "救援队2.png",
+      "legacySource": "Photo_src/救援队2.png",
+      "compressedOutput": "Photo_src/救援队2.webp"
+    },
+    {
+      "id": "IMG_A1_E_003",
+      "file": "鸡公岭地图.png",
+      "legacySource": "Photo_src/鸡公岭地图.png",
+      "compressedOutput": "Photo_src/鸡公岭地图.webp"
+    },
+    {
+      "id": "IMG_A2_T02_001",
+      "file": "IMG_A2_T02_001.jpg",
+      "legacySource": "第二幕/IMG_A2_T02_001.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T02_001.webp"
+    },
+    {
+      "id": "IMG_A2_T03_001",
+      "file": "IMG_A2_T03_001.jpg",
+      "legacySource": "第二幕/IMG_A2_T03_001.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T03_001.webp"
+    },
+    {
+      "id": "IMG_A3_T00_001",
+      "file": "IMG_A3_T00_001.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_001.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_001.webp"
+    },
+    {
+      "id": "IMG_A3_T00_002",
+      "file": "IMG_A3_T00_002.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_002.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_002.webp"
+    },
+    {
+      "id": "IMG_A3_T00_003",
+      "file": "IMG_A3_T00_003.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_003.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_003.webp"
+    },
+    {
+      "id": "IMG_A3_T00_004",
+      "file": "IMG_A3_T00_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_004.webp"
+    },
+    {
+      "id": "IMG_A3_T00_005",
+      "file": "IMG_A3_T00_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_005.webp"
+    },
+    {
+      "id": "IMG_A3_T00_006",
+      "file": "IMG_A3_T00_006.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_006.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_006.webp"
+    },
+    {
+      "id": "IMG_A3_T00_007",
+      "file": "IMG_A3_T00_007.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_007.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_007.webp"
+    },
+    {
+      "id": "IMG_A3_T00_008",
+      "file": "IMG_A3_T00_008.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_008.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_008.webp"
+    },
+    {
+      "id": "IMG_A3_T00_009",
+      "file": "IMG_A3_T00_009.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_009.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_009.webp"
+    },
+    {
+      "id": "IMG_A3_T00_010",
+      "file": "IMG_A3_T00_010.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_010.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_010.webp"
+    },
+    {
+      "id": "IMG_A3_T00_011",
+      "file": "IMG_A3_T00_011.jpg",
+      "legacySource": "第三幕/IMG_A3_T00_011.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T00_011.webp"
+    },
+    {
+      "id": "IMG_A3_T00_012",
+      "file": "IMG_A3_T00_012.png",
+      "legacySource": "第三幕/IMG_A3_T00_012.png",
+      "compressedOutput": "第三幕/IMG_A3_T00_012.webp"
+    },
+    {
+      "id": "IMG_A3_T01_001",
+      "file": "IMG_A3_T01_001.jpg",
+      "legacySource": "第三幕/IMG_A3_T01_001.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T01_001.webp"
+    },
+    {
+      "id": "IMG_A3_T01_002",
+      "file": "IMG_A3_T01_002.jpg",
+      "legacySource": "第三幕/IMG_A3_T01_002.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T01_002.webp"
+    },
+    {
+      "id": "IMG_A3_T01_003",
+      "file": "IMG_A3_T01_003.jpg",
+      "legacySource": "第三幕/IMG_A3_T01_003.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T01_003.webp"
+    },
+    {
+      "id": "IMG_A3_T01_004",
+      "file": "IMG_A3_T01_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T01_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T01_004.webp"
+    },
+    {
+      "id": "IMG_A3_T01_005",
+      "file": "IMG_A3_T01_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T01_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T01_005.webp"
+    },
+    {
+      "id": "IMG_A3_T01_006",
+      "file": "IMG_A3_T01_006.png",
+      "legacySource": "第三幕/IMG_A3_T01_006.png",
+      "compressedOutput": "第三幕/IMG_A3_T01_006.webp"
+    },
+    {
+      "id": "IMG_A3_T02_001",
+      "file": "IMG_A3_T02_001.png",
+      "legacySource": "第三幕/IMG_A3_T02_001.png",
+      "compressedOutput": "第三幕/IMG_A3_T02_001.webp"
+    },
+    {
+      "id": "IMG_A3_T02_002",
+      "file": "IMG_A3_T02_002.jpg",
+      "legacySource": "第三幕/IMG_A3_T02_002.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T02_002.webp"
+    },
+    {
+      "id": "IMG_A3_T02_003",
+      "file": "IMG_A3_T02_003.png",
+      "legacySource": "第三幕/IMG_A3_T02_003.png",
+      "compressedOutput": "第三幕/IMG_A3_T02_003.webp"
+    },
+    {
+      "id": "IMG_A3_T02_004",
+      "file": "IMG_A3_T02_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T02_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T02_004.webp"
+    },
+    {
+      "id": "IMG_A3_T02_005",
+      "file": "IMG_A3_T02_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T02_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T02_005.webp"
+    },
+    {
+      "id": "IMG_A3_T02_006",
+      "file": "IMG_A3_T02_006.jpg",
+      "legacySource": "第三幕/IMG_A3_T02_006.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T02_006.webp"
+    },
+    {
+      "id": "IMG_A2_T07_001",
+      "file": "IMG_A2_T07_001.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_001.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_001.webp"
+    },
+    {
+      "id": "IMG_A2_T07_002",
+      "file": "IMG_A2_T07_002.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_002.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_002.webp"
+    },
+    {
+      "id": "IMG_A2_T07_003",
+      "file": "IMG_A2_T07_003.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_003.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_003.webp"
+    },
+    {
+      "id": "IMG_A2_T07_004",
+      "file": "IMG_A2_T07_004.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_004.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_004.webp"
+    },
+    {
+      "id": "IMG_A2_T07_005",
+      "file": "IMG_A2_T07_005.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_005.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_005.webp"
+    },
+    {
+      "id": "IMG_A2_T07_006",
+      "file": "IMG_A2_T07_005.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_005.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_005.webp"
+    },
+    {
+      "id": "IMG_A2_T07_007",
+      "file": "IMG_A2_T07_007.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_007.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_007.webp"
+    },
+    {
+      "id": "IMG_A2_T07_008",
+      "file": "IMG_A2_T07_008.jpg",
+      "legacySource": "第二幕/IMG_A2_T07_008.jpg",
+      "compressedOutput": "第二幕/IMG_A2_T07_008.webp"
+    },
+    {
+      "id": "IMG_A3_T03_001",
+      "file": "IMG_A3_T03_001.png",
+      "legacySource": "第三幕/IMG_A3_T03_001.png",
+      "compressedOutput": "第三幕/IMG_A3_T03_001.webp"
+    },
+    {
+      "id": "IMG_A3_T03_002",
+      "file": "IMG_A3_T03_002.jpg",
+      "legacySource": "第三幕/IMG_A3_T03_002.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T03_002.webp"
+    },
+    {
+      "id": "IMG_A3_T03_003",
+      "file": "IMG_A3_T03_003.jpg",
+      "legacySource": "第三幕/IMG_A3_T03_003.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T03_003.webp"
+    },
+    {
+      "id": "IMG_A3_T03_004",
+      "file": "IMG_A3_T03_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T03_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T03_004.webp"
+    },
+    {
+      "id": "IMG_A3_T03_005",
+      "file": "IMG_A3_T03_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T03_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T03_005.webp"
+    },
+    {
+      "id": "IMG_A3_T03_006",
+      "file": "IMG_A3_T03_006.png",
+      "legacySource": "第三幕/IMG_A3_T03_006.png",
+      "compressedOutput": "第三幕/IMG_A3_T03_006.webp"
+    },
+    {
+      "id": "IMG_A3_T04_001",
+      "file": "IMG_A3_T04_001.png",
+      "legacySource": "第三幕/IMG_A3_T04_001.png",
+      "compressedOutput": "第三幕/IMG_A3_T04_001.webp"
+    },
+    {
+      "id": "IMG_A3_T04_002",
+      "file": "IMG_A3_T04_002.png",
+      "legacySource": "第三幕/IMG_A3_T04_002.png",
+      "compressedOutput": "第三幕/IMG_A3_T04_002.webp"
+    },
+    {
+      "id": "IMG_A3_T04_003",
+      "file": "IMG_A3_T04_003.jpg",
+      "legacySource": "第三幕/IMG_A3_T04_003.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T04_003.webp"
+    },
+    {
+      "id": "IMG_A3_T04_004",
+      "file": "IMG_A3_T04_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T04_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T04_004.webp"
+    },
+    {
+      "id": "IMG_A3_T04_005",
+      "file": "IMG_A3_T04_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T04_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T04_005.webp"
+    },
+    {
+      "id": "IMG_A3_T04_006",
+      "file": "IMG_A3_T04_006.jpg",
+      "legacySource": "第三幕/IMG_A3_T04_006.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T04_006.webp"
+    },
+    {
+      "id": "IMG_A3_T05_001",
+      "file": "IMG_A3_T05_001.jpg",
+      "legacySource": "第三幕/IMG_A3_T05_001.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T05_001.webp"
+    },
+    {
+      "id": "IMG_A3_T05_002",
+      "file": "IMG_A3_T05_002.png",
+      "legacySource": "第三幕/IMG_A3_T05_002.png",
+      "compressedOutput": "第三幕/IMG_A3_T05_002.webp"
+    },
+    {
+      "id": "IMG_A3_T05_003",
+      "file": "IMG_A3_T05_003.jpg",
+      "legacySource": "第三幕/IMG_A3_T05_003.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T05_003.webp"
+    },
+    {
+      "id": "IMG_A3_T05_004",
+      "file": "IMG_A3_T05_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T05_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T05_004.webp"
+    },
+    {
+      "id": "IMG_A3_T05_005",
+      "file": "IMG_A3_T05_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T05_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T05_005.webp"
+    },
+    {
+      "id": "IMG_A3_T05_006",
+      "file": "IMG_A3_T05_006.jpg",
+      "legacySource": "第三幕/IMG_A3_T05_006.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T05_006.webp"
+    },
+    {
+      "id": "IMG_A3_T06_001",
+      "file": "IMG_A3_T06_001.jpg",
+      "legacySource": "第三幕/IMG_A3_T06_001.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T06_001.webp"
+    },
+    {
+      "id": "IMG_A3_T06_002",
+      "file": "IMG_A3_T06_002.png",
+      "legacySource": "第三幕/IMG_A3_T06_002.png",
+      "compressedOutput": "第三幕/IMG_A3_T06_002.webp"
+    },
+    {
+      "id": "IMG_A3_T06_003",
+      "file": "IMG_A3_T06_003.jpg",
+      "legacySource": "第三幕/IMG_A3_T06_003.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T06_003.webp"
+    },
+    {
+      "id": "IMG_A3_T06_004",
+      "file": "IMG_A3_T06_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T06_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T06_004.webp"
+    },
+    {
+      "id": "IMG_A3_T06_005",
+      "file": "IMG_A3_T06_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T06_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T06_005.webp"
+    },
+    {
+      "id": "IMG_A3_T06_006",
+      "file": "IMG_A3_T06_006.jpg",
+      "legacySource": "第三幕/IMG_A3_T06_006.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T06_006.webp"
+    },
+    {
+      "id": "IMG_A3_T06_007",
+      "file": "IMG_A3_T06_007.png",
+      "legacySource": "第三幕/IMG_A3_T06_007.png",
+      "compressedOutput": "第三幕/IMG_A3_T06_007.webp"
+    },
+    {
+      "id": "IMG_A3_T06_008",
+      "file": "IMG_A3_T06_008.jpg",
+      "legacySource": "第三幕/IMG_A3_T06_008.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T06_008.webp"
+    },
+    {
+      "id": "IMG_A3_T07_001",
+      "file": "IMG_A3_T07_001.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_001.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_001.webp"
+    },
+    {
+      "id": "IMG_A3_T07_002",
+      "file": "IMG_A3_T07_002.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_002.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_002.webp"
+    },
+    {
+      "id": "IMG_A3_T07_003",
+      "file": "IMG_A3_T07_003.png",
+      "legacySource": "第三幕/IMG_A3_T07_003.png",
+      "compressedOutput": "第三幕/IMG_A3_T07_003.webp"
+    },
+    {
+      "id": "IMG_A3_T07_004",
+      "file": "IMG_A3_T07_004.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_004.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_004.webp"
+    },
+    {
+      "id": "IMG_A3_T07_005",
+      "file": "IMG_A3_T07_005.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_005.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_005.webp"
+    },
+    {
+      "id": "IMG_A3_T07_006",
+      "file": "IMG_A3_T07_006.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_006.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_006.webp"
+    },
+    {
+      "id": "IMG_A3_T07_007",
+      "file": "IMG_A3_T07_007.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_007.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_007.webp"
+    },
+    {
+      "id": "IMG_A3_T07_008",
+      "file": "IMG_A3_T07_008.jpg",
+      "legacySource": "第三幕/IMG_A3_T07_008.jpg",
+      "compressedOutput": "第三幕/IMG_A3_T07_008.webp"
+    },
+    {
+      "id": "IMG_A4_T01_001",
+      "file": "IMG_A4_T01_001.png",
+      "legacySource": "第四幕/T01/IMG_A4_T01_001.png",
+      "compressedOutput": "第四幕/T01/IMG_A4_T01_001.webp"
+    },
+    {
+      "id": "IMG_A4_T05_001",
+      "file": "IMG_A4_T05_001.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_001.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_001.webp"
+    },
+    {
+      "id": "IMG_A4_T05_002",
+      "file": "IMG_A4_T05_002.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_002.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_002.webp"
+    },
+    {
+      "id": "IMG_A4_T05_003",
+      "file": "IMG_A4_T05_003.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_003.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_003.webp"
+    },
+    {
+      "id": "IMG_A4_T05_004",
+      "file": "IMG_A4_T05_004.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_004.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_004.webp"
+    },
+    {
+      "id": "IMG_A4_T05_005",
+      "file": "IMG_A4_T05_005.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_005.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_005.webp"
+    },
+    {
+      "id": "IMG_A4_T05_006",
+      "file": "IMG_A4_T05_006.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_006.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_006.webp"
+    },
+    {
+      "id": "IMG_A4_T05_007",
+      "file": "IMG_A4_T05_007.png",
+      "legacySource": "第四幕/T05/IMG_A4_T05_007.png",
+      "compressedOutput": "第四幕/T05/IMG_A4_T05_007.webp"
+    },
+    {
+      "id": "IMG_A4_T06_001",
+      "file": "IMG_A4_T06_001.png",
+      "legacySource": "第四幕/T06/IMG_A4_T06_001.png",
+      "compressedOutput": "第四幕/T06/IMG_A4_T06_001.webp"
+    },
+    {
+      "id": "IMG_A4_T06_002",
+      "file": "IMG_A4_T06_002.png",
+      "legacySource": "第四幕/T06/IMG_A4_T06_002.png",
+      "compressedOutput": "第四幕/T06/IMG_A4_T06_002.webp"
+    },
+    {
+      "id": "IMG_A4_T06_003",
+      "file": "IMG_A4_T06_003.png",
+      "legacySource": "第四幕/T06/IMG_A4_T06_003.png",
+      "compressedOutput": "第四幕/T06/IMG_A4_T06_003.webp"
+    },
+    {
+      "id": "IMG_A4_T06_004",
+      "file": "IMG_A4_T06_004.png",
+      "legacySource": "第四幕/T06/IMG_A4_T06_004.png",
+      "compressedOutput": "第四幕/T06/IMG_A4_T06_004.webp"
+    },
+    {
+      "id": "IMG_A4_T06_005",
+      "file": "IMG_A4_T06_005.png",
+      "legacySource": "第四幕/T06/IMG_A4_T06_005.png",
+      "compressedOutput": "第四幕/T06/IMG_A4_T06_005.webp"
+    },
+    {
+      "id": "IMG_A4_T06_006",
+      "file": "IMG_A4_T06_006.png",
+      "legacySource": "第四幕/T06/IMG_A4_T06_006.png",
+      "compressedOutput": "第四幕/T06/IMG_A4_T06_006.webp"
+    },
+    {
+      "id": "IMG_A4_T07_001",
+      "file": "IMG_A4_T07_001.png",
+      "legacySource": "第四幕/T07/IMG_A4_T07_001.png",
+      "compressedOutput": "第四幕/T07/IMG_A4_T07_001.webp"
+    },
+    {
+      "id": "IMG_A4_T07_002",
+      "file": "IMG_A4_T07_002.png",
+      "legacySource": "第四幕/T07/IMG_A4_T07_002.png",
+      "compressedOutput": "第四幕/T07/IMG_A4_T07_002.webp"
+    },
+    {
+      "id": "IMG_A4_T07_003",
+      "file": "IMG_A4_T07_003.png",
+      "legacySource": "第四幕/T07/IMG_A4_T07_003.png",
+      "compressedOutput": "第四幕/T07/IMG_A4_T07_003.webp"
+    },
+    {
+      "id": "IMG_A4_T07_004",
+      "file": "IMG_A4_T07_004.png",
+      "legacySource": "第四幕/T07/IMG_A4_T07_004.png",
+      "compressedOutput": "第四幕/T07/IMG_A4_T07_004.webp"
+    },
+    {
+      "id": "IMG_A4_T07_005",
+      "file": "IMG_A4_T07_005.png",
+      "legacySource": "第四幕/T07/IMG_A4_T07_005.png",
+      "compressedOutput": "第四幕/T07/IMG_A4_T07_005.webp"
+    },
+    {
+      "id": "IMG_A4_T07_006",
+      "file": "IMG_A4_T07_006.png",
+      "legacySource": "第四幕/T07/IMG_A4_T07_006.png",
+      "compressedOutput": "第四幕/T07/IMG_A4_T07_006.webp"
+    },
+    {
+      "id": "IMG_A4_T08_001",
+      "file": "IMG_A4_T08_001.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_001.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_001.webp"
+    },
+    {
+      "id": "IMG_A4_T08_002",
+      "file": "IMG_A4_T08_002.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_002.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_002.webp"
+    },
+    {
+      "id": "IMG_A4_T08_003",
+      "file": "IMG_A4_T08_003.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_003.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_003.webp"
+    },
+    {
+      "id": "IMG_A4_T08_004",
+      "file": "IMG_A4_T08_004.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_004.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_004.webp"
+    },
+    {
+      "id": "IMG_A4_T08_005",
+      "file": "IMG_A4_T08_005.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_005.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_005.webp"
+    },
+    {
+      "id": "IMG_A4_T08_006",
+      "file": "IMG_A4_T08_006.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_006.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_006.webp"
+    },
+    {
+      "id": "IMG_A4_T08_007",
+      "file": "IMG_A4_T08_007.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_007.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_007.webp"
+    },
+    {
+      "id": "IMG_A4_T08_008",
+      "file": "IMG_A4_T08_008.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_008.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_008.webp"
+    },
+    {
+      "id": "IMG_A4_T08_009",
+      "file": "IMG_A4_T08_009.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_009.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_009.webp"
+    },
+    {
+      "id": "IMG_A4_T08_010",
+      "file": "IMG_A4_T08_010.png",
+      "legacySource": "第四幕/T08/IMG_A4_T08_010.png",
+      "compressedOutput": "第四幕/T08/IMG_A4_T08_010.webp"
+    },
+    {
+      "id": "IMG_A4_T09_001",
+      "file": "IMG_A4_T09_001.png",
+      "legacySource": "第四幕/T09/IMG_A4_T09_001.png",
+      "compressedOutput": "第四幕/T09/IMG_A4_T09_001.webp"
+    },
+    {
+      "id": "IMG_A4_T09_002",
+      "file": "IMG_A4_T09_002.png",
+      "legacySource": "第四幕/T09/IMG_A4_T09_002.png",
+      "compressedOutput": "第四幕/T09/IMG_A4_T09_002.webp"
+    },
+    {
+      "id": "IMG_A4_T09_003",
+      "file": "IMG_A4_T09_003.png",
+      "legacySource": "第四幕/T09/IMG_A4_T09_003.png",
+      "compressedOutput": "第四幕/T09/IMG_A4_T09_003.webp"
+    },
+    {
+      "id": "IMG_A4_T09_004",
+      "file": "IMG_A4_T09_004.png",
+      "legacySource": "第四幕/T09/IMG_A4_T09_004.png",
+      "compressedOutput": "第四幕/T09/IMG_A4_T09_004.webp"
+    },
+    {
+      "id": "IMG_A4_T09_005",
+      "file": "IMG_A4_T09_005.png",
+      "legacySource": "第四幕/T09/IMG_A4_T09_005.png",
+      "compressedOutput": "第四幕/T09/IMG_A4_T09_005.webp"
+    },
+    {
+      "id": "IMG_A4_T10_001",
+      "file": "IMG_A4_T10_001.png",
+      "legacySource": "第四幕/T10/IMG_A4_T10_001.png",
+      "compressedOutput": "第四幕/T10/IMG_A4_T10_001.webp"
+    },
+    {
+      "id": "IMG_A4_T10_002",
+      "file": "IMG_A4_T10_002.png",
+      "legacySource": "第四幕/T10/IMG_A4_T10_002.png",
+      "compressedOutput": "第四幕/T10/IMG_A4_T10_002.webp"
+    },
+    {
+      "id": "IMG_A4_T10_003",
+      "file": "IMG_A4_T10_003.png",
+      "legacySource": "第四幕/T10/IMG_A4_T10_003.png",
+      "compressedOutput": "第四幕/T10/IMG_A4_T10_003.webp"
+    },
+    {
+      "id": "IMG_A4_T10_004",
+      "file": "IMG_A4_T10_004.png",
+      "legacySource": "第四幕/T10/IMG_A4_T10_004.png",
+      "compressedOutput": "第四幕/T10/IMG_A4_T10_004.webp"
+    },
+    {
+      "id": "IMG_A4_T10_005",
+      "file": "IMG_A4_T10_005.png",
+      "legacySource": "第四幕/T10/IMG_A4_T10_005.png",
+      "compressedOutput": "第四幕/T10/IMG_A4_T10_005.webp"
+    }
+  ]
+}

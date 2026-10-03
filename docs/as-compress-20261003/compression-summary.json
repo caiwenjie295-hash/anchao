@@ -1,0 +1,55 @@
+{
+  "count": 141,
+  "sourceBytes": 207531725,
+  "outputBytes": 41752500,
+  "savingsBytes": 165779225,
+  "savingsPercent": 79.88,
+  "webpCount": 141,
+  "originalFormatFallbackCount": 0,
+  "alphaAssets": 6,
+  "alphaExact": true,
+  "registry": {
+    "registryRecords": 138,
+    "resolvedRecords": 138,
+    "uniqueResolvedSources": 134,
+    "unresolvedRecords": 0,
+    "duplicateSourceGroups": [
+      {
+        "source": "Photo_src/A.W刻字黑暗.png",
+        "ids": [
+          "IMG_A1_H_002",
+          "IMG_A1_H_003"
+        ]
+      },
+      {
+        "source": "Photo_src/初中合照1.png",
+        "ids": [
+          "IMG_A1_D_002",
+          "IMG_A1_B_012"
+        ]
+      },
+      {
+        "source": "Photo_src/补字碑.png",
+        "ids": [
+          "IMG_A1_I_002",
+          "IMG_A1_I_004"
+        ]
+      },
+      {
+        "source": "第二幕/IMG_A2_T07_005.jpg",
+        "ids": [
+          "IMG_A2_T07_005",
+          "IMG_A2_T07_006"
+        ]
+      }
+    ],
+    "resolutionOrder": [
+      "Photo_src/*.png",
+      "第二幕/*.jpg",
+      "第三幕/IMG_A3_*.jpg",
+      "第三幕/IMG_A3_*.png",
+      "第四幕/{act4AssetPath}.png"
+    ],
+    "legacyAct4PathSemanticsPreserved": true
+  }
+}

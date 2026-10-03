@@ -1,0 +1,146 @@
+[
+  {
+    "source": "assets/desktop-wallpaper.jpg",
+    "quality": 88,
+    "candidateBytes": 776594,
+    "sourceBytes": 1601144,
+    "publishedCandidate": "assets/desktop-wallpaper.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/wallpaper-center-comparison.png"
+  },
+  {
+    "source": "Photo_src/A.W刻字黑暗.png",
+    "quality": 92,
+    "candidateBytes": 305790,
+    "sourceBytes": 2466745,
+    "publishedCandidate": "Photo_src/A.W刻字黑暗.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/a-w-dark-inscription-comparison.png"
+  },
+  {
+    "source": "Photo_src/补字碑.png",
+    "quality": 92,
+    "candidateBytes": 468460,
+    "sourceBytes": 2871046,
+    "publishedCandidate": "Photo_src/补字碑.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/stone-inscription-comparison.png"
+  },
+  {
+    "source": "Photo_src/黑补母特写1.png",
+    "quality": 92,
+    "candidateBytes": 294400,
+    "sourceBytes": 2324561,
+    "publishedCandidate": "Photo_src/黑补母特写1.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/dark-deity-detail-comparison.png"
+  },
+  {
+    "source": "Photo_src/鸡公岭地图.png",
+    "quality": 92,
+    "candidateBytes": 400752,
+    "sourceBytes": 2643068,
+    "publishedCandidate": "Photo_src/鸡公岭地图.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/trail-map-symbols-comparison.png"
+  },
+  {
+    "source": "第二幕/IMG_A2_T03_001.jpg",
+    "quality": 92,
+    "candidateBytes": 275470,
+    "sourceBytes": 463628,
+    "publishedCandidate": "第二幕/IMG_A2_T03_001.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/library-shelf-comparison.png"
+  },
+  {
+    "source": "第二幕/IMG_A2_T05_006.jpg",
+    "quality": 92,
+    "candidateBytes": 194050,
+    "sourceBytes": 401586,
+    "publishedCandidate": "第二幕/IMG_A2_T05_006.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/school-handwritten-notes-comparison.png"
+  },
+  {
+    "source": "第二幕/IMG_A2_T07_004.jpg",
+    "quality": 88,
+    "candidateBytes": 470592,
+    "sourceBytes": 476153,
+    "publishedCandidate": "第二幕/IMG_A2_T07_004.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/ordinary-trail-photo-comparison.png"
+  },
+  {
+    "source": "第三幕/IMG_A3_T01_002.jpg",
+    "quality": 92,
+    "candidateBytes": 519122,
+    "sourceBytes": 679780,
+    "publishedCandidate": "第三幕/IMG_A3_T01_002.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/act3-gate-inscription-comparison.png"
+  },
+  {
+    "source": "第三幕/IMG_A3_T07_007.jpg",
+    "quality": 92,
+    "candidateBytes": 214664,
+    "sourceBytes": 280252,
+    "publishedCandidate": "第三幕/IMG_A3_T07_007.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/act3-paper-evidence-comparison.png"
+  },
+  {
+    "source": "第三幕/IMG_A3_T04_001.png",
+    "quality": 92,
+    "candidateBytes": 325084,
+    "sourceBytes": 2442350,
+    "publishedCandidate": "第三幕/IMG_A3_T04_001.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/act3-dark-archive-room-comparison.png"
+  },
+  {
+    "source": "第四幕/T09/IMG_A4_T09_003.png",
+    "quality": 92,
+    "candidateBytes": 278356,
+    "sourceBytes": 2236806,
+    "publishedCandidate": "第四幕/T09/IMG_A4_T09_003.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/act4-paper-evidence-comparison.png"
+  },
+  {
+    "source": "第四幕/T10/IMG_A4_T10_002.png",
+    "quality": 92,
+    "candidateBytes": 392854,
+    "sourceBytes": 2663071,
+    "publishedCandidate": "第四幕/T10/IMG_A4_T10_002.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/act4-handwritten-fragments-comparison.png"
+  },
+  {
+    "source": "UI_src/UI1.png",
+    "quality": 92,
+    "candidateBytes": 173666,
+    "sourceBytes": 831205,
+    "publishedCandidate": "UI_src/UI1.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/ui-icon-atlas-alpha-comparison.png"
+  },
+  {
+    "source": "UI_src/UI4.png",
+    "quality": 92,
+    "candidateBytes": 238016,
+    "sourceBytes": 751204,
+    "publishedCandidate": "UI_src/UI4.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/ui-file-atlas-alpha-comparison.png"
+  },
+  {
+    "source": "Wechat_src/Wechat1.png",
+    "quality": 92,
+    "candidateBytes": 257022,
+    "sourceBytes": 2068623,
+    "publishedCandidate": "Wechat_src/Wechat1.webp",
+    "alphaProblem": null,
+    "comparison": "docs/as-compress-20261003/quality-review/avatar-atlas-alpha-comparison.png"
+  }
+]

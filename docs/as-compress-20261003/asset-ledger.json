@@ -1,0 +1,3245 @@
+[
+  {
+    "source": "src/Photo_src/A.W刻字黑暗.png",
+    "sourceSha256": "33e967cd21e77a496fe75e1c0230cbda2786ec521e489630b78a11d6b16776c0",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2466745,
+    "output": "src/assets/compressed/Photo_src/A.W刻字黑暗.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 305790,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2160955,
+    "savingsPercent": 87.6
+  },
+  {
+    "source": "src/Photo_src/初中合照1.png",
+    "sourceSha256": "203871367b3051d59cbc86e14a8eca0575beccd0c7cfd51e9b738f45b690a2ea",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1812480,
+    "output": "src/assets/compressed/Photo_src/初中合照1.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 102652,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1709828,
+    "savingsPercent": 94.34
+  },
+  {
+    "source": "src/Photo_src/小学合照1.png",
+    "sourceSha256": "523a05c0d63d8943992c77cfdd525385f0ead86dd1eea54b205e4276a708de42",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2243643,
+    "output": "src/assets/compressed/Photo_src/小学合照1.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 161546,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2082097,
+    "savingsPercent": 92.8
+  },
+  {
+    "source": "src/Photo_src/山洞内整体景.png",
+    "sourceSha256": "5c1bc474de3fcd21e10d114c5dfb83a194e04b872bf6dd9391d4947e760427c4",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2850925,
+    "output": "src/assets/compressed/Photo_src/山洞内整体景.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 353286,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2497639,
+    "savingsPercent": 87.61
+  },
+  {
+    "source": "src/Photo_src/救援队1.png",
+    "sourceSha256": "de83e72f2485ed49a0fc8c85d863705b1c327c162f2b35a2c031dd29f3b51de7",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2863960,
+    "output": "src/assets/compressed/Photo_src/救援队1.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 350768,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2513192,
+    "savingsPercent": 87.75
+  },
+  {
+    "source": "src/Photo_src/救援队2.png",
+    "sourceSha256": "64ac4c15e275d10c179b1daa93a13d08097016545bf606328221c126af610697",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2649439,
+    "output": "src/assets/compressed/Photo_src/救援队2.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 283646,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2365793,
+    "savingsPercent": 89.29
+  },
+  {
+    "source": "src/Photo_src/生活_傍晚的窗.png",
+    "sourceSha256": "4b89f57ce149a9bd523b605f9f8c2f6bb1d5180f608f7b19c43c26c225ef8a4a",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1825224,
+    "output": "src/assets/compressed/Photo_src/生活_傍晚的窗.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 99876,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1725348,
+    "savingsPercent": 94.53
+  },
+  {
+    "source": "src/Photo_src/生活_母亲厨房午饭.png",
+    "sourceSha256": "7b5ef4c69c57e7f37cb424f04ffbf9ce7dc793ca7c6773d738e4ae3c45c8ee67",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2234037,
+    "output": "src/assets/compressed/Photo_src/生活_母亲厨房午饭.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 192512,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2041525,
+    "savingsPercent": 91.38
+  },
+  {
+    "source": "src/Photo_src/生活_翻新后的学校操场.png",
+    "sourceSha256": "5ad59544b30d87ecf107aa27843ad3207deaf887b8649af83d3346640a5695d3",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2664495,
+    "output": "src/assets/compressed/Photo_src/生活_翻新后的学校操场.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 327872,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2336623,
+    "savingsPercent": 87.69
+  },
+  {
+    "source": "src/Photo_src/石庙外景1.png",
+    "sourceSha256": "0e610041f0dce1eef1cf5d83e966332427b9a4399619be2494eec60ca6e0e11b",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3014383,
+    "output": "src/assets/compressed/Photo_src/石庙外景1.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 406434,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2607949,
+    "savingsPercent": 86.52
+  },
+  {
+    "source": "src/Photo_src/补字碑.png",
+    "sourceSha256": "114f5ff473e81c54e185dacfdcb35e9afcaa298aee7c6ce0575654941c44de7f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2871046,
+    "output": "src/assets/compressed/Photo_src/补字碑.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 468460,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2402586,
+    "savingsPercent": 83.68
+  },
+  {
+    "source": "src/Photo_src/鸡公岭_旧林道.png",
+    "sourceSha256": "8c2496c7908b2b823ab4cb8b9920daffce1c2a6d50b042855dd6143e6a71dfd9",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3776693,
+    "output": "src/assets/compressed/Photo_src/鸡公岭_旧林道.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 660490,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 3116203,
+    "savingsPercent": 82.51
+  },
+  {
+    "source": "src/Photo_src/鸡公岭_溪谷近洞口.png",
+    "sourceSha256": "8e3f4a9d5e41916d18510a40a745f7fcb6682fba87d9859d9c1d88aa2a209a21",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3702183,
+    "output": "src/assets/compressed/Photo_src/鸡公岭_溪谷近洞口.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 621920,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 3080263,
+    "savingsPercent": 83.2
+  },
+  {
+    "source": "src/Photo_src/鸡公岭入口.png",
+    "sourceSha256": "b86638e71aa8ad6f70ade1444b16f962b80fe80a894e8626daa84509dd932d28",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3297797,
+    "output": "src/assets/compressed/Photo_src/鸡公岭入口.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 522208,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2775589,
+    "savingsPercent": 84.16
+  },
+  {
+    "source": "src/Photo_src/鸡公岭地图.png",
+    "sourceSha256": "cfe3ce74b5ad9f13f2a4cf4e9535dfc3281effcad2f981aab6b87c1ca265c9cc",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2643068,
+    "output": "src/assets/compressed/Photo_src/鸡公岭地图.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 400752,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2242316,
+    "savingsPercent": 84.84
+  },
+  {
+    "source": "src/Photo_src/黑补母特写1.png",
+    "sourceSha256": "a44c3f781ffec7fac356dc335cb729c126a8069c3fadb67dd43cbc6c20809cc7",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2324561,
+    "output": "src/assets/compressed/Photo_src/黑补母特写1.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 294400,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2030161,
+    "savingsPercent": 87.34
+  },
+  {
+    "source": "src/UI_src/UI1.png",
+    "sourceSha256": "053e837301b4bcb0f034f84a841ed5e40834f5d7f5aa183934b7a2549247e6cc",
+    "sourceDimensions": [
+      1254,
+      1254
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGBA",
+    "sourceBytes": 831205,
+    "output": "src/assets/compressed/UI_src/UI1.webp",
+    "outputDimensions": [
+      1254,
+      1254
+    ],
+    "outputBytes": 173666,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": true,
+    "alphaExact": true,
+    "savingsBytes": 657539,
+    "savingsPercent": 79.11
+  },
+  {
+    "source": "src/UI_src/UI2.png",
+    "sourceSha256": "2341fb6e8221cafabf4e345a359871359649231e12417ffbc1a83a3469bffe47",
+    "sourceDimensions": [
+      1254,
+      1254
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGBA",
+    "sourceBytes": 879209,
+    "output": "src/assets/compressed/UI_src/UI2.webp",
+    "outputDimensions": [
+      1254,
+      1254
+    ],
+    "outputBytes": 288884,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": true,
+    "alphaExact": true,
+    "savingsBytes": 590325,
+    "savingsPercent": 67.14
+  },
+  {
+    "source": "src/UI_src/UI3.png",
+    "sourceSha256": "d0abfe7eb198ab4c56fa24aca6a565a6e7342f09d9168afd4a558952e385ff5b",
+    "sourceDimensions": [
+      1254,
+      1254
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGBA",
+    "sourceBytes": 895873,
+    "output": "src/assets/compressed/UI_src/UI3.webp",
+    "outputDimensions": [
+      1254,
+      1254
+    ],
+    "outputBytes": 258742,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": true,
+    "alphaExact": true,
+    "savingsBytes": 637131,
+    "savingsPercent": 71.12
+  },
+  {
+    "source": "src/UI_src/UI4.png",
+    "sourceSha256": "931fd1740d26f7e938b9db0b3fbfdb77578f75443f1a224be66f32a11a56e246",
+    "sourceDimensions": [
+      1254,
+      1254
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGBA",
+    "sourceBytes": 751204,
+    "output": "src/assets/compressed/UI_src/UI4.webp",
+    "outputDimensions": [
+      1254,
+      1254
+    ],
+    "outputBytes": 238016,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": true,
+    "alphaExact": true,
+    "savingsBytes": 513188,
+    "savingsPercent": 68.32
+  },
+  {
+    "source": "src/Wechat_src/Wechat1.png",
+    "sourceSha256": "728f7791c2110700f6b4ecef549aa7b31e045e220a5962b09789ed6786691ad8",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGBA",
+    "sourceBytes": 2068623,
+    "output": "src/assets/compressed/Wechat_src/Wechat1.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 257022,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": true,
+    "alphaExact": true,
+    "savingsBytes": 1811601,
+    "savingsPercent": 87.58
+  },
+  {
+    "source": "src/Wechat_src/Wechat2.png",
+    "sourceSha256": "e41a39c983c7a211b026fa23294673fdadd9c0ac3c1ce0545775b6549b32f3a0",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGBA",
+    "sourceBytes": 1985454,
+    "output": "src/assets/compressed/Wechat_src/Wechat2.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 222900,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": true,
+    "alphaExact": true,
+    "savingsBytes": 1762554,
+    "savingsPercent": 88.77
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T02_001.jpg",
+    "sourceSha256": "3e87b2d05f5a5e6c41bdf23689685e5744de6182c6e555f32db3db685be51c28",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 639861,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T02_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 332882,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 306979,
+    "savingsPercent": 47.98
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T03_001.jpg",
+    "sourceSha256": "820194f788d974f4a9c13b3f7e3bc9a262a0bd164bb16e065a8daefd0ebeeb0c",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 463628,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T03_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 275470,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 188158,
+    "savingsPercent": 40.58
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_001.jpg",
+    "sourceSha256": "410500a29fe265c16930eb90aa746a1616431c589739b117a76a3ee6d1501a3f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 531685,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 264024,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 267661,
+    "savingsPercent": 50.34
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_002.jpg",
+    "sourceSha256": "6da77ba4ef2c38cac2a17047cea9e4adaf01ca527d9238e21380d212429abdb4",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 510934,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 241288,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 269646,
+    "savingsPercent": 52.78
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_003.jpg",
+    "sourceSha256": "5838f6d615509613aa2d43ef15fc4060045afc58689c5ac512a099c95682ef6f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 470520,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 200200,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 270320,
+    "savingsPercent": 57.45
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_004.jpg",
+    "sourceSha256": "07a0f0905a665ddedd1e55ad3c9f155c6f736810219017688e4ac34bc6a3886a",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 401127,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 218938,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 182189,
+    "savingsPercent": 45.42
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_005.jpg",
+    "sourceSha256": "4d885ed22a0204827815c7d83e162127f13fa665147f918e21adda977c962abc",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 450332,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 201202,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 249130,
+    "savingsPercent": 55.32
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_006.jpg",
+    "sourceSha256": "ba2ec8eef4b5fdc4b99dbee6ac355c376fb680294d70dbf3f192ca3eea9ab2a1",
+    "sourceDimensions": [
+      1086,
+      1448
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 401586,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_006.webp",
+    "outputDimensions": [
+      1086,
+      1448
+    ],
+    "outputBytes": 194050,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 207536,
+    "savingsPercent": 51.68
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_007.jpg",
+    "sourceSha256": "26653b494be0a34049a51248b1a58f9001ba155538463828778e2794653a2f69",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 585332,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 387268,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 198064,
+    "savingsPercent": 33.84
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_008.jpg",
+    "sourceSha256": "9ed00c778a054bc962749dce54bc8eb355de79678bd1add74cd2148f645cd9a5",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 553252,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_008.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 236266,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 316986,
+    "savingsPercent": 57.3
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_009.jpg",
+    "sourceSha256": "5e487f8963cd291b83f978a8b04d786da9204e3263030083d53a9c58c9d98583",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 345496,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_009.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 119620,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 225876,
+    "savingsPercent": 65.38
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_010.jpg",
+    "sourceSha256": "a4c4f704f880728ad52083a0f551a1d7ded432b85696cd6d3758982ef21c62e7",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 385509,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_010.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 144536,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 240973,
+    "savingsPercent": 62.51
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T05_011.jpg",
+    "sourceSha256": "e5868afec9928f436332c7b90e25a138b8bf61d85e6ba6d73fa2bef887abab21",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 426441,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T05_011.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 163606,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 262835,
+    "savingsPercent": 61.63
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_001.jpg",
+    "sourceSha256": "3c523534ec32a33d15fb3c4ddb9bbc28cabc902f60c06d1d4e2dd27235c5584e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 205009,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 138636,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 66373,
+    "savingsPercent": 32.38
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_002.jpg",
+    "sourceSha256": "ffb92f87a61b9179b6016595fe69f0f5a4f8bf9c4bbf6a5b4520f0cbae2ff96e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 203390,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 143456,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 59934,
+    "savingsPercent": 29.47
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_003.jpg",
+    "sourceSha256": "8e8b056b233d20f8e2fc724a204580a423884f3d57dfcfb6a9940ca17f3ebc31",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 237882,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 169300,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 68582,
+    "savingsPercent": 28.83
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_004.jpg",
+    "sourceSha256": "0078bdb67b6051cb9684dc03640fa3dd7c0352fcf5d3fb1af5be7104edc01dcf",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 476153,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 470592,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 5561,
+    "savingsPercent": 1.17
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_005.jpg",
+    "sourceSha256": "1156ca1f67eef7aadab33c32a5acd768cd964c880008ea449decdbdc7e8cc0ed",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 430222,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 411896,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 18326,
+    "savingsPercent": 4.26
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_007.jpg",
+    "sourceSha256": "79fed9b7b26562a34f2c60526cf2c9f768ceba6453ab42c600b75aa9de89dbc5",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 292694,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 236386,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 56308,
+    "savingsPercent": 19.24
+  },
+  {
+    "source": "src/第二幕/IMG_A2_T07_008.jpg",
+    "sourceSha256": "f0ca768d734de2bf61737da68f1bd13dac644bf466903193ff05e4a309694fa6",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 447231,
+    "output": "src/assets/compressed/第二幕/IMG_A2_T07_008.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 422896,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 24335,
+    "savingsPercent": 5.44
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_001.jpg",
+    "sourceSha256": "d595230a322b136193d608fa9ac236b3eb75c42b24c7bab5cecf519e7cff78e1",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 329123,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 129168,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 199955,
+    "savingsPercent": 60.75
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_002.jpg",
+    "sourceSha256": "267397efdfe0d6239c58e2b6197953f9c6270529c6209d8e188e9424e6c05258",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 459959,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 232584,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 227375,
+    "savingsPercent": 49.43
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_003.jpg",
+    "sourceSha256": "782789681032a62583fec67ed8a6069d5407e424cc75897fd83cdd649b54a09b",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 958127,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 690220,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 267907,
+    "savingsPercent": 27.96
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_004.jpg",
+    "sourceSha256": "46c657d38ec1b18a8badebd1f8342da178a83c8dcbd5403cdfafb7914d125e2e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 892247,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 627648,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 264599,
+    "savingsPercent": 29.66
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_005.jpg",
+    "sourceSha256": "9b591704a7b64edb99e26ef6470c5ea9885466f3df317e3ad159cafd7dd28dda",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 835106,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 573156,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 261950,
+    "savingsPercent": 31.37
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_006.jpg",
+    "sourceSha256": "f8e77e6900db0f54d3eaaea12cf7af7fc4cdd4981c8edba342059b8424cbc940",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 691497,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 455238,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 236259,
+    "savingsPercent": 34.17
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_007.jpg",
+    "sourceSha256": "a0cd2cbfe6e62cfc8a8bde635441dbc1b2123e3c8e5c3a4fb2fde2e8222af492",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 658795,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 416222,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 242573,
+    "savingsPercent": 36.82
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_008.jpg",
+    "sourceSha256": "1f5bf8785519c444bd7d59c2b234bcfe4d7d3f448e7cd94d19268607fb72916f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 799370,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_008.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 549078,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 250292,
+    "savingsPercent": 31.31
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_009.jpg",
+    "sourceSha256": "926516ae7aa6ce35d70b8f247b4877d3df964837c6db41fa4f397ddbf9e2ae63",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 877552,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_009.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 627086,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 250466,
+    "savingsPercent": 28.54
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_010.jpg",
+    "sourceSha256": "05ea78a66f0a68a99cf3c3b1599be0fb81237900b8f066c5aab1d56d015b5b6a",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 828569,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_010.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 569580,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 258989,
+    "savingsPercent": 31.26
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_011.jpg",
+    "sourceSha256": "23440abd8e103e3c437ff8041e32489015ef92cbaac2b59695972eaee85f78c6",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 953042,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_011.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 677060,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 275982,
+    "savingsPercent": 28.96
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T01_001.jpg",
+    "sourceSha256": "52a65ef0b8461385aa4a8ea12919f30800921e5bf315c6dc54d66119a1cd4fdf",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 764611,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T01_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 510396,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 254215,
+    "savingsPercent": 33.25
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T01_002.jpg",
+    "sourceSha256": "9f553f4ef2ffbcdade9fdd9f38c99cb5e2bf75bea254879d2ae2fc7fbf2cebd8",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 679780,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T01_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 519122,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 160658,
+    "savingsPercent": 23.63
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T01_003.jpg",
+    "sourceSha256": "a651fd069018c8507bb66a6a568c9fb58263d74529e1998ad890c9c5e8f986ad",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 635000,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T01_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 378274,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 256726,
+    "savingsPercent": 40.43
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T01_004.jpg",
+    "sourceSha256": "b1d08ee9cf8dd4374de9c1fdaa0e1d76f58aae5e8d1493256a4b201c73331eb4",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 658510,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T01_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 431916,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 226594,
+    "savingsPercent": 34.41
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T01_005.jpg",
+    "sourceSha256": "d3abbd89ca4c751f1a1d8240dd8b6fff521320fbffe0492e8765b0329658a36d",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 875569,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T01_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 619162,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 256407,
+    "savingsPercent": 29.28
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T02_002.jpg",
+    "sourceSha256": "34b3b35540a2fb66477047d5f092fea33fe488990f06acdd5b0f57040106489d",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 557270,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T02_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 307264,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 250006,
+    "savingsPercent": 44.86
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T02_004.jpg",
+    "sourceSha256": "d85098b78a13721a0f9323f67277392809e39e970b76641f0ad8ba2afe9047bc",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 564234,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T02_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 308286,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 255948,
+    "savingsPercent": 45.36
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T02_005.jpg",
+    "sourceSha256": "5ca04518c6e966b6f22cbcc2276a240c56d6946a283900b00d574f1bf0cc8b11",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 537979,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T02_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 286706,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 251273,
+    "savingsPercent": 46.71
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T02_006.jpg",
+    "sourceSha256": "2d156f450c1af11faa0a6077116773d018a2a86b876a4af5a13e13c64f9694d3",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 463707,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T02_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 229592,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 234115,
+    "savingsPercent": 50.49
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T03_002.jpg",
+    "sourceSha256": "d5efd81bba2ca006d1583df7544ccb841a7c85e4bf262b336b5686c2f349eb2a",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 482074,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T03_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 246668,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 235406,
+    "savingsPercent": 48.83
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T03_003.jpg",
+    "sourceSha256": "addba75c6e8dddee0a7d38e914209a9e6c51fb81eca10415d448c8c0ef4e35d9",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 493790,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T03_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 265220,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 228570,
+    "savingsPercent": 46.29
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T03_004.jpg",
+    "sourceSha256": "9a57b9689a833f7df3c7abe0ad5c454da0f12e70be0e4ae47051e5cdc582ce85",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 522936,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T03_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 280594,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 242342,
+    "savingsPercent": 46.34
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T03_005.jpg",
+    "sourceSha256": "76478bce9a91e80eab2c68a71f8bd898bff615ef75a55d62961e5ef0867b3a0b",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 473921,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T03_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 226004,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 247917,
+    "savingsPercent": 52.31
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T04_003.jpg",
+    "sourceSha256": "cdb270955822f40f0d84e44d26a6e85f7d5c6ca357f9b1675029aa283c95b275",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 487497,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T04_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 242520,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 244977,
+    "savingsPercent": 50.25
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T04_004.jpg",
+    "sourceSha256": "1d8fd4b9215e0815c9f104dbf6a8afc3f07d8f6a1b198f62d20fbc441efb192f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 482149,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T04_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 259992,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 222157,
+    "savingsPercent": 46.08
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T04_005.jpg",
+    "sourceSha256": "c5f01549384ad829be66ec51387fb5b198d3194316b67ba46a21b5b28c947c8e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 557699,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T04_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 324268,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 233431,
+    "savingsPercent": 41.86
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T04_006.jpg",
+    "sourceSha256": "62b68236f416e760a700ee59b18c1d86ecb5d8488b9d030683385fe9fbff164e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 536927,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T04_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 292002,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 244925,
+    "savingsPercent": 45.62
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T05_001.jpg",
+    "sourceSha256": "f27f4b0a7049eb783a183ed0f64c3b6c0a2f397909291a7f9b1385cff1e93bce",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 509288,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T05_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 269334,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 239954,
+    "savingsPercent": 47.12
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T05_003.jpg",
+    "sourceSha256": "e1da8b52ca06826ead3062f5569195f36c3d2dede5ef6468071e9f57cfa11b43",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 552836,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T05_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 298722,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 254114,
+    "savingsPercent": 45.97
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T05_004.jpg",
+    "sourceSha256": "f48179523278a94224505d0643305bb48bbc1dda7bdcf40d40e71610db1bf578",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 459681,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T05_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 243830,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 215851,
+    "savingsPercent": 46.96
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T05_005.jpg",
+    "sourceSha256": "49c31af252020087168fab4f30dfe7f81303acf456115742f957a067dda0e7b2",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 534035,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T05_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 313110,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 220925,
+    "savingsPercent": 41.37
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T05_006.jpg",
+    "sourceSha256": "93b2239fd8d7b6d71ce1cf2688ae4d7b2b3c4a7709ce9fd47d624a41e6ce5e00",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 541749,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T05_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 284352,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 257397,
+    "savingsPercent": 47.51
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_001.jpg",
+    "sourceSha256": "a5bcbfdc9b962019bc9a247490e7957d09561902b97fbdcd1e6f83954b5ca052",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 514538,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 258884,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 255654,
+    "savingsPercent": 49.69
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_003.jpg",
+    "sourceSha256": "e38b568a819bc7eecda2afdd981f994af0ee8af172f5c412d9e9ea7932074977",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 480582,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 237936,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 242646,
+    "savingsPercent": 50.49
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_004.jpg",
+    "sourceSha256": "2690e31d96b5c109db5dcfd96b7aea3e6d1843a9da762222e6961d813cf8b23e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 514459,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 279594,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 234865,
+    "savingsPercent": 45.65
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_005.jpg",
+    "sourceSha256": "bcb6ba03ab6df312673e753d07bb8317f898a7ca14f5ad2bbe83a43393aafb01",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 485712,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 231164,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 254548,
+    "savingsPercent": 52.41
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_006.jpg",
+    "sourceSha256": "2852acc6ad8a9488d1323a138f09a33d728f58940e94965df955bf1c8bd679d4",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 453661,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 211302,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 242359,
+    "savingsPercent": 53.42
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_008.jpg",
+    "sourceSha256": "d2e142476e4799244ba9d7e1ebe6903d3e481730e4696bf550fc32e3b31ecded",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 591235,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_008.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 347544,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 243691,
+    "savingsPercent": 41.22
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_001.jpg",
+    "sourceSha256": "4b9fd1abe2bf37bc8da903f1efc102a2c917e3639f41fdef968031d194f36558",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 605102,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 349420,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 255682,
+    "savingsPercent": 42.25
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_002.jpg",
+    "sourceSha256": "13700bf9134ab1b5e711277ad5d3c6a14874a8f1830ef7eb4cde40c7bb89165f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 607178,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 356264,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 250914,
+    "savingsPercent": 41.32
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_004.jpg",
+    "sourceSha256": "b6cded83124bfcbfd14345345c7e69bc253583e500bf854ad9038a8c664cb4c5",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 541296,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 291008,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 250288,
+    "savingsPercent": 46.24
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_005.jpg",
+    "sourceSha256": "c20cd2ce132cf4fb1bd4426c11a31b27130b677157eeeb8a1b10059872b08aad",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 581681,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 329234,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 252447,
+    "savingsPercent": 43.4
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_006.jpg",
+    "sourceSha256": "76e17e6de6bd6eb166e3753161db051a0d7b6e83ab32c7dd6688437116c890e7",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 480195,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 236556,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 243639,
+    "savingsPercent": 50.74
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_007.jpg",
+    "sourceSha256": "4ba1bd45d523a038ce1640e8d20f74277377d08604850579fd9be9af68069c20",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 280252,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 214664,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 65588,
+    "savingsPercent": 23.4
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_008.jpg",
+    "sourceSha256": "dd7590b8277457c4a48dfd7c6c2f2b8efdc04e117f23bde0133fab9fdab6431f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 759933,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_008.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 508326,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 251607,
+    "savingsPercent": 33.11
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T00_012.png",
+    "sourceSha256": "b377b1be974045b0c9bc5606f984b2a6304aea5851e2061d459406f1b64603f8",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3257596,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T00_012.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 621928,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2635668,
+    "savingsPercent": 80.91
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T01_006.png",
+    "sourceSha256": "9d4ce5ae54ee43eb5cb41dda6f3470dd93c7d5da2bd24680f1672c8ffaa914e4",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3368819,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T01_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 684972,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2683847,
+    "savingsPercent": 79.67
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T02_001.png",
+    "sourceSha256": "2d3f3170ef7eded6af8932ad499015c06e9a23754cb54ee1999154adc4342142",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2561740,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T02_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 370514,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2191226,
+    "savingsPercent": 85.54
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T02_003.png",
+    "sourceSha256": "ba060bbb6f29e6cf27358827a9f1aa71fc5cdb43d30f735bfbe461c89c9e340a",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2496058,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T02_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 337020,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2159038,
+    "savingsPercent": 86.5
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T03_001.png",
+    "sourceSha256": "86d36240cd0c25c570792287535b33177c65b171362d5e6b8fce12e49fb0b2fc",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2492396,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T03_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 357198,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2135198,
+    "savingsPercent": 85.67
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T03_006.png",
+    "sourceSha256": "efac5ef60d78cda91f9d10d9ca3b60f2f722569d42c7a59b49275ca57a471e39",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2528325,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T03_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 376396,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2151929,
+    "savingsPercent": 85.11
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T04_001.png",
+    "sourceSha256": "6ce24b01cecaafeed53c85941c08d5151b4d296df18c78e029d5adc59da10c72",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2442350,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T04_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 325084,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2117266,
+    "savingsPercent": 86.69
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T04_002.png",
+    "sourceSha256": "d67bff3ee71a019910111070098e45bbe64e9616f5262f0b44a364b88dc0ee05",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2154431,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T04_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 207400,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1947031,
+    "savingsPercent": 90.37
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T05_002.png",
+    "sourceSha256": "54e3e53ead07a6dbf40efffd503da59c12d019ff399c2a934fddbdfdeeb3b619",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2491207,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T05_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 342978,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2148229,
+    "savingsPercent": 86.23
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_002.png",
+    "sourceSha256": "cb363e7196d3a4fdad1a24608e2e62f5eebef8f8a53deb5f0ef4caba0fe1525e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2360491,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 314806,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2045685,
+    "savingsPercent": 86.66
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T06_007.png",
+    "sourceSha256": "69efac8548b6f8fdb1fac76c8f174ed159251f430a53f806db2ad8e1bd254b6e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2413584,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T06_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 326482,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2087102,
+    "savingsPercent": 86.47
+  },
+  {
+    "source": "src/第三幕/IMG_A3_T07_003.png",
+    "sourceSha256": "76ea7f5e9589dd3020db0ef795ec0a3dceb7b9f80352e1310a15265fae15715a",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2591350,
+    "output": "src/assets/compressed/第三幕/IMG_A3_T07_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 391768,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2199582,
+    "savingsPercent": 84.88
+  },
+  {
+    "source": "src/第四幕/T01/IMG_A4_T01_001.png",
+    "sourceSha256": "6e77fbc047109424b1d10a1c89dd572a507eeabec66c74661d83966484e23e91",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1891440,
+    "output": "src/assets/compressed/第四幕/T01/IMG_A4_T01_001.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 123632,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1767808,
+    "savingsPercent": 93.46
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_001.png",
+    "sourceSha256": "893955ba7f50590c2fb90340ff78ae4bcbc103cb772d4b6eb46501f734668ff3",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1985781,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 151824,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1833957,
+    "savingsPercent": 92.35
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_002.png",
+    "sourceSha256": "ef7dac0b9d3bce4eb95442e408ead974621fe35000866d7d78aa41ca6bd5196e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1972814,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 146796,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1826018,
+    "savingsPercent": 92.56
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_003.png",
+    "sourceSha256": "4feabd29df6ddb6000cb89f48db580ec54d5cabffe605afb1766a0da07059e8b",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1870133,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 103044,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1767089,
+    "savingsPercent": 94.49
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_004.png",
+    "sourceSha256": "80e1b672d3aef91f51ffcba0f823660e5c3dd995ac0d187184498f714b0e93f1",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2844800,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 376216,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2468584,
+    "savingsPercent": 86.78
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_005.png",
+    "sourceSha256": "ed45f0f149a31b91ea330898ba2506cb0080837c6fe3dd5ee045aabe2e1d8609",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2068566,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 170956,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1897610,
+    "savingsPercent": 91.74
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_006.png",
+    "sourceSha256": "474d34c741144db3795335e3f2be00bd936720f51599558b31ebeff03384d020",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1567862,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 58550,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1509312,
+    "savingsPercent": 96.27
+  },
+  {
+    "source": "src/第四幕/T05/IMG_A4_T05_007.png",
+    "sourceSha256": "b28da3b53687e459a73885b912192c70a5e65cab062bf5149e3e05b4fb38c8d2",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1698534,
+    "output": "src/assets/compressed/第四幕/T05/IMG_A4_T05_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 83762,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1614772,
+    "savingsPercent": 95.07
+  },
+  {
+    "source": "src/第四幕/T06/IMG_A4_T06_001.png",
+    "sourceSha256": "9f3ce8fb707b0c714cd6968f6eb23edbe9a7a37ddc06a2bc06fb4274db93a369",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2816949,
+    "output": "src/assets/compressed/第四幕/T06/IMG_A4_T06_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 374512,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2442437,
+    "savingsPercent": 86.71
+  },
+  {
+    "source": "src/第四幕/T06/IMG_A4_T06_002.png",
+    "sourceSha256": "3677bd4415bf75de9f3a532a7cfbd5a13425a708d3802d7226492fbd038b2c72",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2271157,
+    "output": "src/assets/compressed/第四幕/T06/IMG_A4_T06_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 164100,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2107057,
+    "savingsPercent": 92.77
+  },
+  {
+    "source": "src/第四幕/T06/IMG_A4_T06_003.png",
+    "sourceSha256": "6e957ee938431d2bae186f0a4d362280f691bda03423fefa41da5b9c9ca080a3",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1883157,
+    "output": "src/assets/compressed/第四幕/T06/IMG_A4_T06_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 115684,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1767473,
+    "savingsPercent": 93.86
+  },
+  {
+    "source": "src/第四幕/T06/IMG_A4_T06_004.png",
+    "sourceSha256": "d8f1d47b9c94c386cae315a8eea9a4113e4c032d211c02cbd61fc8c1d940cc3c",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1830399,
+    "output": "src/assets/compressed/第四幕/T06/IMG_A4_T06_004.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 98712,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1731687,
+    "savingsPercent": 94.61
+  },
+  {
+    "source": "src/第四幕/T06/IMG_A4_T06_005.png",
+    "sourceSha256": "103b60bd6a07195c86ec924dc22fe231bc02db9829538a643d97df7527110c21",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2109383,
+    "output": "src/assets/compressed/第四幕/T06/IMG_A4_T06_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 176686,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1932697,
+    "savingsPercent": 91.62
+  },
+  {
+    "source": "src/第四幕/T06/IMG_A4_T06_006.png",
+    "sourceSha256": "ec9a2700f5b83c820a0178ddad9fffb7c98f66acec37e70daf80e27b83526010",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2397644,
+    "output": "src/assets/compressed/第四幕/T06/IMG_A4_T06_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 208870,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2188774,
+    "savingsPercent": 91.29
+  },
+  {
+    "source": "src/第四幕/T07/IMG_A4_T07_001.png",
+    "sourceSha256": "b7a2936f367796cf6930afe298b1090463c86c9d8189b7a9f25690dbec5dd62c",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 3038898,
+    "output": "src/assets/compressed/第四幕/T07/IMG_A4_T07_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 417452,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2621446,
+    "savingsPercent": 86.26
+  },
+  {
+    "source": "src/第四幕/T07/IMG_A4_T07_002.png",
+    "sourceSha256": "528a31c7f0800d1884ec5549bba3ed66acec882c7ed840769ccb062ba01dc37c",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2231550,
+    "output": "src/assets/compressed/第四幕/T07/IMG_A4_T07_002.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 183086,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2048464,
+    "savingsPercent": 91.8
+  },
+  {
+    "source": "src/第四幕/T07/IMG_A4_T07_003.png",
+    "sourceSha256": "9863aa904d3fd21d49c55cfd276b5cb42419f3c0bde754968334643383a8f1cb",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2034660,
+    "output": "src/assets/compressed/第四幕/T07/IMG_A4_T07_003.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 101402,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1933258,
+    "savingsPercent": 95.02
+  },
+  {
+    "source": "src/第四幕/T07/IMG_A4_T07_004.png",
+    "sourceSha256": "46d5d727428647e83425250a5cf50ffe243849fbf2ad7e7434d961c5bbc0fc87",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1701488,
+    "output": "src/assets/compressed/第四幕/T07/IMG_A4_T07_004.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 44900,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1656588,
+    "savingsPercent": 97.36
+  },
+  {
+    "source": "src/第四幕/T07/IMG_A4_T07_005.png",
+    "sourceSha256": "a1bb8f6fa4efac0ad4ccc6683244c8c8bbba36b8033d695d8267b10e38cb127c",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2531396,
+    "output": "src/assets/compressed/第四幕/T07/IMG_A4_T07_005.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 240118,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2291278,
+    "savingsPercent": 90.51
+  },
+  {
+    "source": "src/第四幕/T07/IMG_A4_T07_006.png",
+    "sourceSha256": "82f7af554ae37ca4f414fbae773adb36b50530f47c3bdd4bf810bd8a63095a78",
+    "sourceDimensions": [
+      1536,
+      1024
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2084386,
+    "output": "src/assets/compressed/第四幕/T07/IMG_A4_T07_006.webp",
+    "outputDimensions": [
+      1536,
+      1024
+    ],
+    "outputBytes": 105252,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1979134,
+    "savingsPercent": 94.95
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_001.png",
+    "sourceSha256": "bc8d689e4fadde147d0b3bc18421c4000ce50dc376a1dd0f748668f9ef833151",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1851649,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_001.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 108352,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1743297,
+    "savingsPercent": 94.15
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_002.png",
+    "sourceSha256": "ce598863239637d9016e79565a09bf1c5b96d6d32e7eac03bdaca3f117be137e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2912470,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_002.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 400320,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2512150,
+    "savingsPercent": 86.25
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_003.png",
+    "sourceSha256": "b885e97a0321d8e2611caf03a59acaf49f9622d80ac8337b774761b391e70243",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1840462,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_003.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 99988,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1740474,
+    "savingsPercent": 94.57
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_004.png",
+    "sourceSha256": "63164800ea15f6613bf5d657267bb117cce7bb2b2197222968705dc8a74cb7e1",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2221086,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_004.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 172328,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2048758,
+    "savingsPercent": 92.24
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_005.png",
+    "sourceSha256": "a44f1469a84621a7c8545020a395d5c498797e9f38fa4a5d005dc7e31d17ca9b",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2770251,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_005.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 333942,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2436309,
+    "savingsPercent": 87.95
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_006.png",
+    "sourceSha256": "cd9bdc98edce0c84f7556ee8d3428133498787e613aed4c93f708adc6aa9980e",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2215495,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_006.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 193894,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2021601,
+    "savingsPercent": 91.25
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_007.png",
+    "sourceSha256": "e158a81bb03abbadfd076bd20262164b77af8ba4c1234ba58d274b51b35b6c60",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2286738,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_007.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 205858,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2080880,
+    "savingsPercent": 91.0
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_008.png",
+    "sourceSha256": "e653c42daae6a1dfbda0feb33666c00cf16df2f2a44d7428b1888949f7b2d913",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2193015,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_008.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 183760,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2009255,
+    "savingsPercent": 91.62
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_009.png",
+    "sourceSha256": "18cc565a92427d24f894d0beefe20807ab55868b51204582d0ca4326913de361",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2052693,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_009.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 156944,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1895749,
+    "savingsPercent": 92.35
+  },
+  {
+    "source": "src/第四幕/T08/IMG_A4_T08_010.png",
+    "sourceSha256": "465f67ce0129a7ada0f81e50580f636a03f87cf7fb86d629e1febb0265d3f44f",
+    "sourceDimensions": [
+      1448,
+      1086
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2337045,
+    "output": "src/assets/compressed/第四幕/T08/IMG_A4_T08_010.webp",
+    "outputDimensions": [
+      1448,
+      1086
+    ],
+    "outputBytes": 214958,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2122087,
+    "savingsPercent": 90.8
+  },
+  {
+    "source": "src/第四幕/T09/IMG_A4_T09_001.png",
+    "sourceSha256": "26c3c6826689fabbf615a5afb3b30618ae8bb35bf1e178fc7154e1380da35301",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2539797,
+    "output": "src/assets/compressed/第四幕/T09/IMG_A4_T09_001.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 288918,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2250879,
+    "savingsPercent": 88.62
+  },
+  {
+    "source": "src/第四幕/T09/IMG_A4_T09_002.png",
+    "sourceSha256": "d182de7f85b61ff8a2d03abf29ce4a96c7aadc955e994694f5e68f6359e077a2",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2287422,
+    "output": "src/assets/compressed/第四幕/T09/IMG_A4_T09_002.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 220738,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2066684,
+    "savingsPercent": 90.35
+  },
+  {
+    "source": "src/第四幕/T09/IMG_A4_T09_003.png",
+    "sourceSha256": "90802b7d8d737c87fbec3033209d3e763779f761f14a9682fbd2c345180d08cc",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2236806,
+    "output": "src/assets/compressed/第四幕/T09/IMG_A4_T09_003.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 278356,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1958450,
+    "savingsPercent": 87.56
+  },
+  {
+    "source": "src/第四幕/T09/IMG_A4_T09_004.png",
+    "sourceSha256": "31ad5cffdd421e2f671e2e0c8beee06e1a014f8eba48afd06099875d05dcefd1",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2562357,
+    "output": "src/assets/compressed/第四幕/T09/IMG_A4_T09_004.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 292530,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2269827,
+    "savingsPercent": 88.58
+  },
+  {
+    "source": "src/第四幕/T09/IMG_A4_T09_005.png",
+    "sourceSha256": "5efcf0cdd9bcffcf44d647cb91328eea796265582b386d0efecc1ae819d6671c",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1929561,
+    "output": "src/assets/compressed/第四幕/T09/IMG_A4_T09_005.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 146402,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1783159,
+    "savingsPercent": 92.41
+  },
+  {
+    "source": "src/第四幕/T10/IMG_A4_T10_001.png",
+    "sourceSha256": "fae7d364d7fdefd7776a0a398c8d4be5ba2f5e8a80f3705d40ee75907c84f35c",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2342255,
+    "output": "src/assets/compressed/第四幕/T10/IMG_A4_T10_001.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 242390,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2099865,
+    "savingsPercent": 89.65
+  },
+  {
+    "source": "src/第四幕/T10/IMG_A4_T10_002.png",
+    "sourceSha256": "078003b348056b85b6ca5e98da27b98e733b954b7103a179222358fb48a01b2c",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2663071,
+    "output": "src/assets/compressed/第四幕/T10/IMG_A4_T10_002.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 392854,
+    "encoding": "WebP lossy q92, method 6",
+    "quality": 92,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 2270217,
+    "savingsPercent": 85.25
+  },
+  {
+    "source": "src/第四幕/T10/IMG_A4_T10_003.png",
+    "sourceSha256": "b0b6dc1af929dafe78c0e9214d52fa0e1000412b5691528b2501b18dc3352c81",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2139830,
+    "output": "src/assets/compressed/第四幕/T10/IMG_A4_T10_003.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 161466,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1978364,
+    "savingsPercent": 92.45
+  },
+  {
+    "source": "src/第四幕/T10/IMG_A4_T10_004.png",
+    "sourceSha256": "3c29e78d91d6fe5fc06be9748c7a84e3f15e1630031219d0f891000100915c8f",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 2089678,
+    "output": "src/assets/compressed/第四幕/T10/IMG_A4_T10_004.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 154486,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1935192,
+    "savingsPercent": 92.61
+  },
+  {
+    "source": "src/第四幕/T10/IMG_A4_T10_005.png",
+    "sourceSha256": "06b3362aec612ff250ffbaabcf88f613cdcb79140bfc2cbb50816f7af7bc4fad",
+    "sourceDimensions": [
+      1672,
+      941
+    ],
+    "sourceFormat": "PNG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1808572,
+    "output": "src/assets/compressed/第四幕/T10/IMG_A4_T10_005.webp",
+    "outputDimensions": [
+      1672,
+      941
+    ],
+    "outputBytes": 124698,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 1683874,
+    "savingsPercent": 93.11
+  },
+  {
+    "source": "src/assets/desktop-wallpaper.jpg",
+    "sourceSha256": "86316098369820b22ce0265e8d0149ebb321ff5f1d33b4aca004f6f7d74d3642",
+    "sourceDimensions": [
+      4500,
+      3000
+    ],
+    "sourceFormat": "JPEG",
+    "sourceMode": "RGB",
+    "sourceBytes": 1601144,
+    "output": "src/assets/compressed/assets/desktop-wallpaper.webp",
+    "outputDimensions": [
+      4500,
+      3000
+    ],
+    "outputBytes": 776594,
+    "encoding": "WebP lossy q88, method 6",
+    "quality": 88,
+    "alphaPresent": false,
+    "alphaExact": true,
+    "savingsBytes": 824550,
+    "savingsPercent": 51.5
+  }
+]
