@@ -2,10 +2,9 @@
 
 ## 2026-10-03 UX-LAYOUT-20261003 高中与桥头调查排版返修
 
-- A2 实现提交 `7854e04`，摘要箭头/窄屏换行 follow-up `340875c`：T05 旧照/完整回忆和材料判断以原生折叠按需查看；摘要保留可见已读 N/3、已选 X/2 进度和键盘状态箭头。完整地点照片维持4:3画布，学校限宽1440px居中。
-- T02 桥头维持既有老人会话、出示照片、口述与拆字顺序；移除场景/对话内部纵向滚动，保留照片独立稳定尺寸、合理行宽和44px左右操作目标。两页增加专用 `investigation-shell--act2-spacious` modifier，固定壳层操作栏不变。
-- 定向命令 `npx vitest run src/scenes/act2/SchoolInvestigation.test.tsx src/scenes/act2/BridgeInvestigation.test.tsx src/components/investigation/InvestigationShell.test.tsx src/components/investigation/InvestigationNavigation.test.tsx`：4文件/19项通过（在纯CSS箭头/换行follow-up之前）。该follow-up之后的最终 `npm run build`：280 modules通过；只有既有大chunk提示。`git diff --check` 通过。
-- A34隔离fixture/新增回归、父级2556×1370/1440×900/1366×768/390×844真实浏览器几何和最终整合门禁待完成；本记录不代表这些验收已通过。实施边界及交付范围见 `docs/ux-layout-20261003/implementation.md`。
+- A2 实现提交 `7854e04`，展示层箭头/窄屏换行 `340875c`，桥头居中 `3e8cfdb`，专用场景稳定滚动条槽 `257e19e`。T05 回忆与材料按需展开，摘要保留已读 N/3、已选 X/2；学校照片保持完整 4:3 并限宽居中。T02 保留原老人会话、出示照片、口述、拆字和门槛顺序；场景正文单一主要纵向滚动。
+- 定向命令 `npx vitest run src/scenes/act2/SchoolInvestigation.test.tsx src/scenes/act2/BridgeInvestigation.test.tsx src/components/investigation/InvestigationShell.test.tsx src/components/investigation/InvestigationNavigation.test.tsx`：4 文件/19 项通过（早于纯 CSS follow-up）。初始 `npm run build` 280 modules 通过。集成后全量 `npm test`：60 文件/321 项通过；`npm run build` 280 modules；`npm run build:offline` 278 modules、143 文件、197.41 MiB；`npm run test:offline` 默认两轮通过。两次后续纯 CSS 提交各自的生产构建和 `git diff --check` 通过；最终 CSS 集成节点 `9b7225a` 后离线构建与默认两轮 offline 再次通过。审查提交 `d683666` 为 `APPROVED`。
+- 真实 IAB 使用实际组件、StateManager 与隔离 MemoryStorage fixture，验收 2556×1370、1440×900、1366×768、390×844。School 场景照片高 690/472.5/403.19/250 px，展开内容不压低照片，双来源门槛、Escape 焦点返回与显式继续通过。Bridge 照片高 577.5/472.5/403.19/263 px；手机短/长对话照片高度稳定在 263 px，四入口 44×44、无横溢且长对话无内部滚动；“黑补母”正确判断后显式继续至图书馆。主审集成验收通过，审查 `d683666` 为 `APPROVED`；主审随后执行 main 合并，记录见 `docs/reviews/UX-LAYOUT-20261003.md`，实现边界见 `docs/ux-layout-20261003/implementation.md`。
 
 ## 2026-10-02 UX-NARR-20261002 第二至四幕叙事整理
 
