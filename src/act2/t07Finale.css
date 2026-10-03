@@ -9,8 +9,9 @@
 .t07-finale__header span{font-size:.9rem;color:var(--ui-text-muted,#595959)}
 .t07-finale__return{flex:none}
 .t07-finale__intro{max-width:900px;margin:.9rem auto;padding:0 clamp(1rem,3vw,2rem);font:italic 1.02rem/1.6 Georgia,serif;color:var(--ui-text-muted,#595959)}
+.t07-finale__step-indicator{width:fit-content;max-width:calc(100% - 2rem);margin:.75rem auto 0;padding:.45rem .7rem;border-left:3px solid #4d6b63;border-radius:3px;background:#e9efea;color:#33413f;font-size:.9rem;font-weight:650;line-height:1.45}
 .t07-finale__tabs{display:flex;flex-wrap:wrap;gap:.5rem;width:min(100% - 2rem,1100px);margin:0 auto;padding:0 .2rem}
-.t07-finale__tab{padding:.5rem .9rem}
+.t07-finale__tab{min-height:44px;padding:.5rem .9rem}
 .t07-finale__tab.is-active{background:var(--ui-accent-soft,#e8eaec);border-color:var(--ui-accent,#4b535b);font-weight:650}
 .t07-finale__panel{width:min(100% - 2rem,1100px);min-width:0;margin:.8rem auto 2rem;display:grid;gap:1rem;padding:clamp(.85rem,2vw,1.3rem);border:1px solid var(--ui-border,#d9d9d9);border-radius:12px;background:var(--ui-surface,#fff);box-shadow:0 8px 24px rgb(31 31 31 / 7%)}
 .t07-finale__panel h2{margin:0;font:600 1.2rem Georgia,serif}

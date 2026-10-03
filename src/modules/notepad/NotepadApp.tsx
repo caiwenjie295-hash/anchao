@@ -1,9 +1,51 @@
-import { useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
+import { useInvestigationProgress } from '../../components/InvestigationProgressContext';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { getAutoEntries } from '../../data/noteData';
+import './notepad.css';
+
+type HubView = 'current' | 'records' | 'notes';
 
 export function NotepadApp({ manager = stateManager }: { manager?: StateManager }) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const entries = getAutoEntries(state.modules.notepad);
-  return <section className="notepad-app" aria-label="记事本"><header><div><span aria-hidden="true">▤</span><h2>无标题 - 记事本</h2></div><p>文件　编辑　查看</p></header><div className="notepad-body"><section className="notepad-auto" aria-label="自动记录">{entries.map((entry) => <p key={entry.id} className={`notepad-entry notepad-entry--${entry.entryType}`}>{entry.content}</p>)}</section><label className="sr-only" htmlFor="notepad-user-text">自由记录</label><textarea id="notepad-user-text" value={state.modules.notepad.userText} onChange={(event) => manager.setNotepadUserText(event.target.value)} placeholder="在这里记下自己的想法…" spellCheck={false} /></div><footer>UTF-8　　{state.game.phase === 'F' ? '已整理' : '草稿'}</footer></section>;
+  const progressContext = useInvestigationProgress();
+  const [view, setView] = useState<HubView>('current');
+  const tabs: { id: HubView; label: string }[] = [
+    { id: 'current', label: '当前调查' },
+    { id: 'records', label: `线索记录（${entries.length}）` },
+    { id: 'notes', label: '我的笔记' },
+  ];
+
+  return <section className="notepad-app investigation-hub" aria-label="调查">
+    <header className="investigation-hub__titlebar">
+      <div><span aria-hidden="true">▤</span><h2>调查</h2></div>
+      <p>当前路线与个人记录</p>
+    </header>
+    <nav className="investigation-hub__tabs" aria-label="调查内容">
+      {tabs.map((tab) => <button key={tab.id} type="button" aria-pressed={view === tab.id} onClick={() => setView(tab.id)}>{tab.label}</button>)}
+    </nav>
+
+    {view === 'current' && <main className="investigation-hub__current">
+      <p className="investigation-hub__eyebrow">{progressContext?.progress.actLabel ?? '当前调查'}</p>
+      <h3>{progressContext?.progress.location ?? '正在读取调查进度'}</h3>
+      <p className="investigation-hub__recap">{progressContext?.progress.currentObjective ?? '目前没有可显示的调查回顾。'}</p>
+      <p className="investigation-hub__next"><strong>接下来</strong><span>{progressContext?.progress.nextAction ?? '查看已有记录，继续当前调查。'}</span></p>
+      <button type="button" className="investigation-hub__continue" disabled={!progressContext?.onContinueInvestigation} onClick={() => progressContext?.onContinueInvestigation?.()}>继续调查</button>
+      {state.game.flags.FLAG_A3_COMPLETE === true && state.modules.act3.stage === 'T07' && progressContext?.onReviewAct3 && <button type="button" className="investigation-hub__review-act3" onClick={() => progressContext.onReviewAct3?.()}>回看启明旧址</button>}
+    </main>}
+
+    {view === 'records' && <section className="notepad-auto investigation-hub__records" aria-label="线索记录">
+      {entries.length ? entries.map((entry) => <article key={entry.id} className={`notepad-entry notepad-entry--${entry.entryType}`}>
+        <h3>{entry.title}</h3><small>{entry.source}</small><p>{entry.content}</p>
+      </article>) : <p className="investigation-hub__empty">已读材料和观察会记录在这里。</p>}
+    </section>}
+
+    {view === 'notes' && <div className="investigation-hub__notes">
+      <label htmlFor="notepad-user-text">我的笔记</label>
+      <textarea id="notepad-user-text" value={state.modules.notepad.userText} onChange={(event) => manager.setNotepadUserText(event.target.value)} placeholder="记下自己的想法…" spellCheck={false} />
+    </div>}
+
+    <footer>UTF-8　　{state.game.phase === 'F' ? '已整理' : '草稿'}</footer>
+  </section>;
 }

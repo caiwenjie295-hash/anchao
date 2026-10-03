@@ -9,6 +9,11 @@ export interface Act4TextSegment {
   from: number;
   to: number;
   role: Act4SegmentRole;
+  sceneId?: string;
+  sceneLabel?: string;
+  sceneIndex?: number;
+  scenePageIndex?: number;
+  scenePageCount?: number;
 }
 
 export interface Act4PagePresentation {
@@ -79,6 +84,10 @@ const EXPLICIT_SEGMENTS: Record<string, readonly Act4TextSegment[]> = {
     segment('T08_KITCHEN_RETREAT', '往回走', 9, 13),
     segment('T08_FIRE_BOX', '倒在消防箱旁', 13, 20),
   ],
+  'T09:T09_REPLY_AND_LAST_PAGE': [
+    segment('T09_REPLY', '收到回信', 0, 5),
+    segment('T09_LAST_PAGE', '写下最后一页', 5, 8),
+  ],
   'T10:T10_AFTERMATH': [
     segment('T10_SEARCH', '追查无果', 0, 6),
     segment('T10_WORDS', '两个词的联想', 6, 9),
@@ -96,7 +105,9 @@ const PRESENTATION_BY_STAGE: Record<Stage, Act4PresentationKind> = {
 
 const CONTINUOUS_BLOCKS = new Set(['T09:T09_BROADCAST']);
 
-const FIRST_PERSON_PAGE_ART: Partial<Record<Stage, readonly { assetId: string; alt: string }[]>> = {
+type SceneArtwork = { assetId: string; alt: string };
+
+const FIRST_PERSON_PAGE_ART: Partial<Record<Stage, readonly SceneArtwork[]>> = {
   T05: [
     { assetId: 'IMG_A4_T05_001', alt: '王澳在晚自习时把日记藏在练习册下' },
     { assetId: 'IMG_A4_T05_002', alt: '李老师办公室里的茶杯与桌面' },
@@ -117,22 +128,62 @@ const FIRST_PERSON_PAGE_ART: Partial<Record<Stage, readonly { assetId: string; a
   ],
 };
 
+const BLOCK_PAGE_ART: Record<string, readonly (SceneArtwork | undefined)[]> = {
+  'T08:T08_RETURN': [
+    { assetId: 'IMG_A4_T08_001', alt: '大学宿舍清晨，王澳查看手机邮件' },
+    { assetId: 'IMG_A4_T08_002', alt: '王澳独自坐在湖边长椅上' },
+    undefined,
+    { assetId: 'IMG_A4_T08_003', alt: '手机发信后准备夜行出发' },
+    { assetId: 'IMG_A4_T08_004', alt: '山脚下准备上山的王澳' },
+    { assetId: 'IMG_A4_T08_006', alt: '王澳翻越带有碎玻璃的围墙' },
+    { assetId: 'IMG_A4_T08_005', alt: '凌晨时分通往旧址的道路' },
+    { assetId: 'IMG_A4_T08_007', alt: '王澳进入启明旧址的广播室' },
+  ],
+  'T08:T08_ARCHIVE': [
+    { assetId: 'IMG_A4_T08_008', alt: '启明旧址档案架与编号' },
+    { assetId: 'IMG_A4_T08_008', alt: '王澳翻看档案' },
+    { assetId: 'IMG_A4_T08_009', alt: '不锈钢书架映出陌生的人影' },
+    { assetId: 'IMG_A4_T08_008', alt: '档案室里传来的脚步声' },
+  ],
+  'T08:T08_KITCHEN_ESCAPE': [
+    { assetId: 'IMG_A4_T08_010', alt: '启明旧址厨房里的景象' },
+    { assetId: 'IMG_A4_T08_010', alt: '王澳无法确认眼前的肉类' },
+    { assetId: 'IMG_A4_T08_010', alt: '王澳转身离开厨房' },
+    { assetId: 'IMG_A4_T08_010', alt: '王澳摔倒在消防箱旁' },
+  ],
+  'T09:T09_REPLY_AND_LAST_PAGE': [
+    { assetId: 'IMG_A4_T09_002', alt: '手机上收到的回信' },
+    { assetId: 'IMG_A4_T09_003', alt: '王澳写下笔记的最后一页' },
+  ],
+  'T09:T09_NOTE_HIDDEN': [
+    { assetId: 'IMG_A4_T09_001', alt: '消防栓旁等待藏好的笔记' },
+  ],
+  'T09:T09_WALK_TO_DOOR': [
+    { assetId: 'IMG_A4_T09_004', alt: '王澳走向旧址出口' },
+  ],
+  'T09:T09_BROADCAST': [
+    { assetId: 'IMG_A4_T09_005', alt: '旧址门槛与门外的晨光' },
+  ],
+};
+
 export function act4PresentationKind(stage: Stage): Act4PresentationKind {
   return PRESENTATION_BY_STAGE[stage];
 }
 
-export function act4PagePresentation(stage: Stage, pageIndex: number): Act4PagePresentation | undefined {
-  const art = FIRST_PERSON_PAGE_ART[stage];
+export function act4PagePresentation(stage: Stage, pageIndex: number, blockId?: string, pageLabel?: string, sceneIndex = pageIndex): Act4PagePresentation | undefined {
+  const art = (blockId ? BLOCK_PAGE_ART[`${stage}:${blockId}`] : undefined) ?? FIRST_PERSON_PAGE_ART[stage];
   if (!art?.length) return undefined;
-  const index = Math.max(0, Math.min(art.length - 1, pageIndex));
-  const presentation: Act4PagePresentation = {
-    illustrationAssetId: art[index].assetId,
-    illustrationAlt: art[index].alt,
-  };
+  const index = Math.max(0, Math.min(art.length - 1, sceneIndex));
+  const presentation: Act4PagePresentation = art[index] ? {
+    illustrationAssetId: art[index]!.assetId,
+    illustrationAlt: art[index]!.alt,
+  } : {};
   if (stage === 'T05') {
     const pages = EXPLICIT_SEGMENTS['T05:T05_ORIGINAL'].filter((item) => item.role === 'page');
     presentation.title = pages[index].label;
     presentation.periodLabel = index < 2 ? '2014 年 12 月 28 日' : '2014 年 12 月 29 日';
+  } else if (pageLabel) {
+    presentation.title = pageLabel;
   }
   return presentation;
 }
@@ -150,6 +201,75 @@ export function act4TextSegments(stage: Stage, blockId: string, paragraphCount: 
     pages.push(segment(`${blockId}_PART_${number}`, `第 ${number} 段`, from, Math.min(paragraphCount, from + pageSize)));
   }
   return pages;
+}
+
+const SCENE_PAGED_STAGES = new Set<Stage>(['T05', 'T06', 'T07', 'T08', 'T09']);
+const SCENE_LABEL_FALLBACKS: Record<string, string> = {
+  'T09:T09_NOTE_HIDDEN': '藏好最后一页笔记',
+  'T09:T09_WALK_TO_DOOR': '走向门外',
+  'T09:T09_BROADCAST': '门外的广播',
+};
+const MAX_READER_PAGE_CHARACTERS = 440;
+const MAX_READER_PAGE_PARAGRAPHS = 3;
+
+/** Keeps existing scene ranges intact while splitting their complete paragraphs into readable pages. */
+export function act4ReaderTextPages(
+  stage: Stage,
+  blockId: string,
+  paragraphs: readonly string[],
+  includeSceneCovers: boolean,
+): readonly Act4TextSegment[] {
+  const sourceSegments = act4TextSegments(stage, blockId, paragraphs.length);
+  if (!includeSceneCovers || !SCENE_PAGED_STAGES.has(stage)) {
+    return sourceSegments;
+  }
+
+  let sceneIndex = 0;
+  return sourceSegments.flatMap((sourceSegment) => {
+    if (sourceSegment.role !== 'page' && sourceSegment.role !== 'whole') return [sourceSegment];
+    const currentSceneIndex = sceneIndex;
+    sceneIndex += 1;
+    const sceneLabel = sourceSegment.label || SCENE_LABEL_FALLBACKS[`${stage}:${blockId}`] || '';
+    if (CONTINUOUS_BLOCKS.has(`${stage}:${blockId}`)) return [{
+      ...sourceSegment,
+      sceneId: sourceSegment.id,
+      sceneLabel,
+      sceneIndex: currentSceneIndex,
+      scenePageIndex: 0,
+      scenePageCount: 1,
+    }];
+    const pages: Act4TextSegment[] = [];
+    let pageFrom = sourceSegment.from;
+    while (pageFrom < sourceSegment.to) {
+      let pageTo = pageFrom + 1;
+      let characterCount = paragraphs[pageFrom].length;
+      while (
+        pageTo < sourceSegment.to
+        && pageTo - pageFrom < MAX_READER_PAGE_PARAGRAPHS
+        && characterCount + paragraphs[pageTo].length <= MAX_READER_PAGE_CHARACTERS
+      ) {
+        characterCount += paragraphs[pageTo].length;
+        pageTo += 1;
+      }
+      const pageNumber = pages.length + 1;
+      pages.push({
+        ...sourceSegment,
+        id: `${sourceSegment.id}_TEXT_${pageNumber}`,
+        label: sourceSegment.label,
+        from: pageFrom,
+        to: pageTo,
+      });
+      pageFrom = pageTo;
+    }
+    return pages.map((page, scenePageIndex) => ({
+      ...page,
+      sceneId: sourceSegment.id,
+      sceneLabel,
+      sceneIndex: currentSceneIndex,
+      scenePageIndex,
+      scenePageCount: pages.length,
+    }));
+  });
 }
 
 export type Act4ParagraphKind = 'mail-field' | 'mail-body' | 'social-date' | 'social-post' | 'broadcast-word' | 'broadcast-response' | 'broadcast-ending';

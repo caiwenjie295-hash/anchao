@@ -5,7 +5,7 @@
     { "id": "UI_A1_A_002", "appId": "mail", "title": "邮箱", "act": 1, "phase": "A", "source": "desktop", "purpose": "邮件应用入口", "unlockCondition": [], "relatedFlags": [], "notes": "M0 空壳", "assetId": "IMG_A1_A_003", "glyph": "✉" },
     { "id": "UI_A1_A_003", "appId": "browser", "title": "浏览器", "act": 1, "phase": "A", "source": "desktop", "purpose": "浏览器应用入口", "unlockCondition": [], "relatedFlags": [], "notes": "M0 空壳", "assetId": "IMG_A1_A_004", "glyph": "◉" },
     { "id": "UI_A1_A_004", "appId": "explorer", "title": "资源管理器", "act": 1, "phase": "A", "source": "desktop", "purpose": "文件应用入口", "unlockCondition": [], "relatedFlags": [], "notes": "M0 空壳", "assetId": "IMG_A1_A_005", "glyph": "▰" },
-    { "id": "UI_A1_A_005", "appId": "notepad", "title": "记事本", "act": 1, "phase": "A", "source": "desktop", "purpose": "笔记应用入口", "unlockCondition": [], "relatedFlags": [], "notes": "M0 空壳", "assetId": "IMG_A1_A_006", "glyph": "▤" },
+    { "id": "UI_A1_A_005", "appId": "notepad", "title": "调查", "act": 1, "phase": "A", "source": "desktop", "purpose": "调查路线、线索记录与个人笔记入口", "unlockCondition": [], "relatedFlags": [], "notes": "M0 空壳", "assetId": "IMG_A1_A_006", "glyph": "▤" },
     { "id": "UI_A1_A_006", "appId": "photos", "title": "照片", "act": 1, "phase": "A", "source": "desktop", "purpose": "照片应用入口", "unlockCondition": [], "relatedFlags": [], "notes": "M0 空壳", "assetId": "IMG_A1_A_007", "glyph": "▧" }
   ]
 }

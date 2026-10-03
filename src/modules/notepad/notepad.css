@@ -1,0 +1,84 @@
+.investigation-hub {
+  min-height: 0;
+  overflow: hidden;
+  font-family: "Microsoft YaHei", system-ui, sans-serif;
+}
+
+.investigation-hub__titlebar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 58px;
+  padding: 9px 16px;
+}
+
+.investigation-hub__titlebar p { margin: 0; color: #69737c; font-size: 12px; letter-spacing: 0; }
+
+.investigation-hub__tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 8px 14px;
+  border-bottom: 1px solid #e2e7eb;
+  background: #f7f9fa;
+}
+
+.investigation-hub__tabs button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #425360;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.investigation-hub__tabs button[aria-pressed="true"] { border-color: #cad8e2; color: #233f52; background: #eaf1f5; font-weight: 600; }
+.investigation-hub__tabs button:focus-visible, .investigation-hub__continue:focus-visible, .investigation-hub__review-act3:focus-visible { outline: 3px solid #44718c; outline-offset: 2px; }
+
+.investigation-hub__current {
+  box-sizing: border-box;
+  width: min(620px, 100%);
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  margin: auto;
+  padding: clamp(22px, 5vw, 44px);
+}
+
+.investigation-hub__eyebrow { margin: 0 0 10px; color: #647681; font-size: 12px; letter-spacing: .08em; }
+.investigation-hub__current h3 { margin: 0 0 14px; color: #1d2e39; font-size: clamp(20px, 3vw, 27px); font-weight: 600; line-height: 1.35; }
+.investigation-hub__recap { margin: 0; color: #42515a; font-size: 15px; line-height: 1.75; }
+.investigation-hub__next { display: grid; gap: 5px; margin: 20px 0 25px; padding: 13px 15px; border-left: 3px solid #7e9bab; color: #384b57; background: #f1f5f7; font-size: 13px; line-height: 1.65; }
+.investigation-hub__next strong { color: #637783; font-size: 11px; }
+.investigation-hub__continue { min-height: 46px; min-width: 150px; padding: 0 22px; border: 1px solid #3e6579; border-radius: 4px; color: #fff; background: #3e6579; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.investigation-hub__review-act3 { min-height: 44px; margin-left: 9px; padding: 0 15px; border: 1px solid #aab7bd; border-radius: 4px; color: #40525e; background: #fff; font: inherit; cursor: pointer; }
+.investigation-hub__continue:hover:not(:disabled) { background: #2e5164; }
+.investigation-hub__continue:disabled { cursor: not-allowed; opacity: .55; }
+
+.investigation-hub__records { min-height: 0; flex: 1; overflow: auto; padding: 18px clamp(14px, 3vw, 28px); }
+.investigation-hub__records .notepad-entry { margin: 0; }
+.investigation-hub__records .notepad-entry h3 { margin: 0 0 5px; color: inherit; font: inherit; font-weight: 700; }
+.investigation-hub__records .notepad-entry small { display: block; margin-bottom: 8px; color: #63727c; font-size: 11px; }
+.investigation-hub__records .notepad-entry p { margin: 0; white-space: pre-wrap; }
+.investigation-hub__empty { margin: auto; color: #6d7478; font-size: 14px; }
+
+.investigation-hub__notes { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 10px; padding: 18px clamp(14px, 3vw, 28px); }
+.investigation-hub__notes label { color: #53636e; font-size: 13px; }
+.investigation-hub__notes textarea { box-sizing: border-box; width: 100%; min-height: 0; flex: 1; resize: none; overflow: auto; padding: 14px; border: 1px solid #dce2e6; border-radius: 5px; color: #202328; background: #fff; font: 14px/1.75 "Cascadia Mono", "SFMono-Regular", Consolas, monospace; }
+.investigation-hub__notes textarea:focus-visible { outline: 3px solid #8caabd; outline-offset: 2px; }
+.investigation-hub > footer { box-sizing: border-box; min-height: 30px; flex: 0 0 auto; }
+
+@media (max-width: 560px) {
+  .investigation-hub__titlebar { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .investigation-hub__current { padding: 22px 17px; }
+  .investigation-hub__review-act3 { display: block; margin: 10px 0 0; }
+  .investigation-hub__tabs { padding-inline: 8px; }
+  .investigation-hub__tabs button { padding-inline: 9px; font-size: 12px; }
+}
