@@ -220,13 +220,14 @@ describe('T07 promotion investigation', () => {
     await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
 
-    await click('[data-action-id="A2_T07_INFER_LOCATION"]');
+    await click('[data-action-id="A2_T07_CURRENT_INFER"]');
     expect(flags().FLAG_A2_QIMING_LOCATION_INFERRED).toBe(true);
     expect(container.textContent).toContain(act2T07.inference.conclusion);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_003');
     expect(container.querySelector('.t07-finale__outcomes .t07-finale__dialogue')).not.toBeNull();
 
-    await click('[data-action-id="A2_T07_PLAN_TRIP"]');
+    await click('[data-action-id="A2_T07_CURRENT_TRIP_CONVERSATION"]');
+    await click('[data-action-id="A2_T07_CURRENT_PLAN_TRIP"]');
     expect(flags().FLAG_A2_SECOND_TRIP_PLANNED).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_004');
 
@@ -254,7 +255,7 @@ describe('T07 promotion investigation', () => {
     const onEnterAct3 = vi.fn();
     await act(async () => { root.render(<T07Investigation manager={manager} onEnterAct3={onEnterAct3} />); });
 
-    const entry = container.querySelector('.t07-finale__enter-act3') as HTMLButtonElement;
+    const entry = container.querySelector('.t07-finale__closing .t07-finale__enter-act3') as HTMLButtonElement;
     expect(entry).not.toBeNull();
     expect(entry.textContent).toBe('再次进山，调查启明旧址');
     // 主操作与「回看资料」并存，且回看仍在。
@@ -269,7 +270,7 @@ describe('T07 promotion investigation', () => {
     await render();
     // 没有 onEnterAct3 时不能渲染一个空按钮，必须说明去哪继续。
     expect(container.querySelector('.t07-finale__enter-act3')).toBeNull();
-    expect(container.textContent).toContain('任务栏');
+    expect(container.textContent).toContain('按当前步骤继续即可');
   });
 
   it('never renders a broken T07 image and always offers a text alternative', async () => {

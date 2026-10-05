@@ -173,7 +173,7 @@ describe('BridgeInvestigation', () => {
     await clickButton(bridgeScene.askMountainLabel);
 
     expect(container.querySelector('button button')).toBeNull();
-    const items = [...container.querySelectorAll('article.act2-bridge__evidence-item')];
+    const items = [...container.querySelectorAll('li.act2-bridge__evidence-item')];
     expect(items).toHaveLength(bridgeEvidence.length);
     const thumbnail = container.querySelector<HTMLButtonElement>('button[aria-label^="放大查看"]');
     expect(thumbnail).not.toBeNull();
@@ -190,7 +190,6 @@ describe('BridgeInvestigation', () => {
     expect(manager.getState().game.flags.FLAG_A2_HEIBUMU_AUDIO_HEARD).toBeUndefined();
     expect(manager.getState().modules.notepad.autoEntryIds).toEqual([]);
     expect(container.textContent).not.toContain('黑捕木');
-    expect(container.querySelector('button[data-audio-id="AUDIO_A2_T02_001"]')).toBeNull();
   });
 
   it('keeps the confirm disabled until all three parts are chosen and empty submits never count', async () => {

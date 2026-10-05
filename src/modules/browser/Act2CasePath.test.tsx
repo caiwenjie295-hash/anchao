@@ -116,7 +116,7 @@ describe('T06 visible case path', () => {
     const zhongRadios = [...zhongCase.querySelectorAll<HTMLInputElement>('.browser-case-review__choices input[type="radio"]')];
     await click(zhongRadios[1], 'the overclaim choice should be available after both sources are read');
     await click(zhongCase.querySelector('[data-case-action="record"]'));
-    expect(zhongCase.querySelector('.browser-case-review__feedback--error')?.textContent).toContain('不能据此认定因果');
+    expect(zhongCase.querySelector('.browser-case-review__feedback--error')?.textContent).toContain('它们还没有说明原因');
     expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
 
     await click(findButton('.browser-case-review__source-link', '回看钟子月后续报道'));
