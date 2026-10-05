@@ -8,11 +8,13 @@ export function DesktopTaskCard({
   state,
   onOpenApp,
   showProgressTrigger = true,
+  className,
 }: {
   state: AppState;
   onOpenApp: (appId: AppId) => void;
   /** Retained as an optional display switch; existing callers need no changes. */
   showProgressTrigger?: boolean;
+  className?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
@@ -22,7 +24,7 @@ export function DesktopTaskCard({
 
   const presentation = getDesktopTaskPresentation(state);
   const bodyId = `desktop-task-card-${state.game.phase}`;
-  return <aside className={`desktop-task-card${expanded ? ' desktop-task-card--expanded' : ''}`} aria-label={presentation.title}>
+  return <aside className={`desktop-task-card${className ? ` ${className}` : ''}${expanded ? ' desktop-task-card--expanded' : ''}`} aria-label={presentation.title}>
     <div className="desktop-task-card__heading">
       <button
         type="button"

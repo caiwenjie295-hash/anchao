@@ -27,10 +27,9 @@
 .photo-evidence-image { display:block; width:100%; height:100%; }
 .double-s { top:55%; left:73%; color:#918c7e; }
 
-/* Center the user-provided desktop photo at its natural proportions with cover framing. */
+/* App supplies the no-inline Vite URL through its JavaScript bundle for correct offline URL resolution. */
 .desktop {
   background-color: #a9c2ad;
-  background-image: url('./assets/compressed/assets/desktop-wallpaper.webp?no-inline');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
