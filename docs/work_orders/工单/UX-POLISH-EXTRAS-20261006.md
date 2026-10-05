@@ -30,6 +30,8 @@
 
 > 收尾支援覆盖：`UX-POLISH-SETTINGS-SUPPORT-20261006.md` 将新增 `src/modules/settings/**` 交原A1唯一写入；本owner只在NotepadApp/App挂接，不改该目录。其余权限不变。
 
+> 主审静态核对后的窄例外：允许 `src/core/types.ts` 的 AnchaoEventMap **仅追加** `'save:imported': { schemaVersion: 13 }` 一条UI通知类型，为面板卸载后仍可见的导入成功反馈使用。不得改Flag、AppState、存档字段、阶段、schema或既有事件类型；最终审查以单行diff核对此例外。
+
 - src/App.tsx、index.html、src/modules/notepad/**、src/modules/settings/**（新增）
 - scripts/verify-offline.mjs、scripts/test-browser.mjs（仅随真实UI标签/DOM调整验收驱动；保留全部剧情状态、无网络、资源与重载断言，禁止通过减少覆盖掩盖失败）
 - src/components/investigation/**、PhotoViewport.tsx/photoViewport.css、DesktopTaskCard.tsx及同名测试、InvestigationProgress*.tsx及对应测试/investigationProgress.css、ResetProgressButton.tsx
