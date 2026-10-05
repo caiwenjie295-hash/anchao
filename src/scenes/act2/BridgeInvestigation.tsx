@@ -143,7 +143,7 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
               key={elder.id}
               type="button"
               className={`act2-bridge__elder${active ? ' act2-bridge__elder--active' : ''}`}
-              style={{ ...bridgeRectToPercentStyle(target.rect), zIndex: elder.id.endsWith('_001') ? 4 : elder.id.endsWith('_002') ? 1 : elder.id.endsWith('_003') ? 5 : 2 }}
+              style={{ ...bridgeRectToPercentStyle(target.rect), zIndex: elder.id.endsWith('_001') ? 3 : elder.id.endsWith('_002') ? 4 : elder.id.endsWith('_003') ? 5 : 2 }}
               aria-label={`${elder.name}，${talked ? '聊过了' : '还没聊'}`}
               aria-pressed={active}
               data-elder-id={elder.id}
