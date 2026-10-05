@@ -5,6 +5,7 @@ import { InvestigationShell } from '../../components/investigation/Investigation
 import type { InvestigationAction } from '../../components/investigation/types';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import type { AppState, HeibumuNamePart } from '../../core/types';
+import { ACT2_BRIDGE_ELDER_TARGETS, bridgeRectToPercentStyle } from '../../data/act2BridgePresentation';
 import {
   bridgeAudio,
   bridgeElders,
@@ -32,11 +33,15 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   const isBridgeStage = state.modules.act2Research.stage === 'bridge';
   const heard = bridge.heardPhrase;
   const solved = flags.FLAG_A2_HEIBUMU_NAME_SOLVED === true;
+  const oralProgress = heard || solved;
 
-  const [selectedElderId, setSelectedElderId] = useState<string | null>(null);
+  const [selectedElderId, setSelectedElderId] = useState<string | null>(() => (
+    bridge.heardPhrase || solved ? bridgeElders.find((elder) => elder.isClueElder)?.id ?? null : null
+  ));
   const [askedMountainIds, setAskedMountainIds] = useState<string[]>([]);
-  const [replayCount, setReplayCount] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
+  const [sceneFailed, setSceneFailed] = useState(false);
+  const phraseRef = useRef<HTMLParagraphElement>(null);
 
   const talkRecord = useRef(false);
   useEffect(() => {
@@ -61,7 +66,11 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   const selectedElder = bridgeElders.find((elder) => elder.id === selectedElderId) ?? null;
   const isClueElderSelected = selectedElder?.isClueElder === true;
   const locked = wrongAttempts >= bridgePuzzle.maxAttempts;
-  const askedMountain = selectedElder ? askedMountainIds.includes(selectedElder.id) : false;
+  // Reopened saves may already contain the oral phrase or solved name even
+  // though the ask button itself is transient presentation state.
+  const askedMountain = selectedElder
+    ? askedMountainIds.includes(selectedElder.id) || (selectedElder.isClueElder && oralProgress)
+    : false;
 
   const selectElder = (elderId: string) => {
     setSelectedElderId(elderId);
@@ -112,81 +121,79 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
       actLabel="第二幕 · 民俗疑问"
       locationLabel={bridgeScene.location}
       contextLabel={bridgeScene.title}
-      objective="听取当地人的说法，出示相关照片，再核对这处地名。"
-      helpText="先选一位老人交谈；线索人物会在听到相关问题后回应照片。名称判断依据在对话和文字记录里，无需音频。"
+      objective="先听桥边闲谈，再问鸡公岭；带相关照片给老人看看。"
+      helpText="四位老人都能交谈。照片里的虚线框可直接选择人物，也可以从下方名单开始。"
       actions={actions}
       onExit={() => onReturnDesktop?.()}
     >
     <section className="act2-bridge" aria-label={bridgeScene.title}>
       {!heard && <p className="act2-bridge__intro">{bridgeScene.intro}</p>}
 
-      <div className="act2-bridge__body">
-        <div className="act2-bridge__stage" role="group" aria-label="点击照片中的老人交谈">
-          {sceneImage && <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，四位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" />}
-          {bridgeElders.map((elder) => <button
-            key={elder.id}
-            type="button"
-            className={`act2-bridge__elder${selectedElderId === elder.id ? ' act2-bridge__elder--active' : ''}`}
-            style={{ left: `${elder.focus.x}%`, top: `${elder.focus.y}%` }}
-            aria-pressed={selectedElderId === elder.id}
-            onClick={() => selectElder(elder.id)}
-          >
-            <span className="act2-bridge__elder-dot" aria-hidden="true">听</span>
-            <span className="act2-bridge__elder-label">{elder.name} · {bridge.talkedElderIds.includes(elder.id) ? '聊过了' : bridgeScene.chatPrompt}</span>
-          </button>)}
+      <div className="act2-bridge__scene-workspace">
+        <div className="act2-bridge__stage" role="group" aria-label="桥头照片与人物入口">
+          {sceneImage && !sceneFailed
+            ? <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，四位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" onError={() => setSceneFailed(true)} />
+            : <div className="act2-bridge__scene-fallback" role="img" aria-label="桥头照片暂时无法显示，仍可从下方名单选择老人"><span aria-hidden="true">桥</span><p>桥头照片暂时无法显示；可以从下方名单选择老人继续交谈。</p></div>}
+          {!sceneFailed && sceneImage && bridgeElders.map((elder) => {
+            const target = ACT2_BRIDGE_ELDER_TARGETS.find((item) => item.elderId === elder.id);
+            if (!target) return null;
+            const talked = bridge.talkedElderIds.includes(elder.id);
+            const active = selectedElderId === elder.id;
+            return <button
+              key={elder.id}
+              type="button"
+              className={`act2-bridge__elder${active ? ' act2-bridge__elder--active' : ''}`}
+              style={{ ...bridgeRectToPercentStyle(target.rect), zIndex: elder.id.endsWith('_001') ? 4 : elder.id.endsWith('_002') ? 1 : elder.id.endsWith('_003') ? 5 : 2 }}
+              aria-label={`${elder.name}，${talked ? '聊过了' : '还没聊'}`}
+              aria-pressed={active}
+              data-elder-id={elder.id}
+              data-image-rect={`${target.rect.x},${target.rect.y},${target.rect.width},${target.rect.height}`}
+              onClick={() => selectElder(elder.id)}
+            ><span className="act2-bridge__elder-number" aria-hidden="true">{bridgeElders.indexOf(elder) + 1}</span></button>;
+          })}
         </div>
 
-        {!selectedElder && <div className="act2-bridge__dialogue act2-bridge__dialogue--empty"><h2>桥边闲谈</h2><p>点照片中的“听”，选择一位老人。先听他们说些什么，再慢慢问鸡公岭的事。</p></div>}
-        {selectedElder && (
-          <div className="act2-bridge__dialogue" aria-live="polite">
-            {sceneImage && <div className="act2-bridge__portrait" role="img" aria-label={`${selectedElder.name}的现场局部特写`} style={{ backgroundImage: `url(${sceneImage})`, backgroundPosition: `${selectedElder.focus.x}% ${selectedElder.focus.y}%` }} />}
-            <h2>{selectedElder.name}</h2>
-            {selectedElder.chat.map((line) => <p key={line}>{line}</p>)}
-            {!askedMountain && (
-              <button type="button" className="act2-bridge__ask" onClick={askMountain}>{bridgeScene.askMountainLabel}</button>
-            )}
-            {askedMountain && selectedElder.mountainReply.map((line) => <p key={line}>{line}</p>)}
+        <nav className="act2-bridge__elder-list" aria-label="从文字名单选择老人">
+          {bridgeElders.map((elder, index) => {
+            const talked = bridge.talkedElderIds.includes(elder.id);
+            const active = selectedElderId === elder.id;
+            return <button key={elder.id} type="button" className={active ? 'is-active' : ''} aria-pressed={active} onClick={() => selectElder(elder.id)}>
+              <span className="act2-bridge__elder-list-number" aria-hidden="true">{index + 1}</span>
+              <span>{elder.name}</span><small>{talked ? '聊过了' : '开始闲谈'}</small>
+            </button>;
+          })}
+        </nav>
 
-            {isClueElderSelected && (
+        {!selectedElder && <section className="act2-bridge__dialogue act2-bridge__dialogue--empty" aria-label="桥边闲谈"><h2>桥边闲谈</h2><p>选一位老人坐下聊聊。问到鸡公岭时，再看看他是否愿意多说几句。</p></section>}
+        {selectedElder && (
+          <section className="act2-bridge__dialogue" aria-live="polite" aria-label={`${selectedElder.name}的谈话`}>
+            <div className="act2-bridge__dialogue-heading"><p>桥边闲谈</p><h2>{selectedElder.name}</h2></div>
+            <div className="act2-bridge__chat-lines">{selectedElder.chat.map((line) => <p key={line}>{line}</p>)}</div>
+            {!askedMountain && <button type="button" className="act2-bridge__ask" onClick={askMountain}>{bridgeScene.askMountainLabel}</button>}
+            {askedMountain && <div className="act2-bridge__reply" aria-label="关于鸡公岭的回答">{selectedElder.mountainReply.map((line) => <p key={line}>{line}</p>)}</div>}
+
+            {isClueElderSelected && askedMountain && (
               <div className="act2-bridge__evidence">
                 <h3>{bridgeScene.evidencePanelTitle}</h3>
-                {bridgeEvidence.map((item) => (
-                  <article key={item.assetId} className="act2-bridge__evidence-item">
-                    <div className="act2-bridge__evidence-copy">
-                      <span className="act2-bridge__evidence-name">{item.name}</span>
-                      <span className="act2-bridge__evidence-desc">{item.description}</span>
-                    </div>
-                    <div className="act2-bridge__evidence-actions">
-                      <EvidenceSlot assetId={item.assetId} caption={item.name} />
-                      <button
-                        type="button"
-                        className="act2-bridge__show"
-                        aria-label={`出示${item.name}`}
-                        onClick={() => manager.showAct2Evidence(item.assetId)}
-                      >
-                        出示照片
-                      </button>
-                    </div>
-                  </article>
-                ))}
+                <p>{bridgeScene.evidencePanelHint}</p>
+                <ul>{bridgeEvidence.map((item) => (
+                  <li key={item.assetId} className="act2-bridge__evidence-item">
+                    <div className="act2-bridge__evidence-copy"><strong>{item.name}</strong><span>{item.description}</span></div>
+                    <div className="act2-bridge__evidence-actions"><EvidenceSlot assetId={item.assetId} caption={item.name} /><button type="button" className="act2-bridge__show" aria-label={`出示${item.name}`} onClick={() => manager.showAct2Evidence(item.assetId)}>出示照片</button></div>
+                  </li>
+                ))}</ul>
               </div>
             )}
 
-            {isClueElderSelected && heard && (
+            {isClueElderSelected && oralProgress && (
               <div className="act2-bridge__oral">
                 <p className="act2-bridge__evidence-lead">{selectedElder.evidenceLead}</p>
-                <p className="act2-bridge__phrase" aria-live="polite" data-audio-id={bridgeAudio.audioId}>
-                  “{bridgeAudio.phrase}”
-                  {replayCount > 0 && <span className="act2-bridge__replay-echo">{bridgeAudio.replaySuffixTemplate}</span>}
-                </p>
+                <p ref={phraseRef} tabIndex={-1} className="act2-bridge__phrase" aria-live="polite">“{bridgeAudio.phrase}”</p>
                 <p className="act2-bridge__phrase-after" aria-live="polite">{selectedElder.phraseAfter}</p>
-                <p className="act2-bridge__audio-notice">{bridgeAudio.replayNotice}</p>
-                <button type="button" className="act2-bridge__replay" data-audio-id={bridgeAudio.audioId} onClick={() => setReplayCount((count) => count + 1)}>
-                  {bridgeAudio.replayLabel}
-                </button>
+                <button type="button" className="act2-bridge__replay" onClick={() => { phraseRef.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' }); phraseRef.current?.focus({ preventScroll: true }); }}>再看看老人原话</button>
               </div>
             )}
-          </div>
+          </section>
         )}
       </div>
 
@@ -220,6 +227,7 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
             );
           })}
           {locked && <p className="act2-bridge__locked-hint" role="note">{bridgePuzzle.lockedHint}</p>}
+          {wrongAttempts > 0 && !solved && <p className="act2-bridge__wrong-hint" role="status">这组字还没有对上。可以再看看老人原话和石碑照片，再调整选字。</p>}
           <p className="act2-bridge__guessing-note">{bridgePuzzle.guessingNote}</p>
           <button type="button" className="act2-bridge__confirm" disabled={!canConfirm} onClick={confirmName}>{bridgePuzzle.confirmLabel}</button>
         </div>

@@ -131,6 +131,12 @@ describe('Act2 spacious scene layout interactions', () => {
     expect(confirm()?.getAttribute('data-action-state')).toBe('blocked');
     await click(confirm(), 'confirm timeline action');
     expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('两种不同来源');
+    const relatedSource = container.querySelector<HTMLButtonElement>('.investigation-navigation__material');
+    expect(relatedSource?.textContent).toContain('成绩表下方的感谢文字');
+    await click(relatedSource, 'directly open the missing school source');
+    expect(manager.getState().modules.act2Research.school.inspectedHotspotIds).toContain('HOTSPOT_A2_T05_QIMING_TEXT');
+    expect(container.querySelector('.t05-school__dialog')).not.toBeNull();
+    await click(container.querySelector<HTMLButtonElement>('.t05-school__dialog [aria-label="关闭"]'), 'close the related school source');
     expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBeUndefined();
 
     await click(summary, 'school materials summary');
@@ -158,10 +164,11 @@ describe('Act2 spacious scene layout interactions', () => {
     expect(container.querySelectorAll('.act2-bridge__stage .act2-bridge__elder')).toHaveLength(4);
 
     await clickTextButton(container, bridgeClueElder.name);
-    expect(container.querySelectorAll('button[aria-label^="出示"]')).toHaveLength(bridgeEvidence.length);
+    expect(container.querySelectorAll('button[aria-label^="出示"]')).toHaveLength(0);
     expect(container.querySelector('.act2-bridge__phrase')).toBeNull();
     await clickTextButton(container, '打听鸡公岭');
     expect(container.querySelector('.act2-bridge__phrase')).toBeNull();
+    expect(container.querySelectorAll('button[aria-label^="出示"]')).toHaveLength(bridgeEvidence.length);
 
     await click(container.querySelector<HTMLButtonElement>(`button[aria-label="出示${bridgeEvidence[1].name}"]`), 'show bridge evidence');
     expect(manager.getState().modules.act2Research.bridge.shownEvidenceAssetIds).toEqual([bridgeEvidence[1].assetId]);
@@ -171,8 +178,14 @@ describe('Act2 spacious scene layout interactions', () => {
     expect(container.querySelector('.act2-bridge__phrase-after')?.textContent).toContain('就叫这个');
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T02_001');
 
-    await click(container.querySelector<HTMLButtonElement>('button[data-audio-id="AUDIO_A2_T02_001"]'), 'replay oral phrase');
-    expect(container.querySelector('.act2-bridge__replay-echo')?.textContent).toContain('又听了一遍');
+    const replay = container.querySelector<HTMLButtonElement>('.act2-bridge__replay');
+    expect(replay).not.toBeNull();
+    await click(replay, 'focus the heard oral phrase');
+    expect(document.activeElement).toBe(container.querySelector('.act2-bridge__phrase'));
+    expect(container.querySelector('.act2-bridge__replay-echo')).toBeNull();
+    expect(manager.getState().modules.act2Research.bridge.heardPhrase).toBe(true);
+    expect(manager.getState().modules.act2Research.bridge.shownEvidenceAssetIds).toEqual([bridgeEvidence[1].assetId]);
+    expect(manager.getState().modules.act2Research.stage).toBe('bridge');
     for (const part of ['first', 'middle', 'last'] as const) {
       const choice = bridgePuzzle.correct[part];
       await click(container.querySelector<HTMLInputElement>(`input[name="act2-bridge-${part}"][value="${choice}"]`), `${part} character option`);

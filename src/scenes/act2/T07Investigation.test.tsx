@@ -134,6 +134,7 @@ describe('T07 promotion investigation', () => {
     await click('.t07-finale__capture');
     await loadPendingImages();
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_001']);
+    expect(container.querySelector('.t07-finale__capture-followup')?.textContent).toContain('截图已收进调查资料');
 
     await seek(8800);
     await loadPendingImages();
@@ -157,7 +158,8 @@ describe('T07 promotion investigation', () => {
     await loadPendingImages();
     await click('.t07-finale__capture');
     await loadPendingImages();
-    await clickTab('外景对照');
+    await click('.t07-finale__capture-followup button');
+    expect(button('.t07-finale__tab.is-active').textContent).toBe('外景对照');
     await loadPendingImages();
     const comparisonImages = [...container.querySelectorAll<HTMLImageElement>('.t07-finale__compare-side .photo-viewport__plane img')];
     expect(comparisonImages).toHaveLength(2);

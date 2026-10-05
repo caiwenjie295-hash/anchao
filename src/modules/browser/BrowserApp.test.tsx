@@ -8,6 +8,7 @@ import { Act2T06Controller } from '../../story/act2T06Controller';
 import { Act2T01Controller } from '../../story/act2T01Controller';
 import { browserPageById } from '../../data/browserData';
 import { BrowserApp, BrowserPageView } from './BrowserApp';
+import { siteIdentity } from './browserPresentation';
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -51,6 +52,7 @@ describe('BrowserApp T06 visibility gates', () => {
     manager.enterAct2QimingResearch();
     await render();
     expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    expect(host.querySelector('.browser-toolbar__source')?.textContent).toBe('实名材料核对');
     expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(true);
 
     await search('启明 黄子山');
@@ -60,6 +62,7 @@ describe('BrowserApp T06 visibility gates', () => {
 
     await act(async () => (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click());
     expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('review');
+    expect(host.querySelector('.browser-toolbar__source')?.textContent).toBe('实名材料核对');
     await act(async () => (host.querySelector('.browser-new-tab') as HTMLButtonElement).click());
     expect(host.querySelector('.browser-app')?.getAttribute('data-qiming-view')).toBe('browser');
     expect(host.querySelector('.browser-content')?.hasAttribute('hidden')).toBe(false);
@@ -75,6 +78,8 @@ describe('BrowserApp T06 visibility gates', () => {
     await click(zhongChoice);
     expect(host.querySelector('.browser-case-review__case')?.getAttribute('aria-label')).toBe('钟子月材料');
     await click(host.querySelector('[data-case-action="open-official"]'));
+    const sourcePage = browserPageById.get("PAGE_A2_T06_004")!;
+    expect(host.querySelector(".browser-toolbar__source")?.textContent).toBe(`${siteIdentity(sourcePage).name} · ${sourcePage.headline}`);
     expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('正在调查：钟子月');
     expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('钟子月后续报道');
     await click([...host.querySelectorAll('.browser-page__case-path button')].find((button) => button.textContent === '打开钟子月后续报道') ?? null);
@@ -94,7 +99,7 @@ describe('BrowserApp T06 visibility gates', () => {
     expect(returnedRadios[1]?.checked).toBe(true);
     await click(host.querySelector('[data-case-action="record"]'));
     expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
-    expect(host.querySelector('.browser-case-review__feedback--error')?.textContent).toContain('不能据此认定因果');
+    expect(host.querySelector('.browser-case-review__feedback--error')?.textContent).toContain('它们还没有说明原因');
     await click(returnedRadios[0] ?? null);
     await click(host.querySelector('[data-case-action="record"]'));
     expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['zhong']);
@@ -122,9 +127,9 @@ describe('BrowserApp T06 visibility gates', () => {
     await click(host.querySelector('[data-case-action="record"]'));
 
     expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang']);
-    expect(host.querySelector('.browser-case-review__progress')?.textContent).toBe('此前调查已完成');
-    expect(host.querySelector('.browser-case-review__next-step')?.textContent).toBe('此前个案调查已完成，可回看材料或点击“与小月继续核对资料”。');
-    expect(host.querySelector('.browser-case-review__next p')?.textContent).toBe('此前个案调查已完成，可回看材料或点击“与小月继续核对资料”。');
+    expect(host.querySelector('.browser-case-review__progress')?.textContent).toBe('调查记录可回看');
+    expect(host.querySelector('.browser-case-review__next-step')?.textContent).toBe('之前的个案调查已经整理好；材料可以回看，也可以和小月继续核对资料。');
+    expect(host.querySelector('.browser-case-review__next p')?.textContent).toBe('之前的个案调查已经整理好；材料可以回看，也可以和小月继续核对资料。');
     expect(host.querySelector('.browser-case-review__next p')?.textContent).not.toContain('两名学员');
     expect(host.querySelector('.browser-case-review__next-step')?.textContent).not.toContain('钟子月');
   });
