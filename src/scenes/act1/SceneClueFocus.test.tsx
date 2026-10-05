@@ -7,16 +7,21 @@ import { SceneClueFocus } from './SceneClueFocus';
 describe('SceneClueFocus', () => {
   let container: HTMLDivElement;
   let root: Root;
+  let launcher: HTMLButtonElement;
 
   beforeEach(() => {
     container = document.createElement('div');
     document.body.append(container);
     root = createRoot(container);
+    launcher = document.createElement('button');
+    launcher.textContent = '查看观察';
+    document.body.append(launcher);
   });
 
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
+    launcher.remove();
   });
 
   it('uses the current background as a positioned local close-up and supports keyboard dismissal', async () => {
@@ -50,5 +55,24 @@ describe('SceneClueFocus', () => {
     expect(image?.getAttribute('src')).toBe('/close-up.png');
     await act(async () => { container.querySelector<HTMLElement>('.scene-clue-focus')?.click(); });
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('traps keyboard focus and restores it to the caller when the detail closes', async () => {
+    const hotspot = hotspotById.get('HOTSPOT_A1_G_001');
+    expect(hotspot).toBeDefined();
+    launcher.focus();
+    await act(async () => {
+      root.render(<SceneClueFocus hotspot={hotspot!} backgroundSrc="/scene.png" onClose={() => undefined} />);
+    });
+    const closeButton = container.querySelector<HTMLButtonElement>('.scene-clue-focus__header button');
+    expect(document.activeElement).toBe(closeButton);
+
+    const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    await act(async () => { document.dispatchEvent(tabEvent); });
+    expect(tabEvent.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(closeButton);
+
+    await act(async () => { root.render(null); });
+    expect(document.activeElement).toBe(launcher);
   });
 });
