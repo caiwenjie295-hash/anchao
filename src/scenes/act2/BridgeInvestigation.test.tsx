@@ -13,6 +13,7 @@ import {
   bridgeResolution,
   bridgeScene,
 } from '../../data/act2BridgeData';
+import { ACT2_BRIDGE_ELDER_TARGETS, validateBridgeElderTargets } from '../../data/act2BridgePresentation';
 import { BridgeInvestigation } from './BridgeInvestigation';
 
 const buildBridgeState = (): AppState => {
@@ -45,6 +46,8 @@ describe('BridgeInvestigation', () => {
   };
 
   const showEvidence = async (evidenceName: string) => {
+    const ask = [...container.querySelectorAll('button')].find((item) => item.textContent?.includes(bridgeScene.askMountainLabel));
+    if (ask) await act(async () => { ask.click(); });
     const button = [...container.querySelectorAll('button')].find((item) => item.getAttribute('aria-label') === `出示${evidenceName}`);
     expect(button, `evidence ${evidenceName} should be presentable`).toBeDefined();
     await act(async () => { button!.click(); });
@@ -77,7 +80,8 @@ describe('BridgeInvestigation', () => {
     await clickButton(bystander.name);
     expect(manager.getState().modules.act2Research.bridge.talkedElderIds).toContain(bystander.id);
     expect(container.textContent).toContain(bystander.chat[0]);
-    expect(container.querySelector('.act2-bridge__portrait[role="img"]')).not.toBeNull();
+    expect(container.querySelector('.act2-bridge__portrait')).toBeNull();
+    expect(container.querySelectorAll('.act2-bridge__dialogue')).toHaveLength(1);
 
     for (const item of bridgeEvidence) {
       expect([...container.querySelectorAll('button')].some((button) => button.getAttribute('aria-label') === `出示${item.name}`)).toBe(false);
@@ -85,6 +89,34 @@ describe('BridgeInvestigation', () => {
     expect(manager.getState().modules.act2Research.bridge.shownEvidenceAssetIds).toEqual([]);
     expect(manager.getState().modules.act2Research.bridge.heardPhrase).toBe(false);
     expect(manager.getState().game.flags.FLAG_A2_ELDER_PHOTO_SHOWN).toBeUndefined();
+  });
+
+  it('maps four dashed picture buttons to the inspected elder identities and keeps a text route', async () => {
+    validateBridgeElderTargets();
+    await render();
+    const buttons = [...container.querySelectorAll<HTMLButtonElement>('.act2-bridge__stage .act2-bridge__elder')];
+    expect(buttons).toHaveLength(4);
+    expect(ACT2_BRIDGE_ELDER_TARGETS.map(({ elderId }) => elderId)).toEqual(bridgeElders.map(({ id }) => id));
+    for (const elder of bridgeElders) {
+      const button = buttons.find((item) => item.dataset.elderId === elder.id)!;
+      expect(button.getAttribute('aria-label')).toContain(elder.name);
+      expect(button.getAttribute('aria-label')).toContain('还没聊');
+      expect(button.style.left).not.toBe('');
+      await act(async () => { button.click(); });
+      expect(manager.getState().modules.act2Research.bridge.talkedElderIds).toContain(elder.id);
+    }
+    expect(container.querySelector('.act2-bridge__elder-list[aria-label="从文字名单选择老人"]')).not.toBeNull();
+    expect(container.querySelector('.act2-bridge__elder-dot')).toBeNull();
+  });
+
+  it('keeps the text route available when the scene photo fails to load', async () => {
+    await render();
+    const image = container.querySelector<HTMLImageElement>('.act2-bridge__scene-image')!;
+    await act(async () => { image.dispatchEvent(new Event('error')); });
+    expect(container.querySelector('.act2-bridge__scene-fallback')).not.toBeNull();
+    expect(container.querySelectorAll('.act2-bridge__stage .act2-bridge__elder')).toHaveLength(0);
+    await clickButton(bridgeElders[0].name);
+    expect(manager.getState().modules.act2Research.bridge.talkedElderIds).toContain(bridgeElders[0].id);
   });
 
   it('lets the clue elder hear the oral phrase after evidence and writes flags and the note idempotently', async () => {
@@ -103,18 +135,42 @@ describe('BridgeInvestigation', () => {
     expect(manager.getState().modules.notepad.autoEntryIds).toEqual(['NOTE_A2_T02_001']);
 
     expect(container.textContent).toContain('黑捕木');
-    const replay = container.querySelector<HTMLButtonElement>('button[data-audio-id="AUDIO_A2_T02_001"]');
+    const replay = container.querySelector<HTMLButtonElement>('.act2-bridge__replay');
     expect(replay).not.toBeNull();
-    expect(replay!.textContent).toContain('重听口述');
+    expect(replay!.textContent).toContain('再看看老人原话');
     const live = container.querySelector<HTMLElement>('.act2-bridge__phrase');
     expect(live?.getAttribute('aria-live')).toBe('polite');
     await act(async () => { replay!.click(); });
-    expect(container.textContent).toContain('重听口述');
+    expect(container.textContent).not.toContain('录音暂缺');
+    expect(live?.textContent).toContain('黑捕木');
+  });
+
+  it('restores the clue reply, original quote and solved result from saved progress', async () => {
+    const state = buildBridgeState();
+    state.modules.act2Research.bridge = {
+      ...state.modules.act2Research.bridge,
+      heardPhrase: false,
+      shownEvidenceAssetIds: [bridgeEvidence[1].assetId],
+    };
+    state.game.flags.FLAG_A2_HEIBUMU_NAME_SOLVED = true;
+    await render(state);
+
+    const selectedChoice = [...container.querySelectorAll<HTMLButtonElement>('.act2-bridge__elder-list button')].find((button) => button.getAttribute('aria-pressed') === 'true')?.textContent;
+    expect(selectedChoice).toContain(bridgeClueElder.name);
+    expect(container.textContent).toContain(bridgeClueElder.mountainReply[0]);
+    expect(container.querySelector('.act2-bridge__evidence')).not.toBeNull();
+    expect(container.querySelector('.act2-bridge__phrase')?.textContent).toContain('黑捕木');
+    expect(container.querySelector('.act2-bridge__replay')).not.toBeNull();
+    expect(container.querySelector('.act2-bridge__puzzle')).toBeNull();
+    expect(container.querySelector('.act2-bridge__resolution')).not.toBeNull();
+    await clickButton('再看看老人原话');
+    expect(document.activeElement).toBe(container.querySelector('.act2-bridge__phrase'));
   });
 
   it('never nests buttons and clicking zoom does not present evidence or trigger the oral phrase', async () => {
     await render();
     await clickButton(bridgeClueElder.name);
+    await clickButton(bridgeScene.askMountainLabel);
 
     expect(container.querySelector('button button')).toBeNull();
     const items = [...container.querySelectorAll('article.act2-bridge__evidence-item')];
@@ -277,6 +333,7 @@ describe('BridgeInvestigation', () => {
     };
     await render(state);
 
+    await clickButton(bridgeClueElder.name);
     expect(container.querySelector<HTMLInputElement>('input[name="act2-bridge-first"][value="黑"]')?.checked).toBe(true);
     expect(container.querySelector<HTMLInputElement>('input[name="act2-bridge-middle"][value="捕"]')?.checked).toBe(true);
     expect(container.querySelector<HTMLInputElement>('input[name="act2-bridge-last"][value="母"]')?.checked ?? false).toBe(false);

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { browserPageById, findSearchQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible } from '../../data/browserData';
+import { siteIdentity } from './browserPresentation';
 import { BrowserPageView } from './BrowserPageView';
 import { BrowserSearchResults } from './BrowserSearchResults';
 import './browserApp.css';
@@ -37,6 +38,14 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     return view;
   };
   const shownView = visibleView(activeTab.view);
+  const shownPage = shownView.kind === 'page' ? browserPageById.get(shownView.pageId) : undefined;
+  const sourceLabel = stage === 'qiming' && qimingView === 'review'
+    ? '实名材料核对'
+    : shownPage
+      ? `${siteIdentity(shownPage).name} · ${shownPage.headline}`
+      : shownView.kind === 'results'
+        ? '搜索结果'
+        : '离线资料浏览器';
   useEffect(() => {
     if (stage === 'qiming') return;
     setDraft(null); setHistoryOpen(false);
@@ -134,10 +143,11 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
       <div className="browser-toolbar__nav"><button type="button" onClick={() => navigate(-1)} disabled={activeTab.stackIndex === 0} aria-label="后退">←</button><button type="button" onClick={() => navigate(1)} disabled={activeTab.stackIndex === activeTab.stack.length - 1} aria-label="前进">→</button></div>
       <form className="browser-address" onSubmit={(event) => { event.preventDefault(); submitSearch((event.currentTarget.querySelector('input') as HTMLInputElement).value); }}><label className="sr-only" htmlFor="browser-search">搜索网页</label><span aria-hidden="true">⌕</span><input id="browser-search" value={addressValue} onChange={(event) => setDraft(event.target.value)} onFocus={() => setDraft(addressValue)} placeholder="搜索或输入地址" autoComplete="off" /></form>
       <button type="button" className="browser-history-button" onClick={() => { if (stage === 'qiming') setQimingView('browser'); setHistoryOpen((open) => !open); }} aria-expanded={historyOpen} aria-label="查看搜索历史">◷ <span>历史</span></button>
+      <span className="browser-toolbar__source" aria-live="polite" title={sourceLabel}>{sourceLabel}</span>
     </header>
     {stage === 'qiming' && <>
-      <div className="browser-qiming-toolbar" aria-label="启明个案工作区">
-        <span>启明 · 实名个案复核</span>
+      <div className="browser-qiming-toolbar" aria-label="启明实名材料调查">
+        <span>当前核对：{focusedCase === 'huang' ? '黄子山' : '钟子月'}</span>
         {qimingView === 'review'
           ? <button type="button" onClick={() => setQimingView('browser')}>查看已读网页</button>
           : <button type="button" onClick={() => focusCaseReview((activeTab.view.kind === 'page' && activeTab.view.casePerson) || focusedCase)}>{(activeTab.view.kind === 'page' && activeTab.view.casePerson) ? `返回${activeTab.view.casePerson === 'huang' ? '黄子山' : '钟子月'}材料核对` : '返回实名个案核对'}</button>}
@@ -188,7 +198,7 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
   const reviewed = (caseId: QimingCaseId) => reviews.some((item) => item.caseId === caseId);
   const legacyComplete = state.modules.act2Research.t06.legacyCompletionMigrated;
   const isComplete = reviewed('huang') && reviewed('zhong') || legacyComplete;
-  const legacyCompletionCopy = '此前个案调查已完成，可回看材料或点击“与小月继续核对资料”。';
+  const legacyCompletionCopy = '之前的个案调查已经整理好；材料可以回看，也可以和小月继续核对资料。';
   const caseName = (caseId: QimingCaseId) => caseId === 'huang' ? '黄子山' : '钟子月';
   const caseIds: QimingCaseId[] = ['huang', 'zhong'];
   const reviewedCount = Number(reviewed('huang')) + Number(reviewed('zhong'));
@@ -211,7 +221,7 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
   };
   const reviewCase = () => {
     if (selected[caseId] !== 'supported') {
-      setFeedback((current) => ({ ...current, [caseId]: { tone: 'error', text: '这组材料支持的是宣传与后续说法之间的落差；不能据此认定因果或确认论坛昵称身份。' } }));
+      setFeedback((current) => ({ ...current, [caseId]: { tone: 'error', text: '这里能记下的是宣传记录和后续报道的不同。它们还没有说明原因，论坛里相似的昵称也没有可核对的身份信息。' } }));
       return;
     }
     const result = manager.reviewAct2QimingCase(caseId, ['PAGE_A2_T06_004', followupId], 'public-claims-and-followup-differ');
@@ -233,12 +243,12 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
   const nextStep = legacyComplete
     ? legacyCompletionCopy
     : caseReviewed
-      ? nextCase ? `下一步：明确开始核对${caseName(nextCase)}` : '两人的实名材料都已记录，可主动继续下一阶段。'
-      : !officialVisited ? `下一步：先打开共用宣传案例，为${name}建立对照。`
-        : !followupVisited ? `下一步：打开${name}的后续报道。`
-          : '两份来源均已打开；选择有材料支持的发现后记录。';
+      ? nextCase ? `${name}的材料已经记下；要继续了解${caseName(nextCase)}吗？` : '两份实名材料都已经记下，可以和小月接着看看照片和视频。'
+      : !officialVisited ? `先看看宣传页当时怎样介绍${name}。`
+        : !followupVisited ? `宣传页已经看过；接着读读${name}后来的报道。`
+          : '两份材料都读过了。看看它们各自写了什么，再决定要记下的发现。';
   return <aside className="browser-case-review" aria-label="实名个案材料复核">
-    <header className="browser-case-review__header"><div><p className="browser-case-review__eyebrow">第二幕 · 启明后续</p><h2>核对实名个案</h2><p>一次核对一位学员：先看共用宣传案例，再看该人的后续报道，返回这里比较两份来源。论坛昵称是可选线索，不是主链条件。</p></div><span className="browser-case-review__progress">{legacyComplete ? '此前调查已完成' : `${reviewedCount} / 2 已记录`}</span></header>
+    <header className="browser-case-review__header"><div><p className="browser-case-review__eyebrow">第二幕 · 启明后续</p><h2>核对实名材料</h2><p>黄子山和钟子月的记录分开摆在这里。看过宣传页和各自的后续报道后，再把读到的内容记下来。网上相似的昵称不能确认本人；想看时再打开即可。</p></div><span className="browser-case-review__progress">{legacyComplete ? '调查记录可回看' : `${reviewedCount} / 2 已记录`}</span></header>
     <nav className="browser-case-review__person-switcher" aria-label="选择当前实名个案">
       {caseIds.map((person) => {
         const personOfficialRead = officialVisited;

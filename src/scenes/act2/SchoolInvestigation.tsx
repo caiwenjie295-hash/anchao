@@ -28,6 +28,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const [areaId, setAreaId] = useState('AREA_A2_T05_GATE');
   const [hotspotId, setHotspotId] = useState<string | null>(null);
+  const [pendingHotspotId, setPendingHotspotId] = useState<string | null>(null);
   const [comparisonOpen, setComparisonOpen] = useState(false);
   const [timelineFeedback, setTimelineFeedback] = useState('');
   const dialogRef = useRef<HTMLElement>(null);
@@ -46,14 +47,28 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   const readEvidenceCount = timelineEvidence.filter((item) => flags[item.flag] === true).length;
   const selectedSourceCount = schoolProgress.selectedEvidenceIds.length;
   const timelineReady = schoolProgress.symbolMatchConfirmed && selectedSourceCount >= 2 && schoolProgress.selectedInferenceId === 'bounded-timeline';
+  const symbolMatchMaterials = flags.FLAG_A2_SCHOOL_SS_FOUND === true ? [] : [{ id: 'HOTSPOT_A2_T05_SCHOLAR_NOTE', label: '小 A 旧教室里的学霸笔记' }];
+  const missingTimelineMaterials = [
+    ...(flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN === true ? [] : [{ id: 'HOTSPOT_A2_T05_TEACHER', label: '班主任的回忆' }]),
+    ...(flags.FLAG_A2_SCORE_CHANGE_KNOWN === true ? [] : [{ id: 'HOTSPOT_A2_T05_RANKS', label: '历次成绩记录' }]),
+    ...(flags.FLAG_A2_SCORE_CHANGE_KNOWN !== true || flags.FLAG_A2_QIMING_NAME_FOUND === true ? [] : [{ id: 'HOTSPOT_A2_T05_QIMING_TEXT', label: '成绩表下方的感谢文字' }]),
+  ];
   const actions: InvestigationAction[] = [
-    { actionId: 'A2_T05_CONFIRM_TIMELINE', kind: 'story', target: 'school-timeline', label: isComplete ? '暂定时间线已记下' : '记录暂定时间线判断', state: isComplete ? 'completed' : timelineReady ? 'ready' : 'blocked', reason: !schoolProgress.symbolMatchConfirmed ? '先把旧笔记页边的记号与第一幕照片并排核对。' : selectedSourceCount < 2 ? '至少选取两种不同来源，比较休学前后的变化。' : '请选择不超出材料的暂定判断。', onActivate: () => manager.confirmAct2SchoolTimeline() },
+    { actionId: 'A2_T05_CONFIRM_TIMELINE', kind: 'story', target: 'school-timeline', label: isComplete ? '暂定时间线已记下' : '记录暂定时间线判断', state: isComplete ? 'completed' : timelineReady ? 'ready' : 'blocked', reason: !schoolProgress.symbolMatchConfirmed ? '先把旧笔记页边的记号与第一幕照片并排核对。' : selectedSourceCount < 2 ? '读过两种不同来源后，再比较休学前后的变化。' : !schoolProgress.selectedInferenceId ? '选出目前最能贴近材料的一种判断。' : '请回看所选判断，再记录这条暂定时间线。', relatedMaterials: [...symbolMatchMaterials, ...(!schoolProgress.symbolMatchConfirmed ? [] : missingTimelineMaterials)], onActivate: () => manager.confirmAct2SchoolTimeline() },
     { actionId: 'A2_T05_TO_QIMING', kind: 'move', target: 'qiming-research', label: '前往浏览器核查启明', state: isComplete ? 'ready' : 'blocked', reason: '先核对照片上的共同记号，再用至少两种来源记录休学前后的变化。', onActivate: () => { manager.enterAct2QimingResearch(); onReturnToDesktop?.(); manager.openApp('browser'); } },
   ];
   const areaImage = assetLoader.get(area.imageId)?.src;
   const notebookImage = assetLoader.get('IMG_A2_T05_006')?.src;
+  const notebookCloseupImage = assetLoader.get('IMG_A2_T05_012')?.src ?? notebookImage;
+  const notebookCloseupAssetId = assetLoader.isAvailable('IMG_A2_T05_012') ? 'IMG_A2_T05_012' : 'IMG_A2_T05_006';
 
-  useEffect(() => { manager.visitAct2SchoolArea(areaId); }, [areaId, manager]);
+  useEffect(() => {
+    manager.visitAct2SchoolArea(areaId);
+    if (!pendingHotspotId) return;
+    manager.inspectAct2SchoolHotspot(pendingHotspotId);
+    setHotspotId(pendingHotspotId);
+    setPendingHotspotId(null);
+  }, [areaId, manager, pendingHotspotId]);
   useEffect(() => {
     if (hotspotId && !comparisonOpen) dialogRef.current?.querySelector<HTMLElement>('button')?.focus();
     else if (!hotspotId && !comparisonOpen) previousTriggerRef.current?.focus();
@@ -84,6 +99,13 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     helpText="可以在学校地点间往返。班主任回忆、成绩记录、感谢文字是不同来源；读过后再选择它们能支持的判断。照片入口与地点列表使用相同路线。"
     actions={actions}
     statusMessage={timelineFeedback}
+    onOpenMaterial={(_actionId, materialId) => {
+      const target = act2School.hotspots.find((item) => item.id === materialId);
+      if (!target) return;
+      setAreaId(target.areaId);
+      setPendingHotspotId(target.id);
+      setHotspotId(null);
+    }}
     onExit={() => onReturnToDesktop?.()}
   >
   <section className="t05-school" aria-label="高中调查" data-asset-id={area.imageId}>
@@ -106,18 +128,15 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     </div>
     <div className="t05-school__layout">
       <aside className="t05-school__map" aria-label="学校地点">
-        <h2>学校</h2>
-        <p>当前位置：{area.title}</p>
+        <h2>沿旧路线看看</h2>
         <nav>{act2School.areas.map((item) => <button type="button" key={item.id} aria-current={areaId === item.id ? 'location' : undefined} onClick={() => { setAreaId(item.id); setHotspotId(null); }}>{item.title}</button>)}</nav>
       </aside>
       <main className="t05-school__room">
         <div className={`t05-school__backdrop t05-school__backdrop--${area.id.toLowerCase().replaceAll('_', '-')}${areaImage ? ' t05-school__backdrop--image' : ''}`} data-asset-id={area.imageId}>
           {areaImage && <img src={areaImage} alt="" />}
-          <p>{area.title}</p>
           {availableHotspots.map((item) => <button type="button" key={item.id} className="t05-school__image-hotspot" style={{ left: `${item.focus.x}%`, top: `${item.focus.y}%` }} onClick={(event) => openHotspot(item.id, event.currentTarget)}>{item.actionLabel}</button>)}
           <nav className="t05-school__image-routes" aria-label="从照片前往相邻地点">{area.links.map((id) => { const target = schoolAreaById.get(id)!; return <button type="button" key={id} onClick={() => { setAreaId(id); setHotspotId(null); }}>{target.title} →</button>; })}</nav>
         </div>
-        <h2>{area.title}</h2>
         <p className="t05-school__description">{area.description}</p>
         {area.id === 'AREA_A2_T05_TEACHER_OFFICE' && flags.FLAG_A2_SCHOOL_SS_FOUND !== true && <p className="t05-school__soft-hint">{act2School.softHint}</p>}
       </main>
@@ -158,7 +177,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
           {flags.FLAG_A2_SCORE_CHANGE_KNOWN === true && <button type="button" onClick={(event) => openHotspot('HOTSPOT_A2_T05_QIMING_TEXT', event.currentTarget)}>查看成绩表下方的感谢文字</button>}
         </> : hotspot.id === 'HOTSPOT_A2_T05_QIMING_TEXT' ? <><p>{hotspot.content}</p><button type="button" onClick={() => manager.readAct2QimingTestimonial()}>{flags.FLAG_A2_QIMING_NAME_FOUND === true ? '已记入笔记' : '记下这段文字'}</button></>
           : hotspot.id === 'HOTSPOT_A2_T05_TEACHER' ? <><p>{hotspot.content}</p><button type="button" onClick={() => manager.acknowledgeAct2TeacherAccount()}>{flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN === true ? '已记入笔记' : '记下老师的回忆'}</button></>
-            : <><div className={`t05-school__notebook-page${notebookImage ? ' t05-school__notebook-page--image' : ''}`} data-asset-id="IMG_A2_T05_006"><div className="t05-school__notebook-visual">{notebookImage && <img src={notebookImage} alt="学霸笔记原页" />}<DoubleSSymbol className="t05-school__notebook-symbol" label="学霸笔记页边的双 S 符号" /></div><div className="t05-school__notebook-copy"><strong>{act2School.notebookPage.heading}</strong>{act2School.notebookPage.lines.map((line) => <div key={line}>{line}</div>)}<small>{act2School.notebookPage.replacementNote}</small></div></div><p>{hotspot.content}</p><button type="button" onClick={() => { manager.inspectAct2SchoolNotebook(); setComparisonOpen(true); }}>打开双 S 比对</button></>}
+            : <><div className={`t05-school__notebook-page${notebookCloseupImage ? ' t05-school__notebook-page--image' : ''}`} data-asset-id={notebookCloseupAssetId}><div className="t05-school__notebook-visual">{notebookCloseupImage && <img src={notebookCloseupImage} alt="学霸笔记页边的双 S 记号" />}<DoubleSSymbol className="t05-school__notebook-symbol" label="学霸笔记页边的双 S 符号" /></div><div className="t05-school__notebook-copy"><strong>{act2School.notebookPage.heading}</strong>{act2School.notebookPage.lines.map((line) => <div key={line}>{line}</div>)}</div></div><p>{hotspot.content}</p><button type="button" onClick={() => { manager.inspectAct2SchoolNotebook(); setComparisonOpen(true); }}>打开双 S 比对</button></>}
       </section>
     </div>}
     {comparisonOpen && <div className="t05-school__dialog-backdrop" role="presentation"><SchoolSymbolComparison manager={manager} onClose={() => setComparisonOpen(false)} /></div>}
