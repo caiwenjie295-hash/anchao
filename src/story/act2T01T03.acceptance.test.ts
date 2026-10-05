@@ -30,10 +30,6 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(element, 'element must exist before clicking').not.toBeNull();
     await act(async () => { (element as HTMLElement).click(); });
   };
-  const clickText = async (text: string, selector = 'button') => {
-    const target = pickAll(selector).find((item) => item.textContent?.includes(text));
-    await click(target ?? null);
-  };
   const run = async (action: () => void) => { await act(async () => { action(); }); };
 
   const mountApp = async () => {
@@ -152,6 +148,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await run(() => {
       stateManager.setPhase('B');
       stateManager.setFlag('FLAG_A1_XIAOA_MISSING_KNOWN', true);
+      stateManager.setFlag('FLAG_A1_COMPLETE', true);
     });
     expect(pick('.story-transition-launch')).not.toBeNull();
     expect(state().desktop.windows.mail.status).toBe('closed');
@@ -237,7 +234,7 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(desktop()?.getAttribute('aria-hidden')).toBe('true');
     expect(desktop()?.hasAttribute('inert')).toBe(true);
 
-    await clickText('坐在石凳尽头', '.act2-bridge__elder');
+    await click(pick('.act2-bridge__elder[data-elder-id="ELDER_A2_T02_004"]'));
     expect(bridge().talkedElderIds).toContain('ELDER_A2_T02_004');
     // 未出示证据前没有方言口述。
     expect(pick('.act2-bridge__phrase')).toBeNull();
@@ -256,7 +253,10 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(bridge().talkedElderIds).toContain('ELDER_A2_T02_004');
 
     // 证据门槛：只有向线索老人出示证据后才有口述。
-    await clickText('坐在石凳尽头', '.act2-bridge__elder');
+    await click(pick('.act2-bridge__elder[data-elder-id="ELDER_A2_T02_004"]'));
+    expect(pick('.act2-bridge__evidence')).toBeNull();
+    await click(pick('.act2-bridge__ask'));
+    expect(pickAll('.act2-bridge__evidence-item')).toHaveLength(3);
     await click(pick('[aria-label="出示破庙外景照片"]'));
     expect(flags().FLAG_A2_ELDER_PHOTO_SHOWN).toBe(true);
     expect(flags().FLAG_A2_HEIBUMU_AUDIO_HEARD).toBe(true);

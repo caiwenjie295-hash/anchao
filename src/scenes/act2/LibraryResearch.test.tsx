@@ -173,14 +173,18 @@ describe('LibraryResearch (act2 T03)', () => {
     expect(pick<HTMLButtonElement>('.act2-library__zoom-out')?.disabled).toBe(true);
   });
 
-  it('automatically records the target-page source without requiring a keyword checklist', async () => {
+  it('automatically records the target-page source and offers a separate optional excerpt action', async () => {
     await setup();
     await reachTargetPage();
     expect(flags().FLAG_A2_BUMUZHI_FOUND).toBe(true);
     expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T03_001');
-    expect(pick('.act2-library__excerpt-button')).toBeNull();
+    expect(libraryState().excerptedEntryIds).toEqual([]);
+    expect(pick('.act2-library__excerpt')).not.toBeNull();
     expect(pick('.act2-library__keyword-list')).not.toBeNull();
+    await click(pick('.act2-library__excerpt-button'));
+    expect(libraryState().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
+    expect(pick('.act2-library__excerpt-button')?.textContent).toBe('已收入调查笔记');
   });
 
   it('keeps T03 and opens T04 only after the player chooses the story action', async () => {

@@ -235,8 +235,8 @@ describe('investigation progress display model', () => {
     state.modules.act3.currentLensId = 'LENS_A3_T07_008';
 
     const progress = deriveInvestigationProgress(state);
-    expect(progress.nextAction).toContain('继续调查小 A 的笔记');
-    expect(getDesktopTaskPresentation(state).nextAction).toContain('继续调查小 A 的笔记');
+    expect(progress.nextAction).toContain('翻开笔记，继续调查');
+    expect(getDesktopTaskPresentation(state).nextAction).toContain('翻开笔记，继续调查');
   });
 
   it('marks the fourth act complete and directs players to the in-drawer recap', () => {

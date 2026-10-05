@@ -62,7 +62,7 @@ describe('T06 browser acceptance', () => {
     await act(async () => (huangCase.querySelectorAll('label')[1] as HTMLLabelElement).click());
     await act(async () => (huangCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());
     expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
-    expect(huangCase.textContent).toContain('不能据此认定因果');
+    expect(huangCase.textContent).toContain('它们还没有说明原因');
     await act(async () => (huangCase.querySelectorAll('label')[0] as HTMLLabelElement).click());
     await act(async () => (huangCase.querySelector('.browser-case-review__submit') as HTMLButtonElement).click());
     expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['huang']);

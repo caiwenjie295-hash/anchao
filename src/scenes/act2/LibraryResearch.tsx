@@ -7,6 +7,7 @@ import { ACT2_SHELF_ROW_RECTS } from '../../data/act2Presentation';
 import {
   libraryCompletion,
   libraryCorrectSectionId,
+  libraryExcerpt,
   libraryFlagIds,
   libraryKeywordsByPageId,
   libraryPageById,
@@ -14,6 +15,7 @@ import {
   librarySceneCopy,
   librarySections,
   libraryTargetPageId,
+  libraryTargetVolumeId,
   libraryVolumes,
 } from '../../data/act2LibraryData';
 import { Act2ReadingRoom } from './Act2ReadingRoom';
@@ -77,6 +79,11 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
 
   const currentPage = library.currentPageId ? libraryPageById.get(library.currentPageId) ?? null : null;
   const currentVolume = currentPage ? libraryVolumes.find((volume) => volume.id === currentPage.volumeId) ?? null : null;
+  const isTargetVolumeOpen = currentVolume?.id === libraryTargetVolumeId;
+  const targetVolumeCover = assetLoader.get('IMG_A2_T03_002');
+  const volumeCoverSource = isTargetVolumeOpen ? targetVolumeCover?.src ?? sceneImage : undefined;
+  const volumeCoverAssetId = targetVolumeCover ? 'IMG_A2_T03_002' : librarySceneCopy.placeholderAssetId;
+  const pagePaperSource = isTargetVolumeOpen ? assetLoader.get('IMG_A2_T03_003')?.src : undefined;
   const volumePages = currentPage ? libraryPagesByVolumeId.get(currentPage.volumeId) ?? [] : [];
   const shelfEntries = libraryVolumes.map((volume, index) => ({ id: volume.id, label: volume.title, rect: ACT2_SHELF_ROW_RECTS[index] }));
   const currentIndex = currentPage ? volumePages.findIndex((page) => page.id === currentPage.id) : -1;
@@ -86,6 +93,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
   const keywords = currentPage ? libraryKeywordsByPageId.get(currentPage.id) ?? [] : [];
   const markedKeywordIds = library.markedKeywordIds;
   const bookmarked = currentPage ? library.bookmarkedPageIds.includes(currentPage.id) : false;
+  const excerpted = library.excerptedEntryIds.includes(libraryExcerpt.entryId);
 
   const visitSection = (sectionId: string) => {
     setActiveSectionId(sectionId);
@@ -131,6 +139,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
     <section className="act2-library" aria-label={`${librarySceneCopy.title} · 地方志检索`}>
       <Act2ReadingRoom
         ariaLabel="县图书馆地方志阅读空间"
+        className="act2-reading-room--library"
         eyebrow={librarySceneCopy.eyebrow}
         title={librarySceneCopy.title}
         description={librarySceneCopy.intro}
@@ -188,7 +197,10 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
             lockedHint="先在目录里选择地方传说，再辨认书架上的现有卷册。"
             onSelect={openVolume}
           />
-          {currentVolume && <p className="act2-library__volume-context"><span>{currentVolume.spine}</span> · {currentVolume.title} — {currentVolume.summary}</p>}
+          {currentVolume && <div className="act2-library__volume-context">
+            {volumeCoverSource && <figure className="act2-library__volume-cover" data-asset-id={volumeCoverAssetId}><img src={volumeCoverSource} alt={`从书架取下的${currentVolume.title}`} /><figcaption>取下的卷册</figcaption></figure>}
+            <p><span>{currentVolume.spine}</span> · {currentVolume.title} — {currentVolume.summary}</p>
+          </div>}
         </section>
         </>}
         reader={<>
@@ -224,12 +236,19 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
                   <h3>{currentPage.heading}</h3>
                   <p className="act2-library__page-leaf">{currentVolume?.title} · {currentPage.leafLabel}</p>
                 </header>
-                <div className="act2-library__page-text" style={{ fontSize: `${14 * zoom}px` }}>
+                {pagePaperSource && <figure className="act2-library__paper-illustration" data-asset-id="IMG_A2_T03_003"><img src={pagePaperSource} alt="地方志旧卷的纸张配图" /><figcaption>旧卷纸张 · 阅读正文见下方</figcaption></figure>}
+                <div className="act2-library__page-text" style={{ fontSize: `${16 * zoom}px` }}>
                   {currentPage.paragraphs.map((paragraph, index) => (
                     <p key={`${currentPage.id}-p${index + 1}`}>{paragraph}</p>
                   ))}
                 </div>
               </article>
+
+              {currentPage.id === libraryTargetPageId && <aside className="act2-library__excerpt" aria-label="地方志摘录">
+                <div><h3>{libraryExcerpt.title}</h3><p>读完这一页后，可以把这段现有摘录收入调查笔记。</p></div>
+                <blockquote>{libraryExcerpt.content}</blockquote>
+                <button type="button" className="act2-library__excerpt-button" aria-pressed={excerpted} disabled={excerpted} onClick={() => manager.excerptGazetteEntry(libraryExcerpt.entryId)}>{excerpted ? '已收入调查笔记' : '摘录到调查笔记'}</button>
+              </aside>}
 
               <div className="act2-library__controls">
                 <div className="act2-library__pager">

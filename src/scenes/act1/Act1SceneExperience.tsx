@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
-import { EvidenceImage } from '../../components/EvidenceImage';
 import { useInvestigationProgress } from '../../components/InvestigationProgressContext';
 import { stateManager } from '../../core/stateManager';
 import type { AppState } from '../../core/types';
@@ -42,8 +41,11 @@ function Hotspot({ hotspot, onInspect }: { hotspot: SceneHotspot; onInspect: (ho
 function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
   const progressContext = useInvestigationProgress();
   const [activeHotspot, setActiveHotspot] = useState<SceneHotspot | null>(null);
+  const [backgroundFailed, setBackgroundFailed] = useState(false);
+  const [backgroundRetry, setBackgroundRetry] = useState(0);
   const hotspots = hotspotsBySceneId.get(scene.id) ?? [];
   const background = assetLoader.get(scene.backgroundAssetId)?.src;
+  const visibleBackground = background && !backgroundFailed;
   const flags = state.game.flags;
   const photoCaptured = scene.capturePhotoId !== null && state.modules.scene.capturedPhotoIds.includes(scene.capturePhotoId);
   const triggerFlags = [...new Set(hotspots.flatMap((hotspot) => hotspot.triggerFlags))];
@@ -68,16 +70,19 @@ function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
           {progressContext && <button type="button" className="investigation-progress-trigger act1-scene__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
         </div>
       </header>
-      <div className={`act1-scene__canvas act1-scene__canvas--${scene.visualVariant}${background ? ' act1-scene__canvas--image' : ''}`} data-asset-id={scene.backgroundAssetId}>
-        {background ? <div className="scene-image-frame">
-          <img className="scene-background" src={background} alt={scene.title} />
+      <div className={`act1-scene__canvas act1-scene__canvas--${scene.visualVariant}${visibleBackground ? ' act1-scene__canvas--image' : ''}`} data-asset-id={scene.backgroundAssetId}>
+        {visibleBackground ? <div className="scene-image-frame">
+          <img key={`${scene.backgroundAssetId}-${backgroundRetry}`} className="scene-background" src={`${background}${backgroundRetry ? `${background.includes('?') ? '&' : '?'}retry=${backgroundRetry}` : ''}`} alt={scene.title} onError={() => setBackgroundFailed(true)} />
           {hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onInspect={inspect} />)}
-        </div> : <><div className="act1-scene__atmosphere" aria-hidden="true" />{hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onInspect={inspect} />)}</>}
+        </div> : <><div className="act1-scene__atmosphere" aria-hidden="true" />
+          <div className="scene-image-fallback"><p role="status">{background ? '场景照片暂时无法显示。你仍可查看场景说明，也可以从下方打开观察记录。' : '场景照片暂不可用。你仍可查看场景说明，也可以从下方打开观察记录。'}</p>{background && <button type="button" onClick={() => { setBackgroundFailed(false); setBackgroundRetry((attempt) => attempt + 1); }}>重试加载照片</button>}
+            <div className="scene-image-fallback__hotspots" role="group" aria-label="场景观察位置">{hotspots.map((hotspot, index) => <button key={hotspot.id} type="button" aria-label={`查看第 ${index + 1} 处观察位置`} onClick={() => inspect(hotspot)}>观察位置 {index + 1}</button>)}</div>
+          </div>
+        </>}
         <p className="act1-scene__instruction">在图片中寻找线索，点击获取线索</p>
       </div>
       <aside className="act1-scene__detail" aria-live="polite">
-        <div>{activeHotspot ? <><h2>{activeHotspot.label}</h2><p>{activeHotspot.observation}</p></> : <><h2>停一停</h2><p>{scene.description}</p></>}</div>
-        {activeHotspot?.imageAssetId && assetLoader.isAvailable(activeHotspot.imageAssetId) && <EvidenceImage assetId={activeHotspot.imageAssetId} caption={activeHotspot.label} />}
+        <div>{activeHotspot ? <><h2>已观察</h2><p>“{activeHotspot.label}”的观察记录已打开；已知线索可再次点击回看。</p></> : <><h2>场景记录</h2><p>{scene.description}</p></>}</div>
       </aside>
       <footer className="act1-scene__footer">
         <p>{scene.ambience}</p>
@@ -90,7 +95,7 @@ function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
       {activeHotspot && <SceneClueFocus
         hotspot={activeHotspot}
         imageSrc={activeHotspot.imageAssetId && assetLoader.isAvailable(activeHotspot.imageAssetId) ? assetLoader.get(activeHotspot.imageAssetId)?.src : undefined}
-        backgroundSrc={background}
+        backgroundSrc={visibleBackground ? background : undefined}
         onClose={() => setActiveHotspot(null)}
       />}
     </section>

@@ -153,3 +153,54 @@
   .browser-page__case-path-actions button,
   .browser-page__case-entries button { width: 100%; }
 }
+
+/* Source identity and case controls adapt to the Browser app window itself. */
+.browser-toolbar { flex-wrap: wrap; }
+.browser-toolbar__source {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(32ch, 34%);
+  overflow: hidden;
+  color: #405348;
+  font-size: 12px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.browser-qiming-toolbar { min-height: 50px; flex-wrap: wrap; padding: 6px 12px; }
+.browser-qiming-toolbar button { min-height: 44px; }
+.browser-case-review {
+  box-sizing: border-box;
+  width: min(1100px, calc(100% - 24px));
+  margin: 12px auto 26px;
+  padding: clamp(12px, 2.3cqi, 24px);
+}
+.browser-case-review__source-card { min-width: 0; }
+.browser-case-review__source-link,
+.browser-case-review__step-action,
+.browser-case-review__submit,
+.browser-case-review__next-person button,
+.browser-case-review__next button { min-height: 44px; }
+.browser-page__case-path { box-sizing: border-box; width: min(100%, 980px); margin: 18px auto; }
+.browser-page__case-path-actions button { min-height: 44px; }
+.browser-page__case-path-heading > span { font-size: 13px; }
+.browser-page__copy-feedback { line-height: 1.55; }
+@container (max-width: 760px) {
+  .browser-toolbar { gap: 6px; padding: 6px 8px; }
+  .browser-toolbar__source { order: 4; flex: 1 0 100%; max-width: 100%; padding: 1px 4px; }
+  .browser-qiming-toolbar { align-items: stretch; }
+  .browser-case-review { width: calc(100% - 16px); margin: 8px auto 16px; }
+  .browser-case-review__header,
+  .browser-case-review__case-heading { flex-wrap: wrap; gap: 8px; }
+  .browser-case-review__source-cards { grid-template-columns: minmax(0, 1fr); }
+  .browser-case-review__next,
+  .browser-case-review__next-person { align-items: stretch; flex-direction: column; }
+  .browser-case-review__next button,
+  .browser-case-review__next-person button,
+  .browser-case-review__step-action { width: 100%; }
+  .browser-page__case-path { margin: 12px 0; padding: 12px; }
+  .browser-page__case-path-sources { grid-template-columns: minmax(0, 1fr); }
+  .browser-page__case-path-actions,
+  .browser-page__case-entries { display: grid; grid-template-columns: minmax(0, 1fr); }
+}

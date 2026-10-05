@@ -81,3 +81,49 @@
   .act2-library__keyword-list { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .act2-library * { scroll-behavior: auto; animation: none; transition: none; } }
+
+/* Readable body copy, distinct clipping area, and the new registered paper art. */
+.act2-library__catalog > summary { min-height: 44px; }
+.act2-library__catalog > summary small,
+.act2-library__noise-note,
+.act2-library__leaf,
+.act2-library__keyword-gloss { font-size: 12px; }
+.act2-library__section { min-height: 44px; }
+.act2-library__volume-context { display: grid; grid-template-columns: minmax(0, 150px) minmax(0, 1fr); align-items: center; gap: 8px 12px; margin: 0; color: var(--ui-text-muted, #595959); font-size: 13px; line-height: 1.55; }
+.act2-library__volume-context > p { margin: 0; }
+.act2-library__volume-context > p span { color: var(--ui-text, #1f1f1f); font-weight: 650; }
+.act2-library__volume-cover { margin: 0; }
+.act2-library__volume-cover img { display: block; width: 100%; max-height: 160px; object-fit: contain; object-position: center; border: 1px solid var(--ui-border, #d9d9d9); background: var(--ui-surface-muted, #f0f0f0); }
+.act2-library__volume-cover figcaption { margin-top: 3px; color: var(--ui-text-muted, #595959); font-size: 12px; }
+.act2-library__pager,
+.act2-library__tools { min-width: 0; }
+.act2-library__prev,
+.act2-library__next,
+.act2-library__zoom-out,
+.act2-library__zoom-in,
+.act2-library__bookmark,
+.act2-library__keywords-title { min-height: 44px; }
+.act2-library__paper-illustration { display: grid; justify-items: center; gap: 4px; margin: 0; padding: 8px; border: 1px solid #e5e3da; background: #fcfbf6; }
+.act2-library__paper-illustration img { display: block; width: min(100%, 520px); max-height: 230px; object-fit: contain; object-position: center; }
+.act2-library__paper-illustration figcaption { color: var(--ui-text-muted, #595959); font-size: 12px; }
+.act2-library__excerpt { display: grid; gap: 8px; padding: 12px 14px; border-left: 3px solid var(--ui-accent, #315b45); background: var(--ui-surface-muted, #f0f0f0); }
+.act2-library__excerpt h3 { margin: 0 0 3px; font-size: 15px; }
+.act2-library__excerpt p { margin: 0; color: var(--ui-text-muted, #595959); font-size: 13px; line-height: 1.55; }
+.act2-library__excerpt blockquote { margin: 0; color: var(--ui-text, #1f1f1f); font-size: 15px; line-height: 1.7; white-space: pre-line; }
+.act2-library__excerpt-button { min-height: 44px; justify-self: start; padding: 8px 12px; border: 1px solid var(--ui-accent, #315b45); border-radius: 4px; color: #254b37; background: #fff; font: inherit; cursor: pointer; }
+.act2-library__excerpt-button:hover:not(:disabled) { background: var(--ui-accent-soft, #e9eee9); }
+.act2-library__excerpt-button:disabled { color: var(--ui-text-muted, #595959); border-color: var(--ui-border, #d9d9d9); background: var(--ui-surface-muted, #f0f0f0); cursor: default; }
+@container act2-reading-room (max-width: 720px) {
+  .act2-library__volume-context { grid-template-columns: minmax(0, 108px) minmax(0, 1fr); }
+  .act2-library__controls { align-items: stretch; }
+  .act2-library__pager,
+  .act2-library__tools { flex: 1 1 100%; }
+  .act2-library__pager > *,
+  .act2-library__tools > * { flex: 1 1 auto; }
+  .act2-library__excerpt-button { width: 100%; }
+}
+@container act2-reading-room (max-width: 390px) {
+  .act2-library__volume-context { grid-template-columns: minmax(0, 1fr); }
+  .act2-library__volume-cover { width: min(100%, 150px); }
+  .act2-library__sections { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

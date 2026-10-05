@@ -76,6 +76,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const [comparisonExteriorReady, setComparisonExteriorReady] = useState(false);
   const [zoomedShotId, setzoomedShotId] = useState<string | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
+  const [recentlyCapturedFrameId, setRecentlyCapturedFrameId] = useState<string | null>(() => manager.getState().modules.act2Research.t07.capturedFrameIds.at(-1) ?? null);
   const [selectedFeatureId, setSelectedFeatureId] = useState('');
   const [compareFeedback, setCompareFeedback] = useState('');
   const [cueIndex, setCueIndex] = useState(0);
@@ -192,7 +193,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             : currentStep === 4 ? '记下地点判断'
               : tripConversationPresented ? '与小月商量是否再次进山' : '听听与小月的出发商量';
   const actions: InvestigationAction[] = complete
-    ? onEnterAct3 ? [{ actionId: 'A2_T07_ENTER_ACT3', kind: 'story', target: 'A3_T00', label: '再次进山，调查启明旧址', state: 'ready', onActivate: onEnterAct3 }] : []
+    ? []
     : tripPlanned
       ? [{ actionId: 'A2_T07_COMPLETE_AND_ENTER_ACT3', kind: 'story', target: 'A3_T00', label: '再次进山，调查启明旧址', state: 'ready', onActivate: completeAndEnterAct3 }]
       : currentStep === 1
@@ -239,6 +240,17 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const capture = () => {
     if (!capturableFrame) return;
     manager.captureAct2T07Frame(capturableFrame.id, timeMs);
+    setRecentlyCapturedFrameId(capturableFrame.id);
+  };
+  const openRecentCaptureInComparison = () => {
+    if (!recentlyCapturedFrameId || !capturedFrames.some((frame) => frame.id === recentlyCapturedFrameId)) return;
+    setSelectedFrameId(recentlyCapturedFrameId);
+    setComparisonFrameReady(false);
+    setComparisonExteriorReady(false);
+    setSelectedFeatureId('');
+    setCompareFeedback('');
+    setTab('compare');
+    window.setTimeout(() => comparisonPanelRef.current?.focus({ preventScroll: true }), 0);
   };
   const openShot = (frameId: string, trigger?: HTMLElement) => {
     if (trigger) previousTriggerRef.current = trigger;
@@ -372,6 +384,10 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                 <span className="t07-finale__clock">{formatClock(timeMs)} / {formatClock(video.durationMs)}</span>
               </label>
             </div>
+            {recentlyCapturedFrameId && capturedFrames.some((frame) => frame.id === recentlyCapturedFrameId) && <div className="t07-finale__capture-followup" role="status" aria-live="polite">
+              <p>截图已收进调查资料，截取时刻 {formatMediaStamp(t07.capturedAtMsByFrameId[recentlyCapturedFrameId] ?? 0)}。接下来可以和第一次徒步的旧庙外景并排核对。</p>
+              <button type="button" onClick={openRecentCaptureInComparison}>拿这张截图去并排核对</button>
+            </div>}
             <p className="t07-finale__note">{video.continuityNote}</p>
             <p className="t07-finale__note">已看过主要片段：{watchedCount} / {video.requiredSegmentIds.length}{videoWatched ? ` · ${video.watchedNote}` : ''}</p>
               {capturableFrame && !t07.capturedFrameIds.includes(capturableFrame.id) && <p className="t07-finale__hint" aria-live="polite">{canCaptureCurrentFrame ? video.captureHint : '先等当前原图载入；载入失败时可继续查看其他资料。'}</p>}
@@ -464,6 +480,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       {complete && <aside className="t07-finale__closing">
         <p>{finale.closingNote}</p>
         <div className="t07-finale__closing-actions">
+          {onEnterAct3 && <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>}
           <button type="button" className="t07-finale__ending-replay" onClick={reviewMaterials}>{finale.replayLabel}</button>
         </div>
       </aside>}
