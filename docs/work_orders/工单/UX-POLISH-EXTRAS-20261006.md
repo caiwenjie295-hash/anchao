@@ -34,6 +34,7 @@
 - src/data/investigationProgressData.ts及对应测试、src/data/narrative/act4Presentation.ts（原act4Narrative.ts绝对禁止）
 - src/scenes/act3/**、src/scenes/act4/**、src/act3/**、src/act4/**
 - src/core/saveManager.ts/stateManager.ts及对应必要测试；新增 src/core/uiPreferences.ts/uiPreferences.test.ts、src/core/readingPosition.ts/readingPosition.test.ts；不改Flag/types/schema/storylogic
+- src/core/assetLoader.test.ts（原40张A4注册与可用性全部保留，新增3张A4和A2/A3补图的注册可用性断言；assetLoader.ts仍只读）
 - docs/ui-polish-20261006/extras/**
 - 第二阶段仅在父通知功能合并后：维护导航.md、docs/progress_log.md、docs/todo.md、docs/changelog.md
 
