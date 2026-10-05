@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { CSSProperties } from 'react';
+import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
 import { stateManager } from './core/stateManager';
 import type { Act2Stage, AppId } from './core/types';
 import { apps, appById } from './data/apps';
@@ -179,7 +181,31 @@ export default function App() {
   }
   const activeWindowId = state.desktop.activeAppId;
   const activeWindowState = activeWindowId ? state.desktop.windows[activeWindowId] : null;
-  const taskCardVisible = !activeWindowState || activeWindowState.status === 'closed' || activeWindowState.status === 'minimized';
+  const notepadWindowState = state.desktop.windows.notepad;
+  const notepadWindowOpen = notepadWindowState.status === 'normal' || notepadWindowState.status === 'maximized';
+  const taskCardVisible = notepadWindowOpen || !activeWindowState || activeWindowState.status === 'closed' || activeWindowState.status === 'minimized';
+  const taskCardLayout = (() => {
+    if (!notepadWindowOpen) return null;
+    const viewportHeight = typeof window === 'undefined' ? 900 : window.innerHeight;
+    const taskbarClearance = 62;
+    const minimumUsefulHeight = 96;
+    const preferredTop = notepadWindowState.status === 'maximized' ? 50 : Math.max(50, notepadWindowState.bounds.y + 50);
+    if (viewportHeight - taskbarClearance - preferredTop >= minimumUsefulHeight) {
+      return { top: preferredTop, maxHeight: `calc(100dvh - var(--desktop-task-card-top) - ${taskbarClearance}px)` };
+    }
+    const aboveWindowBottom = Math.max(50, Math.min(notepadWindowState.bounds.y - 8, viewportHeight - taskbarClearance));
+    const aboveWindowHeight = Math.max(0, Math.min(240, aboveWindowBottom - 50));
+    const top = Math.max(50, aboveWindowBottom - aboveWindowHeight);
+    return {
+      top,
+      maxHeight: `min(${aboveWindowHeight}px, calc(${aboveWindowBottom}px - var(--desktop-task-card-top)), calc(100dvh - var(--desktop-task-card-top) - ${taskbarClearance}px))`,
+    };
+  })();
+  const desktopStyle: CSSProperties = {
+    backgroundImage: `url("${desktopWallpaperUrl}")`,
+    ...(taskCardLayout ? { '--desktop-task-card-top': `${taskCardLayout.top}px` } as CSSProperties : {}),
+    ...(taskCardLayout ? { '--desktop-task-card-max-height': taskCardLayout.maxHeight } as CSSProperties : {}),
+  };
   const openProgressApp = (appId: AppId) => {
     if (appId !== 'notepad') { openApp(appId); return; }
     const current = stateManager.getState();
@@ -197,13 +223,13 @@ export default function App() {
     <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>
     <div aria-hidden={transitionOpen || showAct4Ending} inert={transitionOpen || showAct4Ending}>
-    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}`} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
+    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <DesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} />)}
       </div>
-      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} />}
+      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} className={notepadWindowOpen ? 'desktop-task-card--notepad-open' : undefined} />}
       {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
       <Act2T07Entry manager={stateManager} />
       {apps.map((app) => {
