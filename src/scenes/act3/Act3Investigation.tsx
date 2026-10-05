@@ -1,7 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
-import type { Act3ActiveStage, Act3Lens } from '../../core/types';
+import type { Act3ActiveStage, Act3Hotspot, Act3Lens } from '../../core/types';
 import '../../act3/act3Scene.css';
 import { PhotoViewport, type PhotoMarker } from '../../components/PhotoViewport';
 import { InvestigationDetail } from '../../components/investigation/InvestigationDetail';
@@ -49,6 +49,38 @@ function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: stri
       <img className="act3-investigation__comparison-zoom" src={src} alt={alt} />
     </InvestigationDetail>}
   </>;
+}
+
+const PAPER_TRANSCRIPTS: Record<string, { title: string; assetId: string; alt: string; lines: string[]; note: string }> = {
+  CLUE_A3_T04_VVAKE_PAPER: {
+    title: 'VVaKe', assetId: 'IMG_A3_T04_005', alt: '档案室发现的 VVaKe 纸片近景',
+    lines: ['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗'],
+    note: '上方文字按纸片上能辨认的内容抄录；这些词之间的对应关系仍不清楚。',
+  },
+  CLUE_A3_T05_13ACK_PAPER: {
+    title: '13aCK', assetId: 'IMG_A3_T05_005', alt: '广播室发现的 13aCK 纸片近景',
+    lines: ['老鼠', '血', '草垛', '木房子', '玫瑰', '表'],
+    note: '上方文字按纸片上能辨认的内容抄录；它与前一张纸的对应关系尚未确认。',
+  },
+};
+
+function ClueDetailEvidence({ stage, hotspot }: { stage: Act3ActiveStage; hotspot: Act3Hotspot }) {
+  const paper = PAPER_TRANSCRIPTS[hotspot.clueId];
+  const assetId = paper?.assetId ?? (stage === 'T06' && hotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE' ? 'IMG_A3_T06_009' : undefined);
+  if (!assetId) return null;
+  const asset = assetLoader.get(assetId);
+  return <figure className="act3-investigation__detail-evidence" data-asset-id={assetId}>
+    {asset?.src
+      ? <img src={asset.src} alt={paper?.alt ?? '空神龛底座近景'} />
+      : <div className="act3-investigation__comparison-placeholder">{paper?.alt ?? '空神龛底座近景'}</div>}
+    <figcaption>{paper ? `${paper.title}纸片 · 实物细节` : '空神龛底座 · 近景'}</figcaption>
+    {paper && <div className="act3-investigation__paper-transcript" aria-label={`${paper.title}纸片可辨文字`}>
+      <h3>纸面文字</h3>
+      <strong>{paper.title}</strong>
+      <ul>{paper.lines.map((line) => <li key={line}>{line}</li>)}</ul>
+      <p>{paper.note}</p>
+    </div>}
+  </figure>;
 }
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop, onOpenAct4 }: Act3InvestigationProps) {
@@ -216,6 +248,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     {lensHotspot && <InvestigationDetail title={act3HotspotLabelFor(stage, lensHotspot.clueId, lensHotspot.label, inspected)} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`) ?? [...document.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent === act3HotspotLabelFor(stage, lensHotspot.clueId, lensHotspot.label, inspected)) ?? null}>
       {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。
           没有正文时宁可说明缺什么，也不回退到整段镜头说明。 */}
+      <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />
       {lensHotspot.observation
         ? <p>{lensHotspot.observation}</p>
         : <p className="act3-investigation__empty">这里暂时没有可记的观察文字。</p>}

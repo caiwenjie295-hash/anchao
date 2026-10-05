@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import type { CSSProperties } from 'react';
+import type { ComponentProps, ComponentType, CSSProperties } from 'react';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
 import { stateManager } from './core/stateManager';
+import { eventBus } from './core/eventBus';
 import type { Act2Stage, AppId } from './core/types';
 import { apps, appById } from './data/apps';
 import { AppWindow } from './components/AppWindow';
@@ -33,6 +34,9 @@ import './imageAssets.css';
 
 type Act2SceneStage = Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school' | 'finale'>;
 
+type SelectableDesktopIconProps = ComponentProps<typeof DesktopIcon> & { selected?: boolean; onSelect?: () => void };
+const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIconProps>;
+
 /** 只有 bridge / library / tales / school / finale 会接管全屏场景；search 与 T06 仍是普通桌面。 */
 const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales' || stage === 'school' || stage === 'finale';
 
@@ -46,6 +50,9 @@ export default function App() {
   const [dismissedAct4, setDismissedAct4] = useState(false);
   const [showAct4Ending, setShowAct4Ending] = useState(false);
   const [openedTransitionId, setOpenedTransitionId] = useState<string | null>(null);
+  const [selectedAppId, setSelectedAppId] = useState<AppId | null>(null);
+  const [saveImportNoticeVisible, setSaveImportNoticeVisible] = useState(false);
+  const saveImportNoticeTimerRef = useRef<number | null>(null);
   const act4WasCompleteRef = useRef(state.game.flags.FLAG_A4_COMPLETE === true);
   useEffect(() => {
     const completeNow = state.game.flags.FLAG_A4_COMPLETE === true;
@@ -55,6 +62,20 @@ export default function App() {
   useEffect(() => {
     const interval = window.setInterval(() => setTime(new Date()), 15_000);
     return () => window.clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    const unsubscribe = eventBus.on('save:imported', () => {
+      setSaveImportNoticeVisible(true);
+      if (saveImportNoticeTimerRef.current !== null) window.clearTimeout(saveImportNoticeTimerRef.current);
+      saveImportNoticeTimerRef.current = window.setTimeout(() => {
+        saveImportNoticeTimerRef.current = null;
+        setSaveImportNoticeVisible(false);
+      }, 8_000);
+    });
+    return () => {
+      unsubscribe();
+      if (saveImportNoticeTimerRef.current !== null) window.clearTimeout(saveImportNoticeTimerRef.current);
+    };
   }, []);
   useEffect(() => {
     const phaseBController = new Act1PhaseBController();
@@ -172,11 +193,13 @@ export default function App() {
   const transitionLayer = transition && (transitionOpen
     ? <StoryTransition transition={transition} onContinue={continueTransition} />
     : null);
+  const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>调查记录已恢复，并保存到这台设备。</div>;
   if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
     return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
       <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
       {transitionLayer}
+      {saveImportNotice}
     </></InvestigationProgressProvider>;
   }
   const activeWindowId = state.desktop.activeAppId;
@@ -223,11 +246,11 @@ export default function App() {
     <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>
     <div aria-hidden={transitionOpen || showAct4Ending} inert={transitionOpen || showAct4Ending}>
-    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined}>
+    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined} onClick={(event) => { const target = event.target as HTMLElement; if (target === event.currentTarget || target.classList.contains('desktop__icons')) setSelectedAppId(null); }}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
       <div className="desktop__icons" aria-label="桌面应用">
-        {apps.map((app) => <DesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} />)}
+        {apps.map((app) => <SelectableDesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} selected={selectedAppId === app.appId} onSelect={() => setSelectedAppId(app.appId)} />)}
       </div>
       {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} className={notepadWindowOpen ? 'desktop-task-card--notepad-open' : undefined} />}
       {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
@@ -277,6 +300,7 @@ export default function App() {
     {showAct4Ending && <Act4Ending onReview={() => setShowAct4Ending(false)} onReturnToDesktop={() => { setShowAct4Ending(false); setDismissedAct4(true); }} />}
     <InvestigationProgressDrawer state={state} />
     {transitionLayer}
+    {saveImportNotice}
     </>
     </InvestigationProgressProvider>
   );

@@ -119,7 +119,7 @@ const FIRST_PERSON_PAGE_ART: Partial<Record<Stage, readonly SceneArtwork[]>> = {
     { assetId: 'IMG_A4_T06_002', alt: '王澳在机构吃到的固定早餐' },
     { assetId: 'IMG_A4_T06_004', alt: '机构走廊中的早晚广播设备' },
     { assetId: 'IMG_A4_T06_005', alt: '床铺上的纸团与逃离计划' },
-    { assetId: 'IMG_A4_T06_006', alt: '禁闭室铁门上的观察孔与送餐口' },
+    { assetId: 'IMG_A4_T06_007', alt: '2014 年仍在使用的禁闭室铁门，保留三个观察孔与送餐口' },
   ],
   T07: [
     { assetId: 'IMG_A4_T07_001', alt: '王澳梦中陌生城市的校园' },
@@ -132,7 +132,7 @@ const BLOCK_PAGE_ART: Record<string, readonly (SceneArtwork | undefined)[]> = {
   'T08:T08_RETURN': [
     { assetId: 'IMG_A4_T08_001', alt: '大学宿舍清晨，王澳查看手机邮件' },
     { assetId: 'IMG_A4_T08_002', alt: '王澳独自坐在湖边长椅上' },
-    undefined,
+    { assetId: 'IMG_A4_T08_011', alt: '大学校园里的日常生活' },
     { assetId: 'IMG_A4_T08_003', alt: '手机发信后准备夜行出发' },
     { assetId: 'IMG_A4_T08_004', alt: '山脚下准备上山的王澳' },
     { assetId: 'IMG_A4_T08_006', alt: '王澳翻越带有碎玻璃的围墙' },
@@ -147,9 +147,9 @@ const BLOCK_PAGE_ART: Record<string, readonly (SceneArtwork | undefined)[]> = {
   ],
   'T08:T08_KITCHEN_ESCAPE': [
     { assetId: 'IMG_A4_T08_010', alt: '启明旧址厨房里的景象' },
-    { assetId: 'IMG_A4_T08_010', alt: '王澳无法确认眼前的肉类' },
-    { assetId: 'IMG_A4_T08_010', alt: '王澳转身离开厨房' },
-    { assetId: 'IMG_A4_T08_010', alt: '王澳摔倒在消防箱旁' },
+    undefined,
+    undefined,
+    { assetId: 'IMG_A4_T08_012', alt: '王澳逃出厨房后，倒在消防栓旁的低视角' },
   ],
   'T09:T09_REPLY_AND_LAST_PAGE': [
     { assetId: 'IMG_A4_T09_002', alt: '手机上收到的回信' },

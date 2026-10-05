@@ -134,9 +134,29 @@ async function click(selector) {
   button.click(); await settle();
 }
 async function lastPage(blockId) {
-  const buttons = query(`[data-block-id="${blockId}"] .a4-reader__page-index`).querySelectorAll('button');
-  assert.ok(buttons.length > 0, `${blockId} should expose a paged reading control`);
-  await click(`[data-block-id="${blockId}"] .a4-reader__page-index button:last-child`);
+  const blockSelector = `[data-block-id="${blockId}"]`;
+  const block = query(blockSelector);
+  for (let step = 0; step < 30; step += 1) {
+    const pageControl = block.querySelector('.a4-reader__segment-pages');
+    if (!pageControl) {
+      const coverActionSelector = `[data-action-id*="OPEN_COVER_${blockId}_"]`;
+      assert.ok(document().querySelector(coverActionSelector), `${blockId} should expose its next cover action`);
+      await click(coverActionSelector);
+      continue;
+    }
+    const pageCount = Number(pageControl.getAttribute('data-page-count'));
+    const activePage = Number(pageControl.getAttribute('data-active-page'));
+    assert.ok(Number.isInteger(pageCount) && pageCount > 0 && Number.isInteger(activePage), `${blockId} should report its available page count`);
+    if (activePage >= pageCount) return;
+    const nextPage = block.querySelector('.a4-reader__pager button:last-child');
+    if (!nextPage) {
+      assert.equal(pageCount, 1, `${blockId} needs the compact pager to reach its last page`);
+      return;
+    }
+    assert.equal(nextPage.disabled, false, `${blockId} should allow deliberate progression to its next page`);
+    await click(`${blockSelector} .a4-reader__pager button:last-child`);
+  }
+  assert.fail(`${blockId} did not reach the last page after its cover and pager actions`);
 }
 async function waitForEnabled(selector) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
@@ -231,6 +251,8 @@ async function solvePhoto() {
   await setInput('[aria-label="阴影"]', '50');
   await setInput('[aria-label="对比度"]', '35');
   await click('[aria-label="放大照片"]');
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  await settle();
   assert.equal(state().modules.photos.zoomByPhotoId.IMG_A1_H_003, 1.1);
   assert.notEqual(state().game.flags.FLAG_A1_SS_FOUND, true);
   await mount(save());
@@ -660,7 +682,7 @@ async function investigateAct4() {
   assert.equal(state().modules.act4.stage, 'T02', 'T02 reload keeps the date checks');
   await lastPage('T02_ORIGINAL');
   await setInput('#a4-shared-date', '20200419');
-  await textButton('主动登录', '.a4-reader__interaction button');
+  await textButton('登录账号', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T02_LOGIN_SUCCEEDED'));
   assert.deepEqual(state().modules.act4.unlockedAccountIds, ['weibo', 'mail']);
   await continueSection('T02');

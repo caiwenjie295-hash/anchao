@@ -1,8 +1,9 @@
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
+import { clearAct4ReadingPositions, setAct4ReadingPosition } from '../../core/uiPreferences';
 import { StateManager } from '../../core/stateManager';
 import { act4NarrativeSections, act4NarrativeSources } from '../../data/narrative/act4Narrative';
 import { Act4Experience } from './Act4Experience';
@@ -19,15 +20,32 @@ const renderExperience = async (component: ReactNode) => {
 };
 
 const selectPage = async (host: HTMLElement, blockId: string, pageNumber: number) => {
-  const button = host.querySelectorAll<HTMLButtonElement>(`[data-block-id="${blockId}"] .a4-reader__page-index button`)[pageNumber - 1];
-  expect(button).toBeDefined();
-  await act(async () => { button.click(); });
+  const block = host.querySelector<HTMLElement>(`[data-block-id="${blockId}"]`)!;
+  const activePage = () => Number(block.querySelector('.a4-reader__segment-pages')?.getAttribute('data-active-page') ?? '0');
+  while (activePage() !== pageNumber) {
+    if (activePage() < pageNumber && !block.querySelector('.a4-reader__pager')) {
+      const openCover = host.querySelector<HTMLButtonElement>('[data-action-id*="OPEN_COVER"]');
+      expect(openCover, `cover for ${blockId} page ${activePage() + 1}`).toBeDefined();
+      await act(async () => { openCover!.click(); });
+    }
+    const buttons = block.querySelectorAll<HTMLButtonElement>('.a4-reader__pager button');
+    const button = activePage() < pageNumber ? buttons[1] : buttons[0];
+    expect(button).toBeDefined();
+    await act(async () => { button!.click(); });
+  }
 };
 
 const selectLastPage = async (host: HTMLElement, blockId: string) => {
-  const buttons = host.querySelectorAll<HTMLButtonElement>(`[data-block-id="${blockId}"] .a4-reader__page-index button`);
-  if (buttons.length) await act(async () => { buttons[buttons.length - 1].click(); });
+  const block = host.querySelector<HTMLElement>(`[data-block-id="${blockId}"]`)!;
+  if (!block.querySelector('.a4-reader__pager')) {
+    const openCover = host.querySelector<HTMLButtonElement>('[data-action-id*="OPEN_COVER"]');
+    if (openCover) await act(async () => { openCover.click(); });
+  }
+  const count = Number(block.querySelector('.a4-reader__pager span')?.textContent?.split('/').at(-1)?.trim() ?? '1');
+  await selectPage(host, blockId, count);
 };
+
+beforeEach(() => { clearAct4ReadingPositions(); });
 
 const paragraphsInBlock = (host: HTMLElement, blockId: string) =>
   [...host.querySelectorAll<HTMLElement>(`[data-block-id="${blockId}"] .a4-reader__paragraph`)].map((element) => element.textContent ?? '');
@@ -106,7 +124,7 @@ describe('Act4 reading experience', () => {
     try {
       expect(host.querySelector('[data-block-id="T02_PASSWORD_REVEAL"]')).toBeNull();
       await selectLastPage(host, 'T02_ORIGINAL');
-      const login = [...host.querySelectorAll<HTMLButtonElement>('.a4-reader__interaction button')].find((button) => button.textContent === '主动登录')!;
+      const login = [...host.querySelectorAll<HTMLButtonElement>('.a4-reader__interaction button')].find((button) => button.textContent === '登录账号')!;
       expect(login.disabled).toBe(true);
       const mailButtons = [...host.querySelectorAll<HTMLButtonElement>('.a4-reader__mail button')];
       await click(mailButtons[0]);
@@ -151,7 +169,7 @@ describe('Act4 reading experience', () => {
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toEqual(expect.arrayContaining(['A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED']));
       const source = act4NarrativeSections.find((section) => section.stage === 'T09')!.blocks.find((block) => block.id === 'T09_BROADCAST')!;
       expect(paragraphsInBlock(host, 'T09_BROADCAST')).toEqual(source.paragraphs);
-      expect(host.querySelectorAll('[data-block-id="T09_BROADCAST"] .a4-reader__page-index')).toHaveLength(0);
+      expect(host.querySelectorAll('[data-block-id="T09_BROADCAST"] .a4-reader__pager')).toHaveLength(0);
       expect(host.querySelectorAll('[data-block-id="T09_BROADCAST"] .a4-reader__paragraph--broadcast-word')).toHaveLength(6);
       expect([...host.querySelectorAll<HTMLElement>('[data-block-id="T09_BROADCAST"] .a4-reader__paragraph--broadcast-ending')].at(-1)?.textContent).toContain('回收完成');
     } finally {
@@ -175,10 +193,11 @@ describe('Act4 reading experience', () => {
       expect(host.querySelector('[data-block-id="T05_ORIGINAL"] .a4-reader__source summary')?.textContent).toBe('查看原文出处');
 
       const block = act4NarrativeSections.find((section) => section.stage === 'T05')!.blocks.find((item) => item.id === 'T05_ORIGINAL')!;
-      const pageButtons = host.querySelectorAll<HTMLButtonElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__page-index button');
-      expect(pageButtons.length).toBeGreaterThan(1);
+      await selectPage(host, 'T05_ORIGINAL', 1);
+      const pageButtons = host.querySelectorAll<HTMLButtonElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__pager button');
+      expect([...pageButtons].map((button) => button.textContent)).toEqual(['上一页', '下一页']);
       const allPages: string[] = [];
-      for (let page = 1; page <= pageButtons.length; page += 1) {
+      for (let page = 1; page <= 5; page += 1) {
         await selectPage(host, 'T05_ORIGINAL', page);
         allPages.push(...paragraphsInBlock(host, 'T05_ORIGINAL'));
       }
@@ -216,8 +235,9 @@ describe('Act4 reading experience', () => {
       expect(sourceDetails.textContent).toContain(t05Source.sourceChapter);
       expect(sourceDetails.textContent).toContain(t05Source.startAnchor);
       expect(sourceDetails.textContent).toContain(t05Source.endAnchor);
-      expect([...host.querySelectorAll<HTMLButtonElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__page-index button')].map((button) => button.textContent))
-        .toEqual(['第 1 段', '第 2 段', '第 3 段', '第 4 段', '第 5 段']);
+      await selectPage(host, 'T05_ORIGINAL', 1);
+      expect([...host.querySelectorAll<HTMLButtonElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__page-directory button')].map((button) => button.textContent))
+        .toEqual(['晚自习']);
 
       const boundary = host.querySelector<HTMLDetailsElement>('.a4-reader__boundary')!;
       expect(boundary.open).toBe(false);
@@ -267,10 +287,11 @@ describe('Act4 reading experience', () => {
     const { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
     try {
       const source = act4NarrativeSections.find((section) => section.stage === 'T01')!.blocks[0];
-      const pageButtons = host.querySelectorAll<HTMLButtonElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__page-index button');
-      expect([...pageButtons].map((button) => button.textContent)).toEqual(Array.from({ length: 9 }, (_, index) => `第 ${index + 1} 页`));
+      await selectPage(host, 'T01_ORIGINAL', 1);
+      const pageButtons = host.querySelectorAll<HTMLButtonElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__pager button');
+      expect([...pageButtons].map((button) => button.textContent)).toEqual(['上一页', '下一页']);
       const collected = [...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--lead .a4-reader__paragraph')].map((item) => item.textContent ?? '');
-      for (let page = 1; page <= pageButtons.length; page += 1) {
+      for (let page = 1; page <= 9; page += 1) {
         await selectPage(host, 'T01_ORIGINAL', page);
         collected.push(...[...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--page .a4-reader__paragraph')].map((item) => item.textContent ?? ''));
         if (page === 9) collected.push(...[...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--ending .a4-reader__paragraph')].map((item) => item.textContent ?? ''));
@@ -342,6 +363,26 @@ describe('Act4 reading experience', () => {
       expect(recap.open).toBe(true);
       expect(recap.querySelector('.a4-reader__ending h3')?.textContent).toContain('第四幕阅读完成');
       expect(recap.textContent).toContain('时间线');
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
+  it('does not turn a restored future notebook page into story progress without a reader action', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'A4_T01';
+    state.modules.act4.stage = 'T01';
+    const manager = new StateManager(new EventBus(), state);
+    setAct4ReadingPosition('T01:current', {
+      activeBlockId: 'T01_ORIGINAL',
+      pageIndexByBlock: { T01_ORIGINAL: 8 },
+      openedCoverKeys: ['T01:current:T01_ORIGINAL:cover'],
+    });
+    const { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
+    try {
+      expect(host.querySelector('[data-block-id="T01_ORIGINAL"] .a4-reader__segment-pages')?.getAttribute('data-active-page')).toBe('9');
+      expect(manager.getState().modules.act4.readNotebookPages).toEqual([]);
     } finally {
       await act(async () => root.unmount());
       host.remove();

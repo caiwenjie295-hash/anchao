@@ -307,4 +307,5 @@ export type AnchaoEventMap = {
   'act2:t07-complete': Record<string, never>;
   'progress:reset': { schemaVersion: 13 };
   'save:completed': { schemaVersion: 13 };
+  'save:imported': { schemaVersion: 13 };
 };
