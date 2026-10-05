@@ -5,11 +5,11 @@ import { useInvestigationProgress } from './InvestigationProgressContext';
 import './investigationProgress.css';
 
 const statusLabel: Record<ProgressNodeStatus, string> = {
-  complete: '已完成', current: '当前', known: '已到达', upcoming: '尚未展开',
+  complete: '已完成', current: '正在这里', known: '到过', upcoming: '还没走到',
 };
 
 const factStatusLabel: Record<InvestigationProgressFact['status'], string> = {
-  read: '已读', noted: '已记入笔记', recorded: '已记录', inspected: '已检视',
+  read: '已读', noted: '已记入笔记', recorded: '已记录', inspected: '看过',
 };
 
 export function InvestigationProgressDrawer({ state }: { state: AppState }) {
@@ -46,7 +46,7 @@ export function InvestigationProgressDrawer({ state }: { state: AppState }) {
   >
     <header className="investigation-progress__header">
       <div>
-        <p>{model.actLabel} · 调查进度</p>
+        <p>{model.actLabel} · 走到这里</p>
         <h2 id="investigation-progress-title">{model.location}</h2>
       </div>
       <button ref={closeRef} type="button" className="investigation-progress__close" onClick={closeProgress} aria-label="关闭调查进度">关闭</button>
@@ -75,19 +75,19 @@ export function InvestigationProgressDrawer({ state }: { state: AppState }) {
       </section>
 
       <section className="investigation-progress__directions" aria-labelledby="investigation-progress-directions-title">
-        <h3 id="investigation-progress-directions-title">已出现的待查方向</h3>
+        <h3 id="investigation-progress-directions-title">还想弄清的事</h3>
         <ul>{model.pendingDirections.map((direction) => <li key={direction}>{direction}</li>)}</ul>
       </section>
 
       <details className="investigation-progress__facts">
-        <summary>已知材料与记录（{model.knownFacts.length}）</summary>
+        <summary>已经找到的材料与记录（{model.knownFacts.length}）</summary>
         {model.knownFacts.length
           ? <ul>{model.knownFacts.map((fact) => <li key={fact.id}>
             <div className="investigation-progress__fact-heading"><strong>{fact.title}</strong><span>{factStatusLabel[fact.status]}</span></div>
             <small>{fact.source}</small>
             <p>{fact.summary}</p>
           </li>)}</ul>
-          : <p className="investigation-progress__empty">目前还没有已读材料或现场观察。</p>}
+          : <p className="investigation-progress__empty">再读几份材料、走访一处地点，这里就会留下新的记录。</p>}
       </details>
     </div>
   </dialog>;

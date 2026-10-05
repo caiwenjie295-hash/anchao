@@ -106,6 +106,42 @@ describe('Third-act investigation interface', () => {
     }
   });
 
+  it('shows each paper transcription only after that paper has been opened and includes the discovered close-up art', async () => {
+    for (const scenario of [
+      { stage: 'T04' as const, lensId: 'LENS_A3_T04_005', clueId: 'CLUE_A3_T04_VVAKE_PAPER', assetId: 'IMG_A3_T04_005', title: 'VVaKe', words: ['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗'] },
+      { stage: 'T05' as const, lensId: 'LENS_A3_T05_005', clueId: 'CLUE_A3_T05_13ACK_PAPER', assetId: 'IMG_A3_T05_005', title: '13aCK', words: ['老鼠', '血', '草垛', '木房子', '玫瑰', '表'] },
+      { stage: 'T06' as const, lensId: 'LENS_A3_T06_007', clueId: 'CLUE_A3_T06_EMPTY_BASE', assetId: 'IMG_A3_T06_009', title: '空神龛底座', words: [] },
+    ]) {
+      const state = createDefaultState();
+      state.game.phase = `A3_${scenario.stage}` as typeof state.game.phase;
+      state.modules.act3.stage = scenario.stage;
+      state.modules.act3.currentLensId = scenario.lensId;
+      const manager = new StateManager(new EventBus(), state);
+      const container = document.createElement('div');
+      document.body.append(container);
+      const root = createRoot(container);
+      try {
+        await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+        expect(container.querySelector(`[data-asset-id="${scenario.assetId}"]`)).toBeNull();
+        const marker = container.querySelector<HTMLButtonElement>(`[data-clue-id="${scenario.clueId}"]`)
+          ?? container.querySelector<HTMLButtonElement>('.photo-viewport__fallback button');
+        expect(marker).toBeDefined();
+        await act(async () => { marker!.click(); });
+        const detail = container.querySelector('[role="dialog"]')!;
+        expect(detail.querySelector(`[data-asset-id="${scenario.assetId}"]`)).not.toBeNull();
+        if (scenario.words.length) {
+          expect(detail.querySelector('.act3-investigation__paper-transcript strong')?.textContent).toBe(scenario.title);
+          for (const word of scenario.words) expect(detail.querySelector('.act3-investigation__paper-transcript')?.textContent).toContain(word);
+        } else {
+          expect(detail.querySelector('.act3-investigation__detail-evidence figcaption')?.textContent).toContain('近景');
+        }
+      } finally {
+        await act(async () => { root.unmount(); });
+        container.remove();
+      }
+    }
+  });
+
   it('keeps the T07 return action understandable without exposing the hidden object or location', async () => {
     localStorage.clear();
     const state = createDefaultState();

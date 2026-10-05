@@ -1,6 +1,6 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
-import { loadState, saveState } from './saveManager';
+import { clearReadingUiState, importSaveText, loadState, saveState, type SaveImportResult } from './saveManager';
 import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2QimingCaseId, type Act2QimingConclusionId, type Act2QimingNicknameAssessment, type Act2ResearchState, type Act2Stage, type Act3State, type Act4NarrativeActionId, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
 import { birthdayScenes, timeline } from '../data/act4/content';
 import { answerAct4Puzzle } from '../story/act4/actions';
@@ -17,6 +17,23 @@ import { getAct3RouteAvailability } from '../story/investigation/act3RoutePolicy
 import { act4NarrativeActionsSatisfied, act4NarrativeSectionId, act4NarrativeStageSequence } from '../story/act4/narrativePolicy';
 
 type StateListener = () => void;
+export type SaveStatus = 'saved' | 'saving' | 'unavailable';
+
+const pendingSaveFlushers = new Set<() => void>();
+let lifecycleFlushInstalled = false;
+
+function flushPendingSaves(): void {
+  pendingSaveFlushers.forEach((flush) => flush());
+}
+
+function installSaveLifecycleFlush(): void {
+  if (lifecycleFlushInstalled || typeof window === 'undefined' || typeof document === 'undefined') return;
+  lifecycleFlushInstalled = true;
+  window.addEventListener('pagehide', flushPendingSaves);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushPendingSaves();
+  });
+}
 
 type Act2ResearchPatch = {
   stage?: Act2Stage;
@@ -49,6 +66,10 @@ const viewportBounds = (): Bounds => ({
 export class StateManager {
   private state: AppState;
   private subscribers = new Set<StateListener>();
+  private saveStatus = 'saved' as SaveStatus;
+  private saveStatusSubscribers = new Set<StateListener>();
+  private pendingSaveTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly flushForLifecycle = () => this.flushPendingSave();
 
   constructor(private readonly bus: EventBus = eventBus, initialState: AppState = loadState()) {
     this.state = initialState;
@@ -61,15 +82,62 @@ export class StateManager {
     return () => this.subscribers.delete(listener);
   };
 
+  getSaveStatus = (): SaveStatus => this.saveStatus;
+
+  subscribeSaveStatus = (listener: StateListener): (() => void) => {
+    this.saveStatusSubscribers.add(listener);
+    return () => this.saveStatusSubscribers.delete(listener);
+  };
+
   /** 订阅 flag:changed 事件，返回取消订阅函数。 */
   subscribeFlagChanged = (handler: (payload: { flagId: string; value: boolean | string | number }) => void): (() => void) => {
     return this.bus.on('flag:changed', handler);
   };
 
-  private commit(next: AppState): void {
+  private setSaveStatus(status: SaveStatus): void {
+    if (this.saveStatus === status) return;
+    this.saveStatus = status;
+    this.saveStatusSubscribers.forEach((listener) => listener());
+  }
+
+  private cancelPendingSave(): void {
+    if (this.pendingSaveTimer !== null) clearTimeout(this.pendingSaveTimer);
+    this.pendingSaveTimer = null;
+    pendingSaveFlushers.delete(this.flushForLifecycle);
+  }
+
+  private flushPendingSave(): void {
+    if (this.pendingSaveTimer === null) return;
+    this.cancelPendingSave();
+    this.persistCurrentState();
+  }
+
+  private deferSave(): void {
+    if (this.pendingSaveTimer !== null) clearTimeout(this.pendingSaveTimer);
+    installSaveLifecycleFlush();
+    pendingSaveFlushers.add(this.flushForLifecycle);
+    this.setSaveStatus('saving');
+    this.pendingSaveTimer = setTimeout(() => this.flushPendingSave(), 300);
+  }
+
+  private persistCurrentState(): void {
+    if (saveState(this.state)) {
+      this.setSaveStatus('saved');
+      this.bus.emit('save:completed', { schemaVersion: 13 });
+    } else {
+      this.setSaveStatus('unavailable');
+    }
+  }
+
+  private commit(next: AppState, savePolicy: 'immediate' | 'deferred' = 'immediate'): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
-    if (saveState(this.state)) this.bus.emit('save:completed', { schemaVersion: 13 });
+    if (savePolicy === 'deferred') {
+      this.deferSave();
+      return;
+    }
+    this.cancelPendingSave();
+    this.persistCurrentState();
   }
 
   private nextZIndex(): number {
@@ -149,7 +217,8 @@ export class StateManager {
     const current = this.state.desktop.windows[appId];
     if (current.status === 'maximized') return;
     const nextBounds = { x: Math.max(0, bounds.x), y: Math.max(0, bounds.y), width: Math.max(320, bounds.width), height: Math.max(240, bounds.height) };
-    this.commit({ ...this.state, desktop: { ...this.state.desktop, windows: { ...this.state.desktop.windows, [appId]: { ...current, bounds: nextBounds } } } });
+    if (current.bounds.x === nextBounds.x && current.bounds.y === nextBounds.y && current.bounds.width === nextBounds.width && current.bounds.height === nextBounds.height) return;
+    this.commit({ ...this.state, desktop: { ...this.state.desktop, windows: { ...this.state.desktop.windows, [appId]: { ...current, bounds: nextBounds } } } }, 'deferred');
   }
 
   setFlag(flagId: string, value: boolean | string | number): void {
@@ -210,7 +279,7 @@ export class StateManager {
 
   setNotepadUserText(userText: string): void {
     if (this.state.modules.notepad.userText === userText) return;
-    this.commit({ ...this.state, modules: { ...this.state.modules, notepad: { ...this.state.modules.notepad, userText } } });
+    this.commit({ ...this.state, modules: { ...this.state.modules, notepad: { ...this.state.modules.notepad, userText } } }, 'deferred');
   }
 
   addNotepadAutoEntry(entryId: string): void {
@@ -221,8 +290,30 @@ export class StateManager {
   }
 
   resetProgress(): void {
+    this.cancelPendingSave();
+    clearReadingUiState();
     this.commit(createDefaultState());
     this.bus.emit('progress:reset', { schemaVersion: 13 });
+  }
+
+  exportSave(): string {
+    return JSON.stringify(this.state, null, 2);
+  }
+
+  importSave(serialized: string): SaveImportResult {
+    const result = importSaveText(serialized);
+    if (!result.ok) {
+      if (result.reason === 'storage-unavailable') this.setSaveStatus('unavailable');
+      return result;
+    }
+    this.cancelPendingSave();
+    clearReadingUiState();
+    this.state = result.state;
+    this.subscribers.forEach((listener) => listener());
+    this.setSaveStatus('saved');
+    this.bus.emit('save:completed', { schemaVersion: 13 });
+    this.bus.emit('save:imported', { schemaVersion: 13 });
+    return result;
   }
 
   startJourney(sceneId: string): void {
@@ -278,7 +369,7 @@ export class StateManager {
     const current = photos.adjustments[photoId] ?? { exposure: 0, shadows: 0, contrast: 0 };
     const nextValue = Math.max(-100, Math.min(100, Math.round(value)));
     if (current[adjustment] === nextValue) return;
-    this.commit({ ...this.state, modules: { ...this.state.modules, photos: { ...photos, adjustments: { ...photos.adjustments, [photoId]: { ...current, [adjustment]: nextValue } } } } });
+    this.commit({ ...this.state, modules: { ...this.state.modules, photos: { ...photos, adjustments: { ...photos.adjustments, [photoId]: { ...current, [adjustment]: nextValue } } } } }, 'deferred');
     this.bus.emit('photo:adjusted', { photoId });
   }
 
@@ -295,7 +386,7 @@ export class StateManager {
     const photos = this.state.modules.photos;
     const nextZoom = Math.max(1, Math.min(2.5, Math.round(zoom * 10) / 10));
     if (photos.zoomByPhotoId[photoId] === nextZoom) return;
-    this.commit({ ...this.state, modules: { ...this.state.modules, photos: { ...photos, zoomByPhotoId: { ...photos.zoomByPhotoId, [photoId]: nextZoom } } } });
+    this.commit({ ...this.state, modules: { ...this.state.modules, photos: { ...photos, zoomByPhotoId: { ...photos.zoomByPhotoId, [photoId]: nextZoom } } } }, 'deferred');
   }
 
   finishFirstAct(): void {

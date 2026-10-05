@@ -5,16 +5,17 @@ import { laterScenes } from '../data/act4/laterContent';
 import { act4AssetPath, assetLoader } from './assetLoader';
 
 describe('fourth act art registration', () => {
-  it('maps all 40 distinct IDs to their stage PNGs and discovers delivered files', () => {
+  it('keeps the original 40 IDs and registers three newly delivered A4 images', () => {
     const deliveredFiles = import.meta.glob('../第四幕/T*/*.png');
     const records = images.items.filter((item) => item.id.startsWith('IMG_A4_'));
     const expected = [
       'IMG_A4_T01_001',
       ...birthdayImageSlots.map((slot) => slot.assetId),
       ...laterScenes.map((scene) => scene.assetId),
+      'IMG_A4_T06_007', 'IMG_A4_T08_011', 'IMG_A4_T08_012',
     ];
-    expect(records).toHaveLength(40);
-    expect(new Set(expected).size).toBe(40);
+    expect(records).toHaveLength(43);
+    expect(new Set(expected).size).toBe(43);
     expect(records.map((record) => record.id).sort()).toEqual(expected.sort());
     for (const record of records) {
       const path = act4AssetPath(record.id, record.file);
@@ -26,6 +27,10 @@ describe('fourth act art registration', () => {
     }
     for (const scene of [...birthdayImageSlots, ...laterScenes]) {
       expect(scene.path).toBe(`src/第四幕/${scene.assetId.slice(7, 10)}/${scene.assetId}.png`);
+    }
+    for (const id of ['IMG_A4_T06_007', 'IMG_A4_T08_011', 'IMG_A4_T08_012']) {
+      expect(assetLoader.get(id)?.id, id).toBe(id);
+      expect(assetLoader.isAvailable(id), id).toBe(true);
     }
     expect(act4AssetPath('IMG_A4_T05_001', 'other.png')).toBeNull();
   });
@@ -41,7 +46,7 @@ describe('first act art registration', () => {
 
 describe('second act art registration', () => {
   it('resolves every supplied or generated second-act image locally', () => {
-    for (const id of ['IMG_A2_T02_001', 'IMG_A2_T03_001', ...Array.from({ length: 11 }, (_, index) => `IMG_A2_T05_${String(index + 1).padStart(3, '0')}`)]) {
+    for (const id of ['IMG_A2_T02_001', 'IMG_A2_T03_001', ...Array.from({ length: 11 }, (_, index) => `IMG_A2_T05_${String(index + 1).padStart(3, '0')}`), 'IMG_A2_T03_002', 'IMG_A2_T03_003', 'IMG_A2_T05_012']) {
       expect(assetLoader.get(id)?.src, id).toMatch(/IMG_A2_|data:image\/jpeg/);
       expect(assetLoader.isAvailable(id), id).toBe(true);
     }
@@ -57,5 +62,7 @@ describe('third act art registration', () => {
         expect(assetLoader.isAvailable(id), id).toBe(true);
       }
     }
+    expect(assetLoader.get('IMG_A3_T06_009')?.id).toBe('IMG_A3_T06_009');
+    expect(assetLoader.isAvailable('IMG_A3_T06_009')).toBe(true);
   });
 });
