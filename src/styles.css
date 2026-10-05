@@ -37,8 +37,10 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 }
 .desktop--scene-hidden { visibility: hidden; pointer-events: none; }
 .desktop::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .22; background-image: linear-gradient(120deg, transparent 0 47%, rgba(255,255,255,.5) 48% 50%, transparent 51% 100%); background-size: 31rem 31rem; }
-.desktop__icons { display: grid; grid-template-columns: repeat(auto-fill, 78px); grid-auto-rows: 102px; align-content: start; gap: 10px 14px; width: min(560px, calc(100vw - 2rem)); padding: 20px 16px; }
+.desktop__icons { position: absolute; top: 18px; bottom: 64px; left: 16px; display: grid; grid-auto-flow: column; grid-template-rows: repeat(auto-fill, 102px); grid-auto-columns: 78px; align-content: start; gap: 10px 14px; width: min(560px, calc(100vw - 2rem)); overflow: auto; padding: 0; }
+.desktop--task-card-visible .desktop__icons { width: min(560px, calc(100vw - 390px)); }
 .desktop-task-card { position: absolute; z-index: 8000; top: 28px; right: 30px; width: min(326px, calc(100vw - 28px)); max-height: calc(100dvh - 82px); overflow: auto; border: 1px solid var(--ui-border); border-radius: 8px; color: var(--ui-text); background: var(--ui-surface); box-shadow: 0 8px 24px rgba(15, 23, 42, .16); }
+.desktop-task-card--notepad-open { top: var(--desktop-task-card-top, 50px); max-height: min(var(--desktop-task-card-max-height, calc(100dvh - var(--desktop-task-card-top, 50px) - 62px)), calc(100dvh - var(--desktop-task-card-top, 50px) - 62px)); }
 .desktop-task-card::before { position: absolute; top: 0; right: 22px; left: 22px; height: 1px; background: var(--ui-border); content: ""; }
 .desktop-task-card__heading { display: flex; align-items: center; gap: 4px; padding-right: 6px; }
 .desktop-task-card__toggle { display: flex; width: 100%; min-width: 0; min-height: 45px; flex: 1 1 auto; align-items: center; gap: 9px; padding: 10px 8px 10px 13px; border: 0; color: inherit; background: transparent; cursor: pointer; text-align: left; }
@@ -70,8 +72,10 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 @keyframes desktop-task-card-current { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 899px) {
-  .desktop-task-card { top: 13px; right: 14px; width: min(326px, calc(100vw - 28px)); }
-  .desktop-task-card:not(.desktop-task-card--expanded) { width: min(326px, calc(100vw - 28px)); min-width: 132px; }
+  .desktop__icons { top: 12px; right: 12px; bottom: 64px; left: 12px; width: auto; grid-template-rows: repeat(auto-fill, 102px); }
+  .desktop--task-card-visible .desktop__icons { bottom: calc(62px + min(30dvh, 230px) + 10px); width: auto; }
+  .desktop-task-card { top: auto; right: 12px; bottom: 62px; left: auto; width: min(326px, calc(100vw - 24px)); max-height: min(30dvh, 230px); }
+  .desktop-task-card:not(.desktop-task-card--expanded) { width: min(326px, calc(100vw - 24px)); min-width: 132px; }
   .desktop-task-card:not(.desktop-task-card--expanded) .desktop-task-card__toggle { min-height: 38px; padding: 8px 10px; }
 }
 .desktop-icon { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 7px; color: #172433; text-shadow: 0 1px rgba(255,255,255,.72); background: transparent; border: 1px solid transparent; border-radius: 7px; padding: 7px 2px; cursor: default; }
@@ -336,7 +340,6 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 .debug-reset__confirm .debug-reset__danger { border-color: #b73a31; color: #fff; background: #b73a31; }
 
 @media (max-width: 720px) {
-  .desktop__icons { grid-template-columns: repeat(3, 78px); }
   .app-window { max-width: 100vw; }
   .window-controls button { width: 39px; }
   .taskbar { grid-template-columns: 1fr auto; }
