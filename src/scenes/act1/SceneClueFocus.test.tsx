@@ -67,7 +67,7 @@ describe('SceneClueFocus', () => {
     const closeButton = container.querySelector<HTMLButtonElement>('.scene-clue-focus__header button');
     expect(document.activeElement).toBe(closeButton);
 
-    const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
     await act(async () => { document.dispatchEvent(tabEvent); });
     expect(tabEvent.defaultPrevented).toBe(true);
     expect(document.activeElement).toBe(closeButton);
