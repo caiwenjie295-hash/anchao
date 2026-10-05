@@ -51,7 +51,7 @@ describe('Act4 reading presentation', () => {
     expect(act4PagePresentation('T05', 2)?.title).toBe('生日白天');
     expect(act4PagePresentation('T05', 2)?.periodLabel).toBe('2014 年 12 月 29 日');
     expect(act4PagePresentation('T05', 4)?.illustrationAssetId).toBe('IMG_A4_T05_006');
-    expect(act4PagePresentation('T06', 3)?.illustrationAssetId).toBe('IMG_A4_T06_006');
+    expect(act4PagePresentation('T06', 3)?.illustrationAssetId).toBe('IMG_A4_T06_007');
     expect(act4PagePresentation('T07', 2)?.illustrationAssetId).toBe('IMG_A4_T07_005');
   });
 

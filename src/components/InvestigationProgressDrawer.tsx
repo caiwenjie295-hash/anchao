@@ -60,7 +60,7 @@ export function InvestigationProgressDrawer({ state }: { state: AppState }) {
         <p id="investigation-progress-next-action" className="investigation-progress__next-action">{model.nextAction}</p>
         {onOpenApp && <button type="button" className="investigation-progress__open-app" onClick={() => {
           closeProgress();
-          onOpenApp('notepad');
+          onOpenApp(model.nextActionAppId ?? 'notepad');
         }}>打开调查</button>}
       </section>
 

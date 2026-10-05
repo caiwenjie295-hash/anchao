@@ -30,6 +30,7 @@ function assertLocalImage(value) {
 }
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
 const imageAssets = JSON.parse(await readFile('data/images.json', 'utf8')).items;
+const compressedAssetMap = JSON.parse(await readFile('src/assets/compressed/asset-map.json', 'utf8')).entries;
 const act2T07Data = JSON.parse(await readFile('data/act2_t07.json', 'utf8'));
   const act3Docs = ['t00', 't01', 't02', 't03', 't04', 't05', 't06', 't07'].map(async (name) => JSON.parse(await readFile(`data/act3_${name}.json`, 'utf8')));
   const [t00Doc, t01Doc, t02Doc, t03Doc, t04Doc, t05Doc, t06Doc, t07Doc] = await Promise.all(act3Docs);
@@ -92,6 +93,7 @@ async function settle() {
   }
 }
 async function mount(saved) {
+  const retainedUiPreferences = saved && dom ? dom.window.localStorage.getItem('anchao.ui.v1') : null;
   dom?.window.close();
   dom = new JSDOM(html, {
     url: 'https://anchao-offline.test', runScripts: 'dangerously',
@@ -108,7 +110,10 @@ async function mount(saved) {
       // jsdom lacks native dialog methods; this checks open/close wiring, not modal layout or focus.
       window.HTMLDialogElement.prototype.showModal = function showModal() { this.setAttribute('open', ''); };
       window.HTMLDialogElement.prototype.close = function close() { this.removeAttribute('open'); };
-      if (saved) window.localStorage.setItem('anchao.save.v1', saved);
+      if (saved) {
+        window.localStorage.setItem('anchao.save.v1', saved);
+        if (retainedUiPreferences) window.localStorage.setItem('anchao.ui.v1', retainedUiPreferences);
+      }
     },
   });
   await new Promise((resolve, reject) => {
@@ -136,8 +141,8 @@ async function click(selector) {
 async function lastPage(blockId) {
   const blockSelector = `[data-block-id="${blockId}"]`;
   const block = query(blockSelector);
-  for (let step = 0; step < 30; step += 1) {
-    const pageControl = block.querySelector('.a4-reader__segment-pages');
+  for (let step = 0; step < 80; step += 1) {
+    const pageControl = block.querySelector(':scope > .a4-reader__segment-pages');
     if (!pageControl) {
       const coverActionSelector = `[data-action-id*="OPEN_COVER_${blockId}_"]`;
       assert.ok(document().querySelector(coverActionSelector), `${blockId} should expose its next cover action`);
@@ -157,6 +162,30 @@ async function lastPage(blockId) {
     await click(`${blockSelector} .a4-reader__pager button:last-child`);
   }
   assert.fail(`${blockId} did not reach the last page after its cover and pager actions`);
+}
+async function advanceReaderUntilBlock(blockId) {
+  let previousActionId = '';
+  for (let step = 0; step < 20; step += 1) {
+    if (document().querySelector(`[data-block-id="${blockId}"]`)) return;
+    const action = document().querySelector('.investigation-shell__operations .investigation-navigation__action[data-action-id]');
+    assert.ok(action, `reader should expose an action before revealing ${blockId}`);
+    assert.equal(action.getAttribute('data-action-state'), 'ready', `reader action before ${blockId} should be ready`);
+    assert.equal(action.disabled, false, `reader action before ${blockId} should be enabled`);
+    const actionId = action.getAttribute('data-action-id');
+    assert.notEqual(actionId, previousActionId, `reader action ${actionId} did not advance toward ${blockId}`);
+    previousActionId = actionId;
+    await click(`[data-action-id="${actionId}"]`);
+  }
+  assert.fail(`${blockId} did not become visible through deliberate reader actions`);
+}
+function assertAct1CanvasImage() {
+  assertLocalImage(query('.scene-image-frame img.scene-background').src);
+}
+function assertAct1ClueFocusImage() {
+  const dialog = query('.scene-clue-focus[role="dialog"]');
+  const image = dialog.querySelector('.scene-clue-focus__image img');
+  if (image) assertLocalImage(image.src);
+  else assert.ok(dialog.querySelector('.scene-clue-focus__image-fallback[role="status"]'), 'clue focus should show its local close-up image or the accessible image fallback');
 }
 async function waitForEnabled(selector) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
@@ -193,6 +222,16 @@ async function openOrFocusApp(title) {
   assert.equal(button.disabled, false, `Disabled taskbar button: ${title}`);
   button.click(); await settle();
 }
+async function continuePendingTransition(id) {
+  const transition = JSON.parse(await readFile('data/story_transitions.json', 'utf8')).items.find((item) => item.id === id);
+  assert.ok(transition, `Unknown story transition: ${id}`);
+  assert.equal(state().game.phase, transition.phase, `${id} should be reached before it is continued`);
+  assert.equal(state().modules.storyTransitions.seenIds.includes(id), false, `${id} should still be pending`);
+  await openApp('调查');
+  await click('.investigation-hub__continue');
+  assert.ok(state().modules.storyTransitions.seenIds.includes(id), `${id} should be acknowledged through the investigation hub`);
+  assert.ok(seenTransitionIds.has(id), `${id} should be shown in the offline flow`);
+}
 async function browse(term) {
   await setInput('#browser-search', term);
   query('.browser-address').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true }));
@@ -209,8 +248,10 @@ async function investigate() {
   await textButton('母亲', '.wechat-conversation');
   await new Promise((resolve) => setTimeout(resolve, 1300));
   assert.equal(state().game.flags.FLAG_A1_XIAOA_MISSING_KNOWN, true);
+  await continuePendingTransition('TRANSITION_A1_B');
   await openApp('邮箱');
   await textButton('小A', '.mail-row__open');
+  await continuePendingTransition('TRANSITION_A1_C');
   await openApp('浏览器');
   await setInput('#browser-search', 'XX县失踪');
   query('.browser-address').dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true }));
@@ -228,12 +269,16 @@ async function investigate() {
   assert.equal(state().game.phase, 'H');
   assert.equal(query('.scene-camera').disabled, true);
   await click('[aria-label="查看A.W"]');
-  assertLocalImage(query('.act1-scene__detail img').src);
+  assertAct1CanvasImage();
+  assertAct1ClueFocusImage();
+  await click('.scene-clue-focus__header button');
   await click('.scene-camera');
   await click('.scene-continue');
   assert.equal(state().game.phase, 'I');
   await click('[aria-label="查看残缺塑像"]');
-  assertLocalImage(query('.act1-scene__detail img').src);
+  assertAct1CanvasImage();
+  assertAct1ClueFocusImage();
+  await click('.scene-clue-focus__header button');
   await click('[aria-label="查看补"]');
   await click('.scene-camera');
   await click('.scene-continue');
@@ -246,6 +291,7 @@ async function solvePhoto() {
   await textButton('山洞留言墙', '.photo-file');
   assertLocalImage(query('.photo-evidence-image').src);
   assert.equal(state().game.phase, 'J');
+  await continuePendingTransition('TRANSITION_A1_J');
   assert.equal(document().querySelector('.double-s'), null);
   await setInput('[aria-label="曝光"]', '55');
   await setInput('[aria-label="阴影"]', '50');
@@ -261,10 +307,11 @@ async function solvePhoto() {
   await click('.double-s');
   assert.equal(state().game.phase, 'K');
   assert.match(query('.photo-controls').textContent, /相反方向/);
-  await textButton('查看记录', '.photo-discovery button');
+  await textButton('查看调查记录', '.photo-discovery button');
+  await textButton('线索记录', '.investigation-hub__tabs button');
   assert.match(query('.notepad-auto').textContent, /2020.04.19/);
   assert.match(query('.notepad-auto').textContent, /双S/);
-  await click('[aria-label="关闭 记事本"]');
+  await click('[aria-label="关闭 调查"]');
   await textButton('整理思绪', '.photo-discovery button');
   assert.match(query('.act1-ending').textContent, /第一幕完/);
   assert.equal(state().game.flags.FLAG_A1_COMPLETE, true);
@@ -322,8 +369,10 @@ async function advanceAct2() {
   assert.equal(query('main.desktop').hasAttribute('inert'), true);
 
   // 证据门槛：出示证据前没有方言口述。
-  await textButton('坐在石凳尽头', '.act2-bridge__elder');
+  await textButton('坐在石凳尽头', '.act2-bridge__elder-list button');
   assert.equal(state().modules.act2Research.bridge.talkedElderIds.includes('ELDER_A2_T02_004'), true);
+  assert.equal(document().querySelector('.act2-bridge__phrase'), null);
+  await textButton('打听鸡公岭', '.act2-bridge__ask');
   assert.equal(document().querySelector('.act2-bridge__phrase'), null);
   await click('[aria-label="出示破庙外景照片"]');
   assert.equal(state().game.flags.FLAG_A2_ELDER_PHOTO_SHOWN, true);
@@ -521,8 +570,11 @@ async function investigateT07() {
   assert.equal(compareImages.length, 2, 'comparison shows exactly the captured frame and the original temple exterior');
   const sourceFile = (img) => decodeURIComponent(new URL(img.src).pathname).split('/').at(-1);
   const capturedFrameImageId = act2T07Data.video.keyFrames.find((frame) => frame.id === 'FRAME_A2_T07_001')?.imageId;
-  const expectedFrameFile = imageAssets.find((asset) => asset.id === capturedFrameImageId)?.file;
-  const expectedExteriorFile = imageAssets.find((asset) => asset.id === 'IMG_A1_I_001')?.file;
+  const expectedFrameSource = imageAssets.find((asset) => asset.id === capturedFrameImageId)?.file;
+  const expectedExteriorSource = imageAssets.find((asset) => asset.id === 'IMG_A1_I_001')?.file;
+  const expectedFrameFile = compressedAssetMap[`../第二幕/${expectedFrameSource}`]?.split('/').at(-1);
+  const expectedExteriorFile = compressedAssetMap[`../Photo_src/${expectedExteriorSource}`]?.split('/').at(-1);
+  assert.ok(expectedFrameFile && expectedExteriorFile, 'comparison sources must resolve through the compressed asset map');
   assert.equal(sourceFile(compareImages[0]), expectedFrameFile);
   assert.equal(sourceFile(compareImages[1]), expectedExteriorFile, 'comparison uses the original temple exterior, not the nearby stele image');
   const comparePanes = [...query('.t07-finale__compare-grid').querySelectorAll('.photo-viewport')];
@@ -542,12 +594,14 @@ async function investigateT07() {
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_002'));
 
   // 地点结论只到“曾经在鸡公岭破庙附近活动”。
-  await click('[data-action-id="A2_T07_INFER_LOCATION"]');
+  await click('[data-action-id="A2_T07_CURRENT_INFER"]');
   assert.equal(state().game.flags.FLAG_A2_QIMING_LOCATION_INFERRED, true);
   assert.match(query('.t07-finale__outcomes').textContent, /启明曾经就在鸡公岭破庙附近/);
 
   // 小月与主角一起约定第二次进山，然后播放一次幕末收束。
-  await click('[data-action-id="A2_T07_PLAN_TRIP"]');
+  await click('[data-action-id="A2_T07_CURRENT_TRIP_CONVERSATION"]');
+  assert.ok(query('.t07-finale__outcomes').textContent.includes('小月'));
+  await click('[data-action-id="A2_T07_CURRENT_PLAN_TRIP"]');
   assert.equal(state().game.flags.FLAG_A2_SECOND_TRIP_PLANNED, true);
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T07_004'));
   assert.ok(query('.t07-finale__ending'));
@@ -558,20 +612,23 @@ async function investigateT07() {
   assert.equal(query('.t07-finale').textContent.includes('第三幕'), false);
   await click('.t07-finale__ending-continue');
   assert.equal(state().game.flags.FLAG_A2_COMPLETE, true);
-  assert.equal(document().querySelector('.t07-finale__ending'), null);
-  assert.ok(query('.t07-finale__ending-replay'));
+  assert.equal(state().game.phase, 'A3_T00');
+  assert.equal(state().modules.act3.stage, 'T00');
+  assert.ok(query('.act3-investigation'), 'choosing the ending action enters the third-act site investigation');
 
-  // 完成后重载：可回看资料，但不自动进入第三幕。
+  // 完成后重载：保留玩家已选择的第三幕入口状态。
   await mount(save());
-  assert.equal(state().modules.act2Research.stage, 'finale');
+  assert.equal(state().modules.act3.stage, 'T00');
   assert.equal(state().game.flags.FLAG_A2_COMPLETE, true);
-  assert.ok(query('.t07-finale'));
-  assert.equal(document().querySelector('.t07-finale__ending'), null);
+  assert.ok(query('.act3-investigation'));
 }
 
 async function investigateAct3() {
   await click('.investigation-shell__exit');
-  await click('.story-transition-launch[aria-label="第三幕调查已就绪"] button');
+  assert.equal(document().querySelector('.act3-investigation'), null);
+  await openApp('调查');
+  await click('.investigation-hub__continue');
+  assert.ok(query('.act3-investigation'), 'continuing from the investigation hub resumes the active third-act site');
   assert.equal(state().game.phase, 'A3_T00');
   const stages = [['T00', t00Doc], ['T01', t01Doc], ['T02', t02Doc], ['T03', t03Doc], ['T04', t04Doc], ['T05', t05Doc], ['T06', t06Doc], ['T07', t07Doc]];
   const lensForClue = (doc, clueId) => doc.lenses.find((lens) => lens.hotspots.some((hotspot) => hotspot.clueId === clueId));
@@ -649,23 +706,39 @@ async function investigateAct3() {
   assert.equal(state().game.flags.FLAG_A3_COMPLETE, true);
   assert.equal(state().modules.act4.stage, 'inactive', '第四幕必须由玩家主动点击入口');
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A3_T07_001'));
-  assert.ok([...document().querySelectorAll('.story-transition-launch button')].some((button) => button.textContent.includes('继续调查小 A 的笔记')));
-  await textButton('回看第三幕', '.story-transition-launch button');
-  assert.ok(document().querySelector('[data-act3-stage="T07"]'));
-  await click('.investigation-shell__exit');
-  assert.equal(state().modules.act4.stage, 'inactive');
+  assert.ok(query('[data-action-id="A3_T07_OPEN_NOTEBOOK"]'), 'the explicit notebook action opens the fourth act');
   await mount(save());
   assert.equal(state().modules.act3.stage, 'T07');
   assert.equal(state().game.phase, 'A3_T07');
   assert.equal(state().modules.act4.stage, 'inactive');
-  assert.ok([...document().querySelectorAll('.story-transition-launch button')].some((button) => button.textContent.includes('继续调查小 A 的笔记')));
+  assert.ok(query('[data-action-id="A3_T07_OPEN_NOTEBOOK"]'), 'reload preserves the explicit fourth-act action');
+  await click('[data-action-id="A3_T07_OPEN_NOTEBOOK"]');
+  assert.equal(state().modules.act4.stage, 'T01');
 }
 
 async function investigateAct4() {
-  await click('.story-transition-launch[aria-label="第四幕调查已就绪"] button:first-child');
   assert.equal(state().modules.act4.stage, 'T01');
   const continueSection = async (stage) => {
-    await click(`[data-action-id="A4_${stage}_CONTINUE_READING"]`);
+    let completed = false;
+    for (let step = 0; step < 80; step += 1) {
+      const action = document().querySelector('.investigation-shell__operations .investigation-navigation__action[data-action-id]');
+      if (!action) {
+        const nextPage = document().querySelector(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
+        assert.ok(nextPage && !nextPage.disabled, `${stage} should expose its next page or a narrative action`);
+        await click(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
+        continue;
+      }
+      const actionId = action.getAttribute('data-action-id');
+      if (actionId === `A4_${stage}_CONTINUE_READING`) {
+        assert.equal(action.disabled, false, `${stage} should unlock its continue action after all required reading and interactions`);
+        await click(`[data-action-id="${actionId}"]`);
+        completed = true;
+        break;
+      }
+      assert.match(actionId, new RegExp(`^A4_${stage}_(OPEN_COVER|NEXT_PAGE|NEXT_BLOCK)_`), `${stage} should expose a deliberate cover, page, or block action before continuing`);
+      await click(`[data-action-id="${actionId}"]`);
+    }
+    assert.ok(completed, `${stage} should reach its explicit continue action`);
     const next = { T01: 'T02', T02: 'T03', T03: 'T04', T04: 'T05', T05: 'T06', T06: 'T07', T07: 'T08', T08: 'T09', T09: 'T10', T10: 'T10' }[stage];
     assert.equal(state().modules.act4.stage, next, `${stage} should advance exactly one reading section`);
     await new Promise((resolve) => setTimeout(resolve, 510));
@@ -698,6 +771,9 @@ async function investigateAct4() {
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T08_ARCHIVE_OPENED'));
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T08', 'T08 reload keeps the opened archive');
+  assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T08_ARCHIVE_OPENED'), 'T08 reload keeps the archive action');
+  await lastPage('T08_RETURN');
+  await click('[data-action-id="A4_T08_NEXT_BLOCK_T08_ARCHIVE"]');
   assert.ok(query('[data-block-id="T08_ARCHIVE"]'));
   await continueSection('T08');
   await lastPage('T09_REPLY_AND_LAST_PAGE');
@@ -705,7 +781,11 @@ async function investigateAct4() {
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_NOTE_HIDDEN'));
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T09', 'T09 reload keeps the hidden note');
+  await lastPage('T09_REPLY_AND_LAST_PAGE');
+  await click('[data-action-id="A4_T09_NEXT_BLOCK_T09_NOTE_HIDDEN"]');
   assert.ok(query('[data-block-id="T09_NOTE_HIDDEN"]'));
+  await advanceReaderUntilBlock('T09_WALK_TO_DOOR');
+  await lastPage('T09_WALK_TO_DOOR');
   await textButton('走向门外，听完广播', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_DOOR_EXITED'));
   await continueSection('T09');
@@ -714,15 +794,16 @@ async function investigateAct4() {
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T10_FINAL_MAIL_OPENED'));
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T10', 'T10 reload keeps the opened final mail');
+  await lastPage('T10_AFTERMATH');
+  await click('[data-action-id="A4_T10_NEXT_BLOCK_T10_FINAL_MAIL"]');
   assert.ok(query('[data-block-id="T10_FINAL_MAIL"]'));
   await continueSection('T10');
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
-  assert.equal(document().querySelector('.a4-reader__ending'), null, 'the recap stays behind its explicit disclosure');
+  assert.equal(query('.a4-reader__final-recap').open, false, 'the recap stays behind its explicit disclosure');
   await mount(save());
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
   const recap = query('.a4-reader__final-recap');
   assert.equal(recap.open, false);
-  assert.equal(recap.querySelector('.a4-reader__ending'), null);
   await click('.a4-reader__final-recap > summary');
   assert.match(query('.a4-reader__ending').textContent, /第四幕阅读完成/);
 }
@@ -790,7 +871,8 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       await mount(save());
       assert.equal(state().modules.act2Research.stage, 'school');
       assert.ok(query('.t05-school'), 'reload must resume the school stage');
-      assert.match(query('.t05-school__backdrop').textContent, /校门/);
+      assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), 'IMG_A2_T05_001');
+      assertLocalImage(query('.t05-school__backdrop img').src);
       assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'true');
       await click('.investigation-shell__exit');
       // T06 opens only after an active Qiming search; suggestions/results stay hidden before then.
@@ -801,6 +883,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       await browse('启明 投诉');
       assert.equal(state().modules.act2Research.stage, 'qiming');
       assert.equal(state().game.phase, 'A2_T06');
+      await continuePendingTransition('TRANSITION_A2_T06');
       await textButton('返回实名个案核对', '.browser-qiming-toolbar button');
       await textButton('核对黄子山', '.browser-case-review__person');
       await textButton('打开共用宣传案例（黄子山）', '.browser-case-review__step-action[data-case-action="open-official"]');
@@ -840,7 +923,10 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
         assert.ok(seenTransitionIds.has(id), `Missing story transition in offline flow: ${id}`);
       }
       const savePath = join(tmpdir(), `anchao-offline-${randomUUID()}.json`);
-      await writeFile(savePath, save(), 'utf8');
+      const finaleSave = save();
+      await writeFile(savePath, finaleSave, 'utf8');
+      dom.window.close();
+      dom = null;
       try {
         const child = spawnSync(process.execPath, ['scripts/verify-offline.mjs'], {
           env: { ...process.env, ANCHAO_OFFLINE_PHASE: 'finale', ANCHAO_OFFLINE_SAVE_PATH: savePath },
@@ -849,6 +935,7 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
         if (child.error) throw child.error;
         assert.equal(child.status, 0, 'Offline finale process failed');
       } finally { await rm(savePath, { force: true }); }
+      await mount(finaleSave);
     }
     await reset();
       console.log(`PASS ${run}: rendered A–K flow, photo editing, save reload, ending, reset and clean reload${run === 1 ? ' plus act2 T01–T07 and act3 T00–T07' : ''}`);

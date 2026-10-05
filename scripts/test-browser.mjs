@@ -23,9 +23,9 @@ try {
   ], { encoding: 'utf8', timeout: 30_000, maxBuffer: 4 * 1024 * 1024 });
   if (result.error) throw result.error;
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /<main class="desktop"/);
+  assert.match(result.stdout, /<main class="desktop(?:\s[^\"]*)?"/);
   assert.match(result.stdout, /data-story-transition="TRANSITION_A1_INTRO"/);
-  assert.match(result.stdout, /file:\/\/\/.*\/assets\/UI2\.png/);
+  assert.match(result.stdout, /file:\/\/\/.*\/assets\/UI2\.webp/);
   assert.doesNotMatch(result.stdout + result.stderr, /ERR_FILE_NOT_FOUND|Uncaught TypeError|Uncaught ReferenceError/);
   assert.doesNotMatch(result.stdout, /(?:src|href)="https?:\/\//i);
   console.log(`PASS: ${browser} opened ${pathToFileURL(entry).href} and mounted the desktop with local images`);

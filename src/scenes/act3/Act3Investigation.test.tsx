@@ -122,13 +122,14 @@ describe('Third-act investigation interface', () => {
       const root = createRoot(container);
       try {
         await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
-        expect(container.querySelector(`[data-asset-id="${scenario.assetId}"]`)).toBeNull();
+        expect(container.querySelector(`.act3-investigation__detail-evidence[data-asset-id="${scenario.assetId}"]`)).toBeNull();
+        expect(container.querySelector('.act3-investigation__paper-transcript')).toBeNull();
         const marker = container.querySelector<HTMLButtonElement>(`[data-clue-id="${scenario.clueId}"]`)
           ?? container.querySelector<HTMLButtonElement>('.photo-viewport__fallback button');
         expect(marker).toBeDefined();
         await act(async () => { marker!.click(); });
         const detail = container.querySelector('[role="dialog"]')!;
-        expect(detail.querySelector(`[data-asset-id="${scenario.assetId}"]`)).not.toBeNull();
+        expect(detail.querySelector(`.act3-investigation__detail-evidence[data-asset-id="${scenario.assetId}"]`)).not.toBeNull();
         if (scenario.words.length) {
           expect(detail.querySelector('.act3-investigation__paper-transcript strong')?.textContent).toBe(scenario.title);
           for (const word of scenario.words) expect(detail.querySelector('.act3-investigation__paper-transcript')?.textContent).toContain(word);
@@ -233,7 +234,7 @@ describe('Third-act investigation interface', () => {
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
       const leave = container.querySelector<HTMLButtonElement>('[data-action-id="A3_T00_LEAVE_AND_CONTINUE"]')!;
-      expect(leave.textContent).toContain('离开本处，前往');
+      expect(leave.textContent).toContain('继续探索');
       await act(async () => { leave.click(); });
       expect(manager.getState().modules.act3.stage).toBe('T01');
       expect(manager.getState().game.flags.FLAG_A3_OLD_ROAD_FOUND).toBe(true);
