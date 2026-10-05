@@ -398,6 +398,103 @@
     {"id":"IMG_A4_T10_002","title":"两张纸片","act":4,"phase":"A4_T10","source":"scene","purpose":"当下桌面两张旧纸与手写 wake/back 并列，人物手部入镜。","unlockCondition":[],"relatedFlags":[],"notes":"","assetType":"image","file":"IMG_A4_T10_002.png"},
     {"id":"IMG_A4_T10_003","title":"三杯饮料","act":4,"phase":"A4_T10","source":"scene","purpose":"咖啡馆桌面三杯饮料与手机，第三杯在两人之间，克制留白。","unlockCondition":[],"relatedFlags":[],"notes":"","assetType":"image","file":"IMG_A4_T10_003.png"},
     {"id":"IMG_A4_T10_004","title":"数月之后","act":4,"phase":"A4_T10","source":"scene","purpose":"当下生活桌面与简短聊天记录，日历翻过数月，不暗示监控。","unlockCondition":[],"relatedFlags":[],"notes":"","assetType":"image","file":"IMG_A4_T10_004.png"},
-    {"id":"IMG_A4_T10_005","title":"最后一封邮件","act":4,"phase":"A4_T10","source":"scene","purpose":"普通邮箱收件箱内一封启明邮件，内容文字层单独显示，不见发件人实体。","unlockCondition":[],"relatedFlags":[],"notes":"","assetType":"image","file":"IMG_A4_T10_005.png"}
+    {"id":"IMG_A4_T10_005","title":"最后一封邮件","act":4,"phase":"A4_T10","source":"scene","purpose":"普通邮箱收件箱内一封启明邮件，内容文字层单独显示，不见发件人实体。","unlockCondition":[],"relatedFlags":[],"notes":"","assetType":"image","file":"IMG_A4_T10_005.png"},
+    {
+      "id": "IMG_A2_T03_002",
+      "title": "县图书馆旧卷封面",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "scene",
+      "purpose": "县图书馆旧卷封面近景；准确标题由网页文字显示。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 参照图生成的旧卷封面照片；不含标题文字。",
+      "assetType": "image",
+      "file": "IMG_A2_T03_002.png"
+    },
+    {
+      "id": "IMG_A2_T03_003",
+      "title": "旧卷纸页",
+      "act": 2,
+      "phase": "A2_T03",
+      "source": "scene",
+      "purpose": "同卷旧纸细节配图；正文由网页准确显示。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 参照图生成的留白旧纸照片；不含正文或符号。",
+      "assetType": "image",
+      "file": "IMG_A2_T03_003.png"
+    },
+    {
+      "id": "IMG_A2_T05_012",
+      "title": "学霸笔记页边近景",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "已有学霸笔记的页边近景；双 S 由既有共用 SVG 叠加。",
+      "unlockCondition": [
+        "FLAG_A2_SCHOOL_ENTERED"
+      ],
+      "relatedFlags": [
+        "FLAG_A2_SCHOOL_SS_FOUND"
+      ],
+      "notes": "imagegen 参照图生成的同款笔记页边；页边留空，不生成双 S。",
+      "assetType": "image",
+      "file": "IMG_A2_T05_012.png"
+    },
+    {
+      "id": "IMG_A3_T06_009",
+      "title": "空神龛底座近景",
+      "act": 3,
+      "phase": "A3_T06",
+      "source": "scene",
+      "purpose": "T06 空底座近景，与第一幕破庙塑像照片并列观察。",
+      "unlockCondition": [
+        "FLAG_A3_KITCHEN_DOOR_REACHED"
+      ],
+      "relatedFlags": [],
+      "notes": "imagegen 参照图生成；保持空底座，不含塑像、文字或新线索。",
+      "assetType": "image",
+      "file": "IMG_A3_T06_009.png"
+    },
+    {
+      "id": "IMG_A4_T06_007",
+      "title": "禁闭室铁门",
+      "act": 4,
+      "phase": "A4_T06",
+      "source": "scene",
+      "purpose": "仍在使用的禁闭室；三孔与翻盖送餐口清楚可辨。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 参照图生成；门孔透入少量光，不展示暴力。",
+      "assetType": "image",
+      "file": "IMG_A4_T06_007.png"
+    },
+    {
+      "id": "IMG_A4_T08_011",
+      "title": "大学食堂日常",
+      "act": 4,
+      "phase": "A4_T08",
+      "source": "scene",
+      "purpose": "食堂用餐桌面与窗外春日校园配图，不新增可辨身份人物。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 参照原文与校园参照图生成；餐盘及文字保持无品牌、无可读字。",
+      "assetType": "image",
+      "file": "IMG_A4_T08_011.png"
+    },
+    {
+      "id": "IMG_A4_T08_012",
+      "title": "凌晨走廊 · 消防栓旁",
+      "act": 4,
+      "phase": "A4_T08",
+      "source": "scene",
+      "purpose": "厨房外、消防箱旁低视角走廊；不以厨房作此段封面。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 参照图生成；凌晨低照度、地面干燥，消防箱清晰；不含人物或笔记。",
+      "assetType": "image",
+      "file": "IMG_A4_T08_012.png"
+    }
   ]
 }
