@@ -9,7 +9,7 @@ describe('clampWindowBounds', () => {
   });
 
   it('shrinks windows to narrow viewports while keeping usable minimums when possible', () => {
-    expect(clampWindowBounds({ x: -20, y: 80, width: 900, height: 500 }, 390, 844)).toEqual({
+    expect(clampWindowBounds({ x: -20, y: 700, width: 900, height: 500 }, 390, 844)).toEqual({
       x: 0, y: 280, width: 390, height: 500,
     });
     expect(clampWindowBounds({ x: 0, y: 0, width: 400, height: 300 }, 280, 220)).toEqual({
