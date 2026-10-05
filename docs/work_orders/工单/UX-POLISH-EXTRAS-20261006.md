@@ -29,6 +29,7 @@
 ## 允许写入
 
 - src/App.tsx、index.html、src/modules/notepad/**、src/modules/settings/**（新增）
+- scripts/verify-offline.mjs、scripts/test-browser.mjs（仅随真实UI标签/DOM调整验收驱动；保留全部剧情状态、无网络、资源与重载断言，禁止通过减少覆盖掩盖失败）
 - src/components/investigation/**、PhotoViewport.tsx/photoViewport.css、DesktopTaskCard.tsx及同名测试、InvestigationProgress*.tsx及对应测试/investigationProgress.css、ResetProgressButton.tsx
 - src/data/investigationProgressData.ts及对应测试、src/data/narrative/act4Presentation.ts（原act4Narrative.ts绝对禁止）
 - src/scenes/act3/**、src/scenes/act4/**、src/act3/**、src/act4/**
@@ -39,5 +40,9 @@
 禁止A1/A2/browser/WeChat、styles.css/imageAssets.css、AppWindow/DesktopIcon、图片manifest/map/源图、原剧情json/act4Narrative/story策略/Flag/schema。
 
 ## 验收
+
+### A1挂接合同（owner已确认）
+
+DesktopIcon兼容props：selected?: boolean、onSelect?: () => void。App独立瞬时selectedAppId: AppId | null，每个icon传selected={selectedAppId === app.appId}与onSelect；桌面空白event.target === event.currentTarget时清除，不让icon冒泡误清除。键盘detail=0直接打开、touch单击打开，鼠标双击打开由A1组件处理。AppWindow不新增必需prop，局部几何夹取，只在真实变化时回调，App无需另行保存循环。
 
 阅读恢复不推动故事或泄露内容；导入损坏存档失败原存档仍可用，正常导入/导出/重置可用；频繁动作通知即时且末尾/页面退出能保存；异常可见；所有新图片按已发现状态显示；常驻卡片/壁纸/纵列保留。整轮测试由父统一。提交前tsc -b --pretty false + git diff --check，测试编写侧重恢复/存档不坏/flush，非样式快照。
