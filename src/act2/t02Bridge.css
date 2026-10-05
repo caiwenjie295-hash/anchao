@@ -41,10 +41,10 @@
 .act2-bridge__scene-fallback { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 8px; padding: 20px; color: var(--bridge-muted); text-align: center; }
 .act2-bridge__scene-fallback > span { display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid #aebbb1; border-radius: 50%; color: var(--bridge-accent); font-size: 24px; }
 .act2-bridge__scene-fallback p { max-width: 36ch; margin: 0; line-height: 1.6; }
-.act2-bridge__elder { position: absolute; z-index: 2; box-sizing: border-box; display: grid; place-items: start; padding: 0; border: 2px dashed #f7f8f3; border-radius: 3px; color: #fff; background: rgb(35 63 49 / 13%); box-shadow: 0 0 0 1px rgb(24 40 31 / 72%), inset 0 0 0 1px rgb(24 40 31 / 24%); cursor: pointer; }
-.act2-bridge__elder:hover,
-.act2-bridge__elder--active { border-width: 3px; border-color: #d8eadb; background: rgb(49 91 69 / 22%); box-shadow: 0 0 0 2px rgb(25 47 34 / 90%), inset 0 0 0 1px rgb(25 47 34 / 35%); }
-.act2-bridge__elder:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px #315b45, inset 0 0 0 1px rgb(25 47 34 / 35%); }
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder { position: absolute; z-index: 2; box-sizing: border-box; display: grid; place-items: start; min-height: 0; padding: 0; border: 2px dashed #f7f8f3; border-radius: 3px; color: #fff; background: transparent; box-shadow: 0 0 0 1px rgb(24 40 31 / 72%), inset 0 0 0 1px rgb(24 40 31 / 24%); cursor: pointer; }
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder:hover:not(:disabled),
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder.act2-bridge__elder--active { border: 3px dashed #d8eadb; background: transparent; box-shadow: 0 0 0 2px rgb(25 47 34 / 90%), inset 0 0 0 1px rgb(25 47 34 / 35%); }
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px #315b45, inset 0 0 0 1px rgb(25 47 34 / 35%); }
 .act2-bridge__elder-number { position: absolute; top: -10px; left: -10px; display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid #fff; border-radius: 50%; color: #fff; background: #254b37; box-shadow: 0 1px 5px #0008; font-size: 12px; font-weight: 700; }
 .act2-bridge__elder-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; width: min(100%, 920px); }
 .act2-bridge__elder-list button { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; align-items: center; column-gap: 8px; min-width: 0; min-height: 52px; padding: 7px 9px; border: 1px solid var(--bridge-line); border-radius: 6px; color: var(--bridge-ink); background: var(--ui-surface, #fff); font: inherit; text-align: left; cursor: pointer; }

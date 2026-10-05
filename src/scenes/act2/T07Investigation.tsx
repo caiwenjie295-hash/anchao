@@ -193,7 +193,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             : currentStep === 4 ? '记下地点判断'
               : tripConversationPresented ? '与小月商量是否再次进山' : '听听与小月的出发商量';
   const actions: InvestigationAction[] = complete
-    ? onEnterAct3 ? [{ actionId: 'A2_T07_ENTER_ACT3', kind: 'story', target: 'A3_T00', label: '再次进山，调查启明旧址', state: 'ready', onActivate: onEnterAct3 }] : []
+    ? []
     : tripPlanned
       ? [{ actionId: 'A2_T07_COMPLETE_AND_ENTER_ACT3', kind: 'story', target: 'A3_T00', label: '再次进山，调查启明旧址', state: 'ready', onActivate: completeAndEnterAct3 }]
       : currentStep === 1
@@ -480,6 +480,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       {complete && <aside className="t07-finale__closing">
         <p>{finale.closingNote}</p>
         <div className="t07-finale__closing-actions">
+          {onEnterAct3 && <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>}
           <button type="button" className="t07-finale__ending-replay" onClick={reviewMaterials}>{finale.replayLabel}</button>
         </div>
       </aside>}
