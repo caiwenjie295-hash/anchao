@@ -11,6 +11,7 @@
 ## 验证与边界
 
 - `git diff --check` 通过。
-- 未运行 TypeScript、Vitest、浏览器验收或完整门禁：当前 worktree 与主仓均没有 `node_modules`，环境中只有 Node 可执行文件、没有 `tsc`。父任务统一运行门禁与验收。
-- 新增 `windowGeometry.test.ts` 覆盖边缘夹取与窄视口尺寸；扩展 `SceneClueFocus.test.tsx` 覆盖键盘焦点陷阱和关闭后焦点恢复，均待父任务环境执行。
+- 最终 `tsc -b --force --pretty false` 通过。
+- 未运行 Vitest、构建、浏览器验收或完整门禁；新增测试待父任务环境执行，完整验收交由父任务统一运行。
+- 新增 `windowGeometry.test.ts` 覆盖边缘夹取与窄视口尺寸；扩展 `SceneClueFocus.test.tsx` 覆盖键盘焦点陷阱和关闭后焦点恢复。
 - 未修改 `App.tsx`、Browser 实现、微信模块、Flag、剧情门槛、资源图片或资产映射。
