@@ -31,3 +31,9 @@
 | 游戏 / Vitest / test:offline / 真实浏览器试玩 | **NOT RUN** |
 
 延续用户“不用测试”，未新增测试或fixture，仓库一般测试/浏览器要求由用户指令覆盖。以上是源码及产物核对，不声称真实宽窄屏视觉、完整操作或通关已经验收。允许按已授权 --no-ff 合入本地main，功能合并后派同一a2更新进度文档，父再审查并合文档；最终main重建网页和离线包，确认manifest.gitSha=HEAD及资源存在。无push或部署。
+
+## 功能合并后的文档审查
+
+功能 main 合并提交为 `e539d50d4ce63354378384c9ab7f660cb5bb6e8c`。原 a2 的文档提交 `43d9a2b095e3e51ae067190f3e07701a72f3df1c` 仅更新维护导航、progress_log、todo、changelog与本批implementation，实际差异和 diffcheck均通过；原JPEG与发布WebP信息已分别记录，未把构建当成游戏验收，视觉/游玩待办保留。文档结论 **APPROVED**，允许合入本地main，再从最终HEAD生成网页与离线包。
+
+功能合并后的父静态审计确认9个冻结文件与141张原图哈希一致，29个保护路径无存在性/哈希变化，原30项dirty状态逐项相同。最终产物SHA与main HEAD的对应以构建后manifest核对为准；不执行游戏或浏览器测试。
