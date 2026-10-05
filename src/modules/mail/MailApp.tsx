@@ -44,8 +44,9 @@ function MailRow({ mail, selected, read, starred, onOpen, onToggleStar }: {
   onToggleStar: () => void;
 }) {
   return <div className={`mail-row${selected ? ' mail-row--selected' : ''}${read ? ' mail-row--read' : ' mail-row--unread'}`}>
-    <button type="button" className="mail-row__open" onClick={onOpen} aria-current={selected ? 'page' : undefined}>
-      <span className="mail-row__indicator" aria-label={read ? '已读' : '未读'} aria-hidden={read} />
+    <button type="button" className="mail-row__open" onClick={onOpen} aria-current={selected ? 'page' : undefined} aria-label={`${read ? '已读' : '未读'}，${mail.fromName}，${mail.subject}`}>
+      <span className="mail-row__indicator" aria-hidden="true" />
+      <span className="sr-only">{read ? '已读' : '未读'}</span>
       <span className="mail-row__from">{mail.fromName}</span>
       <span className="mail-row__summary"><strong>{mail.subject}</strong><span>{mail.preview}</span></span>
       <time dateTime={mail.sentAt}>{rowDateLabel(mail.sentAt)}</time>
@@ -73,7 +74,11 @@ function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starr
           <h3>附件</h3>
           <div>{mail.attachmentIds.map((attachmentId) => {
             const attachment = attachmentById.get(attachmentId);
-            return attachment ? <span className="mail-attachment" key={attachment.id} data-file-id={attachment.id}><b aria-hidden="true">▤</b><span>{attachment.filename}</span><small>{attachment.id}</small></span> : null;
+            if (!attachment) return null;
+            const kind = attachment.mimeType === 'application/pdf' ? 'PDF 文件'
+              : attachment.mimeType === 'application/zip' ? '压缩文件'
+                : attachment.mimeType === 'text/calendar' ? '日历文件' : '文件';
+            return <div className="mail-attachment" key={attachment.id}><b aria-hidden="true">▤</b><span>{attachment.title}</span><small>{kind} · 邮件附件</small></div>;
           })}</div>
         </section>
       )}
@@ -111,7 +116,7 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
   return (
     <section className={`mail-app${selectedMail ? ' mail-app--has-selection' : ''}`} aria-label="私人邮箱">
       <header className="mail-toolbar">
-        <button type="button" className="mail-folders-toggle" onClick={() => setFoldersOpen((open) => !open)} aria-label="显示邮件文件夹" aria-expanded={foldersOpen}>☰ <span>文件夹</span></button>
+        <button type="button" className="mail-folders-toggle" onClick={() => setFoldersOpen((open) => !open)} aria-label="显示邮件文件夹" aria-expanded={foldersOpen} aria-controls="mail-folders">☰ <span>文件夹</span></button>
         <label className="mail-search"><span className="sr-only">搜索邮件</span><span aria-hidden="true">⌕</span><input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="搜索邮件" /></label>
         <div className="mail-toolbar__actions">
           <button type="button" onClick={refresh} aria-label="刷新邮件列表" title="刷新">↻</button>
@@ -119,7 +124,7 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
           <button type="button" onClick={() => selectedMail && toggleStar(selectedMail.id)} disabled={!selectedMail} aria-label="切换当前邮件星标" title="切换星标">★</button>
         </div>
       </header>
-      <nav className={`mail-folders${foldersOpen ? ' mail-folders--open' : ''}`} aria-label="邮件文件夹">
+      <nav id="mail-folders" className={`mail-folders${foldersOpen ? ' mail-folders--open' : ''}`} aria-label="邮件文件夹">
         <div className="mail-folders__account"><span className="mail-account-avatar" aria-hidden="true">林</span><span><strong>林予</strong><small>lin.yu@example.test</small></span></div>
         {mailFolders.map((folder) => <button type="button" key={folder.id} className={folderKey === folder.folderKey ? 'mail-folder--active' : ''} onClick={() => chooseFolder(folder.folderKey)} aria-current={folderKey === folder.folderKey ? 'page' : undefined}><span>{folder.label}</span><small>{getFolderCount(folder.folderKey, state.modules.mail)}</small></button>)}
       </nav>
