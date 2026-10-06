@@ -69,6 +69,70 @@ describe('Act 4 reader behavior', () => {
     }
   });
 
+  it('moves directly from the final-mail action to its named cover without completing T10', async () => {
+    const section = act4NarrativeSections.find((item) => item.stage === 'T10')!;
+    const aftermath = section.blocks.find((block) => block.id === 'T10_AFTERMATH')!;
+    const finalMail = section.blocks.find((block) => block.id === 'T10_FINAL_MAIL')!;
+    const aftermathPages = act4ReaderTextPages('T10', aftermath.id, aftermath.paragraphs, true)
+      .filter((page) => page.role === 'page' || page.role === 'whole');
+    const finalMailPages = act4ReaderTextPages('T10', finalMail.id, finalMail.paragraphs, true)
+      .filter((page) => page.role === 'page' || page.role === 'whole');
+    expect(finalMailPages).toHaveLength(2);
+    const state = createDefaultState();
+    state.game.act = 4;
+    state.game.phase = 'A4_T10';
+    state.game.flags.FLAG_A3_COMPLETE = true;
+    state.modules.act3.stage = 'T07';
+    state.modules.act4.stage = 'T10';
+    state.modules.act4.completedNarrativeSectionIds = Array.from({ length: 9 }, (_, index) => `A4_READ_T${String(index + 1).padStart(2, '0')}`);
+    state.modules.act4.completedNarrativeActionIds = [
+      'A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED', 'A4_T08_ARCHIVE_OPENED',
+      'A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED',
+    ];
+    state.modules.act4.packageStep = 3;
+    state.modules.act4.broadcastIndex = 6;
+    state.modules.act4.viewedWakeMail = true;
+    setAct4ReadingPosition('T10:current', {
+      activeBlockId: aftermath.id,
+      pageIndexByBlock: { [aftermath.id]: aftermathPages.length - 1 },
+      openedCoverKeys: ['T10:current:T10_AFTERMATH:cover'],
+    });
+    const manager = new StateManager(new EventBus(), state);
+    const { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
+
+    try {
+      expect(host.querySelector('[data-block-id="T10_AFTERMATH"] .a4-reader__segment-pages')?.getAttribute('data-active-page'))
+        .toBe(String(aftermathPages.length));
+      const openMail = host.querySelector<HTMLButtonElement>('.a4-reader__interaction[aria-label="打开最后一封邮件"] button')!;
+      await act(async () => { openMail.click(); });
+
+      const mailBlock = host.querySelector<HTMLElement>('[data-block-id="T10_FINAL_MAIL"]')!;
+      expect(mailBlock.querySelector('.a4-reader__cover h3')?.textContent).toBe('最后一封邮件');
+      expect(host.querySelector('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]')?.textContent).toContain('翻开：最后一封邮件');
+      expect(mailBlock.textContent).not.toContain('主题：关于王澳同学相关事项的说明');
+      expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T10_FINAL_MAIL_OPENED');
+      expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T10');
+      expect(manager.getState().game.flags.FLAG_A4_T10_COMPLETE).not.toBe(true);
+      expect(manager.getState().game.flags.FLAG_A4_COMPLETE).not.toBe(true);
+
+      await act(async () => { host.querySelector<HTMLButtonElement>('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]')!.click(); });
+      expect(mailBlock.querySelector('.a4-reader__cover')).toBeNull();
+      expect(mailBlock.textContent).toContain('几个月后，我收到了一封邮件。');
+      expect(mailBlock.textContent).toContain('主题：关于王澳同学相关事项的说明');
+      expect(mailBlock.querySelector('.a4-reader__segment[data-reader-active="true"] h4')?.textContent).toBe('最后一封邮件');
+      expect(mailBlock.querySelector('.a4-reader__pager span')?.textContent).toBe('1 / 2');
+      await act(async () => { mailBlock.querySelector<HTMLButtonElement>('.a4-reader__pager button:last-child')!.click(); });
+      expect(mailBlock.querySelector('.a4-reader__segment[data-reader-active="true"] h4')?.textContent).toBe('最后一封邮件');
+      expect(mailBlock.querySelector('.a4-reader__pager span')?.textContent).toBe('2 / 2');
+      expect(mailBlock.querySelector('.a4-reader__page-directory')?.textContent).not.toContain('第 2 段');
+      expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T10');
+      expect(manager.getState().game.flags.FLAG_A4_COMPLETE).not.toBe(true);
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
   it('opens the private blog, preserves all fourteen posts, and continues into T04 from the feed end', async () => {
     const state = createDefaultState();
     state.game.phase = 'A4_T03';
