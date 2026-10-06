@@ -126,4 +126,35 @@ describe('SaveRecoveryPanel', () => {
     expect(manager.getState().modules.notepad.userText).not.toBe('临时记录保留');
     expect(manager.getRecoveryState().kind).toBe('none');
   });
+
+  it('does not treat exporting temporary progress as exporting a conflicting original record', () => {
+    const storage = memoryStorage();
+    const currentOriginal = '{current damaged original';
+    const protectedOriginal = '{older preserved original';
+    storage.setItem(SAVE_KEY, currentOriginal);
+    storage.setItem(SAVE_RECOVERY_KEY, protectedOriginal);
+    const manager = new StateManager(new EventBus(), undefined, storage);
+    const deviceSave = createDefaultState();
+    deviceSave.game.phase = 'E';
+    storage.setItem(SAVE_KEY, JSON.stringify(deviceSave));
+    expect(manager.refreshSaveRecovery()).toEqual({ ok: false, reason: 'device-save-available' });
+    const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:save-export-test');
+    const clickLink = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+
+    container = document.createElement('div');
+    document.body.append(container);
+    root = createRoot(container);
+    act(() => root?.render(createElement(SaveRecoveryPanel, { manager })));
+    const temporary = [...container.querySelectorAll('button')].find((button) => button.textContent === '导出本次临时记录') as HTMLButtonElement;
+    const protectedRecord = [...container.querySelectorAll('button')].find((button) => button.textContent === '导出先前保护记录') as HTMLButtonElement;
+    act(() => temporary.click());
+    act(() => protectedRecord.click());
+
+    const confirmation = container.querySelector<HTMLInputElement>('input[type="checkbox"]');
+    expect(confirmation).not.toBeNull();
+    expect(confirmation?.disabled).toBe(true);
+    expect(createObjectUrl).toHaveBeenCalledTimes(2);
+    clickLink.mockRestore();
+    createObjectUrl.mockRestore();
+  });
 });

@@ -58,6 +58,34 @@ describe('save recovery boundary', () => {
     expect(loadState(backing).modules.notepad.userText).toBe('存储不可用期间的临时笔记');
   });
 
+  it('keeps the recovery entry and temporary progress when reads recover but writes are still denied', () => {
+    let denied = true;
+    let denyWrites = false;
+    const backing = memoryStorage();
+    const storage = memoryStorage({
+      getItem: (key) => { if (denied) throw new Error('storage denied'); return backing.getItem(key); },
+      setItem: (key, value) => {
+        if (denied || denyWrites) throw new Error('storage write denied');
+        backing.setItem(key, value);
+      },
+      removeItem: (key) => { if (denied) throw new Error('storage denied'); backing.removeItem(key); },
+    });
+    const manager = new StateManager(new EventBus(), undefined, storage);
+    manager.setNotepadUserText('仍需保留的临时进度');
+    denied = false;
+    denyWrites = true;
+
+    expect(manager.refreshSaveRecovery()).toEqual({ ok: false, reason: 'storage-unavailable' });
+    expect(manager.getRecoveryState().kind).toBe('unavailable');
+    expect(manager.getState().modules.notepad.userText).toBe('仍需保留的临时进度');
+    expect(backing.getItem(SAVE_KEY)).toBeNull();
+
+    denyWrites = false;
+    expect(manager.refreshSaveRecovery()).toEqual({ ok: true });
+    expect(manager.getRecoveryState().kind).toBe('none');
+    expect(loadState(backing).modules.notepad.userText).toBe('仍需保留的临时进度');
+  });
+
   it('requires confirmation before adopting a record found after a storage outage and synchronizes import events', () => {
     vi.useFakeTimers();
     let denied = true;

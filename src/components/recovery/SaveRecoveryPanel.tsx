@@ -73,7 +73,7 @@ export function SaveRecoveryPanel({ manager, onContinue, onReplaceProtectedOrigi
       setFeedback('暂时无法开始下载，请稍后再试。');
       return;
     }
-    if (which === 'current' || which === 'temporary') setExportedCurrent(true);
+    if (which === 'current') setExportedCurrent(true);
     else if (which === 'protected') setExportedProtected(true);
     setFeedback('记录副本已开始下载。');
   };

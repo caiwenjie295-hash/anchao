@@ -402,7 +402,10 @@ export class StateManager {
         return { ok: true };
       }
       if (write.recovery) this.setRecoveryState(recoverySnapshot(write.recovery, this.storage));
-      else if (!('originalText' in this.recoveryState)) this.setRecoveryState(recoverySnapshot(result, this.storage));
+      else {
+        const originalText = this.exportOriginalSave();
+        this.setRecoveryState(recoverySnapshot({ kind: 'unavailable', ...(originalText === null ? {} : { raw: originalText }) }, this.storage));
+      }
       this.setSaveStatus(write.reason === 'recovery-slot-occupied' || write.reason === 'recovery-protection-failed' || write.reason === 'recovery-required'
         ? 'recovery-required'
         : 'unavailable');

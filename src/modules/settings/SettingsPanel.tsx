@@ -70,7 +70,8 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
     setIsImporting(true);
     try {
       const serialized = await file.text();
-      const result = manager.importSave(serialized, { replaceProtectedOriginal });
+      // Selecting a file is a fresh import attempt. Only the explicit retry button may replace a protected original.
+      const result = manager.importSave(serialized, { replaceProtectedOriginal: false });
       if (result.ok) {
         setPendingImportText(null);
         setReplaceProtectedOriginal(false);
