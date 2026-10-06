@@ -2,6 +2,8 @@
 
 ## 当前待办
 
+- [x] UX-RHYTHM-READER-20261006 已通过 `APPROVED` 并合入本地 `main`（`a601d5253b9babfca080b2fd50c254fc63858f14`）；第四幕完整回合分页、14条私人动态、最后邮件封面、阅读回归/落幕路径验收完成。统一 `npm test` 75文件/404项全通过，生产/离线构建308 modules通过，功能验收离线包154文件/44,011,802 bytes；默认两轮离线流程与1280×720、390×844真实浏览器关键路径通过。详见 `docs/ux-rhythm-20261006/reader-delivery.md`。
+- [ ] 四文档合入本地 `main` 后，由父重建生产及离线包并将 `manifest.gitSha` 与最终 `main` HEAD 核对；完成原30项dirty状态的最终哈希审计。当前文档提交前的功能包与保护审计结果不代表文档合并后的最终核对。
 - [x] UX-POLISH-20261006 四幕交互与前端精修已通过 `APPROVED` 审查并合入本地 `main`（`82ad316589312f98fe791df99ec3f21ff3cf3277`）。统一验收为首轮70文件/375项、350通过/25失败，修复后只复验失败所在12文件且79/79通过（另58文件首轮通过）；生产/离线构建、默认两轮完整 offline、Chrome `file://` 与1440×900/390×844重点 IAB 走查通过。准确覆盖及限制见 `docs/reviews/UX-POLISH-20261006.md`。
 - [x] 文档合并后最终包已由主审重建：在 `main` 节点 `5f40f55032360f0edd283f3da02720dc9b9d8c5b`，`npm run build` 与 `npm run build:offline` 均 exit 0、300 modules；离线包151文件/43,820,529 bytes（41.79 MiB），`manifest.gitSha` 与构建节点相同。原图/注册/映射、保护路径与dirty状态、微信均通过审计。交付版本以当前 `main` HEAD 与 `manifest.gitSha` 核对为准；没有推送或部署。
 - [x] AS-COMPRESS-20261003 子分支实现、16份样图审阅和两种构建完成：141张发布副本、逐图账本及138个登记ID映射见 `docs/as-compress-20261003/`；按用户要求游戏测试未运行。父审查通过并合入本地 `main` `6856ecb`。
