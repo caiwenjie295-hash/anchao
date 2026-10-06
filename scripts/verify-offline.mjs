@@ -827,11 +827,15 @@ async function investigateAct4() {
   await lastPage('T10_AFTERMATH');
   await textButton('打开启明的最后一封邮件', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T10_FINAL_MAIL_OPENED'));
+  assert.equal(query('[data-block-id="T10_FINAL_MAIL"] .a4-reader__cover h3').textContent, '最后一封邮件', 'opening the final-mail action moves directly to its unopened cover');
+  assert.equal(document().querySelector('[data-block-id="T10_FINAL_MAIL"] .a4-reader__segment-pages'), null, 'the original final mail remains behind its cover');
+  assert.match(query('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]').textContent, /翻开：最后一封邮件/);
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T10', 'T10 reload keeps the opened final mail');
-  await lastPage('T10_AFTERMATH');
-  await click('[data-action-id="A4_T10_NEXT_BLOCK_T10_FINAL_MAIL"]');
-  assert.ok(query('[data-block-id="T10_FINAL_MAIL"]'));
+  assert.equal(query('[data-block-id="T10_FINAL_MAIL"] .a4-reader__cover h3').textContent, '最后一封邮件', 'T10 reload restores the manual mail cover');
+  await click('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]');
+  assert.match(query('[data-block-id="T10_FINAL_MAIL"]').textContent, /几个月后，我收到了一封邮件。/);
+  assert.match(query('[data-block-id="T10_FINAL_MAIL"]').textContent, /主题：关于王澳同学相关事项的说明/);
   await continueSection('T10');
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
   assert.ok(query('.act4-ending'), 'completing T10 opens the ending layer');

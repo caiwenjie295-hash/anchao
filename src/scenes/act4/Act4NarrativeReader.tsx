@@ -370,6 +370,10 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
       : `${currentKey}:${page.sceneId ?? block.id}:cover`;
     return [{ blockId: block.id, blockKind: block.kind, pages, pageIndex, page, coverKey, coverRequired: needsCover(block.kind), coverOpen: openedCoverKeys.has(coverKey) }];
   });
+  const readingTargetTitle = (target: (typeof pageTargets)[number]) =>
+    stage === 'T10' && target.blockId === 'T10_FINAL_MAIL'
+      ? '最后一封邮件'
+      : target.page.sceneLabel || target.page.label || '这一段';
   const rememberedBlockId = readingPosition.activeBlockId;
   const activeReadingTarget = pageTargets.find((target) => target.blockId === rememberedBlockId) ?? pageTargets.find((target) => target.blockId === `${stage}_ORIGINAL`) ?? pageTargets[0];
   const activeReadingBlockIndex = activeReadingTarget ? visibleBlocks.findIndex((block) => block.id === activeReadingTarget.blockId) : -1;
@@ -391,7 +395,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     : activeReadingTarget && activeReadingTarget.coverRequired && !activeReadingTarget.coverOpen
       ? {
         actionId: `A4_${stage}_OPEN_COVER_${activeReadingTarget.blockId}_${activeReadingTarget.pageIndex + 1}`, kind: 'memory', target: activeReadingTarget.blockId,
-        label: stage === 'T01' ? '翻开小 A 的笔记' : `翻开：${activeReadingTarget.page.sceneLabel || activeReadingTarget.page.label || '这一段'}`, state: 'ready',
+        label: stage === 'T01' ? '翻开小 A 的笔记' : `翻开：${readingTargetTitle(activeReadingTarget)}`, state: 'ready',
         onActivate: () => {
           if (stage === 'T01') setHotelBackgroundExpanded(false);
           markNotebookPageRead(activeReadingTarget.blockId, activeReadingTarget.pageIndex);
@@ -534,7 +538,15 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     if (stage === 'T10' && blockId === 'T10_AFTERMATH' && !hasAction('A4_T10_FINAL_MAIL_OPENED')) {
       return <section className="a4-reader__interaction" aria-label="打开最后一封邮件" key="T10_FINAL_MAIL_INTERACTION">
         <p>几个月后，收件箱里出现一封关于王澳同学相关事项的邮件。</p>
-        <button type="button" onClick={() => manager.openAct4FinalMail()}>打开启明的最后一封邮件</button>
+        <button type="button" onClick={() => transitionAct4View(() => {
+          manager.openAct4FinalMail();
+          // The mail becomes visible only after the action, so the current bounds do not include it yet.
+          setAct4ReadingPosition(readingSpaceKey, {
+            ...readingPosition,
+            activeBlockId: 'T10_FINAL_MAIL',
+            pageIndexByBlock: { ...pageIndexByBlock, T10_FINAL_MAIL: 0 },
+          });
+        })}>打开启明的最后一封邮件</button>
       </section>;
     }
     return null;
@@ -597,9 +609,11 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
           ? act4DateTimeValue(segmentParagraphs[0] ?? '')
           : undefined;
         const firstParagraphIsDate = Boolean(dateHeading);
-        const pageHeading = contentSegment.sceneId
-          ? `${contentSegment.sceneLabel || ''}${(contentSegment.scenePageCount ?? 1) > 1 ? ` · 第 ${(contentSegment.scenePageIndex ?? 0) + 1} 页` : ''}`
-          : contentSegment.label;
+        const pageHeading = stage === 'T10' && blockId === 'T10_FINAL_MAIL'
+          ? '最后一封邮件'
+          : contentSegment.sceneId
+            ? `${contentSegment.sceneLabel || ''}${(contentSegment.scenePageCount ?? 1) > 1 ? ` · 第 ${(contentSegment.scenePageIndex ?? 0) + 1} 页` : ''}`
+            : contentSegment.label;
         const showSegmentHeading = Boolean(pageHeading) && (stage === 'T01' || Boolean(contentSegment.sceneId) || !['T03', 'T05'].includes(stage));
         return <section
           className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`}
@@ -731,7 +745,11 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
             const coverOpen = openedCoverKeys.has(coverKey);
             const showCover = coverRequired && !coverOpen;
             const blockPagePresentation = act4PagePresentation(stage, pageIndex, block.id, currentPage?.label, currentPage?.sceneIndex);
-            const coverTitle = stage === 'T01' ? '小 A 的笔记' : blockPagePresentation?.title ?? currentPage?.sceneLabel ?? currentPage?.label ?? section.title;
+            const coverTitle = stage === 'T01'
+              ? '小 A 的笔记'
+              : stage === 'T10' && block.id === 'T10_FINAL_MAIL'
+                ? '最后一封邮件'
+                : blockPagePresentation?.title ?? currentPage?.sceneLabel ?? currentPage?.label ?? section.title;
             const scenePage = Boolean(currentPage?.sceneId);
             const coverAssetId = scenePage
               ? blockPagePresentation?.illustrationAssetId
@@ -804,7 +822,9 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
                     <nav aria-label={`${navLabel}目录`}>
                       {pages.slice(0, pageIndex + 1).map((item, index) => {
                         const dateLabel = stage === 'T03' && block.id === 'T03_ORIGINAL' ? block.paragraphs[item.from] : item.label;
-                        const label = item.scenePageCount && item.scenePageCount > 1
+                        const label = stage === 'T10' && block.id === 'T10_FINAL_MAIL'
+                          ? `最后一封邮件 · ${index + 1}/${pages.length}`
+                          : item.scenePageCount && item.scenePageCount > 1
                           ? `${item.sceneLabel} · ${item.scenePageIndex! + 1}/${item.scenePageCount}`
                           : stage === 'T05' && block.id === 'T05_ORIGINAL'
                             ? item.label || `第 ${index + 1} 段`
