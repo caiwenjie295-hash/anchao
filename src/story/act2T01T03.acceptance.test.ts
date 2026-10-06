@@ -167,7 +167,11 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await completeT01();
     expect(pick('.story-transition')?.getAttribute('data-story-transition')).toBe('TRANSITION_A2_T02');
     expect(pick('.story-transition-launch')).toBeNull();
-    expect(pick('.act2-experience')?.parentElement?.hasAttribute('inert')).toBe(true);
+    const act2Experience = pick('.act2-experience');
+    const inertAncestor = act2Experience?.closest('[inert]') ?? null;
+    expect(inertAncestor).not.toBeNull();
+    expect(inertAncestor?.contains(act2Experience!)).toBe(true);
+    expect(inertAncestor?.getAttribute('aria-hidden')).toBe('true');
     await click(pick('.story-transition button'));
     expect(pick('.act2-bridge')).not.toBeNull();
     await skipT02();

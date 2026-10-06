@@ -343,7 +343,7 @@ function act4Stage(state: AppState): { location: string; objective: string; next
   const actionSteps: Partial<Record<Exclude<Act4Stage, 'inactive'>, string>> = {
     T01: pageReadingAction,
     T02: actions.includes('A4_T02_LOGIN_SUCCEEDED') ? pageReadingAction : '对照两封旧邮件日期，输入八位数登录账号。',
-    T03: '点击“查看动态”，按日期阅读；末尾可以继续。',
+    T03: '打开王澳的动态，按日期阅读；读到末尾后继续。',
     T04: actions.includes('A4_T04_WAKE_MAIL_OPENED') ? pageReadingAction : '找到并打开已出现的 VVaKe 邮件，随后按页阅读。',
     T05: pageReadingAction,
     T06: pageReadingAction,
