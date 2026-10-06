@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import type { StateManager } from './core/stateManager';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 type ReaderProps = { onExit: () => void };
@@ -13,32 +12,23 @@ describe('App Act 4 reader integration', () => {
   });
   afterEach(() => {
     localStorage.clear();
-    vi.doUnmock('./core/stateManager');
     vi.resetModules();
     vi.useRealTimers();
   });
 
   it('keeps the real Reader entry stable through App clock and desktop updates', async () => {
-    let injectedManager: StateManager | undefined;
-    let managerSubscriptions = 0;
-    vi.doMock('./core/stateManager', async () => {
-      const actual = await vi.importActual<typeof import('./core/stateManager')>('./core/stateManager');
-      if (!injectedManager) {
-        const { createDefaultState } = await vi.importActual<typeof import('./core/defaultState')>('./core/defaultState');
-        const initial = createDefaultState();
-        initial.game.act = 4;
-        initial.game.phase = 'A4_T01';
-        initial.modules.act4.stage = 'T01';
-        initial.modules.act4.readNotebookPages = [];
-        injectedManager = new actual.StateManager(undefined, initial);
-        const subscribe = injectedManager.subscribe;
-        injectedManager.subscribe = (listener) => {
-          managerSubscriptions += 1;
-          return subscribe(listener);
-        };
-      }
-      return { ...actual, stateManager: injectedManager };
-    });
+    const { stateManager } = await import('./core/stateManager');
+    const initial = stateManager.getState();
+    initial.game.act = 4;
+    initial.game.phase = 'A4_T01';
+    initial.game.flags.FLAG_A2_COMPLETE = true;
+    initial.game.flags.FLAG_A3_COMPLETE = true;
+    initial.game.flags.FLAG_A3_SITE_EXITED = true;
+    initial.game.flags.FLAG_A3_NOTEBOOK_FOUND = true;
+    initial.game.flags.FLAG_A3_KITCHEN_EXITED = true;
+    initial.modules.act3.stage = 'T07';
+    initial.modules.act4.stage = 'T01';
+    initial.modules.act4.readNotebookPages = [];
 
     const [{ act, createElement }, { createRoot }, { default: App }, { Act4NarrativeReader }, act4Policy] = await Promise.all([
       import('react'),
@@ -47,8 +37,7 @@ describe('App Act 4 reader integration', () => {
       import('./scenes/act4/Act4NarrativeReader'),
       import('./story/act4/narrativePolicy'),
     ]);
-    const manager = injectedManager;
-    expect(manager?.getState().modules.act4.stage).toBe('T01');
+    expect(stateManager.getState().modules.act4.stage).toBe('T01');
     const reactActEnvironment = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
     const previousActEnvironment = reactActEnvironment.IS_REACT_ACT_ENVIRONMENT;
     reactActEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
@@ -73,10 +62,12 @@ describe('App Act 4 reader integration', () => {
     const host = document.createElement('div');
     document.body.append(host);
     const root = createRoot(host);
+    const buttonByText = (text: string) => Array.from(host.querySelectorAll<HTMLButtonElement>('button'))
+      .find((button) => button.textContent?.trim() === text);
+    const visiblePage = () => host.querySelector('.a4-reader__pager span[aria-live="polite"]')?.textContent;
     try {
       await act(async () => { root.render(createElement(App)); });
       expect(host.querySelector('.a4-reader')).not.toBeNull();
-      expect(managerSubscriptions).toBeGreaterThan(0);
       const initialRenders = readerRenders;
       const initialDerivedCalculations = readerDerivedCalculations;
       expect(initialRenders).toBeGreaterThan(0);
@@ -86,14 +77,28 @@ describe('App Act 4 reader integration', () => {
       expect(readerRenders).toBe(initialRenders);
       expect(readerDerivedCalculations).toBe(initialDerivedCalculations);
 
-      await act(async () => { manager?.openApp('wechat'); });
+      await act(async () => { stateManager.openApp('wechat'); });
+      expect(stateManager.getState().desktop.activeAppId).toBe('wechat');
       expect(readerRenders).toBe(initialRenders);
       expect(readerDerivedCalculations).toBe(initialDerivedCalculations);
 
-      await act(async () => { manager?.readAct4NotebookPage(9); });
-      expect(manager?.getState().modules.act4.readNotebookPages).toContain(9);
-      expect(readerRenders).toBe(initialRenders + 1);
-      expect(readerDerivedCalculations).toBe(initialDerivedCalculations + 1);
+      const openCover = buttonByText('翻开小 A 的笔记');
+      expect(openCover).toBeDefined();
+      await act(async () => { openCover?.click(); });
+      expect(stateManager.getState().modules.act4.readNotebookPages).toContain(1);
+      const rendersAfterOpeningCover = readerRenders;
+      const calculationsAfterOpeningCover = readerDerivedCalculations;
+      expect(rendersAfterOpeningCover).toBe(initialRenders + 1);
+      expect(calculationsAfterOpeningCover).toBe(initialDerivedCalculations + 1);
+      expect(visiblePage()).toMatch(/^1\s*\//);
+
+      const nextPage = buttonByText('下一页');
+      expect(nextPage).toBeDefined();
+      await act(async () => { nextPage?.click(); });
+      expect(stateManager.getState().modules.act4.readNotebookPages).toContain(2);
+      expect(visiblePage()).toMatch(/^2\s*\//);
+      expect(readerRenders).toBe(rendersAfterOpeningCover + 1);
+      expect(readerDerivedCalculations).toBe(calculationsAfterOpeningCover + 1);
     } finally {
       await act(async () => { await vi.advanceTimersByTimeAsync(300); });
       await act(async () => { root.unmount(); });
