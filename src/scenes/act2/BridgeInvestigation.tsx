@@ -19,6 +19,7 @@ import {
 import '../../act2/t02Bridge.css';
 
 const namePartOrder: HeibumuNamePart[] = ['first', 'middle', 'last'];
+const recognizedPhotoAssetId = 'IMG_A1_I_002';
 
 function EvidenceSlot({ assetId, caption }: { assetId: string; caption: string }) {
   if (assetLoader.isAvailable(assetId)) return <EvidenceImage assetId={assetId} caption={caption} />;
@@ -41,7 +42,9 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   const [askedMountainIds, setAskedMountainIds] = useState<string[]>([]);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [sceneFailed, setSceneFailed] = useState(false);
+  const [photoFeedback, setPhotoFeedback] = useState('');
   const phraseRef = useRef<HTMLParagraphElement>(null);
+  const responseWasAvailable = useRef(heard);
 
   const talkRecord = useRef(false);
   useEffect(() => {
@@ -51,6 +54,15 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
     if (manager.getState().game.flags[bridgeFlagIds.audioHeard] !== true) manager.setFlag(bridgeFlagIds.audioHeard, true);
     if (!manager.getState().modules.notepad.autoEntryIds.includes(bridgeNoteIds.phraseHeard)) manager.addNotepadAutoEntry(bridgeNoteIds.phraseHeard);
   }, [heard, manager]);
+
+  useEffect(() => {
+    if (heard && !responseWasAvailable.current) {
+      const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      phraseRef.current?.scrollIntoView?.({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+      phraseRef.current?.focus({ preventScroll: true });
+    }
+    responseWasAvailable.current = heard;
+  }, [heard]);
 
   const solveRecord = useRef(false);
   useEffect(() => {
@@ -173,16 +185,25 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
             {askedMountain && <div className="act2-bridge__reply" aria-label="关于鸡公岭的回答">{selectedElder.mountainReply.map((line) => <p key={line}>{line}</p>)}</div>}
 
             {isClueElderSelected && askedMountain && (
-              <div className="act2-bridge__evidence">
-                <h3>{bridgeScene.evidencePanelTitle}</h3>
+              <details className="act2-bridge__evidence" key={oralProgress ? 'response-found' : 'photo-selection'} open={!oralProgress}>
+                <summary>{bridgeScene.evidencePanelTitle}</summary>
                 <p>{bridgeScene.evidencePanelHint}</p>
                 <ul>{bridgeEvidence.map((item) => (
                   <li key={item.assetId} className="act2-bridge__evidence-item">
                     <div className="act2-bridge__evidence-copy"><strong>{item.name}</strong><span>{item.description}</span></div>
-                    <div className="act2-bridge__evidence-actions"><EvidenceSlot assetId={item.assetId} caption={item.name} /><button type="button" className="act2-bridge__show" aria-label={`出示${item.name}`} onClick={() => manager.showAct2Evidence(item.assetId)}>出示照片</button></div>
+                    <div className="act2-bridge__evidence-actions"><EvidenceSlot assetId={item.assetId} caption={item.name} /><button type="button" className="act2-bridge__show" aria-label={`出示${item.name}`} onClick={() => {
+                      const responseWasAlreadyAvailable = manager.getState().modules.act2Research.bridge.heardPhrase || solved;
+                      manager.showAct2Evidence(item.assetId);
+                      setPhotoFeedback(item.assetId !== recognizedPhotoAssetId
+                        ? '老人没有认出这张照片里的地点；可以换一张继续问。'
+                        : responseWasAlreadyAvailable
+                          ? '老人已经说过这处地名；可以再看看老人原话。'
+                          : '老人接过石碑刻字照片，想起了那处地名。');
+                    }}>出示照片</button></div>
                   </li>
                 ))}</ul>
-              </div>
+                {photoFeedback && <p className="act2-bridge__photo-feedback" role="status">{photoFeedback}</p>}
+              </details>
             )}
 
             {isClueElderSelected && oralProgress && (

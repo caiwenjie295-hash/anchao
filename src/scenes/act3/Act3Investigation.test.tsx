@@ -45,6 +45,29 @@ describe('Third-act investigation interface', () => {
     }
   });
 
+  it('describes the empty-room marker as looking while the route remains a separate move action', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = 'A3_T04';
+    state.modules.act3.stage = 'T04';
+    state.modules.act3.currentLensId = 'LENS_A3_T04_002';
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      const emptyRoom = container.querySelector('[data-clue-id="CLUE_A3_T04_EMPTY_ROOM"]')
+        ?? [...container.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent?.includes('看看屋内'));
+      expect(emptyRoom?.textContent).toContain('看看屋内');
+      expect(container.querySelector('[data-action-id="A3_ROUTE_T04_002_003"]')?.textContent).toContain('继续探索');
+      expect(container.querySelector('[data-action-id="A3_ROUTE_T04_002_003"]')?.textContent).not.toContain('档案室');
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
   it('keeps place, objective and exit controls visible outside the photo viewport', async () => {
     localStorage.clear();
     const state = createDefaultState();
@@ -74,8 +97,8 @@ describe('Third-act investigation interface', () => {
 
   it('keeps unrevealed vocabulary out of the complete T04 and T05 interface', async () => {
     for (const scenario of [
-      { stage: 'T04' as const, lensId: 'LENS_A3_T04_004', forbidden: ['VVaKe', '蜘蛛', '曼陀罗'], blockedRoute: 'A3_ROUTE_T04_004_005', nextLabel: '继续查看架脚附近' },
-      { stage: 'T05' as const, lensId: 'LENS_A3_T05_004', forbidden: ['13aCK', '老鼠', '草垛', '玫瑰'], blockedRoute: 'A3_ROUTE_T05_004_005', nextLabel: '继续查看桌脚附近' },
+      { stage: 'T04' as const, lensId: 'LENS_A3_T04_004', forbidden: ['VVaKe', '蜘蛛', '曼陀罗'], blockedRoute: 'A3_ROUTE_T04_004_005' },
+      { stage: 'T05' as const, lensId: 'LENS_A3_T05_004', forbidden: ['13aCK', '老鼠', '草垛', '玫瑰'], blockedRoute: 'A3_ROUTE_T05_004_005' },
     ]) {
       localStorage.clear();
       const state = createDefaultState();
@@ -90,7 +113,7 @@ describe('Third-act investigation interface', () => {
         await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
         const initialDom = container.textContent ?? '';
         for (const word of scenario.forbidden) expect(initialDom).not.toContain(word);
-        expect(container.querySelector(`[data-action-id="${scenario.blockedRoute}"]`)?.textContent).toContain(scenario.nextLabel);
+        expect(container.querySelector(`[data-action-id="${scenario.blockedRoute}"]`)?.textContent).toContain('继续探索');
         expect(container.querySelector(`[data-action-id="${scenario.blockedRoute}"]`)?.getAttribute('data-action-state')).toBe('blocked');
 
         const route = container.querySelector<HTMLButtonElement>(`[data-action-id="${scenario.blockedRoute}"]`)!;
@@ -198,11 +221,16 @@ describe('Third-act investigation interface', () => {
       const beforePickup = container.textContent ?? '';
       for (const word of ['笔记本', '包裹', 'A.W']) expect(beforePickup).not.toContain(word);
       const firstPageRoute = container.querySelector<HTMLButtonElement>('[data-action-id="A3_ROUTE_T07_006_007"]')!;
-      expect(firstPageRoute.textContent).toContain('继续核对这一物件');
+      expect(firstPageRoute.textContent).toContain('继续探索');
       expect(firstPageRoute.getAttribute('data-action-state')).toBe('blocked');
       await act(async () => { firstPageRoute.click(); });
       expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('当前取物动作');
-      expect(container.querySelector('.investigation-navigation__material')?.textContent).toContain('继续核对当前发现');
+      const relatedMaterial = container.querySelector('.investigation-navigation__material')?.textContent ?? '';
+      expect(relatedMaterial).toContain('查看相关材料');
+      expect(relatedMaterial).toContain('缝隙里的物件');
+      expect(relatedMaterial).not.toContain('笔记本');
+      expect(relatedMaterial).not.toContain('包裹');
+      expect(relatedMaterial).not.toContain('A.W');
       for (const word of ['笔记本', '包裹', 'A.W']) expect(container.textContent).not.toContain(word);
       await act(async () => { manager.inspectAct3Clue('CLUE_A3_T07_NOTEBOOK_PICKUP'); });
       expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T07_NOTEBOOK_PICKUP');
@@ -234,7 +262,7 @@ describe('Third-act investigation interface', () => {
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
       const leave = container.querySelector<HTMLButtonElement>('[data-action-id="A3_T00_LEAVE_AND_CONTINUE"]')!;
-      expect(leave.textContent).toContain('继续探索');
+      expect(leave.textContent).toContain('离开这里，继续探索');
       await act(async () => { leave.click(); });
       expect(manager.getState().modules.act3.stage).toBe('T01');
       expect(manager.getState().game.flags.FLAG_A3_OLD_ROAD_FOUND).toBe(true);

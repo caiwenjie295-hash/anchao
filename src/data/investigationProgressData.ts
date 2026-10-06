@@ -5,10 +5,11 @@ import { getCurrentTaskGuide } from './taskGuideData';
 import { getAutoEntries } from './noteData';
 import { mailById } from './mailData';
 import { ACT3_REQUIRED_EVIDENCE, ACT3_STAGE_COMPLETION_FLAG, act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, type AuthoredAct3Stage } from './act3Data';
-import { act3HotspotLabelFor, act3ObjectiveFor, act3PlaceForLens } from './act3Presentation';
+import { act3ObjectiveFor, act3PlaceForLens } from './act3Presentation';
 import { act4NarrativeSections } from './narrative/act4Narrative';
 import { act4NarrativeActionsSatisfied, act4NarrativeRequiredActions } from '../story/act4/narrativePolicy';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../story/investigation/act3RoutePolicy';
+import { act3HotspotActionLabel, act3RouteActionLabel, act3StageActionLabel } from '../story/investigation/actionPresentation';
 
 export type ProgressNodeStatus = 'complete' | 'current' | 'known' | 'upcoming';
 
@@ -265,34 +266,26 @@ function act3Stage(state: AppState): { location: string; objective: string; next
   const location = lens ? act3PlaceForLens(lens.id, lens.title) : ACT3_STAGE_LABEL[stage];
   const inspected = state.modules.act3.inspectedClueIds;
   const objective = act3ObjectiveFor(stage, inspected);
-  if (stage === 'T07') {
-    if (hasFlag(state, 'FLAG_A3_SITE_EXITED') && hasFlag(state, 'FLAG_A3_COMPLETE') && state.modules.act4.stage === 'inactive') return {
+  if (stage === 'T07' && hasFlag(state, 'FLAG_A3_SITE_EXITED') && hasFlag(state, 'FLAG_A3_COMPLETE') && state.modules.act4.stage === 'inactive') {
+    return {
       location,
       objective: '第三幕现场调查已经收束。',
       nextAction: '点击“翻开笔记，继续调查”开始阅读第四幕；也可以回看启明旧址。',
     };
-    const missing = (id: string) => !inspected.includes(id);
-    const nextAction = missing('CLUE_A3_T07_XIAOYUE_MEMORY')
-      ? '先听小月把她记得的事情说完。'
-      : missing('CLUE_A3_T07_BACK_GAP')
-        ? '结合小月的回忆，从不同高度检查她认出的拐角。'
-        : missing('CLUE_A3_T07_NOTEBOOK_PICKUP')
-          ? '沿着发现的缝隙，主动决定是否取出物件。'
-          : missing('CLUE_A3_T07_FIRST_PAGE')
-            ? '把取出的本子带到外面，只打开扉页核对字迹。'
-            : '沿来路返回遗址出口，并完成离开前的确认。';
-    return { location, objective, nextAction };
   }
 
   const missingRequiredIds = act3RequiredClueIds(stage).filter((id) => !inspected.includes(id));
   if (missingRequiredIds.length === 0) {
-    return { location, objective, nextAction: '本处必需观察已齐，按底部“离开本处”按钮确认并继续。' };
+    const nextAction = stage === 'T07'
+      ? '按底部“与小月一起离开旧址”完成离开前的确认。'
+      : `按底部“${act3StageActionLabel()}”继续调查。`;
+    return { location, objective, nextAction };
   }
 
   const currentPendingHotspot = lens?.hotspots.find((hotspot) => missingRequiredIds.includes(hotspot.clueId));
   if (currentPendingHotspot) {
-    const safeLabel = act3HotspotLabelFor(stage, currentPendingHotspot.clueId, currentPendingHotspot.label, inspected);
-    return { location, objective, nextAction: `检查当前画面里已出现的“${safeLabel}”。` };
+    const actionLabel = act3HotspotActionLabel(stage, currentPendingHotspot.clueId, currentPendingHotspot.label, inspected);
+    return { location, objective, nextAction: `点击当前画面上的“${actionLabel}”标记查看。` };
   }
 
   const pathToMissingClue = missingRequiredIds
@@ -301,19 +294,19 @@ function act3Stage(state: AppState): { location: string; objective: string; next
   if (pathToMissingClue?.length) {
     const firstRoute = lens?.routes.find((route) => route.target === pathToMissingClue[0]);
     if (firstRoute && getAct3RouteAvailability(stage, lens?.id ?? null, firstRoute.target, inspected).state === 'ready') {
-      return { location, objective, nextAction: `按底部“${act3RouteLabelFor(stage, firstRoute, inspected)}”前往已出现的相邻位置，再检查那里的现场痕迹。` };
+      return { location, objective, nextAction: `按底部“${act3RouteActionLabel(firstRoute.kind)}”按钮移动到相邻视角，再查看现场。` };
     }
   }
 
   const visiblePendingHotspot = lens?.hotspots.find((hotspot) => !inspected.includes(hotspot.clueId));
   if (visiblePendingHotspot) {
-    const safeLabel = act3HotspotLabelFor(stage, visiblePendingHotspot.clueId, visiblePendingHotspot.label, inspected);
-    return { location, objective, nextAction: `检查当前画面里已出现的“${safeLabel}”。` };
+    const actionLabel = act3HotspotActionLabel(stage, visiblePendingHotspot.clueId, visiblePendingHotspot.label, inspected);
+    return { location, objective, nextAction: `点击当前画面上的“${actionLabel}”标记查看。` };
   }
 
   const readyRoute = lens?.routes.find((route) => getAct3RouteAvailability(stage, lens?.id ?? null, route.target, inspected).state === 'ready');
   if (readyRoute) {
-    return { location, objective, nextAction: `按底部“${act3RouteLabelFor(stage, readyRoute, inspected)}”前往已出现的相邻位置，再检查那里的现场痕迹。` };
+    return { location, objective, nextAction: `按底部“${act3RouteActionLabel(readyRoute.kind)}”按钮移动到相邻视角，再查看现场。` };
   }
 
   const blockedRoute = lens?.routes.find((route) => getAct3RouteAvailability(stage, lens.id, route.target, inspected).state === 'blocked');
@@ -323,20 +316,8 @@ function act3Stage(state: AppState): { location: string; objective: string; next
   return {
     location,
     objective,
-    nextAction: '沿当前调查路线检查尚未核对的现场痕迹；必需观察齐备后，可按底部“离开本处”继续。',
+    nextAction: '查看当前现场已出现的观察点；完成必需核对后，可按底部按钮继续。',
   };
-}
-
-function act3RouteLabelFor(
-  stage: AuthoredAct3Stage,
-  route: { target: string; label: string; kind: 'move' | 'return' },
-  inspected: readonly string[],
-): string {
-  if (stage === 'T04' && route.target === 'LENS_A3_T04_005') return inspected.includes('CLUE_A3_T04_PAPER_EDGE') ? '前往刚发现的纸片' : '继续查看架脚附近';
-  if (stage === 'T05' && route.target === 'LENS_A3_T05_005') return inspected.includes('CLUE_A3_T05_PAPER_EDGE') ? '前往刚取出的纸片' : '继续查看桌脚附近';
-  if (stage === 'T07' && route.target === 'LENS_A3_T07_006') return '继续查看窄缝';
-  if (stage === 'T07' && route.target === 'LENS_A3_T07_007' && !inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP')) return '继续核对这一物件';
-  return route.label || `${route.kind === 'return' ? '返回' : '前往'}相邻位置`;
 }
 
 type Act4NarrativeSection = (typeof act4NarrativeSections)[number];
@@ -358,17 +339,18 @@ function act4Stage(state: AppState): { location: string; objective: string; next
   };
   const section = act4NarrativeSections.find((item) => item.stage === stage);
   const actions = state.modules.act4.completedNarrativeActionIds;
+  const pageReadingAction = '翻开这一段，按页往下读；读完后继续。';
   const actionSteps: Partial<Record<Exclude<Act4Stage, 'inactive'>, string>> = {
-    T01: '阅读当前笔记页，按页面按钮翻阅并收好这一段。',
-    T02: actions.includes('A4_T02_LOGIN_SUCCEEDED') ? '继续阅读当前记录，再收好这一段。' : '对照两封旧邮件日期，输入八位数登录账号。',
-    T03: '按日期查看当前微博记录，再收好这一段。',
-    T04: actions.includes('A4_T04_WAKE_MAIL_OPENED') ? '继续读完当前原文，再收好这一段。' : '主动打开 VVaKe 邮件查看原文，然后继续阅读。',
-    T05: '按页面顺序阅读王澳的 2014 年亲历，读完当前段落再继续。',
-    T06: '阅读王澳记下的入所日常与早晚广播，再继续当前章节。',
-    T07: '继续阅读王澳的梦境与学校记忆，再收好当前章节。',
-    T08: actions.includes('A4_T08_ARCHIVE_OPENED') ? '继续阅读当前原文，再收好这一段。' : '到达档案馆后，主动选择并打开 2008 年档案。',
-    T09: !actions.includes('A4_T09_NOTE_HIDDEN') ? '读到便签段落后，按页面动作把笔记藏好。' : !actions.includes('A4_T09_DOOR_EXITED') ? '按页面动作继续走向门外，明确完成离开。' : '继续阅读当前段落，再进入本幕结尾。',
-    T10: actions.includes('A4_T10_FINAL_MAIL_OPENED') ? '继续阅读当前结尾并完成第四幕。' : '读到邮件入口后，主动打开启明的最后一封邮件。',
+    T01: pageReadingAction,
+    T02: actions.includes('A4_T02_LOGIN_SUCCEEDED') ? pageReadingAction : '对照两封旧邮件日期，输入八位数登录账号。',
+    T03: '点击“查看动态”，按日期阅读；末尾可以继续。',
+    T04: actions.includes('A4_T04_WAKE_MAIL_OPENED') ? pageReadingAction : '找到并打开已出现的 VVaKe 邮件，随后按页阅读。',
+    T05: pageReadingAction,
+    T06: pageReadingAction,
+    T07: pageReadingAction,
+    T08: actions.includes('A4_T08_ARCHIVE_OPENED') ? pageReadingAction : '选择并打开当前页面提供的档案，再按页阅读。',
+    T09: !actions.includes('A4_T09_NOTE_HIDDEN') ? '读到便签段落后，按页面动作把笔记藏好。' : !actions.includes('A4_T09_DOOR_EXITED') ? '按页面动作继续走向门外，明确完成离开。' : pageReadingAction,
+    T10: actions.includes('A4_T10_FINAL_MAIL_OPENED') ? pageReadingAction : '读到邮件入口后，打开启明的最后一封邮件。',
   };
   const perspective = section?.perspective === 'wangao' ? '王澳亲历' : '调查者阅读';
   const sectionComplete = Boolean(section && state.modules.act4.completedNarrativeSectionIds.includes(section.id));
@@ -381,9 +363,7 @@ function act4Stage(state: AppState): { location: string; objective: string; next
   return {
     location: displayTitle,
     objective,
-    nextAction: stage === 'T05'
-      ? '按王澳的 2014 年亲历原文分段阅读当前内容；读完后点击“收好这一段，继续阅读”。'
-      : actionSteps[stage] ?? '继续阅读当前篇章，并完成页面上明确要求的操作。',
+    nextAction: actionSteps[stage] ?? '点击“继续阅读”阅读当前篇章，并完成页面上明确要求的操作。',
   };
 }
 
@@ -606,7 +586,8 @@ function pendingDirections(state: AppState, act: 1 | 2 | 3 | 4, finished: boolea
     const remainingHere = lens?.hotspots.filter((hotspot) => !inspected.includes(hotspot.clueId)).length ?? 0;
     if (remainingHere) directions.push(`当前位置还有 ${remainingHere} 处已出现的观察点可查看。`);
     const availableRoutes = lens?.routes.filter((route) => getAct3RouteAvailability(stage, lensId, route.target, inspected).state === 'ready') ?? [];
-    for (const route of availableRoutes.slice(0, 2)) directions.push(`已可前往：${act3RouteLabelFor(stage, route, inspected)}。`);
+    const routeLabels = [...new Set(availableRoutes.map((route) => act3RouteActionLabel(route.kind)))];
+    for (const routeLabel of routeLabels) directions.push(`按“${routeLabel}”移动到已出现的相邻视角。`);
     return directions.length ? directions : ['当前没有新的已知观察方向；按页面提示完成必需核对。'];
   }
 
@@ -616,8 +597,8 @@ function pendingDirections(state: AppState, act: 1 | 2 | 3 | 4, finished: boolea
     const sectionRead = state.modules.act4.completedNarrativeSectionIds.includes(section?.id ?? '');
     const actionSatisfied = act4NarrativeActionsSatisfied(stage, state.modules.act4.completedNarrativeActionIds);
     if (!sectionRead && !actionSatisfied) return [`当前篇章的指定动作尚未完成：${act4Stage(state).nextAction}`];
-    if (!sectionRead) return ['当前篇章动作已满足；正文还没有收好。'];
-    return ['当前篇章已读完；按页面提示进入下一段。'];
+    if (!sectionRead) return ['当前篇章动作已满足；翻开这一段，按页往下读。'];
+    return stage === 'T03' ? ['当前动态已读完；按页面提示继续。'] : ['当前篇章已读完；按页面提示继续。'];
   }
 
   return ['后续内容尚未展开；继续完成当前步骤即可。'];

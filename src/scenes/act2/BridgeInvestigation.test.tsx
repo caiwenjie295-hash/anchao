@@ -140,6 +140,8 @@ describe('BridgeInvestigation', () => {
     expect(replay!.textContent).toContain('再看看老人原话');
     const live = container.querySelector<HTMLElement>('.act2-bridge__phrase');
     expect(live?.getAttribute('aria-live')).toBe('polite');
+    expect(document.activeElement).toBe(live);
+    expect(container.querySelector<HTMLDetailsElement>('.act2-bridge__evidence')?.open).toBe(false);
     await act(async () => { replay!.click(); });
     expect(container.textContent).not.toContain('录音暂缺');
     expect(live?.textContent).toContain('黑捕木');
@@ -159,12 +161,35 @@ describe('BridgeInvestigation', () => {
     expect(selectedChoice).toContain(bridgeClueElder.name);
     expect(container.textContent).toContain(bridgeClueElder.mountainReply[0]);
     expect(container.querySelector('.act2-bridge__evidence')).not.toBeNull();
+    expect(container.querySelector<HTMLDetailsElement>('.act2-bridge__evidence')?.open).toBe(false);
     expect(container.querySelector('.act2-bridge__phrase')?.textContent).toContain('黑捕木');
     expect(container.querySelector('.act2-bridge__replay')).not.toBeNull();
     expect(container.querySelector('.act2-bridge__puzzle')).toBeNull();
     expect(container.querySelector('.act2-bridge__resolution')).not.toBeNull();
     await clickButton('再看看老人原话');
     expect(document.activeElement).toBe(container.querySelector('.act2-bridge__phrase'));
+  });
+
+  it('matches each presented photo locally even after the correct response is already saved', async () => {
+    const state = buildBridgeState();
+    state.modules.act2Research.bridge = {
+      ...state.modules.act2Research.bridge,
+      heardPhrase: true,
+      shownEvidenceAssetIds: [bridgeEvidence[1].assetId],
+    };
+    state.game.flags.FLAG_A2_HEIBUMU_AUDIO_HEARD = true;
+    await render(state);
+
+    const evidencePanel = container.querySelector<HTMLDetailsElement>('.act2-bridge__evidence')!;
+    await act(async () => { evidencePanel.querySelector('summary')?.click(); });
+    await showEvidence(bridgeEvidence[0].name);
+    expect(container.querySelector('.act2-bridge__photo-feedback')?.textContent).toContain('没有认出这张照片');
+    expect(manager.getState().modules.act2Research.bridge.heardPhrase).toBe(true);
+    expect(manager.getState().game.flags.FLAG_A2_HEIBUMU_AUDIO_HEARD).toBe(true);
+
+    await showEvidence(bridgeEvidence[1].name);
+    expect(container.querySelector('.act2-bridge__photo-feedback')?.textContent).toContain('已经说过这处地名');
+    expect(container.querySelector('.act2-bridge__photo-feedback')?.textContent).toContain('再看看老人原话');
   });
 
   it('never nests buttons and clicking zoom does not present evidence or trigger the oral phrase', async () => {

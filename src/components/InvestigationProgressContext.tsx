@@ -6,6 +6,7 @@ export interface InvestigationProgressContextValue {
   openProgress: (trigger: HTMLElement) => void;
   closeProgress: () => void;
   isOpen: boolean;
+  currentContentActive: boolean;
   onOpenApp?: (appId: AppId) => void;
   onContinueInvestigation?: () => void;
   onReviewAct3?: () => void;
@@ -22,6 +23,7 @@ export function InvestigationProgressProvider({
   children,
   state,
   suppressed = false,
+  currentContentActive = false,
   onOpenApp,
   onContinueInvestigation,
   onReviewAct3,
@@ -29,6 +31,7 @@ export function InvestigationProgressProvider({
   children: ReactNode;
   state: AppState;
   suppressed?: boolean;
+  currentContentActive?: boolean;
   onOpenApp?: (appId: AppId) => void;
   onContinueInvestigation?: () => void;
   onReviewAct3?: () => void;
@@ -60,7 +63,7 @@ export function InvestigationProgressProvider({
     wasOpenRef.current = isOpen;
   }, [isOpen]);
 
-  return <InvestigationProgressContext.Provider value={{ openProgress, closeProgress, isOpen, onOpenApp, onContinueInvestigation, onReviewAct3, progress }}>
+  return <InvestigationProgressContext.Provider value={{ openProgress, closeProgress, isOpen, currentContentActive, onOpenApp, onContinueInvestigation, onReviewAct3, progress }}>
     {children}
   </InvestigationProgressContext.Provider>;
 }
