@@ -1,6 +1,6 @@
 # UX-IDENTITY-20261006 头像与图标视觉身份补全
 
-> 状态：冻结执行工单；仅主审可更新
+> 状态：实现及统一验收完成，主审 APPROVED；合并后更新进度文档；仅主审可更新
 > 基线：main `ff96c5034388e32be292f39397c459f7aafe1475`
 > 唯一执行者：一个 gpt-6-luna / max 子代理 `/root/ux_identity`
 > 分支：`agent/UX-IDENTITY-20261006-icons`
@@ -50,3 +50,7 @@
 若父通知五小时剩余≤10%，立即停止本轮开发并保留文件、分支、待办；仅按实际额度恢复及父指令继续。不要修改上轮已停用的额度自动化，也不要购买或重置额度。
 
 最终报告：Role / Delivered / Commit SHA / Changed paths / Asset budget + prompts / Validation run / Remaining review targets / Cross-boundary requests。
+
+## 主审验收节点（2026-10-06）
+
+功能节点 `911acb515acf7623592f28905d17cb9d9535308e`：77 文件/409 项测试、网页构建、155 文件离线构建和默认两轮离线验收通过，1280×720 / 390×844 实际浏览器重点检查通过。最初图片内联验收失败及搜索图标断行已由原执行者在允许路径内修复；未改变旧断言或构建脚本。审查见 `docs/reviews/UX-IDENTITY-20261006.md`。随后先合并功能，再由原执行者更新四进度文档，不提前声称最终包已交付。
