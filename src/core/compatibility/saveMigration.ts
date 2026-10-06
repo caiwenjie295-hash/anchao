@@ -9,7 +9,7 @@ import { isStoryTransitionReached, storyTransitions, storyTransitionIds } from '
 import { act3LensById } from '../../data/act3Data';
 import { act2T07, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, ACT2_T07_FRAME_IDS } from '../../data/act2T07Data';
 import { act4NarrativeActionsSatisfied, act4NarrativeStageSequence } from '../../story/act4/narrativePolicy';
-import { SUPPORTED_SAVE_SCHEMA_VERSIONS, validAct2Stages, validAct3Stages, validStatuses } from './saveSchema';
+import { SUPPORTED_SAVE_SCHEMA_VERSIONS, act4PuzzleIds, act4Stages, validAct2Stages, validAct3Stages, validStatuses } from './saveSchema';
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const finiteNumber = (value: unknown, fallback: number): number => typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 const safeStringIds = (value: unknown): string[] => Array.isArray(value)
@@ -153,8 +153,6 @@ const safeAct3 = (candidate: unknown): Act3State => {
   return { stage, currentLensId, visitedLensIds, inspectedClueIds, confirmedFlagIds };
 };
 
-const act4Stages: Act4Stage[] = ['inactive', ...act4NarrativeStageSequence];
-const act4PuzzleIds = Array.from({ length: 24 }, (_, index) => `A4_P${String(index + 1).padStart(2, '0')}`);
 const safeAct4 = (candidate: unknown, flags: AppState['game']['flags'], sourceSchemaVersion = 11): Act4State => {
   const fallback = createDefaultAct4State();
   if (!isRecord(candidate) || flags.FLAG_A3_COMPLETE !== true || !act4Stages.includes(candidate.stage as Act4Stage)) return fallback;

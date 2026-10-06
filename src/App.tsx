@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
 import type { ComponentProps, ComponentType, CSSProperties, ReactNode } from 'react';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
@@ -181,11 +181,11 @@ export default function App() {
     if (!isAct2SceneStage(act2Stage)) setDismissedAct2Stage(null);
   }, [act2Stage]);
 
-  const openApp = (appId: AppId) => stateManager.openApp(appId);
+  const openApp = useCallback((appId: AppId) => stateManager.openApp(appId), []);
   const taskbarClick = (appId: AppId) => stateManager.toggleTaskbarApp(appId);
   // 第二幕收尾页与任务栏「调查」共用同一语义：只有第二幕已完成且第三幕未开始时才启动，
   // 避免出现第二个能改写阶段的入口（工单 §15.2 FLOW-05）。
-  const startAct3FromInvestigation = () => {
+  const startAct3FromInvestigation = useCallback(() => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A2_COMPLETE !== true || current.modules.act3.stage !== 'inactive') return;
     runSceneTransition(() => {
@@ -193,8 +193,8 @@ export default function App() {
       stateManager.startAct3();
       setDismissedAct3(false);
     });
-  };
-  const startAct4FromInvestigation = () => {
+  }, []);
+  const startAct4FromInvestigation = useCallback(() => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A3_COMPLETE !== true || current.game.flags.FLAG_A3_SITE_EXITED !== true || current.modules.act3.stage !== 'T07') return;
     runSceneTransition(() => {
@@ -203,8 +203,8 @@ export default function App() {
       setDismissedAct3(false);
       setDismissedAct4(false);
     });
-  };
-  const reviewAct3FromInvestigation = () => {
+  }, []);
+  const reviewAct3FromInvestigation = useCallback(() => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A3_COMPLETE !== true || current.modules.act3.stage !== 'T07') return;
     runSceneTransition(() => {
@@ -212,8 +212,8 @@ export default function App() {
       setDismissedAct3(false);
       if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
     });
-  };
-  const continueInvestigation = () => {
+  }, []);
+  const continueInvestigation = useCallback(() => {
     const current = stateManager.getState();
     const pending = getPendingStoryTransition(current);
     if (pending && pending.presentation !== 'immediate') {
@@ -249,7 +249,7 @@ export default function App() {
     }
     const currentProgress = deriveInvestigationProgress(current);
     if (currentProgress.nextActionAppId) openApp(currentProgress.nextActionAppId);
-  };
+  }, [openApp, startAct3FromInvestigation, startAct4FromInvestigation]);
   const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
   const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
   const act3Stage = state.modules.act3.stage;
@@ -308,7 +308,7 @@ export default function App() {
     ...(taskCardLayout ? { '--desktop-task-card-top': `${taskCardLayout.top}px` } as CSSProperties : {}),
     ...(taskCardLayout ? { '--desktop-task-card-max-height': taskCardLayout.maxHeight } as CSSProperties : {}),
   };
-  const openProgressApp = (appId: AppId) => {
+  const openProgressApp = useCallback((appId: AppId) => {
     if (appId !== 'notepad') { openApp(appId); return; }
     const current = stateManager.getState();
     if (current.modules.scene.currentSceneId !== null || (current.game.phase === 'F' && !current.modules.scene.journeyStarted)) return;
@@ -322,7 +322,8 @@ export default function App() {
       if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
       stateManager.openApp('notepad');
     });
-  };
+  }, []);
+  const exitAct4 = useCallback(() => runSceneTransition(() => setDismissedAct4(true)), []);
   return (
     <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive={sceneOpen} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>
@@ -378,7 +379,7 @@ export default function App() {
         )}
       </>
     )}
-    {act4Open && <SceneTransitionLayer><Act4Experience manager={stateManager} onExit={() => runSceneTransition(() => setDismissedAct4(true))} /></SceneTransitionLayer>}
+    {act4Open && <SceneTransitionLayer><Act4Experience manager={stateManager} onExit={exitAct4} /></SceneTransitionLayer>}
     </div>
     {showAct4Ending && <Act4Ending onReview={() => setShowAct4Ending(false)} onReturnToDesktop={() => { setShowAct4Ending(false); setDismissedAct4(true); }} />}
     <InvestigationProgressDrawer state={state} />
