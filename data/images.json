@@ -495,6 +495,45 @@
       "notes": "imagegen 参照图生成；凌晨低照度、地面干燥，消防箱清晰；不含人物或笔记。",
       "assetType": "image",
       "file": "IMG_A4_T08_012.png"
+    },
+    {
+      "id": "IMG_A4_BLOG_WINDOW_001",
+      "title": "宿舍窗边",
+      "act": 4,
+      "phase": "A4_T03",
+      "source": "scene",
+      "purpose": "私人动态页的宿舍窗边资料头图；仅作日常环境氛围，不承载正文或调查信息。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 原创环境配图；无人、无文字、无标识。",
+      "assetType": "image",
+      "file": "IMG_A4_BLOG_WINDOW_001.png"
+    },
+    {
+      "id": "IMG_A4_FINAL_READING_001",
+      "title": "桌灯下的邮件",
+      "act": 4,
+      "phase": "A4_T10",
+      "source": "scene",
+      "purpose": "最终邮件段落的中性当下阅读环境封面；邮件文字由独立文本呈现。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 原创环境配图；未指定具体剧情地点，不显示邮件界面、正文或线索。",
+      "assetType": "image",
+      "file": "IMG_A4_FINAL_READING_001.png"
+    },
+    {
+      "id": "IMG_A4_READING_DETAIL_001",
+      "title": "档案室镜面反光",
+      "act": 4,
+      "phase": "A4_T08",
+      "source": "scene",
+      "purpose": "“镜面中的人”段落前的独立氛围封面；仅呈现无人档案室与不锈钢架上的微弱反光。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "imagegen 原创环境配图；反光不呈现可辨人物，不显示档案文字或身份结论。",
+      "assetType": "image",
+      "file": "IMG_A4_READING_DETAIL_001.png"
     }
   ]
 }

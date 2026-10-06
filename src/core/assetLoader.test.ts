@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import images from '../../data/images.json';
 import { birthdayImageSlots } from '../data/act4/assets';
 import { laterScenes } from '../data/act4/laterContent';
-import { act4AssetPath, assetLoader } from './assetLoader';
+import { act4AssetPath, assetLoader, uxRhythmA4AssetPath } from './assetLoader';
 
 describe('fourth act art registration', () => {
   it('keeps the original 40 IDs and registers three newly delivered A4 images', () => {
@@ -13,13 +13,14 @@ describe('fourth act art registration', () => {
       ...birthdayImageSlots.map((slot) => slot.assetId),
       ...laterScenes.map((scene) => scene.assetId),
       'IMG_A4_T06_007', 'IMG_A4_T08_011', 'IMG_A4_T08_012',
+      'IMG_A4_BLOG_WINDOW_001', 'IMG_A4_FINAL_READING_001', 'IMG_A4_READING_DETAIL_001',
     ];
-    expect(records).toHaveLength(43);
-    expect(new Set(expected).size).toBe(43);
+    expect(records).toHaveLength(46);
+    expect(new Set(expected).size).toBe(46);
     expect(records.map((record) => record.id).sort()).toEqual(expected.sort());
     for (const record of records) {
-      const path = act4AssetPath(record.id, record.file);
-      expect(path, record.id).toBe(`../第四幕/${record.id.slice(7, 10)}/${record.id}.png`);
+      const path = act4AssetPath(record.id, record.file) ?? uxRhythmA4AssetPath(record.id, record.file);
+      expect(path, record.id).not.toBeNull();
       expect(assetLoader.get(record.id)?.id).toBe(record.id);
       if (path! in deliveredFiles) {
         expect(assetLoader.isAvailable(record.id), record.id).toBe(true);
@@ -33,6 +34,12 @@ describe('fourth act art registration', () => {
       expect(assetLoader.isAvailable(id), id).toBe(true);
     }
     expect(act4AssetPath('IMG_A4_T05_001', 'other.png')).toBeNull();
+    for (const id of ['IMG_A4_BLOG_WINDOW_001', 'IMG_A4_FINAL_READING_001', 'IMG_A4_READING_DETAIL_001']) {
+      expect(uxRhythmA4AssetPath(id, `${id}.png`)).toBe(`../第四幕/UX-RHYTHM/${id}.png`);
+      expect(assetLoader.isAvailable(id), id).toBe(true);
+    }
+    expect(uxRhythmA4AssetPath('IMG_A4_UNREGISTERED_001', 'IMG_A4_UNREGISTERED_001.png')).toBeNull();
+    expect(uxRhythmA4AssetPath('IMG_A4_BLOG_WINDOW_001', 'wrong.png')).toBeNull();
   });
 });
 

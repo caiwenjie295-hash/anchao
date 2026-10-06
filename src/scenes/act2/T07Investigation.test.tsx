@@ -6,6 +6,7 @@ import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
 import { assetLoader } from '../../core/assetLoader';
 import { act2T07 } from '../../data/act2T07Data';
+import { investigationAudio, readInvestigationAudioPreference } from '../../media/investigationAudio';
 import { T07Investigation } from './T07Investigation';
 
 // React 19 需要在测试环境中显式开启 act 支持，否则 effect 不会被刷新。
@@ -44,6 +45,8 @@ describe('T07 promotion investigation', () => {
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
+    localStorage.removeItem('anchao.ui.t07AmbientAudioEnabled');
+    vi.restoreAllMocks();
     vi.useRealTimers();
   });
 
@@ -78,6 +81,27 @@ describe('T07 promotion investigation', () => {
   };
   const play = async (ms: number) => { await act(async () => { vi.advanceTimersByTime(ms); }); };
   const flags = () => manager.getState().game.flags;
+
+  it('keeps local ambience opt-in, persists only its UI preference, and stops before leaving', async () => {
+    const setEnabled = vi.spyOn(investigationAudio, 'setEnabled').mockReturnValue(true);
+    const playAudio = vi.spyOn(investigationAudio, 'play').mockReturnValue(true);
+    const stopAudio = vi.spyOn(investigationAudio, 'stop').mockImplementation(() => {});
+    const onReturnToDesktop = vi.fn();
+    await act(async () => { root.render(<T07Investigation manager={manager} onReturnToDesktop={onReturnToDesktop} />); });
+
+    const toggle = button('.t07-finale__ambience button');
+    expect(toggle.getAttribute('aria-pressed')).toBe('false');
+    expect(container.querySelector('.t07-finale__ambience')?.textContent).toContain('无声阅读');
+    await click('.t07-finale__ambience button');
+    expect(setEnabled).toHaveBeenCalledWith(true);
+    expect(playAudio).toHaveBeenCalledWith('keyboard');
+    expect(button('.t07-finale__ambience button').getAttribute('aria-pressed')).toBe('true');
+    expect(readInvestigationAudioPreference()).toBe(true);
+
+    await click('.investigation-shell__exit');
+    expect(stopAudio).toHaveBeenCalled();
+    expect(onReturnToDesktop).toHaveBeenCalledTimes(1);
+  });
 
   it('records the double S only after the player zooms the photo corner', async () => {
     await render();

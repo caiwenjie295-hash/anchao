@@ -39,6 +39,7 @@ describe('PhotoViewport aspect ratio', () => {
     await act(async () => { root.unmount(); });
     container.remove();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   const plane = () => container.querySelector<HTMLElement>('.photo-viewport__plane')!;
@@ -111,5 +112,53 @@ describe('PhotoViewport aspect ratio', () => {
     await render({ imageUrl: undefined });
     expect(container.querySelector('.photo-viewport__missing')).not.toBeNull();
     expect(container.querySelectorAll('.photo-viewport__fallback button')).toHaveLength(1);
+  });
+
+  it('applies local edge treatment only in exploration mode and keeps the full image hotspot plane', async () => {
+    await render({ explorationMode: true, revealBeat: true });
+    await reportSize();
+    const viewport = container.querySelector('.photo-viewport')!;
+    const marker = container.querySelector<HTMLButtonElement>('[data-clue-id="CLUE_TEST"]')!;
+    expect(viewport.classList.contains('photo-viewport--exploration')).toBe(true);
+    expect(container.querySelector<HTMLElement>('.photo-viewport__scene')?.style.getPropertyValue('--scene-transition-ms')).toBe('420ms');
+    expect(marker.style.getPropertyValue('--marker-x')).toBe('50%');
+    expect(marker.style.getPropertyValue('--marker-y')).toBe('50%');
+    expect(Math.abs(parseFloat(plane().style.width) / parseFloat(plane().style.height) - NATURAL.width / NATURAL.height)).toBeLessThan(0.001);
+
+    await render({ explorationMode: false });
+    expect(container.querySelector('.photo-viewport')?.classList.contains('photo-viewport--exploration')).toBe(false);
+  });
+
+  it('crossfades a changed scene immediately and restores focus to the matching hotspot', async () => {
+    await render();
+    await reportSize();
+    const firstFrame = container.querySelector('.photo-viewport__frame')!;
+    const firstHotspot = container.querySelector<HTMLButtonElement>('[data-clue-id="CLUE_TEST"]')!;
+    firstHotspot.focus();
+    expect(document.activeElement).toBe(firstHotspot);
+
+    await act(async () => {
+      root.render(<PhotoViewport sceneKey="LENS_TEST_2" imageUrl="next.jpg" imageAlt="另一张照片" hotspots={[hotspot]} routes={[]} />);
+    });
+    expect(container.querySelector('.photo-viewport__frame')).not.toBe(firstFrame);
+    expect(container.querySelector('.photo-viewport__scene')?.classList.contains('is-transitioning')).toBe(true);
+    expect(container.querySelector('.photo-viewport__handoff img')?.getAttribute('src')).toBe('test.jpg');
+    const nextImage = container.querySelector<HTMLImageElement>('.photo-viewport__plane > img')!;
+    Object.defineProperty(nextImage, 'naturalWidth', { value: NATURAL.width, configurable: true });
+    Object.defineProperty(nextImage, 'naturalHeight', { value: NATURAL.height, configurable: true });
+    await act(async () => { nextImage.dispatchEvent(new Event('load')); });
+    expect(document.activeElement).toBe(container.querySelector('[data-clue-id="CLUE_TEST"]'));
+    expect(container.querySelector('.photo-viewport__marker')?.getAttribute('aria-label')).toBe('查看痕迹');
+  });
+
+  it('skips the image handoff when reduced motion is requested', async () => {
+    vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true, media: '(prefers-reduced-motion: reduce)', onchange: null, addListener: vi.fn(), removeListener: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn() })));
+    await render();
+    await reportSize();
+    await act(async () => {
+      root.render(<PhotoViewport sceneKey="LENS_TEST_2" imageUrl="next.jpg" imageAlt="另一张照片" hotspots={[hotspot]} routes={[]} />);
+    });
+    expect(container.querySelector('.photo-viewport__handoff')).toBeNull();
+    expect(container.querySelector('.photo-viewport__scene')?.classList.contains('is-transitioning')).toBe(false);
   });
 });

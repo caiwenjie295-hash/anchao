@@ -49,7 +49,7 @@ describe('PhotoViewport observes the current frame after a lens change', () => {
   });
 
   const reportLoad = async (natural = { width: 1448, height: 1086 }) => {
-    const img = container.querySelector('img')!;
+    const img = container.querySelector('.photo-viewport__plane > img')!;
     Object.defineProperty(img, 'naturalWidth', { value: natural.width, configurable: true });
     Object.defineProperty(img, 'naturalHeight', { value: natural.height, configurable: true });
     await act(async () => { img.dispatchEvent(new Event('load')); });
