@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { flushSync } from 'react-dom';
-import type { ComponentProps, ComponentType, CSSProperties, ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { ComponentProps, ComponentType, CSSProperties } from 'react';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
 import { stateManager } from './core/stateManager';
 import { eventBus } from './core/eventBus';
-import type { Act2Stage, AppId } from './core/types';
+import type { AppId } from './core/types';
 import { apps, appById } from './data/apps';
 import { AppWindow } from './components/AppWindow';
 import { DesktopIcon } from './components/DesktopIcon';
@@ -31,85 +30,15 @@ import { StoryTransition, StoryTransitionLaunch } from './components/StoryTransi
 import { getPendingStoryTransition } from './data/storyTransitionData';
 import { deriveInvestigationProgress } from './data/investigationProgressData';
 import { act1Scenes } from './data/sceneData';
+import { SceneTransitionLayer } from './components/transition/SceneTransitionLayer';
+import { runAppSceneTransition as runSceneTransition } from './components/transition/sceneTransition';
+import { deriveAppView, isAct2SceneStage, type Act2SceneStage } from './core/presentation/appView';
 import './styles.css';
 import './imageAssets.css';
 import './components/sceneTransition.css';
 
-type Act2SceneStage = Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school' | 'finale'>;
-
 type SelectableDesktopIconProps = ComponentProps<typeof DesktopIcon> & { selected?: boolean; onSelect?: () => void };
 const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIconProps>;
-
-/** 只有 bridge / library / tales / school / finale 会接管全屏场景；search 与 T06 仍是普通桌面。 */
-const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales' || stage === 'school' || stage === 'finale';
-
-type SceneViewTransition = { ready?: Promise<unknown>; finished?: Promise<unknown> };
-type SceneTransitionDocument = Document & { startViewTransition?: (update: () => void) => SceneViewTransition };
-let activeSceneTransitionCount = 0;
-
-/** Commits the action synchronously so the browser snapshots the completed React update. */
-function runSceneTransition(update: () => void): void {
-  let committed = false;
-  const commit = () => {
-    if (committed) return;
-    flushSync(update);
-    committed = true;
-  };
-  if (typeof window === 'undefined' || typeof document === 'undefined' || window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true) {
-    commit();
-    return;
-  }
-  const host = document as SceneTransitionDocument;
-  if (!host.startViewTransition) {
-    commit();
-    return;
-  }
-  const root = document.documentElement;
-  activeSceneTransitionCount += 1;
-  root.dataset.sceneTransition = 'active';
-  let cleaned = false;
-  const cleanup = () => {
-    if (cleaned) return;
-    cleaned = true;
-    activeSceneTransitionCount = Math.max(0, activeSceneTransitionCount - 1);
-    if (activeSceneTransitionCount === 0) delete root.dataset.sceneTransition;
-  };
-  try {
-    const transition = host.startViewTransition.call(document, commit);
-    if (transition.ready) transition.ready.then(() => {
-      if (!committed) commit();
-      if (!transition.finished) cleanup();
-    }, () => {
-      if (!committed) commit();
-      cleanup();
-    });
-    if (transition.finished) transition.finished.then(cleanup, cleanup);
-    else if (!transition.ready) {
-      if (!committed) commit();
-      cleanup();
-    }
-  } catch {
-    cleanup();
-    commit();
-  }
-}
-
-function SceneTransitionLayer({ children }: { children: ReactNode }) {
-  const layerRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    const element = layerRef.current;
-    if (!element || typeof window === 'undefined' || document.documentElement.dataset.sceneTransition === 'active') return;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true || !element.animate) return;
-    const animation = element.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: 240,
-      easing: 'ease-out',
-      fill: 'both',
-    });
-    animation.onfinish = () => animation.cancel();
-    return () => animation.cancel();
-  }, []);
-  return <div ref={layerRef} className="scene-transition-layer">{children}</div>;
-}
 
 export default function App() {
   const state = useSyncExternalStore(stateManager.subscribe, stateManager.getState, stateManager.getState);
@@ -175,6 +104,7 @@ export default function App() {
   }, []);
 
   const act2Stage = state.modules.act2Research.stage;
+  const view = deriveAppView(state, { dismissedAct2Stage, dismissedAct3, reviewAct3, dismissedAct4 });
 
   // 清零或离开第二幕场景阶段时，丢弃旧的“已返回桌面”标记，避免污染下一次游玩。
   useEffect(() => {
@@ -250,17 +180,7 @@ export default function App() {
     const currentProgress = deriveInvestigationProgress(current);
     if (currentProgress.nextActionAppId) openApp(currentProgress.nextActionAppId);
   }, [openApp, startAct3FromInvestigation, startAct4FromInvestigation]);
-  const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted) || state.modules.scene.currentSceneId !== null;
-  const act2SceneStage = isAct2SceneStage(act2Stage) ? act2Stage : null;
-  const act3Stage = state.modules.act3.stage;
-  const act3Active = act3Stage !== 'inactive';
-  const act4Active = state.modules.act4.stage !== 'inactive';
-  const act4Open = act4Active && !dismissedAct4;
-  const act3Open = act3Active && !dismissedAct3 && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3 || (!act4Active && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07'));
-  const act2SceneOpen = act2SceneStage !== null && !act3Active && dismissedAct2Stage !== act2SceneStage;
-  const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open || act4Open;
-  const secondActStarted = act2Stage !== 'inactive';
-  const desktopLabel = secondActStarted ? '暗潮私人桌面' : '暗潮第一幕私人桌面';
+  const { act1SceneOpen, act2SceneStage, act3Stage, act3Active, act4Active, act4Open, act3Open, act2SceneOpen, sceneOpen, desktopLabel } = view;
   const transition = getPendingStoryTransition(state);
   const transitionOpen = transition !== null && (transition.presentation === 'immediate' || openedTransitionId === transition.id);
   const continueTransition = () => {
@@ -273,7 +193,7 @@ export default function App() {
     ? <StoryTransition transition={transition} onContinue={continueTransition} />
     : null);
   const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>调查记录已恢复，并保存到这台设备。</div>;
-  if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
+  if (view.act1EndingOpen) {
     return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
       <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />

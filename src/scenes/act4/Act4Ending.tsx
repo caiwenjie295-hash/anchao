@@ -1,78 +1,22 @@
-import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { flushSync } from 'react-dom';
-
-const REVEAL_STEP_MS = 240;
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
-}
-
-function transitionEndingExit(update: () => void): void {
-  const transitionDocument = document as Document & {
-    startViewTransition?: (callback: () => void) => { ready?: Promise<unknown>; finished?: Promise<unknown> };
-  };
-  if (
-    prefersReducedMotion()
-    || window.location.protocol === 'file:'
-    || document.documentElement.dataset.sceneTransition === 'active'
-    || document.documentElement.dataset.a4ReaderTransition === 'active'
-    || typeof transitionDocument.startViewTransition !== 'function'
-  ) {
-    update();
-    return;
-  }
-
-  let committed = false;
-  const commitOnce = () => {
-    if (committed) return;
-    committed = true;
-    flushSync(update);
-  };
-  let scopeClosed = false;
-  document.documentElement.dataset.a4ReaderTransition = 'active';
-  const closeTransitionScope = () => {
-    if (scopeClosed) return;
-    scopeClosed = true;
-    delete document.documentElement.dataset.a4ReaderTransition;
-  };
-  try {
-    const transition = transitionDocument.startViewTransition.call(transitionDocument, commitOnce);
-    void transition.ready?.catch(() => {
-      closeTransitionScope();
-      if (!committed) commitOnce();
-    });
-    if (transition.finished) void transition.finished.then(closeTransitionScope, closeTransitionScope);
-    else if (transition.ready) void transition.ready.then(() => window.setTimeout(closeTransitionScope, 260), closeTransitionScope);
-    else window.setTimeout(closeTransitionScope, 260);
-  } catch {
-    closeTransitionScope();
-    commitOnce();
-  }
-}
+import { useLayoutEffect, useRef, type KeyboardEvent } from 'react';
+import { runAct4EndingTransition } from '../../components/transition/sceneTransition';
+import { useAct4EndingReveal } from './reader/useAct4EndingReveal';
 
 export function Act4Ending({ onReview, onReturnToDesktop }: { onReview: () => void; onReturnToDesktop: () => void }) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const skipRef = useRef<HTMLButtonElement>(null);
   const actionRef = useRef<HTMLButtonElement>(null);
-  const [revealStage, setRevealStage] = useState(() => prefersReducedMotion() ? 3 : 0);
+  const { revealStage, showAll } = useAct4EndingReveal();
 
   useLayoutEffect(() => {
     if (revealStage === 0) skipRef.current?.focus();
     else if (revealStage === 3 && (document.activeElement === document.body || document.activeElement === skipRef.current)) actionRef.current?.focus();
   }, [revealStage]);
 
-  useEffect(() => {
-    if (revealStage >= 3 || prefersReducedMotion()) return;
-    const timer = window.setTimeout(() => setRevealStage((stage) => Math.min(3, stage + 1)), REVEAL_STEP_MS);
-    return () => window.clearTimeout(timer);
-  }, [revealStage]);
-
-  const showAll = () => setRevealStage(3);
-
   const keepFocusInside = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
       event.preventDefault();
-      transitionEndingExit(() => {
+      runAct4EndingTransition(() => {
         onReview();
         window.requestAnimationFrame(() => document.querySelector<HTMLElement>('.a4-reader')?.focus({ preventScroll: true }));
       });
@@ -92,14 +36,14 @@ export function Act4Ending({ onReview, onReturnToDesktop }: { onReview: () => vo
   };
 
   const returnToDesktop = () => {
-    transitionEndingExit(() => {
+    runAct4EndingTransition(() => {
       onReturnToDesktop();
       window.requestAnimationFrame(() => document.querySelector<HTMLElement>('#taskbar')?.focus({ preventScroll: true }));
     });
   };
 
   const reviewStory = () => {
-    transitionEndingExit(() => {
+    runAct4EndingTransition(() => {
       onReview();
       window.requestAnimationFrame(() => document.querySelector<HTMLElement>('.a4-reader')?.focus({ preventScroll: true }));
     });
