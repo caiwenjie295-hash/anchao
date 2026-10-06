@@ -26,6 +26,8 @@ const labels: Record<FixtureMode, string> = {
   finale: '第二幕 / T07 收尾',
   'a3-t04': '第三幕 / T04 刚进入',
   'a4-t05': '第四幕 / T05 刚进入',
+  'a4-blog': '第四幕 / T03 私人动态',
+  'a4-ending': '第四幕 / T10 最后阅读',
 };
 
 type BootContext = {

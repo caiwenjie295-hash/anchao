@@ -720,23 +720,53 @@ async function investigateAct4() {
   assert.equal(state().modules.act4.stage, 'T01');
   const continueSection = async (stage) => {
     let completed = false;
-    for (let step = 0; step < 80; step += 1) {
-      const action = document().querySelector('.investigation-shell__operations .investigation-navigation__action[data-action-id]');
-      if (!action) {
-        const nextPage = document().querySelector(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
-        assert.ok(nextPage && !nextPage.disabled, `${stage} should expose its next page or a narrative action`);
-        await click(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
-        continue;
-      }
-      const actionId = action.getAttribute('data-action-id');
-      if (actionId === `A4_${stage}_CONTINUE_READING`) {
-        assert.equal(action.disabled, false, `${stage} should unlock its continue action after all required reading and interactions`);
+    if (stage === 'T03') {
+      const dates = ['2020 年 4 月 3 日', '2020 年 4 月 5 日', '2020 年 4 月 6 日', '2020 年 4 月 7 日', '2020 年 4 月 8 日', '2020 年 4 月 9 日', '2020 年 4 月 10 日', '2020 年 4 月 13 日', '2020 年 4 月 14 日', '2020 年 4 月 15 日', '2020 年 4 月 16 日', '2020 年 4 月 17 日', '2020 年 4 月 18 日', '2020 年 4 月 19 日'];
+      const viewBlogAction = '[data-action-id="A4_T03_VIEW_PRIVATE_BLOG"]';
+      assert.equal(query(viewBlogAction).textContent.trim(), '查看动态');
+      await click(viewBlogAction);
+      const posts = [...document().querySelectorAll('.a4-private-blog__post')];
+      assert.equal(posts.length, 14, 'the private blog opens all fourteen original posts in one stream');
+      assert.deepEqual(posts.map((post) => post.querySelector('time')?.textContent.trim()), dates, 'the original post dates keep chronological order');
+      assert.equal(document().querySelector('.a4-private-blog__source-context')?.textContent.trim(), '微博：');
+      assert.match(posts[0].querySelector('.a4-private-blog__post-text').textContent, /刚注册的账号/);
+      assert.match(posts.at(-1).querySelector('.a4-private-blog__post-text').textContent, /直面恐惧/);
+      assert.match(posts.at(-1).querySelector('.a4-private-blog__post-text').textContent, /我是自由的/);
+      assert.match(document().querySelector('.a4-private-blog__closing').textContent, /我感觉我背叛了小 A/);
+      assert.equal(document().querySelectorAll('.a4-private-blog__date-index button').length, 14);
+      assert.equal(state().modules.act4.stage, 'T03', 'opening the blog does not advance the narrative stage');
+
+      await click('.a4-private-blog__post-actions button');
+      assert.equal(posts[0].querySelector('.a4-private-blog__post-actions button').getAttribute('aria-pressed'), 'true', 'bookmark control responds locally');
+      await click('.a4-private-blog__date-index button:last-child');
+      assert.equal(document().activeElement.id, 'a4-private-post-2020-04-19', 'date index moves focus to its matching post');
+      await click('.a4-private-blog__return');
+      assert.ok(document().querySelector('[data-reading-view="context"]'), 'return control exits the blog view');
+
+      await mount(save());
+      assert.equal(state().modules.act4.stage, 'T03', 'reloading the blog fixture keeps the reader at T03');
+      await click(viewBlogAction);
+      await click('.a4-private-blog__closing button');
+      completed = true;
+    } else {
+      for (let step = 0; step < 80; step += 1) {
+        const action = document().querySelector('.investigation-shell__operations .investigation-navigation__action[data-action-id]');
+        if (!action) {
+          const nextPage = document().querySelector(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
+          assert.ok(nextPage && !nextPage.disabled, `${stage} should expose its next page or a narrative action`);
+          await click(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
+          continue;
+        }
+        const actionId = action.getAttribute('data-action-id');
+        if (actionId === `A4_${stage}_CONTINUE_READING`) {
+          assert.equal(action.disabled, false, `${stage} should unlock its continue action after all required reading and interactions`);
+          await click(`[data-action-id="${actionId}"]`);
+          completed = true;
+          break;
+        }
+        assert.match(actionId, new RegExp(`^A4_${stage}_(OPEN_COVER|NEXT_PAGE|NEXT_BLOCK)_`), `${stage} should expose a deliberate cover, page, or block action before continuing`);
         await click(`[data-action-id="${actionId}"]`);
-        completed = true;
-        break;
       }
-      assert.match(actionId, new RegExp(`^A4_${stage}_(OPEN_COVER|NEXT_PAGE|NEXT_BLOCK)_`), `${stage} should expose a deliberate cover, page, or block action before continuing`);
-      await click(`[data-action-id="${actionId}"]`);
     }
     assert.ok(completed, `${stage} should reach its explicit continue action`);
     const next = { T01: 'T02', T02: 'T03', T03: 'T04', T04: 'T05', T05: 'T06', T06: 'T07', T07: 'T08', T08: 'T09', T09: 'T10', T10: 'T10' }[stage];

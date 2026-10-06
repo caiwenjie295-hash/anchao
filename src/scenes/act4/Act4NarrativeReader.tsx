@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
+import { createPortal, flushSync } from 'react-dom';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { act4NarrativeSections, act4NarrativeExplanations, act4NarrativeEnding, type Act4NarrativeBlock } from '../../data/narrative/act4Narrative';
 import { act4OldMails } from '../../data/act4/mail';
@@ -7,9 +7,19 @@ import { assetLoader } from '../../core/assetLoader';
 import { act4NarrativeActionsSatisfied, type ActiveAct4NarrativeStage } from '../../story/act4/narrativePolicy';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
-import { act4DateTimeValue, act4PagePresentation, act4ParagraphKind, act4PresentationKind, act4ReaderTextPages, type Act4TextSegment } from '../../data/narrative/act4Presentation';
+import {
+  act4CompatibleReaderPageIndex,
+  act4DateTimeValue,
+  act4PagePresentation,
+  act4ParagraphKind,
+  act4PresentationKind,
+  act4PrivateBlogPosts,
+  act4ReaderTextPages,
+  type Act4TextSegment,
+} from '../../data/narrative/act4Presentation';
 import { act4ReadingSpaceKey, sanitizeAct4ReadingPosition } from '../../core/readingPosition';
 import { getUiPreferences, setAct4ReadingPosition, subscribeUiPreferences } from '../../core/uiPreferences';
+import { Act4PrivateBlog } from './Act4PrivateBlog';
 import '../../act4/act4.css';
 
 const blockedReason: Partial<Record<ActiveAct4NarrativeStage, string>> = {
@@ -22,6 +32,130 @@ const blockedReason: Partial<Record<ActiveAct4NarrativeStage, string>> = {
 
 const readerPagesForBlock = (stage: ActiveAct4NarrativeStage, block: Act4NarrativeBlock) =>
   act4ReaderTextPages(stage, block.id, block.paragraphs, block.kind === 'novel-excerpt');
+
+const READER_LAYOUT_VERSION_KEY = 'anchao.a4-reader-layout';
+const READER_LAYOUT_VERSION = '2';
+const PRIVATE_BLOG_BOOKMARKS_KEY = 'anchao.a4-private-blog-bookmarks';
+let readerLayoutMigratedInMemory = false;
+let activeReaderViewTransitions = 0;
+
+function readPrivateBlogBookmarks(): string[] {
+  try {
+    const stored = JSON.parse(window.localStorage.getItem(PRIVATE_BLOG_BOOKMARKS_KEY) ?? '[]');
+    return Array.isArray(stored) ? stored.filter((item): item is string => typeof item === 'string' && /^2020-04-\d{2}$/.test(item)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function isLegacyReaderLayout(): boolean {
+  if (readerLayoutMigratedInMemory) return false;
+  try {
+    return window.localStorage.getItem(READER_LAYOUT_VERSION_KEY) !== READER_LAYOUT_VERSION;
+  } catch {
+    return true;
+  }
+}
+
+function migrateReaderLayoutPreferences(): void {
+  if (!isLegacyReaderLayout()) return;
+  const preferences = getUiPreferences();
+  for (const narrativeSection of act4NarrativeSections) {
+    for (const mode of ['current', 'review'] as const) {
+      const spaceKey = act4ReadingSpaceKey(narrativeSection.stage, mode)!;
+      const position = preferences.act4Reading[spaceKey];
+      if (!position) continue;
+      const nextPageIndexByBlock = { ...position.pageIndexByBlock };
+      for (const block of narrativeSection.blocks) {
+        const requested = position.pageIndexByBlock[block.id];
+        if (requested === undefined) continue;
+        const pages = readerPagesForBlock(narrativeSection.stage, block)
+          .filter((page) => page.role === 'page' || page.role === 'whole');
+        nextPageIndexByBlock[block.id] = act4CompatibleReaderPageIndex(
+          narrativeSection.stage,
+          block.id,
+          block.paragraphs,
+          pages,
+          requested,
+          block.kind === 'novel-excerpt',
+        );
+      }
+      setAct4ReadingPosition(spaceKey, { ...position, pageIndexByBlock: nextPageIndexByBlock });
+    }
+  }
+  try {
+    window.localStorage.setItem(READER_LAYOUT_VERSION_KEY, READER_LAYOUT_VERSION);
+  } catch {
+    // The in-memory migration still keeps this reader session on the safe paragraph boundary.
+  }
+  readerLayoutMigratedInMemory = true;
+}
+
+function transitionAct4View(update: () => void): void {
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+  const transitionDocument = document as Document & {
+    startViewTransition?: (callback: () => void) => { ready?: Promise<unknown>; finished?: Promise<unknown> };
+  };
+  if (reducedMotion || document.documentElement.dataset.sceneTransition === 'active') {
+    update();
+    return;
+  }
+  if (activeReaderViewTransitions > 0) {
+    update();
+    return;
+  }
+  if (typeof transitionDocument.startViewTransition !== 'function') {
+    update();
+    animateAct4Arrival();
+    return;
+  }
+  let committed = false;
+  let fallbackApplied = false;
+  const commitOnce = () => {
+    if (committed) return;
+    committed = true;
+    flushSync(update);
+  };
+  const applyFallback = () => {
+    if (!committed) commitOnce();
+    if (fallbackApplied) return;
+    fallbackApplied = true;
+    if (!reducedMotion) animateAct4Arrival();
+  };
+  let scopeClosed = false;
+  activeReaderViewTransitions += 1;
+  document.documentElement.dataset.a4ReaderTransition = 'active';
+  const closeTransitionScope = () => {
+    if (scopeClosed) return;
+    scopeClosed = true;
+    activeReaderViewTransitions = Math.max(0, activeReaderViewTransitions - 1);
+    if (activeReaderViewTransitions === 0) delete document.documentElement.dataset.a4ReaderTransition;
+  };
+  try {
+    const transition = transitionDocument.startViewTransition.call(transitionDocument, commitOnce);
+    void transition.ready?.catch(() => {
+      closeTransitionScope();
+      applyFallback();
+    });
+    if (transition.finished) void transition.finished.then(closeTransitionScope, closeTransitionScope);
+    else if (transition.ready) void transition.ready.then(() => window.setTimeout(closeTransitionScope, 260), closeTransitionScope);
+    else window.setTimeout(closeTransitionScope, 260);
+  } catch {
+    closeTransitionScope();
+    applyFallback();
+  }
+}
+
+function animateAct4Arrival(): void {
+  const reader = document.querySelector<HTMLElement>('.a4-reader');
+  if (!reader) return;
+  window.requestAnimationFrame(() => {
+    reader.classList.remove('a4-reader--transition-arrival');
+    void reader.offsetWidth;
+    reader.classList.add('a4-reader--transition-arrival');
+    window.setTimeout(() => reader.classList.remove('a4-reader--transition-arrival'), 260);
+  });
+}
 
 const perspectiveLabel = (perspective: 'investigator' | 'wangao') => perspective === 'wangao'
   ? '王澳当时的亲历'
@@ -40,6 +174,8 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const [failedIllustrationAssetId, setFailedIllustrationAssetId] = useState<string | undefined>();
   const [hotelBackgroundExpanded, setHotelBackgroundExpanded] = useState(true);
   const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
+  const [privateBlogOpen, setPrivateBlogOpen] = useState(false);
+  const [bookmarkedBlogDates, setBookmarkedBlogDates] = useState<string[]>(readPrivateBlogBookmarks);
   const uiPreferences = useSyncExternalStore(subscribeUiPreferences, getUiPreferences, getUiPreferences);
   const readerRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -50,6 +186,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const returningToCurrentRef = useRef(false);
   const skipPageAutoScrollRef = useRef(false);
   const continueClickLockRef = useRef(false);
+  const layoutMigrationStartedRef = useRef(false);
   const actions = state.completedNarrativeActionIds;
   const hasAction = (actionId: string | undefined) => actionId !== undefined && actions.includes(actionId as typeof actions[number]);
 
@@ -58,10 +195,37 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const stage = section?.stage ?? 'T01';
   const readingSpaceKey = act4ReadingSpaceKey(stage, reviewing ? 'review' : 'current') ?? `${stage}:current`;
   const storedReadingPosition = uiPreferences.act4Reading[readingSpaceKey];
-  const storedPageIndex = (blockId: string, pageCount: number) => {
-    const requested = storedReadingPosition?.pageIndexByBlock[blockId] ?? 0;
-    return Math.max(0, Math.min(Math.max(0, pageCount - 1), Number.isInteger(requested) ? requested : 0));
+  const storedPageIndex = (block: Act4NarrativeBlock, pages: readonly Act4TextSegment[]) => {
+    const requested = storedReadingPosition?.pageIndexByBlock[block.id] ?? 0;
+    if (isLegacyReaderLayout()) {
+      return act4CompatibleReaderPageIndex(stage, block.id, block.paragraphs, pages, requested, block.kind === 'novel-excerpt');
+    }
+    return Math.max(0, Math.min(Math.max(0, pages.length - 1), Number.isInteger(requested) ? requested : 0));
   };
+
+  useLayoutEffect(() => {
+    if (layoutMigrationStartedRef.current) return;
+    layoutMigrationStartedRef.current = true;
+    migrateReaderLayoutPreferences();
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PRIVATE_BLOG_BOOKMARKS_KEY, JSON.stringify(bookmarkedBlogDates));
+    } catch {
+      // Bookmarks remain available for the current reader session when storage is unavailable.
+    }
+  }, [bookmarkedBlogDates]);
+
+  const focusPrivateBlog = () => {
+    const stream = readerRef.current?.querySelector<HTMLElement>('.a4-private-blog__feed');
+    const scene = readerRef.current?.closest<HTMLElement>('.investigation-shell__scene');
+    if (!stream || !scene) return;
+    stream.focus({ preventScroll: true });
+    scene.scrollTop += stream.getBoundingClientRect().top - scene.getBoundingClientRect().top - 18;
+  };
+
+  const togglePrivateBlog = (open: boolean) => transitionAct4View(() => setPrivateBlogOpen(open));
 
   function openReview(targetStage: ActiveAct4NarrativeStage, triggerKey: string): void {
     if (targetStage === currentStage) {
@@ -73,20 +237,21 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
       savedCurrentPositionRef.current = { scrollTop: scene?.scrollTop ?? 0 };
       reviewTriggerRef.current = triggerKey;
     }
-    setReviewStage(targetStage);
+    transitionAct4View(() => setReviewStage(targetStage));
   }
 
   function returnToCurrent(): void {
     returningToCurrentRef.current = true;
     skipPageAutoScrollRef.current = true;
-    setReviewStage(null);
+    transitionAct4View(() => setReviewStage(null));
   }
 
   function continueCurrentSection(expectedStage: ActiveAct4NarrativeStage): void {
     if (continueClickLockRef.current) return;
     continueClickLockRef.current = true;
     window.setTimeout(() => { continueClickLockRef.current = false; }, 500);
-    manager.advanceAct4NarrativeSection(expectedStage);
+    if (expectedStage === 'T10') manager.advanceAct4NarrativeSection(expectedStage);
+    else transitionAct4View(() => manager.advanceAct4NarrativeSection(expectedStage));
   }
 
   useLayoutEffect(() => {
@@ -127,6 +292,14 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     scene.scrollTop += pageRect.top - sceneRect.top - 18;
   }, [uiPreferences, reviewStage, state.stage]);
 
+  useLayoutEffect(() => {
+    if (stage !== 'T03') return;
+    const target = readerRef.current?.querySelector<HTMLElement>(privateBlogOpen ? '.a4-private-blog' : '.a4-private-blog-gateway');
+    target?.focus({ preventScroll: true });
+    const scene = readerRef.current?.closest<HTMLElement>('.investigation-shell__scene');
+    if (target && scene) scene.scrollTop += target.getBoundingClientRect().top - scene.getBoundingClientRect().top - 18;
+  }, [privateBlogOpen, stage]);
+
   useEffect(() => {
     if (!zoomOpen) return;
     const shell = readerRef.current?.closest<HTMLElement>('.investigation-shell');
@@ -150,7 +323,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     ? readerPagesForBlock(stage, primaryBlock).filter((item) => item.role === 'page' || item.role === 'whole')
     : [];
   const primaryPageIndex = primaryBlock && primaryPages.length
-    ? storedPageIndex(primaryBlock.id, primaryPages.length)
+    ? storedPageIndex(primaryBlock, primaryPages)
     : 0;
   const primaryPage = primaryPages[primaryPageIndex];
   const pagePresentation = act4PagePresentation(stage, primaryPageIndex, primaryBlock?.id, primaryPage?.label, primaryPage?.sceneIndex);
@@ -188,7 +361,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     if (block.kind === 'adaptation-bridge') return [];
     const pages = readerPagesForBlock(stage, block).filter((item) => item.role === 'page' || item.role === 'whole');
     if (!pages.length) return [];
-    const pageIndex = Math.max(0, Math.min(pages.length - 1, pageIndexByBlock[block.id] ?? 0));
+    const pageIndex = storedPageIndex(block, pages);
     const page = pages[pageIndex];
     const currentKey = `${stage}:${reviewing ? 'review' : 'current'}:${block.id}`;
     const coverKey = stage === 'T01' || stage === 'T10'
@@ -201,39 +374,54 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const activeReadingBlockIndex = activeReadingTarget ? visibleBlocks.findIndex((block) => block.id === activeReadingTarget.blockId) : -1;
   const nextReadingTarget = activeReadingTarget ? pageTargets.find((target) => visibleBlocks.findIndex((block) => block.id === target.blockId) === activeReadingBlockIndex + 1) : undefined;
   const t01PageControls = stage === 'T01' && activeReadingTarget?.coverOpen === true && activeReadingTarget.blockId === 'T01_ORIGINAL';
-  const continueAction: InvestigationAction = activeReadingTarget && activeReadingTarget.coverRequired && !activeReadingTarget.coverOpen
+  const continueAction: InvestigationAction = stage === 'T03' && reviewing
+    ? {
+      actionId: 'A4_RETURN_TO_CURRENT_PROGRESS', kind: 'return', label: '返回当前阅读进度', state: 'ready',
+      onActivate: returnToCurrent,
+    }
+    : stage === 'T03'
+      ? {
+        actionId: 'A4_T03_VIEW_PRIVATE_BLOG', kind: 'memory', target: 'T03_ORIGINAL', label: '查看动态', state: 'ready',
+        onActivate: () => {
+          if (privateBlogOpen) focusPrivateBlog();
+          else togglePrivateBlog(true);
+        },
+      }
+    : activeReadingTarget && activeReadingTarget.coverRequired && !activeReadingTarget.coverOpen
       ? {
         actionId: `A4_${stage}_OPEN_COVER_${activeReadingTarget.blockId}_${activeReadingTarget.pageIndex + 1}`, kind: 'memory', target: activeReadingTarget.blockId,
         label: stage === 'T01' ? '翻开小 A 的笔记' : `翻开：${activeReadingTarget.page.sceneLabel || activeReadingTarget.page.label || '这一段'}`, state: 'ready',
         onActivate: () => {
           if (stage === 'T01') setHotelBackgroundExpanded(false);
           markNotebookPageRead(activeReadingTarget.blockId, activeReadingTarget.pageIndex);
-          persistReadingPosition({
+          transitionAct4View(() => persistReadingPosition({
             activeBlockId: activeReadingTarget.blockId,
             openedCoverKeys: [...new Set([...readingPosition.openedCoverKeys, activeReadingTarget.coverKey])],
-          });
+          }));
         },
       }
       : activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1
         ? {
           actionId: `A4_${stage}_NEXT_PAGE_${activeReadingTarget.blockId}_${activeReadingTarget.pageIndex + 1}`, kind: 'memory', target: activeReadingTarget.blockId,
           label: stage === 'T01' ? `继续阅读 · ${activeReadingTarget.pageIndex + 1} / ${activeReadingTarget.pages.length}` : activeReadingTarget.pages[activeReadingTarget.pageIndex + 1]?.sceneId !== activeReadingTarget.page.sceneId
-            ? `继续到：${activeReadingTarget.pages[activeReadingTarget.pageIndex + 1]?.sceneLabel || '下一段'}`
+            ? '继续阅读'
             : `下一页 · ${activeReadingTarget.pageIndex + 1} / ${activeReadingTarget.pages.length}`, state: 'ready',
           onActivate: () => {
             const nextPageIndex = activeReadingTarget.pageIndex + 1;
             markNotebookPageRead(activeReadingTarget.blockId, nextPageIndex);
-            persistReadingPosition({
+            const update = () => persistReadingPosition({
               activeBlockId: activeReadingTarget.blockId,
               pageIndexByBlock: { ...pageIndexByBlock, [activeReadingTarget.blockId]: nextPageIndex },
             });
+            if (activeReadingTarget.pages[nextPageIndex]?.sceneId !== activeReadingTarget.page.sceneId) transitionAct4View(update);
+            else update();
           },
         }
     : activeReadingTarget && nextReadingTarget
       ? {
         actionId: `A4_${stage}_NEXT_BLOCK_${nextReadingTarget.blockId}`, kind: 'memory', target: nextReadingTarget.blockId,
-        label: `继续到：${nextReadingTarget.page.sceneLabel || nextReadingTarget.page.label || '下一段'}`, state: 'ready',
-        onActivate: () => persistReadingPosition({ activeBlockId: nextReadingTarget.blockId }),
+        label: '继续阅读', state: 'ready',
+        onActivate: () => transitionAct4View(() => persistReadingPosition({ activeBlockId: nextReadingTarget.blockId })),
       }
     : reviewing
       ? {
@@ -456,8 +644,11 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     actLabel="第四幕 · 暗潮"
     locationLabel={displayTitle}
     className="investigation-shell--reading"
-    objective={stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。' : activeReadingTarget ? '继续读完当前内容；需要行动时，会在这里出现。' : '这一部分已经读完，可以继续。'}
-    helpText="先看这一段的场景，再读文字。已读内容可以回看；需要做的事仍由你决定。"
+    objective={stage === 'T03'
+      ? privateBlogOpen ? '浏览王澳按日期留下的私人动态；读到末尾后可以继续。' : '查看登录后的王澳私人动态。'
+      : stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。'
+        : activeReadingTarget ? '继续读完当前内容；需要行动时，会在这里出现。' : '这一部分已经读完，可以继续。'}
+    helpText={stage === 'T03' ? '可以按日期回看，也可以收藏想留意的一条。' : '先看这一段的场景，再读文字。已读内容可以回看；需要做的事仍由你决定。'}
     actions={t01PageControls && !reviewing && activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1 ? [] : [continueAction]}
     onExit={onExit}
   >
@@ -485,7 +676,43 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
             if (blockOrder > activeReadingBlockIndex) return null;
             const segments = readerPagesForBlock(stage, block);
             const pages = segments.filter((item) => item.role === 'page' || item.role === 'whole');
-            const pageIndex = Math.max(0, Math.min(pages.length - 1, pageIndexByBlock[block.id] ?? 0));
+            const pageIndex = storedPageIndex(block, pages);
+            if (stage === 'T03' && block.id === 'T03_ORIGINAL') {
+              const blogPosts = act4PrivateBlogPosts(block.paragraphs);
+              return <div className="a4-reader__block-stack" key={block.id}>
+                <section
+                  className="a4-reader__block a4-reader__block--novel-excerpt a4-reader__block--private-blog"
+                  data-block-id={block.id}
+                  data-source-ref-id={block.sourceRefId}
+                  data-content-kind={block.kind}
+                  data-presentation-kind={presentationKind}
+                  data-paragraph-count={block.paragraphs.length}
+                  data-reading-view={privateBlogOpen ? 'blog' : 'context'}
+                >
+                  {privateBlogOpen
+                    ? <Act4PrivateBlog
+                      openingText={block.paragraphs[0]}
+                      posts={blogPosts}
+                      closingText={block.paragraphs.at(-1) ?? ''}
+                      bookmarkedDates={bookmarkedBlogDates}
+                      onToggleBookmark={(dateTime) => setBookmarkedBlogDates((current) => current.includes(dateTime)
+                        ? current.filter((item) => item !== dateTime)
+                        : [...current, dateTime])}
+                      onReturnToContext={() => togglePrivateBlog(false)}
+                      onContinue={() => reviewing ? returnToCurrent() : continueCurrentSection('T03')}
+                      continueLabel={reviewing ? '返回当前阅读进度' : '读完动态，继续'}
+                    />
+                    : <div className="a4-private-blog-gateway" tabIndex={-1} aria-label="动态记录入口">
+                      <p className="a4-private-blog-gateway__source">{block.paragraphs[0]}</p>
+                      <div className="a4-private-blog-gateway__card">
+                        <p>私人动态 · 账号记录</p>
+                        <h3>王澳的动态</h3>
+                        <p>2020 年 4 月 3 日至 19 日 · {blogPosts.length} 条按日期记录</p>
+                      </div>
+                    </div>}
+                </section>
+              </div>;
+            }
             if (blockOrder < activeReadingBlockIndex) {
               const previousPage = pages[pages.length - 1];
               const previousSegments = [...pages, ...segments.filter((item) => item.role === 'ending')];
@@ -558,13 +785,17 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
                     <button type="button" disabled={pageIndex === 0} onClick={() => {
                       const previousPageIndex = Math.max(0, pageIndex - 1);
                       markNotebookPageRead(block.id, previousPageIndex);
-                      persistReadingPosition({ activeBlockId: block.id, pageIndexByBlock: { ...pageIndexByBlock, [block.id]: previousPageIndex } });
+                      const update = () => persistReadingPosition({ activeBlockId: block.id, pageIndexByBlock: { ...pageIndexByBlock, [block.id]: previousPageIndex } });
+                      if (pages[previousPageIndex]?.sceneId !== currentPage?.sceneId) transitionAct4View(update);
+                      else update();
                     }}>上一页</button>
                     <span aria-live="polite">{pageIndex + 1} / {pages.length}</span>
                     <button type="button" disabled={pageIndex >= pages.length - 1} onClick={() => {
                       const nextPageIndex = Math.min(pages.length - 1, pageIndex + 1);
                       markNotebookPageRead(block.id, nextPageIndex);
-                      persistReadingPosition({ activeBlockId: block.id, pageIndexByBlock: { ...pageIndexByBlock, [block.id]: nextPageIndex } });
+                      const update = () => persistReadingPosition({ activeBlockId: block.id, pageIndexByBlock: { ...pageIndexByBlock, [block.id]: nextPageIndex } });
+                      if (pages[nextPageIndex]?.sceneId !== currentPage?.sceneId) transitionAct4View(update);
+                      else update();
                     }}>下一页</button>
                   </nav>
                   <details className="a4-reader__page-directory">
@@ -579,7 +810,9 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
                             : dateLabel || `第 ${index + 1} 页`;
                         return <button type="button" key={item.id} aria-current={pageIndex === index ? 'page' : undefined} onClick={() => {
                           markNotebookPageRead(block.id, index);
-                          persistReadingPosition({ activeBlockId: block.id, pageIndexByBlock: { ...pageIndexByBlock, [block.id]: index } });
+                        const update = () => persistReadingPosition({ activeBlockId: block.id, pageIndexByBlock: { ...pageIndexByBlock, [block.id]: index } });
+                        if (pages[index]?.sceneId !== currentPage?.sceneId) transitionAct4View(update);
+                        else update();
                         }}>{label}</button>;
                       })}
                     </nav>

@@ -356,6 +356,13 @@
 .a4-reader__cover-copy p { margin: 0 0 6px; color: #59615d; }
 .a4-reader__cover-copy h3 { margin: 0 0 9px; color: #303a34; font-size: clamp(1.2rem, 2vw, 1.6rem); }
 .a4-reader__cover-copy span { color: #59615d; }
+.a4-private-blog-gateway { display: grid; min-height: 300px; align-content: center; justify-items: center; gap: 14px; padding: clamp(22px, 5vw, 58px); border: 1px solid #d3d9d5; border-radius: 10px; background: linear-gradient(145deg, #f7f8f6, #e8ece9); text-align: center; }
+.a4-private-blog-gateway:focus { outline: 2px solid #789382; outline-offset: 2px; }
+.a4-private-blog-gateway__source { align-self: start; justify-self: start; margin: 0; color: #737c76; font-family: "Noto Serif CJK SC", "SimSun", serif; }
+.a4-private-blog-gateway__card { width: min(100%, 560px); padding: clamp(20px, 4vw, 38px); border: 1px solid #d3d9d5; border-radius: 9px; background: #fff; box-shadow: 0 10px 24px #23342a0a; }
+.a4-private-blog-gateway__card > p:first-child { margin: 0 0 8px; color: #68756d; font-size: .86rem; }
+.a4-private-blog-gateway__card h3 { margin: 0; color: #293b30; font-size: clamp(1.35rem, 3vw, 1.8rem); }
+.a4-private-blog-gateway__card > p:last-child { margin: 9px 0 0; color: #68736c; }
 .a4-reader__past-block { margin: 12px 0; padding: 0 12px; border: 1px solid #c7cbce; border-radius: 7px; background: #e9ebec; }
 .a4-reader__past-block > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 650; }
 .a4-reader__notebook-pager { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; width: min(100%, 560px); margin: 22px auto 0; padding-top: 14px; border-top: 1px solid #d1d4d7; text-align: center; }
@@ -379,16 +386,39 @@
 .a4-reader__boundary { display: none; }
 .a4-reader__past-block .a4-reader__segment { padding-block: 8px; border-bottom: 1px solid #d1d4d7; }
 .a4-reader--first-person .a4-reader__paragraphs { max-width: 36em; margin-inline: auto; font-size: var(--a4-reader-font-size, 18px); line-height: 1.8; }
-.act4-ending { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; overflow: auto; padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom)); color: #f4f2ed; background: #050607; animation: act4-ending-fade-in 900ms ease-out both; }
+.a4-reader--transition-arrival { animation: act4-reader-arrival 240ms ease-out both; }
+@keyframes act4-reader-arrival { from { opacity: 0; } to { opacity: 1; } }
+@keyframes act4-reader-fade-out { to { opacity: 0; } }
+@supports (view-transition-name: a4-reader) {
+  .a4-reader { view-transition-name: a4-reader; }
+  .act4-ending { view-transition-name: act4-ending; }
+  html[data-a4-reader-transition="active"]::view-transition-old(root),
+  html[data-a4-reader-transition="active"]::view-transition-new(root) { animation: none; }
+  ::view-transition-group(a4-reader) { animation-duration: 240ms; }
+  ::view-transition-old(a4-reader) { animation: act4-reader-fade-out 240ms ease-in both; }
+  ::view-transition-new(a4-reader) { animation: act4-reader-arrival 240ms ease-out both; }
+  ::view-transition-group(act4-ending) { animation-duration: 240ms; }
+  ::view-transition-old(act4-ending) { animation: act4-ending-fade-out 240ms ease-in both; }
+}
+.act4-ending { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; overflow: auto; padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom)); color: #f4f2ed; background: #050607; animation: act4-ending-fade-in 240ms ease-out both; }
 .act4-ending__card { width: min(100%, 680px); text-align: center; }
-.act4-ending__card h1 { margin: 0 0 34px; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 500; letter-spacing: .08em; }
+.act4-ending__skip { position: fixed; top: max(18px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right)); min-height: 44px; padding: 8px 13px; border: 1px solid #686d6e; border-radius: 5px; color: #e4e4df; background: #151819; font: inherit; cursor: pointer; }
+.act4-ending__skip:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.act4-ending__card h1 { margin: 0 0 34px; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 500; letter-spacing: .08em; animation: act4-ending-copy-in 240ms ease-out both; }
+.act4-ending__credits { animation: act4-ending-copy-in 240ms ease-out both; }
 .act4-ending__card p { margin: 10px 0; color: #d0d0cb; font-size: clamp(1rem, 2.2vw, 1.2rem); letter-spacing: .035em; }
 .act4-ending__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 44px; }
+.act4-ending__actions--revealed { animation: act4-ending-copy-in 240ms ease-out both; }
 .act4-ending__actions button { min-width: 140px; min-height: 44px; padding: 9px 16px; border: 1px solid #6f7476; border-radius: 5px; color: #f4f2ed; background: #171a1c; font: inherit; cursor: pointer; }
 .act4-ending__actions button:first-child { border-color: #a9aca8; background: #292d2e; }
 .act4-ending__actions button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 @keyframes act4-ending-fade-in { from { opacity: 0; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .act4-ending { animation-duration: .01ms; } }
+@keyframes act4-ending-fade-out { to { opacity: 0; } }
+@keyframes act4-ending-copy-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .a4-reader--transition-arrival, .act4-ending, .act4-ending__card h1, .act4-ending__credits, .act4-ending__actions--revealed { animation-duration: .01ms !important; }
+  ::view-transition-group(a4-reader), ::view-transition-old(a4-reader), ::view-transition-new(a4-reader) { animation-duration: .01ms !important; }
+}
 @media (max-width: 760px) {
   .a4-reader--first-person { grid-template-columns: minmax(0, 1fr); padding: 12px; gap: 12px; }
   .a4-reader--first-person .a4-reader__art { width: 100%; max-width: 100%; margin: 0 auto; }
