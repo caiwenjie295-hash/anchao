@@ -10,6 +10,7 @@ import { AppWindow } from './components/AppWindow';
 import { DesktopIcon } from './components/DesktopIcon';
 import { DesktopTaskCard } from './components/DesktopTaskCard';
 import { InvestigationProgressDrawer } from './components/InvestigationProgressDrawer';
+import { SaveRecoveryNotice } from './components/recovery/SaveRecoveryNotice';
 import { InvestigationProgressProvider } from './components/InvestigationProgressContext';
 import { Taskbar } from './components/Taskbar';
 import { Act1PhaseBController } from './story/act1PhaseBController';
@@ -383,6 +384,7 @@ export default function App() {
     <InvestigationProgressDrawer state={state} />
     {transitionLayer}
     {saveImportNotice}
+    <SaveRecoveryNotice manager={stateManager} />
     </>
     </InvestigationProgressProvider>
   );

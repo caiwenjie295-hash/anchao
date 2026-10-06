@@ -2,6 +2,8 @@ import { useRef, useState, useSyncExternalStore } from 'react';
 import type { ChangeEvent } from 'react';
 import { getUiPreferences, setReaderFontSize, subscribeUiPreferences, type ReaderFontSize } from '../../core/uiPreferences';
 import type { SaveStatus, StateManager } from '../../core/stateManager';
+import { SaveRecoveryPanel } from '../../components/recovery/SaveRecoveryPanel';
+import { downloadSaveText } from '../../components/recovery/saveFile';
 import './settings.css';
 
 const MAX_IMPORT_SIZE_BYTES = 2 * 1024 * 1024;
@@ -11,6 +13,7 @@ const saveStatusCopy: Record<SaveStatus, { title: string; detail: string }> = {
   saved: { title: '已保存', detail: '最近的调查进度已保存在这台设备上。' },
   saving: { title: '正在保存', detail: '稍等片刻，正在记下最近的进展。' },
   unavailable: { title: '暂时无法保存', detail: '你可以继续调查；也可以先导出一份副本留存。' },
+  'recovery-required': { title: '需要恢复调查记录', detail: '原记录仍受保护；恢复完成前的新操作只在本次打开期间保留。' },
 };
 
 function localDateStamp(date: Date): string {
@@ -31,6 +34,8 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
   const [exportFeedback, setExportFeedback] = useState('');
   const [importFeedback, setImportFeedback] = useState<{ kind: 'success' | 'error'; text: string } | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [pendingImportText, setPendingImportText] = useState<string | null>(null);
+  const [replaceProtectedOriginal, setReplaceProtectedOriginal] = useState(false);
   const isImportingRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,28 +47,10 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
   };
 
   const exportLatestSave = () => {
-    let pendingObjectUrl: string | null = null;
-    let downloadLink: HTMLAnchorElement | null = null;
-    try {
-      const saveText = manager.exportSave();
-      const blob = new Blob([saveText], { type: 'application/json;charset=utf-8' });
-      pendingObjectUrl = URL.createObjectURL(blob);
-      const objectUrl = pendingObjectUrl;
-      downloadLink = document.createElement('a');
-      downloadLink.href = objectUrl;
-      downloadLink.download = `暗潮-调查记录-${localDateStamp(new Date())}.json`;
-      downloadLink.hidden = true;
-      document.body.append(downloadLink);
-      downloadLink.click();
-      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-      pendingObjectUrl = null;
-      setExportFeedback('调查记录副本已开始下载。');
-    } catch {
-      setExportFeedback('暂时无法导出调查记录，请稍后再试。');
-    } finally {
-      downloadLink?.remove();
-      if (pendingObjectUrl) URL.revokeObjectURL(pendingObjectUrl);
-    }
+    const saveText = manager.exportSave();
+    setExportFeedback(downloadSaveText(saveText, `暗潮-调查记录-${localDateStamp(new Date())}.json`)
+      ? '调查记录副本已开始下载。'
+      : '暂时无法导出调查记录，请稍后再试。');
   };
 
   const importSaveFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +59,8 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
     input.value = '';
     if (!file || isImportingRef.current) return;
     setImportFeedback(null);
+    setPendingImportText(null);
+    setReplaceProtectedOriginal(false);
     if (file.size > MAX_IMPORT_SIZE_BYTES) {
       setImportFeedback({ kind: 'error', text: '这个文件超过 2 MiB，未导入；请选择较小的调查记录副本。' });
       return;
@@ -81,12 +70,19 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
     setIsImporting(true);
     try {
       const serialized = await file.text();
-      const result = manager.importSave(serialized);
+      const result = manager.importSave(serialized, { replaceProtectedOriginal });
       if (result.ok) {
+        setPendingImportText(null);
+        setReplaceProtectedOriginal(false);
         setImportFeedback({ kind: 'success', text: '调查记录已恢复并保存到这台设备。' });
-      } else if (result.reason === 'storage-unavailable') {
+      } else if (result.reason === 'recovery-slot-occupied') {
+        setPendingImportText(serialized);
+        setImportFeedback({ kind: 'error', text: '这个文件有效，但设备上已保留另一条原始记录副本。请先在恢复选项中分别导出两条原文，再明确允许替换旧副本。' });
+      } else if (result.reason === 'storage-unavailable' || result.reason === 'backup-unavailable' || result.reason === 'recovery-protection-failed') {
+        setPendingImportText(null);
         setImportFeedback({ kind: 'error', text: '这台设备暂时无法保存；原有调查记录没有更改。' });
       } else {
+        setPendingImportText(null);
         setImportFeedback({ kind: 'error', text: '这个文件无法用于恢复调查记录；原有记录没有更改。' });
       }
     } catch {
@@ -94,6 +90,20 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
     } finally {
       isImportingRef.current = false;
       setIsImporting(false);
+    }
+  };
+
+  const retryPendingImport = () => {
+    if (!pendingImportText || !replaceProtectedOriginal) return;
+    const result = manager.importSave(pendingImportText, { replaceProtectedOriginal: true });
+    if (result.ok) {
+      setPendingImportText(null);
+      setReplaceProtectedOriginal(false);
+      setImportFeedback({ kind: 'success', text: '调查记录已恢复并保存到这台设备。原始记录副本仍保留在设备上。' });
+    } else {
+      setImportFeedback({ kind: 'error', text: result.reason === 'recovery-protection-failed'
+        ? '无法保存新的原始记录副本，主存档没有更改。'
+        : '调查记录没有更改；请检查设备存储后重试。' });
     }
   };
 
@@ -147,6 +157,10 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
               onChange={importSaveFile}
             />
           </div>
+          <SaveRecoveryPanel manager={manager} onReplaceProtectedOriginalChange={setReplaceProtectedOriginal} />
+          {pendingImportText && <button type="button" className="save-recovery-panel__confirm-import" disabled={!replaceProtectedOriginal || isImporting} onClick={retryPendingImport}>
+            导入所选记录并替换旧保护副本
+          </button>}
           {exportFeedback && <p className="settings-panel__feedback" role="status" aria-live="polite">{exportFeedback}</p>}
           <p className="settings-panel__description">恢复文件最多 2 MiB；导入前会检查内容，无法恢复时原有记录会保留。</p>
           {importFeedback && <p className={`settings-panel__feedback settings-panel__feedback--${importFeedback.kind}`} role="status" aria-live="polite">{importFeedback.text}</p>}

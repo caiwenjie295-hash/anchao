@@ -1,7 +1,8 @@
 import { eventBus, type EventBus } from './eventBus';
 import { createDefaultState } from './defaultState';
-import { clearReadingUiState, importSaveText, loadState, saveState, type SaveImportResult } from './saveManager';
+import { clearReadingUiState, importSaveText, readProtectedOriginalSave, readRecentSaveBackup, readSave, restoreRecentSaveBackup, writeSaveState, type SaveImportResult, type SaveReadResult, type SaveRecoveryWriteOptions, type SaveWriteFailureReason } from './saveManager';
 import { ACT2_SCHOOL_AREA_IDS, ACT2_SCHOOL_HOTSPOT_IDS, isAct2EvidenceAssetId, type Act2ActiveStage, type Act2QimingCaseId, type Act2QimingConclusionId, type Act2QimingNicknameAssessment, type Act2ResearchState, type Act2Stage, type Act3State, type Act4NarrativeActionId, type Act4Stage, type AppId, type AppState, type Bounds, type GamePhase, type HeibumuNamePart, type Act2SchoolEvidenceId, type Act2SchoolInferenceId } from './types';
+import type { SaveStoragePort } from './persistence/browserStorage';
 import { birthdayScenes, timeline } from '../data/act4/content';
 import { answerAct4Puzzle } from '../story/act4/actions';
 import { laterScenesByStage, type LaterStage } from '../data/act4/laterContent';
@@ -17,7 +18,30 @@ import { getAct3RouteAvailability } from '../story/investigation/act3RoutePolicy
 import { act4NarrativeActionsSatisfied, act4NarrativeSectionId, act4NarrativeStageSequence } from '../story/act4/narrativePolicy';
 
 type StateListener = () => void;
-export type SaveStatus = 'saved' | 'saving' | 'unavailable';
+export type SaveStatus = 'saved' | 'saving' | 'unavailable' | 'recovery-required';
+
+export type SaveRecoveryState =
+  | { kind: 'none' }
+  | { kind: 'device-save-available'; savedSaveText: string; originalText?: string; backupAvailable: boolean; protectedOriginalText: string | null }
+  | { kind: 'backup-only'; backupAvailable: true; protectedOriginalText: string | null }
+  | { kind: 'corrupt'; originalText: string; backupAvailable: boolean; protectedOriginalText: string | null }
+  | { kind: 'unsupported-version'; originalText: string; version: number; backupAvailable: boolean; protectedOriginalText: string | null }
+  | { kind: 'unavailable'; originalText?: string; backupAvailable: boolean; protectedOriginalText: string | null };
+
+export type SaveRecoveryActionResult = { ok: true } | { ok: false; reason: SaveWriteFailureReason | 'backup-not-found' | 'device-save-available' | 'device-save-changed' };
+
+const noSaveRecovery: SaveRecoveryState = Object.freeze({ kind: 'none' });
+
+function recoverySnapshot(result: SaveReadResult, storage?: SaveStoragePort): SaveRecoveryState {
+  const backup = readRecentSaveBackup(storage);
+  const protectedOriginalText = readProtectedOriginalSave(storage);
+  const backupAvailable = backup.kind === 'loaded';
+  if (result.kind === 'empty') return backupAvailable ? { kind: 'backup-only', backupAvailable: true, protectedOriginalText } : noSaveRecovery;
+  if (result.kind === 'loaded') return noSaveRecovery;
+  if (result.kind === 'corrupt') return { kind: 'corrupt', originalText: result.raw, backupAvailable, protectedOriginalText };
+  if (result.kind === 'unsupported-version') return { kind: 'unsupported-version', originalText: result.raw, version: result.version, backupAvailable, protectedOriginalText };
+  return { kind: 'unavailable', ...(result.raw === undefined ? {} : { originalText: result.raw }), backupAvailable, protectedOriginalText };
+}
 
 const pendingSaveFlushers = new Set<() => void>();
 let lifecycleFlushInstalled = false;
@@ -68,11 +92,20 @@ export class StateManager {
   private subscribers = new Set<StateListener>();
   private saveStatus = 'saved' as SaveStatus;
   private saveStatusSubscribers = new Set<StateListener>();
+  private recoveryState: SaveRecoveryState = noSaveRecovery;
+  private recoveryStateSubscribers = new Set<StateListener>();
   private pendingSaveTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly flushForLifecycle = () => this.flushPendingSave();
 
-  constructor(private readonly bus: EventBus = eventBus, initialState: AppState = loadState()) {
-    this.state = initialState;
+  constructor(private readonly bus: EventBus = eventBus, initialState?: AppState, private readonly storage?: SaveStoragePort) {
+    if (initialState) {
+      this.state = initialState;
+      return;
+    }
+    const result = readSave(storage);
+    this.state = result.kind === 'loaded' ? result.state : createDefaultState();
+    this.recoveryState = recoverySnapshot(result, storage);
+    if (this.recoveryState.kind !== 'none') this.saveStatus = this.recoveryState.kind === 'unavailable' ? 'unavailable' : 'recovery-required';
   }
 
   getState = (): AppState => this.state;
@@ -88,6 +121,19 @@ export class StateManager {
     this.saveStatusSubscribers.add(listener);
     return () => this.saveStatusSubscribers.delete(listener);
   };
+
+  getRecoveryState = (): SaveRecoveryState => this.recoveryState;
+
+  subscribeRecoveryState = (listener: StateListener): (() => void) => {
+    this.recoveryStateSubscribers.add(listener);
+    return () => this.recoveryStateSubscribers.delete(listener);
+  };
+
+  private setRecoveryState(state: SaveRecoveryState): void {
+    if (JSON.stringify(this.recoveryState) === JSON.stringify(state)) return;
+    this.recoveryState = state;
+    this.recoveryStateSubscribers.forEach((listener) => listener());
+  }
 
   /** 订阅 flag:changed 事件，返回取消订阅函数。 */
   subscribeFlagChanged = (handler: (payload: { flagId: string; value: boolean | string | number }) => void): (() => void) => {
@@ -121,17 +167,34 @@ export class StateManager {
   }
 
   private persistCurrentState(): void {
-    if (saveState(this.state)) {
+    if (this.recoveryState.kind !== 'none') {
+      this.setSaveStatus(this.recoveryState.kind === 'unavailable' ? 'unavailable' : 'recovery-required');
+      return;
+    }
+    const result = writeSaveState(this.state, this.storage);
+    if (result.ok) {
       this.setSaveStatus('saved');
       this.bus.emit('save:completed', { schemaVersion: 13 });
     } else {
-      this.setSaveStatus('unavailable');
+      if (result.recovery) {
+        this.setRecoveryState(recoverySnapshot(result.recovery, this.storage));
+      } else if (result.reason === 'storage-unavailable' || result.reason === 'backup-unavailable') {
+        this.setRecoveryState(recoverySnapshot({ kind: 'unavailable' }, this.storage));
+      }
+      this.setSaveStatus(result.reason === 'recovery-required' || result.reason === 'recovery-slot-occupied' || result.reason === 'recovery-protection-failed'
+        ? 'recovery-required'
+        : 'unavailable');
     }
   }
 
   private commit(next: AppState, savePolicy: 'immediate' | 'deferred' = 'immediate'): void {
     this.state = next;
     this.subscribers.forEach((listener) => listener());
+    if (this.recoveryState.kind !== 'none') {
+      this.cancelPendingSave();
+      this.setSaveStatus(this.recoveryState.kind === 'unavailable' ? 'unavailable' : 'recovery-required');
+      return;
+    }
     if (savePolicy === 'deferred') {
       this.deferSave();
       return;
@@ -290,6 +353,7 @@ export class StateManager {
   }
 
   resetProgress(): void {
+    if (this.recoveryState.kind !== 'none') return;
     this.cancelPendingSave();
     clearReadingUiState();
     this.commit(createDefaultState());
@@ -300,16 +364,142 @@ export class StateManager {
     return JSON.stringify(this.state, null, 2);
   }
 
-  importSave(serialized: string): SaveImportResult {
-    const result = importSaveText(serialized);
+  exportOriginalSave(): string | null {
+    return 'originalText' in this.recoveryState ? this.recoveryState.originalText ?? null : null;
+  }
+
+  exportProtectedOriginalSave(): string | null {
+    return this.recoveryState.kind === 'none'
+      ? readProtectedOriginalSave(this.storage)
+      : this.recoveryState.protectedOriginalText ?? readProtectedOriginalSave(this.storage);
+  }
+
+  refreshSaveRecovery(options: SaveRecoveryWriteOptions = {}): SaveRecoveryActionResult {
+    const result = readSave(this.storage);
+    if (result.kind === 'loaded') {
+      if (this.recoveryState.kind === 'none') return { ok: true };
+      this.cancelPendingSave();
+      this.setRecoveryState({
+        kind: 'device-save-available',
+        savedSaveText: JSON.stringify(result.state, null, 2),
+        ...('originalText' in this.recoveryState && this.recoveryState.originalText !== undefined ? { originalText: this.recoveryState.originalText } : {}),
+        backupAvailable: readRecentSaveBackup(this.storage).kind === 'loaded',
+        protectedOriginalText: readProtectedOriginalSave(this.storage),
+      });
+      this.setSaveStatus('recovery-required');
+      return { ok: false, reason: 'device-save-available' };
+    }
+    if (result.kind === 'empty' && this.recoveryState.kind !== 'none') {
+      const write = writeSaveState(this.state, this.storage, {
+        ...options,
+        preserveOriginalText: this.exportOriginalSave() ?? undefined,
+      });
+      if (write.ok) {
+        this.cancelPendingSave();
+        this.setRecoveryState(noSaveRecovery);
+        this.setSaveStatus('saved');
+        this.bus.emit('save:completed', { schemaVersion: 13 });
+        return { ok: true };
+      }
+      if (write.recovery) this.setRecoveryState(recoverySnapshot(write.recovery, this.storage));
+      else if (!('originalText' in this.recoveryState)) this.setRecoveryState(recoverySnapshot(result, this.storage));
+      this.setSaveStatus(write.reason === 'recovery-slot-occupied' || write.reason === 'recovery-protection-failed' || write.reason === 'recovery-required'
+        ? 'recovery-required'
+        : 'unavailable');
+      return { ok: false, reason: write.reason };
+    }
+    const snapshot = recoverySnapshot(result, this.storage);
+    if (snapshot.kind !== 'none') this.cancelPendingSave();
+    this.setRecoveryState(snapshot);
+    this.setSaveStatus(snapshot.kind === 'unavailable' ? 'unavailable' : snapshot.kind === 'none' ? 'saved' : 'recovery-required');
+    return { ok: false, reason: result.kind === 'unavailable' ? 'storage-unavailable' : 'recovery-required' };
+  }
+
+  adoptAvailableSave(options: SaveRecoveryWriteOptions = {}): SaveRecoveryActionResult {
+    if (this.recoveryState.kind !== 'device-save-available') return { ok: false, reason: 'device-save-changed' };
+    const savedSaveText = this.recoveryState.savedSaveText;
+    const result = readSave(this.storage);
+    if (result.kind !== 'loaded') {
+      this.setRecoveryState(recoverySnapshot(result, this.storage));
+      this.setSaveStatus(result.kind === 'unavailable' ? 'unavailable' : 'recovery-required');
+      return { ok: false, reason: result.kind === 'unavailable' ? 'storage-unavailable' : 'device-save-changed' };
+    }
+    const currentSaveText = JSON.stringify(result.state, null, 2);
+    if (currentSaveText !== savedSaveText) {
+      this.setRecoveryState({ ...this.recoveryState, savedSaveText: currentSaveText, backupAvailable: readRecentSaveBackup(this.storage).kind === 'loaded' });
+      this.setSaveStatus('recovery-required');
+      return { ok: false, reason: 'device-save-changed' };
+    }
+    const originalText = this.recoveryState.originalText;
+    if (originalText !== undefined) {
+      const write = writeSaveState(result.state, this.storage, { ...options, preserveOriginalText: originalText });
+      if (!write.ok) {
+        this.setSaveStatus(write.reason === 'recovery-slot-occupied' || write.reason === 'recovery-protection-failed' ? 'recovery-required' : 'unavailable');
+        return { ok: false, reason: write.reason };
+      }
+    }
+    this.cancelPendingSave();
+    clearReadingUiState();
+    this.state = result.state;
+    this.subscribers.forEach((listener) => listener());
+    this.setRecoveryState(noSaveRecovery);
+    this.setSaveStatus('saved');
+    this.bus.emit('save:completed', { schemaVersion: 13 });
+    this.bus.emit('save:imported', { schemaVersion: 13 });
+    return { ok: true };
+  }
+
+  restoreSaveBackup(options: SaveRecoveryWriteOptions = {}): SaveRecoveryActionResult {
+    this.cancelPendingSave();
+    const result = restoreRecentSaveBackup(this.storage, { ...options, preserveOriginalText: this.exportOriginalSave() ?? undefined });
     if (!result.ok) {
-      if (result.reason === 'storage-unavailable') this.setSaveStatus('unavailable');
+      this.setSaveStatus(result.reason === 'recovery-slot-occupied' || result.reason === 'recovery-protection-failed' ? 'recovery-required' : 'unavailable');
+      this.setRecoveryState(recoverySnapshot(readSave(this.storage), this.storage));
+      return { ok: false, reason: result.reason };
+    }
+    this.state = result.state;
+    this.subscribers.forEach((listener) => listener());
+    this.setRecoveryState(noSaveRecovery);
+    this.setSaveStatus('saved');
+    this.bus.emit('save:completed', { schemaVersion: 13 });
+    this.bus.emit('save:imported', { schemaVersion: 13 });
+    return { ok: true };
+  }
+
+  restartFromRecovery(options: SaveRecoveryWriteOptions = {}): SaveRecoveryActionResult {
+    if (this.recoveryState.kind === 'none') return { ok: false, reason: 'recovery-required' };
+    this.cancelPendingSave();
+    const state = createDefaultState();
+    const result = writeSaveState(state, this.storage, { ...options, preserveOriginalText: this.exportOriginalSave() ?? undefined, allowInvalidOverwrite: true });
+    if (!result.ok) {
+      this.setSaveStatus(result.reason === 'recovery-slot-occupied' || result.reason === 'recovery-protection-failed' ? 'recovery-required' : 'unavailable');
+      if (result.recovery) this.setRecoveryState(recoverySnapshot(result.recovery, this.storage));
+      return { ok: false, reason: result.reason };
+    }
+    clearReadingUiState();
+    this.state = state;
+    this.subscribers.forEach((listener) => listener());
+    this.setRecoveryState(noSaveRecovery);
+    this.setSaveStatus('saved');
+    this.bus.emit('progress:reset', { schemaVersion: 13 });
+    this.bus.emit('save:completed', { schemaVersion: 13 });
+    return { ok: true };
+  }
+
+  importSave(serialized: string, options: SaveRecoveryWriteOptions = {}): SaveImportResult {
+    const result = importSaveText(serialized, this.storage, { ...options, preserveOriginalText: this.exportOriginalSave() ?? undefined });
+    if (!result.ok) {
+      if (result.reason === 'recovery-slot-occupied' || result.reason === 'recovery-protection-failed') {
+        this.setRecoveryState(recoverySnapshot(readSave(this.storage), this.storage));
+        this.setSaveStatus('recovery-required');
+      } else if (result.reason === 'storage-unavailable' || result.reason === 'backup-unavailable') this.setSaveStatus('unavailable');
       return result;
     }
     this.cancelPendingSave();
     clearReadingUiState();
     this.state = result.state;
     this.subscribers.forEach((listener) => listener());
+    this.setRecoveryState(noSaveRecovery);
     this.setSaveStatus('saved');
     this.bus.emit('save:completed', { schemaVersion: 13 });
     this.bus.emit('save:imported', { schemaVersion: 13 });
