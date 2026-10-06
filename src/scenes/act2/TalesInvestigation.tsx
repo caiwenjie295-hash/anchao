@@ -1,4 +1,4 @@
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
@@ -20,9 +20,14 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
   const progress = state.modules.act2Research.tales;
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [status, setStatus] = useState('');
+  const [pendingEvidenceFocusTaleId, setPendingEvidenceFocusTaleId] = useState<string | null>(null);
+  const readerRef = useRef<HTMLElement>(null);
   const selected = selectedId ? act2Tales.records.find((record) => record.id === selectedId) ?? null : null;
   const readTales = useMemo(() => tales.filter((tale) => progress.readTaleIds.includes(tale.id)), [progress.readTaleIds]);
   const selectedSourceCount = new Set(progress.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter(Boolean)).size;
+  const selectedTaleIds = new Set(progress.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter((id): id is string => Boolean(id)));
+  const readUnselectedTales = tales.filter((tale) => progress.readTaleIds.includes(tale.id) && !selectedTaleIds.has(tale.id));
+  const unreadTales = tales.filter((tale) => !progress.readTaleIds.includes(tale.id));
   const hasJudgment = progress.inferenceAcknowledged;
   const inferenceReady = selectedSourceCount >= 2 && progress.selectedInferenceId !== null;
 
@@ -35,6 +40,17 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
     setStatus('');
     if (taleById.has(id)) manager.readAct2Tale(id);
   };
+  useEffect(() => {
+    if (!pendingEvidenceFocusTaleId || selectedId !== pendingEvidenceFocusTaleId) return;
+    const tale = taleById.get(pendingEvidenceFocusTaleId);
+    const evidenceId = tale?.evidence?.find((evidence) => !progress.supportingEvidenceIds.includes(evidence.id))?.id;
+    if (!evidenceId) { setPendingEvidenceFocusTaleId(null); return; }
+    const button = readerRef.current?.querySelector<HTMLButtonElement>(`[data-evidence-id="${evidenceId}"] button`);
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    button?.scrollIntoView?.({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    button?.focus({ preventScroll: true });
+    setPendingEvidenceFocusTaleId(null);
+  }, [pendingEvidenceFocusTaleId, selectedId, progress.supportingEvidenceIds]);
   const chooseInference = (id: InferenceId) => {
     setStatus('');
     // StateManager persists the chosen interpretation only when the player confirms it.
@@ -51,13 +67,26 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
     };
     setStatus(messages[result]);
   };
-  const openMaterial = (materialId: string) => openRecord(materialId);
+  const openMaterial = (materialId: string) => {
+    openRecord(materialId);
+    if (taleById.has(materialId)) setPendingEvidenceFocusTaleId(materialId);
+  };
+  const missingEvidenceReason = selectedSourceCount >= 2
+    ? '先选一种暂定判断。'
+    : readUnselectedTales.length
+      ? selectedSourceCount
+        ? `目前已有 ${selectedSourceCount} 篇来源选入支持片段；再从已读旧录中选一条，凑足两篇不同来源。`
+        : '旧录已经读过，但还没有片段选入支持范围；从已读原文中选取片段。'
+      : selectedSourceCount
+        ? '还需要从另一篇旧录中选择支持片段；阅读后可在原文下方直接选取。'
+        : '先读旧录，再从原文下方选取支持片段。至少选自两篇不同旧录即可。';
+  const evidenceCandidates = readUnselectedTales.length ? readUnselectedTales : unreadTales;
   const actions: InvestigationAction[] = [
     {
       actionId: 'A2_T04_CONFIRM_PATTERN', kind: 'story', target: 'transfer-pattern', label: hasJudgment ? '暂定结论已记下' : '确认暂定判断',
       state: hasJudgment ? 'completed' : inferenceReady ? 'ready' : 'blocked',
-      reason: selectedSourceCount < 2 ? '还需要核对至少两篇旧录中的支持片段。' : '先选一种暂定判断。',
-      relatedMaterials: selectedSourceCount < 2 ? tales.filter((tale) => !progress.readTaleIds.includes(tale.id)).map((tale) => ({ id: tale.id, label: tale.title })) : undefined,
+      reason: missingEvidenceReason,
+      relatedMaterials: selectedSourceCount < 2 ? evidenceCandidates.map((tale) => ({ id: tale.id, label: readUnselectedTales.length ? `${tale.title} · 选取支持片段` : tale.title })) : undefined,
       onActivate: confirmInference,
     },
     {
@@ -121,16 +150,16 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
         </details>
       </>}
       reader={<>
-        <section className="act2-tales__reader" aria-label="旧录原文">
+        <section ref={readerRef} className="act2-tales__reader" aria-label="旧录原文">
           {!selected ? <div className="act2-tales__paper act2-tales__idle"><p>书架上有三处带书签痕迹的卷末旧录。选择一处，打开完整原文。</p></div> : taleById.has(selected.id) ? <article className="act2-tales__paper" data-tale-id={selected.id}>
             <header><p>{selected.era} · {selected.page}</p><h3>{selected.title}</h3></header>
             <div className="act2-tales__original" aria-label="原文">{(selected.paragraphs ?? []).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             <details className="act2-tales__explanation"><summary>现代文说明（辅助阅读）</summary><p>{selected.modernExplanation}</p></details>
-            {selected.evidence?.map((evidence) => <details className="act2-tales__evidence" key={evidence.id}>
-              <summary>{evidence.label} · 查看可支持的原文片段</summary>
+            {selected.evidence?.map((evidence) => <section className="act2-tales__evidence" key={evidence.id} data-evidence-id={evidence.id}>
+              <h4>{evidence.label} · 可支持的原文片段</h4>
               <blockquote>{evidence.excerpt}</blockquote>
               <button type="button" aria-pressed={progress.supportingEvidenceIds.includes(evidence.id)} onClick={() => manager.toggleAct2TaleEvidence(evidence.id)}>{progress.supportingEvidenceIds.includes(evidence.id) ? '移出支持片段' : '选作支持片段'}</button>
-            </details>)}
+            </section>)}
           </article> : <article className="act2-tales__paper act2-tales__noise"><h3>{selected.title}</h3><p>{selected.era} · {selected.page}</p><p>{selected.summary}</p></article>}
         </section>
         <details className="act2-tales__comparison" aria-labelledby="tale-comparison-title">

@@ -1,0 +1,33 @@
+.scene-transition-layer {
+  view-transition-name: none;
+}
+
+html[data-scene-transition="active"] .scene-transition-layer {
+  view-transition-name: scene-surface;
+}
+
+html[data-scene-transition="active"]::view-transition-old(root),
+html[data-scene-transition="active"]::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes scene-surface-exit {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+::view-transition-old(scene-surface) {
+  animation: scene-surface-exit 240ms ease-in both;
+}
+
+::view-transition-new(scene-surface) {
+  animation: scene-surface-enter 240ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-transition-layer,
+  ::view-transition-old(scene-surface),
+  ::view-transition-new(scene-surface) {
+    animation: none;
+  }
+}

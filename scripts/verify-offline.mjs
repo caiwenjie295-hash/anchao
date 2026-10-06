@@ -434,8 +434,11 @@ async function advanceAct2() {
   await click('details.act2-tales__index > summary');
   for (const title of ['石工补指', '书生遗事']) {
     await textButton(title, '.act2-tales__record');
-    await click('.act2-tales__evidence > summary');
+    const supportingPassage = query('.act2-tales__evidence blockquote');
+    assert.ok(supportingPassage.textContent.trim().length > 0, `${title} should show its original supporting passage before selection`);
+    assert.match(supportingPassage.textContent, title === '石工补指' ? /二指渐可屈伸/ : /六儿竟能读出废书数行/);
     await click('.act2-tales__evidence button');
+    assert.equal(query('.act2-tales__evidence button').getAttribute('aria-pressed'), 'true', `${title} supporting passage should be selected`);
   }
   await click('details.act2-tales__comparison > summary');
   const comparisonRows = [...query('.act2-tales__comparison tbody').querySelectorAll('tr')];
@@ -498,12 +501,14 @@ async function advanceAct2() {
   assert.equal(state().modules.act2Research.school.symbolMatchConfirmed, true);
   assert.notEqual(state().game.flags.FLAG_A2_SS_MATCH_CONFIRMED, true);
 
-  const schoolMaterials = query('details.t05-school__timeline-disclosure');
-  assert.equal(schoolMaterials.open, false, 'school materials are initially collapsed');
-  await click('details.t05-school__timeline-disclosure > summary');
-  assert.equal(schoolMaterials.open, true, 'player explicitly expands school materials before selecting support');
+  const schoolMaterials = query('.t05-school__timeline');
+  assert.match(schoolMaterials.querySelector('h2').textContent, /学校记录/);
+  assert.match(schoolMaterials.textContent, /班主任的回忆/);
+  assert.match(schoolMaterials.textContent, /历次成绩记录/);
   await textButton('班主任的回忆', '.t05-school__evidence-options button');
+  assert.equal([...schoolMaterials.querySelectorAll('button')].find((button) => button.textContent.includes('班主任的回忆')).getAttribute('aria-pressed'), 'true');
   await textButton('历次成绩记录', '.t05-school__evidence-options button');
+  assert.equal([...schoolMaterials.querySelectorAll('button')].find((button) => button.textContent.includes('历次成绩记录')).getAttribute('aria-pressed'), 'true');
   await textButton('休学后他的表现和成绩都有明显变化', '.t05-school__inferences button');
   assert.equal(query('[data-action-id="A2_T05_CONFIRM_TIMELINE"]').getAttribute('data-action-state'), 'ready');
   await click('[data-action-id="A2_T05_CONFIRM_TIMELINE"]');
@@ -720,23 +725,53 @@ async function investigateAct4() {
   assert.equal(state().modules.act4.stage, 'T01');
   const continueSection = async (stage) => {
     let completed = false;
-    for (let step = 0; step < 80; step += 1) {
-      const action = document().querySelector('.investigation-shell__operations .investigation-navigation__action[data-action-id]');
-      if (!action) {
-        const nextPage = document().querySelector(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
-        assert.ok(nextPage && !nextPage.disabled, `${stage} should expose its next page or a narrative action`);
-        await click(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
-        continue;
-      }
-      const actionId = action.getAttribute('data-action-id');
-      if (actionId === `A4_${stage}_CONTINUE_READING`) {
-        assert.equal(action.disabled, false, `${stage} should unlock its continue action after all required reading and interactions`);
+    if (stage === 'T03') {
+      const dates = ['2020 年 4 月 3 日', '2020 年 4 月 5 日', '2020 年 4 月 6 日', '2020 年 4 月 7 日', '2020 年 4 月 8 日', '2020 年 4 月 9 日', '2020 年 4 月 10 日', '2020 年 4 月 13 日', '2020 年 4 月 14 日', '2020 年 4 月 15 日', '2020 年 4 月 16 日', '2020 年 4 月 17 日', '2020 年 4 月 18 日', '2020 年 4 月 19 日'];
+      const viewBlogAction = '[data-action-id="A4_T03_VIEW_PRIVATE_BLOG"]';
+      assert.equal(query(viewBlogAction).textContent.trim(), '查看动态');
+      await click(viewBlogAction);
+      const posts = [...document().querySelectorAll('.a4-private-blog__post')];
+      assert.equal(posts.length, 14, 'the private blog opens all fourteen original posts in one stream');
+      assert.deepEqual(posts.map((post) => post.querySelector('time')?.textContent.trim()), dates, 'the original post dates keep chronological order');
+      assert.equal(document().querySelector('.a4-private-blog__source-context')?.textContent.trim(), '微博：');
+      assert.match(posts[0].querySelector('.a4-private-blog__post-text').textContent, /刚注册的账号/);
+      assert.match(posts.at(-1).querySelector('.a4-private-blog__post-text').textContent, /直面恐惧/);
+      assert.match(posts.at(-1).querySelector('.a4-private-blog__post-text').textContent, /我是自由的/);
+      assert.match(document().querySelector('.a4-private-blog__closing').textContent, /我感觉我背叛了小 A/);
+      assert.equal(document().querySelectorAll('.a4-private-blog__date-index button').length, 14);
+      assert.equal(state().modules.act4.stage, 'T03', 'opening the blog does not advance the narrative stage');
+
+      await click('.a4-private-blog__post-actions button');
+      assert.equal(posts[0].querySelector('.a4-private-blog__post-actions button').getAttribute('aria-pressed'), 'true', 'bookmark control responds locally');
+      await click('.a4-private-blog__date-index button:last-child');
+      assert.equal(document().activeElement.id, 'a4-private-post-2020-04-19', 'date index moves focus to its matching post');
+      await click('.a4-private-blog__return');
+      assert.ok(document().querySelector('[data-reading-view="context"]'), 'return control exits the blog view');
+
+      await mount(save());
+      assert.equal(state().modules.act4.stage, 'T03', 'reloading the blog fixture keeps the reader at T03');
+      await click(viewBlogAction);
+      await click('.a4-private-blog__closing button');
+      completed = true;
+    } else {
+      for (let step = 0; step < 80; step += 1) {
+        const action = document().querySelector('.investigation-shell__operations .investigation-navigation__action[data-action-id]');
+        if (!action) {
+          const nextPage = document().querySelector(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
+          assert.ok(nextPage && !nextPage.disabled, `${stage} should expose its next page or a narrative action`);
+          await click(`[data-block-id="${stage}_ORIGINAL"] .a4-reader__pager button:last-child`);
+          continue;
+        }
+        const actionId = action.getAttribute('data-action-id');
+        if (actionId === `A4_${stage}_CONTINUE_READING`) {
+          assert.equal(action.disabled, false, `${stage} should unlock its continue action after all required reading and interactions`);
+          await click(`[data-action-id="${actionId}"]`);
+          completed = true;
+          break;
+        }
+        assert.match(actionId, new RegExp(`^A4_${stage}_(OPEN_COVER|NEXT_PAGE|NEXT_BLOCK)_`), `${stage} should expose a deliberate cover, page, or block action before continuing`);
         await click(`[data-action-id="${actionId}"]`);
-        completed = true;
-        break;
       }
-      assert.match(actionId, new RegExp(`^A4_${stage}_(OPEN_COVER|NEXT_PAGE|NEXT_BLOCK)_`), `${stage} should expose a deliberate cover, page, or block action before continuing`);
-      await click(`[data-action-id="${actionId}"]`);
     }
     assert.ok(completed, `${stage} should reach its explicit continue action`);
     const next = { T01: 'T02', T02: 'T03', T03: 'T04', T04: 'T05', T05: 'T06', T06: 'T07', T07: 'T08', T08: 'T09', T09: 'T10', T10: 'T10' }[stage];
@@ -792,13 +827,29 @@ async function investigateAct4() {
   await lastPage('T10_AFTERMATH');
   await textButton('打开启明的最后一封邮件', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T10_FINAL_MAIL_OPENED'));
+  assert.equal(query('[data-block-id="T10_FINAL_MAIL"] .a4-reader__cover h3').textContent, '最后一封邮件', 'opening the final-mail action moves directly to its unopened cover');
+  assert.equal(document().querySelector('[data-block-id="T10_FINAL_MAIL"] .a4-reader__segment-pages'), null, 'the original final mail remains behind its cover');
+  assert.match(query('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]').textContent, /翻开：最后一封邮件/);
   await mount(save());
   assert.equal(state().modules.act4.stage, 'T10', 'T10 reload keeps the opened final mail');
-  await lastPage('T10_AFTERMATH');
-  await click('[data-action-id="A4_T10_NEXT_BLOCK_T10_FINAL_MAIL"]');
-  assert.ok(query('[data-block-id="T10_FINAL_MAIL"]'));
+  assert.equal(query('[data-block-id="T10_FINAL_MAIL"] .a4-reader__cover h3').textContent, '最后一封邮件', 'T10 reload restores the manual mail cover');
+  await click('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]');
+  assert.match(query('[data-block-id="T10_FINAL_MAIL"]').textContent, /几个月后，我收到了一封邮件。/);
+  assert.match(query('[data-block-id="T10_FINAL_MAIL"]').textContent, /主题：关于王澳同学相关事项的说明/);
   await continueSection('T10');
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
+  assert.ok(query('.act4-ending'), 'completing T10 opens the ending layer');
+  assert.equal(query('.a4-reader').closest('[inert]') !== null, true, 'the reader stays inactive behind the ending layer');
+  const skipEnding = query('.act4-ending__skip');
+  assert.ok(['立即显示全部', '前往入口'].includes(skipEnding.textContent.trim()));
+  await click('.act4-ending__skip');
+  assert.equal(query('.act4-ending h1').textContent, '故事已结束');
+  assert.deepEqual([...query('.act4-ending__credits').querySelectorAll('p')].map((item) => item.textContent.trim()), [
+    '小说原文撰写 VeinJay_C', '项目策划 VeinJay_C', '游戏制作 VeinJay_C',
+  ]);
+  assert.deepEqual([...query('.act4-ending__actions').querySelectorAll('button')].map((button) => button.textContent.trim()), ['回顾故事', '返回桌面']);
+  await textButton('回顾故事', '.act4-ending__actions button');
+  assert.equal(document().querySelector('.act4-ending'), null, 'choosing review dismisses the ending layer');
   assert.equal(query('.a4-reader__final-recap').open, false, 'the recap stays behind its explicit disclosure');
   await mount(save());
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);

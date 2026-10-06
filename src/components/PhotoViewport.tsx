@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { InvestigationNavigation } from './investigation/InvestigationNavigation';
 import type { InvestigationAction, InvestigationActionKind, InvestigationActionState } from './investigation/types';
 import './photoViewport.css';
@@ -28,6 +28,10 @@ export interface PhotoViewportProps {
   children?: ReactNode;
   imageOverlay?: ReactNode;
   transitionDirection?: 'forward' | 'back' | 'fade';
+  /** Exploration-only edge vignette; reading and comparison photos stay at their authored brightness. */
+  explorationMode?: boolean;
+  /** A slightly longer visual handoff for an already-authored key reveal. */
+  revealBeat?: boolean;
   onImageAvailabilityChange?: (available: boolean) => void;
 }
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
@@ -36,7 +40,7 @@ export const calculatePhotoPanLimits = (planeWidth: number, planeHeight: number,
   y: Math.max(0, (planeHeight * scale - frameHeight) / 2),
 });
 
-export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, transitionDirection = 'forward', onImageAvailabilityChange }: PhotoViewportProps) {
+export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, transitionDirection = 'forward', explorationMode = false, revealBeat = false, onImageAvailabilityChange }: PhotoViewportProps) {
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
@@ -46,12 +50,19 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   latestResourceKey.current = resourceKey;
   const [loadedResourceKey, setLoadedResourceKey] = useState<string | null>(null);
   const [failedResourceKey, setFailedResourceKey] = useState<string | null>(null);
+  const [handoffImage, setHandoffImage] = useState<{ url: string; width: number; height: number } | null>(null);
   const imageLoaded = Boolean(imageUrl && loadedResourceKey === resourceKey && imageSize.width > 0 && imageSize.height > 0);
   const imageFailed = Boolean(imageUrl && failedResourceKey === resourceKey);
   const frame = useRef<HTMLDivElement>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const pinch = useRef<number | null>(null);
   const pointerMoved = useRef(false);
+  const previousResourceKey = useRef(resourceKey);
+  const latestLoadedImage = useRef<{ url: string; width: number; height: number } | null>(null);
+  const focusedTarget = useRef<{ type: 'frame' } | { type: 'hotspot'; id: string } | null>(null);
+  const restoringFocus = useRef(false);
+  const handoffTimer = useRef<number | null>(null);
+  const transitionMs = revealBeat ? 420 : 260;
 
   // 审查 P1：sceneKey 变化会重建 key={sceneKey} 子树，frame 节点被替换但组件不重挂载。
   // 依赖 sceneKey 重新绑定观察，并始终读取 ref.current，避免观察已分离的旧节点。
@@ -113,6 +124,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     setImageSize({ width: 0, height: 0 });
     setLoadedResourceKey(null);
     setFailedResourceKey(null);
+    latestLoadedImage.current = null;
   }, [resourceKey]);
   useEffect(() => { onImageAvailabilityChange?.(imageLoaded); }, [resourceKey, imageLoaded, onImageAvailabilityChange]);
   useEffect(() => {
@@ -121,6 +133,52 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
       return next.x === previous.x && next.y === previous.y ? previous : next;
     });
   }, [frameSize.width, frameSize.height, imageSize.width, imageSize.height, imageLoaded, zoom]);
+
+  // Swap the story scene immediately; this short crossfade is presentation only and never gates an action.
+  useLayoutEffect(() => {
+    if (handoffTimer.current !== null) {
+      window.clearTimeout(handoffTimer.current);
+      handoffTimer.current = null;
+    }
+    if (previousResourceKey.current === resourceKey) return;
+    previousResourceKey.current = resourceKey;
+    const previousImage = latestLoadedImage.current;
+    const reducedMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+    if (!previousImage || reducedMotion || !imageUrl || previousImage.url === imageUrl) {
+      setHandoffImage(null);
+    } else {
+      setHandoffImage(previousImage);
+      handoffTimer.current = window.setTimeout(() => {
+        handoffTimer.current = null;
+        setHandoffImage(null);
+      }, transitionMs + 40);
+    }
+  }, [resourceKey]);
+
+  useEffect(() => () => {
+    if (handoffTimer.current !== null) window.clearTimeout(handoffTimer.current);
+    handoffTimer.current = null;
+  }, []);
+
+  // The frame subtree is replaced on a lens change. Preserve keyboard focus on the frame or the
+  // same hotspot so the visual handoff does not interrupt exploration.
+  useLayoutEffect(() => {
+    const target = focusedTarget.current;
+    if (!target) return;
+    if (target.type === 'hotspot' && imageLoaded) {
+      const escapedId = typeof CSS !== 'undefined' && typeof CSS.escape === 'function' ? CSS.escape(target.id) : target.id.replace(/["\\]/g, '\\$&');
+      const matchingHotspot = frame.current?.querySelector<HTMLButtonElement>(`[data-clue-id="${escapedId}"]`);
+      if (matchingHotspot) {
+        restoringFocus.current = true;
+        matchingHotspot.focus({ preventScroll: true });
+        restoringFocus.current = false;
+        return;
+      }
+    }
+    restoringFocus.current = true;
+    frame.current?.focus({ preventScroll: true });
+    restoringFocus.current = false;
+  }, [sceneKey, imageLoaded]);
 
   const distance = () => {
     const [a, b] = [...pointers.current.values()];
@@ -145,7 +203,14 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   }));
 
   return (
-    <div className={'photo-viewport photo-viewport--' + transitionDirection} key={sceneKey}>
+    <div className={'photo-viewport photo-viewport--' + transitionDirection + (explorationMode ? ' photo-viewport--exploration' : '')}>
+      <div className={'photo-viewport__scene' + (handoffImage ? ' is-transitioning' : '')} key={sceneKey} style={{ '--scene-transition-ms': `${transitionMs}ms` } as CSSProperties} onFocusCapture={(event) => {
+        if (restoringFocus.current) return;
+        const target = event.target as HTMLElement;
+        const marker = target.closest<HTMLButtonElement>('[data-clue-id]');
+        focusedTarget.current = marker ? { type: 'hotspot', id: marker.dataset.clueId ?? '' } : target.classList.contains('photo-viewport__frame') ? { type: 'frame' } : null;
+      }}>
+        {handoffImage && <div className="photo-viewport__handoff" aria-hidden="true"><img src={handoffImage.url} alt="" style={{ aspectRatio: `${handoffImage.width} / ${handoffImage.height}` }} /></div>}
       <div
         ref={frame}
         className="photo-viewport__frame"
@@ -214,6 +279,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
                 const { naturalWidth, naturalHeight } = event.currentTarget;
                 if (naturalWidth <= 0 || naturalHeight <= 0) return;
                 setImageSize({ width: naturalWidth, height: naturalHeight });
+                latestLoadedImage.current = { url: imageUrl!, width: naturalWidth, height: naturalHeight };
                 setLoadedResourceKey(resourceKey);
                 setFailedResourceKey(null);
               }}
@@ -259,6 +325,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           <button type="button" onClick={() => { changeZoom(1); setOffset({ x: 0, y: 0 }); }}>复位</button>
         </div>
         {children && <div className="photo-viewport__overlay">{children}</div>}
+      </div>
       </div>
       {routeActions.length > 0 && <div className="photo-viewport__fixed-operations"><InvestigationNavigation actions={routeActions} compact /></div>}
       {(!imageUrl || imageFailed || !imageLoaded) && hotspots.length > 0 && (

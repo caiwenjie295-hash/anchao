@@ -8,13 +8,60 @@ describe('whole-App legal fixture checkpoints', () => {
       'a1-start': 'inactive', 'a1-f': 'inactive', 'a1-ending': 'inactive',
       bridge: 'bridge', library: 'library', tales: 'tales', school: 'school',
       qiming: 'qiming', 'qiming-zhong': 'qiming', 'qiming-both': 'qiming', 'qiming-legacy': 'qiming',
-      finale: 'finale', 'a3-t04': 'finale', 'a4-t05': 'finale',
+      finale: 'finale', 'a3-t04': 'finale', 'a4-t05': 'finale', 'a4-blog': 'finale', 'a4-ending': 'finale',
     };
     for (const mode of FIXTURE_MODES) {
       const state = hydrateState(JSON.parse(JSON.stringify(buildCheckpoint(mode))));
       expect(state.schemaVersion, mode).toBe(13);
       expect(state.modules.act2Research.stage, mode).toBe(expectedStages[mode]);
     }
+  });
+
+  it.each([
+    {
+      mode: 'a4-blog' as const,
+      phase: 'A4_T03',
+      stage: 'T03',
+      completedSections: ['A4_READ_T01', 'A4_READ_T02'],
+      completedActions: ['A4_T02_LOGIN_SUCCEEDED'],
+      currentReadFlag: 'FLAG_A4_T03_COMPLETE',
+      previousReadFlag: 'FLAG_A4_T02_COMPLETE',
+      wakeMailViewed: false,
+    },
+    {
+      mode: 'a4-ending' as const,
+      phase: 'A4_T10',
+      stage: 'T10',
+      completedSections: Array.from({ length: 9 }, (_, index) => `A4_READ_T${String(index + 1).padStart(2, '0')}`),
+      completedActions: [
+        'A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED', 'A4_T08_ARCHIVE_OPENED',
+        'A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED',
+      ],
+      currentReadFlag: 'FLAG_A4_T10_COMPLETE',
+      previousReadFlag: 'FLAG_A4_T09_COMPLETE',
+      wakeMailViewed: true,
+    },
+  ])('hydrates the legal $mode reading checkpoint with only prior sections complete', ({
+    mode, phase, stage, completedSections, completedActions, currentReadFlag, previousReadFlag, wakeMailViewed,
+  }) => {
+    const state = hydrateState(JSON.parse(JSON.stringify(buildCheckpoint(mode))));
+    expect(state.game.act, mode).toBe(4);
+    expect(state.game.phase, mode).toBe(phase);
+    expect(state.modules.act2Research.stage, mode).toBe('finale');
+    expect(state.modules.act3.stage, mode).toBe('T07');
+    expect(state.game.flags.FLAG_A3_COMPLETE, mode).toBe(true);
+    expect(state.modules.act4.stage, mode).toBe(stage);
+    expect(state.modules.act4.completedNarrativeSectionIds, mode).toEqual(completedSections);
+    expect(state.modules.act4.completedNarrativeActionIds, mode).toEqual(completedActions);
+    expect(state.modules.act4.viewedWakeMail, mode).toBe(wakeMailViewed);
+    expect(state.modules.act4.finalMailOpened, mode).toBe(false);
+    for (const section of completedSections) {
+      const readFlag = `FLAG_A4_T${section.slice(-2)}_COMPLETE`;
+      expect(state.game.flags[readFlag], mode).toBe(true);
+    }
+    expect(state.game.flags[previousReadFlag], mode).toBe(true);
+    expect(state.game.flags[currentReadFlag], mode).not.toBe(true);
+    expect(state.game.flags.FLAG_A4_COMPLETE, mode).not.toBe(true);
   });
 
   it('opens A3 T04 with earlier route evidence intact and the current paper still undiscovered', () => {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../core/defaultState';
+import { act4NarrativeSections } from './narrative/act4Narrative';
 import { deriveInvestigationProgress, getDesktopTaskPresentation } from './investigationProgressData';
 
 const qimingState = () => {
@@ -133,8 +134,9 @@ describe('investigation progress display model', () => {
     const result = deriveInvestigationProgress(state);
     const serialized = JSON.stringify(result);
 
-    expect(result.nextAction).toContain('前往刚取出的纸片');
-    expect(result.pendingDirections.join(' ')).toContain('前往刚取出的纸片');
+    expect(result.nextAction).toContain('继续探索');
+    expect(result.nextAction).not.toContain('13aCK');
+    expect(result.pendingDirections.join(' ')).toContain('继续探索');
     expect(serialized).not.toContain('13aCK');
     expect(serialized).not.toContain('老鼠、血、草垛');
   });
@@ -177,9 +179,9 @@ describe('investigation progress display model', () => {
 
     expect(result.location).toBe('王澳的 2014 年亲历');
     expect(result.currentObjective).toContain('王澳亲历');
-    expect(result.nextAction).toContain('收好这一段，继续阅读');
+    expect(result.nextAction).toContain('翻开这一段，按页往下读');
     expect(desktop.summary).toContain('王澳亲历');
-    expect(desktop.nextAction).toContain('收好这一段，继续阅读');
+    expect(desktop.nextAction).toContain('翻开这一段，按页往下读');
     expect(currentRoute?.label).toBe('王澳的 2014 年亲历');
     expect(currentRoute?.detail).toContain('2014 年');
     expect(result.knownFacts.map((fact) => fact.id)).toEqual(['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04']);
@@ -193,6 +195,30 @@ describe('investigation progress display model', () => {
     expect(completed.knownFacts.find((fact) => fact.id === 'A4_READ_T05')?.source).toContain('2014 年 12 月 28 日至 29 日');
   });
 
+  it('keeps the A3 progress action synchronized with the visible stage-closure control', () => {
+    const state = createDefaultState();
+    state.game.act = 3;
+    state.game.phase = 'A3_T00';
+    state.game.flags.FLAG_A2_COMPLETE = true;
+    state.modules.act3.stage = 'T00';
+    state.modules.act3.currentLensId = 'LENS_A3_T00_001';
+    state.modules.act3.inspectedClueIds = ['CLUE_A3_T00_CABLE_BREAK', 'CLUE_A3_T00_DRAIN_DISCOVERED'];
+
+    const result = deriveInvestigationProgress(state);
+    expect(result.nextAction).toContain('离开这里，继续探索');
+    expect(result.nextAction).not.toContain('继续探索”前往');
+  });
+
+  it('keeps the A4 blog prompt valid before and after the private page is opened', () => {
+    const state = createDefaultState();
+    state.game.act = 4;
+    state.game.phase = 'A4_T03';
+    state.modules.act4.stage = 'T03';
+    const result = deriveInvestigationProgress(state);
+    expect(result.nextAction).toBe('打开王澳的动态，按日期阅读；读到末尾后继续。');
+    expect(result.nextAction).not.toContain('查看动态');
+  });
+
   it('limits the act four route and recap to completed sections and the current Wang Ao chapter', () => {
     const state = createDefaultState();
     state.game.act = 4;
@@ -203,7 +229,8 @@ describe('investigation progress display model', () => {
     expect(result.route.map((node) => node.id)).toEqual(['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04', 'A4_READ_T05', 'a4-undiscovered']);
     expect(result.knownFacts.map((fact) => fact.id)).toEqual(['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04']);
     expect(result.knownFacts[0].source).toContain('调查者视角原文');
-    expect(result.nextAction).toContain('王澳');
+    expect(result.currentObjective).toContain('王澳');
+    expect(result.nextAction).toBe('翻开这一段，按页往下读；读完后继续。');
     expect(JSON.stringify(result)).not.toContain('T06_INSTITUTION');
     expect(JSON.stringify(result)).not.toContain('禁闭室');
   });
@@ -247,11 +274,18 @@ describe('investigation progress display model', () => {
     state.game.flags.FLAG_A4_COMPLETE = true;
     state.modules.act2Research.stage = 'finale';
     state.modules.act4.stage = 'T10';
+    state.modules.act4.completedNarrativeSectionIds = act4NarrativeSections.map((section) => section.id);
     const progress = deriveInvestigationProgress(state);
+    const desktop = getDesktopTaskPresentation(state);
 
     expect(progress.currentObjective).toBe('第四幕已经完成。');
     expect(progress.nextAction).toContain('回顾已读篇章');
-    expect(getDesktopTaskPresentation(state).nextAction).toContain('回顾已读篇章');
+    expect(desktop.nextAction).toContain('回顾已读篇章');
+    expect(progress.route.map((node) => node.id)).toEqual(act4NarrativeSections.map((section) => section.id));
+    expect(desktop.completedCount).toBe(act4NarrativeSections.length);
+    expect(desktop.totalCount).toBe(act4NarrativeSections.length);
+    expect(desktop.steps).toEqual([]);
+    expect(desktop.actionAppId).toBeUndefined();
   });
 
   it('does not mutate the supplied state while deriving status and known facts', () => {

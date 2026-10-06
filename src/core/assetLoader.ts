@@ -32,7 +32,15 @@ export const act4AssetPath = (id: string, file: string): string | null => {
   const match = /^IMG_A4_(T(?:01|05|06|07|08|09|10))_\d{3}$/.exec(id);
   return match && file === `${id}.png` ? `../第四幕/${match[1]}/${file}` : null;
 };
+const uxRhythmA4ImageIds = new Set([
+  'IMG_A4_BLOG_WINDOW_001',
+  'IMG_A4_FINAL_READING_001',
+  'IMG_A4_READING_DETAIL_001',
+]);
+export const uxRhythmA4AssetPath = (id: string, file: string): string | null =>
+  uxRhythmA4ImageIds.has(id) && file === `${id}.png` ? `../第四幕/UX-RHYTHM/${file}` : null;
 export const assetLoader = new AssetLoader(Object.fromEntries(imageRecords.filter((image) => image.file).map((image) => [image.id, {
   id: image.id, type: 'image', src: compressedSource(`../Photo_src/${image.file}`) ?? compressedSource(`../第二幕/${image.file}`)
-    ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!)),
+    ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!))
+    ?? compressedSource(uxRhythmA4AssetPath(image.id, image.file!)),
 }])));

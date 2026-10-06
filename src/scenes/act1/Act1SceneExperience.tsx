@@ -8,14 +8,16 @@ import { SceneClueFocus } from './SceneClueFocus';
 
 const startScene = act1Scenes[0];
 
-function SceneTransition() {
+type SceneTransitionRunner = (action: () => void) => void;
+
+function SceneTransition({ onSceneTransition }: { onSceneTransition?: SceneTransitionRunner }) {
   const progressContext = useInvestigationProgress();
   return (
     <section className="journey-transition" aria-label="前往鸡公岭">
       {progressContext && <button type="button" className="investigation-progress-trigger journey-transition__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
       <div className="journey-transition__copy">
         <p>{startScene.journeyIntro}</p>
-        <button type="button" autoFocus onClick={() => stateManager.startJourney(startScene.id)}>继续</button>
+        <button type="button" autoFocus onClick={() => (onSceneTransition ?? ((action) => action()))(() => stateManager.startJourney(startScene.id))}>继续</button>
       </div>
     </section>
   );
@@ -38,7 +40,7 @@ function Hotspot({ hotspot, onInspect }: { hotspot: SceneHotspot; onInspect: (ho
   );
 }
 
-function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
+function SceneView({ state, scene, onSceneTransition }: { state: AppState; scene: SceneRecord; onSceneTransition?: SceneTransitionRunner }) {
   const progressContext = useInvestigationProgress();
   const [activeHotspot, setActiveHotspot] = useState<SceneHotspot | null>(null);
   const [backgroundFailed, setBackgroundFailed] = useState(false);
@@ -58,8 +60,10 @@ function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
   };
   const leave = () => {
     if (!canLeave) return;
-    if (next) stateManager.enterScene(next.id);
-    else stateManager.finishJourney(scene.id);
+    (onSceneTransition ?? ((action) => action()))(() => {
+      if (next) stateManager.enterScene(next.id);
+      else stateManager.finishJourney(scene.id);
+    });
   };
   return (
     <section className="act1-scene" aria-label={`${scene.title}场景`}>
@@ -102,9 +106,9 @@ function SceneView({ state, scene }: { state: AppState; scene: SceneRecord }) {
   );
 }
 
-export function Act1SceneExperience({ state }: { state: AppState }) {
-  if (state.game.phase === 'F' && !state.modules.scene.journeyStarted) return <SceneTransition />;
+export function Act1SceneExperience({ state, onSceneTransition }: { state: AppState; onSceneTransition?: SceneTransitionRunner }) {
+  if (state.game.phase === 'F' && !state.modules.scene.journeyStarted) return <SceneTransition onSceneTransition={onSceneTransition} />;
   const currentId = state.modules.scene.currentSceneId;
   const scene = currentId ? sceneById.get(currentId) : null;
-  return scene ? <SceneView key={scene.id} state={state} scene={scene} /> : null;
+  return scene ? <SceneView key={scene.id} state={state} scene={scene} onSceneTransition={onSceneTransition} /> : null;
 }

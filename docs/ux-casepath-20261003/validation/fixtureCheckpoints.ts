@@ -9,7 +9,7 @@ import { isStoryTransitionReached, storyTransitions } from '../../../src/data/st
 
 export const FIXTURE_MODES = [
   'a1-start', 'a1-f', 'a1-ending', 'bridge', 'library', 'tales', 'school',
-  'qiming', 'qiming-zhong', 'qiming-both', 'qiming-legacy', 'finale', 'a3-t04', 'a4-t05',
+  'qiming', 'qiming-zhong', 'qiming-both', 'qiming-legacy', 'finale', 'a3-t04', 'a4-t05', 'a4-blog', 'a4-ending',
 ] as const;
 
 export type FixtureMode = (typeof FIXTURE_MODES)[number];
@@ -166,6 +166,27 @@ function seedAct4T05(state: AppState): void {
   setFlags(state, ['FLAG_A4_T01_COMPLETE', 'FLAG_A4_T02_COMPLETE', 'FLAG_A4_T03_COMPLETE', 'FLAG_A4_T04_COMPLETE']);
 }
 
+function seedAct4Stage(state: AppState, stage: 'T03' | 'T10'): void {
+  seedAct3History(state, 'T07');
+  state.game.act = 4;
+  state.game.phase = `A4_${stage}`;
+  state.modules.act4.stage = stage;
+  const lastCompletedStage = stage === 'T03' ? 2 : 9;
+  state.modules.act4.completedNarrativeSectionIds = Array.from({ length: lastCompletedStage }, (_, index) => `A4_READ_T${String(index + 1).padStart(2, '0')}`);
+  state.modules.act4.completedNarrativeActionIds = ['A4_T02_LOGIN_SUCCEEDED'];
+  state.modules.act4.unlockedAccountIds = ['weibo', 'mail'];
+  state.modules.act4.checkedMailRecipients = ['protagonist', 'xiaoyue'];
+  state.modules.act4.viewedWakeMail = stage === 'T10';
+  if (stage === 'T10') {
+    state.modules.act4.packageStep = 3;
+    state.modules.act4.broadcastIndex = 6;
+    state.modules.act4.completedNarrativeActionIds.push(
+      'A4_T04_WAKE_MAIL_OPENED', 'A4_T08_ARCHIVE_OPENED', 'A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED',
+    );
+  }
+  for (let index = 1; index <= lastCompletedStage; index += 1) state.game.flags[`FLAG_A4_T${String(index).padStart(2, '0')}_COMPLETE`] = true;
+}
+
 function setDesktopWindow(state: AppState, viewport: FixtureViewport): void {
   const browser = state.desktop.windows.browser;
   browser.status = 'normal';
@@ -240,6 +261,10 @@ function buildMode(mode: FixtureMode, viewport: FixtureViewport): AppState {
     seedAct3History(state, 'T04');
   } else if (mode === 'a4-t05') {
     seedAct4T05(state);
+  } else if (mode === 'a4-blog') {
+    seedAct4Stage(state, 'T03');
+  } else if (mode === 'a4-ending') {
+    seedAct4Stage(state, 'T10');
   }
 
   if (mode === 'a1-ending') {

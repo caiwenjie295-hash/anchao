@@ -142,7 +142,7 @@ const BLOCK_PAGE_ART: Record<string, readonly (SceneArtwork | undefined)[]> = {
   'T08:T08_ARCHIVE': [
     { assetId: 'IMG_A4_T08_008', alt: '启明旧址档案架与编号' },
     { assetId: 'IMG_A4_T08_008', alt: '王澳翻看档案' },
-    { assetId: 'IMG_A4_T08_009', alt: '不锈钢书架映出陌生的人影' },
+    { assetId: 'IMG_A4_READING_DETAIL_001', alt: '手机微光落在档案室的不锈钢书架上，反光里的轮廓难以辨认' },
     { assetId: 'IMG_A4_T08_008', alt: '档案室里传来的脚步声' },
   ],
   'T08:T08_KITCHEN_ESCAPE': [
@@ -163,6 +163,9 @@ const BLOCK_PAGE_ART: Record<string, readonly (SceneArtwork | undefined)[]> = {
   ],
   'T09:T09_BROADCAST': [
     { assetId: 'IMG_A4_T09_005', alt: '旧址门槛与门外的晨光' },
+  ],
+  'T10:T10_FINAL_MAIL': [
+    { assetId: 'IMG_A4_FINAL_READING_001', alt: '桌灯旁摊开的无字纸张与模糊屏幕，邮件内容不可辨认' },
   ],
 };
 
@@ -209,8 +212,8 @@ const SCENE_LABEL_FALLBACKS: Record<string, string> = {
   'T09:T09_WALK_TO_DOOR': '走向门外',
   'T09:T09_BROADCAST': '门外的广播',
 };
-const MAX_READER_PAGE_CHARACTERS = 440;
-const MAX_READER_PAGE_PARAGRAPHS = 3;
+const MAX_READER_PAGE_CHARACTERS = 560;
+const MAX_READER_PAGE_PARAGRAPHS = 6;
 
 /** Keeps existing scene ranges intact while splitting their complete paragraphs into readable pages. */
 export function act4ReaderTextPages(
@@ -270,6 +273,82 @@ export function act4ReaderTextPages(
       scenePageCount: pages.length,
     }));
   });
+}
+
+/** The earlier reader used six-paragraph source chunks and a 440-character / three-paragraph page budget. */
+export function act4LegacyReaderTextPages(
+  stage: Stage,
+  blockId: string,
+  paragraphs: readonly string[],
+  includeSceneCovers: boolean,
+): readonly Act4TextSegment[] {
+  const key = `${stage}:${blockId}`;
+  // Keep baseline scene IDs and ranges; only restore the old page budget inside them.
+  const legacySegments = act4TextSegments(stage, blockId, paragraphs.length);
+
+  if (!includeSceneCovers || !SCENE_PAGED_STAGES.has(stage)) return legacySegments;
+  let sceneIndex = 0;
+  return legacySegments.flatMap((sourceSegment) => {
+    if (sourceSegment.role !== 'page' && sourceSegment.role !== 'whole') return [sourceSegment];
+    const currentSceneIndex = sceneIndex++;
+    if (CONTINUOUS_BLOCKS.has(key)) return [{
+      ...sourceSegment, sceneId: sourceSegment.id, sceneLabel: sourceSegment.label,
+      sceneIndex: currentSceneIndex, scenePageIndex: 0, scenePageCount: 1,
+    }];
+    const pages: Act4TextSegment[] = [];
+    let from = sourceSegment.from;
+    while (from < sourceSegment.to) {
+      let to = from + 1;
+      let characterCount = paragraphs[from].length;
+      while (to < sourceSegment.to && to - from < 3 && characterCount + paragraphs[to].length <= 440) {
+        characterCount += paragraphs[to].length;
+        to += 1;
+      }
+      pages.push({ ...sourceSegment, id: `${sourceSegment.id}_TEXT_${pages.length + 1}`, from, to });
+      from = to;
+    }
+    return pages.map((page, scenePageIndex) => ({
+      ...page, sceneId: sourceSegment.id, sceneLabel: sourceSegment.label,
+      sceneIndex: currentSceneIndex, scenePageIndex, scenePageCount: pages.length,
+    }));
+  });
+}
+
+/** Reopens the new page that contains the first paragraph of a saved page from the former layout. */
+export function act4CompatibleReaderPageIndex(
+  stage: Stage,
+  blockId: string,
+  paragraphs: readonly string[],
+  pages: readonly Act4TextSegment[],
+  requestedLegacyPageIndex: number,
+  includeSceneCovers: boolean,
+): number {
+  const previousPages = act4LegacyReaderTextPages(stage, blockId, paragraphs, includeSceneCovers)
+    .filter((item) => item.role === 'page' || item.role === 'whole');
+  const previousPage = previousPages[Math.max(0, Math.min(previousPages.length - 1,
+    Number.isInteger(requestedLegacyPageIndex) ? requestedLegacyPageIndex : 0))];
+  if (!previousPage) return 0;
+  const readablePages = pages.filter((page) => page.role === 'page' || page.role === 'whole');
+  const matchingPage = readablePages.findIndex((page) => previousPage.from >= page.from && previousPage.from < page.to);
+  return matchingPage < 0 ? 0 : matchingPage;
+}
+
+export interface Act4PrivateBlogPost {
+  dateText: string;
+  dateTime: string;
+  text: string;
+}
+
+/** Keeps the original date/body pairs intact; surrounding prose stays outside the post list. */
+export function act4PrivateBlogPosts(paragraphs: readonly string[]): readonly Act4PrivateBlogPost[] {
+  const posts: Act4PrivateBlogPost[] = [];
+  for (let index = 1; index + 1 < paragraphs.length - 1; index += 2) {
+    const dateText = paragraphs[index];
+    const dateTime = act4DateTimeValue(dateText);
+    if (!dateTime) return [];
+    posts.push({ dateText, dateTime, text: paragraphs[index + 1] });
+  }
+  return posts;
 }
 
 export type Act4ParagraphKind = 'mail-field' | 'mail-body' | 'social-date' | 'social-post' | 'broadcast-word' | 'broadcast-response' | 'broadcast-ending';

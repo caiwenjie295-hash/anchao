@@ -20,6 +20,8 @@ export function InvestigationProgressDrawer({ state }: { state: AppState }) {
   const isOpen = progressContext?.isOpen ?? false;
   const closeProgress = progressContext?.closeProgress ?? (() => {});
   const onOpenApp = progressContext?.onOpenApp;
+  const onContinueInvestigation = progressContext?.onContinueInvestigation;
+  const currentContentActive = progressContext?.currentContentActive ?? false;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -58,10 +60,12 @@ export function InvestigationProgressDrawer({ state }: { state: AppState }) {
         <p>{model.currentObjective}</p>
         <h3>下一步</h3>
         <p id="investigation-progress-next-action" className="investigation-progress__next-action">{model.nextAction}</p>
-        {onOpenApp && <button type="button" className="investigation-progress__open-app" onClick={() => {
+        {(currentContentActive || (model.nextActionAppId && onOpenApp) || onContinueInvestigation) && <button type="button" className="investigation-progress__open-app" onClick={() => {
           closeProgress();
-          onOpenApp(model.nextActionAppId ?? 'notepad');
-        }}>继续这一步</button>}
+          if (currentContentActive) return;
+          if (model.nextActionAppId && onOpenApp) onOpenApp(model.nextActionAppId);
+          else onContinueInvestigation?.();
+        }}>{currentContentActive ? '回到当前内容' : model.nextActionAppId ? '打开对应材料' : '继续调查'}</button>}
       </section>
 
       <section className="investigation-progress__route" aria-labelledby="investigation-progress-route-title">

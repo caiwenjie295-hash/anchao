@@ -31,8 +31,10 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   const [pendingHotspotId, setPendingHotspotId] = useState<string | null>(null);
   const [comparisonOpen, setComparisonOpen] = useState(false);
   const [timelineFeedback, setTimelineFeedback] = useState('');
+  const [pendingEvidenceFocusId, setPendingEvidenceFocusId] = useState<Act2SchoolEvidenceId | null>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const previousTriggerRef = useRef<HTMLElement | null>(null);
+  const evidenceButtonRefs = useRef(new Map<Act2SchoolEvidenceId, HTMLButtonElement>());
   const area = schoolAreaById.get(areaId)!;
   const availableHotspots = act2School.hotspots.filter((hotspot) => hotspot.areaId === areaId);
   const hotspot = hotspotId ? act2School.hotspots.find((item) => item.id === hotspotId) : undefined;
@@ -46,15 +48,24 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   ];
   const readEvidenceCount = timelineEvidence.filter((item) => flags[item.flag] === true).length;
   const selectedSourceCount = schoolProgress.selectedEvidenceIds.length;
+  const readUnselectedEvidence = timelineEvidence.filter((item) => flags[item.flag] === true && !schoolProgress.selectedEvidenceIds.includes(item.id));
   const timelineReady = schoolProgress.symbolMatchConfirmed && selectedSourceCount >= 2 && schoolProgress.selectedInferenceId === 'bounded-timeline';
   const symbolMatchMaterials = flags.FLAG_A2_SCHOOL_SS_FOUND === true ? [] : [{ id: 'HOTSPOT_A2_T05_SCHOLAR_NOTE', label: '小 A 旧教室里的学霸笔记' }];
-  const missingTimelineMaterials = [
+  const unreadTimelineMaterials = [
     ...(flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN === true ? [] : [{ id: 'HOTSPOT_A2_T05_TEACHER', label: '班主任的回忆' }]),
     ...(flags.FLAG_A2_SCORE_CHANGE_KNOWN === true ? [] : [{ id: 'HOTSPOT_A2_T05_RANKS', label: '历次成绩记录' }]),
     ...(flags.FLAG_A2_SCORE_CHANGE_KNOWN !== true || flags.FLAG_A2_QIMING_NAME_FOUND === true ? [] : [{ id: 'HOTSPOT_A2_T05_QIMING_TEXT', label: '成绩表下方的感谢文字' }]),
   ];
+  const sourceSelectionMaterials = selectedSourceCount >= 2 ? [] : readUnselectedEvidence.length
+    ? readUnselectedEvidence.map((item) => ({ id: `SCHOOL_EVIDENCE:${item.id}`, label: `${item.label} · 选作支持来源` }))
+    : unreadTimelineMaterials;
+  const sourceSelectionReason = selectedSourceCount >= 2
+    ? '两种不同来源已选好；现在选择最能贴近材料的判断。'
+    : readUnselectedEvidence.length
+      ? `已有 ${readEvidenceCount} 份记录读过，其中 ${readUnselectedEvidence.length} 份还没有选作支持来源；继续选择已读记录。`
+      : '先到学校地点读到记录，再选出两种不同来源作为支持材料。';
   const actions: InvestigationAction[] = [
-    { actionId: 'A2_T05_CONFIRM_TIMELINE', kind: 'story', target: 'school-timeline', label: isComplete ? '暂定时间线已记下' : '记录暂定时间线判断', state: isComplete ? 'completed' : timelineReady ? 'ready' : 'blocked', reason: !schoolProgress.symbolMatchConfirmed ? '先把旧笔记页边的记号与第一幕照片并排核对。' : selectedSourceCount < 2 ? '读过两种不同来源后，再比较休学前后的变化。' : !schoolProgress.selectedInferenceId ? '选出目前最能贴近材料的一种判断。' : '请回看所选判断，再记录这条暂定时间线。', relatedMaterials: [...symbolMatchMaterials, ...(!schoolProgress.symbolMatchConfirmed ? [] : missingTimelineMaterials)], onActivate: () => manager.confirmAct2SchoolTimeline() },
+    { actionId: 'A2_T05_CONFIRM_TIMELINE', kind: 'story', target: 'school-timeline', label: isComplete ? '暂定时间线已记下' : '记录暂定时间线判断', state: isComplete ? 'completed' : timelineReady ? 'ready' : 'blocked', reason: !schoolProgress.symbolMatchConfirmed ? '先把旧笔记页边的记号与第一幕照片并排核对。' : selectedSourceCount < 2 ? sourceSelectionReason : !schoolProgress.selectedInferenceId ? '选出目前最能贴近材料的一种判断。' : '请回看所选判断，再记录这条暂定时间线。', relatedMaterials: [...symbolMatchMaterials, ...(!schoolProgress.symbolMatchConfirmed ? [] : sourceSelectionMaterials)], onActivate: () => manager.confirmAct2SchoolTimeline() },
     { actionId: 'A2_T05_TO_QIMING', kind: 'move', target: 'qiming-research', label: '前往浏览器核查启明', state: isComplete ? 'ready' : 'blocked', reason: '先核对照片上的共同记号，再用至少两种来源记录休学前后的变化。', onActivate: () => { manager.enterAct2QimingResearch(); onReturnToDesktop?.(); manager.openApp('browser'); } },
   ];
   const areaImage = assetLoader.get(area.imageId)?.src;
@@ -73,6 +84,14 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     if (hotspotId && !comparisonOpen) dialogRef.current?.querySelector<HTMLElement>('button')?.focus();
     else if (!hotspotId && !comparisonOpen) previousTriggerRef.current?.focus();
   }, [hotspotId, comparisonOpen]);
+  useEffect(() => {
+    if (!pendingEvidenceFocusId) return;
+    const button = evidenceButtonRefs.current.get(pendingEvidenceFocusId);
+    if (!button) return;
+    button.scrollIntoView?.({ block: 'center', behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    button.focus({ preventScroll: true });
+    setPendingEvidenceFocusId(null);
+  }, [pendingEvidenceFocusId]);
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -95,11 +114,16 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     actLabel="第二幕 · 小 A 的变化"
     locationLabel={area.title}
     contextLabel="回到高中 · 沿记忆中的路线核对"
-    objective="确认休学前后的变化，并把学校记录与双 S 记号放在一起判断。"
-    helpText="可以在学校地点间往返。班主任回忆、成绩记录、感谢文字是不同来源；读过后再选择它们能支持的判断。照片入口与地点列表使用相同路线。"
+    objective="先看看小月记得的日常，再对照学校留下的记录；你可以保留自己的判断。"
+    helpText="先在地点读记录，再在下方把读过的来源选作支持材料；“已读”和“已选”分别统计。照片入口与地点列表都能前往同一地点。"
     actions={actions}
     statusMessage={timelineFeedback}
     onOpenMaterial={(_actionId, materialId) => {
+      if (materialId.startsWith('SCHOOL_EVIDENCE:')) {
+        const evidenceId = materialId.slice('SCHOOL_EVIDENCE:'.length) as Act2SchoolEvidenceId;
+        setPendingEvidenceFocusId(evidenceId);
+        return;
+      }
       const target = act2School.hotspots.find((item) => item.id === materialId);
       if (!target) return;
       setAreaId(target.areaId);
@@ -111,18 +135,15 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   <section className="t05-school" aria-label="高中调查" data-asset-id={area.imageId}>
     <div className="t05-school__intro">
       <section className="t05-school__memory" aria-label="小月的日常回忆与高中旧照片">
-        {schoolMemoryMessages[0] && <p className="t05-school__memory-lead"><strong>小月先想起的日常</strong><span>{schoolMemoryMessages[0].content}</span></p>}
-        <details className="t05-school__memory-disclosure">
-          <summary>展开小月的日常消息与两张旧照片</summary>
-          <div className="t05-school__memory-content">
-            <div className="t05-school__memory-chat">
-              {schoolMemoryMessages.map((message) => <blockquote key={message.id} data-message-id={message.id}>{message.content}</blockquote>)}
-            </div>
-            <div className="t05-school__memory-photos">
-              {schoolMemoryPhotos.map((message) => <SchoolMemoryPhoto key={message.id} message={message} />)}
-            </div>
+        <strong className="t05-school__memory-heading">小月记得的日常与两张旧照片</strong>
+        <div className="t05-school__memory-content">
+          <div className="t05-school__memory-chat">
+            {schoolMemoryMessages.map((message) => <blockquote key={message.id} data-message-id={message.id}>{message.content}</blockquote>)}
           </div>
-        </details>
+          <div className="t05-school__memory-photos">
+            {schoolMemoryPhotos.map((message) => <SchoolMemoryPhoto key={message.id} message={message} />)}
+          </div>
+        </div>
       </section>
       <p className="t05-school__route-intro">{act2School.intro}</p>
     </div>
@@ -141,16 +162,14 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         {area.id === 'AREA_A2_T05_TEACHER_OFFICE' && flags.FLAG_A2_SCHOOL_SS_FOUND !== true && <p className="t05-school__soft-hint">{act2School.softHint}</p>}
       </main>
     </div>
-    <details className="t05-school__timeline-disclosure">
-      <summary>整理已读材料（已读 {readEvidenceCount} / 3 · 已选不同来源 {selectedSourceCount} / 2）</summary>
     <section className="t05-school__timeline" aria-label="休学前后对照">
-      <h2>休学前后，哪些变化有材料支持？</h2>
-      <p>选读过的来源，再判断它们能说明什么。至少选择两种来源；访问地点本身不计作证据。</p>
+      <h2>学校记录 · 已读 {readEvidenceCount} / 3 · 已选不同来源 {selectedSourceCount} / 2</h2>
+      <p>读过记录后，选择至少两种不同来源，再判断它们能说明什么。访问地点本身不计作证据。</p>
       <div className="t05-school__evidence-options">
         {timelineEvidence.map((item) => {
           const available = flags[item.flag] === true;
           const selected = schoolProgress.selectedEvidenceIds.includes(item.id);
-          return <button type="button" key={item.id} disabled={!available || isComplete} aria-pressed={selected} onClick={() => manager.toggleAct2SchoolEvidence(item.id)}>
+          return <button type="button" key={item.id} ref={(node) => { if (node) evidenceButtonRefs.current.set(item.id, node); else evidenceButtonRefs.current.delete(item.id); }} data-evidence-id={item.id} disabled={!available || isComplete} aria-pressed={selected} onClick={() => manager.toggleAct2SchoolEvidence(item.id)}>
             <strong>{item.label}</strong><span>{available ? item.detail : '先在对应地点读到这份记录。'}</span><small>{selected ? '已选作支持来源' : available ? '选作支持来源' : '尚未读到'}</small>
           </button>;
         })}
@@ -167,7 +186,6 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
       </div>
       {isComplete && <p className="t05-school__ending" aria-live="polite"><strong>{act2School.matchNote}</strong> · 双 S 比对与两种来源支持的暂定时间线已记入笔记。</p>}
     </section>
-    </details>
     {hotspot && <div className="t05-school__dialog-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setHotspotId(null); }}>
       <section ref={dialogRef} className="t05-school__dialog" role="dialog" aria-modal="true" aria-labelledby="t05-school-dialog-title">
         <header><h2 id="t05-school-dialog-title">{hotspot.title}</h2><button type="button" aria-label="关闭" onClick={() => setHotspotId(null)}>关闭 ×</button></header>
