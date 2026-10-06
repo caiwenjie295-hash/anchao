@@ -12,6 +12,6 @@
 
 ## SVG 图形
 
-`src/components/VisualIcon.tsx` 内的 46 个本地 SVG 图形共用一个描边系统。`src/data/visualIdentityData.ts` 导出的 `visualIdentityVectorLedger` 为每个图形登记稳定 ID、图形名称和用途；ID 规则为 `ICON_UI_IDENTITY_<图形名大写并以下划线替换连字符>`。该数组由图形目录逐项生成，测试检查覆盖数、ID 唯一性与用途完整性。
+`src/components/VisualIcon.tsx` 内的 47 个本地 SVG 图形共用一个描边系统。`src/data/visualIdentityData.ts` 导出的 `visualIdentityVectorLedger` 为每个图形登记稳定 ID、图形名称和用途；ID 规则为 `ICON_UI_IDENTITY_<图形名大写并以下划线替换连字符>`。该数组由图形目录逐项生成，测试检查覆盖数、ID 唯一性与用途完整性。
 
-图形用途覆盖邮件操作/状态、邮件附件与空状态、博客品牌/收藏、搜索结果和来源站点标识、论坛昵称头像，以及图像加载失败时无文字的账户头像回退。论坛昵称头像只使用抽象自然物图形。林予继续使用现有图集 `IMG_A1_B_010`；小A与王澳复用同一张无脸日常图。
+图形用途覆盖邮件和浏览器操作/状态、邮件附件与空状态、博客品牌/收藏、搜索结果和来源站点标识、论坛昵称头像，以及图像加载失败时无文字的账户头像回退。论坛昵称头像只使用抽象自然物图形。林予继续使用现有图集 `IMG_A1_B_010`；小A与王澳复用同一张无脸日常图。

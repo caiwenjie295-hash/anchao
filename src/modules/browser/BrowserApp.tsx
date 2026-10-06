@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { VisualIcon } from '../../components/VisualIcon';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { browserPageById, findSearchQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible } from '../../data/browserData';
 import { siteIdentity } from './browserPresentation';
@@ -141,8 +142,8 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     </div>
     <header className="browser-toolbar">
       <div className="browser-toolbar__nav"><button type="button" onClick={() => navigate(-1)} disabled={activeTab.stackIndex === 0} aria-label="后退">←</button><button type="button" onClick={() => navigate(1)} disabled={activeTab.stackIndex === activeTab.stack.length - 1} aria-label="前进">→</button></div>
-      <form className="browser-address" onSubmit={(event) => { event.preventDefault(); submitSearch((event.currentTarget.querySelector('input') as HTMLInputElement).value); }}><label className="sr-only" htmlFor="browser-search">搜索网页</label><span aria-hidden="true">⌕</span><input id="browser-search" value={addressValue} onChange={(event) => setDraft(event.target.value)} onFocus={() => setDraft(addressValue)} placeholder="搜索或输入地址" autoComplete="off" /></form>
-      <button type="button" className="browser-history-button" onClick={() => { if (stage === 'qiming') setQimingView('browser'); setHistoryOpen((open) => !open); }} aria-expanded={historyOpen} aria-label="查看搜索历史">◷ <span>历史</span></button>
+      <form className="browser-address" onSubmit={(event) => { event.preventDefault(); submitSearch((event.currentTarget.querySelector('input') as HTMLInputElement).value); }}><label className="sr-only" htmlFor="browser-search">搜索网页</label><span aria-hidden="true"><VisualIcon name="search" size={16} /></span><input id="browser-search" value={addressValue} onChange={(event) => setDraft(event.target.value)} onFocus={() => setDraft(addressValue)} placeholder="搜索或输入地址" autoComplete="off" /></form>
+      <button type="button" className="browser-history-button" onClick={() => { if (stage === 'qiming') setQimingView('browser'); setHistoryOpen((open) => !open); }} aria-expanded={historyOpen} aria-label="查看搜索历史"><VisualIcon name="history" size={16} /> <span>历史</span></button>
       <span className="browser-toolbar__source" aria-live="polite" title={sourceLabel}>{sourceLabel}</span>
     </header>
     {stage === 'qiming' && <>

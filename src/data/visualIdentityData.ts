@@ -53,6 +53,7 @@ const visualIdentityVectorPurposes: Record<VisualIconName, string> = {
   network: '校园网络与信息中心来源标识',
   club: '读书会来源标识',
   streaming: '流媒体账户来源标识',
+  history: '浏览器搜索历史入口',
   'avatar-leaf': '论坛昵称对应的叶片头像图形',
   'avatar-wave': '论坛昵称对应的波纹头像图形',
   'avatar-spark': '论坛昵称对应的光点头像图形',

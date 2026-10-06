@@ -223,9 +223,14 @@
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
+  color: var(--visual-avatar-ink);
+  background: var(--visual-avatar-paper);
   border: 1px solid rgb(15 23 42 / 12%);
 }
 .browser-page .browser-thread__avatar .visual-icon { width: 17px; height: 17px; }
+.browser-address > span { display: grid; width: 16px; height: 16px; flex: 0 0 16px; place-items: center; }
+.browser-address > span .visual-icon { width: 16px; height: 16px; }
+.browser-history-button > .visual-icon { width: 16px; height: 16px; }
 @container (max-width: 520px) {
   .browser-page .browser-thread__avatar.visual-avatar { width: 24px; height: 24px; flex-basis: 24px; }
   .browser-page .browser-thread__avatar .visual-icon { width: 14px; height: 14px; }

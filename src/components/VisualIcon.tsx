@@ -6,7 +6,7 @@ export const visualIconNames = [
   'bookmark', 'bookmark-filled', 'tidebook', 'news', 'trail', 'book', 'weather', 'map', 'forum',
   'notes', 'location', 'hotel', 'government', 'community', 'outdoor', 'market',
   'education', 'repair', 'travel', 'photo', 'bus', 'career', 'cloud', 'media', 'service',
-  'library', 'event', 'calendar', 'network', 'club', 'streaming', 'avatar-leaf', 'avatar-wave',
+  'library', 'event', 'calendar', 'network', 'club', 'streaming', 'history', 'avatar-leaf', 'avatar-wave',
   'avatar-spark', 'avatar-photo', 'avatar-cloud', 'avatar-book', 'profile',
 ] as const;
 
@@ -52,6 +52,7 @@ const glyphs: Record<VisualIconName, ReactNode> = {
   network: <><circle cx="6" cy="7" r="2" /><circle cx="18" cy="7" r="2" /><circle cx="12" cy="17" r="2" /><path d="m7.5 8.5 3.2 6.6M16.5 8.5l-3.2 6.6M8 7h8" /></>,
   club: <><path d="M12 3.5 14.2 9l5.8.4-4.5 3.7 1.5 5.6-5-3.1-5 3.1 1.5-5.6-4.5-3.7 5.8-.4L12 3.5Z" /><path d="M9 21h6" /></>,
   streaming: <><rect x="3.5" y="5.5" width="17" height="13" rx="2" /><path d="m10 9 5 3-5 3V9ZM8 3.5l2 2M16 3.5l-2 2" /></>,
+  history: <><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l3 2" /></>,
   'avatar-leaf': <><path d="M19.5 4.5c-8.5-.3-13 3.5-13 8.7a5.8 5.8 0 0 0 5.9 5.8c5.1 0 7.4-5.8 7.1-14.5Z" /><path d="M5 20c2.5-4.2 6-7 11-10" /></>,
   'avatar-wave': <><path d="M3 9c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0M3 15c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0" /></>,
   'avatar-spark': <><path d="m12 3 1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3Z" /><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z" /></>,
