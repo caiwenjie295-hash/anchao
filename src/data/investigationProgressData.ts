@@ -689,13 +689,15 @@ function currentStageTaskPresentation(state: AppState): DesktopTaskPresentation 
     : current.act === 2 ? act2Route(state)
       : current.act === 3 ? act3Route(state)
         : act4Route(state);
-  const completedCount = route.filter((node) => node.status === 'complete').length;
+  const terminalAct4 = current.act === 4 && hasFlag(state, 'FLAG_A4_COMPLETE');
+  const visibleRouteCount = route.filter((node) => node.status !== 'upcoming').length;
+  const completedCount = terminalAct4 ? visibleRouteCount : route.filter((node) => node.status === 'complete').length;
   return {
     title: '当前步骤',
     summary: current.objective,
     completedCount,
-    totalCount: Math.max(completedCount + 1, route.length - 1),
-    steps: [{ id: 'current-action', label: current.nextAction, complete: false, current: true, ...(current.appId ? { appId: current.appId } : {}) }],
+    totalCount: terminalAct4 ? visibleRouteCount : Math.max(completedCount + 1, route.length - 1),
+    steps: terminalAct4 ? [] : [{ id: 'current-action', label: current.nextAction, complete: false, current: true, ...(current.appId ? { appId: current.appId } : {}) }],
     nextAction: current.nextAction,
     ...(current.appId ? { actionAppId: current.appId, actionLabel: appLabel[current.appId] } : {}),
   };
