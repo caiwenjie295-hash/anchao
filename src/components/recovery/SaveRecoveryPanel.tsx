@@ -32,9 +32,10 @@ export interface SaveRecoveryPanelProps {
   manager: StateManager;
   onContinue?: () => void;
   onReplaceProtectedOriginalChange?: (allowed: boolean) => void;
+  confirmationResetKey?: number;
 }
 
-export function SaveRecoveryPanel({ manager, onContinue, onReplaceProtectedOriginalChange }: SaveRecoveryPanelProps) {
+export function SaveRecoveryPanel({ manager, onContinue, onReplaceProtectedOriginalChange, confirmationResetKey }: SaveRecoveryPanelProps) {
   const recovery = useSyncExternalStore(manager.subscribeRecoveryState, manager.getRecoveryState, manager.getRecoveryState);
   const [feedback, setFeedback] = useState('');
   const [restartConfirmation, setRestartConfirmation] = useState(false);
@@ -50,6 +51,7 @@ export function SaveRecoveryPanel({ manager, onContinue, onReplaceProtectedOrigi
       ? [recovery.kind, recovery.originalText ?? null, recovery.backupAvailable, recovery.protectedOriginalText]
       : recovery.kind === 'backup-only' ? [recovery.kind, recovery.protectedOriginalText] : [recovery.kind]);
   const previousRecoverySignature = useRef(recoverySignature);
+  const previousConfirmationResetKey = useRef(confirmationResetKey);
 
   useEffect(() => {
     if (previousRecoverySignature.current === recoverySignature) return;
@@ -61,6 +63,13 @@ export function SaveRecoveryPanel({ manager, onContinue, onReplaceProtectedOrigi
     setReplaceAcknowledged(false);
     onReplaceProtectedOriginalChange?.(false);
   }, [recoverySignature, onReplaceProtectedOriginalChange]);
+
+  useEffect(() => {
+    if (previousConfirmationResetKey.current === confirmationResetKey) return;
+    previousConfirmationResetKey.current = confirmationResetKey;
+    setReplaceAcknowledged(false);
+    onReplaceProtectedOriginalChange?.(false);
+  }, [confirmationResetKey, onReplaceProtectedOriginalChange]);
 
   const protectedText = ('protectedOriginalText' in recovery ? recovery.protectedOriginalText : null)
     ?? manager.exportProtectedOriginalSave();

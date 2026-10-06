@@ -73,7 +73,19 @@ describe('SettingsPanel protected save import', () => {
     expect(importSave).toHaveBeenNthCalledWith(2, imported, { replaceProtectedOriginal: false });
     expect(storage.getItem(SAVE_KEY)).toBe(currentOriginal);
     expect(storage.getItem(SAVE_RECOVERY_KEY)).toBe(previousProtected);
+    const nextAcknowledgement = container.querySelector<HTMLInputElement>('.save-recovery-panel__confirmation input[type="checkbox"]')!;
+    expect(nextAcknowledgement.checked).toBe(false);
+    const retryBeforeConfirmation = [...container.querySelectorAll('button')].find((button) => button.textContent === '导入所选记录并替换旧保护副本') as HTMLButtonElement;
+    expect(retryBeforeConfirmation.disabled).toBe(true);
+
+    act(() => nextAcknowledgement.click());
     const explicitRetry = [...container.querySelectorAll('button')].find((button) => button.textContent === '导入所选记录并替换旧保护副本') as HTMLButtonElement;
-    expect(explicitRetry.disabled).toBe(true);
+    expect(explicitRetry.disabled).toBe(false);
+    expect(storage.getItem(SAVE_KEY)).toBe(currentOriginal);
+    expect(storage.getItem(SAVE_RECOVERY_KEY)).toBe(previousProtected);
+    act(() => explicitRetry.click());
+    expect(importSave).toHaveBeenNthCalledWith(3, imported, { replaceProtectedOriginal: true });
+    expect(storage.getItem(SAVE_KEY)).not.toBe(currentOriginal);
+    expect(storage.getItem(SAVE_RECOVERY_KEY)).toBe(currentOriginal);
   });
 });

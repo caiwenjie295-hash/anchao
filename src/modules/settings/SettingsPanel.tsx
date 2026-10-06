@@ -36,6 +36,7 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
   const [isImporting, setIsImporting] = useState(false);
   const [pendingImportText, setPendingImportText] = useState<string | null>(null);
   const [replaceProtectedOriginal, setReplaceProtectedOriginal] = useState(false);
+  const [importSelectionVersion, setImportSelectionVersion] = useState(0);
   const isImportingRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -61,6 +62,7 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
     setImportFeedback(null);
     setPendingImportText(null);
     setReplaceProtectedOriginal(false);
+    setImportSelectionVersion((version) => version + 1);
     if (file.size > MAX_IMPORT_SIZE_BYTES) {
       setImportFeedback({ kind: 'error', text: '这个文件超过 2 MiB，未导入；请选择较小的调查记录副本。' });
       return;
@@ -158,7 +160,7 @@ export function SettingsPanel({ manager, onClose }: SettingsPanelProps) {
               onChange={importSaveFile}
             />
           </div>
-          <SaveRecoveryPanel manager={manager} onReplaceProtectedOriginalChange={setReplaceProtectedOriginal} />
+          <SaveRecoveryPanel manager={manager} onReplaceProtectedOriginalChange={setReplaceProtectedOriginal} confirmationResetKey={importSelectionVersion} />
           {pendingImportText && <button type="button" className="save-recovery-panel__confirm-import" disabled={!replaceProtectedOriginal || isImporting} onClick={retryPendingImport}>
             导入所选记录并替换旧保护副本
           </button>}
