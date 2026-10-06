@@ -1,0 +1,50 @@
+.visual-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  overflow: visible;
+  vertical-align: middle;
+}
+
+.visual-avatar {
+  --visual-avatar-ink: #456554;
+  --visual-avatar-paper: #e8f0eb;
+  position: relative;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  color: var(--visual-avatar-ink);
+  background: var(--visual-avatar-paper);
+  isolation: isolate;
+}
+
+.visual-avatar--tone-0 { --visual-avatar-ink: #456554; --visual-avatar-paper: #e8f0eb; }
+.visual-avatar--tone-1 { --visual-avatar-ink: #496579; --visual-avatar-paper: #eaf0f4; }
+.visual-avatar--tone-2 { --visual-avatar-ink: #765b4c; --visual-avatar-paper: #f3ece7; }
+.visual-avatar--tone-3 { --visual-avatar-ink: #665c80; --visual-avatar-paper: #efedf5; }
+.visual-avatar--tone-4 { --visual-avatar-ink: #56736b; --visual-avatar-paper: #e8f1ef; }
+.visual-avatar--tone-5 { --visual-avatar-ink: #80684b; --visual-avatar-paper: #f3efe6; }
+
+.visual-avatar__fallback {
+  grid-area: 1 / 1;
+  width: 62%;
+  height: 62%;
+  color: var(--visual-avatar-ink);
+}
+
+.visual-avatar__image,
+.visual-avatar .visual-avatar__sprite {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visual-avatar__image { z-index: 1; }

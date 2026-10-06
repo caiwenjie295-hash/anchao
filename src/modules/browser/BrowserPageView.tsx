@@ -1,7 +1,10 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { EvidenceImage } from '../../components/EvidenceImage';
+import { VisualAvatar } from '../../components/VisualAvatar';
+import { VisualIcon } from '../../components/VisualIcon';
 import type { StateManager } from '../../core/stateManager';
 import { type BrowserPage, type BrowserPageInteraction, type BrowserPageType } from '../../data/browserData';
+import { forumAvatarForAuthor, siteMarkForName } from '../../data/visualIdentityData';
 import { PAGE_TYPE_LABEL, labeledEntries, leadLinesAndNote, parseForumPosts, siteIdentity, urlCrumbs, type SiteIdentity } from './browserPresentation';
 
 type TemplateProps = { page: BrowserPage; identity: SiteIdentity };
@@ -77,8 +80,10 @@ function ForumThread({ page, identity }: TemplateProps) {
       <p className="browser-page__byline"><span>{posts.length} 条发言</span><time dateTime={page.publishedAt}>最后回复 {page.publishedAt}</time></p>
     </header>
     <nav className="browser-forum-nav" aria-label="社区导航"><span>社区首页</span><span>{identity.board ?? '话题讨论'}</span><span>帖子正文</span></nav>
-    <ol className="browser-thread">{posts.map((post, index) => <li className="browser-thread__post" key={index}>
-      <span className="browser-thread__avatar" aria-hidden="true">{Array.from(post.author)[0] ?? '·'}</span>
+    <ol className="browser-thread">{posts.map((post, index) => {
+      const avatar = forumAvatarForAuthor(post.author);
+      return <li className="browser-thread__post" key={index}>
+      <VisualAvatar className="browser-thread__avatar" fallbackIcon={avatar.icon} tone={avatar.tone} />
       <div className="browser-thread__body">
         <div className="browser-thread__author">
           <strong>{post.author}</strong><span>{index + 1} 楼</span>
@@ -86,7 +91,7 @@ function ForumThread({ page, identity }: TemplateProps) {
         </div>
         <p className="browser-thread__text">{post.text}</p>
       </div>
-    </li>)}</ol>
+    </li>})}</ol>
   </>;
 }
 
@@ -203,7 +208,7 @@ const TEMPLATE_BY_TYPE: Record<BrowserPageType, Template> = {
 
 function SiteMasthead({ identity, crumbs }: { identity: SiteIdentity; crumbs: string[] }) {
   return <div className="browser-page__masthead">
-    <span className="browser-page__logo" aria-hidden="true">{identity.monogram}</span>
+    <span className="browser-page__logo" aria-hidden="true"><VisualIcon name={siteMarkForName(identity.name)} size={20} /></span>
     <span className="browser-page__brand">
       <strong>{identity.name}</strong>
       {identity.board ? <span className="browser-page__board">{identity.board}</span> : null}

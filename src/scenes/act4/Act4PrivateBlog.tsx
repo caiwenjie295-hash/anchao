@@ -1,9 +1,13 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { VisualAvatar } from '../../components/VisualAvatar';
+import { VisualIcon } from '../../components/VisualIcon';
 import { assetLoader } from '../../core/assetLoader';
+import { mailAvatarForSender } from '../../data/visualIdentityData';
 import type { Act4PrivateBlogPost } from '../../data/narrative/act4Presentation';
 import './privateBlog.css';
 
 const BLOG_HEADER_ASSET_ID = 'IMG_A4_BLOG_WINDOW_001';
+const WANG_AO_AVATAR = mailAvatarForSender('小A');
 
 export function Act4PrivateBlog({
   openingText,
@@ -50,7 +54,7 @@ export function Act4PrivateBlog({
   >
     <header className="a4-private-blog__masthead">
       <div className="a4-private-blog__wordmark" aria-label="潮汐簿">
-        <span aria-hidden="true">潮</span>
+        <span aria-hidden="true"><VisualIcon name="tidebook" size={18} /></span>
         <strong>潮汐簿</strong>
       </div>
       <p>私人动态 · 本地归档</p>
@@ -64,7 +68,7 @@ export function Act4PrivateBlog({
             : <div className="a4-private-blog__banner-fallback" aria-hidden="true" />}
         </div>
         <div className="a4-private-blog__profile-copy">
-          <div className="a4-private-blog__avatar" aria-hidden="true">澳</div>
+          <VisualAvatar className="a4-private-blog__avatar" {...WANG_AO_AVATAR} />
           <h2>王澳</h2>
           <p className="a4-private-blog__handle">@wangao</p>
           <p>个人记录</p>
@@ -90,7 +94,7 @@ export function Act4PrivateBlog({
             return <li key={post.dateTime}>
               <article className="a4-private-blog__post" id={`a4-private-post-${post.dateTime}`} tabIndex={-1} data-post-date={post.dateTime}>
                 <header className="a4-private-blog__post-heading">
-                  <div className="a4-private-blog__post-avatar" aria-hidden="true">澳</div>
+                  <VisualAvatar className="a4-private-blog__post-avatar" {...WANG_AO_AVATAR} />
                   <div>
                     <strong>王澳</strong>
                     <span>@wangao</span>
@@ -105,7 +109,7 @@ export function Act4PrivateBlog({
                     aria-label={`${isBookmarked ? '取消收藏' : '收藏'} ${post.dateText} 的动态`}
                     onClick={() => onToggleBookmark(post.dateTime)}
                   >
-                    <span aria-hidden="true" className="a4-private-blog__bookmark-icon">{isBookmarked ? '◆' : '◇'}</span>
+                    <span aria-hidden="true" className="a4-private-blog__bookmark-icon"><VisualIcon name={isBookmarked ? 'bookmark-filled' : 'bookmark'} size={16} /></span>
                     {isBookmarked ? '已收藏' : '收藏'}
                   </button>
                 </footer>

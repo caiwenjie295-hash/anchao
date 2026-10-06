@@ -1,6 +1,9 @@
+import type { CSSProperties } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import type { Act2Stage } from '../../core/types';
 import { getResultsForQuery, type BrowserPage } from '../../data/browserData';
+import { siteMarkForName } from '../../data/visualIdentityData';
+import { VisualIcon } from '../../components/VisualIcon';
 import { PAGE_TYPE_LABEL, resultShowsKeywords, resultVariantFor, siteIdentity, urlCrumbs } from './browserPresentation';
 
 function ResultItem({ page, onOpen }: { page: BrowserPage; onOpen: (pageId: string) => void }) {
@@ -8,9 +11,9 @@ function ResultItem({ page, onOpen }: { page: BrowserPage; onOpen: (pageId: stri
   const variant = resultVariantFor(page.pageType);
   const crumbs = urlCrumbs(page.url);
   const thumbnail = page.images?.[0] ? assetLoader.get(page.images[0].assetId)?.src ?? null : null;
-  return <button type="button" className={`browser-result browser-result--${variant}`} onClick={() => onOpen(page.id)}>
+  return <button type="button" className={`browser-result browser-result--${variant}`} style={{ '--browser-site-hue': identity.hue } as CSSProperties} onClick={() => onOpen(page.id)}>
     <span className="browser-result__origin">
-      <span className="browser-result__logo" aria-hidden="true">{identity.monogram}</span>
+      <span className="browser-result__logo" aria-hidden="true"><VisualIcon name={siteMarkForName(identity.name)} size={18} /></span>
       <span className="browser-result__site">{identity.name}</span>
       {variant === 'report' && <time className="browser-result__date" dateTime={page.publishedAt}>{page.publishedAt}</time>}
     </span>
