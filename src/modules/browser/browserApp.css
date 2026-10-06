@@ -219,6 +219,18 @@
 }
 .browser-results .browser-result__logo .visual-icon,
 .browser-page .browser-page__logo .visual-icon { width: 18px; height: 18px; }
+.browser-results .browser-result__origin {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.browser-page .browser-page__masthead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
 .browser-page .browser-thread__avatar.visual-avatar {
   width: 32px;
   height: 32px;

@@ -1,5 +1,12 @@
-import wangAoAvatar from '../assets/ui-identity/IMG_UI_IDENTITY_WANGAO_001.webp';
 import { visualIconNames, type VisualIconName } from '../components/VisualIcon';
+
+const wangAoAvatarFiles = import.meta.glob<string>('../assets/ui-identity/IMG_UI_IDENTITY_WANGAO_001.webp', {
+  eager: true,
+  query: '?url&no-inline',
+  import: 'default',
+});
+const wangAoAvatar = wangAoAvatarFiles['../assets/ui-identity/IMG_UI_IDENTITY_WANGAO_001.webp'];
+if (!wangAoAvatar) throw new Error('Missing visual identity image: IMG_UI_IDENTITY_WANGAO_001.webp');
 
 export type VisualIdentityImageId = 'IMG_UI_IDENTITY_WANGAO_001';
 export type MailAvatarSpec = { fallbackIcon: VisualIconName; tone: number; imageId?: VisualIdentityImageId; spriteAssetId?: 'IMG_A1_B_010' };

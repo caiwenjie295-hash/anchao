@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- |
 | `IMG_UI_IDENTITY_WANGAO_001` | `source/IMG_UI_IDENTITY_WANGAO_001.png`（2,074,163 B） | `src/assets/ui-identity/IMG_UI_IDENTITY_WANGAO_001.webp`（12,530 B） | 王澳/小A共同账户头像；只有窗边树影与叶片，不包含人物、身份线索或剧情证据 | `prompts/profile-avatars.md#IMG_UI_IDENTITY_WANGAO_001` |
 
-当前发布光栅合计 12,530 B（12.3 KiB），低于 400 KiB 上限。原始 PNG 只作项目源稿归档，不参与页面下载。
+当前发布光栅合计 12,530 B（12.3 KiB），低于 400 KiB 上限。原始 PNG 只作项目源稿归档，不参与页面下载。WebP 通过单文件 `import.meta.glob` 的 `?url&no-inline` 选项作为独立文件输出，并纳入离线资源清单，不嵌入应用 JavaScript。
 
 ## SVG 图形
 
