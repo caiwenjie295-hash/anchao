@@ -6,7 +6,7 @@
 - 首次离线检查发现直接 WebP import 被内联为 `data:image`；改用单文件 `import.meta.glob` + `?url&no-inline` 独立输出，没有改构建脚本或离线断言。邮件和论坛身份色板显式覆盖旧头像底色；搜索结果与来源 masthead 调整为同行、空间不足可换行。
 - 主审结论 `APPROVED`。父统一验证：`npm test` 77文件/409项通过；`npm run build` 316 modules通过；`npm run build:offline` 155文件/44,042,834 B（约42.00 MiB）通过；默认 `npm run test:offline` 两轮通过，覆盖四幕、离线资源、无外网请求和零运行错误。生产构建的既有大 chunk 提醒保留。
 - 真实浏览器在1280×720和390×844重点检查邮箱、搜索/来源、论坛与博客呈现及操作，通过；覆盖头像、星标、来源行、收藏与日期跳转。无横向溢出，控制台无 warn/error。检查为代表状态抽查；offline DOM脚本的图像解码使用原有模拟，另由浏览器检查真实图像。没有声称全镜头人工通关或所有平台/辅助技术矩阵均完成。另完成一处微信/桌面回归检查，既有头像/图集显示正常，截图 `wechat-regression.png`。
-- 功能提交 `911acb515acf7623592f28905d17cb9d9535308e` 已以 `--no-ff` 合入本地 `main`，合并节点 `cb833299bd90c0cc5785647eb58182d4de3c1381`。845条旧受保护路径无差异、148条旧图片注册和151条压缩映射保留；合并审计868项受保护工作文件无差异，原30项dirty状态保持。最终文档合入后的 main 离线包重建及 manifest 核对仍待父任务完成；不预报未知SHA或称最终包已交付。未推送或部署。
+- 功能提交 `911acb515acf7623592f28905d17cb9d9535308e` 已以 `--no-ff` 合入本地 `main`，合并节点 `cb833299bd90c0cc5785647eb58182d4de3c1381`。845条旧受保护路径无差异、148条旧图片注册和151条压缩映射保留；合并审计868项受保护工作文件无差异，原30项dirty状态保持。文档合并后的 main 节点 `222c01b2778feaae9b951eabac7da5e5b74a4057` 生产构建316 modules、离线构建314 modules并生成155文件/44,042,840 B；根目录 `release-main.json` 校对 `manifest.gitSha`、文件尺寸、头像源/包SHA、零内嵌图片及保护状态全部通过。功能门禁节点的离线包历史记录仍为155文件/44,042,834 B；该节点默认两轮 offline 已通过。main 节点默认两轮 offline 复验也通过，记录于根目录 `main-offline-test.log`。本批纯文档修改合入后，父只刷新离线 manifest 对应SHA；最终交付版本以当前 main HEAD、manifest.gitSha 和根目录 `release-main.json` 动态校对为准。未推送或部署。
 - 最终门禁日志、截图和保护审计位于开发包根目录 `UX-IDENTITY-20261006-validation/`。范围外改进目标整理于 `docs/ux-identity-20261006/improvement-targets.md`。
 
 ## 2026-10-06 UX-RHYTHM-20261006 四幕交互与阅读流程
