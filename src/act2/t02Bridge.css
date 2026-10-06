@@ -75,7 +75,7 @@
 .act2-bridge__show:hover,
 .act2-bridge__confirm:hover:not(:disabled) { background: #edf2ed; }
 .act2-bridge__evidence { margin-top: 16px; padding-top: 12px; border-top: 1px dashed #a9b6ac; }
-.act2-bridge__evidence h3 { margin: 0; font-size: 15px; }
+.act2-bridge__evidence > summary { color: var(--bridge-ink); font-size: 15px; font-weight: 650; cursor: pointer; }
 .act2-bridge__evidence > p { margin: 4px 0 10px; color: var(--bridge-muted); font-size: 13px; }
 .act2-bridge__evidence ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .act2-bridge__evidence-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; padding: 8px 0; border-top: 1px solid #edf0ed; }
@@ -86,6 +86,7 @@
 .act2-bridge__evidence-item .evidence-thumbnail,
 .act2-bridge__evidence-slot { width: 64px; height: 48px; flex: 0 0 auto; }
 .act2-bridge__evidence-item .evidence-thumbnail img { width: 100%; height: 100%; object-fit: contain; border-radius: 4px; }
+.act2-bridge__photo-feedback { margin: 10px 0 0; padding: 8px 10px; border-left: 3px solid var(--bridge-accent); color: var(--bridge-ink); background: #f1f4ef; line-height: 1.5; }
 .act2-bridge__evidence-slot { display: grid; place-items: center; border: 1px dashed var(--bridge-line); color: var(--bridge-muted); background: var(--ui-surface-muted, #f0f0f0); font-size: 12px; }
 .act2-bridge__oral { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #a9b6ac; }
 .act2-bridge__evidence-lead { color: var(--bridge-muted); }

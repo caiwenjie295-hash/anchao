@@ -38,17 +38,15 @@ describe('T05 school exploration', () => {
     expect((document.activeElement as HTMLElement)?.textContent).toBe('听听老师回忆');
   });
 
-  it('places existing daily messages and high-school photos before the anomaly timeline', async () => {
+  it('keeps a compact daily-memory entry and the evidence choices visible without opening folds', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
     const memory = container.querySelector('.t05-school__memory');
     const timeline = container.querySelector('.t05-school__timeline');
     expect(memory).not.toBeNull();
-    const memoryDisclosure = memory?.querySelector<HTMLDetailsElement>('.t05-school__memory-disclosure');
-    const timelineDisclosure = container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure');
-    expect(memoryDisclosure?.open).toBe(false);
-    expect(memoryDisclosure?.querySelector('summary')?.textContent).toContain('展开小月的日常消息与两张旧照片');
-    expect(timelineDisclosure?.open).toBe(false);
-    expect(timelineDisclosure?.querySelector('summary')?.textContent).toContain('已读 0 / 3 · 已选不同来源 0 / 2');
+    expect(memory?.querySelector('details')).toBeNull();
+    expect(container.querySelector('.t05-school__timeline-disclosure')).toBeNull();
+    expect(timeline?.querySelector('h2')?.textContent).toContain('已读 0 / 3 · 已选不同来源 0 / 2');
+    expect(timeline?.querySelectorAll('.t05-school__evidence-options button')).toHaveLength(3);
     expect([...memory!.querySelectorAll('blockquote[data-message-id]')].map((node) => node.getAttribute('data-message-id'))).toEqual([
       'CHAT_A2_T05_001',
       'CHAT_A2_T05_011',
@@ -57,16 +55,41 @@ describe('T05 school exploration', () => {
       'CHAT_A2_T05_004',
       'CHAT_A2_T05_007',
     ]);
-    expect(memory?.textContent).toContain('想起');
+    expect(memory?.textContent).toContain('小月记得的日常与两张旧照片');
     expect(memory!.compareDocumentPosition(timeline!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 
-    const flagsBeforeDisclosure = { ...manager.getState().game.flags };
-    await act(async () => { memoryDisclosure!.querySelector('summary')?.click(); });
-    await act(async () => { timelineDisclosure!.querySelector('summary')?.click(); });
-    expect(memoryDisclosure?.open).toBe(true);
-    expect(timelineDisclosure?.open).toBe(true);
-    expect(manager.getState().game.flags).toEqual(flagsBeforeDisclosure);
+    expect(manager.getState().game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN).toBeUndefined();
     expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual([]);
     expect(manager.getState().modules.act2Research.school.selectedInferenceId).toBeNull();
+  });
+
+  it('offers already-read school records as support choices and keeps reading separate from selection', async () => {
+    const state = createDefaultState();
+    state.game.act = 2;
+    state.game.phase = 'A2_T05';
+    state.game.flags = { FLAG_A2_SCHOOL_ENTERED: true, FLAG_A2_SCHOOL_SS_FOUND: true, FLAG_A2_LEAVE_OF_ABSENCE_KNOWN: true, FLAG_A2_SCORE_CHANGE_KNOWN: true };
+    state.modules.act2Research.stage = 'school';
+    state.modules.act2Research.school.symbolMatchConfirmed = true;
+    manager = new StateManager(new EventBus(), state);
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-action-id="A2_T05_CONFIRM_TIMELINE"]')?.click(); });
+    const materials = [...container.querySelectorAll<HTMLButtonElement>('.investigation-navigation__reason .investigation-navigation__material')];
+    expect(materials.map((button) => button.textContent)).toEqual([
+      '查看相关材料：班主任的回忆 · 选作支持来源',
+      '查看相关材料：历次成绩记录 · 选作支持来源',
+    ]);
+    await act(async () => { materials[0].click(); });
+    const teacherEvidence = container.querySelector<HTMLButtonElement>('[data-evidence-id="teacher-account"]');
+    expect(teacherEvidence).toBe(document.activeElement);
+    expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual([]);
+
+    await act(async () => { teacherEvidence?.click(); });
+    expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual(['teacher-account']);
+    expect(manager.getState().game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN).toBe(true);
+    expect(container.querySelector('.t05-school__timeline h2')?.textContent).toContain('已读 2 / 3 · 已选不同来源 1 / 2');
+    const remainingMaterial = container.querySelector('.investigation-navigation__reason .investigation-navigation__material');
+    expect(remainingMaterial?.textContent).toContain('历次成绩记录 · 选作支持来源');
+    expect(container.querySelectorAll('.investigation-navigation__reason .investigation-navigation__material')).toHaveLength(1);
   });
 });

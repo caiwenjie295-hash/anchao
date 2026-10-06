@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import type { ComponentProps, ComponentType, CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { flushSync } from 'react-dom';
+import type { ComponentProps, ComponentType, CSSProperties, ReactNode } from 'react';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
 import { stateManager } from './core/stateManager';
 import { eventBus } from './core/eventBus';
@@ -31,6 +32,7 @@ import { deriveInvestigationProgress } from './data/investigationProgressData';
 import { act1Scenes } from './data/sceneData';
 import './styles.css';
 import './imageAssets.css';
+import './components/sceneTransition.css';
 
 type Act2SceneStage = Extract<Act2Stage, 'bridge' | 'library' | 'tales' | 'school' | 'finale'>;
 
@@ -39,6 +41,74 @@ const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIcon
 
 /** 只有 bridge / library / tales / school / finale 会接管全屏场景；search 与 T06 仍是普通桌面。 */
 const isAct2SceneStage = (stage: Act2Stage): stage is Act2SceneStage => stage === 'bridge' || stage === 'library' || stage === 'tales' || stage === 'school' || stage === 'finale';
+
+type SceneViewTransition = { ready?: Promise<unknown>; finished?: Promise<unknown> };
+type SceneTransitionDocument = Document & { startViewTransition?: (update: () => void) => SceneViewTransition };
+let activeSceneTransitionCount = 0;
+
+/** Commits the action synchronously so the browser snapshots the completed React update. */
+function runSceneTransition(update: () => void): void {
+  let committed = false;
+  const commit = () => {
+    if (committed) return;
+    flushSync(update);
+    committed = true;
+  };
+  if (typeof window === 'undefined' || typeof document === 'undefined' || window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true) {
+    commit();
+    return;
+  }
+  const host = document as SceneTransitionDocument;
+  if (!host.startViewTransition) {
+    commit();
+    return;
+  }
+  const root = document.documentElement;
+  activeSceneTransitionCount += 1;
+  root.dataset.sceneTransition = 'active';
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    activeSceneTransitionCount = Math.max(0, activeSceneTransitionCount - 1);
+    if (activeSceneTransitionCount === 0) delete root.dataset.sceneTransition;
+  };
+  try {
+    const transition = host.startViewTransition.call(document, commit);
+    if (transition.ready) transition.ready.then(() => {
+      if (!committed) commit();
+      if (!transition.finished) cleanup();
+    }, () => {
+      if (!committed) commit();
+      cleanup();
+    });
+    if (transition.finished) transition.finished.then(cleanup, cleanup);
+    else if (!transition.ready) {
+      if (!committed) commit();
+      cleanup();
+    }
+  } catch {
+    cleanup();
+    commit();
+  }
+}
+
+function SceneTransitionLayer({ children }: { children: ReactNode }) {
+  const layerRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const element = layerRef.current;
+    if (!element || typeof window === 'undefined' || document.documentElement.dataset.sceneTransition === 'active') return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true || !element.animate) return;
+    const animation = element.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: 240,
+      easing: 'ease-out',
+      fill: 'both',
+    });
+    animation.onfinish = () => animation.cancel();
+    return () => animation.cancel();
+  }, []);
+  return <div ref={layerRef} className="scene-transition-layer">{children}</div>;
+}
 
 export default function App() {
   const state = useSyncExternalStore(stateManager.subscribe, stateManager.getState, stateManager.getState);
@@ -117,24 +187,30 @@ export default function App() {
   const startAct3FromInvestigation = () => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A2_COMPLETE !== true || current.modules.act3.stage !== 'inactive') return;
-    setDismissedAct2Stage(null);
-    stateManager.startAct3();
-    setDismissedAct3(false);
+    runSceneTransition(() => {
+      setDismissedAct2Stage(null);
+      stateManager.startAct3();
+      setDismissedAct3(false);
+    });
   };
   const startAct4FromInvestigation = () => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A3_COMPLETE !== true || current.game.flags.FLAG_A3_SITE_EXITED !== true || current.modules.act3.stage !== 'T07') return;
-    if (current.modules.act4.stage === 'inactive') stateManager.startAct4();
-    setReviewAct3(false);
-    setDismissedAct3(false);
-    setDismissedAct4(false);
+    runSceneTransition(() => {
+      if (current.modules.act4.stage === 'inactive') stateManager.startAct4();
+      setReviewAct3(false);
+      setDismissedAct3(false);
+      setDismissedAct4(false);
+    });
   };
   const reviewAct3FromInvestigation = () => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A3_COMPLETE !== true || current.modules.act3.stage !== 'T07') return;
-    setReviewAct3(true);
-    setDismissedAct3(false);
-    if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
+    runSceneTransition(() => {
+      setReviewAct3(true);
+      setDismissedAct3(false);
+      if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
+    });
   };
   const continueInvestigation = () => {
     const current = stateManager.getState();
@@ -144,13 +220,15 @@ export default function App() {
       return;
     }
     if (current.modules.act4.stage !== 'inactive') {
-      setReviewAct3(false);
-      setDismissedAct4(false);
+      runSceneTransition(() => {
+        setReviewAct3(false);
+        setDismissedAct4(false);
+      });
       return;
     }
     if (current.modules.act3.stage !== 'inactive') {
       if (current.game.flags.FLAG_A3_COMPLETE === true && current.game.flags.FLAG_A3_SITE_EXITED === true) startAct4FromInvestigation();
-      else { setReviewAct3(false); setDismissedAct3(false); }
+      else runSceneTransition(() => { setReviewAct3(false); setDismissedAct3(false); });
       return;
     }
     if (current.game.flags.FLAG_A2_COMPLETE === true) {
@@ -159,13 +237,13 @@ export default function App() {
     }
     const act2StageNow = current.modules.act2Research.stage;
     if (act2StageNow !== 'inactive') {
-      if (isAct2SceneStage(act2StageNow)) setDismissedAct2Stage(null);
+      if (isAct2SceneStage(act2StageNow)) runSceneTransition(() => setDismissedAct2Stage(null));
       else openApp('browser');
       return;
     }
     if (current.game.phase === 'F' && !current.modules.scene.journeyStarted) {
       const firstScene = act1Scenes[0];
-      if (firstScene) stateManager.startJourney(firstScene.id);
+      if (firstScene) runSceneTransition(() => stateManager.startJourney(firstScene.id));
       return;
     }
     const currentProgress = deriveInvestigationProgress(current);
@@ -195,7 +273,7 @@ export default function App() {
     : null);
   const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>调查记录已恢复，并保存到这台设备。</div>;
   if (state.game.flags.FLAG_A1_COMPLETE === true && !secondActStarted) {
-    return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
+    return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
       <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
       {transitionLayer}
@@ -233,17 +311,19 @@ export default function App() {
     if (appId !== 'notepad') { openApp(appId); return; }
     const current = stateManager.getState();
     if (current.modules.scene.currentSceneId !== null || (current.game.phase === 'F' && !current.modules.scene.journeyStarted)) return;
-    const currentAct2Stage = current.modules.act2Research.stage;
-    if (isAct2SceneStage(currentAct2Stage)) setDismissedAct2Stage(currentAct2Stage);
-    if (current.modules.act3.stage !== 'inactive') {
-      setDismissedAct3(true);
-      setReviewAct3(false);
-    }
-    if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
-    stateManager.openApp('notepad');
+    runSceneTransition(() => {
+      const currentAct2Stage = current.modules.act2Research.stage;
+      if (isAct2SceneStage(currentAct2Stage)) setDismissedAct2Stage(currentAct2Stage);
+      if (current.modules.act3.stage !== 'inactive') {
+        setDismissedAct3(true);
+        setReviewAct3(false);
+      }
+      if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
+      stateManager.openApp('notepad');
+    });
   };
   return (
-    <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
+    <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive={sceneOpen} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>
     <div aria-hidden={transitionOpen || showAct4Ending} inert={transitionOpen || showAct4Ending}>
     <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined} onClick={(event) => { const target = event.target as HTMLElement; if (target === event.currentTarget || target.classList.contains('desktop__icons')) setSelectedAppId(null); }}>
@@ -273,29 +353,31 @@ export default function App() {
       })}
       <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={() => stateManager.resetProgress()} time={time} /></div>
     </main>
-    {act1SceneOpen && <Act1SceneExperience state={state} />}
+    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} /></SceneTransitionLayer>}
     {act2SceneStage !== null && !act3Active && (
-      <Act2Experience
-        stage={act2SceneStage}
-        sceneOpen={act2SceneOpen}
-        onDismissScene={() => setDismissedAct2Stage(act2SceneStage)}
-        onResumeScene={() => setDismissedAct2Stage(null)}
-        onEnterAct3={startAct3FromInvestigation}
-        manager={stateManager}
-      />
+      <SceneTransitionLayer key={`${act2SceneStage}-${act2SceneOpen ? 'open' : 'resume'}`}>
+        <Act2Experience
+          stage={act2SceneStage}
+          sceneOpen={act2SceneOpen}
+          onDismissScene={() => runSceneTransition(() => setDismissedAct2Stage(act2SceneStage))}
+          onResumeScene={() => runSceneTransition(() => setDismissedAct2Stage(null))}
+          onEnterAct3={startAct3FromInvestigation}
+          manager={stateManager}
+        />
+      </SceneTransitionLayer>
     )}
     {act3Active && (!act4Active || dismissedAct4) && (state.game.flags.FLAG_A3_COMPLETE !== true || reviewAct3 || (state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07')) && (
       <>
         {act3Open && (
-          <Act3Investigation
+          <SceneTransitionLayer><Act3Investigation
             manager={stateManager}
-            onReturnToDesktop={() => { setDismissedAct3(true); setReviewAct3(false); }}
+            onReturnToDesktop={() => runSceneTransition(() => { setDismissedAct3(true); setReviewAct3(false); })}
             onOpenAct4={startAct4FromInvestigation}
-          />
+          /></SceneTransitionLayer>
         )}
       </>
     )}
-    {act4Open && <Act4Experience manager={stateManager} onExit={() => setDismissedAct4(true)} />}
+    {act4Open && <SceneTransitionLayer><Act4Experience manager={stateManager} onExit={() => runSceneTransition(() => setDismissedAct4(true))} /></SceneTransitionLayer>}
     </div>
     {showAct4Ending && <Act4Ending onReview={() => setShowAct4Ending(false)} onReturnToDesktop={() => { setShowAct4Ending(false); setDismissedAct4(true); }} />}
     <InvestigationProgressDrawer state={state} />

@@ -11,8 +11,8 @@ function ProgressTrigger() {
   return <button type="button" aria-label="打开调查进度" onClick={(event) => progress?.openProgress(event.currentTarget)}>打开调查进度</button>;
 }
 
-function Harness({ state, suppressed, onOpenApp }: { state: AppState; suppressed?: boolean; onOpenApp?: (appId: AppId) => void }) {
-  return <InvestigationProgressProvider state={state} suppressed={suppressed} onOpenApp={onOpenApp}>
+function Harness({ state, suppressed, currentContentActive, onOpenApp, onContinueInvestigation }: { state: AppState; suppressed?: boolean; currentContentActive?: boolean; onOpenApp?: (appId: AppId) => void; onContinueInvestigation?: () => void }) {
+  return <InvestigationProgressProvider state={state} suppressed={suppressed} currentContentActive={currentContentActive} onOpenApp={onOpenApp} onContinueInvestigation={onContinueInvestigation}>
     <ProgressTrigger />
     <InvestigationProgressDrawer state={state} />
   </InvestigationProgressProvider>;
@@ -36,8 +36,8 @@ describe('InvestigationProgressDrawer', () => {
     vi.restoreAllMocks();
   });
 
-  const render = async (state: AppState, options: { suppressed?: boolean; onOpenApp?: (appId: AppId) => void } = {}) => act(async () => root.render(
-    <Harness state={state} suppressed={options.suppressed} onOpenApp={options.onOpenApp} />,
+  const render = async (state: AppState, options: { suppressed?: boolean; currentContentActive?: boolean; onOpenApp?: (appId: AppId) => void; onContinueInvestigation?: () => void } = {}) => act(async () => root.render(
+    <Harness state={state} suppressed={options.suppressed} currentContentActive={options.currentContentActive} onOpenApp={options.onOpenApp} onContinueInvestigation={options.onContinueInvestigation} />,
   ));
 
   it('opens a native dialog with current goals and returns focus without changing game state', async () => {
@@ -99,5 +99,26 @@ describe('InvestigationProgressDrawer', () => {
     expect(onOpenApp).toHaveBeenCalledWith('browser');
     expect(dialog.open).toBe(false);
     expect(document.activeElement).toBe(opener);
+  });
+
+  it('returns to the open scene or reading page without opening an app or changing progress', async () => {
+    const state = createDefaultState();
+    state.game.act = 4;
+    state.modules.act4.stage = 'T05';
+    const before = JSON.stringify(state);
+    const onOpenApp = vi.fn();
+    const onContinueInvestigation = vi.fn();
+    await render(state, { currentContentActive: true, onOpenApp, onContinueInvestigation });
+    const opener = host.querySelector<HTMLButtonElement>('[aria-label="打开调查进度"]')!;
+    await act(async () => opener.click());
+    const dialog = host.querySelector<HTMLDialogElement>('.investigation-progress')!;
+    const action = dialog.querySelector<HTMLButtonElement>('.investigation-progress__open-app')!;
+    expect(action.textContent).toBe('回到当前内容');
+    await act(async () => action.click());
+    expect(dialog.open).toBe(false);
+    expect(document.activeElement).toBe(opener);
+    expect(onOpenApp).not.toHaveBeenCalled();
+    expect(onContinueInvestigation).not.toHaveBeenCalled();
+    expect(JSON.stringify(state)).toBe(before);
   });
 });
