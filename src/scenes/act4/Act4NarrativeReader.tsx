@@ -650,7 +650,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
       : stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。'
         : activeReadingTarget ? '继续读完当前内容；需要行动时，会在这里出现。' : '这一部分已经读完，可以继续。'}
     helpText={stage === 'T03' ? '可以按日期回看，也可以收藏想留意的一条。' : '先看这一段的场景，再读文字。已读内容可以回看；需要做的事仍由你决定。'}
-    actions={t01PageControls && !reviewing && activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1 ? [] : [continueAction]}
+    actions={privateBlogView || (t01PageControls && !reviewing && activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1) ? [] : [continueAction]}
     onExit={onExit}
   >
     <main className={`a4-reader a4-reader--${presentationKind}${privateBlogView ? ' a4-reader--private-blog-open' : ''}`} style={{ '--a4-reader-font-size': `${uiPreferences.readerFontSize}px` } as CSSProperties} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>

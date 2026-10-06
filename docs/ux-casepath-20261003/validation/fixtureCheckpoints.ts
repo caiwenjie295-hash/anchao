@@ -178,6 +178,8 @@ function seedAct4Stage(state: AppState, stage: 'T03' | 'T10'): void {
   state.modules.act4.checkedMailRecipients = ['protagonist', 'xiaoyue'];
   state.modules.act4.viewedWakeMail = stage === 'T10';
   if (stage === 'T10') {
+    state.modules.act4.packageStep = 3;
+    state.modules.act4.broadcastIndex = 6;
     state.modules.act4.completedNarrativeActionIds.push(
       'A4_T04_WAKE_MAIL_OPENED', 'A4_T08_ARCHIVE_OPENED', 'A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED',
     );

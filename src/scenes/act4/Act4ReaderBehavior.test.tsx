@@ -94,6 +94,8 @@ describe('Act 4 reader behavior', () => {
       await act(async () => { viewBlog.click(); });
       delete document.documentElement.dataset.sceneTransition;
       expect(startViewTransition).not.toHaveBeenCalled();
+      expect(host.querySelector('.investigation-shell__operations')).toBeNull();
+      expect(host.querySelector('[data-action-id="A4_T03_VIEW_PRIVATE_BLOG"]')).toBeNull();
 
       const posts = [...host.querySelectorAll<HTMLElement>('.a4-private-blog__post')];
       expect(posts).toHaveLength(14);
