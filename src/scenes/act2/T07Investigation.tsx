@@ -4,6 +4,7 @@ import { InvestigationShell } from '../../components/investigation/Investigation
 import { PhotoViewport } from '../../components/PhotoViewport';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
+import { investigationAudio, readInvestigationAudioPreference, writeInvestigationAudioPreference } from '../../media/investigationAudio';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import '../../act2/t07Finale.css';
@@ -43,17 +44,6 @@ function FrameVisual({ assetId, altText, note, className = '', children, onImage
   );
 }
 
-/** 本地音效挂点：cue.file 指向本地音频后才发声；当前无音频文件，只保留字幕与无声路径。 */
-function playCue(file: string | null): void {
-  if (!file) return;
-  try {
-    const audio = new Audio(file);
-    void audio.play().catch(() => undefined);
-  } catch {
-    // 无可用音频时保持无声路径，不影响收束完成。
-  }
-}
-
 const formatMediaStamp = (timeMs: number): string => {
   const safeTime = Math.max(0, Math.floor(timeMs));
   const seconds = Math.floor(safeTime / 1000);
@@ -80,6 +70,11 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const [selectedFeatureId, setSelectedFeatureId] = useState('');
   const [compareFeedback, setCompareFeedback] = useState('');
   const [cueIndex, setCueIndex] = useState(0);
+  const [ambienceEnabled, setAmbienceEnabled] = useState(false);
+  const [ambiencePreference, setAmbiencePreference] = useState(() => readInvestigationAudioPreference());
+  const [ambienceStatus, setAmbienceStatus] = useState(() => readInvestigationAudioPreference() === true
+    ? '已记住你上次的选择；本次需要点按后才会播放。'
+    : '环境声默认关闭；调查资料和幕末文字都可以无声阅读。');
   const [finaleOpen, setFinaleOpen] = useState(false);
   const photoMaterial = act2T07.materials.find((material) => material.id === act2T07.photoMaterialId)!;
   const videoMaterial = act2T07.materials.find((material) => material.id === video.materialId)!;
@@ -152,13 +147,10 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
 
   useEffect(() => {
     if (!finaleOpen) return;
-    playCue(finale.cues[cueIndex]?.file ?? null);
-  }, [finaleOpen, cueIndex]);
-
-  useEffect(() => {
-    if (!finaleOpen) return;
     finaleRef.current?.querySelector<HTMLElement>('button')?.focus();
   }, [finaleOpen]);
+
+  useEffect(() => () => { investigationAudio.stop(); }, []);
 
   const focusAfterTab = (nextTab: TabId, getTarget: () => HTMLElement | null) => {
     setTab(nextTab);
@@ -173,7 +165,33 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     if (typeof outcomesRef.current?.scrollIntoView === 'function') outcomesRef.current.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
     window.setTimeout(() => tripArticleRef.current?.focus({ preventScroll: true }), 0);
   };
+  const toggleAmbience = () => {
+    if (ambienceEnabled) {
+      investigationAudio.stop();
+      setAmbienceEnabled(false);
+      setAmbiencePreference(false);
+      writeInvestigationAudioPreference(false);
+      setAmbienceStatus('环境声已关闭；文字与字幕仍可继续阅读。');
+      return;
+    }
+    if (!investigationAudio.setEnabled(true)) {
+      setAmbienceStatus('当前浏览器无法播放环境声；调查文字和字幕仍可无声阅读。');
+      return;
+    }
+    setAmbienceEnabled(true);
+    setAmbiencePreference(true);
+    writeInvestigationAudioPreference(true);
+    investigationAudio.play('keyboard');
+    setAmbienceStatus('轻微键盘声、雨声和微风正在播放，可随时关闭。');
+  };
+  const leaveInvestigation = () => {
+    investigationAudio.stop();
+    setAmbienceEnabled(false);
+    onReturnToDesktop?.();
+  };
   const completeAndEnterAct3 = () => {
+    investigationAudio.stop();
+    setAmbienceEnabled(false);
     manager.completeAct2T07Finale();
     setFinaleOpen(false);
     onEnterAct3?.();
@@ -260,7 +278,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     setzoomedShotId(null);
     previousTriggerRef.current?.focus();
   };
-  const reviewMaterials = () => { setFinaleOpen(false); setTab('materials'); };
+  const reviewMaterials = () => { investigationAudio.stop(); setAmbienceEnabled(false); setFinaleOpen(false); setTab('materials'); };
 
   return (
     <InvestigationShell
@@ -273,12 +291,16 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       helpText="按当前步骤继续即可；已读资料仍可回看。视频不必完整播放，只有清晰截图与已选特征匹配后才会记录对照。"
       actions={actions}
       statusMessage={compareFeedback}
-      onExit={() => onReturnToDesktop?.()}
+      onExit={leaveInvestigation}
       onOpenMaterial={(_actionId, materialId) => setTab(materialId === 'photo' ? 'materials' : materialId === 'video' ? 'video' : 'compare')}
     >
     <section className="t07-finale" aria-label="第二幕宣传资料调查" data-asset-id={photoMaterial.imageId}>
       <p className="t07-finale__step-indicator" aria-live="polite">{complete ? `第二幕已收束 · ${currentStepName}` : `当前步骤 · ${Math.min(currentStep, 5)} / 5 · ${currentStepName}`}</p>
       <p className="t07-finale__intro">{act2T07.intro}</p>
+      <div className="t07-finale__ambience" role="group" aria-label="可选环境声">
+        <button type="button" aria-pressed={ambienceEnabled} onClick={toggleAmbience}>{ambienceEnabled ? '关闭环境声' : '开启环境声'}</button>
+        <p aria-live="polite">{ambienceStatus}{ambiencePreference === true && !ambienceEnabled ? '（已记住此偏好，点按后播放）' : ''}</p>
+      </div>
 
       <nav className="t07-finale__tabs" aria-label="调查步骤">
         {tabLabels.map((item) => (
@@ -480,7 +502,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       {complete && <aside className="t07-finale__closing">
         <p>{finale.closingNote}</p>
         <div className="t07-finale__closing-actions">
-          {onEnterAct3 && <button type="button" className="t07-finale__enter-act3" onClick={onEnterAct3}>再次进山，调查启明旧址</button>}
+          {onEnterAct3 && <button type="button" className="t07-finale__enter-act3" onClick={() => { investigationAudio.stop(); setAmbienceEnabled(false); onEnterAct3(); }}>再次进山，调查启明旧址</button>}
           <button type="button" className="t07-finale__ending-replay" onClick={reviewMaterials}>{finale.replayLabel}</button>
         </div>
       </aside>}
@@ -497,7 +519,6 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       })()}
 
       {finaleOpen && <div className="t07-finale__ending" role="dialog" aria-modal="true" aria-label="第二幕收束" ref={finaleRef}>
-        <p className="t07-finale__cue" aria-live="polite">{finale.cues[cueIndex]?.label ?? finale.cues[finale.cues.length - 1].label}</p>
         {finale.lines.map((line, index) => (
           <p key={line} className={`t07-finale__narration${index <= cueIndex ? ' is-shown' : ''}`}>{index <= cueIndex ? line : ''}</p>
         ))}
