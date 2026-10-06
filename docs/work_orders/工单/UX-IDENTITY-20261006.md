@@ -1,6 +1,6 @@
 # UX-IDENTITY-20261006 头像与图标视觉身份补全
 
-> 状态：实现及统一验收完成，主审 APPROVED；合并后更新进度文档；仅主审可更新
+> 状态：功能已合 main，进度文档收尾审查 APPROVED；待最终包校对；仅主审可更新
 > 基线：main `ff96c5034388e32be292f39397c459f7aafe1475`
 > 唯一执行者：一个 gpt-6-luna / max 子代理 `/root/ux_identity`
 > 分支：`agent/UX-IDENTITY-20261006-icons`
