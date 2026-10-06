@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../core/defaultState';
+import { act4NarrativeSections } from './narrative/act4Narrative';
 import { deriveInvestigationProgress, getDesktopTaskPresentation } from './investigationProgressData';
 
 const qimingState = () => {
@@ -273,11 +274,18 @@ describe('investigation progress display model', () => {
     state.game.flags.FLAG_A4_COMPLETE = true;
     state.modules.act2Research.stage = 'finale';
     state.modules.act4.stage = 'T10';
+    state.modules.act4.completedNarrativeSectionIds = act4NarrativeSections.map((section) => section.id);
     const progress = deriveInvestigationProgress(state);
+    const desktop = getDesktopTaskPresentation(state);
 
     expect(progress.currentObjective).toBe('第四幕已经完成。');
     expect(progress.nextAction).toContain('回顾已读篇章');
-    expect(getDesktopTaskPresentation(state).nextAction).toContain('回顾已读篇章');
+    expect(desktop.nextAction).toContain('回顾已读篇章');
+    expect(progress.route.map((node) => node.id)).toEqual(act4NarrativeSections.map((section) => section.id));
+    expect(desktop.completedCount).toBe(act4NarrativeSections.length);
+    expect(desktop.totalCount).toBe(act4NarrativeSections.length);
+    expect(desktop.steps).toEqual([]);
+    expect(desktop.actionAppId).toBeUndefined();
   });
 
   it('does not mutate the supplied state while deriving status and known facts', () => {
