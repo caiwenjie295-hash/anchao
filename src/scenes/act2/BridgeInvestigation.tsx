@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { EvidenceImage } from '../../components/EvidenceImage';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
-import type { AppState, HeibumuNamePart } from '../../core/types';
+import type { HeibumuNamePart } from '../../core/types';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct2BridgeSnapshot, selectAct2BridgeSnapshot } from '../../core/store/selectors';
 import { ACT2_BRIDGE_ELDER_TARGETS, bridgeRectToPercentStyle } from '../../data/act2BridgePresentation';
 import {
   bridgeAudio,
   bridgeElders,
   bridgeEvidence,
-  bridgeFlagIds,
-  bridgeNoteIds,
   bridgePuzzle,
   bridgeResolution,
   bridgeScene,
@@ -28,7 +28,7 @@ function EvidenceSlot({ assetId, caption }: { assetId: string; caption: string }
 
 export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop }: { manager?: StateManager; onReturnDesktop?: () => void } = {}) {
   const manager = injectedManager ?? defaultManager;
-  const state: AppState = useSyncExternalStore(manager.subscribe, manager.getState);
+  const state = useAppSelector(manager, selectAct2BridgeSnapshot, equalAct2BridgeSnapshot);
   const bridge = state.modules.act2Research.bridge;
   const flags = state.game.flags;
   const isBridgeStage = state.modules.act2Research.stage === 'bridge';
@@ -46,14 +46,9 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   const phraseRef = useRef<HTMLParagraphElement>(null);
   const responseWasAvailable = useRef(heard);
 
-  const talkRecord = useRef(false);
   useEffect(() => {
-    if (!heard || talkRecord.current) return;
-    talkRecord.current = true;
-    if (manager.getState().game.flags[bridgeFlagIds.evidenceShown] !== true) manager.setFlag(bridgeFlagIds.evidenceShown, true);
-    if (manager.getState().game.flags[bridgeFlagIds.audioHeard] !== true) manager.setFlag(bridgeFlagIds.audioHeard, true);
-    if (!manager.getState().modules.notepad.autoEntryIds.includes(bridgeNoteIds.phraseHeard)) manager.addNotepadAutoEntry(bridgeNoteIds.phraseHeard);
-  }, [heard, manager]);
+    manager.reconcileAct2BridgeProgress();
+  }, [heard, solved, manager]);
 
   useEffect(() => {
     if (heard && !responseWasAvailable.current) {
@@ -63,14 +58,6 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
     }
     responseWasAvailable.current = heard;
   }, [heard]);
-
-  const solveRecord = useRef(false);
-  useEffect(() => {
-    if (!solved || solveRecord.current) return;
-    solveRecord.current = true;
-    if (manager.getState().game.flags[bridgeResolution.flagId] !== true) manager.setFlag(bridgeResolution.flagId, true);
-    if (!manager.getState().modules.notepad.autoEntryIds.includes(bridgeResolution.noteId)) manager.addNotepadAutoEntry(bridgeResolution.noteId);
-  }, [solved, manager]);
 
   if (!isBridgeStage) return null;
 

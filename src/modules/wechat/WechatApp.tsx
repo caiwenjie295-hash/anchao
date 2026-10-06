@@ -1,9 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { EvidenceImage } from '../../components/EvidenceImage';
 import { SpriteIcon } from '../../components/SpriteIcon';
 import { eventBus, type EventBus } from '../../core/eventBus';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalWechatSnapshot, selectWechatSnapshot } from '../../core/store/selectors';
 import {
   MOM_CONTACT_ID,
   MOM_TRIGGERED_FLAG,
@@ -71,7 +73,7 @@ function MessageBubble({ message }: { message: WechatMessage }) {
 }
 
 export function WechatApp({ manager = stateManager, bus = eventBus }: { manager?: StateManager; bus?: EventBus }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectWechatSnapshot, equalWechatSnapshot);
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [viewingHistory, setViewingHistory] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);

@@ -1,3 +1,5 @@
+import { resolveBrowserStorage, type BrowserStoragePort } from './persistence/browserStorage';
+
 export const UI_PREFERENCES_KEY = 'anchao.ui.v1';
 
 export type ReaderFontSize = 18 | 20 | 22;
@@ -18,15 +20,6 @@ const DEFAULT_PREFERENCES: UiPreferences = { readerFontSize: 18, act4Reading: {}
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const validFontSizes: ReaderFontSize[] = [18, 20, 22];
 const validAct4SpaceKey = /^T(?:0[1-9]|10):(current|review)$/;
-
-function resolveStorage(storage?: Storage): Storage | undefined {
-  if (storage) return storage;
-  try {
-    return typeof window === 'undefined' ? undefined : window.localStorage;
-  } catch {
-    return undefined;
-  }
-}
 
 export function sanitizeUiPreferences(candidate: unknown): UiPreferences {
   if (!isRecord(candidate)) return { ...DEFAULT_PREFERENCES, act4Reading: {} };
@@ -54,9 +47,9 @@ export function sanitizeUiPreferences(candidate: unknown): UiPreferences {
   };
 }
 
-export function readUiPreferences(storage?: Storage): UiPreferences {
+export function readUiPreferences(storage?: BrowserStoragePort): UiPreferences {
   try {
-    const target = resolveStorage(storage);
+    const target = resolveBrowserStorage(storage);
     const saved = target?.getItem(UI_PREFERENCES_KEY);
     return saved ? sanitizeUiPreferences(JSON.parse(saved)) : { ...DEFAULT_PREFERENCES, act4Reading: {} };
   } catch {
@@ -64,9 +57,9 @@ export function readUiPreferences(storage?: Storage): UiPreferences {
   }
 }
 
-export function writeUiPreferences(preferences: unknown, storage?: Storage): boolean {
+export function writeUiPreferences(preferences: unknown, storage?: BrowserStoragePort): boolean {
   try {
-    const target = resolveStorage(storage);
+    const target = resolveBrowserStorage(storage);
     if (!target) return false;
     target.setItem(UI_PREFERENCES_KEY, JSON.stringify(sanitizeUiPreferences(preferences)));
     return true;

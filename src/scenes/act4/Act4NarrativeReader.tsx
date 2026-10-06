@@ -1,6 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
+import { memo, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct4ReaderSnapshot, selectAct4ReaderSnapshot } from '../../core/store/selectors';
 import { act4NarrativeSections, act4NarrativeExplanations, act4NarrativeEnding, type Act4NarrativeBlock } from '../../data/narrative/act4Narrative';
 import { act4OldMails } from '../../data/act4/mail';
 import { assetLoader } from '../../core/assetLoader';
@@ -161,9 +163,10 @@ const perspectiveLabel = (perspective: 'investigator' | 'wangao') => perspective
   ? '王澳当时的亲历'
   : '主角与小月的调查';
 
-export function Act4NarrativeReader({ manager = stateManager, onExit }: { manager?: StateManager; onExit: () => void }) {
-  const whole = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
-  const state = whole.modules.act4;
+function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?: StateManager; onExit: () => void }) {
+  const selectedState = useAppSelector(manager, selectAct4ReaderSnapshot, equalAct4ReaderSnapshot);
+  const state = selectedState.act4;
+  const isComplete = selectedState.complete;
   const currentStage = state.stage;
   const [reviewStage, setReviewStage] = useState<ActiveAct4NarrativeStage | null>(null);
   const [password, setPassword] = useState('');
@@ -313,8 +316,8 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     };
   }, [zoomOpen]);
   useEffect(() => {
-    if (state.stage === 'T10' && state.completedNarrativeSectionIds.includes('A4_READ_T10') && whole.game.flags.FLAG_A4_COMPLETE === true) setEndingRecapExpanded(true);
-  }, [state.completedNarrativeSectionIds, state.stage, whole.game.flags.FLAG_A4_COMPLETE]);
+    if (state.stage === 'T10' && state.completedNarrativeSectionIds.includes('A4_READ_T10') && isComplete) setEndingRecapExpanded(true);
+  }, [state.completedNarrativeSectionIds, state.stage, isComplete]);
   if (!section) return null;
   const presentationKind = act4PresentationKind(stage);
   const isWangaoMemory = ['T05', 'T06', 'T07', 'T08', 'T09'].includes(stage);
@@ -335,7 +338,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     : stage === 'T05' ? 0 : undefined;
   const actionCompleted = act4NarrativeActionsSatisfied(stage, actions);
   const sectionCompleted = state.completedNarrativeSectionIds.includes(section.id);
-  const finalCompleted = stage === 'T10' && sectionCompleted && whole.game.flags.FLAG_A4_COMPLETE === true;
+  const finalCompleted = stage === 'T10' && sectionCompleted && isComplete;
   const visibleBlocks = section.blocks.filter((block) => !block.revealAfterActionId || hasAction(block.revealAfterActionId));
   const needsCover = (kind: string) => (stage === 'T01' || isWangaoMemory || stage === 'T10') && kind === 'novel-excerpt';
   const readingBounds = visibleBlocks.flatMap((block) => {
@@ -869,3 +872,5 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     </main>
   </InvestigationShell>;
 }
+
+export const Act4NarrativeReader = memo(Act4NarrativeReaderView);

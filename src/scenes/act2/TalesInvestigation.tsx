@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct2TalesSnapshot, selectAct2TalesSnapshot } from '../../core/store/selectors';
 import { ACT2_SHELF_ROW_RECTS } from '../../data/act2Presentation';
 import { librarySceneCopy } from '../../data/act2LibraryData';
 import { act2Tales, taleById, taleEvidenceById, tales } from '../../data/act2TalesData';
@@ -16,8 +18,8 @@ type InferenceId = 'accompanied-change' | 'recovery-or-imitation' | 'complete-tr
 
 /** T04: the three marked old records stay in the same reading room and volume as the gazette pages. */
 export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, shelfImageSrc }: TalesInvestigationProps) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
-  const progress = state.modules.act2Research.tales;
+  const state = useAppSelector(manager, selectAct2TalesSnapshot, equalAct2TalesSnapshot);
+  const progress = state.tales;
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [status, setStatus] = useState('');
   const [pendingEvidenceFocusTaleId, setPendingEvidenceFocusTaleId] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
   const hasJudgment = progress.inferenceAcknowledged;
   const inferenceReady = selectedSourceCount >= 2 && progress.selectedInferenceId !== null;
 
-  if (state.modules.act2Research.stage !== 'tales') return null;
+  if (state.stage !== 'tales') return null;
 
   const sceneImage = shelfImageSrc ?? assetLoader.get(librarySceneCopy.placeholderAssetId)?.src;
   const shelfEntries = tales.map((tale, index) => ({ id: tale.id, label: tale.title, rect: ACT2_SHELF_ROW_RECTS[index] }));

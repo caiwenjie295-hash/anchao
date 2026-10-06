@@ -1,7 +1,9 @@
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useMemo, useState } from 'react';
 import { VisualAvatar } from '../../components/VisualAvatar';
 import { VisualIcon } from '../../components/VisualIcon';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { selectMail } from '../../core/store/selectors';
 import {
   attachmentById,
   getFolderCount,
@@ -91,13 +93,13 @@ function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starr
 }
 
 export function MailApp({ manager = stateManager }: { manager?: StateManager }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const mailState = useAppSelector(manager, selectMail);
   const [folderKey, setFolderKey] = useState<MailFolderKey>('inbox');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMailId, setSelectedMailId] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
   const [foldersOpen, setFoldersOpen] = useState(false);
-  const groups = useMemo(() => getMailGroups(folderKey, state.modules.mail, searchTerm), [folderKey, searchTerm, state.modules.mail]);
+  const groups = useMemo(() => getMailGroups(folderKey, mailState, searchTerm), [folderKey, searchTerm, mailState]);
   const selectedMail = selectedMailId ? mailById.get(selectedMailId) : undefined;
 
   const openMail = (mailId: string) => {
@@ -130,17 +132,17 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
       </header>
       <nav id="mail-folders" className={`mail-folders${foldersOpen ? ' mail-folders--open' : ''}`} aria-label="邮件文件夹">
         <div className="mail-folders__account"><VisualAvatar className="mail-account-avatar" {...mailAvatarForSender('林予')} /><span><strong>林予</strong><small>lin.yu@example.test</small></span></div>
-        {mailFolders.map((folder) => <button type="button" key={folder.id} className={folderKey === folder.folderKey ? 'mail-folder--active' : ''} onClick={() => chooseFolder(folder.folderKey)} aria-current={folderKey === folder.folderKey ? 'page' : undefined}><span>{folder.label}</span><small>{getFolderCount(folder.folderKey, state.modules.mail)}</small></button>)}
+        {mailFolders.map((folder) => <button type="button" key={folder.id} className={folderKey === folder.folderKey ? 'mail-folder--active' : ''} onClick={() => chooseFolder(folder.folderKey)} aria-current={folderKey === folder.folderKey ? 'page' : undefined}><span>{folder.label}</span><small>{getFolderCount(folder.folderKey, mailState)}</small></button>)}
       </nav>
       <section className="mail-list" aria-label="邮件列表">
         <header className="mail-list__header"><h2>{mailFolders.find((folder) => folder.folderKey === folderKey)?.label}</h2><span>{groups.reduce((total, group) => total + group.mails.length, 0)} 封</span></header>
         {notice && <p className="mail-status" role="status">{notice}</p>}
         <div className="mail-list__scroll">
-          {groups.length > 0 ? groups.map((group) => <section className="mail-group" key={group.id}><h3>{group.label}</h3>{group.mails.map((mail) => <MailRow key={mail.id} mail={mail} selected={selectedMailId === mail.id} read={isMailRead(mail, state.modules.mail)} starred={isMailStarred(mail, state.modules.mail)} onOpen={() => openMail(mail.id)} onToggleStar={() => toggleStar(mail.id)} />)}</section>) : <p className="mail-empty">没有找到匹配的邮件</p>}
+          {groups.length > 0 ? groups.map((group) => <section className="mail-group" key={group.id}><h3>{group.label}</h3>{group.mails.map((mail) => <MailRow key={mail.id} mail={mail} selected={selectedMailId === mail.id} read={isMailRead(mail, mailState)} starred={isMailStarred(mail, mailState)} onOpen={() => openMail(mail.id)} onToggleStar={() => toggleStar(mail.id)} />)}</section>) : <p className="mail-empty">没有找到匹配的邮件</p>}
         </div>
       </section>
       <section className="mail-reading-pane" aria-label="阅读面板">
-        {selectedMail ? <MailDetail mail={selectedMail} starred={isMailStarred(selectedMail, state.modules.mail)} onBack={() => setSelectedMailId(null)} onToggleStar={() => toggleStar(selectedMail.id)} /> : <div className="mail-empty mail-empty--reading"><span aria-hidden="true"><VisualIcon name="mail" size={30} /></span><p>选择一封邮件开始阅读</p></div>}
+        {selectedMail ? <MailDetail mail={selectedMail} starred={isMailStarred(selectedMail, mailState)} onBack={() => setSelectedMailId(null)} onToggleStar={() => toggleStar(selectedMail.id)} /> : <div className="mail-empty mail-empty--reading"><span aria-hidden="true"><VisualIcon name="mail" size={30} /></span><p>选择一封邮件开始阅读</p></div>}
       </section>
     </section>
   );

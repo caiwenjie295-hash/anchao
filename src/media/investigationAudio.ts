@@ -1,3 +1,5 @@
+import { resolveBrowserStorage } from '../core/persistence/browserStorage';
+
 type AudioCue = 'keyboard';
 
 interface AudioSession {
@@ -161,13 +163,13 @@ export function stopInvestigationAudio(): void {
 /** Only a UI preference; it is deliberately separate from story state and saved-game data. */
 export function readInvestigationAudioPreference(): boolean | null {
   try {
-    const value = globalThis.localStorage?.getItem(PREFERENCE_KEY);
+    const value = resolveBrowserStorage()?.getItem(PREFERENCE_KEY);
     return value === null || value === undefined ? null : value === 'true';
   } catch { return null; }
 }
 
 export function writeInvestigationAudioPreference(enabled: boolean): void {
-  try { globalThis.localStorage?.setItem(PREFERENCE_KEY, String(enabled)); } catch { /* audio still works without persisted UI preference */ }
+  try { resolveBrowserStorage()?.setItem(PREFERENCE_KEY, String(enabled)); } catch { /* audio still works without persisted UI preference */ }
 }
 
 export const investigationAudio = {

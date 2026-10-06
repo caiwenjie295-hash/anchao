@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { VisualIcon } from '../../components/VisualIcon';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalBrowserSnapshot, selectBrowserSnapshot, type BrowserSnapshot } from '../../core/store/selectors';
 import { browserPageById, findSearchQuery, getSuggestions, isAct2T06Query, isAct2T06Record, isBrowserPageVisible } from '../../data/browserData';
 import { siteIdentity } from './browserPresentation';
 import { BrowserPageView } from './BrowserPageView';
@@ -17,7 +19,7 @@ const viewLabel = (view: View): string => view.kind === 'home' ? '新标签页' 
 const searchView = (query: string): View => ({ kind: 'results', query: findSearchQuery(query)?.query ?? query.trim() });
 
 export function BrowserApp({ manager = stateManager }: { manager?: StateManager }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectBrowserSnapshot, equalBrowserSnapshot);
   const [tabs, setTabs] = useState<Tab[]>([{ id: 1, view: { kind: 'home' }, stack: [{ kind: 'home' }], stackIndex: 0 }]);
   const [activeTabId, setActiveTabId] = useState(1);
   // null means the address follows the active page; '' is an intentional empty edit.
@@ -185,7 +187,7 @@ const CASE_PAGES = {
 } as const;
 
 function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpenPage, onContinueToFinale }: {
-  state: ReturnType<StateManager['getState']>;
+  state: BrowserSnapshot;
   manager: StateManager;
   focusedCase: QimingCaseId;
   onFocusCase: (caseId: QimingCaseId) => void;

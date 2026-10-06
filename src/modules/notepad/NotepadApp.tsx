@@ -1,6 +1,8 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import { useInvestigationProgress } from '../../components/InvestigationProgressContext';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalNotepadSnapshot, selectNotepadSnapshot } from '../../core/store/selectors';
 import { getAutoEntries } from '../../data/noteData';
 import { SettingsPanel } from '../settings/SettingsPanel';
 import './notepad.css';
@@ -8,7 +10,7 @@ import './notepad.css';
 type HubView = 'current' | 'records' | 'notes' | 'settings';
 
 export function NotepadApp({ manager = stateManager }: { manager?: StateManager }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectNotepadSnapshot, equalNotepadSnapshot);
   const entries = getAutoEntries(state.modules.notepad);
   const progressContext = useInvestigationProgress();
   const [view, setView] = useState<HubView>('current');
