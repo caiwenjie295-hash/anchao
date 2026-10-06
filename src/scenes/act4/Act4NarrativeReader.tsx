@@ -104,7 +104,7 @@ function transitionAct4View(update: () => void): void {
     update();
     return;
   }
-  if (typeof transitionDocument.startViewTransition !== 'function') {
+  if (window.location.protocol === 'file:' || typeof transitionDocument.startViewTransition !== 'function') {
     update();
     animateAct4Arrival();
     return;
@@ -193,6 +193,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
   const section = act4NarrativeSections.find((item) => item.stage === (reviewStage ?? currentStage));
   const reviewing = section !== undefined && section.stage !== currentStage;
   const stage = section?.stage ?? 'T01';
+  const privateBlogView = stage === 'T03' && privateBlogOpen;
   const readingSpaceKey = act4ReadingSpaceKey(stage, reviewing ? 'review' : 'current') ?? `${stage}:current`;
   const storedReadingPosition = uiPreferences.act4Reading[readingSpaceKey];
   const storedPageIndex = (block: Act4NarrativeBlock, pages: readonly Act4TextSegment[]) => {
@@ -643,7 +644,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     ariaLabel="第四幕故事阅读"
     actLabel="第四幕 · 暗潮"
     locationLabel={displayTitle}
-    className="investigation-shell--reading"
+    className={`investigation-shell--reading${privateBlogView ? ' investigation-shell--reading-blog' : ''}`}
     objective={stage === 'T03'
       ? privateBlogOpen ? '浏览王澳按日期留下的私人动态；读到末尾后可以继续。' : '查看登录后的王澳私人动态。'
       : stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。'
@@ -652,7 +653,7 @@ export function Act4NarrativeReader({ manager = stateManager, onExit }: { manage
     actions={t01PageControls && !reviewing && activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1 ? [] : [continueAction]}
     onExit={onExit}
   >
-    <main className={`a4-reader a4-reader--${presentationKind}`} style={{ '--a4-reader-font-size': `${uiPreferences.readerFontSize}px` } as CSSProperties} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>
+    <main className={`a4-reader a4-reader--${presentationKind}${privateBlogView ? ' a4-reader--private-blog-open' : ''}`} style={{ '--a4-reader-font-size': `${uiPreferences.readerFontSize}px` } as CSSProperties} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>
       <article className="a4-reader__story" aria-label={`${displayTitle}故事`}>
         <header className="a4-reader__heading">
           <h2 className="sr-only">{displayTitle}</h2>

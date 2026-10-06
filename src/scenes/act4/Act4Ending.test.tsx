@@ -27,6 +27,7 @@ describe('Act4Ending', () => {
     vi.useFakeTimers();
     await act(async () => { root.render(<Act4Ending onReview={() => {}} onReturnToDesktop={() => {}} />); });
     const skip = host.querySelector<HTMLButtonElement>('.act4-ending__skip')!;
+    expect(skip.textContent).toBe('立即显示全部');
     expect(document.activeElement).toBe(skip);
     expect(host.querySelector('h1')).toBeNull();
     expect(host.querySelector('.act4-ending__credits')).toBeNull();
@@ -41,6 +42,7 @@ describe('Act4Ending', () => {
     expect(host.querySelector('.act4-ending__actions')).toBeNull();
 
     await act(async () => { skip.click(); });
+    expect(skip.textContent).toBe('前往入口');
     expect(host.querySelectorAll('.act4-ending__actions button')).toHaveLength(2);
     expect(document.activeElement).toBe(host.querySelector('.act4-ending__actions button'));
   });

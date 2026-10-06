@@ -1,6 +1,6 @@
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { clearAct4ReadingPositions, setAct4ReadingPosition } from '../../core/uiPreferences';
@@ -79,15 +79,25 @@ describe('Act 4 reader behavior', () => {
     let { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
     const source = act4NarrativeSections.find((item) => item.stage === 'T03')!.blocks[0].paragraphs;
     const expectedPosts = act4PrivateBlogPosts(source);
+    const priorTransitionDescriptor = Object.getOwnPropertyDescriptor(document, 'startViewTransition');
+    const startViewTransition = vi.fn((commit: () => void) => {
+      commit();
+      throw new Error('simulated view-transition failure after the update committed');
+    });
+    Object.defineProperty(document, 'startViewTransition', { configurable: true, value: startViewTransition });
 
     try {
       expect(host.querySelector('.a4-private-blog-gateway__source')?.textContent).toBe('微博：');
       const viewBlog = host.querySelector<HTMLButtonElement>('[data-action-id="A4_T03_VIEW_PRIVATE_BLOG"]')!;
       expect(viewBlog.textContent).toBe('查看动态');
+      document.documentElement.dataset.sceneTransition = 'active';
       await act(async () => { viewBlog.click(); });
+      delete document.documentElement.dataset.sceneTransition;
+      expect(startViewTransition).not.toHaveBeenCalled();
 
       const posts = [...host.querySelectorAll<HTMLElement>('.a4-private-blog__post')];
       expect(posts).toHaveLength(14);
+      expect(host.querySelector('.a4-reader--private-blog-open')).not.toBeNull();
       expect(posts.map((post) => [post.querySelector('time')?.textContent, post.querySelector('.a4-private-blog__post-text')?.textContent]))
         .toEqual(expectedPosts.map((post) => [post.dateText, post.text]));
       expect(posts.some((post) => post.textContent?.includes(source.at(-1)!))).toBe(false);
@@ -115,14 +125,25 @@ describe('Act 4 reader behavior', () => {
       expect(host.querySelector('[data-reading-view="context"]')).not.toBeNull();
       await act(async () => { host.querySelector<HTMLButtonElement>('[data-action-id="A4_T03_VIEW_PRIVATE_BLOG"]')!.click(); });
       expect(host.querySelector('[data-reading-view="blog"]')).not.toBeNull();
+      expect(startViewTransition).toHaveBeenCalledTimes(1);
+      expect(document.documentElement.dataset.a4ReaderTransition).toBeUndefined();
       expect(host.querySelector('.a4-private-blog__post-actions button')?.getAttribute('aria-pressed')).toBe('true');
+      const advanceNarrative = vi.spyOn(manager, 'advanceAct4NarrativeSection');
       await act(async () => { host.querySelector<HTMLButtonElement>('.a4-private-blog__closing button')!.click(); });
 
       expect(manager.getState().modules.act4.stage).toBe('T04');
       expect(host.querySelector('.a4-reader')?.getAttribute('data-reading-stage')).toBe('T04');
+      expect(host.querySelector('.a4-reader--private-blog-open')).toBeNull();
+      expect(startViewTransition).toHaveBeenCalledTimes(2);
+      expect(advanceNarrative).toHaveBeenCalledTimes(1);
+      expect(document.documentElement.dataset.a4ReaderTransition).toBeUndefined();
     } finally {
       await act(async () => root.unmount());
       host.remove();
+      delete document.documentElement.dataset.sceneTransition;
+      delete document.documentElement.dataset.a4ReaderTransition;
+      if (priorTransitionDescriptor) Object.defineProperty(document, 'startViewTransition', priorTransitionDescriptor);
+      else Reflect.deleteProperty(document, 'startViewTransition');
     }
   });
 });

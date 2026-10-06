@@ -434,8 +434,11 @@ async function advanceAct2() {
   await click('details.act2-tales__index > summary');
   for (const title of ['石工补指', '书生遗事']) {
     await textButton(title, '.act2-tales__record');
-    await click('.act2-tales__evidence > summary');
+    const supportingPassage = query('.act2-tales__evidence blockquote');
+    assert.ok(supportingPassage.textContent.trim().length > 0, `${title} should show its original supporting passage before selection`);
+    assert.match(supportingPassage.textContent, title === '石工补指' ? /二指渐可屈伸/ : /六儿竟能读出废书数行/);
     await click('.act2-tales__evidence button');
+    assert.equal(query('.act2-tales__evidence button').getAttribute('aria-pressed'), 'true', `${title} supporting passage should be selected`);
   }
   await click('details.act2-tales__comparison > summary');
   const comparisonRows = [...query('.act2-tales__comparison tbody').querySelectorAll('tr')];
@@ -498,12 +501,14 @@ async function advanceAct2() {
   assert.equal(state().modules.act2Research.school.symbolMatchConfirmed, true);
   assert.notEqual(state().game.flags.FLAG_A2_SS_MATCH_CONFIRMED, true);
 
-  const schoolMaterials = query('details.t05-school__timeline-disclosure');
-  assert.equal(schoolMaterials.open, false, 'school materials are initially collapsed');
-  await click('details.t05-school__timeline-disclosure > summary');
-  assert.equal(schoolMaterials.open, true, 'player explicitly expands school materials before selecting support');
+  const schoolMaterials = query('.t05-school__timeline');
+  assert.match(schoolMaterials.querySelector('h2').textContent, /学校记录/);
+  assert.match(schoolMaterials.textContent, /班主任的回忆/);
+  assert.match(schoolMaterials.textContent, /历次成绩记录/);
   await textButton('班主任的回忆', '.t05-school__evidence-options button');
+  assert.equal([...schoolMaterials.querySelectorAll('button')].find((button) => button.textContent.includes('班主任的回忆')).getAttribute('aria-pressed'), 'true');
   await textButton('历次成绩记录', '.t05-school__evidence-options button');
+  assert.equal([...schoolMaterials.querySelectorAll('button')].find((button) => button.textContent.includes('历次成绩记录')).getAttribute('aria-pressed'), 'true');
   await textButton('休学后他的表现和成绩都有明显变化', '.t05-school__inferences button');
   assert.equal(query('[data-action-id="A2_T05_CONFIRM_TIMELINE"]').getAttribute('data-action-state'), 'ready');
   await click('[data-action-id="A2_T05_CONFIRM_TIMELINE"]');
@@ -829,6 +834,18 @@ async function investigateAct4() {
   assert.ok(query('[data-block-id="T10_FINAL_MAIL"]'));
   await continueSection('T10');
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);
+  assert.ok(query('.act4-ending'), 'completing T10 opens the ending layer');
+  assert.equal(query('.a4-reader').closest('[inert]') !== null, true, 'the reader stays inactive behind the ending layer');
+  const skipEnding = query('.act4-ending__skip');
+  assert.ok(['立即显示全部', '前往入口'].includes(skipEnding.textContent.trim()));
+  await click('.act4-ending__skip');
+  assert.equal(query('.act4-ending h1').textContent, '故事已结束');
+  assert.deepEqual([...query('.act4-ending__credits').querySelectorAll('p')].map((item) => item.textContent.trim()), [
+    '小说原文撰写 VeinJay_C', '项目策划 VeinJay_C', '游戏制作 VeinJay_C',
+  ]);
+  assert.deepEqual([...query('.act4-ending__actions').querySelectorAll('button')].map((button) => button.textContent.trim()), ['回顾故事', '返回桌面']);
+  await textButton('回顾故事', '.act4-ending__actions button');
+  assert.equal(document().querySelector('.act4-ending'), null, 'choosing review dismisses the ending layer');
   assert.equal(query('.a4-reader__final-recap').open, false, 'the recap stays behind its explicit disclosure');
   await mount(save());
   assert.equal(state().game.flags.FLAG_A4_COMPLETE, true);

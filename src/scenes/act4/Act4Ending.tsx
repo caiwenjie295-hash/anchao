@@ -13,6 +13,7 @@ function transitionEndingExit(update: () => void): void {
   };
   if (
     prefersReducedMotion()
+    || window.location.protocol === 'file:'
     || document.documentElement.dataset.sceneTransition === 'active'
     || document.documentElement.dataset.a4ReaderTransition === 'active'
     || typeof transitionDocument.startViewTransition !== 'function'
@@ -106,7 +107,7 @@ export function Act4Ending({ onReview, onReturnToDesktop }: { onReview: () => vo
 
   return <div ref={dialogRef} className="act4-ending" role="dialog" aria-modal="true" aria-label="第四幕落幕" onKeyDown={keepFocusInside} aria-busy={revealStage < 3}>
     <button ref={skipRef} type="button" className="act4-ending__skip" onClick={revealStage < 3 ? showAll : () => actionRef.current?.focus()}>
-      {revealStage < 3 ? '立即显示入口' : '前往入口'}
+      {revealStage < 3 ? '立即显示全部' : '前往入口'}
     </button>
     <div className="act4-ending__card" aria-live="polite" aria-atomic="false">
       {revealStage >= 1 && <h1 id="act4-ending-title">故事已结束</h1>}

@@ -386,12 +386,24 @@
 .a4-reader__boundary { display: none; }
 .a4-reader__past-block .a4-reader__segment { padding-block: 8px; border-bottom: 1px solid #d1d4d7; }
 .a4-reader--first-person .a4-reader__paragraphs { max-width: 36em; margin-inline: auto; font-size: var(--a4-reader-font-size, 18px); line-height: 1.8; }
+.a4-reader--private-blog-open { grid-template-columns: minmax(0, 1fr); }
+.a4-reader--private-blog-open .a4-reader__story { max-width: none; }
+.a4-reader--private-blog-open .a4-reader__heading { margin-bottom: 8px; padding-bottom: 0; border: 0; }
+.a4-reader--private-blog-open .a4-reader__perspective { display: none; }
+.a4-reader--private-blog-open .a4-reader__index { margin-bottom: 8px; padding: 5px 10px; }
+.a4-reader--private-blog-open .a4-reader__index summary { min-height: 32px; }
+.a4-reader--private-blog-open .a4-reader__block-stack { margin: 8px 0; }
+.a4-reader--private-blog-open .a4-reader__block--private-blog { padding: 0; border: 0; }
+.investigation-shell--reading-blog .investigation-shell__header { min-height: 46px; justify-content: flex-end; padding: 3px 10px; }
+.investigation-shell--reading-blog .investigation-shell__place { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.investigation-shell--reading-blog .investigation-shell__goal { padding-top: 2px; padding-bottom: 2px; }
+.investigation-shell--reading-blog .investigation-shell__goal-details > summary { min-height: 30px; }
 .a4-reader--transition-arrival { animation: act4-reader-arrival 240ms ease-out both; }
 @keyframes act4-reader-arrival { from { opacity: 0; } to { opacity: 1; } }
 @keyframes act4-reader-fade-out { to { opacity: 0; } }
 @supports (view-transition-name: a4-reader) {
-  .a4-reader { view-transition-name: a4-reader; }
-  .act4-ending { view-transition-name: act4-ending; }
+  html[data-a4-reader-transition="active"] .a4-reader { view-transition-name: a4-reader; }
+  html[data-a4-reader-transition="active"] .act4-ending { view-transition-name: act4-ending; }
   html[data-a4-reader-transition="active"]::view-transition-old(root),
   html[data-a4-reader-transition="active"]::view-transition-new(root) { animation: none; }
   ::view-transition-group(a4-reader) { animation-duration: 240ms; }
