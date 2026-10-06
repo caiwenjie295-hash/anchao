@@ -1,4 +1,6 @@
 import { useMemo, useState, useSyncExternalStore } from 'react';
+import { VisualAvatar } from '../../components/VisualAvatar';
+import { VisualIcon } from '../../components/VisualIcon';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import {
   attachmentById,
@@ -11,6 +13,8 @@ import {
   type Mail,
   type MailFolderKey,
 } from '../../data/mailData';
+import { mailAvatarForSender } from '../../data/visualIdentityData';
+import './mailIdentity.css';
 
 const rowDateLabel = (timestamp: string): string => new Intl.DateTimeFormat('zh-CN', {
   year: 'numeric', month: '2-digit', day: '2-digit',
@@ -30,7 +34,7 @@ function StarButton({ active, onClick, label }: { active: boolean; onClick: () =
       aria-pressed={active}
       title={label}
     >
-      ★
+      <VisualIcon name={active ? 'star-filled' : 'star'} size={16} />
     </button>
   );
 }
@@ -64,7 +68,7 @@ function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starr
       </header>
       <div className="mail-detail__subject-row"><h2>{mail.subject}</h2></div>
       <div className="mail-detail__sender">
-        <span className="mail-avatar" aria-hidden="true">{mail.fromName.slice(0, 1)}</span>
+        <VisualAvatar className="mail-avatar" {...mailAvatarForSender(mail.fromName)} />
         <div><strong>{mail.fromName}</strong><span>&lt;{mail.fromAddress}&gt;</span><small>收件人：{mail.toAddresses.join('，')}</small></div>
         <time dateTime={mail.sentAt}>{fullDateLabel(mail.sentAt)}</time>
       </div>
@@ -78,7 +82,7 @@ function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starr
             const kind = attachment.mimeType === 'application/pdf' ? 'PDF 文件'
               : attachment.mimeType === 'application/zip' ? '压缩文件'
                 : attachment.mimeType === 'text/calendar' ? '日历文件' : '文件';
-            return <div className="mail-attachment" key={attachment.id}><b aria-hidden="true">▤</b><span>{attachment.title}</span><small>{kind} · 邮件附件</small></div>;
+            return <div className="mail-attachment" key={attachment.id}><b aria-hidden="true"><VisualIcon name="attachment" size={20} /></b><span>{attachment.title}</span><small>{kind} · 邮件附件</small></div>;
           })}</div>
         </section>
       )}
@@ -116,16 +120,16 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
   return (
     <section className={`mail-app${selectedMail ? ' mail-app--has-selection' : ''}`} aria-label="私人邮箱">
       <header className="mail-toolbar">
-        <button type="button" className="mail-folders-toggle" onClick={() => setFoldersOpen((open) => !open)} aria-label="显示邮件文件夹" aria-expanded={foldersOpen} aria-controls="mail-folders">☰ <span>文件夹</span></button>
-        <label className="mail-search"><span className="sr-only">搜索邮件</span><span aria-hidden="true">⌕</span><input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="搜索邮件" /></label>
+        <button type="button" className="mail-folders-toggle" onClick={() => setFoldersOpen((open) => !open)} aria-label="显示邮件文件夹" aria-expanded={foldersOpen} aria-controls="mail-folders"><VisualIcon name="menu" size={16} /> <span>文件夹</span></button>
+        <label className="mail-search"><span className="sr-only">搜索邮件</span><span aria-hidden="true"><VisualIcon name="search" size={16} /></span><input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="搜索邮件" /></label>
         <div className="mail-toolbar__actions">
-          <button type="button" onClick={refresh} aria-label="刷新邮件列表" title="刷新">↻</button>
-          <button type="button" onClick={() => selectedMail && manager.markMailRead(selectedMail.id)} disabled={!selectedMail} aria-label="标记当前邮件为已读" title="标记为已读">✓</button>
-          <button type="button" onClick={() => selectedMail && toggleStar(selectedMail.id)} disabled={!selectedMail} aria-label="切换当前邮件星标" title="切换星标">★</button>
+          <button type="button" onClick={refresh} aria-label="刷新邮件列表" title="刷新"><VisualIcon name="refresh" size={16} /></button>
+          <button type="button" onClick={() => selectedMail && manager.markMailRead(selectedMail.id)} disabled={!selectedMail} aria-label="标记当前邮件为已读" title="标记为已读"><VisualIcon name="check" size={16} /></button>
+          <button type="button" onClick={() => selectedMail && toggleStar(selectedMail.id)} disabled={!selectedMail} aria-label="切换当前邮件星标" title="切换星标"><VisualIcon name="star" size={16} /></button>
         </div>
       </header>
       <nav id="mail-folders" className={`mail-folders${foldersOpen ? ' mail-folders--open' : ''}`} aria-label="邮件文件夹">
-        <div className="mail-folders__account"><span className="mail-account-avatar" aria-hidden="true">林</span><span><strong>林予</strong><small>lin.yu@example.test</small></span></div>
+        <div className="mail-folders__account"><VisualAvatar className="mail-account-avatar" {...mailAvatarForSender('林予')} /><span><strong>林予</strong><small>lin.yu@example.test</small></span></div>
         {mailFolders.map((folder) => <button type="button" key={folder.id} className={folderKey === folder.folderKey ? 'mail-folder--active' : ''} onClick={() => chooseFolder(folder.folderKey)} aria-current={folderKey === folder.folderKey ? 'page' : undefined}><span>{folder.label}</span><small>{getFolderCount(folder.folderKey, state.modules.mail)}</small></button>)}
       </nav>
       <section className="mail-list" aria-label="邮件列表">
@@ -136,7 +140,7 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
         </div>
       </section>
       <section className="mail-reading-pane" aria-label="阅读面板">
-        {selectedMail ? <MailDetail mail={selectedMail} starred={isMailStarred(selectedMail, state.modules.mail)} onBack={() => setSelectedMailId(null)} onToggleStar={() => toggleStar(selectedMail.id)} /> : <div className="mail-empty mail-empty--reading"><span aria-hidden="true">✉</span><p>选择一封邮件开始阅读</p></div>}
+        {selectedMail ? <MailDetail mail={selectedMail} starred={isMailStarred(selectedMail, state.modules.mail)} onBack={() => setSelectedMailId(null)} onToggleStar={() => toggleStar(selectedMail.id)} /> : <div className="mail-empty mail-empty--reading"><span aria-hidden="true"><VisualIcon name="mail" size={30} /></span><p>选择一封邮件开始阅读</p></div>}
       </section>
     </section>
   );
