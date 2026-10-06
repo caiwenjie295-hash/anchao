@@ -1,6 +1,6 @@
 # UX 身份图形交付记录
 
-工单：`UX-IDENTITY-20261006`。主审结论 `APPROVED`。功能节点 `911acb515acf7623592f28905d17cb9d9535308e` 已以 `--no-ff` 合入本地 `main`，合并节点为 `cb833299bd90c0cc5785647eb58182d4de3c1381`。文档节点 `222c01b2778feaae9b951eabac7da5e5b74a4057` 的生产/离线构建与发布完整性校对通过；纯文档收尾变更尚待父合入。最终交付依据始终为当前 `main` HEAD、`manifest.gitSha` 与开发包根目录 `UX-IDENTITY-20261006-validation/release-main.json` 动态校对。未推送或部署。
+工单：`UX-IDENTITY-20261006`。主审结论 `APPROVED`。功能节点 `911acb515acf7623592f28905d17cb9d9535308e` 已以 `--no-ff` 合入本地 `main`，合并节点为 `cb833299bd90c0cc5785647eb58182d4de3c1381`。文档节点 `222c01b2778feaae9b951eabac7da5e5b74a4057` 的生产/离线构建与发布完整性校对通过。最终交付依据始终为当前 `main` HEAD、`manifest.gitSha` 与开发包根目录 `UX-IDENTITY-20261006-validation/release-main.json` 动态校对。未推送或部署。
 
 本批把邮箱账户/发件人、浏览器论坛作者/页面来源/搜索结果及工具栏搜索/历史、私人博客头像/品牌/收藏图形接入统一稳定映射。保留名称、按钮文字、ARIA 名称、交互、内容与剧情状态。林予使用既有猫头像 `IMG_A1_B_010`；王澳/小A共用无脸窗边树影照片；站点与作者身份不依赖正确性、剧情 Flag 或结果等级。图像失败使用无字 SVG 回退。桌面及微信图片图集未作为本批资产修改。
 
