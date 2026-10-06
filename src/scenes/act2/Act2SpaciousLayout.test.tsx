@@ -10,6 +10,7 @@ import {
   bridgePuzzle,
   bridgeResolution,
 } from '../../data/act2BridgeData';
+import { messageById } from '../../data/wechatData';
 import { BridgeInvestigation } from './BridgeInvestigation';
 import { SchoolInvestigation } from './SchoolInvestigation';
 
@@ -87,39 +88,35 @@ describe('Act2 spacious scene layout interactions', () => {
     container.remove();
   });
 
-  it('opens and closes the school memory without discovering sources or advancing state', async () => {
+  it('shows school memories directly without reading or selecting evidence automatically', async () => {
     const manager = makeSchoolManager();
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
-    const memory = container.querySelector<HTMLDetailsElement>('details.t05-school__memory-disclosure');
-    const summary = memory?.querySelector<HTMLElement>(':scope > summary') ?? null;
+    const memory = container.querySelector<HTMLElement>('.t05-school__memory');
     expect(memory).not.toBeNull();
-    expect(memory!.open).toBe(false);
+    expect([...memory!.querySelectorAll<HTMLElement>('.t05-school__memory-chat blockquote')].map((message) => message.textContent)).toEqual(
+      ['CHAT_A2_T05_001', 'CHAT_A2_T05_011'].map((id) => messageById.get(id)?.content),
+    );
+    expect([...memory!.querySelectorAll<HTMLElement>('.t05-school__memory-photo')].map((photo) => photo.dataset.messageId)).toEqual(['CHAT_A2_T05_004', 'CHAT_A2_T05_007']);
     expect(container.querySelector('.investigation-shell')?.classList.contains('investigation-shell--act2-spacious')).toBe(true);
-
-    const afterMount = manager.getState();
-    await click(summary, 'school memory summary');
-    expect(memory!.open).toBe(true);
-    expect(manager.getState()).toBe(afterMount);
-    await click(summary, 'school memory summary');
-    expect(memory!.open).toBe(false);
-    expect(manager.getState()).toBe(afterMount);
-    expect(manager.getState().modules.act2Research.stage).toBe('school');
+    expect(container.querySelector('.t05-school__timeline')?.textContent).toContain('已读 0 / 3');
     expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual([]);
     expect(manager.getState().game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN).toBeUndefined();
     expect(manager.getState().game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).toBeUndefined();
+    expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).toBeUndefined();
+    expect(manager.getState().modules.act2Research.stage).toBe('school');
   });
 
-  it('keeps a selected school source through disclosure toggles and blocks confirmation below two sources', async () => {
+  it('focuses a read unselected source directly and confirms only after two sources', async () => {
     const manager = makeSchoolManager(true);
     expect(manager.getState().modules.act2Research.school.symbolMatchConfirmed).toBe(true);
+    expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual([]);
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
 
-    const materials = container.querySelector<HTMLDetailsElement>('details.t05-school__timeline-disclosure');
-    const summary = materials?.querySelector<HTMLElement>(':scope > summary') ?? null;
+    const materials = container.querySelector<HTMLElement>('.t05-school__timeline');
     expect(materials).not.toBeNull();
-    expect(materials!.open).toBe(false);
-    await click(summary, 'school materials summary');
-    expect(materials!.open).toBe(true);
+    expect(materials!.querySelectorAll('.t05-school__evidence-options button')).toHaveLength(3);
+    expect(materials!.textContent).toContain('已读 2 / 3');
+    expect(materials!.textContent).toContain('已选不同来源 0 / 2');
 
     const teacherSource = [...container.querySelectorAll<HTMLButtonElement>('.t05-school__evidence-options button')]
       .find((button) => button.textContent?.includes('班主任的回忆')) ?? null;
@@ -130,24 +127,17 @@ describe('Act2 spacious scene layout interactions', () => {
     const confirm = () => container.querySelector<HTMLButtonElement>('button[data-action-id="A2_T05_CONFIRM_TIMELINE"]');
     expect(confirm()?.getAttribute('data-action-state')).toBe('blocked');
     await click(confirm(), 'confirm timeline action');
-    expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('两种不同来源');
+    expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('还没有选作支持来源');
+    expect(container.querySelector('.t05-school__evidence-count')?.textContent).toContain('1 / 2');
     const relatedSource = container.querySelector<HTMLButtonElement>('.investigation-navigation__material');
-    expect(relatedSource?.textContent).toContain('成绩表下方的感谢文字');
+    expect(relatedSource?.textContent).toContain('历次成绩记录 · 选作支持来源');
     await click(relatedSource, 'directly open the missing school source');
-    expect(manager.getState().modules.act2Research.school.inspectedHotspotIds).toContain('HOTSPOT_A2_T05_QIMING_TEXT');
-    expect(container.querySelector('.t05-school__dialog')).not.toBeNull();
-    await click(container.querySelector<HTMLButtonElement>('.t05-school__dialog [aria-label="关闭"]'), 'close the related school source');
-    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBeUndefined();
-
-    await click(summary, 'school materials summary');
-    expect(materials!.open).toBe(false);
-    await click(summary, 'school materials summary');
-    expect(materials!.open).toBe(true);
-    expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual(['teacher-account']);
-    expect(summary?.textContent).toContain('1 / 2');
-
     const rankSource = [...container.querySelectorAll<HTMLButtonElement>('.t05-school__evidence-options button')]
       .find((button) => button.textContent?.includes('历次成绩记录')) ?? null;
+    expect(document.activeElement).toBe(rankSource);
+    expect(manager.getState().modules.act2Research.school.inspectedHotspotIds).not.toContain('HOTSPOT_A2_T05_QIMING_TEXT');
+    expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual(['teacher-account']);
+    expect(manager.getState().game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBeUndefined();
     await click(rankSource, 'rank evidence selector');
     expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual(['teacher-account', 'rank-record']);
     expect(confirm()?.getAttribute('data-action-state')).toBe('ready');

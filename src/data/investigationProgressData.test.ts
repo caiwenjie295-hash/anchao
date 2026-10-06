@@ -208,13 +208,14 @@ describe('investigation progress display model', () => {
     expect(result.nextAction).not.toContain('继续探索”前往');
   });
 
-  it('uses the reader’s visible A4 blog action label', () => {
+  it('keeps the A4 blog prompt valid before and after the private page is opened', () => {
     const state = createDefaultState();
     state.game.act = 4;
     state.game.phase = 'A4_T03';
     state.modules.act4.stage = 'T03';
     const result = deriveInvestigationProgress(state);
-    expect(result.nextAction).toBe('点击“查看动态”，按日期阅读；末尾可以继续。');
+    expect(result.nextAction).toBe('打开王澳的动态，按日期阅读；读到末尾后继续。');
+    expect(result.nextAction).not.toContain('查看动态');
   });
 
   it('limits the act four route and recap to completed sections and the current Wang Ao chapter', () => {
