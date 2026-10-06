@@ -3,7 +3,7 @@
 ## 当前待办
 
 - [x] UX-IDENTITY-20261006 已通过 `APPROVED` 并合入本地 `main`（功能合并节点 `cb833299bd90c0cc5785647eb58182d4de3c1381`）。统一验收为77文件/409项、生产构建316 modules、离线构建155文件/44,042,834 B、默认两轮 offline 与1280×720/390×844目标浏览器检查通过。实现、修复历史和覆盖边界见 `docs/ux-identity-20261006/delivery.md`；只读后续目标见 `docs/ux-identity-20261006/improvement-targets.md`。
-- [ ] 文档合入 main 后，父任务重建最终生产/离线包并核对 `暗潮离线/manifest.json` 的最终 main SHA、文件数、字节数及原 dirty/保护状态；在核对完成前不记录最终包 SHA或宣称最终包交付。
+- [x] 文档节点 `222c01b2778feaae9b951eabac7da5e5b74a4057` 的生产构建316 modules、离线构建314 modules；离线包155文件/44,042,840 B，`manifest.gitSha` 匹配。根目录 `UX-IDENTITY-20261006-validation/release-main.json` 校对全部文件尺寸、12,530 B头像源/包SHA、零内嵌图片、868项保护文件及原30项dirty状态均通过。功能门禁节点历史包为44,042,834 B且默认两轮 offline 通过；main 节点默认两轮 offline 复验也通过，见根目录 `main-offline-test.log`。本批纯文档再合并后只刷新 manifest 对应SHA；交付依据始终为当前 main HEAD 与 `manifest.gitSha`、根目录 `release-main.json` 的动态核对。
 - [x] UX-RHYTHM-20261006 已通过 `APPROVED` 并合入本地 `main`（`a601d5253b9babfca080b2fd50c254fc63858f14`）；完成第四幕分页/动态/落幕、FLOW调查抽屉与提示、MEDIA配图及可关闭环境声。最终门禁和浏览器范围见 `docs/reviews/UX-RHYTHM-20261006.md`，阅读器细节见 `docs/ux-rhythm-20261006/reader-delivery.md`。
 - [x] 功能合并节点 `a601d5253b9babfca080b2fd50c254fc63858f14` 的main生产/离线重建与保护审计完成：离线包154文件/44,011,808 bytes（41.97 MiB），`manifest.gitSha` 与节点一致；364条保护路径、145条旧注册、148条旧映射无差异，原30项工作区状态保持。四文档合入后仍按最终 `main` HEAD 重建并核对 `manifest.gitSha`；最终交付版本以当前main HEAD与manifest为准。
 - [x] UX-POLISH-20261006 四幕交互与前端精修已通过 `APPROVED` 审查并合入本地 `main`（`82ad316589312f98fe791df99ec3f21ff3cf3277`）。统一验收为首轮70文件/375项、350通过/25失败，修复后只复验失败所在12文件且79/79通过（另58文件首轮通过）；生产/离线构建、默认两轮完整 offline、Chrome `file://` 与1440×900/390×844重点 IAB 走查通过。准确覆盖及限制见 `docs/reviews/UX-POLISH-20261006.md`。
