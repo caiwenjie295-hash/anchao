@@ -2,6 +2,10 @@
   animation: scene-polish-curtain-in 260ms ease-out both;
 }
 
+.scene-polish-opening-prelude {
+  background: #0c1110;
+}
+
 .scene-polish-curtain--closing {
   animation: scene-polish-curtain-out 240ms ease-in both;
   pointer-events: none;
