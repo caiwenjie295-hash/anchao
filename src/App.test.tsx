@@ -109,4 +109,36 @@ describe('App Act 4 reader integration', () => {
       reactActEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
     }
   });
+
+  it('keeps hook order stable while entering and leaving the first-act ending', async () => {
+    const [{ act, createElement }, { createRoot }, { default: App }, { stateManager }] = await Promise.all([
+      import('react'),
+      import('react-dom/client'),
+      import('./App'),
+      import('./core/stateManager'),
+    ]);
+    const reactActEnvironment = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
+    const previousActEnvironment = reactActEnvironment.IS_REACT_ACT_ENVIRONMENT;
+    reactActEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => { root.render(createElement(App)); });
+      expect(host.querySelector('.act1-ending')).toBeNull();
+
+      await act(async () => { stateManager.setFlag('FLAG_A1_COMPLETE', true); });
+      expect(host.querySelector('.act1-ending')).not.toBeNull();
+
+      const continueButton = host.querySelector<HTMLButtonElement>('.act1-ending__continue');
+      expect(continueButton).not.toBeNull();
+      await act(async () => { continueButton?.click(); });
+      expect(stateManager.getState().modules.act2Research.stage).toBe('search');
+      expect(host.querySelector('.act1-ending')).toBeNull();
+    } finally {
+      await act(async () => { root.unmount(); });
+      host.remove();
+      reactActEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+    }
+  });
 });

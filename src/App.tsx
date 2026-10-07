@@ -193,6 +193,22 @@ export default function App() {
     ? <StoryTransition transition={transition} onContinue={continueTransition} />
     : null);
   const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>调查记录已恢复，并保存到这台设备。</div>;
+  const openProgressApp = useCallback((appId: AppId) => {
+    if (appId !== 'notepad') { openApp(appId); return; }
+    const current = stateManager.getState();
+    if (current.modules.scene.currentSceneId !== null || (current.game.phase === 'F' && !current.modules.scene.journeyStarted)) return;
+    runSceneTransition(() => {
+      const currentAct2Stage = current.modules.act2Research.stage;
+      if (isAct2SceneStage(currentAct2Stage)) setDismissedAct2Stage(currentAct2Stage);
+      if (current.modules.act3.stage !== 'inactive') {
+        setDismissedAct3(true);
+        setReviewAct3(false);
+      }
+      if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
+      stateManager.openApp('notepad');
+    });
+  }, []);
+  const exitAct4 = useCallback(() => runSceneTransition(() => setDismissedAct4(true)), []);
   if (view.act1EndingOpen) {
     return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
       <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
@@ -228,22 +244,6 @@ export default function App() {
     ...(taskCardLayout ? { '--desktop-task-card-top': `${taskCardLayout.top}px` } as CSSProperties : {}),
     ...(taskCardLayout ? { '--desktop-task-card-max-height': taskCardLayout.maxHeight } as CSSProperties : {}),
   };
-  const openProgressApp = useCallback((appId: AppId) => {
-    if (appId !== 'notepad') { openApp(appId); return; }
-    const current = stateManager.getState();
-    if (current.modules.scene.currentSceneId !== null || (current.game.phase === 'F' && !current.modules.scene.journeyStarted)) return;
-    runSceneTransition(() => {
-      const currentAct2Stage = current.modules.act2Research.stage;
-      if (isAct2SceneStage(currentAct2Stage)) setDismissedAct2Stage(currentAct2Stage);
-      if (current.modules.act3.stage !== 'inactive') {
-        setDismissedAct3(true);
-        setReviewAct3(false);
-      }
-      if (current.modules.act4.stage !== 'inactive') setDismissedAct4(true);
-      stateManager.openApp('notepad');
-    });
-  }, []);
-  const exitAct4 = useCallback(() => runSceneTransition(() => setDismissedAct4(true)), []);
   return (
     <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive={sceneOpen} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>

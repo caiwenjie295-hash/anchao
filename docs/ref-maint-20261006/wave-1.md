@@ -34,9 +34,9 @@ The startup recovery surface is an ARIA modal dialog: it takes initial focus, co
 
 ## Checks and release steps
 
-`.node-version` pins Node `24.13.1`; `package.json` requires the same Node version and npm `>=11.8.0 <12`. Use that Node version and a compatible npm before running `npm ci`. The workflow runs `npm ci` on both `ubuntu-latest` and `windows-latest`, then invokes `npm run quality:gate`.
+`.node-version` pins Node `24.15.0`; `package.json` requires the same Node version and npm `>=11.8.0 <12`. Use that Node version and a compatible npm before running `npm ci`. The workflow reads this pin and runs `npm ci` on both `ubuntu-latest` and `windows-latest`, then invokes `npm run quality:gate`.
 
-`scripts/quality/testInventory.mjs` discovers tests below `src`, `docs`, and `scripts`, then assigns each discovered path to one group exactly once. The current inventory is 82 tests: 24 unit, 52 component, and 6 acceptance. The four docs storage/window fixtures remain in the jsdom component group.
+`scripts/quality/testInventory.mjs` discovers tests below `src`, `docs`, and `scripts`, then assigns each discovered path to one group exactly once. At the wave 1 freeze, the inventory was 82 tests: 24 unit, 52 component, and 6 acceptance. The current count must be taken from `collectTestInventory`; do not hand-maintain or infer group totals here. The four docs storage/window fixtures remain in the jsdom component group.
 
 Run `npm run quality:gate` for development checks. It verifies branch/path hygiene when given a base ref, the Node pin, test partition, TypeScript, all three test groups, online build, offline build and gameplay verification, package integrity/150 MiB budget, and browser smoke. Run `npm run quality:release` from the reviewed source commit for the additional clean-source check before producing a release package. The source checker compares content independently from mode bits. It reports and permits only the existing Windows mode-only differences in `scripts/new-worktree.sh` and `scripts/quality-gate.sh`; actual content edits, additions, deletions, or unexpected mode-only paths still fail. The offline manifest retains its existing fields and adds Node/npm/platform metadata, source content SHA-256 and dirty-path details, plus per-file SHA-256 values. The package verifier checks path containment, file size/hash, manifest totals, commit identity, and source hash.
 
@@ -45,5 +45,7 @@ The CI uses the major tags from GitHub's official Node workflow example: `action
 ## Wave 1 verification record
 
 On 2026-10-06, the directed local run passed 8 test files / 50 tests across save classification/migration, recovery conflict protection and timer cancellation, import/restore/reset event behavior, runtime boundary recovery, modal focus/reopen behavior, export after successful restore, inventory partitioning, release dirty-source checks, and non-zero gate failure. `tsc --noEmit -p tsconfig.app.json`, `tsc -b`, and `scripts/quality/verify-node-version.mjs` passed. `scripts/build-offline.mjs` produced 155 files (42.03 MiB), and `scripts/release/verify-offline-package.mjs` passed with the package linked to source commit `08d61844`.
+
+Those 2026-10-06 measurements were performed with the then-pinned Node `24.13.1`; the current supported local and CI pin is `24.15.0`, selected to satisfy the engines range of the already-locked jsdom 30.1.0 dependency tree. No dependency versions or lockfile package integrity/resolved entries changed.
 
 The initial sandbox attempt for Vite's offline build hit Windows `spawn EPERM`; the identical targeted build was rerun successfully with the authorized process permission. The full four-gate combination, complete offline gameplay verification, browser smoke, cross-platform CI, and release from a clean reviewed commit remain for the parent acceptance node. No commercial certification or release approval is claimed here.
