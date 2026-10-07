@@ -1,6 +1,6 @@
 # STORY-ORIGINAL-20261007：结尾原文入口与 HTML 阅读页
 
-状态：IMPLEMENTING。基线 main=6a316008107a257fb8d5c69acaf67afe2f9d2ee0。
+状态：APPROVED。基线 main=6a316008107a257fb8d5c69acaf67afe2f9d2ee0。
 用户已授权原文时间等与游戏核对；最新明确要求点击入口以 HTML 显示完整原文并排版。
 
 ## 角色与边界
@@ -49,3 +49,7 @@
 ## 额度
 
 父实际窗口已恢复0%已用/100%剩余；沿既有要求只在实际五小时剩余>10%时开发。<=10%则父与本任务执行者停止turn，保留文件/分支、记录pause/reset/阶段待办到根validation/quota-state.md；原代理模型与worktree不重新创建。自动化html只控制本任务，旧automations保持PAUSED。
+
+## 主审收尾
+
+产品 `002b09b6a7b4e0657eb8391271935e31103a2904` APPROVED，允许本地集成；最终干净源包及维护文档收尾以根release-main.json的DELIVERED记录为准。
