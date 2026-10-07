@@ -92,6 +92,11 @@
 .t07-finale__narration.is-shown{opacity:1}
 .t07-finale__narration:nth-last-of-type(2){font-weight:650;letter-spacing:.08em}
 .t07-finale__ending-continue{margin-top:1rem;min-width:132px;background:#e9e7de;color:#1b2224;border-color:#6f7a78}
+.t07-finale .t07-finale__ending-continue{color:#182323;background:#e9e7de;border-color:#a7b0ab;font-weight:650}
+.t07-finale .t07-finale__ending-continue:hover:not(:disabled){color:#111b1b;background:#fff;border-color:#cbd1cd}
+.t07-finale .t07-finale__ending-continue:focus-visible{color:#182323;background:#e9e7de;outline:3px solid #f6f5ee;outline-offset:4px}
+.t07-finale .t07-finale__ending-continue:disabled{color:#46514e;background:#d9ddd9;border-color:#a4aca7;cursor:not-allowed;opacity:1}
+.t07-finale__ending--closing{pointer-events:none}
 .act2-t07-entry{position:absolute;z-index:8500;left:24px;bottom:74px;min-height:44px;padding:.6rem 1rem;border:1px solid #7d8b88;border-radius:8px;background:#fdfcf6;color:#26302f;box-shadow:0 10px 24px #22303424;font:inherit;cursor:pointer}
 .act2-t07-entry:hover{background:#eef1ec}
 .act2-t07-entry:focus-visible{outline:3px solid #285c83;outline-offset:2px}

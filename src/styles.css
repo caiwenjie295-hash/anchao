@@ -38,8 +38,8 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 .desktop--scene-hidden { visibility: hidden; pointer-events: none; }
 .desktop::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .22; background-image: linear-gradient(120deg, transparent 0 47%, rgba(255,255,255,.5) 48% 50%, transparent 51% 100%); background-size: 31rem 31rem; }
 .desktop__icons { position: absolute; top: 18px; bottom: 64px; left: 16px; display: grid; grid-auto-flow: column; grid-template-rows: repeat(auto-fill, 102px); grid-auto-columns: 78px; align-content: start; gap: 10px 14px; width: min(560px, calc(100vw - 2rem)); overflow: auto; padding: 0; }
-.desktop--task-card-visible .desktop__icons { width: min(560px, calc(100vw - 390px)); }
-.desktop-task-card { position: absolute; z-index: 8000; top: 28px; right: 30px; width: min(326px, calc(100vw - 28px)); max-height: calc(100dvh - 82px); overflow: auto; border: 1px solid var(--ui-border); border-radius: 8px; color: var(--ui-text); background: var(--ui-surface); box-shadow: 0 8px 24px rgba(15, 23, 42, .16); }
+.desktop--task-card-visible .desktop__icons { width: min(560px, calc(100vw - 400px)); }
+.desktop-task-card { position: absolute; z-index: 8000; top: 24px; right: 24px; width: min(336px, calc(100vw - 28px)); max-height: calc(100dvh - 88px); overflow: auto; border: 1px solid var(--ui-border); border-radius: 8px; color: var(--ui-text); background: var(--ui-surface); box-shadow: 0 8px 24px rgba(15, 23, 42, .16); }
 .desktop-task-card--notepad-open { top: var(--desktop-task-card-top, 50px); max-height: min(var(--desktop-task-card-max-height, calc(100dvh - var(--desktop-task-card-top, 50px) - 62px)), calc(100dvh - var(--desktop-task-card-top, 50px) - 62px)); }
 .desktop-task-card::before { position: absolute; top: 0; right: 22px; left: 22px; height: 1px; background: var(--ui-border); content: ""; }
 .desktop-task-card__heading { display: flex; align-items: center; gap: 4px; padding-right: 6px; }
@@ -50,6 +50,9 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 .desktop-task-card__next { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin: 0; padding: 0 13px 12px; color: var(--ui-text); font-size: 12px; line-height: 1.45; }
 .desktop-task-card__next strong { color: var(--ui-text-muted); font-size: 11px; }
 .desktop-task-card__next span { min-width: 0; }
+.desktop-task-card__resume { display: block; width: calc(100% - 26px); min-height: 42px; margin: 0 13px 12px; padding: 6px 10px; border: 1px solid var(--ui-accent, #315f4a); border-radius: 5px; color: #fff; background: var(--ui-accent, #315f4a); cursor: pointer; text-align: left; font-size: 12px; font-weight: 600; }
+.desktop-task-card__resume:hover { background: #254b37; }
+.desktop-task-card__resume:focus-visible { outline: 3px solid var(--ui-accent, #315f4a); outline-offset: 2px; }
 .desktop-task-card__toggle:hover { background: var(--ui-accent-soft); }
 .desktop-task-card__toggle-title { font-size: 13px; font-weight: 650; letter-spacing: .08em; }
 .desktop-task-card__count { margin-left: auto; color: var(--ui-text-muted); font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 11px; }
@@ -73,8 +76,9 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 
 @media (max-width: 899px) {
   .desktop__icons { top: 12px; right: 12px; bottom: 64px; left: 12px; width: auto; grid-template-rows: repeat(auto-fill, 102px); }
-  .desktop--task-card-visible .desktop__icons { bottom: calc(62px + min(30dvh, 230px) + 10px); width: auto; }
-  .desktop-task-card { top: auto; right: 12px; bottom: 62px; left: auto; width: min(326px, calc(100vw - 24px)); max-height: min(30dvh, 230px); }
+  .desktop--task-card-visible .desktop__icons { bottom: calc(62px + 104px + 10px); width: auto; }
+  .desktop--task-card-expanded .desktop__icons { bottom: calc(62px + min(30dvh, 230px) + 10px); }
+  .desktop-task-card { top: auto; right: 12px; bottom: 62px; left: auto; width: min(336px, calc(100vw - 24px)); max-height: min(30dvh, 230px); }
   .desktop-task-card:not(.desktop-task-card--expanded) { width: min(326px, calc(100vw - 24px)); min-width: 132px; }
   .desktop-task-card:not(.desktop-task-card--expanded) .desktop-task-card__toggle { min-height: 38px; padding: 8px 10px; }
 }
@@ -332,16 +336,16 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
   .wechat-conversation__top time { display: none; }
   .wechat-chat__messages { padding: 16px 10px; }
 }
-@media (max-width: 1100px) {
+@media (max-width: 899px) {
   .app-window:has(.browser-app) {
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    height: calc(100dvh - 52px) !important;
+    height: calc(100dvh - var(--desktop-task-card-reserve, 104px) - 64px) !important;
     min-width: 0;
     min-height: 0;
     max-width: 100vw;
-    max-height: calc(100dvh - 52px);
+    max-height: calc(100dvh - var(--desktop-task-card-reserve, 104px) - 64px);
     border-radius: 0;
   }
 }
@@ -613,6 +617,10 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 .photos-app > header p { max-width: 56%; line-height: 1.4; text-align: right; }
 .photo-stage { grid-area: stage; min-width: 0; padding: 14px 14px 54px; }
 .photo-scroll { position: relative; width: 100%; height: 100%; }
+.photos-app .photo-scroll { display: grid; min-width: 0; min-height: 0; place-items: center; overflow: auto; }
+.photos-app .photo-zoom { min-width: 0; min-height: 0; height: auto; margin: auto; aspect-ratio: 4 / 3; }
+.photos-app .evidence-photo { height: auto; aspect-ratio: 4 / 3; }
+.photos-app .photo-evidence-image { display: block; width: 100%; height: 100%; object-fit: contain; }
 .photo-image-fallback { position: absolute; z-index: 4; inset: 0; display: grid; align-content: center; justify-items: center; gap: 10px; padding: 20px; color: var(--ui-text); background: rgb(245 246 245 / 92%); text-align: center; }
 .photo-image-fallback p { max-width: 36ch; margin: 0; font-size: 14px; line-height: 1.6; }
 .photo-image-fallback button, .photo-controls__heading button { min-height: 44px; padding: 0 13px; border: 1px solid var(--ui-interactive-border); border-radius: 4px; color: var(--ui-text); background: var(--ui-surface); cursor: pointer; }
@@ -632,7 +640,7 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 .photo-discovery button { min-height: 44px; padding-inline: 12px; }
 .photo-discovery span { font-size: 13px; }
 
-@container app-content (min-width: 720px) {
+@container app-content (min-width: 680px) {
   .photos-app { grid-template-columns: minmax(0, 1fr) minmax(248px, 31%); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "header header" "stage controls" "discovery discovery"; }
   .photo-stage { padding: 16px 18px 54px; }
   .photo-controls { align-content: start; grid-template-columns: minmax(0, 1fr); gap: 10px; overflow: auto; border-top: 0; border-left: 1px solid var(--ui-border); padding: 16px 14px; }
@@ -700,7 +708,12 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 @container app-content (max-width: 520px) {
   .photos-app > header { align-items: start; gap: 8px; padding: 9px 11px; }
   .photos-app > header p { max-width: 52%; font-size: 12px; }
-  .photo-controls { padding: 9px 11px; }
+  .photo-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 10px; padding: 8px 10px; }
+  .photo-controls__heading, .photo-controls > p { grid-column: 1 / -1; }
+  .photo-controls label { min-height: 36px; grid-template-columns: 40px minmax(0, 1fr) 30px; gap: 4px; font-size: 11px; }
+  .photo-controls input { min-height: 26px; }
+  .photo-controls__heading button { min-height: 38px; }
+  .photo-controls p { font-size: 11px; line-height: 1.4; }
   .photo-discovery { justify-content: flex-start; }
   .photo-discovery span { width: 100%; }
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import type { ComponentProps, ComponentType, CSSProperties } from 'react';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
 import { stateManager } from './core/stateManager';
+import { readSave } from './core/saveManager';
 import { eventBus } from './core/eventBus';
 import type { AppId } from './core/types';
 import { apps, appById } from './data/apps';
@@ -32,10 +33,15 @@ import { deriveInvestigationProgress } from './data/investigationProgressData';
 import { act1Scenes } from './data/sceneData';
 import { SceneTransitionLayer } from './components/transition/SceneTransitionLayer';
 import { runAppSceneTransition as runSceneTransition } from './components/transition/sceneTransition';
+import { OpeningPrelude } from './components/scenePolish/OpeningPrelude';
+import { shouldShowOpeningPrelude } from './components/scenePolish/openingPreludeData';
+import { fitWindowBesideTaskRail } from './components/scenePolish/desktopTaskRailLayout';
+import { shouldRenderAct1Scene } from './components/scenePolish/act1ScenePresentation';
 import { deriveAppView, isAct2SceneStage, type Act2SceneStage } from './core/presentation/appView';
 import './styles.css';
 import './imageAssets.css';
 import './components/sceneTransition.css';
+import './components/scenePolish/scenePolish.css';
 
 type SelectableDesktopIconProps = ComponentProps<typeof DesktopIcon> & { selected?: boolean; onSelect?: () => void };
 const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIconProps>;
@@ -45,12 +51,18 @@ export default function App() {
   const [time, setTime] = useState(() => new Date());
   // “已返回桌面”只是瞬时显示状态；阶段一变或清零即刻失效。
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
+  const [dismissedAct1SceneId, setDismissedAct1SceneId] = useState<string | null>(null);
   const [dismissedAct3, setDismissedAct3] = useState(false);
   const [reviewAct3, setReviewAct3] = useState(false);
   const [dismissedAct4, setDismissedAct4] = useState(false);
   const [showAct4Ending, setShowAct4Ending] = useState(false);
   const [openedTransitionId, setOpenedTransitionId] = useState<string | null>(null);
+  const [showOpeningPrelude, setShowOpeningPrelude] = useState(() => shouldShowOpeningPrelude(readSave().kind));
   const [selectedAppId, setSelectedAppId] = useState<AppId | null>(null);
+  const [taskCardExpanded, setTaskCardExpanded] = useState(false);
+  const [viewport, setViewport] = useState(() => typeof window === 'undefined'
+    ? { width: 1280, height: 900 }
+    : { width: window.innerWidth, height: window.innerHeight });
   const [saveImportNoticeVisible, setSaveImportNoticeVisible] = useState(false);
   const saveImportNoticeTimerRef = useRef<number | null>(null);
   const act4WasCompleteRef = useRef(state.game.flags.FLAG_A4_COMPLETE === true);
@@ -64,7 +76,14 @@ export default function App() {
     return () => window.clearInterval(interval);
   }, []);
   useEffect(() => {
+    const updateViewport = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', updateViewport);
+    return () => window.removeEventListener('resize', updateViewport);
+  }, []);
+  useEffect(() => {
     const unsubscribe = eventBus.on('save:imported', () => {
+      setShowOpeningPrelude(false);
+      setOpenedTransitionId(null);
       setSaveImportNoticeVisible(true);
       if (saveImportNoticeTimerRef.current !== null) window.clearTimeout(saveImportNoticeTimerRef.current);
       saveImportNoticeTimerRef.current = window.setTimeout(() => {
@@ -110,6 +129,9 @@ export default function App() {
   useEffect(() => {
     if (!isAct2SceneStage(act2Stage)) setDismissedAct2Stage(null);
   }, [act2Stage]);
+  useEffect(() => {
+    if (dismissedAct1SceneId && state.modules.scene.currentSceneId !== dismissedAct1SceneId) setDismissedAct1SceneId(null);
+  }, [dismissedAct1SceneId, state.modules.scene.currentSceneId]);
 
   const openApp = useCallback((appId: AppId) => stateManager.openApp(appId), []);
   const taskbarClick = (appId: AppId) => stateManager.toggleTaskbarApp(appId);
@@ -150,6 +172,10 @@ export default function App() {
       setOpenedTransitionId(pending.id);
       return;
     }
+    if (current.modules.scene.currentSceneId !== null) {
+      if (current.modules.scene.currentSceneId === dismissedAct1SceneId) runSceneTransition(() => setDismissedAct1SceneId(null));
+      return;
+    }
     if (current.modules.act4.stage !== 'inactive') {
       runSceneTransition(() => {
         setReviewAct3(false);
@@ -179,19 +205,42 @@ export default function App() {
     }
     const currentProgress = deriveInvestigationProgress(current);
     if (currentProgress.nextActionAppId) openApp(currentProgress.nextActionAppId);
-  }, [openApp, startAct3FromInvestigation, startAct4FromInvestigation]);
-  const { act1SceneOpen, act2SceneStage, act3Stage, act3Active, act4Active, act4Open, act3Open, act2SceneOpen, sceneOpen, desktopLabel } = view;
+  }, [dismissedAct1SceneId, openApp, startAct3FromInvestigation, startAct4FromInvestigation]);
+  const returnFromAct1Scene = useCallback(() => {
+    const currentSceneId = stateManager.getState().modules.scene.currentSceneId;
+    if (currentSceneId) runSceneTransition(() => setDismissedAct1SceneId(currentSceneId));
+  }, []);
+  const resumeAct1Scene = useCallback(() => runSceneTransition(() => setDismissedAct1SceneId(null)), []);
+  const restartProgress = useCallback(() => {
+    setShowOpeningPrelude(true);
+    setOpenedTransitionId(null);
+    setDismissedAct1SceneId(null);
+    setDismissedAct2Stage(null);
+    setDismissedAct3(false);
+    setReviewAct3(false);
+    setDismissedAct4(false);
+    setShowAct4Ending(false);
+    setTaskCardExpanded(false);
+    stateManager.resetProgress();
+  }, []);
+  const { act1SceneOpen: act1SceneReached, act2SceneStage, act3Stage, act3Active, act4Active, act4Open, act3Open, act2SceneOpen, sceneOpen: derivedSceneOpen, desktopLabel } = view;
+  const act1SceneOpen = shouldRenderAct1Scene(act1SceneReached, state.modules.scene.currentSceneId, dismissedAct1SceneId);
+  const sceneOpen = derivedSceneOpen && (!act1SceneReached || act1SceneOpen);
   const transition = getPendingStoryTransition(state);
   const transitionOpen = transition !== null && (transition.presentation === 'immediate' || openedTransitionId === transition.id);
+  const preludeOpen = transition?.id === 'TRANSITION_A1_INTRO' && showOpeningPrelude;
+  const curtainOpen = transitionOpen || preludeOpen;
   const continueTransition = () => {
     if (!transition) return;
     stateManager.acknowledgeStoryTransition(transition.id);
     if (transition.targetAppId) stateManager.openApp(transition.targetAppId);
     setOpenedTransitionId(null);
   };
-  const transitionLayer = transition && (transitionOpen
-    ? <StoryTransition transition={transition} onContinue={continueTransition} />
-    : null);
+  const transitionLayer = transition && (preludeOpen
+    ? <OpeningPrelude onBegin={() => { setShowOpeningPrelude(false); setOpenedTransitionId(transition.id); }} />
+    : transitionOpen
+      ? <StoryTransition key={transition.id} transition={transition} onContinue={continueTransition} />
+      : null);
   const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>调查记录已恢复，并保存到这台设备。</div>;
   const openProgressApp = useCallback((appId: AppId) => {
     if (appId !== 'notepad') { openApp(appId); return; }
@@ -210,51 +259,32 @@ export default function App() {
   }, []);
   const exitAct4 = useCallback(() => runSceneTransition(() => setDismissedAct4(true)), []);
   if (view.act1EndingOpen) {
-    return <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
-      <div className="act1-ending-flow" aria-hidden={transitionOpen} inert={transitionOpen}><Act1Ending />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
+    return <InvestigationProgressProvider state={state} suppressed={curtainOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
+      <div className="act1-ending-flow" aria-hidden={curtainOpen} inert={curtainOpen}><Act1Ending onContinue={() => runSceneTransition(() => stateManager.startSecondAct())} onReset={restartProgress} />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
       {transitionLayer}
       {saveImportNotice}
     </></InvestigationProgressProvider>;
   }
-  const activeWindowId = state.desktop.activeAppId;
-  const activeWindowState = activeWindowId ? state.desktop.windows[activeWindowId] : null;
-  const notepadWindowState = state.desktop.windows.notepad;
-  const notepadWindowOpen = notepadWindowState.status === 'normal' || notepadWindowState.status === 'maximized';
-  const taskCardVisible = notepadWindowOpen || !activeWindowState || activeWindowState.status === 'closed' || activeWindowState.status === 'minimized';
-  const taskCardLayout = (() => {
-    if (!notepadWindowOpen) return null;
-    const viewportHeight = typeof window === 'undefined' ? 900 : window.innerHeight;
-    const taskbarClearance = 62;
-    const minimumUsefulHeight = 96;
-    const preferredTop = notepadWindowState.status === 'maximized' ? 50 : Math.max(50, notepadWindowState.bounds.y + 50);
-    if (viewportHeight - taskbarClearance - preferredTop >= minimumUsefulHeight) {
-      return { top: preferredTop, maxHeight: `calc(100dvh - var(--desktop-task-card-top) - ${taskbarClearance}px)` };
-    }
-    const aboveWindowBottom = Math.max(50, Math.min(notepadWindowState.bounds.y - 8, viewportHeight - taskbarClearance));
-    const aboveWindowHeight = Math.max(0, Math.min(240, aboveWindowBottom - 50));
-    const top = Math.max(50, aboveWindowBottom - aboveWindowHeight);
-    return {
-      top,
-      maxHeight: `min(${aboveWindowHeight}px, calc(${aboveWindowBottom}px - var(--desktop-task-card-top)), calc(100dvh - var(--desktop-task-card-top) - ${taskbarClearance}px))`,
-    };
-  })();
+  const taskCardVisible = true;
+  const dismissedAct1Scene = dismissedAct1SceneId && dismissedAct1SceneId === state.modules.scene.currentSceneId
+    ? act1Scenes.find((scene) => scene.id === dismissedAct1SceneId)
+    : undefined;
   const desktopStyle: CSSProperties = {
     backgroundImage: `url("${desktopWallpaperUrl}")`,
-    ...(taskCardLayout ? { '--desktop-task-card-top': `${taskCardLayout.top}px` } as CSSProperties : {}),
-    ...(taskCardLayout ? { '--desktop-task-card-max-height': taskCardLayout.maxHeight } as CSSProperties : {}),
+    ...(viewport.width < 900 ? { '--desktop-task-card-reserve': `${taskCardExpanded ? 244 : 104}px` } as CSSProperties : {}),
   };
   return (
-    <InvestigationProgressProvider state={state} suppressed={transitionOpen || showAct4Ending} currentContentActive={sceneOpen} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
+    <InvestigationProgressProvider state={state} suppressed={curtainOpen || showAct4Ending} currentContentActive={sceneOpen} onOpenApp={openProgressApp} onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}>
     <>
-    <div aria-hidden={transitionOpen || showAct4Ending} inert={transitionOpen || showAct4Ending}>
-    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined} onClick={(event) => { const target = event.target as HTMLElement; if (target === event.currentTarget || target.classList.contains('desktop__icons')) setSelectedAppId(null); }}>
+    <div aria-hidden={curtainOpen || showAct4Ending} inert={curtainOpen || showAct4Ending}>
+    <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}${taskCardExpanded ? ' desktop--task-card-expanded' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined} onClick={(event) => { const target = event.target as HTMLElement; if (target === event.currentTarget || target.classList.contains('desktop__icons')) setSelectedAppId(null); }}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <SelectableDesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} selected={selectedAppId === app.appId} onSelect={() => setSelectedAppId(app.appId)} />)}
       </div>
-      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} className={notepadWindowOpen ? 'desktop-task-card--notepad-open' : undefined} />}
+      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} expanded={taskCardExpanded} onExpandedChange={setTaskCardExpanded} onResumeScene={dismissedAct1Scene ? resumeAct1Scene : undefined} resumeSceneLabel={dismissedAct1Scene ? `回到${dismissedAct1Scene.title}现场` : undefined} />}
       {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
       <Act2T07Entry manager={stateManager} />
       {apps.map((app) => {
@@ -263,19 +293,19 @@ export default function App() {
           <AppWindow
             key={app.appId}
             app={appById[app.appId]}
-            windowState={windowState}
+            windowState={fitWindowBesideTaskRail(windowState, viewport, taskCardExpanded)}
             active={state.desktop.activeAppId === app.appId}
             onFocus={() => stateManager.focusWindow(app.appId)}
             onMinimize={() => stateManager.minimizeWindow(app.appId)}
             onToggleMaximize={() => stateManager.toggleMaximize(app.appId)}
             onClose={() => stateManager.closeWindow(app.appId)}
-            onBoundsChange={(bounds) => stateManager.setBounds(app.appId, bounds)}
+            onBoundsChange={(bounds) => stateManager.setBounds(app.appId, fitWindowBesideTaskRail({ ...windowState, bounds }, viewport, taskCardExpanded).bounds)}
           />
         );
       })}
-      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={() => stateManager.resetProgress()} time={time} /></div>
+      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={restartProgress} time={time} /></div>
     </main>
-    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} /></SceneTransitionLayer>}
+    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} /></SceneTransitionLayer>}
     {act2SceneStage !== null && !act3Active && (
       <SceneTransitionLayer key={`${act2SceneStage}-${act2SceneOpen ? 'open' : 'resume'}`}>
         <Act2Experience

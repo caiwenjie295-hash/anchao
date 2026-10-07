@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { StoryTransitionRecord } from '../data/storyTransitionData';
+import { useCurtainExit } from './scenePolish/useCurtainExit';
 
 export function StoryTransitionLaunch({ transition, onOpen }: { transition: StoryTransitionRecord; onOpen: () => void }) {
   return <aside className="story-transition-launch" aria-label="下一步调查已就绪">
@@ -10,10 +11,11 @@ export function StoryTransitionLaunch({ transition, onOpen }: { transition: Stor
 
 export function StoryTransition({ transition, onContinue }: { transition: StoryTransitionRecord; onContinue: () => void }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { closing, beginExit } = useCurtainExit(onContinue);
   useEffect(() => { buttonRef.current?.focus(); }, [transition.id]);
   return (
     <section
-      className="story-transition"
+      className={`story-transition scene-polish-curtain${closing ? ' story-transition--closing scene-polish-curtain--closing' : ''}`}
       data-story-transition={transition.id}
       role="dialog"
       aria-modal="true"
@@ -29,7 +31,7 @@ export function StoryTransition({ transition, onContinue }: { transition: StoryT
         <div id="story-transition-copy" className="story-transition__copy">
           {transition.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </div>
-        <button ref={buttonRef} type="button" onClick={onContinue}>{transition.actionLabel}</button>
+        <button ref={buttonRef} type="button" disabled={closing} onClick={() => beginExit()}>{transition.actionLabel}</button>
       </div>
     </section>
   );

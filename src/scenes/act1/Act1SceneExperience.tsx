@@ -5,6 +5,7 @@ import { stateManager } from '../../core/stateManager';
 import type { AppState } from '../../core/types';
 import { act1Scenes, hotspotsBySceneId, sceneById, type SceneHotspot, type SceneRecord } from '../../data/sceneData';
 import { SceneClueFocus } from './SceneClueFocus';
+import { useCurtainExit } from '../../components/scenePolish/useCurtainExit';
 
 const startScene = act1Scenes[0];
 
@@ -12,12 +13,13 @@ type SceneTransitionRunner = (action: () => void) => void;
 
 function SceneTransition({ onSceneTransition }: { onSceneTransition?: SceneTransitionRunner }) {
   const progressContext = useInvestigationProgress();
+  const { closing, beginExit } = useCurtainExit(() => (onSceneTransition ?? ((action) => action()))(() => stateManager.startJourney(startScene.id)));
   return (
-    <section className="journey-transition" aria-label="前往鸡公岭">
+    <section className={`journey-transition scene-polish-curtain${closing ? ' journey-transition--closing scene-polish-curtain--closing' : ''}`} aria-label="前往鸡公岭">
       {progressContext && <button type="button" className="investigation-progress-trigger journey-transition__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
       <div className="journey-transition__copy">
         <p>{startScene.journeyIntro}</p>
-        <button type="button" autoFocus onClick={() => (onSceneTransition ?? ((action) => action()))(() => stateManager.startJourney(startScene.id))}>继续</button>
+        <button type="button" autoFocus disabled={closing} onClick={() => beginExit()}>继续</button>
       </div>
     </section>
   );
@@ -40,7 +42,7 @@ function Hotspot({ hotspot, onInspect }: { hotspot: SceneHotspot; onInspect: (ho
   );
 }
 
-function SceneView({ state, scene, onSceneTransition }: { state: AppState; scene: SceneRecord; onSceneTransition?: SceneTransitionRunner }) {
+function SceneView({ state, scene, onSceneTransition, onReturnToDesktop }: { state: AppState; scene: SceneRecord; onSceneTransition?: SceneTransitionRunner; onReturnToDesktop?: () => void }) {
   const progressContext = useInvestigationProgress();
   const [activeHotspot, setActiveHotspot] = useState<SceneHotspot | null>(null);
   const [backgroundFailed, setBackgroundFailed] = useState(false);
@@ -54,23 +56,24 @@ function SceneView({ state, scene, onSceneTransition }: { state: AppState; scene
   const canCapture = scene.capturePhotoId !== null && triggerFlags.every((flagId) => flags[flagId] === true) && !photoCaptured;
   const canLeave = scene.requiredFlagIds.every((flagId) => flags[flagId] === true);
   const next = scene.nextSceneId ? sceneById.get(scene.nextSceneId) : null;
+  const { closing, beginExit } = useCurtainExit(() => (onSceneTransition ?? ((action) => action()))(() => {
+    if (next) stateManager.enterScene(next.id);
+    else stateManager.finishJourney(scene.id);
+  }));
   const inspect = (hotspot: SceneHotspot) => {
     stateManager.inspectSceneHotspot(hotspot.id);
     setActiveHotspot(hotspot);
   };
   const leave = () => {
-    if (!canLeave) return;
-    (onSceneTransition ?? ((action) => action()))(() => {
-      if (next) stateManager.enterScene(next.id);
-      else stateManager.finishJourney(scene.id);
-    });
+    if (canLeave) beginExit();
   };
   return (
-    <section className="act1-scene" aria-label={`${scene.title}场景`}>
+    <section className={`act1-scene${closing ? ' act1-scene--closing scene-polish-curtain--closing' : ''}`} aria-label={`${scene.title}场景`}>
       <header className="act1-scene__header">
         <div><p className="act1-scene__eyebrow">鸡公岭</p><h1>{scene.title}</h1></div>
-        <div className="act1-scene__header-actions">
+      <div className="act1-scene__header-actions">
           <p className="act1-scene__progress" aria-label={`当前位置：${scene.title}`}>{act1Scenes.findIndex((item) => item.id === scene.id) + 1} / {act1Scenes.length}</p>
+        {onReturnToDesktop && <button type="button" className="act1-scene__return" aria-label="返回桌面，稍后继续现场调查" onClick={() => beginExit(onReturnToDesktop)}>返回桌面</button>}
           {progressContext && <button type="button" className="investigation-progress-trigger act1-scene__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
         </div>
       </header>
@@ -106,9 +109,9 @@ function SceneView({ state, scene, onSceneTransition }: { state: AppState; scene
   );
 }
 
-export function Act1SceneExperience({ state, onSceneTransition }: { state: AppState; onSceneTransition?: SceneTransitionRunner }) {
+export function Act1SceneExperience({ state, onSceneTransition, onReturnToDesktop }: { state: AppState; onSceneTransition?: SceneTransitionRunner; onReturnToDesktop?: () => void }) {
   if (state.game.phase === 'F' && !state.modules.scene.journeyStarted) return <SceneTransition onSceneTransition={onSceneTransition} />;
   const currentId = state.modules.scene.currentSceneId;
   const scene = currentId ? sceneById.get(currentId) : null;
-  return scene ? <SceneView key={scene.id} state={state} scene={scene} onSceneTransition={onSceneTransition} /> : null;
+  return scene ? <SceneView key={scene.id} state={state} scene={scene} onSceneTransition={onSceneTransition} onReturnToDesktop={onReturnToDesktop} /> : null;
 }

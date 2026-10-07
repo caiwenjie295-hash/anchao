@@ -14,6 +14,7 @@ import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_
 import { act3ExitReason, act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
 import { act3HotspotActionLabel, act3RouteActionLabel, act3StageActionLabel } from '../../story/investigation/actionPresentation';
+import { SceneObservationCrop, resolveSceneObservationCrop } from '../../components/scenePolish/SceneObservationCrop';
 
 type Act3PhotoViewportProps = ComponentProps<typeof PhotoViewport> & { explorationMode?: boolean; revealBeat?: boolean };
 const Act3PhotoViewport = PhotoViewport as ComponentType<Act3PhotoViewportProps>;
@@ -122,6 +123,19 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const nextStage = ACT3_STAGE_NEXT[stage];
 
   const hotspotByClue = new Map(doc.lenses.flatMap((item) => item.hotspots.map((hotspot) => [hotspot.clueId, { hotspot, lensId: item.id }] as const)));
+  const currentMissingRequiredHotspot = lens.hotspots.find((hotspot) => missingRequiredIds.includes(hotspot.clueId));
+  const nextMissingRequired = missingRequiredIds.map((id) => hotspotByClue.get(id)?.hotspot).find((hotspot) => hotspot !== undefined);
+  const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
+    .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
+  const blockedForwardHint = currentMissingRequiredHotspot
+    ? missingXiaoyueMemory
+      ? '还差一处观察。先听小月说完这一段，再继续。'
+      : '还差一处观察。先点击当前照片上的＋，查看这处线索，再继续。'
+    : nextMissingRequired
+      ? missingXiaoyueMemory
+        ? '还差一处观察。先听小月说完这一段，再继续。'
+        : '还差一处观察。先从下方地点按钮前往对应照片，点击＋完成观察，再继续。'
+      : act3ExitReason(stage, missingRequiredIds);
   const findMaterialLinks = (clueIds: string[]): InvestigationMaterialLink[] => clueIds.flatMap((clueId) => {
     const entry = hotspotByClue.get(clueId);
     if (!entry || !findAct3RoutePathToClue(stage, lens.id, clueId, inspected)) return [];
@@ -185,7 +199,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
       actions.push({
         actionId: 'A3_T07_LEAVE_SITE', kind: 'story', target: 'A3_EXIT', label: '与小月一起离开旧址',
         state: readyToLeave ? 'ready' : 'blocked',
-        reason: readyToLeave ? undefined : act3ExitReason(stage, missingRequiredIds),
+      reason: readyToLeave ? undefined : blockedForwardHint,
         relatedMaterials: findMaterialLinks(missingRequiredIds),
         onActivate: () => { manager.leaveAct3Stage(); setHotspotId(null); },
       });
@@ -195,7 +209,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
       actionId: `A3_${stage}_LEAVE_AND_CONTINUE`, kind: 'story', target: nextStage ?? undefined,
       label: act3StageActionLabel(),
       state: missingRequiredIds.length ? 'blocked' : 'ready',
-      reason: missingRequiredIds.length ? `还没有核对${findMaterialLinks(missingRequiredIds).map(({ label }) => label).join('、') || act3ExitReason(stage, missingRequiredIds)}` : undefined,
+      reason: missingRequiredIds.length ? blockedForwardHint : undefined,
       relatedMaterials: findMaterialLinks(missingRequiredIds),
       onActivate: () => {
         if (missingRequiredIds.length) return;
@@ -214,6 +228,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     || (stage === 'T06' && lens.id === 'LENS_A3_T06_007' && inspected.includes('CLUE_A3_T06_SHRINE'))
     || (stage === 'T07' && lens.id === 'LENS_A3_T07_007' && inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP'))
   );
+  const hasDedicatedEvidence = Boolean(lensHotspot && (PAPER_TRANSCRIPTS[lensHotspot.clueId]
+    || (stage === 'T06' && lensHotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE')));
+  const observationCrop = lensHotspot && !hasDedicatedEvidence ? resolveSceneObservationCrop(lens, lensHotspot) : null;
   return <InvestigationShell
     className={`act3-investigation investigation-shell--exploration act3-investigation--${act3MovementClassForStage(stage)}`}
     ariaLabel="第三幕调查"
@@ -223,11 +240,12 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '已和小月离开旧址，手边的笔记还有内容可读。'
       : act3ObjectiveFor(stage, inspected)}
-    helpText="点击照片上的标记查看物件；底部地点按钮用于移动或返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
+    helpText="点击照片上的＋查看物件；底部地点按钮可移动。没点＋也可点右上“退出调查，返回桌面”，之后能继续当前镜头，不会丢线索。观察弹层可用 Esc、关闭按钮或点击遮罩返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
     actions={actions}
     statusMessage={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
-      : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
+      : missingRequiredIds.length ? blockedForwardHint
+        : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
     onExit={onReturnToDesktop ?? (() => {})}
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
@@ -251,7 +269,10 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     {lensHotspot && <InvestigationDetail title={act3HotspotActionLabel(stage, lensHotspot.clueId, lensHotspot.label, inspected)} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`) ?? [...document.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent === act3HotspotActionLabel(stage, lensHotspot.clueId, lensHotspot.label, inspected)) ?? null}>
       {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。
           没有正文时宁可说明缺什么，也不回退到整段镜头说明。 */}
-      <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />
+      {hasDedicatedEvidence
+        ? <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />
+        : observationCrop ? <SceneObservationCrop source={observationCrop} alt={`${lensHotspot.label}的照片局部`} />
+          : <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />}
       {lensHotspot.observation
         ? <p>{lensHotspot.observation}</p>
         : <p className="act3-investigation__empty">这里暂时没有可记的观察文字。</p>}

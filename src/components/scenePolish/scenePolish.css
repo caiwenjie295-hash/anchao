@@ -1,0 +1,142 @@
+.scene-polish-curtain {
+  animation: scene-polish-curtain-in 260ms ease-out both;
+}
+
+.scene-polish-opening-prelude {
+  background: #0c1110;
+}
+
+.scene-polish-curtain--closing {
+  animation: scene-polish-curtain-out 240ms ease-in both;
+  pointer-events: none;
+}
+
+.act1-scene--closing {
+  animation: scene-polish-curtain-out 240ms ease-in both;
+  pointer-events: none;
+}
+
+.investigation-detail__backdrop {
+  animation: scene-polish-detail-backdrop-in 240ms ease-out both;
+}
+
+.investigation-detail {
+  transform-origin: center;
+  animation: scene-polish-detail-panel-in 260ms cubic-bezier(.2, .76, .25, 1) both;
+}
+
+.investigation-detail__backdrop--closing {
+  animation: scene-polish-detail-backdrop-out 220ms ease-in both;
+  pointer-events: none;
+}
+
+.investigation-detail--closing {
+  animation: scene-polish-detail-panel-out 220ms ease-in both;
+}
+
+.scene-clue-focus--closing {
+  animation: scene-polish-detail-backdrop-out 220ms ease-in both;
+  pointer-events: none;
+}
+
+.scene-clue-focus--closing .scene-clue-focus__panel {
+  animation: scene-polish-detail-panel-out 220ms ease-in both;
+}
+
+.scene-polish-opening-prelude__time {
+  margin: 28px 0 0;
+  color: #c7ceca;
+  font: 14px/1.5 system-ui, sans-serif;
+  letter-spacing: .06em;
+}
+
+.scene-polish-observation-crop {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 780px);
+  margin: 14px auto 18px;
+}
+
+.scene-polish-observation-crop__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid #aeb8b5;
+  border-radius: 4px;
+  background: #d9dedc;
+  box-shadow: 0 8px 24px rgb(21 31 28 / 15%);
+}
+
+.scene-polish-observation-crop__frame img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  object-fit: cover;
+}
+
+.scene-polish-observation-crop__fallback {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  padding: 18px;
+  border: 1px solid #c1c9ca;
+  color: #36413c;
+  background: #e8ecea;
+  text-align: center;
+}
+
+.scene-polish-observation-crop figcaption {
+  color: var(--ui-text-muted, #595959);
+  font-size: .85rem;
+}
+
+@keyframes scene-polish-curtain-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scene-polish-curtain-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scene-polish-detail-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scene-polish-detail-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scene-polish-detail-panel-in {
+  from { opacity: 0; transform: scale(.975); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scene-polish-detail-panel-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(.985); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-polish-curtain,
+  .scene-polish-curtain--closing,
+  .act1-scene--closing,
+  .investigation-detail__backdrop,
+  .investigation-detail,
+  .investigation-detail__backdrop--closing,
+  .investigation-detail--closing,
+  .scene-clue-focus--closing,
+  .scene-clue-focus--closing .scene-clue-focus__panel,
+  .scene-transition-layer--arriving {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .scene-polish-observation-crop { width: 100%; }
+}
