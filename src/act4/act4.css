@@ -443,3 +443,28 @@
   .a4-reader__notebook-pager { gap: 8px; }
   .a4-reader__notebook-pager button { padding-inline: 10px; }
 }
+.act4-ending__actions a {
+  display: inline-flex;
+  min-width: min(220px, 100%);
+  min-height: 44px;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  border: 1px solid #a9aca8;
+  border-radius: 5px;
+  color: #f4f2ed;
+  background: #171a1c;
+  font: inherit;
+  line-height: 1.35;
+  text-align: center;
+  text-underline-offset: .2em;
+}
+.act4-ending__actions a:hover {
+  color: #fff;
+  background: #292d2e;
+}
+.act4-ending__actions a:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
