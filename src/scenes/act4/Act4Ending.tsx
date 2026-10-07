@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, type KeyboardEvent } from 'react';
+import originalNovelUrl from '../../assets/novel/anchao-original.html?url&no-inline';
 import { runAct4EndingTransition } from '../../components/transition/sceneTransition';
 import { useAct4EndingReveal } from './reader/useAct4EndingReveal';
 
@@ -23,9 +24,9 @@ export function Act4Ending({ onReview, onReturnToDesktop }: { onReview: () => vo
       return;
     }
     if (event.key !== 'Tab') return;
-    const buttons = [...(dialogRef.current?.querySelectorAll<HTMLButtonElement>('button:not([disabled])') ?? [])];
-    const first = buttons[0];
-    const last = buttons.at(-1);
+    const focusable = [...(dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href]') ?? [])];
+    const first = focusable[0];
+    const last = focusable.at(-1);
     if (first && last && event.shiftKey && document.activeElement === first) {
       event.preventDefault();
       last.focus();
@@ -63,6 +64,7 @@ export function Act4Ending({ onReview, onReturnToDesktop }: { onReview: () => vo
       {revealStage >= 3 && <div className="act4-ending__actions act4-ending__actions--revealed">
         <button ref={actionRef} type="button" onClick={reviewStory}>回顾故事</button>
         <button type="button" onClick={returnToDesktop}>返回桌面</button>
+        <a href={originalNovelUrl} target="_blank" rel="noopener noreferrer">点击查看原文《暗潮》</a>
       </div>}
     </div>
   </div>;
