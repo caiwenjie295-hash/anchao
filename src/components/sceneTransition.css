@@ -2,6 +2,15 @@
   view-transition-name: none;
 }
 
+.scene-transition-layer--arriving {
+  animation: scene-polish-layer-arrive 240ms ease-out both;
+}
+
+@keyframes scene-polish-layer-arrive {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 html[data-scene-transition="active"] .scene-transition-layer {
   view-transition-name: scene-surface;
 }

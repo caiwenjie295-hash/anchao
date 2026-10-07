@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { SceneHotspot } from '../../data/sceneData';
+import { useCurtainExit } from '../../components/scenePolish/useCurtainExit';
 
 export interface SceneClueFocusProps {
   hotspot: SceneHotspot;
@@ -15,6 +16,7 @@ export function SceneClueFocus({ hotspot, imageSrc, backgroundSrc, onClose }: Sc
   const onCloseRef = useRef(onClose);
   const [imageFailed, setImageFailed] = useState(false);
   const [retryAttempt, setRetryAttempt] = useState(0);
+  const { closing, beginExit } = useCurtainExit(() => onCloseRef.current());
   onCloseRef.current = onClose;
   const titleId = `scene-clue-focus-${hotspot.id}`;
   const descriptionId = `${titleId}-description`;
@@ -32,7 +34,7 @@ export function SceneClueFocus({ hotspot, imageSrc, backgroundSrc, onClose }: Sc
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        onCloseRef.current();
+        beginExit();
         return;
       }
       if (event.key !== 'Tab') return;
@@ -59,7 +61,7 @@ export function SceneClueFocus({ hotspot, imageSrc, backgroundSrc, onClose }: Sc
       document.removeEventListener('keydown', onKeyDown);
       if (previousFocus?.isConnected) previousFocus.focus();
     };
-  }, [hotspot.id]);
+  }, [beginExit, hotspot.id]);
 
   useEffect(() => {
     setImageFailed(false);
@@ -68,17 +70,17 @@ export function SceneClueFocus({ hotspot, imageSrc, backgroundSrc, onClose }: Sc
 
   return (
     <div
-      className="scene-clue-focus"
+      className={`scene-clue-focus${closing ? ' scene-clue-focus--closing' : ''}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
-      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+      onClick={(event) => { if (event.target === event.currentTarget) beginExit(); }}
     >
       <section ref={panelRef} className="scene-clue-focus__panel" tabIndex={-1}>
         <header className="scene-clue-focus__header">
           <h2 id={titleId}>{hotspot.label}</h2>
-          <button ref={closeButtonRef} type="button" onClick={onClose}>关闭特写</button>
+          <button ref={closeButtonRef} type="button" aria-disabled={closing} onClick={() => beginExit()}>关闭特写</button>
         </header>
         {imageUrl && !imageFailed && isIndependentImage ? (
           <figure className="scene-clue-focus__image scene-clue-focus__image--independent">

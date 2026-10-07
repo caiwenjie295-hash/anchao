@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode, type KeyboardEvent } from 'react';
+import { useCurtainExit } from '../scenePolish/useCurtainExit';
 import './investigation.css';
 
 export interface InvestigationDetailProps {
@@ -18,6 +19,7 @@ export function InvestigationDetail({ title, children, onClose, closeLabel = 'å…
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const fallbackFocusRef = useRef(fallbackFocus);
+  const { closing, beginExit } = useCurtainExit(onClose);
 
   useEffect(() => { fallbackFocusRef.current = fallbackFocus; }, [fallbackFocus]);
 
@@ -36,7 +38,7 @@ export function InvestigationDetail({ title, children, onClose, closeLabel = 'å…
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape') {
       event.preventDefault();
-      onClose();
+      beginExit();
       return;
     }
     if (event.key !== 'Tab' || !dialogRef.current) return;
@@ -58,10 +60,10 @@ export function InvestigationDetail({ title, children, onClose, closeLabel = 'å…
   };
 
   return (
-    <div className="investigation-detail__backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <div className={`investigation-detail__backdrop${closing ? ' investigation-detail__backdrop--closing' : ''}`} role="presentation" onClick={(event) => { if (event.target === event.currentTarget) beginExit(); }}>
       <section
         ref={dialogRef}
-        className="investigation-detail"
+        className={`investigation-detail${closing ? ' investigation-detail--closing' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="investigation-detail-title"
@@ -70,7 +72,7 @@ export function InvestigationDetail({ title, children, onClose, closeLabel = 'å…
       >
         <header className="investigation-detail__header">
           <h2 id="investigation-detail-title">{title}</h2>
-          <button ref={closeRef} type="button" onClick={onClose}>{closeLabel}</button>
+          <button ref={closeRef} type="button" aria-disabled={closing} onClick={() => beginExit()}>{closeLabel}</button>
         </header>
         <div className="investigation-detail__content">{children}</div>
       </section>

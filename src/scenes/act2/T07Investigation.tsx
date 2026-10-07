@@ -9,6 +9,7 @@ import { StateManager, stateManager as defaultManager } from '../../core/stateMa
 import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
 import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt, visualFrameAt } from '../../data/act2T07Data';
+import { T07FinaleCurtain } from '../../components/scenePolish/T07FinaleCurtain';
 import '../../act2/t07Finale.css';
 
 export const ACT2_T07_ENTRY_LABEL = act2T07.entryLabel;
@@ -84,7 +85,6 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const flags = state.game.flags;
   const reducedMotion = state.settings.reducedMotion || (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true);
   const shotDialogRef = useRef<HTMLElement>(null);
-  const finaleRef = useRef<HTMLDivElement>(null);
   const previousTriggerRef = useRef<HTMLElement | null>(null);
   const outcomesRef = useRef<HTMLElement>(null);
   const photoArticleRef = useRef<HTMLElement>(null);
@@ -146,11 +146,6 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     const timer = window.setInterval(() => setCueIndex((index) => Math.min(index + 1, finale.cues.length - 1)), 2400);
     return () => window.clearInterval(timer);
   }, [finaleOpen, complete, reducedMotion]);
-
-  useEffect(() => {
-    if (!finaleOpen) return;
-    finaleRef.current?.querySelector<HTMLElement>('button')?.focus();
-  }, [finaleOpen]);
 
   useEffect(() => () => { investigationAudio.stop(); }, []);
 
@@ -280,7 +275,12 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     setzoomedShotId(null);
     previousTriggerRef.current?.focus();
   };
-  const reviewMaterials = () => { investigationAudio.stop(); setAmbienceEnabled(false); setFinaleOpen(false); setTab('materials'); };
+  const reviewMaterials = () => {
+    investigationAudio.stop();
+    setAmbienceEnabled(false);
+    setFinaleOpen(false);
+    setTab('materials');
+  };
 
   return (
     <InvestigationShell
@@ -520,13 +520,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
         </div>;
       })()}
 
-      {finaleOpen && <div className="t07-finale__ending" role="dialog" aria-modal="true" aria-label="第二幕收束" ref={finaleRef}>
-        {finale.lines.map((line, index) => (
-          <p key={line} className={`t07-finale__narration${index <= cueIndex ? ' is-shown' : ''}`}>{index <= cueIndex ? line : ''}</p>
-        ))}
-        <button type="button" className="t07-finale__ending-continue" onClick={completeAndEnterAct3}>再次进山，调查启明旧址</button>
-        <button type="button" className="t07-finale__ending-replay" onClick={reviewMaterials}>回看资料</button>
-      </div>}
+      {finaleOpen && <T07FinaleCurtain lines={finale.lines} cueIndex={cueIndex} onContinue={completeAndEnterAct3} onReview={reviewMaterials} />}
     </section>
     </InvestigationShell>
   );
