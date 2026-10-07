@@ -1,6 +1,8 @@
-import { useEffect, useState, useSyncExternalStore, type ComponentProps, type ComponentType } from 'react';
+import { useEffect, useState, type ComponentProps, type ComponentType } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct3Snapshot, selectAct3Snapshot } from '../../core/store/selectors';
 import type { Act3ActiveStage, Act3Hotspot, Act3Lens } from '../../core/types';
 import '../../act3/act3Scene.css';
 import { PhotoViewport, type PhotoMarker } from '../../components/PhotoViewport';
@@ -88,7 +90,7 @@ function ClueDetailEvidence({ stage, hotspot }: { stage: Act3ActiveStage; hotspo
 }
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop, onOpenAct4 }: Act3InvestigationProps) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectAct3Snapshot, equalAct3Snapshot);
   const stage = state.modules.act3.stage;
   const [hotspotId, setHotspotId] = useState<string | null>(null);
 

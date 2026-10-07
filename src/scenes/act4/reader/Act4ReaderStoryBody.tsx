@@ -1,0 +1,62 @@
+import type { Act4TextSegment } from '../../../data/narrative/act4Presentation';
+import { act4DateTimeValue, act4ParagraphKind } from '../../../data/narrative/act4Presentation';
+import type { ActiveAct4NarrativeStage } from '../../../story/act4/narrativePolicy';
+
+export function Act4ReaderStoryBody({
+  stage,
+  blockId,
+  paragraphs,
+  currentPage,
+  visibleSegments,
+  pageIndex,
+  pageCount,
+  focusCurrentPage = true,
+}: {
+  stage: ActiveAct4NarrativeStage;
+  blockId: string;
+  paragraphs: readonly string[];
+  currentPage: Act4TextSegment | undefined;
+  visibleSegments: readonly Act4TextSegment[];
+  pageIndex: number;
+  pageCount: number;
+  focusCurrentPage?: boolean;
+}) {
+  return <div className="a4-reader__segment-pages" data-active-segment-id={currentPage?.id} data-active-page={pageIndex + 1} data-page-count={pageCount}>
+    {visibleSegments.map((contentSegment) => {
+      const isSelectedPage = contentSegment.id === currentPage?.id;
+      const isActivePage = focusCurrentPage && isSelectedPage;
+      const segmentParagraphs = paragraphs.slice(contentSegment.from, contentSegment.to);
+      const dateHeading = stage === 'T03' && blockId === 'T03_ORIGINAL' && isSelectedPage
+        ? act4DateTimeValue(segmentParagraphs[0] ?? '')
+        : undefined;
+      const firstParagraphIsDate = Boolean(dateHeading);
+      const pageHeading = stage === 'T10' && blockId === 'T10_FINAL_MAIL'
+        ? '最后一封邮件'
+        : contentSegment.sceneId
+          ? `${contentSegment.sceneLabel || ''}${(contentSegment.scenePageCount ?? 1) > 1 ? ` · 第 ${(contentSegment.scenePageIndex ?? 0) + 1} 页` : ''}`
+          : contentSegment.label;
+      const showSegmentHeading = Boolean(pageHeading) && (stage === 'T01' || Boolean(contentSegment.sceneId) || !['T03', 'T05'].includes(stage));
+      return <section
+        className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`}
+        data-segment-id={contentSegment.id}
+        data-reader-active={isActivePage ? 'true' : undefined}
+        aria-label={isActivePage && pageHeading ? pageHeading : undefined}
+        tabIndex={isActivePage ? -1 : undefined}
+        key={contentSegment.id}
+      >
+        {showSegmentHeading && <h4>{pageHeading}</h4>}
+        {dateHeading && <h4 className="a4-reader__social-date"><time dateTime={dateHeading}>{segmentParagraphs[0]}</time></h4>}
+        <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
+          const index = contentSegment.from + localIndex;
+          if (firstParagraphIsDate && localIndex === 0) return null;
+          const kind = act4ParagraphKind(stage, blockId, index, paragraph);
+          const dateTime = kind === 'social-date' ? act4DateTimeValue(paragraph) : undefined;
+          const paragraphClass = kind ? `a4-reader__paragraph a4-reader__paragraph--${kind}` : 'a4-reader__paragraph';
+          return dateTime
+            ? <time className={paragraphClass} dateTime={dateTime} key={`${blockId}-${index}`}>{paragraph}</time>
+            : <p className={paragraphClass} key={`${blockId}-${index}`}>{paragraph}</p>;
+        })}</div>
+      </section>;
+    })}
+  </div>;
+}

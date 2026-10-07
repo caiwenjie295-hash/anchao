@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { AppId, AppState } from '../core/types';
 import { deriveInvestigationProgress, type InvestigationProgressModel } from '../data/investigationProgressData';
 
@@ -37,7 +37,7 @@ export function InvestigationProgressProvider({
   onReviewAct3?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const progress = deriveInvestigationProgress(state);
+  const progress = useMemo(() => deriveInvestigationProgress(state), [state.game, state.modules]);
   const openerRef = useRef<HTMLElement | null>(null);
   const wasOpenRef = useRef(false);
   const suppressedRef = useRef(suppressed);
@@ -63,7 +63,9 @@ export function InvestigationProgressProvider({
     wasOpenRef.current = isOpen;
   }, [isOpen]);
 
-  return <InvestigationProgressContext.Provider value={{ openProgress, closeProgress, isOpen, currentContentActive, onOpenApp, onContinueInvestigation, onReviewAct3, progress }}>
+  const value = useMemo(() => ({ openProgress, closeProgress, isOpen, currentContentActive, onOpenApp, onContinueInvestigation, onReviewAct3, progress }), [openProgress, closeProgress, isOpen, currentContentActive, onOpenApp, onContinueInvestigation, onReviewAct3, progress]);
+
+  return <InvestigationProgressContext.Provider value={value}>
     {children}
   </InvestigationProgressContext.Provider>;
 }

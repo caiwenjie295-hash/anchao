@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct2SchoolSnapshot, selectAct2SchoolSnapshot } from '../../core/store/selectors';
 import { messageById, type WechatMessage } from '../../data/wechatData';
 import type { Act2SchoolEvidenceId } from '../../core/types';
 import { act2School, schoolAreaById } from '../../data/act2SchoolData';
@@ -25,7 +27,7 @@ function SchoolMemoryPhoto({ message }: { message: WechatMessage }) {
 }
 
 export function SchoolInvestigation({ manager = defaultManager, onReturnToDesktop }: SchoolInvestigationProps) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectAct2SchoolSnapshot, equalAct2SchoolSnapshot);
   const [areaId, setAreaId] = useState('AREA_A2_T05_GATE');
   const [hotspotId, setHotspotId] = useState<string | null>(null);
   const [pendingHotspotId, setPendingHotspotId] = useState<string | null>(null);

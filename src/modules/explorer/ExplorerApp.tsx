@@ -1,13 +1,15 @@
-import { useRef, useState, useSyncExternalStore } from 'react';
+import { useRef, useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { selectScene } from '../../core/store/selectors';
 import { photoById, type PhotoRecord } from '../../data/photoData';
 
 export function ExplorerApp({ manager = stateManager }: { manager?: StateManager }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const sceneState = useAppSelector(manager, selectScene);
   const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
   const pointerTypeRef = useRef('');
-  const photos = state.modules.scene.capturedPhotoIds.map((id) => photoById.get(id)).filter((photo): photo is PhotoRecord => Boolean(photo));
+  const photos = sceneState.capturedPhotoIds.map((id) => photoById.get(id)).filter((photo): photo is PhotoRecord => Boolean(photo));
   const openPhoto = (photoId: string) => {
     manager.openPhotoEditor(photoId);
     manager.openApp('photos');

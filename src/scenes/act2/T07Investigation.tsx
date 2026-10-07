@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import { PhotoViewport } from '../../components/PhotoViewport';
@@ -6,6 +6,8 @@ import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { investigationAudio, readInvestigationAudioPreference, writeInvestigationAudioPreference } from '../../media/investigationAudio';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
 import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import '../../act2/t07Finale.css';
 
@@ -54,7 +56,7 @@ const frameTimeWindow = (frame: (typeof video.keyFrames)[number]): string => `${
 export interface T07InvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void; onEnterAct3?: () => void }
 
 export function T07Investigation({ manager = defaultManager, onReturnToDesktop, onEnterAct3 }: T07InvestigationProps) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectAct2T07Snapshot, equalAct2T07Snapshot);
   const [tab, setTab] = useState<TabId>('materials');
   const [timeMs, setTimeMs] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -532,7 +534,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
 
 /** T06 收束后出现在桌面的中性入口；点击才进入 T07，重载不会自动跳过。 */
 export function Act2T07Entry({ manager = defaultManager }: { manager?: StateManager }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
-  if (state.modules.act2Research.stage !== 'qiming' || state.game.flags.FLAG_A2_OTHER_CASES_ABNORMAL !== true) return null;
+  const state = useAppSelector(manager, selectAct2T07EntrySnapshot, equalAct2T07EntrySnapshot);
+  if (state.stage !== 'qiming' || !state.complete) return null;
   return <button type="button" className="act2-t07-entry" onClick={() => manager.enterAct2FinaleInvestigation()}>{ACT2_T07_ENTRY_LABEL}</button>;
 }

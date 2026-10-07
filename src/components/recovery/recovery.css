@@ -1,0 +1,77 @@
+.save-recovery-notice {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(20 24 31 / 56%);
+  color: #20242b;
+}
+
+.save-recovery-notice__card {
+  width: min(620px, 100%);
+  max-height: min(90dvh, 760px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid #d3d8df;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 24%);
+}
+
+.save-recovery-notice__card h2,
+.save-recovery-panel h3 { margin: 0 0 10px; }
+.save-recovery-notice__card > p,
+.save-recovery-panel > p { color: #4f5865; line-height: 1.55; }
+
+.save-recovery-panel { display: grid; gap: 12px; }
+.save-recovery-panel__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.save-recovery-panel button {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #c5ccd5;
+  border-radius: 8px;
+  background: #f7f8fa;
+  color: inherit;
+  cursor: pointer;
+}
+.save-recovery-panel button:focus-visible,
+.save-recovery-panel input:focus-visible { outline: 3px solid #4b80d4; outline-offset: 2px; }
+.save-recovery-panel button:disabled { cursor: not-allowed; opacity: .55; }
+.save-recovery-panel__confirmation { display: grid; gap: 10px; padding: 12px; border: 1px solid #e5c58c; border-radius: 8px; background: #fff9ed; }
+.save-recovery-panel__confirmation p { margin: 0; line-height: 1.5; }
+.save-recovery-panel__confirmation label { display: flex; align-items: flex-start; gap: 8px; }
+.save-recovery-panel__feedback { margin: 0; color: #263b58; }
+.save-recovery-panel__confirm-import {
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 1px solid #8b6840;
+  border-radius: 6px;
+  color: #4f381e;
+  background: #fff6e8;
+  font: inherit;
+  cursor: pointer;
+}
+.save-recovery-panel__confirm-import:disabled { cursor: not-allowed; opacity: .6; }
+.save-recovery-notice--compact {
+  inset: auto 16px auto auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid #e0bd77;
+  border-radius: 10px;
+  background: #fff8e8;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 14%);
+}
+.save-recovery-notice--compact button { min-height: 36px; padding: 6px 10px; }
+
+@media (max-width: 520px) {
+  .save-recovery-notice { padding: 12px; }
+  .save-recovery-notice__card { padding: 18px; }
+  .save-recovery-panel__actions { display: grid; grid-template-columns: 1fr; }
+  .save-recovery-panel__actions button { width: 100%; }
+  .save-recovery-notice--compact { inset: 8px 8px auto; justify-content: space-between; }
+}

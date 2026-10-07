@@ -13,7 +13,8 @@
     "test:acceptance": "node scripts/run-test-group.mjs acceptance",
     "test:browser": "node scripts/test-browser.mjs",
     "test": "vitest run",
-    "quality:gate": "node scripts/quality-gate.mjs"
+    "quality:gate": "node scripts/quality-gate.mjs",
+    "quality:release": "node scripts/quality-gate.mjs --release"
   },
   "dependencies": {
     "@vitejs/plugin-react": "6.1.1",
@@ -27,5 +28,9 @@
     "vitest": "5.0.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0"
+  },
+  "engines": {
+    "node": "24.15.0",
+    "npm": ">=11.8.0 <12"
   }
 }

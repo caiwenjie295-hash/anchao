@@ -1,8 +1,10 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { equalAct2LibrarySnapshot, selectAct2LibrarySnapshot } from '../../core/store/selectors';
 import { ACT2_SHELF_ROW_RECTS } from '../../data/act2Presentation';
 import {
   libraryCompletion,
@@ -45,7 +47,7 @@ export interface LibraryResearchProps {
  * 只通过冻结的 StateManager 方法推进状态；故事 Flag 由本内容控制器在对应节点写入。
  */
 export function LibraryResearch({ manager = stateManager, onReturnToDesktop, shelfImageSrc }: LibraryResearchProps) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const state = useAppSelector(manager, selectAct2LibrarySnapshot, equalAct2LibrarySnapshot);
   const stage = state.modules.act2Research.stage;
   const library = state.modules.act2Research.library;
   const flags = state.game.flags;

@@ -1,5 +1,7 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import { stateManager, type StateManager } from '../../core/stateManager';
+import { useAppSelector } from '../../core/hooks/useAppSelector';
+import { selectPhotos } from '../../core/store/selectors';
 import { photoById, isSymbolVisible } from '../../data/photoData';
 import { assetLoader } from '../../core/assetLoader';
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
@@ -7,17 +9,17 @@ import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 const defaults = { exposure: 0, shadows: 0, contrast: 0 };
 
 export function PhotosApp({ manager = stateManager }: { manager?: StateManager }) {
-  const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const photosState = useAppSelector(manager, selectPhotos);
   const [failedPhotoId, setFailedPhotoId] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
-  const photoId = state.modules.photos.activePhotoId;
+  const photoId = photosState.activePhotoId;
   const photo = photoId ? photoById.get(photoId) : undefined;
   if (!photo || !photoId) return <section className="photos-app photos-app--empty" aria-label="照片"><p>从资源管理器打开一张照片。</p></section>;
-  const adjustment = state.modules.photos.adjustments[photoId] ?? defaults;
-  const zoom = state.modules.photos.zoomByPhotoId[photoId] ?? 1;
+  const adjustment = photosState.adjustments[photoId] ?? defaults;
+  const zoom = photosState.zoomByPhotoId[photoId] ?? 1;
   const cave = photoId === 'IMG_A1_H_003';
   const revealed = cave && isSymbolVisible(adjustment);
-  const inspected = state.modules.photos.inspectedSymbolPhotoIds.includes(photoId);
+  const inspected = photosState.inspectedSymbolPhotoIds.includes(photoId);
   const imageSrc = assetLoader.get(photoId)?.src;
   const imageFailed = !imageSrc || failedPhotoId === photoId;
   const restoreOriginal = () => {
