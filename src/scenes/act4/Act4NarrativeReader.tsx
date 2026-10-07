@@ -49,10 +49,14 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const [hotelBackgroundExpanded, setHotelBackgroundExpanded] = useState(true);
   const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
   const [privateBlogOpen, setPrivateBlogOpen] = useState(false);
-  const [lastConsciousnessComplete, setLastConsciousnessComplete] = useState(false);
+  const [completedBroadcastStageEpoch, setCompletedBroadcastStageEpoch] = useState<number | null>(null);
   const { bookmarkedDates: bookmarkedBlogDates, toggleBookmark } = usePrivateBlogBookmarks();
   const uiPreferences = useSyncExternalStore(subscribeUiPreferences, getUiPreferences, getUiPreferences);
   const readerRef = useRef<HTMLElement>(null);
+  const currentStageEpochRef = useRef({ stage: currentStage, epoch: 0 });
+  if (currentStageEpochRef.current.stage !== currentStage) {
+    currentStageEpochRef.current = { stage: currentStage, epoch: currentStageEpochRef.current.epoch + 1 };
+  }
   const dialogRef = useRef<HTMLDivElement>(null);
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -131,7 +135,6 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   useEffect(() => {
     if (state.stage === 'T10' && state.completedNarrativeSectionIds.includes('A4_READ_T10') && isComplete) setEndingRecapExpanded(true);
   }, [state.completedNarrativeSectionIds, state.stage, isComplete]);
-  useEffect(() => { setLastConsciousnessComplete(false); }, [currentStage]);
   if (!section) return null;
   const presentationKind = act4PresentationKind(stage);
   const isWangaoMemory = ['T05', 'T06', 'T07', 'T08', 'T09'].includes(stage);
@@ -196,6 +199,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const activeReadingBlockIndex = activeReadingTarget ? visibleBlocks.findIndex((block) => block.id === activeReadingTarget.blockId) : -1;
   const nextReadingTarget = activeReadingTarget ? pageTargets.find((target) => visibleBlocks.findIndex((block) => block.id === target.blockId) === activeReadingBlockIndex + 1) : undefined;
   const mustFinishLastConsciousness = !reviewing && stage === 'T09' && activeReadingTarget?.blockId === 'T09_BROADCAST';
+  const lastConsciousnessComplete = completedBroadcastStageEpoch === currentStageEpochRef.current.epoch;
   const currentReadingReady = actionCompleted && (!mustFinishLastConsciousness || lastConsciousnessComplete);
   const t01PageControls = stage === 'T01' && activeReadingTarget?.coverOpen === true && activeReadingTarget.blockId === 'T01_ORIGINAL';
   const continueAction: InvestigationAction = stage === 'T03' && reviewing
@@ -398,7 +402,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     pageIndex={pageIndex}
     pageCount={pageCount}
     focusCurrentPage={focusCurrentPage}
-    onBroadcastCompleteChange={setLastConsciousnessComplete}
+    onBroadcastCompleteChange={!reviewing ? (complete) => setCompletedBroadcastStageEpoch(complete ? currentStageEpochRef.current.epoch : null) : undefined}
   />;
 
   const renderEndingRecap = () => <>
