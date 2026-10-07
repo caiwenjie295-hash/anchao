@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import images from '../../data/images.json';
 import { birthdayImageSlots } from '../data/act4/assets';
 import { laterScenes } from '../data/act4/laterContent';
-import { act4AssetPath, assetLoader, uxRhythmA4AssetPath } from './assetLoader';
+import { act4AssetPath, assetLoader, uxFinaleA4AssetPath, uxRhythmA4AssetPath } from './assetLoader';
 
 describe('fourth act art registration', () => {
   it('keeps the original 40 IDs and registers three newly delivered A4 images', () => {
@@ -48,6 +48,27 @@ describe('first act art registration', () => {
     for (const id of ['IMG_A1_D_001', 'IMG_A1_G_001', 'IMG_A1_I_001']) {
       expect(assetLoader.isAvailable(id), id).toBe(true);
     }
+  });
+});
+
+describe('UX finale artwork registration', () => {
+  it('serves the four approved finale WebP assets without adding them to the legacy image manifest', () => {
+    const ids = [
+      'IMG_A4_FINALE_FEAR_001',
+      'IMG_A4_FINALE_DOOR_001',
+      'IMG_A4_FINALE_DOOR_002',
+      'IMG_A4_FINALE_SURROUND_001',
+    ];
+    const records = images.items.map((image) => image.id);
+    for (const id of ids) {
+      expect(records).not.toContain(id);
+      expect(uxFinaleA4AssetPath(id, `${id}.webp`)).toBe(`../assets/ux-finale-20261008/${id}.webp`);
+      expect(assetLoader.get(id)?.id).toBe(id);
+      expect(assetLoader.get(id)?.src).toMatch(new RegExp(`ux-finale-20261008/${id}\\.webp`));
+      expect(assetLoader.isAvailable(id)).toBe(true);
+    }
+    expect(uxFinaleA4AssetPath('IMG_A4_FINALE_UNKNOWN_001', 'IMG_A4_FINALE_UNKNOWN_001.webp')).toBeNull();
+    expect(uxFinaleA4AssetPath(ids[0], 'different.webp')).toBeNull();
   });
 });
 

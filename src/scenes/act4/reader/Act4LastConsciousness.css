@@ -1,0 +1,154 @@
+.a4-last-consciousness {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.a4-last-consciousness__frame {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 140px;
+  max-height: min(48vh, 430px);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #64716c;
+  border-radius: 8px;
+  background: #101311;
+}
+
+.a4-last-consciousness__frame img {
+  display: block;
+  width: 100%;
+  max-height: min(48vh, 430px);
+  object-fit: contain;
+  filter: blur(var(--consciousness-blur, 0px));
+  transform: scale(var(--consciousness-scale, 1));
+  transition: filter 300ms ease, transform 300ms ease;
+}
+
+.a4-last-consciousness__image-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 140px;
+  padding: 18px;
+  color: #e4ded0;
+  text-align: center;
+}
+
+.a4-last-consciousness__live-text {
+  min-width: 0;
+  min-height: 2.6em;
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid #c2ad82;
+  background: #18201f;
+  color: #f3eee4;
+  font-size: 1.08em;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.a4-last-consciousness__live-text--broadcast-word {
+  color: #fff3d0;
+  font-size: clamp(1.35rem, 4vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.a4-last-consciousness__live-text--broadcast-ending {
+  border-left-color: #d6cdbd;
+  font-weight: 700;
+}
+
+.a4-last-consciousness__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.a4-last-consciousness__controls button,
+.a4-last-consciousness__transcript > button {
+  flex: 1 1 10rem;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid #798d82;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #263632;
+  color: #f5f1e7;
+  font: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.a4-last-consciousness__controls button:focus-visible,
+.a4-last-consciousness__transcript > button:focus-visible,
+.a4-last-consciousness__transcript summary:focus-visible {
+  outline: 3px solid #f0ca7c;
+  outline-offset: 2px;
+}
+
+.a4-last-consciousness__controls button:disabled,
+.a4-last-consciousness__transcript > button:disabled {
+  opacity: .55;
+  cursor: default;
+}
+
+.a4-last-consciousness__transcript {
+  min-width: 0;
+  border-top: 1px solid #54625d;
+  padding-top: 10px;
+}
+
+.a4-last-consciousness__transcript summary {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid #71857c;
+  border-radius: 6px;
+  background: #263632;
+  color: #fff4dc;
+  font-weight: 700;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.a4-last-consciousness__transcript summary:hover {
+  background: #344740;
+}
+
+.a4-last-consciousness__transcript .a4-reader__paragraphs {
+  margin-block: 10px;
+}
+
+@media (max-width: 520px) {
+  .a4-last-consciousness__frame,
+  .a4-last-consciousness__frame img {
+    max-height: min(38vh, 300px);
+  }
+
+  .a4-last-consciousness__controls button {
+    flex-basis: calc(50% - 8px);
+  }
+
+  .a4-last-consciousness__controls button:last-child {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .a4-last-consciousness__frame img {
+    transition: none;
+    transform: none;
+  }
+}

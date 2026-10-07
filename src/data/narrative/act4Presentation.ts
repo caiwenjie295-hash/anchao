@@ -147,7 +147,7 @@ const BLOCK_PAGE_ART: Record<string, readonly (SceneArtwork | undefined)[]> = {
   ],
   'T08:T08_KITCHEN_ESCAPE': [
     { assetId: 'IMG_A4_T08_010', alt: '启明旧址厨房里的景象' },
-    undefined,
+    { assetId: 'IMG_A4_FINALE_FEAR_001', alt: '王澳在地下厨房边惊惧地回望，视线开始模糊' },
     undefined,
     { assetId: 'IMG_A4_T08_012', alt: '王澳逃出厨房后，倒在消防栓旁的低视角' },
   ],
