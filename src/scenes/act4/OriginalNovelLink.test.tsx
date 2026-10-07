@@ -43,8 +43,10 @@ describe('original novel ending link', () => {
     expect(link.target).toBe('_blank');
     expect(link.rel).toContain('noopener');
     expect(link.rel).toContain('noreferrer');
-    expect(link.getAttribute('href')).toContain('anchao-original.html');
-    expect(link.getAttribute('href')).not.toMatch(/^data:/);
+    const novelHref = link.getAttribute('href');
+    expect(novelHref).toContain('anchao-original.html');
+    expect(novelHref).not.toMatch(/^data:/);
+    expect(new URL(novelHref!, window.location.href).pathname).toMatch(/anchao-original\.html$/);
     expect(document.activeElement).toBe(host.querySelector('.act4-ending__actions button'));
 
     skip.focus();

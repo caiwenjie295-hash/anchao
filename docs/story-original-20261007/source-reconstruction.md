@@ -20,7 +20,7 @@
 
 ## 阅读入口和返回
 
-幕末使用普通 `<a>`，正文资产由 Vite `?url` 导入，链接在署名完成后出现并以新标签打开。阅读页目录链接指向 `#chapter-01` 至 `#chapter-22`；`main#novel-start` 为正文入口。
+幕末使用普通 `<a>`，正文资产由 Vite `?url&no-inline` 导入，明确要求产出独立静态 HTML 文件（包括 library/offline 构建），避免把整篇原文内嵌进应用 JS。链接在署名完成后出现并以新标签打开。阅读页目录链接指向 `#chapter-01` 至 `#chapter-22`；`main#novel-start` 为正文入口。
 
 页面顶部有置顶“返回游戏”入口，页尾也保留返回入口。相对路径 `../index.html` 适用于正式发布和 `暗潮离线/assets/` 内的 file:// 静态资源；当 Vite 开发/源码 URL 位于 `/src/assets/novel/` 时，内联小脚本把入口调整到 `../../../index.html`。页面样式与系统衬线字体内联，不依赖网络资源。
 
@@ -32,6 +32,7 @@
 
 - `npm test -- src/scenes/act4/OriginalNovelLink.test.tsx src/scenes/act4/Act4Ending.test.tsx`：2个测试文件、3项测试通过。
 - `npm exec -- tsc -b --pretty false`：退出码0。
+- `npm run build` 与 `npm run build:offline`：均退出码0。网页包和离线包各含1个独立原文 HTML；两份 SHA-256 均为 `487105BFEE2582128D95897997FD85312B13644DBD07F17EB3D4010FE648EE04`，与源 HTML 一致。网页包文件为 `dist/assets/anchao-original-BxXxlN9X.html`，离线包为 `暗潮离线/assets/anchao-original.html`；应用 JS 只引用对应静态资源 URL，不含 `data:text/html;base64` 或完整正文段落。离线页 `../index.html` 返回路径解析到 `暗潮离线/index.html`。
 - `git diff --check`：通过。静态 HTML 检查：22个章节 section、无 `PAGE` 标记、无远端引用、无行尾空白；规范化正文匹配检查通过。
 
-全仓门禁、打包与真实浏览器/离线包验收由父方统一执行。
+全仓门禁及真实浏览器/离线运行验收由父方统一执行。

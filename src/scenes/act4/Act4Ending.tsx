@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, type KeyboardEvent } from 'react';
-import originalNovelUrl from '../../assets/novel/anchao-original.html?url';
+import originalNovelUrl from '../../assets/novel/anchao-original.html?url&no-inline';
 import { runAct4EndingTransition } from '../../components/transition/sceneTransition';
 import { useAct4EndingReveal } from './reader/useAct4EndingReveal';
 
