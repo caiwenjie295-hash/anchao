@@ -49,9 +49,14 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const [hotelBackgroundExpanded, setHotelBackgroundExpanded] = useState(true);
   const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
   const [privateBlogOpen, setPrivateBlogOpen] = useState(false);
+  const [completedBroadcastStageEpoch, setCompletedBroadcastStageEpoch] = useState<number | null>(null);
   const { bookmarkedDates: bookmarkedBlogDates, toggleBookmark } = usePrivateBlogBookmarks();
   const uiPreferences = useSyncExternalStore(subscribeUiPreferences, getUiPreferences, getUiPreferences);
   const readerRef = useRef<HTMLElement>(null);
+  const currentStageEpochRef = useRef({ stage: currentStage, epoch: 0 });
+  if (currentStageEpochRef.current.stage !== currentStage) {
+    currentStageEpochRef.current = { stage: currentStage, epoch: currentStageEpochRef.current.epoch + 1 };
+  }
   const dialogRef = useRef<HTMLDivElement>(null);
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -193,6 +198,9 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const activeReadingTarget = pageTargets.find((target) => target.blockId === rememberedBlockId) ?? pageTargets.find((target) => target.blockId === `${stage}_ORIGINAL`) ?? pageTargets[0];
   const activeReadingBlockIndex = activeReadingTarget ? visibleBlocks.findIndex((block) => block.id === activeReadingTarget.blockId) : -1;
   const nextReadingTarget = activeReadingTarget ? pageTargets.find((target) => visibleBlocks.findIndex((block) => block.id === target.blockId) === activeReadingBlockIndex + 1) : undefined;
+  const mustFinishLastConsciousness = !reviewing && stage === 'T09' && activeReadingTarget?.blockId === 'T09_BROADCAST';
+  const lastConsciousnessComplete = completedBroadcastStageEpoch === currentStageEpochRef.current.epoch;
+  const currentReadingReady = actionCompleted && (!mustFinishLastConsciousness || lastConsciousnessComplete);
   const t01PageControls = stage === 'T01' && activeReadingTarget?.coverOpen === true && activeReadingTarget.blockId === 'T01_ORIGINAL';
   const continueAction: InvestigationAction = stage === 'T03' && reviewing
     ? {
@@ -253,8 +261,8 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
       kind: stage === 'T10' ? 'story' : 'memory',
       target: stage === 'T10' ? 'A4_COMPLETE' : `A4_READ_T${String(Number(stage.slice(1)) + 1).padStart(2, '0')}`,
       label: finalCompleted ? '第四幕已完成' : stage === 'T10' ? '完成第四幕' : '读完这一段，继续',
-      state: finalCompleted ? 'completed' : actionCompleted ? 'ready' : 'blocked',
-      reason: actionCompleted ? undefined : blockedReason[stage] ?? '先读完这一段，再继续。',
+      state: finalCompleted ? 'completed' : currentReadingReady ? 'ready' : 'blocked',
+      reason: currentReadingReady ? undefined : !actionCompleted ? blockedReason[stage] ?? '先读完这一段，再继续。' : '按顺序听完广播与最后一句，再继续。',
       onActivate: () => continueCurrentSection(stage),
     };
 
@@ -394,6 +402,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     pageIndex={pageIndex}
     pageCount={pageCount}
     focusCurrentPage={focusCurrentPage}
+    onBroadcastCompleteChange={!reviewing ? (complete) => setCompletedBroadcastStageEpoch(complete ? currentStageEpochRef.current.epoch : null) : undefined}
   />;
 
   const renderEndingRecap = () => <>

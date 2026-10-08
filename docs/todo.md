@@ -1,5 +1,10 @@
 # 《暗潮》当前待办
 
+## UX-FINALE-20261008
+
+- [x] 恐惧封面与最后清醒的照片演出、原文顺序、浏览器与四门禁APPROVED。
+- [x] 32项个人dirty及原PDF/HTML保护；从审查main干净源交付以root release-main.json核对。
+
 ## STORY-ORIGINAL-20261007 完成与后续
 
 - [x] 结尾原文链接、22章完整HTML、目录/返回/手机排版和网页/离线资产。

@@ -131,7 +131,10 @@ describe('Act4 reading presentation baseline checks', () => {
     expect(act4PagePresentation('T06', 3)?.illustrationAssetId).toBe('IMG_A4_T06_007');
     expect(act4PagePresentation('T08', 2, 'T08_RETURN')?.illustrationAssetId).toBe('IMG_A4_T08_011');
     expect(act4PagePresentation('T08', 0, 'T08_KITCHEN_ESCAPE')?.illustrationAssetId).toBe('IMG_A4_T08_010');
-    expect(act4PagePresentation('T08', 1, 'T08_KITCHEN_ESCAPE')?.illustrationAssetId).toBeUndefined();
+    expect(act4PagePresentation('T08', 1, 'T08_KITCHEN_ESCAPE')).toEqual({
+      illustrationAssetId: 'IMG_A4_FINALE_FEAR_001',
+      illustrationAlt: '王澳在地下厨房边惊惧地回望，视线开始模糊',
+    });
     expect(act4PagePresentation('T08', 2, 'T08_KITCHEN_ESCAPE')?.illustrationAssetId).toBeUndefined();
     expect(act4PagePresentation('T08', 3, 'T08_KITCHEN_ESCAPE')?.illustrationAssetId).toBe('IMG_A4_T08_012');
   });

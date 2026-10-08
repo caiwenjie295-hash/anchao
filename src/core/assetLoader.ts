@@ -21,6 +21,7 @@ export class AssetLoader {
 }
 
 const compressedFiles = import.meta.glob<string>('../assets/compressed/**/*.{webp,png,jpg,jpeg}', { eager: true, query: '?url&no-inline', import: 'default' });
+const uxFinaleFiles = import.meta.glob<string>('../assets/ux-finale-20261008/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const compressedEntries = compressedAssetMap.entries as Record<string, string>;
 const compressedSource = (sourcePath: string | null): string | undefined => {
   if (!sourcePath) return undefined;
@@ -39,8 +40,22 @@ const uxRhythmA4ImageIds = new Set([
 ]);
 export const uxRhythmA4AssetPath = (id: string, file: string): string | null =>
   uxRhythmA4ImageIds.has(id) && file === `${id}.png` ? `../第四幕/UX-RHYTHM/${file}` : null;
-export const assetLoader = new AssetLoader(Object.fromEntries(imageRecords.filter((image) => image.file).map((image) => [image.id, {
+const uxFinaleA4ImageIds = [
+  'IMG_A4_FINALE_FEAR_001',
+  'IMG_A4_FINALE_DOOR_001',
+  'IMG_A4_FINALE_DOOR_002',
+  'IMG_A4_FINALE_SURROUND_001',
+] as const;
+export const uxFinaleA4AssetPath = (id: string, file: string): string | null =>
+  uxFinaleA4ImageIds.includes(id as typeof uxFinaleA4ImageIds[number]) && file === `${id}.webp`
+    ? `../assets/ux-finale-20261008/${file}`
+    : null;
+const existingAssets = imageRecords.filter((image) => image.file).map((image) => [image.id, {
   id: image.id, type: 'image', src: compressedSource(`../Photo_src/${image.file}`) ?? compressedSource(`../第二幕/${image.file}`)
     ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!))
     ?? compressedSource(uxRhythmA4AssetPath(image.id, image.file!)),
-}])));
+}]);
+const uxFinaleAssets = uxFinaleA4ImageIds.map((id) => [id, {
+  id, type: 'image' as const, src: uxFinaleFiles[`../assets/ux-finale-20261008/${id}.webp`],
+}]);
+export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets]));

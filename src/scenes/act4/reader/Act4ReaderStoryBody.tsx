@@ -1,6 +1,7 @@
 import type { Act4TextSegment } from '../../../data/narrative/act4Presentation';
 import { act4DateTimeValue, act4ParagraphKind } from '../../../data/narrative/act4Presentation';
 import type { ActiveAct4NarrativeStage } from '../../../story/act4/narrativePolicy';
+import { Act4LastConsciousness } from './Act4LastConsciousness';
 
 export function Act4ReaderStoryBody({
   stage,
@@ -11,6 +12,7 @@ export function Act4ReaderStoryBody({
   pageIndex,
   pageCount,
   focusCurrentPage = true,
+  onBroadcastCompleteChange,
 }: {
   stage: ActiveAct4NarrativeStage;
   blockId: string;
@@ -20,6 +22,7 @@ export function Act4ReaderStoryBody({
   pageIndex: number;
   pageCount: number;
   focusCurrentPage?: boolean;
+  onBroadcastCompleteChange?: (complete: boolean) => void;
 }) {
   return <div className="a4-reader__segment-pages" data-active-segment-id={currentPage?.id} data-active-page={pageIndex + 1} data-page-count={pageCount}>
     {visibleSegments.map((contentSegment) => {
@@ -46,7 +49,9 @@ export function Act4ReaderStoryBody({
       >
         {showSegmentHeading && <h4>{pageHeading}</h4>}
         {dateHeading && <h4 className="a4-reader__social-date"><time dateTime={dateHeading}>{segmentParagraphs[0]}</time></h4>}
-        <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
+        {stage === 'T09' && blockId === 'T09_BROADCAST'
+          ? <Act4LastConsciousness paragraphs={paragraphs} onCompleteChange={onBroadcastCompleteChange} />
+          : <div className="a4-reader__paragraphs">{segmentParagraphs.map((paragraph, localIndex) => {
           const index = contentSegment.from + localIndex;
           if (firstParagraphIsDate && localIndex === 0) return null;
           const kind = act4ParagraphKind(stage, blockId, index, paragraph);
@@ -55,7 +60,7 @@ export function Act4ReaderStoryBody({
           return dateTime
             ? <time className={paragraphClass} dateTime={dateTime} key={`${blockId}-${index}`}>{paragraph}</time>
             : <p className={paragraphClass} key={`${blockId}-${index}`}>{paragraph}</p>;
-        })}</div>
+        })}</div>}
       </section>;
     })}
   </div>;
