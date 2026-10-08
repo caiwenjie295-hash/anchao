@@ -178,6 +178,81 @@ async function advanceReaderUntilBlock(blockId) {
   }
   assert.fail(`${blockId} did not become visible through deliberate reader actions`);
 }
+async function completeLastConsciousness() {
+  const blockSelector = '[data-block-id="T09_BROADCAST"]';
+  const block = query(blockSelector);
+  const scene = query(`${blockSelector} .a4-last-consciousness`);
+  const expectedParagraphs = [
+    '广播传来声音：',
+    '“老鼠”',
+    '“不行，只有几步！”',
+    '“血”',
+    '“可恶，差一点，就快到了！”我感觉我已经能触摸到门外的阳光。',
+    '“草垛”',
+    '“别，别说了！”恐惧攥住了我，我浑身发抖。',
+    '“木房子”',
+    '“啊啊啊啊啊啊啊！”',
+    '“玫瑰”',
+    '我的左脚已经迈出了那扇门，啊！微风！阳光！',
+    '“表”',
+    '我倒在地上，慢慢闭上眼睛，耳边只有模糊的脚步声和冷静的交谈声：',
+    '“回收完成。”',
+  ];
+  const expectedWords = ['“老鼠”', '“血”', '“草垛”', '“木房子”', '“玫瑰”', '“表”'];
+  assert.deepEqual(expectedParagraphs.filter((_, index) => [1, 3, 5, 7, 9, 11].includes(index)), expectedWords,
+    'the final broadcast keeps its six original words in order');
+  assert.deepEqual([...block.querySelectorAll('.a4-last-consciousness__transcript .a4-reader__paragraph')]
+    .map((paragraph) => paragraph.textContent.trim()), expectedParagraphs,
+  'the full transcript retains every original line in order');
+
+  const currentParagraph = () => query(`${blockSelector} .a4-last-consciousness__live-text`).textContent.trim();
+  const currentFrameAsset = () => query(`${blockSelector} .a4-last-consciousness__frame img`).getAttribute('data-asset-id');
+  const continueAction = '.investigation-shell__operations .investigation-navigation__action[data-action-id="A4_T09_CONTINUE_READING"]';
+  const assertContinueState = (expected) => assert.equal(query(continueAction).getAttribute('data-action-state'), expected,
+    `T09 continue action should remain ${expected} at broadcast index ${scene.getAttribute('data-last-consciousness-index')}`);
+
+  assert.equal(scene.getAttribute('data-last-consciousness-index'), '0');
+  assert.equal(currentParagraph(), expectedParagraphs[0]);
+  assert.equal(currentFrameAsset(), 'IMG_A4_T09_004', 'the opening broadcast lines reuse the existing distant door image');
+  assert.equal(block.querySelector('[data-asset-id="IMG_A4_FINALE_SURROUND_001"]'), null,
+    'the masked figures remain hidden before the fall');
+  assertContinueState('blocked');
+
+  for (let index = 1; index < expectedParagraphs.length; index += 1) {
+    if (index === 10) {
+      assert.equal(currentParagraph(), '“玫瑰”', 'the left foot has not left the door before the rose response');
+      assert.doesNotMatch(currentParagraph(), /左脚/);
+    }
+    if (index === 12) {
+      assert.equal(currentParagraph(), '“表”', 'the fall follows the sixth broadcast word');
+      assert.equal(block.querySelector('[data-asset-id="IMG_A4_FINALE_SURROUND_001"]'), null,
+        'masked figures stay hidden until the fall line is deliberately revealed');
+    }
+
+    await click(`${blockSelector} .a4-last-consciousness__controls button:last-child`);
+    assert.equal(scene.getAttribute('data-last-consciousness-index'), String(index));
+    assert.equal(currentParagraph(), expectedParagraphs[index], `broadcast line ${index} appears only after its click`);
+
+    const expectedFrame = index < 2
+      ? 'IMG_A4_T09_004'
+      : index < 7
+        ? 'IMG_A4_FINALE_DOOR_001'
+        : index < 12
+          ? 'IMG_A4_FINALE_DOOR_002'
+          : 'IMG_A4_FINALE_SURROUND_001';
+    assert.equal(currentFrameAsset(), expectedFrame, `broadcast frame matches line ${index}`);
+    if (index < 12) {
+      assert.equal(block.querySelector('[data-asset-id="IMG_A4_FINALE_SURROUND_001"]'), null,
+        `masked figures remain hidden before fall paragraph ${index}`);
+    } else {
+      assert.ok(block.querySelector('[data-asset-id="IMG_A4_FINALE_SURROUND_001"]'),
+        `masked figures appear with fall paragraph ${index}`);
+    }
+    if (index === 10) assert.match(currentParagraph(), /左脚已经迈出了那扇门/);
+    assertContinueState(index === expectedParagraphs.length - 1 ? 'ready' : 'blocked');
+  }
+  assert.equal(currentParagraph(), '“回收完成。”', 'recovery remains the final original broadcast line');
+}
 function assertAct1CanvasImage() {
   assertLocalImage(query('.scene-image-frame img.scene-background').src);
 }
@@ -823,6 +898,9 @@ async function investigateAct4() {
   await lastPage('T09_WALK_TO_DOOR');
   await textButton('走向门外，听完广播', '.a4-reader__interaction button');
   assert.ok(state().modules.act4.completedNarrativeActionIds.includes('A4_T09_DOOR_EXITED'));
+  await advanceReaderUntilBlock('T09_BROADCAST');
+  await lastPage('T09_BROADCAST');
+  await completeLastConsciousness();
   await continueSection('T09');
   await lastPage('T10_AFTERMATH');
   await textButton('打开启明的最后一封邮件', '.a4-reader__interaction button');
