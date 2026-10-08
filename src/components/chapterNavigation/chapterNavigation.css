@@ -1,0 +1,26 @@
+.chapter-navigation { position: fixed; z-index: 90; left: max(12px, env(safe-area-inset-left, 0px)); bottom: max(72px, calc(60px + env(safe-area-inset-bottom, 0px))); width: min(350px, calc(100vw - max(12px, env(safe-area-inset-left, 0px)) - max(12px, env(safe-area-inset-right, 0px)))); color: #edf3ef; font: inherit; }
+.chapter-navigation button { min-height: 44px; font: inherit; }
+.chapter-navigation__trigger { padding: 0 15px; border: 1px solid #9aa89f; border-radius: 999px; color: #f3f5ef; background: #18231ee8; box-shadow: 0 5px 20px #0004; cursor: pointer; }
+.chapter-navigation__trigger:hover,.chapter-navigation__trigger:focus-visible { border-color: #d5e5d9; background: #25372d; outline: 3px solid #c6d9cd; outline-offset: 2px; }
+.chapter-navigation__menu { position: absolute; bottom: calc(100% + 9px); left: 0; box-sizing: border-box; width: 100%; max-height: min(70vh, calc(100vh - 164px)); max-height: min(70dvh, calc(100dvh - 164px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)), 620px); overflow: auto; overscroll-behavior: contain; padding: 17px; border: 1px solid #61746a; border-radius: 12px; color: #e9eee9; background: #18211ff5; box-shadow: 0 16px 40px #0008; backdrop-filter: blur(12px); }
+.chapter-navigation__menu h2 { margin: 0 0 7px; font-size: 1.02rem; }
+.chapter-navigation__menu p { margin: 0 0 12px; color: #c7d0ca; font-size: .9rem; line-height: 1.5; }
+.chapter-navigation__choices { display: grid; gap: 7px; }
+.chapter-navigation__choice { width: 100%; padding: 8px 12px; border: 1px solid #78897e; border-radius: 8px; color: #f3f5ef; background: #283730; text-align: left; cursor: pointer; }
+.chapter-navigation__choice:not(:disabled):hover,.chapter-navigation__choice:not(:disabled):focus-visible { background: #384e41; outline: 2px solid #b9d2c1; outline-offset: 1px; }
+.chapter-navigation__choice:disabled { border-color: #4f5952; color: #a1aaa3; background: #202824; cursor: not-allowed; }
+.chapter-navigation__other { margin-top: 13px; border-top: 1px solid #56645b; padding-top: 8px; }
+.chapter-navigation__other summary { min-height: 44px; display: flex; align-items: center; color: #d4ddd6; cursor: pointer; }
+.chapter-navigation__clear { width: 100%; padding: 8px 12px; border: 1px solid #966a5d; border-radius: 8px; color: #f1e5e0; background: #3a2925; text-align: left; cursor: pointer; }
+.chapter-navigation__clear:hover,.chapter-navigation__clear:focus-visible { background: #55342c; outline: 2px solid #d6a796; outline-offset: 1px; }
+.chapter-navigation__warning { margin-top: 10px !important; color: #ffe2ac !important; }
+.chapter-navigation__backdrop { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 18px; background: #09100dcc; }
+.chapter-navigation__confirmation { width: min(480px, 100%); padding: 22px; border: 1px solid #819389; border-radius: 14px; color: #edf3ef; background: #1b2822; box-shadow: 0 18px 54px #0009; }
+.chapter-navigation__confirmation h2 { margin: 0 0 10px; font-size: 1.2rem; }
+.chapter-navigation__confirmation p { margin: 0 0 17px; color: #d7e0d9; line-height: 1.6; }
+.chapter-navigation__confirmation-actions { display: flex; justify-content: flex-end; gap: 9px; }
+.chapter-navigation__confirmation-actions button { min-width: 100px; min-height: 44px; padding: 7px 13px; border: 1px solid #87968d; border-radius: 8px; color: #eff3ef; background: #33443a; cursor: pointer; }
+.chapter-navigation__confirmation-actions button:focus-visible { outline: 3px solid #c7e0cf; outline-offset: 2px; }
+.chapter-navigation__confirmation-actions .chapter-navigation__danger { border-color: #b77c69; color: #fff4f0; background: #672f26; }
+.chapter-navigation__confirmation .chapter-navigation__error { margin-top: -5px; color: #ffc5ae; }
+@media (max-width: 520px) { .chapter-navigation__confirmation { padding: 18px; } }

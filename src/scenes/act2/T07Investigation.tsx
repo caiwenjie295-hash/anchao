@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent a
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import { PhotoViewport } from '../../components/PhotoViewport';
+import type { PhotoMarker } from '../../components/PhotoViewport';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { assetLoader } from '../../core/assetLoader';
 import { investigationAudio, readInvestigationAudioPreference, writeInvestigationAudioPreference } from '../../media/investigationAudio';
@@ -71,6 +72,8 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
   const [recentlyCapturedFrameId, setRecentlyCapturedFrameId] = useState<string | null>(() => manager.getState().modules.act2Research.t07.capturedFrameIds.at(-1) ?? null);
   const [selectedFeatureId, setSelectedFeatureId] = useState('');
+  const [observedVideoFrameIds, setObservedVideoFrameIds] = useState<string[]>([]);
+  const [observedExteriorFrameIds, setObservedExteriorFrameIds] = useState<string[]>([]);
   const [compareFeedback, setCompareFeedback] = useState('');
   const [cueIndex, setCueIndex] = useState(0);
   const [ambienceEnabled, setAmbienceEnabled] = useState(false);
@@ -116,6 +119,26 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const onPhotoAvailability = useCallback((available: boolean) => setPhotoImageAvailable(available), []);
   const onComparisonFrameAvailability = useCallback((available: boolean) => setComparisonFrameReady(available), [activeFrame?.id]);
   const onComparisonExteriorAvailability = useCallback((available: boolean) => setComparisonExteriorReady(available), [activeFrame?.id]);
+  const videoObservationMarkers: PhotoMarker[] = activeFrame ? [{
+    id: `T07_OBSERVE_VIDEO_${activeFrame.id}`,
+    label: observedVideoFrameIds.includes(activeFrame.id) ? '已标记视频画面观察区域' : '点选查看视频画面区域',
+    x: 0.445,
+    y: 0.35,
+    kind: 'memory',
+    active: observedVideoFrameIds.includes(activeFrame.id),
+    disabled: !comparisonFrameReady,
+    onActivate: () => setObservedVideoFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id]),
+  }] : [];
+  const exteriorObservationMarkers: PhotoMarker[] = activeFrame ? [{
+    id: `T07_OBSERVE_EXTERIOR_${activeFrame.id}`,
+    label: observedExteriorFrameIds.includes(activeFrame.id) ? '已标记外景观察区域' : '点选查看外景石砌开口附近',
+    x: 0.525,
+    y: 0.46,
+    kind: 'memory',
+    active: observedExteriorFrameIds.includes(activeFrame.id),
+    disabled: !comparisonExteriorReady,
+    onActivate: () => setObservedExteriorFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id]),
+  }] : [];
 
   // 播放推进只由计时器驱动；暂停时拖动进度条不计入覆盖。
   useEffect(() => {
@@ -256,10 +279,11 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     if (!capturableFrame) return;
     manager.captureAct2T07Frame(capturableFrame.id, timeMs);
     setRecentlyCapturedFrameId(capturableFrame.id);
+    setSelectedFrameId(capturableFrame.id);
   };
-  const openRecentCaptureInComparison = () => {
-    if (!recentlyCapturedFrameId || !capturedFrames.some((frame) => frame.id === recentlyCapturedFrameId)) return;
-    setSelectedFrameId(recentlyCapturedFrameId);
+  const openFrameInComparison = (frameId: string) => {
+    if (!capturedFrames.some((frame) => frame.id === frameId)) return;
+    setSelectedFrameId(frameId);
     setComparisonFrameReady(false);
     setComparisonExteriorReady(false);
     setSelectedFeatureId('');
@@ -267,6 +291,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     setTab('compare');
     window.setTimeout(() => comparisonPanelRef.current?.focus({ preventScroll: true }), 0);
   };
+  const openRecentCaptureInComparison = () => { if (recentlyCapturedFrameId) openFrameInComparison(recentlyCapturedFrameId); };
   const openShot = (frameId: string, trigger?: HTMLElement) => {
     if (trigger) previousTriggerRef.current = trigger;
     setzoomedShotId(frameId);
@@ -377,6 +402,18 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             <FrameVisual key={currentVideoImageId} assetId={currentVideoImageId} altText={capturableFrame?.altText ?? segment?.label ?? videoMaterial.altText} note={capturableFrame?.placeholderNote ?? segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen" onImageAvailabilityChange={(available) => setLoadedVideoAssetId(available ? currentVideoImageId : '')}>
               <p className="t07-finale__screen-label">{segment?.label ?? '视频封面'}</p>
             </FrameVisual>
+            <div className="t07-finale__timeline" role="group" aria-label="中性分段时间轴">
+              <p>按分段定位（定位不会计作已播放）</p>
+              <div className="t07-finale__timeline-track">
+                {video.segments.map((item, index) => <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={segment?.id === item.id}
+                  aria-label={`第 ${index + 1} 段，${formatMediaStamp(item.startMs)} 到 ${formatMediaStamp(item.endMs)}`}
+                  onClick={() => { setPlaying(false); seek(item.startMs); }}
+                ><span>第 {index + 1} 段</span><small>{formatMediaStamp(item.startMs)}–{formatMediaStamp(item.endMs)}</small></button>)}
+              </div>
+            </div>
             <p className="t07-finale__subtitle">{segment?.line ?? ''}</p>
             <div className="t07-finale__controls">
               <button type="button" className="t07-finale__play" onClick={() => setPlaying((value) => !value)}>{playing ? '暂停' : '播放'}</button>
@@ -417,16 +454,25 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
               {capturableFrame && !t07.capturedFrameIds.includes(capturableFrame.id) && <p className="t07-finale__hint" aria-live="polite">{canCaptureCurrentFrame ? video.captureHint : '先等当前原图载入；载入失败时可继续查看其他资料。'}</p>}
           </div>}
 
-        {capturedFrames.length > 0 && <div className="t07-finale__shots">
-          <h2>截图</h2>
-          {capturedFrames.map((frame) => (
-            <article key={frame.id} className="t07-finale__shot">
-              <FrameVisual assetId={frame.imageId} altText={frame.altText} note={frame.placeholderNote} />
-              <p>{frame.caption}</p>
-              <button type="button" className="t07-finale__screenshot-zoom" onClick={(event) => openShot(frame.id, event.currentTarget)}>{video.screenshotZoomLabel}</button>
-            </article>
-          ))}
-        </div>}
+        {capturedFrames.length > 0 && <section className="t07-finale__filmstrip" aria-label="已截取的视频画面">
+          <h2>已截画面 · 按截取顺序</h2>
+          <div className="t07-finale__filmstrip-track">
+            {capturedFrames.map((frame) => {
+              const capturedAt = t07.capturedAtMsByFrameId[frame.id];
+              return <article key={frame.id} className="t07-finale__filmstrip-item">
+                <button type="button" className="t07-finale__filmstrip-select" aria-pressed={selectedFrameId === frame.id || (!selectedFrameId && activeFrame?.id === frame.id)} onClick={() => setSelectedFrameId(frame.id)}>
+                  <FrameVisual assetId={frame.imageId} altText={frame.altText} note={frame.placeholderNote} className="t07-finale__filmstrip-image" />
+                  <span>{frame.caption}</span>
+                  <small>{capturedAt === undefined ? `画面 ${frameTimeWindow(frame)}` : `截取 ${formatMediaStamp(capturedAt)}`}</small>
+                </button>
+                <div className="t07-finale__filmstrip-actions">
+                  <button type="button" className="t07-finale__screenshot-zoom" onClick={(event) => openShot(frame.id, event.currentTarget)}>{video.screenshotZoomLabel}</button>
+                  <button type="button" onClick={() => openFrameInComparison(frame.id)}>带入对照</button>
+                </div>
+              </article>;
+            })}
+          </div>
+        </section>}
       </div>}
 
       {tab === 'compare' && <div ref={comparisonPanelRef} className="t07-finale__panel" tabIndex={-1}>
@@ -445,12 +491,14 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
               <p className="t07-finale__source-line">来源一：创始人受访视频，画面时段 {frameTimeWindow(activeFrame)}。来源二：第一次徒步拍下的破庙外景。</p>
               <div className="t07-finale__compare-grid">
                 <figure className="t07-finale__compare-side">
-                  <PhotoViewport key={activeFrame.id} sceneKey={`A2_T07_COMPARE_${activeFrame.id}`} imageUrl={assetLoader.get(activeFrame.imageId)?.src} imageAlt={activeFrame.altText} hotspots={[]} routes={[]} onImageAvailabilityChange={onComparisonFrameAvailability} />
+                  <PhotoViewport key={activeFrame.id} sceneKey={`A2_T07_COMPARE_${activeFrame.id}`} imageUrl={assetLoader.get(activeFrame.imageId)?.src} imageAlt={activeFrame.altText} hotspots={videoObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonFrameAvailability} />
                   <figcaption>{activeFrame.caption}</figcaption>
+                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedVideoFrameIds.includes(activeFrame.id)} disabled={!comparisonFrameReady} onClick={() => setObservedVideoFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记视频画面观察区域</button>
                 </figure>
                 <figure className="t07-finale__compare-side">
-                  <PhotoViewport key={activeFrame.id + comparison.exteriorImageId} sceneKey={`A2_T07_COMPARE_EXTERIOR_${activeFrame.id}`} imageUrl={exteriorSource} imageAlt={comparison.exteriorAltText} hotspots={[]} routes={[]} onImageAvailabilityChange={onComparisonExteriorAvailability} />
+                  <PhotoViewport key={activeFrame.id + comparison.exteriorImageId} sceneKey={`A2_T07_COMPARE_EXTERIOR_${activeFrame.id}`} imageUrl={exteriorSource} imageAlt={comparison.exteriorAltText} hotspots={exteriorObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonExteriorAvailability} />
                   <figcaption>{comparison.exteriorCaption}</figcaption>
+                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedExteriorFrameIds.includes(activeFrame.id)} disabled={!comparisonExteriorReady} onClick={() => setObservedExteriorFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记外景观察区域</button>
                 </figure>
               </div>
               <fieldset className="t07-finale__feature-choice">

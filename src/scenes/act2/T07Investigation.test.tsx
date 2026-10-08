@@ -142,6 +142,12 @@ describe('T07 promotion investigation', () => {
     expect(flags().FLAG_A2_PROMO_VIDEO_FOUND).toBe(true);
     expect(container.querySelector('.t07-finale__player')).not.toBeNull();
 
+    const secondSegment = act2T07.video.segments[1];
+    await click('.t07-finale__timeline-track button:nth-child(2)');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(String(secondSegment.startMs));
+    expect(manager.getState().modules.act2Research.t07.playedSegmentIds).toEqual([]);
+    expect(flags().FLAG_A2_PROMO_VIDEO_WATCHED).not.toBe(true);
+
     // 关键帧窗口外不可截，也不算看过。
     await seek(2000);
     expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_003');
@@ -158,6 +164,10 @@ describe('T07 promotion investigation', () => {
     await click('.t07-finale__capture');
     await loadPendingImages();
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_001']);
+    expect(manager.getState().modules.act2Research.t07.capturedAtMsByFrameId.FRAME_A2_T07_001).toBe(7000);
+    expect(container.querySelectorAll('.t07-finale__filmstrip-item')).toHaveLength(1);
+    expect(container.querySelector('.t07-finale__filmstrip-select')?.getAttribute('aria-pressed')).toBe('true');
+    expect(container.querySelector('.t07-finale__filmstrip-item')?.textContent).toContain('00:07');
     expect(container.querySelector('.t07-finale__capture-followup')?.textContent).toContain('截图已收进调查资料');
 
     await seek(8800);
@@ -190,6 +200,17 @@ describe('T07 promotion investigation', () => {
     expect(comparisonImages.some((image) => image.getAttribute('src') === assetLoader.get('IMG_A1_I_001')?.src)).toBe(true);
     expect(comparisonImages.some((image) => image.getAttribute('src') === assetLoader.get('IMG_A1_I_004')?.src)).toBe(false);
     expect(container.querySelectorAll('.t07-finale__tab')).toHaveLength(3);
+    expect(container.querySelectorAll('.t07-finale__compare-side')).toHaveLength(2);
+    const observedVideoMarker = container.querySelector<HTMLButtonElement>('[data-clue-id^="T07_OBSERVE_VIDEO_"]')!;
+    expect(observedVideoMarker).toBeDefined();
+    await act(async () => { observedVideoMarker.click(); });
+    expect(container.querySelector('[data-clue-id^="T07_OBSERVE_VIDEO_"]')?.getAttribute('aria-label')).toContain('已标记');
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
+    const exteriorTextEntry = container.querySelector<HTMLButtonElement>('.t07-finale__observe-text:last-child')!;
+    expect(exteriorTextEntry.disabled).toBe(false);
+    await act(async () => { exteriorTextEntry.click(); });
+    expect(container.querySelector('.t07-finale__observe-text:last-child')?.getAttribute('aria-pressed')).toBe('true');
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
     await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
@@ -211,6 +232,7 @@ describe('T07 promotion investigation', () => {
     await clickTab('外景对照');
     await loadPendingImages();
     await click('.t07-finale__candidate-list button');
+    await loadPendingImages();
     await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
