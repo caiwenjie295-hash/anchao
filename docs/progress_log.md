@@ -1,5 +1,11 @@
 # 《暗潮》开发记录
 
+## 2026-10-08 AS-QUALITY-20261008 场景照片材质重生
+
+主审APPROVED，产品验收 `3710e771d7f0ee7162accbb8d1a9721a79e5d528`。唯一原Luna max集成38授权资产，父内置imagegen逐图生图与审查。148映射照片contact检查，19张全尺寸重生/选优替换，129张bytes保持；墙面/锈铁/湿地面过密均匀鱼鳞细纹显著减少，保留自然潮湿老化和原构图/线索。第三幕14、第四幕禁闭备用图1及清醒前4，刻意失焦/面具人演出保留。尺寸/ID/map/剧情/代码不变，8PNG/11JPEG源与19WebP；完整prompt/前后hash见[实施账本](docs/as-quality-20261008/replacement-ledger.md)。
+
+父107文件498项、网页/离线构建、两轮四幕offline及Chrome file通过；真实1280×720/390×844特写/笔记/厨房/门口/广播13步与19图加载通过。32项个人dirty、991tracked基线非授权blob/mode、129mapped保留图、原PDF/HTML受保护。20秒CLI预算和实际覆盖边界见[主审](docs/reviews/AS-QUALITY-20261008.md)。最终main干净源包/逐文件SHA以root release-main.json为准，未推送/部署。
+
 ## 2026-10-08 UX-NAV-20261008 章节重玩与视频调查
 
 主审APPROVED，产品验证 `76ec1ecb8b5fe73d696036d297a248bbf65f6f24`。唯一原Luna max完成编程，父审查/门禁/浏览器/集成。全局章节选择仅开放真正到过的幕，重玩回各幕开头、后续解锁刷新仍保留；清零藏于“其他选项”，确认后清除全部进度和解锁。章节记录独立version1，schema13/旧存档和原异常保护保持，保存失败不跳转。

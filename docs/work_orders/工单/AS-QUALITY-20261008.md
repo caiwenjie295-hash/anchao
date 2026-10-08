@@ -25,3 +25,8 @@ Node24.15.0/npm11.x，portable runtime在REF-MAINT-20261006-validation/runtime/n
 父方审查全部19原图新图、关键点/连续空间；统一四门禁npm test -- --testTimeout=20000、build、build:offline、test:offline，已有Chrome file启动；真实宽1280×720/窄390×844核对第三幕走廊消防栓/铁门/厨房与第四幕禁闭/最后清醒照片显示及原交互。APPROVED后--no-ff合本地main，从main干净源重建网页/离线发布包、5339测试地址，核对32dirty/非授权991index及原PDF/HTML。
 
 实际Codex300分钟窗口<=10%立即停止父开发并中断本任务原执行者运行turn；保留全部文件/提交/运行测试，在本任务quota-state.md记实际pause/reset/阶段/todo；只有实际>10%恢复原agent/model/worktree。用量不可读不可推断恢复，不买额度或用重置券。
+
+
+## 主审完成记录
+
+APPROVED。资产852f6495，产品验收3710e771d7f0ee7162accbb8d1a9721a79e5d528；107文件498项、四门禁/Chrome file及真实宽窄通过。完整范围/限制见docs/reviews/AS-QUALITY-20261008.md。最终main与干净包以root release-main.json实际DELIVERED为准。
