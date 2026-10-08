@@ -1,5 +1,11 @@
 # 《暗潮》 Changelog
 
+## 2026-10-08 UX-FINALE-20261008 最后清醒的视线
+
+主审APPROVED，验收提交 `a31de15c2cc2612ce2ed4c0d7b201154de7e6c6e`。补T08恐惧封面，T09原文逐句点击中加入远门→近门→失焦→倒地面具人第一人称照片；上一步、重看、全文与完成继续可用，六词/响应/剧情门槛/完整小说不变。四张imagegen源图及WebP账本在本任务root validation与docs/ux-finale-20261008。
+
+父103文件476项、网页/离线构建、默认双轮四幕offline和Chrome file启动通过。真实1280×720/390×844验收全部13次推进、原文/图片出现顺序、键盘、全文与进入T10通过。原render-count回归修复，不改旧断言；离线驱动真实点击新演出，失败历史保留。实际32项个人dirty、原PDF/HTML保持。验收20秒CLI预算/覆盖限制见[主审](docs/reviews/UX-FINALE-20261008.md)；最新干净源包以root release-main.json为准，不宣称公网发布。
+
 ## 2026-10-07 STORY-ORIGINAL-20261007（本地main）
 
 本轮 STORY-ORIGINAL-20261007 主审APPROVED，功能合并 `6db9356eabad13d93f7f721b5ca9f3692d323832`，产品验证 `002b09b6a7b4e0657eb8391271935e31103a2904`。
