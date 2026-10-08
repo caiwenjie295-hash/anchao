@@ -1,8 +1,8 @@
-.chapter-navigation { position: fixed; z-index: 90; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); color: #edf3ef; font: inherit; }
+.chapter-navigation { position: fixed; z-index: 90; left: max(12px, env(safe-area-inset-left, 0px)); bottom: max(72px, calc(60px + env(safe-area-inset-bottom, 0px))); width: min(350px, calc(100vw - max(12px, env(safe-area-inset-left, 0px)) - max(12px, env(safe-area-inset-right, 0px)))); color: #edf3ef; font: inherit; }
 .chapter-navigation button { min-height: 44px; font: inherit; }
 .chapter-navigation__trigger { padding: 0 15px; border: 1px solid #9aa89f; border-radius: 999px; color: #f3f5ef; background: #18231ee8; box-shadow: 0 5px 20px #0004; cursor: pointer; }
 .chapter-navigation__trigger:hover,.chapter-navigation__trigger:focus-visible { border-color: #d5e5d9; background: #25372d; outline: 3px solid #c6d9cd; outline-offset: 2px; }
-.chapter-navigation__menu { position: absolute; top: calc(100% + 9px); left: 0; width: min(350px, calc(100vw - 24px)); max-height: min(70vh, 620px); overflow: auto; padding: 17px; border: 1px solid #61746a; border-radius: 12px; color: #e9eee9; background: #18211ff5; box-shadow: 0 16px 40px #0008; backdrop-filter: blur(12px); }
+.chapter-navigation__menu { position: absolute; bottom: calc(100% + 9px); left: 0; box-sizing: border-box; width: 100%; max-height: min(70vh, calc(100vh - 164px)); max-height: min(70dvh, calc(100dvh - 164px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)), 620px); overflow: auto; overscroll-behavior: contain; padding: 17px; border: 1px solid #61746a; border-radius: 12px; color: #e9eee9; background: #18211ff5; box-shadow: 0 16px 40px #0008; backdrop-filter: blur(12px); }
 .chapter-navigation__menu h2 { margin: 0 0 7px; font-size: 1.02rem; }
 .chapter-navigation__menu p { margin: 0 0 12px; color: #c7d0ca; font-size: .9rem; line-height: 1.5; }
 .chapter-navigation__choices { display: grid; gap: 7px; }
@@ -23,4 +23,4 @@
 .chapter-navigation__confirmation-actions button:focus-visible { outline: 3px solid #c7e0cf; outline-offset: 2px; }
 .chapter-navigation__confirmation-actions .chapter-navigation__danger { border-color: #b77c69; color: #fff4f0; background: #672f26; }
 .chapter-navigation__confirmation .chapter-navigation__error { margin-top: -5px; color: #ffc5ae; }
-@media (max-width: 520px) { .chapter-navigation__menu { width: min(350px, calc(100vw - 24px)); } .chapter-navigation__confirmation { padding: 18px; } }
+@media (max-width: 520px) { .chapter-navigation__confirmation { padding: 18px; } }

@@ -79,7 +79,8 @@
 .t07-finale__compare-side .t07-frame{width:100%}
 .t07-finale__compare-side .photo-viewport{height:auto;animation:none}
 .t07-finale__compare-side .photo-viewport__frame{box-sizing:border-box;flex:none;width:100%;height:auto;aspect-ratio:4/3;min-height:0;margin:0;border-radius:9px}
-.t07-finale__compare-side .photo-viewport__marker{width:44%;height:40%;min-width:88px;min-height:76px;border-radius:14px!important;background:#21332c72!important;border:2px dashed #f3f4df!important;box-shadow:0 0 0 1px #17231d70;backdrop-filter:none;touch-action:manipulation}
+.t07-finale__compare-side .photo-viewport__marker{width:44%;height:40%;min-width:88px;min-height:76px;border-radius:14px!important;background:rgb(255 255 255 / 8%)!important;border:2px dashed rgb(250 255 248 / 94%)!important;box-shadow:0 0 0 1px rgb(15 27 20 / 82%),0 2px 10px rgb(0 0 0 / 16%);backdrop-filter:none;touch-action:manipulation}
+.t07-finale__compare-side .photo-viewport__marker--active{background:rgb(215 246 222 / 14%)!important;border:2px solid #a4e8b3!important;box-shadow:0 0 0 3px rgb(25 89 49 / 78%),inset 0 0 0 1px rgb(255 255 255 / 78%)}
 .t07-finale__compare-side:last-child .photo-viewport__marker{width:56%;height:62%;min-width:100px;min-height:90px}
 .t07-finale__compare-side .photo-viewport__marker>span:first-child{font-size:.82rem;line-height:1.15}
 .t07-finale__compare-side .photo-viewport__marker-label{top:calc(100% + 3px);font-size:.74rem;max-width:170px;white-space:normal}
