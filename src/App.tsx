@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ComponentProps, ComponentType, CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
 import { stateManager } from './core/stateManager';
 import { readSave } from './core/saveManager';
@@ -11,6 +12,8 @@ import { DesktopIcon } from './components/DesktopIcon';
 import { DesktopTaskCard } from './components/DesktopTaskCard';
 import { InvestigationProgressDrawer } from './components/InvestigationProgressDrawer';
 import { SaveRecoveryNotice } from './components/recovery/SaveRecoveryNotice';
+import { ChapterNavigation } from './components/chapterNavigation/ChapterNavigation';
+import type { ChapterId } from './core/chapterNavigation';
 import { InvestigationProgressProvider } from './components/InvestigationProgressContext';
 import { Taskbar } from './components/Taskbar';
 import { Act1PhaseBController } from './story/act1PhaseBController';
@@ -48,6 +51,7 @@ const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIcon
 
 export default function App() {
   const state = useSyncExternalStore(stateManager.subscribe, stateManager.getState, stateManager.getState);
+  const recoveryState = useSyncExternalStore(stateManager.subscribeRecoveryState, stateManager.getRecoveryState, stateManager.getRecoveryState);
   const [time, setTime] = useState(() => new Date());
   // “已返回桌面”只是瞬时显示状态；阶段一变或清零即刻失效。
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
@@ -64,6 +68,7 @@ export default function App() {
     ? { width: 1280, height: 900 }
     : { width: window.innerWidth, height: window.innerHeight });
   const [saveImportNoticeVisible, setSaveImportNoticeVisible] = useState(false);
+  const [act4EndingNavigationHost, setAct4EndingNavigationHost] = useState<HTMLElement | null>(null);
   const saveImportNoticeTimerRef = useRef<number | null>(null);
   const act4WasCompleteRef = useRef(state.game.flags.FLAG_A4_COMPLETE === true);
   useEffect(() => {
@@ -82,7 +87,15 @@ export default function App() {
   }, []);
   useEffect(() => {
     const unsubscribe = eventBus.on('save:imported', () => {
-      setShowOpeningPrelude(false);
+      const imported = stateManager.getState();
+      const atUnseenOpening = imported.game.act === 1
+        && imported.game.phase === 'A'
+        && !imported.modules.scene.journeyStarted
+        && imported.modules.act2Research.stage === 'inactive'
+        && imported.modules.act3.stage === 'inactive'
+        && imported.modules.act4.stage === 'inactive'
+        && !imported.modules.storyTransitions.seenIds.includes('TRANSITION_A1_INTRO');
+      setShowOpeningPrelude(atUnseenOpening);
       setOpenedTransitionId(null);
       setSaveImportNoticeVisible(true);
       if (saveImportNoticeTimerRef.current !== null) window.clearTimeout(saveImportNoticeTimerRef.current);
@@ -96,6 +109,11 @@ export default function App() {
       if (saveImportNoticeTimerRef.current !== null) window.clearTimeout(saveImportNoticeTimerRef.current);
     };
   }, []);
+  useEffect(() => {
+    if (!showAct4Ending) { setAct4EndingNavigationHost(null); return; }
+    const frame = window.requestAnimationFrame(() => setAct4EndingNavigationHost(document.querySelector<HTMLElement>('.act4-ending')));
+    return () => window.cancelAnimationFrame(frame);
+  }, [showAct4Ending]);
   useEffect(() => {
     const phaseBController = new Act1PhaseBController();
     const phaseCController = new Act1PhaseCController();
@@ -212,6 +230,7 @@ export default function App() {
   }, []);
   const resumeAct1Scene = useCallback(() => runSceneTransition(() => setDismissedAct1SceneId(null)), []);
   const restartProgress = useCallback(() => {
+    if (!stateManager.resetProgress()) return false;
     setShowOpeningPrelude(true);
     setOpenedTransitionId(null);
     setDismissedAct1SceneId(null);
@@ -221,7 +240,21 @@ export default function App() {
     setDismissedAct4(false);
     setShowAct4Ending(false);
     setTaskCardExpanded(false);
-    stateManager.resetProgress();
+    setAct4EndingNavigationHost(null);
+    return true;
+  }, []);
+  const replayChapter = useCallback((chapter: ChapterId) => {
+    setShowOpeningPrelude(chapter === 1);
+    setOpenedTransitionId(null);
+    setDismissedAct1SceneId(null);
+    setDismissedAct2Stage(null);
+    setDismissedAct3(false);
+    setReviewAct3(false);
+    setDismissedAct4(false);
+    setShowAct4Ending(false);
+    setTaskCardExpanded(false);
+    setSelectedAppId(null);
+    setAct4EndingNavigationHost(null);
   }, []);
   const { act1SceneOpen: act1SceneReached, act2SceneStage, act3Stage, act3Active, act4Active, act4Open, act3Open, act2SceneOpen, sceneOpen: derivedSceneOpen, desktopLabel } = view;
   const act1SceneOpen = shouldRenderAct1Scene(act1SceneReached, state.modules.scene.currentSceneId, dismissedAct1SceneId);
@@ -241,7 +274,7 @@ export default function App() {
     : transitionOpen
       ? <StoryTransition key={transition.id} transition={transition} onContinue={continueTransition} />
       : null);
-  const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>调查记录已恢复，并保存到这台设备。</div>;
+  const saveImportNotice = saveImportNoticeVisible && <div role="status" aria-live="polite" style={{ position: 'fixed', zIndex: 4000, top: 'max(12px, env(safe-area-inset-top))', right: 12, width: 'min(360px, calc(100vw - 24px))', padding: '13px 16px', border: '1px solid #55745f', borderRadius: 6, color: '#263a2d', background: '#eef4ef', boxShadow: '0 8px 24px #15251f30', lineHeight: 1.5 }}>存档已应用并写入这台设备。</div>;
   const openProgressApp = useCallback((appId: AppId) => {
     if (appId !== 'notepad') { openApp(appId); return; }
     const current = stateManager.getState();
@@ -260,8 +293,9 @@ export default function App() {
   const exitAct4 = useCallback(() => runSceneTransition(() => setDismissedAct4(true)), []);
   if (view.act1EndingOpen) {
     return <InvestigationProgressProvider state={state} suppressed={curtainOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
-      <div className="act1-ending-flow" aria-hidden={curtainOpen} inert={curtainOpen}><Act1Ending onContinue={() => runSceneTransition(() => stateManager.startSecondAct())} onReset={restartProgress} />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
+      <div className="act1-ending-flow" aria-hidden={curtainOpen} inert={curtainOpen}><Act1Ending onContinue={() => runSceneTransition(() => stateManager.startSecondAct())} />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
+      {!curtainOpen && recoveryState.kind === 'none' && <ChapterNavigation onReplay={replayChapter} onReset={restartProgress} />}
       {transitionLayer}
       {saveImportNotice}
     </></InvestigationProgressProvider>;
@@ -303,7 +337,7 @@ export default function App() {
           />
         );
       })}
-      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} onResetProgress={restartProgress} time={time} /></div>
+      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} time={time} /></div>
     </main>
     {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} /></SceneTransitionLayer>}
     {act2SceneStage !== null && !act3Active && (
@@ -332,7 +366,9 @@ export default function App() {
     {act4Open && <SceneTransitionLayer><Act4Experience manager={stateManager} onExit={exitAct4} /></SceneTransitionLayer>}
     </div>
     {showAct4Ending && <Act4Ending onReview={() => setShowAct4Ending(false)} onReturnToDesktop={() => { setShowAct4Ending(false); setDismissedAct4(true); }} />}
+    {showAct4Ending && act4EndingNavigationHost && recoveryState.kind === 'none' && createPortal(<ChapterNavigation onReplay={replayChapter} onReset={restartProgress} />, act4EndingNavigationHost)}
     <InvestigationProgressDrawer state={state} />
+    {!curtainOpen && !showAct4Ending && recoveryState.kind === 'none' && <ChapterNavigation onReplay={replayChapter} onReset={restartProgress} />}
     {transitionLayer}
     {saveImportNotice}
     <SaveRecoveryNotice manager={stateManager} />

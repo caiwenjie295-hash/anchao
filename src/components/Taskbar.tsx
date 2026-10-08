@@ -1,9 +1,8 @@
-import { ResetProgressButton } from './ResetProgressButton';
 import type { AppId, DesktopState } from '../core/types';
 import { apps } from '../data/apps';
 import { AppIcon } from './AppIcon';
 
-export function Taskbar({ desktop, onAppClick, onResetProgress, time }: { desktop: DesktopState; onAppClick: (appId: AppId) => void; onResetProgress?: () => void; time: Date }) {
+export function Taskbar({ desktop, onAppClick, time }: { desktop: DesktopState; onAppClick: (appId: AppId) => void; time: Date }) {
   return (
     <footer className="taskbar" aria-label="任务栏">
       <div className="taskbar__apps">
@@ -15,7 +14,6 @@ export function Taskbar({ desktop, onAppClick, onResetProgress, time }: { deskto
         })}
       </div>
       <div className="taskbar__system-area">
-        {onResetProgress && <ResetProgressButton onReset={onResetProgress} />}
         <div className="taskbar__system" aria-label="系统时间">
           <span>{new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false }).format(time)}</span>
           <span>{new Intl.DateTimeFormat('zh-CN', { month: '2-digit', day: '2-digit' }).format(time)}</span>

@@ -94,6 +94,7 @@ async function settle() {
 }
 async function mount(saved) {
   const retainedUiPreferences = saved && dom ? dom.window.localStorage.getItem('anchao.ui.v1') : null;
+  const retainedChapterHistory = saved && dom ? dom.window.localStorage.getItem('anchao.chapter-history.v1') : null;
   dom?.window.close();
   dom = new JSDOM(html, {
     url: 'https://anchao-offline.test', runScripts: 'dangerously',
@@ -113,6 +114,7 @@ async function mount(saved) {
       if (saved) {
         window.localStorage.setItem('anchao.save.v1', saved);
         if (retainedUiPreferences) window.localStorage.setItem('anchao.ui.v1', retainedUiPreferences);
+        if (retainedChapterHistory) window.localStorage.setItem('anchao.chapter-history.v1', retainedChapterHistory);
       }
     },
   });
@@ -621,11 +623,18 @@ async function investigateT07() {
   await click('.t07-finale__video-open');
   assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_FOUND, true);
   assert.equal(query('.t07-finale__capture').disabled, true);
+  await click('.t07-finale__timeline-track button:nth-child(2)');
+  assert.equal(Number(query('.t07-finale__seek').value), act2T07Data.video.segments[1].startMs);
+  assert.deepEqual(state().modules.act2Research.t07.playedSegmentIds, [], 'timeline seeking does not count as real playback');
+  assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_WATCHED, undefined);
   await setInput('.t07-finale__seek', '7000');
   await waitForEnabled('.t07-finale__capture');
   assert.equal(query('.t07-finale__capture').disabled, false);
   await click('.t07-finale__capture');
   assert.deepEqual(state().modules.act2Research.t07.capturedFrameIds, ['FRAME_A2_T07_001']);
+  assert.equal(state().modules.act2Research.t07.capturedAtMsByFrameId.FRAME_A2_T07_001, 7000);
+  assert.equal(query('.t07-finale__filmstrip-item .t07-finale__filmstrip-select').getAttribute('aria-pressed'), 'true');
+  assert.match(query('.t07-finale__filmstrip-item').textContent, /00:07\.0/);
   await click('.t07-finale__screenshot-zoom');
   assert.ok(query('.t07-finale__shot-dialog'));
   const enlargedFrame = query('.t07-finale__shot-large img');
@@ -644,8 +653,9 @@ async function investigateT07() {
   assert.equal(document().querySelector('.t07-finale__play').textContent, '播放');
   assert.equal(state().game.flags.FLAG_A2_PROMO_VIDEO_WATCHED, true);
 
-  // 外景对照只能用第一幕破庙外景，不能用“补”字石碑近照。
-  await textButton('外景对照', '.t07-finale__tab');
+  // 外景对照只能用第一幕破庙外景，不能用“补”字石碑近照。胶片条入口直接带入所选帧。
+  await click('.t07-finale__filmstrip-actions button:last-child');
+  assert.equal(query('.t07-finale__tab.is-active').textContent, '外景对照');
   const compareImages = [...query('.t07-finale__compare-grid').querySelectorAll('.photo-viewport__plane > img')];
   assert.equal(compareImages.length, 2, 'comparison shows exactly the captured frame and the original temple exterior');
   const sourceFile = (img) => decodeURIComponent(new URL(img.src).pathname).split('/').at(-1);
@@ -666,6 +676,14 @@ async function investigateT07() {
     assert.match(pane.querySelector('.photo-viewport__world').style.transform, /scale\(1\.25\)/);
     pane.querySelector('.photo-viewport__controls button:last-of-type').click(); await settle();
   }
+  const videoObservation = query('[data-clue-id^="T07_OBSERVE_VIDEO_"]');
+  videoObservation.click(); await settle();
+  assert.match(query('[data-clue-id^="T07_OBSERVE_VIDEO_"]').getAttribute('aria-label'), /已标记/);
+  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, undefined, 'local observation alone does not record semantic comparison evidence');
+  const exteriorObservation = query('.t07-finale__observe-text:last-child');
+  exteriorObservation.click(); await settle();
+  assert.equal(query('.t07-finale__observe-text:last-child').getAttribute('aria-pressed'), 'true', 'text observation entry remains operable alongside image markers');
+  assert.equal(state().game.flags.FLAG_A2_TEMPLE_FRAME_FOUND, undefined);
   await click('input[name="t07-comparison-feature"][value="square-opening"]');
   await waitForEnabled('.t07-finale__compare');
   await click('.t07-finale__compare');
@@ -939,11 +957,32 @@ async function investigateAct4() {
 
 async function reset() {
   const before = save();
-  await click('.debug-reset__trigger');
-  await textButton('取消', '.debug-reset__confirm button');
+  await click('.chapter-navigation__trigger');
+  const choices = [...document().querySelectorAll('.chapter-navigation__choice')];
+  assert.equal(choices.length, 4);
+  const current = state();
+  const activeChapter = current.modules.act4.stage !== 'inactive' || current.game.act >= 4
+    ? 4
+    : current.modules.act3.stage !== 'inactive' || current.game.act >= 3
+      ? 3
+      : current.modules.act2Research.stage !== 'inactive' || current.game.act >= 2 ? 2 : 1;
+  const chapterHistory = JSON.parse(dom.window.localStorage.getItem('anchao.chapter-history.v1') ?? '{"unlockedThrough":1}');
+  const unlockedThrough = Math.max(activeChapter, chapterHistory.unlockedThrough ?? 1);
+  assert.deepEqual(choices.map((choice, index) => !choice.disabled), [1, 2, 3, 4].map((chapter) => chapter <= unlockedThrough), 'only reached chapters and chapters retained by replay history are enabled');
+  const chapterMenu = query('#chapter-navigation-menu');
+  chapterMenu.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  await settle();
+  assert.equal(document().querySelector('#chapter-navigation-menu'), null);
+  assert.equal(document().activeElement, query('.chapter-navigation__trigger'));
+  await click('.chapter-navigation__trigger');
+  await click('.chapter-navigation__other > summary');
+  await click('.chapter-navigation__clear');
+  const confirmationButtons = '.chapter-navigation__confirmation-actions button';
+  assert.equal(document().activeElement, query(`${confirmationButtons}:first-child`), 'reset confirmation defaults focus to cancel');
+  await textButton('取消', confirmationButtons);
   assert.equal(save(), before);
-  await click('.debug-reset__trigger');
-  await textButton('确认清零', '.debug-reset__confirm button');
+  await click('.chapter-navigation__clear');
+  await textButton('确认清零', confirmationButtons);
   assert.equal(state().game.phase, 'A');
   assert.deepEqual(state().game.flags, {});
   assert.deepEqual(state().game.discoveredClueIds, []);
@@ -964,6 +1003,7 @@ async function reset() {
     t07: { viewedMaterialIds: [], playedSegmentIds: [], capturedFrameIds: [], capturedAtMsByFrameId: {}, comparedFrameIds: [], comparisonFeatureIdByFrameId: {} },
   });
   assert.deepEqual(state().modules.act3, { stage: 'inactive', currentLensId: null, visitedLensIds: [], inspectedClueIds: [], confirmedFlagIds: [] });
+  assert.equal(JSON.parse(dom.window.localStorage.getItem('anchao.chapter-history.v1')).unlockedThrough, 1);
   await mount(save());
   assert.equal(document().querySelectorAll('.app-window').length, 0);
   assert.equal(document().querySelector('.act2-experience'), null);

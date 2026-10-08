@@ -3,8 +3,10 @@ import { createDefaultState } from './defaultState';
 import { clearReadingUiState, importSaveText, readProtectedOriginalSave, readRecentSaveBackup, readSave, restoreRecentSaveBackup, writeSaveState, type SaveImportResult, type SaveReadResult, type SaveRecoveryWriteOptions, type SaveWriteFailureReason } from './saveManager';
 import type { Act2ActiveStage, Act2QimingCaseId, Act2QimingConclusionId, Act2QimingNicknameAssessment, Act2SchoolEvidenceId, Act2SchoolInferenceId, Act4Stage, AppId, AppState, Bounds, GamePhase, HeibumuNamePart } from './types';
 import type { SaveStoragePort } from './persistence/browserStorage';
+import { clearChapterHistory, chapterHistoryWithProgress, readChapterHistory, recordChapterEntry, writeChapterHistory, type ChapterHistory, type ChapterHistoryReadResult } from './persistence/chapterHistory';
+import { buildLegacyChapterEntry, deriveReachedChapter, readChapterEntrySnapshot, resolveChapterEntry, type ChapterId } from './chapterNavigation';
 import { openApp as openAppDomain, focusWindow as focusWindowDomain, closeWindow as closeWindowDomain, minimizeWindow as minimizeWindowDomain, toggleTaskbarApp as toggleTaskbarAppDomain, toggleMaximize as toggleMaximizeDomain, setBounds as setBoundsDomain } from './domain/desktop';
-import { setFlag as setFlagDomain, setPhase as setPhaseDomain, acknowledgeStoryTransition as acknowledgeStoryTransitionDomain, markMailRead as markMailReadDomain, toggleMailStarred as toggleMailStarredDomain, recordBrowserSearch as recordBrowserSearchDomain, recordBrowserPageVisit as recordBrowserPageVisitDomain, setNotepadUserText as setNotepadUserTextDomain, addNotepadAutoEntry as addNotepadAutoEntryDomain, resetProgress as resetProgressDomain } from './domain/applications';
+import { setFlag as setFlagDomain, setPhase as setPhaseDomain, acknowledgeStoryTransition as acknowledgeStoryTransitionDomain, markMailRead as markMailReadDomain, toggleMailStarred as toggleMailStarredDomain, recordBrowserSearch as recordBrowserSearchDomain, recordBrowserPageVisit as recordBrowserPageVisitDomain, setNotepadUserText as setNotepadUserTextDomain, addNotepadAutoEntry as addNotepadAutoEntryDomain } from './domain/applications';
 import type { DomainTransition } from './domain/transitions';
 import type { DomainPlan } from './domain/plans';
 import { reconcileAct2BridgeProgress as reconcileAct2BridgeProgressDomain } from './domain/act2Bridge';
@@ -88,6 +90,7 @@ export class StateManager {
     this.state = result.kind === 'loaded' ? result.state : createDefaultState();
     this.recoveryState = recoverySnapshot(result, storage);
     if (this.recoveryState.kind !== 'none') this.saveStatus = this.recoveryState.kind === 'unavailable' ? 'unavailable' : 'recovery-required';
+    if (result.kind === 'loaded') this.backfillChapterHistory(result.state);
   }
 
   getState = (): AppState => this.state;
@@ -261,12 +264,100 @@ export class StateManager {
     this.applyDomainTransition(addNotepadAutoEntryDomain(this.state, entryId));
   }
 
-  resetProgress(): void {
-    if (this.recoveryState.kind !== 'none') return;
+  resetProgress(): boolean {
+    if (this.recoveryState.kind !== 'none') return false;
+    this.cancelPendingSave();
+    const previousHistory = readChapterHistory(this.storage);
+    if (previousHistory.kind === 'unavailable') {
+      this.setSaveStatus('unavailable');
+      return false;
+    }
+    if (!clearChapterHistory(this.storage)) {
+      this.setSaveStatus('unavailable');
+      return false;
+    }
+    const next = createDefaultState();
+    const result = writeSaveState(next, this.storage);
+    if (!result.ok) {
+      writeChapterHistory(previousHistory.history, this.storage);
+      if (result.recovery) this.setRecoveryState(recoverySnapshot(result.recovery, this.storage));
+      else if (result.reason === 'storage-unavailable' || result.reason === 'backup-unavailable') this.setRecoveryState(recoverySnapshot({ kind: 'unavailable' }, this.storage));
+      this.setSaveStatus(result.reason === 'recovery-required' || result.reason === 'recovery-slot-occupied' || result.reason === 'recovery-protection-failed' ? 'recovery-required' : 'unavailable');
+      return false;
+    }
+    clearReadingUiState();
+    this.state = next;
+    this.subscribers.forEach((listener) => listener());
+    this.setSaveStatus('saved');
+    this.bus.emit('progress:reset', { schemaVersion: 13 });
+    this.bus.emit('save:completed', { schemaVersion: 13 });
+    return true;
+  }
+
+  getChapterHistory(): ChapterHistoryReadResult {
+    return readChapterHistory(this.storage);
+  }
+
+  private rememberChapterEntry(chapter: ChapterId): void {
+    const read = readChapterHistory(this.storage);
+    if (read.kind === 'unavailable') return;
+    const history = chapterHistoryWithProgress(read.history, deriveReachedChapter(this.state));
+    const withEntry = recordChapterEntry(history, chapter, this.state);
+    writeChapterHistory(withEntry, this.storage);
+  }
+
+  private backfillChapterHistory(state: AppState): void {
+    const read = readChapterHistory(this.storage);
+    if (read.kind === 'unavailable') return;
+    const reached = deriveReachedChapter(state);
+    let history = chapterHistoryWithProgress(read.history, reached);
+    for (const chapter of [2, 3, 4] as const) {
+      if (chapter <= reached) history = this.ensureChapterEntry(history, state, chapter);
+    }
+    writeChapterHistory(history, this.storage);
+  }
+
+  private ensureChapterEntry(history: ChapterHistory, state: AppState, chapter: ChapterId): ChapterHistory {
+    if (readChapterEntrySnapshot(history.snapshots[chapter], chapter)) return history;
+    const entry = buildLegacyChapterEntry(state, chapter);
+    if (!entry) return history;
+    const snapshots = { ...history.snapshots };
+    delete snapshots[chapter];
+    return recordChapterEntry({ ...history, snapshots }, chapter, entry);
+  }
+
+  /** Persist a chapter choice before publishing it; the original save recovery path remains authoritative. */
+  replayChapter(chapter: ChapterId): { ok: true } | { ok: false; reason: string } {
+    if (this.recoveryState.kind !== 'none') return { ok: false, reason: 'recovery-required' };
+    const historyRead = readChapterHistory(this.storage);
+    if (historyRead.kind === 'unavailable') return { ok: false, reason: 'storage-unavailable' };
+    const reached = deriveReachedChapter(this.state);
+    let history = chapterHistoryWithProgress(historyRead.history, reached);
+    for (const available of [2, 3, 4] as const) {
+      if (available <= reached) history = this.ensureChapterEntry(history, this.state, available);
+    }
+    const target = resolveChapterEntry(this.state, history, chapter);
+    if (!target) return { ok: false, reason: 'chapter-locked' };
+    if (!writeChapterHistory(history, this.storage)) {
+      this.setSaveStatus('unavailable');
+      return { ok: false, reason: 'storage-unavailable' };
+    }
+    const result = importSaveText(JSON.stringify(target), this.storage, { preserveOriginalText: this.exportOriginalSave() ?? undefined });
+    if (!result.ok) {
+      if (result.reason === 'recovery-slot-occupied' || result.reason === 'recovery-protection-failed') {
+        this.setRecoveryState(recoverySnapshot(readSave(this.storage), this.storage));
+        this.setSaveStatus('recovery-required');
+      } else if (result.reason === 'storage-unavailable' || result.reason === 'backup-unavailable') this.setSaveStatus('unavailable');
+      return { ok: false, reason: result.reason };
+    }
     this.cancelPendingSave();
     clearReadingUiState();
-    this.applyDomainTransition(resetProgressDomain(this.state));
-    this.bus.emit('progress:reset', { schemaVersion: 13 });
+    this.state = result.state;
+    this.subscribers.forEach((listener) => listener());
+    this.setRecoveryState(noSaveRecovery);
+    this.setSaveStatus('saved');
+    this.bus.emit('save:completed', { schemaVersion: 13 });
+    return { ok: true };
   }
 
   exportSave(): string {
@@ -357,6 +448,7 @@ export class StateManager {
     this.setRecoveryState(noSaveRecovery);
     this.setSaveStatus('saved');
     this.bus.emit('save:completed', { schemaVersion: 13 });
+    this.backfillChapterHistory(result.state);
     this.bus.emit('save:imported', { schemaVersion: 13 });
     return { ok: true };
   }
@@ -374,6 +466,7 @@ export class StateManager {
     this.setRecoveryState(noSaveRecovery);
     this.setSaveStatus('saved');
     this.bus.emit('save:completed', { schemaVersion: 13 });
+    this.backfillChapterHistory(result.state);
     this.bus.emit('save:imported', { schemaVersion: 13 });
     return { ok: true };
   }
@@ -414,6 +507,7 @@ export class StateManager {
     this.setRecoveryState(noSaveRecovery);
     this.setSaveStatus('saved');
     this.bus.emit('save:completed', { schemaVersion: 13 });
+    this.backfillChapterHistory(result.state);
     this.bus.emit('save:imported', { schemaVersion: 13 });
     return result;
   }
@@ -466,6 +560,7 @@ export class StateManager {
   /** 只有第一幕完成且第二幕尚未启动时生效；保留全部第一幕状态。 */
   startSecondAct(): void {
     this.applyDomainTransition(startSecondActDomain(this.state));
+    if (this.state.modules.act2Research.stage === 'search') this.rememberChapterEntry(2);
   }
 
   /** 阶段只允许沿主线前进；桥头调查需要至少做过一次相关的 T01 搜索。 */
@@ -641,6 +736,7 @@ export class StateManager {
   /** 启动第三幕；只在第二幕 T07 完成、第三幕尚未启动时生效。 */
   startAct3(): void {
     this.applyDomainTransition(startAct3Domain(this.state));
+    if (this.state.modules.act3.stage === 'T00') this.rememberChapterEntry(3);
   }
 
   /** 切换当前镜头；不允许跨 T。 */
@@ -724,6 +820,7 @@ export class StateManager {
   /** 第三幕终点只是入口；玩家在回看笔记时主动开始第四幕。 */
   startAct4(): void {
     this.applyDomainTransition(startAct4Domain(this.state));
+    if (this.state.modules.act4.stage === 'T01') this.rememberChapterEntry(4);
   }
 
   readAct4NotebookPage(page: number): void {
