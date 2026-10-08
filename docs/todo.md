@@ -1,5 +1,11 @@
 # 《暗潮》当前待办
 
+## AS-QUALITY-20261008
+
+- [x] 148图质量检查，19图内置imagegen逐图重生/替换，129保留、线索构图/尺寸/map不变。
+- [x] 父APPROVED、107文件498项/四门禁/Chrome file、真实宽窄与19图加载。
+- [x] 原32个人dirty、原PDF/HTML及非授权assets保护；最终main干净源交付以root release-main.json实际DELIVERED记录核对。
+
 ## UX-NAV-20261008
 
 - [x] 实际已达章节重玩、入口历史/旧存档兼容、隐藏清零、保存异常保护与确认焦点。
