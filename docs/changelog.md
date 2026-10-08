@@ -1,5 +1,15 @@
 # 《暗潮》 Changelog
 
+## 2026-10-08 UX-NAV-20261008 章节重玩与视频调查
+
+主审APPROVED，产品验证 `76ec1ecb8b5fe73d696036d297a248bbf65f6f24`。唯一原Luna max完成编程，父审查/门禁/浏览器/集成。全局章节选择仅开放真正到过的幕，重玩回各幕开头、后续解锁刷新仍保留；清零藏于“其他选项”，确认后清除全部进度和解锁。章节记录独立version1，schema13/旧存档和原异常保护保持，保存失败不跳转。
+
+第二幕T07使用中性时间轴找镜头、暂停截图进入底部胶片条、完整比例双图放大对照、点击宽容观察区域或键盘文字入口，再按原可见特征记录。错帧/错特征拒绝，拖动不伪造已播，观察不形成证据；原来源/剧情/必需门槛保持。1280×720并排、390×844堆叠，只有胶片条横向滚动，44px操作。
+
+父107文件498项、网页/离线构建、默认双轮四幕offline及Chrome file启动全通过；实际浏览器覆盖T07→A3、四幕重玩/刷新/取消/清零和结尾模态焦点。32项个人dirty与980条非授权index、原PDF/完整HTML保护。CLI20秒预算/失败历史/覆盖限制见[主审](docs/reviews/UX-NAV-20261008.md)。最终main干净源包和SHA以开发包根release-main.json为准，未推送/部署。
+
+维护入口：`src/components/chapterNavigation/`、`src/core/chapterNavigation.ts`、`src/core/persistence/chapterHistory.ts`；视频调查仍由T07Investigation和原StateManager语义动作驱动。见[工单](docs/work_orders/工单/UX-NAV-20261008.md)和[实施记录](docs/ux-nav-20261008/implementation.md)。
+
 ## 2026-10-08 UX-FINALE-20261008 最后清醒的视线
 
 主审APPROVED，验收提交 `a31de15c2cc2612ce2ed4c0d7b201154de7e6c6e`。补T08恐惧封面，T09原文逐句点击中加入远门→近门→失焦→倒地面具人第一人称照片；上一步、重看、全文与完成继续可用，六词/响应/剧情门槛/完整小说不变。四张imagegen源图及WebP账本在本任务root validation与docs/ux-finale-20261008。
