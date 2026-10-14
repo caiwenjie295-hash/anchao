@@ -225,3 +225,44 @@ describe('BrowserApp T01 flexible offline route', () => {
     }
   });
 });
+
+describe('BrowserApp first-act search prompts', () => {
+  let host: HTMLDivElement;
+  let root: Root;
+  let manager: StateManager;
+
+  beforeEach(() => {
+    host = document.createElement('div');
+    document.body.append(host);
+    root = createRoot(host);
+    const state = createDefaultState();
+    state.game.phase = 'C';
+    state.game.flags = { FLAG_A1_MAIL_XIAOA_OPENED: true };
+    manager = new StateManager(new EventBus(), state);
+  });
+
+  afterEach(() => { act(() => root.unmount()); host.remove(); });
+
+  it('shows only the next unlocked search term and returns to the general home after Act 1', async () => {
+    await act(async () => { root.render(createElement(BrowserApp, { manager })); });
+    const firstTask = host.querySelector<HTMLButtonElement>('.browser-home__task button');
+    expect(firstTask?.dataset.searchQuery).toBe('XX县失踪');
+    expect(host.querySelector('.browser-home__task')?.textContent).toContain('先搜索“XX县失踪”');
+    expect(host.querySelector('.browser-home__task')?.textContent).not.toContain('鸡公岭徒步');
+
+    await act(async () => { firstTask?.click(); });
+    expect((host.querySelector('#browser-search') as HTMLInputElement).value).toBe('XX县失踪');
+
+    await act(async () => { manager.setFlag('FLAG_A1_NEWS_FOUND', true); });
+    await act(async () => { host.querySelector<HTMLButtonElement>('.browser-new-tab')?.click(); });
+    const routeTask = host.querySelector<HTMLButtonElement>('.browser-home__task button');
+    expect(routeTask?.dataset.searchQuery).toBe('鸡公岭徒步');
+    expect(host.querySelector('.browser-home__task')?.textContent).toContain('接着搜索“鸡公岭徒步”');
+    expect(host.querySelector('.browser-home__task')?.textContent).not.toContain('XX县失踪');
+
+    await act(async () => { manager.setPhase('A2_T01'); });
+    await act(async () => { host.querySelector<HTMLButtonElement>('.browser-new-tab')?.click(); });
+    expect(host.querySelector('.browser-home h2')?.textContent).toBe('查找一些旧信息');
+    expect(host.querySelector('.browser-home__task')).toBeNull();
+  });
+});
