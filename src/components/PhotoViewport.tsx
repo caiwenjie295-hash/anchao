@@ -9,6 +9,7 @@ export interface PhotoMarker {
   x: number;
   y: number;
   kind?: 'object' | 'sound' | 'memory' | 'direction';
+  presentation?: 'pin' | 'focus-box';
   disabled?: boolean;
   active?: boolean;
   actionKind?: InvestigationActionKind;
@@ -27,6 +28,8 @@ export interface PhotoViewportProps {
   routes: PhotoMarker[];
   children?: ReactNode;
   imageOverlay?: ReactNode;
+  /** Optional first view for a real photo-plane detail view. Coordinates are fractions of the image. */
+  initialView?: { zoom: number; focus?: { x: number; y: number } };
   transitionDirection?: 'forward' | 'back' | 'fade';
   /** Exploration-only edge vignette; reading and comparison photos stay at their authored brightness. */
   explorationMode?: boolean;
@@ -39,8 +42,22 @@ export const calculatePhotoPanLimits = (planeWidth: number, planeHeight: number,
   x: Math.max(0, (planeWidth * scale - frameWidth) / 2),
   y: Math.max(0, (planeHeight * scale - frameHeight) / 2),
 });
+export const calculatePhotoInitialOffset = (
+  planeWidth: number,
+  planeHeight: number,
+  frameWidth: number,
+  frameHeight: number,
+  scale: number,
+  focus: { x: number; y: number },
+) => {
+  const limits = calculatePhotoPanLimits(planeWidth, planeHeight, frameWidth, frameHeight, scale);
+  return {
+    x: clamp((0.5 - focus.x) * planeWidth * scale, -limits.x, limits.x),
+    y: clamp((0.5 - focus.y) * planeHeight * scale, -limits.y, limits.y),
+  };
+};
 
-export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, transitionDirection = 'forward', explorationMode = false, revealBeat = false, onImageAvailabilityChange }: PhotoViewportProps) {
+export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, onImageAvailabilityChange }: PhotoViewportProps) {
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
@@ -62,6 +79,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   const focusedTarget = useRef<{ type: 'frame' } | { type: 'hotspot'; id: string } | null>(null);
   const restoringFocus = useRef(false);
   const handoffTimer = useRef<number | null>(null);
+  const initialViewAppliedResource = useRef<string | null>(null);
   const transitionMs = revealBeat ? 420 : 260;
 
   // 审查 P1：sceneKey 变化会重建 key={sceneKey} 子树，frame 节点被替换但组件不重挂载。
@@ -133,6 +151,23 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
       return next.x === previous.x && next.y === previous.y ? previous : next;
     });
   }, [frameSize.width, frameSize.height, imageSize.width, imageSize.height, imageLoaded, zoom]);
+  useEffect(() => {
+    if (!initialView || !imageLoaded || frameSize.width <= 0 || frameSize.height <= 0 || initialViewAppliedResource.current === resourceKey) return;
+    const nextZoom = clamp(initialView.zoom, 1, 3);
+    const imageFit = Math.min(frameSize.width / imageSize.width, frameSize.height / imageSize.height);
+    const focus = initialView.focus ?? { x: 0.5, y: 0.5 };
+    const nextOffset = calculatePhotoInitialOffset(
+      imageSize.width * imageFit,
+      imageSize.height * imageFit,
+      frameSize.width,
+      frameSize.height,
+      nextZoom,
+      { x: clamp(focus.x, 0, 1), y: clamp(focus.y, 0, 1) },
+    );
+    setZoom(nextZoom);
+    setOffset(bound(nextOffset, nextZoom));
+    initialViewAppliedResource.current = resourceKey;
+  }, [initialView, imageLoaded, imageSize.width, imageSize.height, frameSize.width, frameSize.height, resourceKey]);
 
   // Swap the story scene immediately; this short crossfade is presentation only and never gates an action.
   useLayoutEffect(() => {
@@ -297,7 +332,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
                 key={marker.id}
                 data-clue-id={marker.id}
                 type="button"
-                className={'photo-viewport__marker photo-viewport__marker--' + (marker.kind ?? 'object') + (marker.active ? ' photo-viewport__marker--active' : '')}
+                className={'photo-viewport__marker photo-viewport__marker--' + (marker.kind ?? 'object') + (marker.presentation === 'focus-box' ? ' photo-viewport__marker--focus-box' : '') + (marker.active ? ' photo-viewport__marker--active' : '')}
                 style={{
                   '--marker-x': (marker.x * 100) + '%',
                   '--marker-y': (marker.y * 100) + '%',
@@ -309,7 +344,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
                 onPointerDown={(event) => event.stopPropagation()}
                 onClick={(event) => marker.onActivate(event.currentTarget)}
               >
-                <span aria-hidden="true">{marker.kind === 'sound' ? '◖))' : marker.kind === 'memory' ? '◌' : '＋'}</span>
+                <span aria-hidden="true">{marker.presentation === 'focus-box' ? '＋' : marker.kind === 'sound' ? '◖))' : marker.kind === 'memory' ? '◌' : '＋'}</span>
                 <span className="photo-viewport__marker-label">{marker.label}</span>
               </button>
             ))}

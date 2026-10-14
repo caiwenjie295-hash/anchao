@@ -1,8 +1,9 @@
+import type { ReactNode } from 'react';
 import type { AppId, DesktopState } from '../core/types';
 import { apps } from '../data/apps';
 import { AppIcon } from './AppIcon';
 
-export function Taskbar({ desktop, onAppClick, time }: { desktop: DesktopState; onAppClick: (appId: AppId) => void; time: Date }) {
+export function Taskbar({ desktop, onAppClick, time, chapterNavigation }: { desktop: DesktopState; onAppClick: (appId: AppId) => void; time: Date; chapterNavigation?: ReactNode }) {
   return (
     <footer className="taskbar" aria-label="任务栏">
       <div className="taskbar__apps">
@@ -18,6 +19,7 @@ export function Taskbar({ desktop, onAppClick, time }: { desktop: DesktopState; 
           <span>{new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false }).format(time)}</span>
           <span>{new Intl.DateTimeFormat('zh-CN', { month: '2-digit', day: '2-digit' }).format(time)}</span>
         </div>
+        {chapterNavigation}
       </div>
     </footer>
   );

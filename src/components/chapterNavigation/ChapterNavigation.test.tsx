@@ -72,6 +72,17 @@ describe('ChapterNavigation', () => {
     expect(document.activeElement).toBe(firstChoice);
   });
 
+  it('uses the requested placement class so taskbar and fullscreen entries share the same access behavior', async () => {
+    await render({ placement: 'taskbar' });
+    expect(container.querySelector('.chapter-navigation--taskbar .chapter-navigation__trigger')).not.toBeNull();
+    await render({ placement: 'header' });
+    expect(container.querySelector('.chapter-navigation--header .chapter-navigation__trigger')).not.toBeNull();
+    await render({ placement: 'scene' });
+    expect(container.querySelector('.chapter-navigation--scene .chapter-navigation__trigger')).not.toBeNull();
+    await render({ placement: 'ending' });
+    expect(container.querySelector('.chapter-navigation--ending .chapter-navigation__trigger')).not.toBeNull();
+  });
+
   it('keeps reset hidden under the collapsed other-options disclosure and uses the default-cancel confirmation', async () => {
     await render();
     await act(async () => { button('.chapter-navigation__trigger').click(); });

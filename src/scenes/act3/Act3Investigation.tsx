@@ -10,11 +10,10 @@ import { InvestigationDetail } from '../../components/investigation/Investigatio
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction, InvestigationMaterialLink } from '../../components/investigation/types';
 import { act3PhotoLayout } from '../../data/act3PhotoLayout';
-import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT } from '../../data/act3Data';
+import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT, act3DetailImageIdForClue } from '../../data/act3Data';
 import { act3ExitReason, act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
 import { act3HotspotActionLabel, act3RouteActionLabel, act3StageActionLabel } from '../../story/investigation/actionPresentation';
-import { SceneObservationCrop, resolveSceneObservationCrop } from '../../components/scenePolish/SceneObservationCrop';
 
 type Act3PhotoViewportProps = ComponentProps<typeof PhotoViewport> & { explorationMode?: boolean; revealBeat?: boolean };
 const Act3PhotoViewport = PhotoViewport as ComponentType<Act3PhotoViewportProps>;
@@ -58,14 +57,14 @@ function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: stri
   </>;
 }
 
-const PAPER_TRANSCRIPTS: Record<string, { title: string; assetId: string; alt: string; lines: string[]; note: string }> = {
+const PAPER_TRANSCRIPTS: Record<string, { title: string; alt: string; lines: string[]; note: string }> = {
   CLUE_A3_T04_VVAKE_PAPER: {
-    title: 'VVaKe', assetId: 'IMG_A3_T04_005', alt: '档案室发现的 VVaKe 纸片近景',
+    title: 'VVaKe', alt: '档案室发现的 VVaKe 纸片近景',
     lines: ['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗'],
     note: '上方文字按纸片上能辨认的内容抄录；这些词之间的对应关系仍不清楚。',
   },
   CLUE_A3_T05_13ACK_PAPER: {
-    title: '13aCK', assetId: 'IMG_A3_T05_005', alt: '广播室发现的 13aCK 纸片近景',
+    title: '13aCK', alt: '广播室发现的 13aCK 纸片近景',
     lines: ['老鼠', '血', '草垛', '木房子', '玫瑰', '表'],
     note: '上方文字按纸片上能辨认的内容抄录；它与前一张纸的对应关系尚未确认。',
   },
@@ -73,14 +72,14 @@ const PAPER_TRANSCRIPTS: Record<string, { title: string; assetId: string; alt: s
 
 function ClueDetailEvidence({ stage, hotspot }: { stage: Act3ActiveStage; hotspot: Act3Hotspot }) {
   const paper = PAPER_TRANSCRIPTS[hotspot.clueId];
-  const assetId = paper?.assetId ?? (stage === 'T06' && hotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE' ? 'IMG_A3_T06_009' : undefined);
+  const assetId = act3DetailImageIdForClue(hotspot.clueId);
   if (!assetId) return null;
   const asset = assetLoader.get(assetId);
   return <figure className="act3-investigation__detail-evidence" data-asset-id={assetId}>
     {asset?.src
-      ? <img src={asset.src} alt={paper?.alt ?? '空神龛底座近景'} />
-      : <div className="act3-investigation__comparison-placeholder">{paper?.alt ?? '空神龛底座近景'}</div>}
-    <figcaption>{paper ? `${paper.title}纸片 · 实物细节` : '空神龛底座 · 近景'}</figcaption>
+      ? <img src={asset.src} alt={paper?.alt ?? `${hotspot.label}的独立照片细节`} />
+      : <div className="act3-investigation__comparison-placeholder" role="img" aria-label={`${hotspot.label}的独立照片细节暂不可用`}>{hotspot.observation ?? hotspot.label}</div>}
+    <figcaption>{paper ? `${paper.title}纸片 · 实物细节` : stage === 'T06' && hotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE' ? '空神龛底座 · 近景' : `${hotspot.label} · 独立细节`}</figcaption>
     {paper && <div className="act3-investigation__paper-transcript" aria-label={`${paper.title}纸片可辨文字`}>
       <h3>纸面文字</h3>
       <strong>{paper.title}</strong>
@@ -162,6 +161,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     ...act3PhotoLayout[lens.id]?.[hotspot.clueId],
     x: act3PhotoLayout[lens.id]?.[hotspot.clueId]?.x ?? .5,
     y: act3PhotoLayout[lens.id]?.[hotspot.clueId]?.y ?? .5,
+    presentation: 'focus-box',
     active: inspected.includes(hotspot.clueId),
     onActivate: () => openHotspot(hotspot.clueId),
   }));
@@ -228,9 +228,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     || (stage === 'T06' && lens.id === 'LENS_A3_T06_007' && inspected.includes('CLUE_A3_T06_SHRINE'))
     || (stage === 'T07' && lens.id === 'LENS_A3_T07_007' && inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP'))
   );
-  const hasDedicatedEvidence = Boolean(lensHotspot && (PAPER_TRANSCRIPTS[lensHotspot.clueId]
-    || (stage === 'T06' && lensHotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE')));
-  const observationCrop = lensHotspot && !hasDedicatedEvidence ? resolveSceneObservationCrop(lens, lensHotspot) : null;
+  const hasDedicatedEvidence = Boolean(lensHotspot && act3DetailImageIdForClue(lensHotspot.clueId));
   return <InvestigationShell
     className={`act3-investigation investigation-shell--exploration act3-investigation--${act3MovementClassForStage(stage)}`}
     ariaLabel="第三幕调查"
@@ -271,8 +269,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
           没有正文时宁可说明缺什么，也不回退到整段镜头说明。 */}
       {hasDedicatedEvidence
         ? <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />
-        : observationCrop ? <SceneObservationCrop source={observationCrop} alt={`${lensHotspot.label}的照片局部`} />
-          : <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />}
+        : <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />}
       {lensHotspot.observation
         ? <p>{lensHotspot.observation}</p>
         : <p className="act3-investigation__empty">这里暂时没有可记的观察文字。</p>}

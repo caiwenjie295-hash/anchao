@@ -68,6 +68,9 @@ describe('App Act 4 reader integration', () => {
     try {
       await act(async () => { root.render(createElement(App)); });
       expect(host.querySelector('.a4-reader')).not.toBeNull();
+      await act(async () => { await vi.advanceTimersByTimeAsync(32); });
+      expect(host.querySelector('.chapter-navigation--scene, .chapter-navigation--header .chapter-navigation__trigger')).not.toBeNull();
+      expect(host.querySelector('#taskbar .chapter-navigation')).toBeNull();
       const initialRenders = readerRenders;
       const initialDerivedCalculations = readerDerivedCalculations;
       expect(initialRenders).toBeGreaterThan(0);

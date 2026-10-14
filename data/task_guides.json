@@ -71,12 +71,13 @@
           "label": "在浏览器搜索“XX县失踪”，打开并阅读旧报道",
           "completionFlag": "FLAG_A1_NEWS_FOUND",
           "appId": "browser",
-          "hint": "可以试试“XX县失踪”。"
+          "hint": "可以直接搜索“XX县失踪”，打开并阅读一篇旧报道。"
         },
         {
           "label": "在浏览器打开徒步路线资料，核对长度和难度",
           "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND",
-          "appId": "browser"
+          "appId": "browser",
+          "hint": "搜索“鸡公岭徒步”，再打开路线资料核对长度和难度。"
         }
       ]
     },
