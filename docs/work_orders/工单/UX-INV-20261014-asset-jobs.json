@@ -4,7 +4,7 @@
   "jobs": [
     {
       "id": "IMG_A2_SCHOOL_MAP_001",
-      "title": "高中校区导览平面图",
+      "title": "高中校园俯视总图",
       "kind": "school-map",
       "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_MAP_001.webp",
       "references": [
@@ -22,38 +22,34 @@
       "positions": {
         "gate": [
           50,
-          89
+          90
         ],
-        "corridor": [
+        "courtyard": [
           50,
-          54
-        ],
-        "notice": [
-          28,
-          73
+          72
         ],
         "honor": [
           72,
-          73
+          76
         ],
-        "office": [
+        "notice": [
           28,
-          54
+          76
         ],
-        "restroom": [
-          72,
-          37
+        "teachingBuilding": [
+          48,
+          35
         ],
-        "xiaoa": [
-          28,
-          29
+        "playground": [
+          18,
+          42
         ],
-        "xiaoyue": [
-          28,
-          14
+        "dorm": [
+          82,
+          26
         ]
       },
-      "requirements": "北朝上，主走廊南北贯通。黄旧纸上简洁校园平面，无生成地点文字，代码叠精确文字。房间左右与合同一致。"
+      "requirements": "最新用户修正：校园俯视/鸟瞰总图，北朝上，南门与入口室外广场，北中教学楼、西侧操场、东北宿舍楼；排行榜及宣传栏均在室外广场两侧；树在室外绿化，不画房间剖面/室内桌椅/室内树木。图像位置严格按positions。无需生成标签文字，代码叠准确按钮。"
     },
     {
       "id": "IMG_A2_SCHOOL_GATE_001",
@@ -69,7 +65,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "GATE",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_CORRIDOR_001",
@@ -85,7 +81,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "CORRIDOR",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_XIAOA_001",
@@ -101,7 +97,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "XIAOA",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_XIAOYUE_001",
@@ -117,7 +113,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "XIAOYUE",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_RESTROOM_001",
@@ -133,7 +129,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "RESTROOM",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_HONOR_001",
@@ -149,7 +145,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "HONOR",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_OFFICE_001",
@@ -165,7 +161,7 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "OFFICE",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
     },
     {
       "id": "IMG_A2_SCHOOL_NOTICE_001",
@@ -181,7 +177,55 @@
       "aspect": "4:3",
       "transparent": false,
       "schoolPosition": "NOTICE",
-      "requirements": "同一所正常使用中的旧高中，地图约定方位；每张独立机位。两个教室相邻但布局/墙上陈设/机位明显不同，不照抄同一图片。"
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_DORM_001",
+      "title": "校园东北宿舍楼",
+      "kind": "school-view",
+      "schoolPosition": "DORM",
+      "campusPosition": [
+        82,
+        26
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_DORM_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_PLAYGROUND_001",
+      "title": "校园西侧操场",
+      "kind": "school-view",
+      "schoolPosition": "PLAYGROUND",
+      "campusPosition": [
+        18,
+        42
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_PLAYGROUND_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_COURTYARD_001",
+      "title": "校门内室外广场",
+      "kind": "school-view",
+      "schoolPosition": "COURTYARD",
+      "campusPosition": [
+        50,
+        72
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_COURTYARD_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
     },
     {
       "id": "IMG_A2_SCHOOL_NOTE_001",
@@ -1753,5 +1797,6 @@
       },
       "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
     }
-  ]
+  ],
+  "revision": "用户校园俯视修正，77作业"
 }

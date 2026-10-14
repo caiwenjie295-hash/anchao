@@ -1496,6 +1496,45 @@
       "notes": "UX-INV-20261014 原创素材；参考/约束见冻结 asset-jobs；不得据图扩展剧情事实",
       "assetType": "image",
       "file": "IMG_A3_DETAIL_T07_EXIT_ROUTE.webp"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_DORM_001",
+      "title": "校园东北宿舍楼",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "校园俯视路线的只读环境浏览，无新增剧情证据",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "UX-INV-20261014 用户校园总图修正；只读广场/操场/宿舍环境",
+      "assetType": "image",
+      "file": "IMG_A2_SCHOOL_DORM_001.webp"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_PLAYGROUND_001",
+      "title": "校园西侧操场",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "校园俯视路线的只读环境浏览，无新增剧情证据",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "UX-INV-20261014 用户校园总图修正；只读广场/操场/宿舍环境",
+      "assetType": "image",
+      "file": "IMG_A2_SCHOOL_PLAYGROUND_001.webp"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_COURTYARD_001",
+      "title": "校门内室外广场",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "校园俯视路线的只读环境浏览，无新增剧情证据",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "UX-INV-20261014 用户校园总图修正；只读广场/操场/宿舍环境",
+      "assetType": "image",
+      "file": "IMG_A2_SCHOOL_COURTYARD_001.webp"
     }
   ]
 }
