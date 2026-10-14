@@ -7,4 +7,3 @@ const detailAssetIds = new Map<string, string>(Object.entries(act3ComparisonPhot
 
 export const act3ComparisonPhotoDetailAssetId = (sourceAssetId: string): string | undefined =>
   detailAssetIds.get(sourceAssetId);
-
