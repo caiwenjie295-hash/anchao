@@ -163,14 +163,14 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     setCampusRouteFromId(campusLocationId);
     setCampusLocationId(id);
     setHotspotId(null);
-    if (id === 'CAMPUS_BUILDING') {
-      setMapLevel('building');
-      setAreaId('AREA_A2_T05_CORRIDOR');
-      setIndoorRouteFromId('AREA_A2_T05_CORRIDOR');
-      return;
-    }
     setMapLevel('campus');
     if (target.areaId) setAreaId(target.areaId);
+  };
+  const enterSchoolBuilding = () => {
+    setMapLevel('building');
+    setAreaId('AREA_A2_T05_CORRIDOR');
+    setIndoorRouteFromId('AREA_A2_T05_CORRIDOR');
+    setHotspotId(null);
   };
   const selectSchoolArea = (nextAreaId: string, trigger?: HTMLElement) => {
     if (trigger) previousTriggerRef.current = trigger;
@@ -266,11 +266,12 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         <h2>{mapLevel === 'building' ? area?.title ?? '教学楼' : campusLocation.title}</h2>
         <div className={`t05-school__backdrop${selectedImage ? ' t05-school__backdrop--image' : ''}`} data-asset-id={selectedImageId}>
           {selectedImage
-            ? <img src={selectedImage} alt={mapLevel === 'building' ? area?.title ?? '教学楼内景' : campusLocation.title} />
+            ? <img src={selectedImage} alt={mapLevel === 'building' ? area?.title ?? '教学楼内景' : campusLocation.id === 'CAMPUS_BUILDING' ? '校园教学楼整体外景' : campusLocation.title} />
             : <div className="t05-school__photo-fallback" role="img" aria-label={`${mapLevel === 'building' ? area?.title : campusLocation.title}照片暂不可用`}>{mapLevel === 'building' ? area?.description : campusLocation.description}</div>}
           {availableHotspots.map((item) => <button type="button" key={item.id} className="t05-school__image-hotspot" style={{ left: `${item.focus.x}%`, top: `${item.focus.y}%` }} onClick={(event) => openHotspot(item.id, event.currentTarget)}>{item.actionLabel}</button>)}
           {mapLevel === 'building' && area && <nav className="t05-school__image-routes" aria-label="沿室内可通行路线前往相邻地点">{area.links.map((id) => { const target = schoolAreaById.get(id)!; return <button type="button" key={id} onClick={() => selectSchoolArea(id)}>{id === 'AREA_A2_T05_GATE' ? '校园入口' : target.title} →</button>; })}</nav>}
         </div>
+        {mapLevel === 'campus' && campusLocation.id === 'CAMPUS_BUILDING' && <button type="button" className="t05-school__building-entry" onClick={enterSchoolBuilding}>进入教学楼走廊</button>}
         <p className="t05-school__description">{mapLevel === 'building' ? area?.description : area?.description ?? campusLocation.description}</p>
         {area?.id === 'AREA_A2_T05_TEACHER_OFFICE' && flags.FLAG_A2_SCHOOL_SS_FOUND !== true && <p className="t05-school__soft-hint">{act2School.softHint}</p>}
       </main>

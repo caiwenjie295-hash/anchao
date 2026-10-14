@@ -51,6 +51,9 @@ describe('Second-act T05 acceptance: Xiaoyue to school scene', () => {
 
     await click('.act2-experience__continue');
     await clickText('教学楼', '.t05-school__campus-plan button');
+    expect(container.querySelector('.t05-school__backdrop')?.getAttribute('data-asset-id')).toBe('IMG_A2_SCHOOL_BUILDING_001');
+    expect(container.querySelector('.t05-school__indoor-plan')).toBeNull();
+    await clickText('进入教学楼走廊', '.t05-school__building-entry');
     expect(container.querySelector('.t05-school__indoor-plan')).not.toBeNull();
     await clickText('老师办公室', '.t05-school__indoor-plan button');
     await clickText('听听老师回忆', '.t05-school__image-hotspot');
@@ -62,6 +65,7 @@ describe('Second-act T05 acceptance: Xiaoyue to school scene', () => {
     await clickText('记下这组名次');
     await click('button[aria-label="关闭"]');
     await clickText('教学楼', '.t05-school__campus-plan button');
+    await clickText('进入教学楼走廊', '.t05-school__building-entry');
     await clickText('小A旧教室', '.t05-school__indoor-plan button');
     await clickText('翻看学霸笔记', '.t05-school__image-hotspot');
     await clickText('打开双 S 比对');

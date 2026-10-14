@@ -22,6 +22,8 @@ describe('Third-act investigation interface', () => {
     const click = async (button: HTMLButtonElement) => act(async () => { button.click(); });
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      expect(container.textContent).toContain('点击照片上的虚线框查看物件');
+      expect(container.textContent).not.toContain('点击照片上的＋');
       const route = container.querySelector<HTMLButtonElement>('[data-action-id="A3_ROUTE_T04_004_005"]');
       expect(route).not.toBeNull();
       expect(route?.disabled).toBe(false);

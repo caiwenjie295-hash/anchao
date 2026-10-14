@@ -52,7 +52,7 @@ export const uxFinaleA4AssetPath = (id: string, file: string): string | null =>
     ? `../assets/ux-finale-20261008/${file}`
     : null;
 const isUxInvestigationAssetId = (id: string): boolean =>
-  /^IMG_A2_SCHOOL_(?:MAP|GATE|CORRIDOR|XIAOA|XIAOYUE|RESTROOM|HONOR|OFFICE|NOTICE|NOTE|NOTE_DETAIL|RANK_PAPER|COURTYARD|PLAYGROUND|DORM)_001$/.test(id)
+  /^IMG_A2_SCHOOL_(?:MAP|BUILDING|GATE|CORRIDOR|XIAOA|XIAOYUE|RESTROOM|HONOR|OFFICE|NOTICE|NOTE|NOTE_DETAIL|RANK_PAPER|COURTYARD|PLAYGROUND|DORM)_001$/.test(id)
   || id === 'IMG_A2_T07_TRAIL_WALK_001'
   || id === 'IMG_A3_SIGN_FULL_001'
   || id === 'IMG_A3_BOARD_FULL_001'

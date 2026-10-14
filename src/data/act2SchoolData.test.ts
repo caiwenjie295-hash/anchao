@@ -22,6 +22,8 @@ describe('T05 school data', () => {
       ['CAMPUS_PLAYGROUND', 18, 42],
       ['CAMPUS_DORM', 82, 26],
     ]);
+    expect(schoolCampusLocations.find(({ id }) => id === 'CAMPUS_BUILDING')?.imageId).toBe('IMG_A2_SCHOOL_BUILDING_001');
+    expect(schoolCampusLocations.find(({ id }) => id === 'CAMPUS_BUILDING')?.imageId).not.toBe('IMG_A2_SCHOOL_MAP_001');
     expect(schoolCampusRoute('CAMPUS_SOUTH_GATE', 'CAMPUS_BUILDING')).toEqual(['CAMPUS_SOUTH_GATE', 'CAMPUS_COURTYARD', 'CAMPUS_BUILDING']);
     expect(schoolCampusRoute('CAMPUS_SOUTH_GATE', 'CAMPUS_PLAYGROUND')).toEqual(['CAMPUS_SOUTH_GATE', 'CAMPUS_COURTYARD', 'CAMPUS_PLAYGROUND']);
     expect(schoolAreaRoute('AREA_A2_T05_GATE', 'AREA_A2_T05_XIAOYUE_CLASSROOM')).toEqual(['AREA_A2_T05_GATE', 'AREA_A2_T05_CORRIDOR', 'AREA_A2_T05_XIAOYUE_CLASSROOM']);

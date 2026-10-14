@@ -76,7 +76,7 @@ describe('UX finale artwork registration', () => {
 describe('UX investigation artwork paths', () => {
   it('maps only the frozen investigation IDs to the isolated WebP directory', () => {
     const schoolIds = [
-      'IMG_A2_SCHOOL_MAP_001', 'IMG_A2_SCHOOL_GATE_001', 'IMG_A2_SCHOOL_CORRIDOR_001',
+      'IMG_A2_SCHOOL_MAP_001', 'IMG_A2_SCHOOL_BUILDING_001', 'IMG_A2_SCHOOL_GATE_001', 'IMG_A2_SCHOOL_CORRIDOR_001',
       'IMG_A2_SCHOOL_XIAOA_001', 'IMG_A2_SCHOOL_XIAOYUE_001', 'IMG_A2_SCHOOL_RESTROOM_001',
       'IMG_A2_SCHOOL_HONOR_001', 'IMG_A2_SCHOOL_OFFICE_001', 'IMG_A2_SCHOOL_NOTICE_001',
       'IMG_A2_SCHOOL_DORM_001', 'IMG_A2_SCHOOL_PLAYGROUND_001', 'IMG_A2_SCHOOL_COURTYARD_001',
@@ -84,8 +84,8 @@ describe('UX investigation artwork paths', () => {
     ];
     const clueIds = (['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]).flatMap(act3StageClueIds);
     const ids = [...schoolIds, 'IMG_A2_T07_TRAIL_WALK_001', 'IMG_A3_SIGN_FULL_001', 'IMG_A3_BOARD_FULL_001', ...clueIds.map((id) => `IMG_A3_DETAIL_${id.slice('CLUE_A3_'.length)}`)];
-    expect(ids).toHaveLength(77);
-    expect(new Set(ids).size).toBe(77);
+    expect(ids).toHaveLength(78);
+    expect(new Set(ids).size).toBe(78);
     for (const id of ids) expect(uxInvestigationAssetPath(id, `${id}.webp`)).toBe(`../assets/ux-investigation-20261014/${id}.webp`);
     expect(uxInvestigationAssetPath('IMG_A3_DETAIL_UNKNOWN', 'IMG_A3_DETAIL_UNKNOWN.webp')).toBeNull();
     expect(uxInvestigationAssetPath(ids[0], 'wrong.png')).toBeNull();

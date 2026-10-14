@@ -16,7 +16,7 @@ export const schoolCampusLocations: SchoolCampusLocation[] = [
   { id: 'CAMPUS_COURTYARD', title: '室外广场', x: 50, y: 72, imageId: 'IMG_A2_SCHOOL_COURTYARD_001', description: '南门内的室外广场连着教学楼、光荣榜、宣传栏、操场与宿舍方向。', links: ['CAMPUS_SOUTH_GATE', 'CAMPUS_BUILDING', 'CAMPUS_HONOR', 'CAMPUS_NOTICE', 'CAMPUS_PLAYGROUND', 'CAMPUS_DORM'] },
   { id: 'CAMPUS_HONOR', title: '光荣榜', x: 72, y: 76, imageId: 'IMG_A2_SCHOOL_HONOR_001', areaId: 'AREA_A2_T05_HONOR_ROLL', description: schoolAreaById.get('AREA_A2_T05_HONOR_ROLL')!.description, links: ['CAMPUS_COURTYARD', 'CAMPUS_NOTICE'] },
   { id: 'CAMPUS_NOTICE', title: '宣传栏', x: 28, y: 76, imageId: 'IMG_A2_SCHOOL_NOTICE_001', areaId: 'AREA_A2_T05_NOTICE_BOARD', description: schoolAreaById.get('AREA_A2_T05_NOTICE_BOARD')!.description, links: ['CAMPUS_COURTYARD', 'CAMPUS_HONOR'] },
-  { id: 'CAMPUS_BUILDING', title: '教学楼', x: 48, y: 35, imageId: 'IMG_A2_SCHOOL_MAP_001', description: '从广场沿室外道路走到教学楼，再进入走廊和各个房间。', links: ['CAMPUS_COURTYARD'] },
+  { id: 'CAMPUS_BUILDING', title: '教学楼', x: 48, y: 35, imageId: 'IMG_A2_SCHOOL_BUILDING_001', description: '从广场沿室外道路走到教学楼。教学楼整体外景在眼前，入口通向记忆里的走廊。', links: ['CAMPUS_COURTYARD'] },
   { id: 'CAMPUS_PLAYGROUND', title: '西操场', x: 18, y: 42, imageId: 'IMG_A2_SCHOOL_PLAYGROUND_001', description: '西侧操场沿室外道路连回入口广场。这里只能浏览环境。', links: ['CAMPUS_COURTYARD'] },
   { id: 'CAMPUS_DORM', title: '东北宿舍', x: 82, y: 26, imageId: 'IMG_A2_SCHOOL_DORM_001', description: '东北方向是旧宿舍楼，旁边有一条回到入口广场的室外道路。这里只能浏览环境。', links: ['CAMPUS_COURTYARD'] },
 ];
