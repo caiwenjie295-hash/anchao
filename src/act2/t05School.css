@@ -266,9 +266,10 @@
 .t05-school__map-point.is-on-route:not(.is-current) { border-color: #ffe276 !important; }
 .t05-school__map-point:hover,
 .t05-school__map-point:focus-visible { z-index: 3; outline: 3px solid #fff; outline-offset: 2px; }
-.t05-school__map-heading { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+.t05-school__map-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 10px; }
+.t05-school__map-heading > div { flex: 1 1 180px; min-width: 0; }
 .t05-school__map-heading p { margin: 0 0 10px; color: var(--school-muted); font-size: 13px; line-height: 1.45; }
-.t05-school__map-heading > button { flex: none; min-height: 44px; padding: 6px 10px; }
+.t05-school__map-heading > button { width: max-content; max-width: 100%; flex: 0 0 auto; min-height: 44px; margin-left: auto; padding: 6px 10px; text-align: center; white-space: nowrap; }
 .t05-school__indoor-plan { aspect-ratio: 1.55 / 1; background: repeating-linear-gradient(0deg, #eee9dc 0 24%, #d9d2c2 24.5% 25.5%, #eee9dc 26% 49%, #b4bdad 49.5% 51%, #eee9dc 52% 74%, #d9d2c2 74.5% 75.5%, #eee9dc 76%); }
 .t05-school__indoor-plan::before { position: absolute; z-index: 0; inset: 8% 39%; border: 1px solid #9a8f7b; background: #d4d4c6; content: "走廊"; display: grid; place-items: center; color: #615b4d; font-size: .8rem; }
 .t05-school__indoor-plan > svg { z-index: 1; }
