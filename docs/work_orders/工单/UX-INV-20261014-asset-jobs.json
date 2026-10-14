@@ -228,6 +228,22 @@
       "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
     },
     {
+      "id": "IMG_A2_SCHOOL_BUILDING_001",
+      "title": "教学楼整体外景",
+      "kind": "school-view",
+      "schoolPosition": "BUILDING",
+      "campusPosition": [
+        48,
+        35
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_BUILDING_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "依据最终校园俯视总图里北中教学楼的同一建筑形态，第一人称从入口广场向北靠近楼前，完整展示教学楼整体外景。门窗/楼层/颜色/周边操场宿舍方向一致，进入走廊前能与总图位置对应。不同于校门/校园地图，不能以旧图镜像或裁切替代新生图。自然稀疏老化，避免鱼鳞/蜂巢/浮雕细纹。"
+    },
+    {
       "id": "IMG_A2_SCHOOL_NOTE_001",
       "title": "学霸笔记原页",
       "kind": "school-note",
@@ -1798,5 +1814,5 @@
       "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
     }
   ],
-  "revision": "用户校园俯视修正，77作业"
+  "revision": "最新用户遗漏审计：校园总图+教学楼整体外景，78作业"
 }

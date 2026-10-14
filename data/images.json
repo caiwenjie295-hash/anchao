@@ -1535,6 +1535,19 @@
       "notes": "UX-INV-20261014 用户校园总图修正；只读广场/操场/宿舍环境",
       "assetType": "image",
       "file": "IMG_A2_SCHOOL_COURTYARD_001.webp"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_BUILDING_001",
+      "title": "教学楼整体外景",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "到达教学楼后先看整体外景，再由玩家进入走廊；不增加剧情证据",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "UX-INV-20261014 校园俯视总图与楼内路线之间的独立场景照片",
+      "assetType": "image",
+      "file": "IMG_A2_SCHOOL_BUILDING_001.webp"
     }
   ]
 }
