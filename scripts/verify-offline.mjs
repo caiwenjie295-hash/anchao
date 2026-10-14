@@ -564,7 +564,7 @@ async function advanceAct2() {
   await textButton('教学楼', '.t05-school__campus-plan button');
   assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), 'IMG_A2_SCHOOL_BUILDING_001');
   assertLocalImage(query('.t05-school__backdrop img').src);
-  assert.equal(query('.t05-school__indoor-plan'), null, 'arriving at the building must show its exterior before entering');
+  assert.equal(document().querySelector('.t05-school__indoor-plan'), null, 'arriving at the building must show its exterior before entering');
   assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, undefined);
   await textButton('进入教学楼走廊', '.t05-school__building-entry');
   assert.ok(query('.t05-school__indoor-plan'));
