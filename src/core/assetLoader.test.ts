@@ -7,7 +7,7 @@ import { act4AssetPath, assetLoader, uxFinaleA4AssetPath, uxInvestigationAssetPa
 import { act3StageClueIds, type AuthoredAct3Stage } from '../data/act3Data';
 
 describe('fourth act art registration', () => {
-  it('keeps the original 40 IDs and registers three newly delivered A4 images', () => {
+  it('preserves the existing A4 registrations and registers dedicated zoom details', () => {
     const deliveredFiles = import.meta.glob('../第四幕/T*/*.png');
     const records = images.items.filter((item) => item.id.startsWith('IMG_A4_'));
     const expected = [
@@ -17,10 +17,10 @@ describe('fourth act art registration', () => {
       'IMG_A4_T06_007', 'IMG_A4_T08_011', 'IMG_A4_T08_012',
       'IMG_A4_BLOG_WINDOW_001', 'IMG_A4_FINAL_READING_001', 'IMG_A4_READING_DETAIL_001',
     ];
-    expect(records).toHaveLength(46);
-    expect(new Set(expected).size).toBe(46);
-    expect(records.map((record) => record.id).sort()).toEqual(expected.sort());
-    for (const record of records) {
+    const existingRecords = records.filter((record) => expected.includes(record.id));
+    expect(new Set(expected).size).toBe(expected.length);
+    expect(existingRecords.map((record) => record.id).sort()).toEqual([...expected].sort());
+    for (const record of existingRecords) {
       const path = act4AssetPath(record.id, record.file) ?? uxRhythmA4AssetPath(record.id, record.file);
       expect(path, record.id).not.toBeNull();
       expect(assetLoader.get(record.id)?.id).toBe(record.id);
@@ -39,6 +39,14 @@ describe('fourth act art registration', () => {
     for (const id of ['IMG_A4_BLOG_WINDOW_001', 'IMG_A4_FINAL_READING_001', 'IMG_A4_READING_DETAIL_001']) {
       expect(uxRhythmA4AssetPath(id, `${id}.png`)).toBe(`../第四幕/UX-RHYTHM/${id}.png`);
       expect(assetLoader.isAvailable(id), id).toBe(true);
+    }
+    for (const id of act4IllustrationZoomDetailAssetIds) {
+      const record = records.find((item) => item.id === id);
+      expect(record, id).toBeDefined();
+      expect(record?.file, id).toBe(`${id}.webp`);
+      expect(uxInvestigationAssetPath(id, record?.file ?? ''), id)
+        .toBe(`../assets/ux-investigation-20261014/${id}.webp`);
+      expect(assetLoader.get(id)?.id, id).toBe(id);
     }
     expect(uxRhythmA4AssetPath('IMG_A4_UNREGISTERED_001', 'IMG_A4_UNREGISTERED_001.png')).toBeNull();
     expect(uxRhythmA4AssetPath('IMG_A4_BLOG_WINDOW_001', 'wrong.png')).toBeNull();
