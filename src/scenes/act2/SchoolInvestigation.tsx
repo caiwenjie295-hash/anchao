@@ -8,7 +8,7 @@ import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2SchoolSnapshot, selectAct2SchoolSnapshot } from '../../core/store/selectors';
 import { messageById, type WechatMessage } from '../../data/wechatData';
 import type { Act2SchoolEvidenceId } from '../../core/types';
-import { act2School, schoolAreaById, schoolAreaRoute, schoolCampusLocationById, schoolCampusLocations, schoolCampusRoute } from '../../data/act2SchoolData';
+import { act2School, schoolAreaById, schoolAreaRoute, schoolCampusLocationById, schoolCampusLocations, schoolCampusRoute, schoolCampusRoutePolylines } from '../../data/act2SchoolData';
 import { SchoolSymbolComparison } from './SchoolSymbolComparison';
 import '../../act2/t05School.css';
 
@@ -224,23 +224,23 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
           <div className="t05-school__campus-plan" data-asset-id="IMG_A2_SCHOOL_MAP_001">
             {assetLoader.get('IMG_A2_SCHOOL_MAP_001')?.src && <img src={assetLoader.get('IMG_A2_SCHOOL_MAP_001')!.src} alt="学校校园北朝上俯视总图" />}
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-              {uniqueRouteEdges(schoolCampusLocations).map(({ from, to }) => {
-                const start = schoolCampusLocationById.get(from)!;
-                const end = schoolCampusLocationById.get(to)!;
+              {schoolCampusRoutePolylines.map(({ from, to, points }) => {
                 const active = campusRouteEdges.has(routeEdgeKey(from, to));
-                return <line key={routeEdgeKey(from, to)} className={active ? 't05-school__route-line t05-school__route-line--active' : 't05-school__route-line'} x1={start.x} y1={start.y} x2={end.x} y2={end.y} />;
+                return <polyline key={routeEdgeKey(from, to)} className={active ? 't05-school__route-line t05-school__route-line--active' : 't05-school__route-line'} points={points.map(({ x, y }) => `${x},${y}`).join(' ')} />;
               })}
+              {schoolCampusLocations.map((location) => <line key={`${location.id}-leader`} className="t05-school__map-leader" x1={location.x} y1={location.y} x2={location.labelX} y2={location.labelY} />)}
+              {schoolCampusLocations.map((location) => <ellipse key={`${location.id}-anchor`} className={`t05-school__map-anchor${location.id === campusLocationId ? ' is-current' : ''}${campusRoute.includes(location.id) ? ' is-on-route' : ''}`} cx={location.x} cy={location.y} rx="1.8" ry="2.4" />)}
             </svg>
             {schoolCampusLocations.map((location) => <button
               key={location.id}
               type="button"
               className={`t05-school__map-point${location.id === campusLocationId ? ' is-current' : ''}${campusRoute.includes(location.id) ? ' is-on-route' : ''}`}
-              style={{ left: `${location.x}%`, top: `${location.y}%` }}
+              style={{ left: `${location.labelX}%`, top: `${location.labelY}%` }}
               data-location-id={location.id}
               aria-current={location.id === campusLocationId ? 'location' : undefined}
               aria-label={`${location.title}${location.id === campusLocationId ? '，当前位置' : campusRoute.includes(location.id) ? '，刚才路线经过此处' : ''}`}
               onClick={(event) => selectCampusLocation(location.id, event.currentTarget)}
-            ><span aria-hidden="true" />{location.title}</button>)}
+            >{location.title}</button>)}
           </div>
           <p className="t05-school__route-status" aria-live="polite">当前位置：{campusLocation.title} · {campusRouteFromId === campusLocationId ? '选择地点后显示步行路线。' : `刚才走过的路线：${campusRoute.map((id) => schoolCampusLocationById.get(id)?.title).filter(Boolean).join(' → ')}`}</p>
         </> : <>
