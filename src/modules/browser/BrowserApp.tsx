@@ -33,6 +33,13 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
   const qimingWorkspaceRef = useRef<HTMLDivElement>(null);
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
   const stage = state.modules.act2Research.stage;
+  const firstActSearchTask = ['C', 'D', 'E'].includes(state.game.phase) && state.game.flags.FLAG_A1_MAIL_XIAOA_OPENED === true
+    ? state.game.flags.FLAG_A1_NEWS_FOUND !== true
+      ? { query: 'XX县失踪', prompt: '先搜索“XX县失踪”，打开并阅读一篇旧报道。' }
+      : state.game.flags.FLAG_A1_ROUTE_INFO_FOUND !== true
+        ? { query: '鸡公岭徒步', prompt: '接着搜索“鸡公岭徒步”，打开路线资料核对长度和难度。' }
+        : null
+    : null;
   const safeDraft = draft ?? '';
   const suggestions = useMemo(() => getSuggestions(isAct2T06Query(safeDraft) && stage !== 'qiming' ? '' : safeDraft, stage), [safeDraft, stage]);
   const visibleView = (view: View): View => {
@@ -161,7 +168,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     </>}
     {historyOpen && (stage !== 'qiming' || qimingView === 'browser') && <aside className="browser-history" aria-label="搜索历史"><strong>最近搜索</strong>{state.modules.browser.queryHistory.filter((query) => stage === 'qiming' || !findSearchQuery(query) || !isAct2T06Record(findSearchQuery(query)!)).length ? state.modules.browser.queryHistory.filter((query) => stage === 'qiming' || !findSearchQuery(query) || !isAct2T06Record(findSearchQuery(query)!)).map((query) => <button type="button" key={query} onClick={() => submitSearch(query)}>{query}</button>) : <p>还没有搜索记录</p>}</aside>}
     <div className="browser-content" hidden={stage === 'qiming' && qimingView === 'review'}>
-      {shownView.kind === 'home' && <BrowserHome draft={safeDraft} suggestions={suggestions} onChoose={(query) => { setDraft(query); submitSearch(query); }} />}
+      {shownView.kind === 'home' && <BrowserHome draft={safeDraft} suggestions={suggestions} firstActSearchTask={firstActSearchTask} onChoose={(query) => { setDraft(query); submitSearch(query); }} />}
       {shownView.kind === 'results' && <BrowserSearchResults query={shownView.query} stage={stage} onOpen={openPage} />}
       {shownView.kind === 'page' && <BrowserPageView
         key={shownView.pageId}
@@ -305,6 +312,17 @@ function Act2QimingCaseReview({ state, manager, focusedCase, onFocusCase, onOpen
   </aside>;
 }
 
-function BrowserHome({ draft, suggestions, onChoose }: { draft: string; suggestions: string[]; onChoose: (query: string) => void }) {
-  return <section className="browser-home"><div><p className="browser-home__eyebrow">网页搜索</p><h2>查找一些旧信息</h2><p>搜索保存下来的网页记录。</p>{draft && <div className="browser-suggestions" aria-label="搜索建议">{suggestions.map((term) => <button type="button" key={term} onClick={() => onChoose(term)}>{term}</button>)}</div>}</div></section>;
+function BrowserHome({ draft, suggestions, firstActSearchTask, onChoose }: {
+  draft: string;
+  suggestions: string[];
+  firstActSearchTask: { query: string; prompt: string } | null;
+  onChoose: (query: string) => void;
+}) {
+  return <section className="browser-home"><div><p className="browser-home__eyebrow">网页搜索</p><h2>查找一些旧信息</h2><p>搜索保存下来的网页记录。</p>
+    {firstActSearchTask && <aside className="browser-home__task" aria-label="当前搜索任务">
+      <p>{firstActSearchTask.prompt}</p>
+      <button type="button" data-search-query={firstActSearchTask.query} onClick={() => onChoose(firstActSearchTask.query)}>搜索“{firstActSearchTask.query}”</button>
+    </aside>}
+    {draft && <div className="browser-suggestions" aria-label="搜索建议">{suggestions.map((term) => <button type="button" key={term} onClick={() => onChoose(term)}>{term}</button>)}</div>}
+  </div></section>;
 }
