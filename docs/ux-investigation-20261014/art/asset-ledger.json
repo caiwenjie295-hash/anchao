@@ -4,8 +4,8 @@
   "canonicalJobCount": 112,
   "producedCanonicalCount": 112,
   "allCanonicalNativeAndWebpDecoded": true,
-  "verbatimPromptRecordCount": 62,
-  "reconstructedPromptRecordCount": 50,
+  "verbatimPromptRecordCount": 65,
+  "reconstructedPromptRecordCount": 47,
   "nativeAndWebpAspectMismatches": [],
   "technicalFailures": [],
   "assets": [
@@ -876,23 +876,32 @@
         "format": "PNG",
         "width": 1448,
         "height": 1086,
-        "bytes": 3606864,
-        "sha256": "5781af9e7488cd7c803194b8eb5b2013e286e853041a1f0b0c75c2364a686bb1"
+        "bytes": 3274352,
+        "sha256": "961075b633800bd83451beff8a9c842574a650630c01bd15a1c09f75ab29e9f8"
       },
       "webp": {
         "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CAVE_SHELTER.webp",
         "format": "WEBP",
         "width": 1448,
         "height": 1086,
-        "bytes": 515508,
-        "sha256": "d4c6846d7b642f2832d79f447b101c76261527c55be587e2940d33c2cb78abb2"
+        "bytes": 406920,
+        "sha256": "40276a2543b4a900b62f4c3ec80d3ceb3c16a6837c2707ec651ef707f2ac8805"
       },
       "promptRecord": {
-        "type": "post-hoc reconstructed constraint summary, not verbatim original",
-        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER.txt",
-        "sha256": "26b76c6437009a89c77fb2f3fa84d827636e54be93c896c24eab486e7516dd5b"
+        "type": "targeted replacement verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER.txt",
+        "sha256": "8a6419a9953e33425c91034c2b0fcc52641d86c35f8d0a646b12530b69be99f2"
       },
-      "previousCandidates": []
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-first-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-first-targeted-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-one-reference-attempt.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-one-reference-attempt.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-pre-latest-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-pre-latest-targeted-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-second-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-second-targeted-fix.webp"
+      ]
     },
     {
       "id": "IMG_A3_DETAIL_T00_CAVE_TALK",
@@ -918,23 +927,32 @@
         "format": "PNG",
         "width": 1448,
         "height": 1086,
-        "bytes": 2651563,
-        "sha256": "c3d0b4b06b6dcd13af0e13cb6c9913b16bd9ef51469915f8419c8b9a8c3bb376"
+        "bytes": 2667301,
+        "sha256": "4e60ce13b4fa7892e68e17f04ea290ac672fcca408d7c2dfbf69b9b9f5de0bbd"
       },
       "webp": {
         "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CAVE_TALK.webp",
         "format": "WEBP",
         "width": 1448,
         "height": 1086,
-        "bytes": 271748,
-        "sha256": "0070c729c44b12e2465c30a00a52eff5320ed86e0ce50ac3010c0ebd55ff519b"
+        "bytes": 244562,
+        "sha256": "a42362d38b8b927a5c72b222aea7d5d509183c525a85d12f6b838f128b39a494"
       },
       "promptRecord": {
-        "type": "post-hoc reconstructed constraint summary, not verbatim original",
-        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_CAVE_TALK.txt",
-        "sha256": "2bfd4ab2ebb1d52a297c13f38fe8cf718988e0e0eb07b67b6b44438dbca4bf84"
+        "type": "targeted replacement verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T00_CAVE_TALK.txt",
+        "sha256": "c273c57648ab0a41137079286e82c13e676edb6c7eb589391be5dae3eb2304e8"
       },
-      "previousCandidates": []
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-first-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-first-targeted-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-one-reference-attempt.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-one-reference-attempt.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-pre-latest-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-pre-latest-targeted-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-second-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-second-targeted-fix.webp"
+      ]
     },
     {
       "id": "IMG_A3_DETAIL_T00_DEPART",
@@ -2297,23 +2315,26 @@
         "format": "PNG",
         "width": 1448,
         "height": 1086,
-        "bytes": 3292429,
-        "sha256": "c0c4eb90ef7770243a4bc5a58c4f0fbd5a617bc4e563738866d15cda427f03f0"
+        "bytes": 3271882,
+        "sha256": "5fed2e804595e4b5d223404f5c9adbd393e628e6000a2f1bf385982b6b2020c3"
       },
       "webp": {
         "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_VVAKE_PAPER.webp",
         "format": "WEBP",
         "width": 1448,
         "height": 1086,
-        "bytes": 407496,
-        "sha256": "4fff40a7f72c6434fa2dbaef28670c52c5728a7bbcd769eba3360c669aa99123"
+        "bytes": 412038,
+        "sha256": "6d028ed1020b681d2cd3cae70461a787ccd7e8b3d9a2a9965c2d82a9f175b77d"
       },
       "promptRecord": {
-        "type": "post-hoc reconstructed constraint summary, not verbatim original",
-        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_VVAKE_PAPER.txt",
-        "sha256": "4dcfa8a0930051b51a57f15b3b0075f37f0067f8dd751ff1afa47269aa8bae24"
+        "type": "targeted replacement verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T04_VVAKE_PAPER.txt",
+        "sha256": "164d5fadc56c4f2ae8231faa0887beb4f54adbb96b07375c572ad60dd079c7c2"
       },
-      "previousCandidates": []
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T04_VVAKE_PAPER-pre-latest-targeted-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T04_VVAKE_PAPER-pre-latest-targeted-fix.webp"
+      ]
     },
     {
       "id": "IMG_A3_DETAIL_T05_13ACK_PAPER",
@@ -4553,6 +4574,102 @@
       "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
     },
     {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-first-targeted-fix.png",
+      "bytes": 3185538,
+      "sha256": "f8ed35442bf5928d622109146f2d38ccd08b0fdde13ff8078a3badb2e34f6223",
+      "reason": "First targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-first-targeted-fix.webp",
+      "bytes": 393042,
+      "sha256": "d4984359d0aff27d5142636aa9fc2a3597ea9809d91eec4d580bc843ffccc29c",
+      "reason": "First targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-one-reference-attempt.png",
+      "bytes": 3233140,
+      "sha256": "78b8316f508017d7cc98c4614069acde7e93a41cad2626ecbc203a792b532163",
+      "reason": "One-reference cave candidate retained; superseded by the final no-reference replacement."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-one-reference-attempt.webp",
+      "bytes": 417060,
+      "sha256": "01226cb71b771804ab05900585531f0675fe102d306d8360bd637ff412b22433",
+      "reason": "One-reference cave candidate retained; superseded by the final no-reference replacement."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-pre-latest-targeted-fix.png",
+      "bytes": 3606864,
+      "sha256": "5781af9e7488cd7c803194b8eb5b2013e286e853041a1f0b0c75c2364a686bb1",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-pre-latest-targeted-fix.webp",
+      "bytes": 515508,
+      "sha256": "d4c6846d7b642f2832d79f447b101c76261527c55be587e2940d33c2cb78abb2",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-second-targeted-fix.png",
+      "bytes": 3253023,
+      "sha256": "b843434fbfef9a63ea52da154a9382dd2f11cde77e566aa0683d15e01baa645c",
+      "reason": "Second targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_SHELTER-second-targeted-fix.webp",
+      "bytes": 405572,
+      "sha256": "4575fb46afd228709627ea6d0323ef9a4d20f62db3c1129182e539788f423488",
+      "reason": "Second targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-first-targeted-fix.png",
+      "bytes": 2810526,
+      "sha256": "29d344a6a305a76fa22748fd95f36ba5b23a36a1e0e778082f2db64a8027d43d",
+      "reason": "First targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-first-targeted-fix.webp",
+      "bytes": 299550,
+      "sha256": "030c0a6672abd36a14dbdf9aa4f1ca3d8948b6d55e1b62fb4a76c074e384afd0",
+      "reason": "First targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-one-reference-attempt.png",
+      "bytes": 2750800,
+      "sha256": "c7fe1e3b4ec4ca7bab976098ece5040fc844c5a6ebec613083fbd850fae1dad8",
+      "reason": "One-reference cave candidate retained; superseded by the final no-reference replacement."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-one-reference-attempt.webp",
+      "bytes": 282336,
+      "sha256": "ac788ddd73cc3b3d687e7028eb113a5f69e690dd3470e07a50d2a47b7baa8fc0",
+      "reason": "One-reference cave candidate retained; superseded by the final no-reference replacement."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-pre-latest-targeted-fix.png",
+      "bytes": 2651563,
+      "sha256": "c3d0b4b06b6dcd13af0e13cb6c9913b16bd9ef51469915f8419c8b9a8c3bb376",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-pre-latest-targeted-fix.webp",
+      "bytes": 271748,
+      "sha256": "0070c729c44b12e2465c30a00a52eff5320ed86e0ce50ac3010c0ebd55ff519b",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-second-targeted-fix.png",
+      "bytes": 3068559,
+      "sha256": "3a47617f943bd7cb61662e5547413ca39b7a056e55f0705001fdf0d53d6ea400",
+      "reason": "Second targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_CAVE_TALK-second-targeted-fix.webp",
+      "bytes": 357828,
+      "sha256": "b9062207d993994180edd030c903723f08df332ba4c04dfeee236c77340113e2",
+      "reason": "Second targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
       "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.png",
       "bytes": 3825730,
       "sha256": "bd921118e08651d1f51a15e043cdaee57632ccf9383cd43b1786f476dcbcd181",
@@ -4661,6 +4778,18 @@
       "reason": "Superseded because the earlier close detail left the board blank; replacement shows irregular crooked S chalk marks and retains speaker/podium anchors."
     },
     {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T04_VVAKE_PAPER-pre-latest-targeted-fix.png",
+      "bytes": 3292429,
+      "sha256": "c0c4eb90ef7770243a4bc5a58c4f0fbd5a617bc4e563738866d15cda427f03f0",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T04_VVAKE_PAPER-pre-latest-targeted-fix.webp",
+      "bytes": 407496,
+      "sha256": "4fff40a7f72c6434fa2dbaef28670c52c5728a7bbcd769eba3360c669aa99123",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
       "path": "docs/ux-investigation-20261014/art/superseded/IMG_A4_ZOOM_T08_005-targeted-reshoot.png",
       "bytes": 3276965,
       "sha256": "113c46ef2c29f21669658ad4446d18d7170eafe5d248d22ea2a274c2b554feff",
@@ -4671,6 +4800,54 @@
       "bytes": 447026,
       "sha256": "44be49fcfd91e59be6ee55d762b0054e193da990afad404d1ca306c50e662ffe",
       "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER-first-targeted-fix.txt",
+      "bytes": 2132,
+      "sha256": "6d5b7e5d2030a4018a3ed777ad1fe809f2ef8194a17f05452b4f11e721e6531a",
+      "reason": "First targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER-one-reference-attempt.txt",
+      "bytes": 2555,
+      "sha256": "9e74fd77567ae84d7f8d342d76a6896ea93cfca090c96fed07341f55e486a39e",
+      "reason": "One-reference cave candidate retained; superseded by the final no-reference replacement."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER-pre-latest-targeted-fix-reconstructed-summary.txt",
+      "bytes": 1001,
+      "sha256": "26b76c6437009a89c77fb2f3fa84d827636e54be93c896c24eab486e7516dd5b",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER-second-targeted-fix.txt",
+      "bytes": 2614,
+      "sha256": "fe62d9e3f83491493eb9f755d30ac0b6a16544afb81972f71efce9bed3c13511",
+      "reason": "Second targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_TALK-first-targeted-fix.txt",
+      "bytes": 2076,
+      "sha256": "ae9c94c66b5d88821391d8a5ebe162231106e7348ca28b3153d6f9432e2fcf68",
+      "reason": "First targeted cave candidate retained; it still showed repeated small plate texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_TALK-one-reference-attempt.txt",
+      "bytes": 2611,
+      "sha256": "1086c0b416b7da6c8e7a384a2ba4e61dde7687df66fa9ed1fe7b6d7e2bbff5b1",
+      "reason": "One-reference cave candidate retained; superseded by the final no-reference replacement."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_TALK-pre-latest-targeted-fix-reconstructed-summary.txt",
+      "bytes": 995,
+      "sha256": "2bfd4ab2ebb1d52a297c13f38fe8cf718988e0e0eb07b67b6b44438dbca4bf84",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_CAVE_TALK-second-targeted-fix.txt",
+      "bytes": 2546,
+      "sha256": "dbf67acae272e288273c9938c08fcf7755d3b1a9667064c2a8ebba53ea3fca42",
+      "reason": "Second targeted cave candidate retained; it still showed repeated small plate texture."
     },
     {
       "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.txt",
@@ -4739,6 +4916,12 @@
       "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
     },
     {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T04_VVAKE_PAPER-pre-latest-targeted-fix-reconstructed-summary.txt",
+      "bytes": 1010,
+      "sha256": "4dcfa8a0930051b51a57f15b3b0075f37f0067f8dd751ff1afa47269aa8bae24",
+      "reason": "Prior canonical image or reconstructed prompt archived after the latest parent review identified missing paper title or repeated cave-rock texture."
+    },
+    {
       "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A4_ZOOM_T08_005-targeted-reshoot.txt",
       "bytes": 1442,
       "sha256": "95609b3b36a17d593a020019fc839391b2a5644bd658d3801614b41b0cb03c53",
@@ -4782,5 +4965,5 @@
     }
   ],
   "stagingFilesRetained": [],
-  "visualReview": "Parent final visual QA of the seven targeted replacements is pending; no acceptance is claimed by the art production ledger."
+  "visualReview": "The latest three targeted replacements (VVaKe paper and two cave details) are pending parent visual review; no acceptance is claimed by the art producer."
 }
