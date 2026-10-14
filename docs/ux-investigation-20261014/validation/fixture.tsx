@@ -15,8 +15,8 @@ async function boot() {
     import('../../../src/data/act3Data'),
   ]);
   type Mode = 'browser' | 'school' | 't07' | 'act3' | 'act4';
-  const lensOptions = Object.values(a3Data.act3LensById instanceof Map
-    ? Object.fromEntries(a3Data.act3LensById) : a3Data.act3LensById);
+  const lensOptions = (['T00','T01','T02','T03','T04','T05','T06','T07'] as Act3ActiveStage[])
+    .flatMap(stage => a3Data.act3StageDoc(stage).lenses);
   const makeState = (mode: Mode, lensId: string, readingStage: 'T05' | 'T08' | 'T09'): AppState => {
     const value = defaults.createDefaultState();
     if (mode === 'browser') {
