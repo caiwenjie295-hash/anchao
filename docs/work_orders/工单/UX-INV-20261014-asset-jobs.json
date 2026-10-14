@@ -1813,6 +1813,583 @@
         "kind": "direction"
       },
       "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_001",
+      "title": "王澳在晚自习时把日记藏在练习册下 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_001",
+          "path": "src/第四幕/T05/IMG_A4_T05_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "练习册下露出的日记页边与桌面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。练习册下露出的日记页边与桌面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_002",
+      "title": "李老师办公室里的茶杯与桌面 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_002",
+          "path": "src/第四幕/T05/IMG_A4_T05_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "办公室桌面的茶杯和纸面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。办公室桌面的茶杯和纸面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_003",
+      "title": "王澳生日当天回家的门厅与早饭 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_003",
+          "path": "src/第四幕/T05/IMG_A4_T05_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "门厅边的早餐与桌面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。门厅边的早餐与桌面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_005",
+      "title": "生日晚餐中父母交换眼色 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_005",
+          "path": "src/第四幕/T05/IMG_A4_T05_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "晚餐桌边父母原有的手部与眼色关系",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。晚餐桌边父母原有的手部与眼色关系。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_006",
+      "title": "王澳从房门缝边的镜面观察门外来人 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_006",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_006.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_006",
+          "path": "src/第四幕/T05/IMG_A4_T05_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "门缝旁镜面里的原有模糊倒影",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。门缝旁镜面里的原有模糊倒影。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_002",
+      "title": "王澳在机构吃到的固定早餐 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_002",
+          "path": "src/第四幕/T06/IMG_A4_T06_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "餐盘中的原有固定早餐，不判断肉来源",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。餐盘中的原有固定早餐，不判断肉来源。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_004",
+      "title": "机构走廊中的早晚广播设备 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_004",
+          "path": "src/第四幕/T06/IMG_A4_T06_004.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原墙面广播设备、接线与固定件",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原墙面广播设备、接线与固定件。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_005",
+      "title": "床铺上的纸团与逃离计划 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_005",
+          "path": "src/第四幕/T06/IMG_A4_T06_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "下铺被面上的折叠纸团",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。下铺被面上的折叠纸团。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "title": "2014 年仍在使用的禁闭室铁门，保留三个观察孔与送餐口 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_007",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_007.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_007",
+          "path": "src/第四幕/T06/IMG_A4_T06_007.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "铁门原有的三个观察孔与送餐口，保持2014仍在使用的状态",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。铁门原有的三个观察孔与送餐口，保持2014仍在使用的状态。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_001",
+      "title": "王澳梦中陌生城市的校园 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_001",
+          "path": "src/第四幕/T07/IMG_A4_T07_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "梦中校园道路和近处建筑细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。梦中校园道路和近处建筑细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_004",
+      "title": "王澳在梦里的镜前视角 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_004",
+          "path": "src/第四幕/T07/IMG_A4_T07_004.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "洗手间镜面与模糊面容，面容继续模糊",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。洗手间镜面与模糊面容，面容继续模糊。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "title": "机构地下厨房深处的黑色塑像 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_005",
+          "path": "src/第四幕/T07/IMG_A4_T07_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一地下厨房深处的黑色塑像与神龛，不改变厨房方位",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一地下厨房深处的黑色塑像与神龛，不改变厨房方位。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_001",
+      "title": "大学宿舍清晨，王澳查看手机邮件 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_001",
+          "path": "src/第四幕/T08/IMG_A4_T08_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "清晨宿舍中原手机与手边细节，屏幕不新增可读文本",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。清晨宿舍中原手机与手边细节，屏幕不新增可读文本。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_002",
+      "title": "王澳独自坐在湖边长椅上 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_002",
+          "path": "src/第四幕/T08/IMG_A4_T08_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "湖边长椅、水草与原远处人物的空间关系",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。湖边长椅、水草与原远处人物的空间关系。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_011",
+      "title": "大学校园里的日常生活 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_011",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_011.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_011",
+          "path": "src/第四幕/T08/IMG_A4_T08_011.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "大学日常场景中近处物件与路面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。大学日常场景中近处物件与路面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_003",
+      "title": "手机发信后准备夜行出发 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_003",
+          "path": "src/第四幕/T08/IMG_A4_T08_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "夜行行李旁的原手机和包袋",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。夜行行李旁的原手机和包袋。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_004",
+      "title": "山脚下准备上山的王澳 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_004",
+          "path": "src/第四幕/T08/IMG_A4_T08_004.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "山脚原小店柜台的笔记本、核桃、胶带与袋子",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。山脚原小店柜台的笔记本、核桃、胶带与袋子。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_006",
+      "title": "王澳翻越带有碎玻璃的围墙 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_006",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_006.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_006",
+          "path": "src/第四幕/T08/IMG_A4_T08_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "墙沿原碎玻璃、包扎手或原冲锋衣细节，保持原左右方向与动作",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。墙沿原碎玻璃、包扎手或原冲锋衣细节，保持原左右方向与动作。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_005",
+      "title": "凌晨时分通往旧址的道路 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_005",
+          "path": "src/第四幕/T08/IMG_A4_T08_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原夜间道路、石洞边或排水沟，手电光方向保持",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原夜间道路、石洞边或排水沟，手电光方向保持。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "title": "王澳进入启明旧址的广播室 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_007",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_007.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_007",
+          "path": "src/第四幕/T08/IMG_A4_T08_007.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "正在使用的广播室设备与原桌面纸片",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。正在使用的广播室设备与原桌面纸片。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "title": "启明旧址档案架与编号 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_008",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_008.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_008",
+          "path": "src/第四幕/T08/IMG_A4_T08_008.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原档案架的年份编号、书脊和材质",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原档案架的年份编号、书脊和材质。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_READING_DETAIL_001",
+      "title": "手机微光落在档案室的不锈钢书架上，反光里的轮廓难以辨认 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_READING_DETAIL_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_READING_DETAIL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_READING_DETAIL_001",
+          "path": "src/第四幕/UX-RHYTHM/IMG_A4_READING_DETAIL_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原金属架反光和手中文件；镜中身份轮廓继续难以辨认",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原金属架反光和手中文件；镜中身份轮廓继续难以辨认。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "title": "启明旧址厨房里的景象 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_010",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_010.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_010",
+          "path": "src/第四幕/T08/IMG_A4_T08_010.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原厨房门缝视线中的深处黑像，锅与铁钩方位保持；不判断肉来源",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原厨房门缝视线中的深处黑像，锅与铁钩方位保持；不判断肉来源。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "title": "王澳在地下厨房边惊惧地回望，视线开始模糊 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_FINALE_FEAR_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINALE_FEAR_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_FINALE_FEAR_001",
+          "path": "src/assets/ux-finale-20261008/IMG_A4_FINALE_FEAR_001.webp"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原地下厨房边模糊回望的近处门框/墙面与手；保留惊惧失焦，不揭示模糊人脸",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原地下厨房边模糊回望的近处门框/墙面与手；保留惊惧失焦，不揭示模糊人脸。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_012",
+      "title": "王澳逃出厨房后，倒在消防栓旁的低视角 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_012",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_012.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_012",
+          "path": "src/第四幕/T08/IMG_A4_T08_012.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原消防栓附近低机位的地面、包扎/衣料与柜体细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原消防栓附近低机位的地面、包扎/衣料与柜体细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_002",
+      "title": "手机上收到的回信 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_002",
+          "path": "src/第四幕/T09/IMG_A4_T09_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原颤抖手中手机和旁侧消防栓，屏幕不新增可读内容",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原颤抖手中手机和旁侧消防栓，屏幕不新增可读内容。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_003",
+      "title": "王澳写下笔记的最后一页 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_003",
+          "path": "src/第四幕/T09/IMG_A4_T09_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原褐色笔记本末页、笔尖、袋子和胶带；不新增可读字句",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原褐色笔记本末页、笔尖、袋子和胶带；不新增可读字句。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_001",
+      "title": "消防栓旁等待藏好的笔记 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_001",
+          "path": "src/第四幕/T09/IMG_A4_T09_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原消防栓侧背藏物处与袋包纸边细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原消防栓侧背藏物处与袋包纸边细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_004",
+      "title": "王澳走向旧址出口 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_004",
+          "path": "src/第四幕/T09/IMG_A4_T09_004.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一走廊朝出口前进的门框/地面近景，晨光方向保持",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一走廊朝出口前进的门框/地面近景，晨光方向保持。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "title": "旧址门槛与门外的晨光 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_005",
+          "path": "src/第四幕/T09/IMG_A4_T09_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一门槛、晨光和失焦边缘；不揭示意识中断后的去处",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一门槛、晨光和失焦边缘；不揭示意识中断后的去处。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINAL_READING_001",
+      "title": "桌灯旁摊开的无字纸张与模糊屏幕，邮件内容不可辨认 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_FINAL_READING_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINAL_READING_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_FINAL_READING_001",
+          "path": "src/第四幕/UX-RHYTHM/IMG_A4_FINAL_READING_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原桌灯旁纸张、键盘和屏幕边缘，内容继续不可辨认",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原桌灯旁纸张、键盘和屏幕边缘，内容继续不可辨认。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T01_001",
+      "title": "酒店桌上摊开的旧笔记本 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T01_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T01_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T01_001",
+          "path": "src/第四幕/T01/IMG_A4_T01_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "酒店同一桌上笔记本的装订、纸张边缘；不提前显示尚未阅读的密码/文本",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。酒店同一桌上笔记本的装订、纸张边缘；不提前显示尚未阅读的密码/文本。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T10_003",
+      "title": "咖啡馆桌面的三杯饮料 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T10_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T10_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T10_003",
+          "path": "src/第四幕/T10/IMG_A4_T10_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一桌面三杯饮料的杯沿和凝水，必须仍是三杯且相对位置一致",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一桌面三杯饮料的杯沿和凝水，必须仍是三杯且相对位置一致。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A3_COMPARE_STATUE_DETAIL_001",
+      "title": "第一次进山破庙塑像 · 对照放大近景",
+      "kind": "act3-comparison-detail",
+      "sourceAssetId": "IMG_A1_I_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_COMPARE_STATUE_DETAIL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A1_I_003",
+          "path": "src/Photo_src/黑补母特写1.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "从同一破庙原塑像向前靠近拍摄新的底座/残存雕像近景，保持残缺形态、左右与室内墙面关系。稀疏自然裂痕、平滑石质，不做密集鱼鳞/蜂巢纹。不恢复缺失肢体，不命名神像，不添加新线索。用于第三幕旧塑像/空神龛对照的放大查看。"
     }
   ],
   "revision": "最新用户遗漏审计：校园总图+教学楼整体外景，78作业"
