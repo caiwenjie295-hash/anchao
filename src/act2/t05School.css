@@ -252,7 +252,7 @@
 .t05-school__campus-plan > img { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
 .t05-school__campus-plan > svg,
 .t05-school__indoor-plan > svg { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.t05-school__route-line { stroke: #fff8df; stroke-width: 1.7; stroke-dasharray: 3 2; stroke-linecap: round; opacity: .9; filter: drop-shadow(0 1px 1px #233322); }
+.t05-school__route-line { fill: none; stroke: #fff8df; stroke-width: 1.7; stroke-dasharray: 3 2; stroke-linecap: round; opacity: .9; filter: drop-shadow(0 1px 1px #233322); }
 .t05-school__route-line--active { stroke: #ffe06f; stroke-width: 2.5; stroke-dasharray: none; opacity: 1; filter: drop-shadow(0 0 2px #1d3128) drop-shadow(0 1px 1px #1d3128); }
 .t05-school__campus-plan > svg .t05-school__route-line,
 .t05-school__campus-plan > svg .t05-school__map-leader,
