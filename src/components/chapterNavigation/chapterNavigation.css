@@ -24,3 +24,25 @@
 .chapter-navigation__confirmation-actions .chapter-navigation__danger { border-color: #b77c69; color: #fff4f0; background: #672f26; }
 .chapter-navigation__confirmation .chapter-navigation__error { margin-top: -5px; color: #ffc5ae; }
 @media (max-width: 520px) { .chapter-navigation__confirmation { padding: 18px; } }
+
+.chapter-navigation--taskbar { position: relative; z-index: 9010; left: auto; bottom: auto; width: auto; flex: 0 0 auto; color: #26312b; }
+.chapter-navigation--taskbar .chapter-navigation__trigger { min-width: 44px; min-height: 44px; padding: 0 10px; border-color: #a1aaa3; color: #35423a; background: #f4f5f1; box-shadow: none; font-size: 12px; }
+.chapter-navigation--taskbar .chapter-navigation__trigger:hover,
+.chapter-navigation--taskbar .chapter-navigation__trigger:focus-visible { color: #1d3527; background: #e4ebe4; outline-color: #486b54; }
+.chapter-navigation--taskbar .chapter-navigation__menu { right: 0; bottom: calc(100% + 8px); left: auto; width: min(350px, calc(100vw - 24px)); max-height: min(70dvh, calc(100dvh - 90px - env(safe-area-inset-top, 0px)), 620px); }
+.chapter-navigation--header { position: relative; z-index: 90; left: auto; bottom: auto; width: auto; flex: 0 0 auto; }
+.chapter-navigation--header .chapter-navigation__trigger { min-height: 44px; padding: 0 11px; border-color: #65766c; color: #e9eee9; background: #1d2a23; box-shadow: none; font-size: .86rem; }
+.chapter-navigation--header .chapter-navigation__menu { right: 0; left: auto; width: min(350px, calc(100vw - 24px)); }
+.chapter-navigation--scene,
+.chapter-navigation--ending { position: fixed; z-index: 3001; left: auto; width: auto; }
+.chapter-navigation--scene { right: max(14px, env(safe-area-inset-right, 0px)); bottom: max(68px, calc(58px + env(safe-area-inset-bottom, 0px))); }
+.chapter-navigation--ending { right: max(14px, env(safe-area-inset-right, 0px)); bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
+.chapter-navigation--scene .chapter-navigation__trigger,
+.chapter-navigation--ending .chapter-navigation__trigger { min-height: 44px; padding: 0 14px; border-color: #87968d; color: #edf3ef; background: #17221de8; box-shadow: 0 3px 12px #0005; }
+.chapter-navigation--scene .chapter-navigation__menu,
+.chapter-navigation--ending .chapter-navigation__menu { right: 0; left: auto; width: min(350px, calc(100vw - 28px)); }
+.chapter-navigation--ending .chapter-navigation__menu { max-height: min(64dvh, calc(100dvh - 90px)); }
+@media (max-width: 600px) {
+  .chapter-navigation--header .chapter-navigation__trigger { min-width: 44px; padding-inline: 8px; font-size: .78rem; }
+  .chapter-navigation--taskbar .chapter-navigation__trigger { padding-inline: 7px; font-size: 11px; }
+}

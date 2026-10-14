@@ -69,6 +69,7 @@ export default function App() {
     : { width: window.innerWidth, height: window.innerHeight });
   const [saveImportNoticeVisible, setSaveImportNoticeVisible] = useState(false);
   const [act4EndingNavigationHost, setAct4EndingNavigationHost] = useState<HTMLElement | null>(null);
+  const [sceneNavigationHost, setSceneNavigationHost] = useState<HTMLElement | null>(null);
   const saveImportNoticeTimerRef = useRef<number | null>(null);
   const act4WasCompleteRef = useRef(state.game.flags.FLAG_A4_COMPLETE === true);
   useEffect(() => {
@@ -263,6 +264,14 @@ export default function App() {
   const transitionOpen = transition !== null && (transition.presentation === 'immediate' || openedTransitionId === transition.id);
   const preludeOpen = transition?.id === 'TRANSITION_A1_INTRO' && showOpeningPrelude;
   const curtainOpen = transitionOpen || preludeOpen;
+  useEffect(() => {
+    setSceneNavigationHost(null);
+    if (!sceneOpen || curtainOpen || showAct4Ending || recoveryState.kind !== 'none') return;
+    const frame = window.requestAnimationFrame(() => {
+      setSceneNavigationHost(document.querySelector<HTMLElement>('.investigation-shell__header-actions, .act1-scene__header-actions'));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [act2SceneStage, act3Stage, curtainOpen, recoveryState.kind, sceneOpen, showAct4Ending, state.modules.scene.currentSceneId]);
   const continueTransition = () => {
     if (!transition) return;
     stateManager.acknowledgeStoryTransition(transition.id);
@@ -295,7 +304,7 @@ export default function App() {
     return <InvestigationProgressProvider state={state} suppressed={curtainOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
       <div className="act1-ending-flow" aria-hidden={curtainOpen} inert={curtainOpen}><Act1Ending onContinue={() => runSceneTransition(() => stateManager.startSecondAct())} />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
-      {!curtainOpen && recoveryState.kind === 'none' && <ChapterNavigation onReplay={replayChapter} onReset={restartProgress} />}
+      {!curtainOpen && recoveryState.kind === 'none' && <ChapterNavigation placement="ending" onReplay={replayChapter} onReset={restartProgress} />}
       {transitionLayer}
       {saveImportNotice}
     </></InvestigationProgressProvider>;
@@ -337,7 +346,7 @@ export default function App() {
           />
         );
       })}
-      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} time={time} /></div>
+      <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} time={time} chapterNavigation={!sceneOpen && !curtainOpen && !showAct4Ending && recoveryState.kind === 'none' ? <ChapterNavigation placement="taskbar" onReplay={replayChapter} onReset={restartProgress} /> : undefined} /></div>
     </main>
     {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} /></SceneTransitionLayer>}
     {act2SceneStage !== null && !act3Active && (
@@ -366,9 +375,11 @@ export default function App() {
     {act4Open && <SceneTransitionLayer><Act4Experience manager={stateManager} onExit={exitAct4} /></SceneTransitionLayer>}
     </div>
     {showAct4Ending && <Act4Ending onReview={() => setShowAct4Ending(false)} onReturnToDesktop={() => { setShowAct4Ending(false); setDismissedAct4(true); }} />}
-    {showAct4Ending && act4EndingNavigationHost && recoveryState.kind === 'none' && createPortal(<ChapterNavigation onReplay={replayChapter} onReset={restartProgress} />, act4EndingNavigationHost)}
+    {showAct4Ending && act4EndingNavigationHost && recoveryState.kind === 'none' && createPortal(<ChapterNavigation placement="ending" onReplay={replayChapter} onReset={restartProgress} />, act4EndingNavigationHost)}
     <InvestigationProgressDrawer state={state} />
-    {!curtainOpen && !showAct4Ending && recoveryState.kind === 'none' && <ChapterNavigation onReplay={replayChapter} onReset={restartProgress} />}
+    {sceneOpen && !curtainOpen && !showAct4Ending && recoveryState.kind === 'none' && (sceneNavigationHost
+      ? createPortal(<ChapterNavigation placement="header" onReplay={replayChapter} onReset={restartProgress} />, sceneNavigationHost)
+      : <ChapterNavigation placement="scene" onReplay={replayChapter} onReset={restartProgress} />)}
     {transitionLayer}
     {saveImportNotice}
     <SaveRecoveryNotice manager={stateManager} />

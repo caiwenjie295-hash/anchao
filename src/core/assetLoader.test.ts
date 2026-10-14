@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import images from '../../data/images.json';
 import { birthdayImageSlots } from '../data/act4/assets';
 import { laterScenes } from '../data/act4/laterContent';
-import { act4AssetPath, assetLoader, uxFinaleA4AssetPath, uxRhythmA4AssetPath } from './assetLoader';
+import { act4AssetPath, assetLoader, uxFinaleA4AssetPath, uxInvestigationAssetPath, uxRhythmA4AssetPath } from './assetLoader';
+import { act3StageClueIds, type AuthoredAct3Stage } from '../data/act3Data';
 
 describe('fourth act art registration', () => {
   it('keeps the original 40 IDs and registers three newly delivered A4 images', () => {
@@ -69,6 +70,25 @@ describe('UX finale artwork registration', () => {
     }
     expect(uxFinaleA4AssetPath('IMG_A4_FINALE_UNKNOWN_001', 'IMG_A4_FINALE_UNKNOWN_001.webp')).toBeNull();
     expect(uxFinaleA4AssetPath(ids[0], 'different.webp')).toBeNull();
+  });
+});
+
+describe('UX investigation artwork paths', () => {
+  it('maps only the frozen investigation IDs to the isolated WebP directory', () => {
+    const schoolIds = [
+      'IMG_A2_SCHOOL_MAP_001', 'IMG_A2_SCHOOL_GATE_001', 'IMG_A2_SCHOOL_CORRIDOR_001',
+      'IMG_A2_SCHOOL_XIAOA_001', 'IMG_A2_SCHOOL_XIAOYUE_001', 'IMG_A2_SCHOOL_RESTROOM_001',
+      'IMG_A2_SCHOOL_HONOR_001', 'IMG_A2_SCHOOL_OFFICE_001', 'IMG_A2_SCHOOL_NOTICE_001',
+      'IMG_A2_SCHOOL_DORM_001', 'IMG_A2_SCHOOL_PLAYGROUND_001', 'IMG_A2_SCHOOL_COURTYARD_001',
+      'IMG_A2_SCHOOL_NOTE_001', 'IMG_A2_SCHOOL_NOTE_DETAIL_001', 'IMG_A2_SCHOOL_RANK_PAPER_001',
+    ];
+    const clueIds = (['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]).flatMap(act3StageClueIds);
+    const ids = [...schoolIds, 'IMG_A2_T07_TRAIL_WALK_001', 'IMG_A3_SIGN_FULL_001', 'IMG_A3_BOARD_FULL_001', ...clueIds.map((id) => `IMG_A3_DETAIL_${id.slice('CLUE_A3_'.length)}`)];
+    expect(ids).toHaveLength(77);
+    expect(new Set(ids).size).toBe(77);
+    for (const id of ids) expect(uxInvestigationAssetPath(id, `${id}.webp`)).toBe(`../assets/ux-investigation-20261014/${id}.webp`);
+    expect(uxInvestigationAssetPath('IMG_A3_DETAIL_UNKNOWN', 'IMG_A3_DETAIL_UNKNOWN.webp')).toBeNull();
+    expect(uxInvestigationAssetPath(ids[0], 'wrong.png')).toBeNull();
   });
 });
 

@@ -222,6 +222,10 @@ describe('T07 promotion investigation', () => {
   });
 
   it('does not show a prior successful comparison as feedback for a different weak frame', async () => {
+    const getAsset = assetLoader.get.bind(assetLoader);
+    vi.spyOn(assetLoader, 'get').mockImplementation((assetId) => assetId === 'IMG_A2_T07_TRAIL_WALK_001'
+      ? { id: assetId, type: 'image', src: '/test/IMG_A2_T07_TRAIL_WALK_001.webp' }
+      : getAsset(assetId));
     await render();
     await loadPendingImages();
     await click('.t07-finale__video-open');

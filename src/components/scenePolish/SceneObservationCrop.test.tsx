@@ -32,7 +32,7 @@ describe('scene observation close crops', () => {
   it('uses the active mother image coordinates for other clues with a registered photo marker', () => {
     const lens = { id: 'LENS_A3_T00_009', title: '山下水痕', assetId: 'IMG_A3_T00_009' } as Act3Lens;
     const hotspot = { clueId: 'CLUE_A3_T00_WATER_ODDITY', label: '水痕' } as Act3Hotspot;
-    expect(resolveSceneObservationCrop(lens, hotspot)).toEqual({ assetId: 'IMG_A3_T00_009', focusX: 0.57, focusY: 0.54, zoom: 2.4 });
+    expect(resolveSceneObservationCrop(lens, hotspot)).toEqual({ assetId: 'IMG_A3_T00_009', focusX: 0.21, focusY: 0.28, zoom: 2.4 });
   });
 
   it('clamps edge-hotspot crops to the source photo bounds without changing their centers', () => {

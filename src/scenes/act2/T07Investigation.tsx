@@ -362,6 +362,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                   imageAlt={photoMaterial.altText}
                   hotspots={[]}
                   routes={[]}
+                  initialView={{ zoom: 2.8, focus: { x: .86, y: .86 } }}
                   onImageAvailabilityChange={onPhotoAvailability}
                   imageOverlay={<DoubleSSymbol className="t07-finale__photo-symbol" label="合影右下角的双 S 标志" />}
                 />

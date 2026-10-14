@@ -11,10 +11,10 @@ export const act3PhotoLayout: Record<string, Record<string, PhotoPoint>> = {
     "CLUE_A3_T00_APPROACH": { x: 0.55, y: 0.48, kind: 'direction' },
   },
   "LENS_A3_T00_004": {
-    "CLUE_A3_T00_CABLE": { x: 0.24, y: 0.43, kind: 'object' },
+    "CLUE_A3_T00_CABLE": { x: 0.53, y: 0.735, kind: 'object' },
   },
   "LENS_A3_T00_005": {
-    "CLUE_A3_T00_CABLE_BREAK": { x: 0.29, y: 0.62, kind: 'object' },
+    "CLUE_A3_T00_CABLE_BREAK": { x: 0.55, y: 0.64, kind: 'object' },
   },
   "LENS_A3_T00_006": {
     "CLUE_A3_T00_CAVE_SHELTER": { x: 0.46, y: 0.49, kind: 'direction' },
@@ -26,7 +26,7 @@ export const act3PhotoLayout: Record<string, Record<string, PhotoPoint>> = {
     "CLUE_A3_T00_TEMPLE_REVISIT": { x: 0.52, y: 0.55, kind: 'object' },
   },
   "LENS_A3_T00_009": {
-    "CLUE_A3_T00_WATER_ODDITY": { x: 0.57, y: 0.54, kind: 'object' },
+    "CLUE_A3_T00_WATER_ODDITY": { x: 0.21, y: 0.28, kind: 'object' },
   },
   "LENS_A3_T00_010": {
     "CLUE_A3_T00_DRAIN_DISCOVERED": { x: 0.38, y: 0.67, kind: 'object' },

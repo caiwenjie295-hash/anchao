@@ -139,7 +139,10 @@ const ACT2_T07_EXTERIOR_IMAGE_ID = 'IMG_A1_I_001';
 export function validateAct2T07Data(): void {
   const knownFlags = new Set((flagsDocument as { items: { id: string }[] }).items.map((flag) => flag.id));
   const knownNotes = new Set((notesDocument as { items: { id: string }[] }).items.map((note) => note.id));
-  const knownImages = new Set((imagesDocument as { items: { id: string }[] }).items.map((image) => image.id));
+  const knownImages = new Set([
+    ...(imagesDocument as { items: { id: string }[] }).items.map((image) => image.id),
+    'IMG_A2_T07_TRAIL_WALK_001',
+  ]);
   if (act2T07.schemaVersion !== 1) throw new Error('act2_t07.json schemaVersion 必须为 1。');
   if (act2T07.record.act !== 2 || act2T07.record.phase !== 'A2_T07') throw new Error('T07 可追溯记录无效。');
   for (const flagId of [...act2T07.record.unlockCondition, ...act2T07.record.relatedFlags]) if (!knownFlags.has(flagId)) throw new Error(`T07 数据引用未登记 Flag：${flagId}`);

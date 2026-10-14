@@ -17,10 +17,24 @@ describe('T05 school exploration', () => {
   });
   afterEach(() => { act(() => root.unmount()); container.remove(); });
 
-  it('exposes the frozen locations and shows the hydrant as an ordinary corridor detail', async () => {
+  it('opens on the north-up campus map, enters the building interior, and keeps the hydrant as an ordinary detail', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
-    for (const title of ['校门', '走廊', '小A旧教室', '小月旧教室', '厕所方向', '光荣榜', '老师办公室', '宣传栏']) expect(container.textContent).toContain(title);
-    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '走廊')?.click(); });
+    expect(container.querySelector('.t05-school__campus-plan')?.getAttribute('data-asset-id')).toBe('IMG_A2_SCHOOL_MAP_001');
+    expect(container.querySelectorAll('.t05-school__campus-plan [data-location-id]')).toHaveLength(7);
+    expect(container.querySelector('.t05-school__indoor-plan')).toBeNull();
+    for (const title of ['南门', '室外广场', '光荣榜', '宣传栏', '教学楼', '西操场', '东北宿舍']) expect(container.textContent).toContain(title);
+    const visitedBeforeEnvironment = [...manager.getState().modules.act2Research.school.visitedAreaIds];
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_COURTYARD"]')?.click(); });
+    expect(manager.getState().modules.act2Research.school.visitedAreaIds).toEqual(visitedBeforeEnvironment);
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_BUILDING"]')?.click(); });
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '返回校园总图')?.click(); });
+    expect(container.querySelector('[data-location-id="CAMPUS_BUILDING"]')?.getAttribute('aria-current')).toBe('location');
+    expect(container.querySelector('.t05-school__route-status')?.textContent).toContain('刚才走过的路线：室外广场 → 教学楼');
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_BUILDING"]')?.click(); });
+    expect(container.querySelector('.t05-school__indoor-plan')).not.toBeNull();
+    expect(container.querySelectorAll('.t05-school__indoor-plan [data-location-id]')).toHaveLength(5);
+    for (const title of ['走廊', '小A旧教室', '小月旧教室', '厕所方向', '老师办公室']) expect(container.textContent).toContain(title);
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="AREA_A2_T05_CORRIDOR"]')?.click(); });
     expect(container.textContent).toContain('墙边的消防栓');
     expect(manager.getState().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds.some((id) => id.includes('HYDRANT'))).toBe(false);
@@ -29,6 +43,9 @@ describe('T05 school exploration', () => {
 
   it('moves keyboard focus into the teacher dialog and lets Escape close it', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_BUILDING"]')?.click(); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="AREA_A2_T05_TEACHER_OFFICE"]')?.click(); });
+    expect(container.querySelector('.t05-school__route-status')?.textContent).toContain('刚才走过的路线：走廊 → 老师办公室');
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '老师办公室')?.click(); });
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '听听老师回忆')?.click(); });
     expect(container.querySelector('.t05-school__backdrop .t05-school__image-hotspot')).not.toBeNull();
@@ -36,6 +53,17 @@ describe('T05 school exploration', () => {
     await act(async () => { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
     expect(container.querySelector('[role="dialog"]')).toBeNull();
     expect((document.activeElement as HTMLElement)?.textContent).toBe('听听老师回忆');
+  });
+
+  it('draws the seven exact rank values over the paper background when opened from the outdoor honor board', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看历次名次')?.click(); });
+    const chart = container.querySelector<HTMLElement>('.t05-school__rank-chart');
+    expect(chart?.dataset.assetId).toBe('IMG_A2_SCHOOL_RANK_PAPER_001');
+    expect([...chart!.querySelectorAll('.t05-school__rank-value')].map((item) => item.textContent)).toEqual(['600', '400', '300', '130', '88', '53', '20']);
+    expect(chart?.getAttribute('aria-label')).toContain('600、400、300、130、88、53、20');
+    expect([...container.querySelectorAll('.t05-school__ranks strong')].map((item) => item.textContent)).toEqual(['600', '400', '300', '130', '88', '53', '20']);
   });
 
   it('keeps a compact daily-memory entry and the evidence choices visible without opening folds', async () => {

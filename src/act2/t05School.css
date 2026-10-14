@@ -239,9 +239,50 @@
 .t05-school__evidence-options button,
 .t05-school__inferences button { min-height: 44px; }
 
+/* Campus map is the first screen: keep the geographic plan readable, with real
+   routes and large, keyboard-friendly destination targets over the artwork. */
+.t05-school__layout { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.t05-school__map { padding: clamp(10px, 1.2vw, 16px); }
+.t05-school__map h2 { font-size: clamp(1.08rem, 1.45vw, 1.35rem); }
+.t05-school__map h2 small { margin-left: 5px; color: var(--school-muted); font-size: .68em; font-weight: 500; }
+.t05-school__map > p { max-width: 60ch; line-height: 1.45; }
+.t05-school__campus-plan,
+.t05-school__indoor-plan { position: relative; isolation: isolate; width: 100%; aspect-ratio: 1.25 / 1; overflow: hidden; border: 1px solid #8c9989; border-radius: 8px; background: #dfe6d6; box-shadow: inset 0 0 0 4px #f3f2e6a8; }
+.t05-school__campus-plan > img { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.t05-school__campus-plan > svg,
+.t05-school__indoor-plan > svg { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.t05-school__route-line { stroke: #fff8df; stroke-width: 1.7; stroke-dasharray: 3 2; stroke-linecap: round; opacity: .9; filter: drop-shadow(0 1px 1px #233322); }
+.t05-school__route-line--active { stroke: #ffe06f; stroke-width: 2.5; stroke-dasharray: none; opacity: 1; filter: drop-shadow(0 0 2px #1d3128) drop-shadow(0 1px 1px #1d3128); }
+.t05-school__map-point { position: absolute; z-index: 2; display: grid; justify-items: center; gap: 2px; width: auto !important; min-width: 60px; min-height: 44px !important; max-width: 112px; padding: 3px 7px !important; transform: translate(-50%, -50%); border: 1px solid #f7f2d5 !important; border-radius: 7px !important; color: #fffdf0 !important; background: #24362fe8 !important; box-shadow: 0 2px 6px #15251f70; font-size: clamp(.65rem, .9vw, .82rem); font-weight: 650; line-height: 1.15; text-align: center !important; cursor: pointer; }
+.t05-school__map-point > span[aria-hidden="true"] { display: block; width: 8px; height: 8px; border: 2px solid #fff3c3; border-radius: 50%; background: #4d835d; }
+.t05-school__map-point.is-current { z-index: 2; border-color: #fff !important; background: #153f2b !important; box-shadow: 0 0 0 3px #f6d56e, 0 3px 9px #10211690; }
+.t05-school__map-point.is-on-route:not(.is-current) { border-color: #ffe276 !important; }
+.t05-school__map-point:hover,
+.t05-school__map-point:focus-visible { z-index: 3; outline: 3px solid #fff; outline-offset: 2px; }
+.t05-school__map-heading { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+.t05-school__map-heading p { margin: 0 0 10px; color: var(--school-muted); font-size: 13px; line-height: 1.45; }
+.t05-school__map-heading > button { flex: none; min-height: 44px; padding: 6px 10px; }
+.t05-school__indoor-plan { aspect-ratio: 1.55 / 1; background: repeating-linear-gradient(0deg, #eee9dc 0 24%, #d9d2c2 24.5% 25.5%, #eee9dc 26% 49%, #b4bdad 49.5% 51%, #eee9dc 52% 74%, #d9d2c2 74.5% 75.5%, #eee9dc 76%); }
+.t05-school__indoor-plan::before { position: absolute; z-index: 0; inset: 8% 39%; border: 1px solid #9a8f7b; background: #d4d4c6; content: "走廊"; display: grid; place-items: center; color: #615b4d; font-size: .8rem; }
+.t05-school__indoor-plan > svg { z-index: 1; }
+.t05-school__indoor-plan .t05-school__map-point { z-index: 2; }
+.t05-school__route-status { min-height: 1.4em; margin: 9px 0 0 !important; color: #384a3f !important; font-size: .84rem !important; line-height: 1.45; }
+.t05-school__photo-fallback { display: grid; place-items: center; width: 100%; min-height: 100%; padding: 1.25rem; color: #35443a; background: linear-gradient(150deg, #d8ddcf, #eee8d8); text-align: center; line-height: 1.6; }
+.t05-school__rank-chart { position: relative; isolation: isolate; width: min(100%, 640px); aspect-ratio: 7 / 3; margin: 12px auto 4px; overflow: hidden; border: 1px solid #ad9d78; border-radius: 3px; background: #efe3bd; }
+.t05-school__rank-chart > img { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .82; }
+.t05-school__rank-chart > svg { display: block; width: 100%; height: calc(100% - 24px); overflow: visible; }
+.t05-school__rank-axis { stroke: #594c3b; stroke-width: 2; }
+.t05-school__rank-line { fill: none; stroke: #9b322d; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+.t05-school__rank-point { fill: #fff8e6; stroke: #842c27; stroke-width: 3; }
+.t05-school__rank-value { fill: #30281d; font-family: Georgia, serif; font-size: 17px; font-weight: 700; paint-order: stroke; stroke: #f6edda; stroke-width: 4px; stroke-linejoin: round; }
+.t05-school__rank-step { fill: #5a4e3d; font-family: Georgia, serif; font-size: 13px; }
+.t05-school__rank-chart figcaption { position: absolute; right: 5px; bottom: 2px; left: 5px; color: #5d513f; font-size: 11px; text-align: center; }
+
 @media (max-width: 760px) {
   .t05-school__memory-content { grid-template-columns: minmax(0, 1fr); }
   .t05-school__layout { grid-template-columns: minmax(0, 1fr); }
+  .t05-school__campus-plan { aspect-ratio: 1.2 / 1; }
+  .t05-school__map-point { min-width: 62px; max-width: 90px; font-size: .68rem; }
   .t05-school__map nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .t05-school__map button { text-align: center; }
   .t05-school__evidence-options,
@@ -250,6 +291,7 @@
 
 @container t05-school (max-width: 820px) {
   .t05-school__layout { grid-template-columns: minmax(0, 1fr); }
+  .t05-school__campus-plan { aspect-ratio: 1.2 / 1; }
   .t05-school__memory-content { grid-template-columns: minmax(0, 1fr); }
   .t05-school__map nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .t05-school__map button { text-align: center; }
