@@ -129,11 +129,11 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const blockedForwardHint = currentMissingRequiredHotspot
     ? missingXiaoyueMemory
       ? '还差一处观察。先听小月说完这一段，再继续。'
-      : '还差一处观察。先点击当前照片上的＋，查看这处线索，再继续。'
+      : '还差一处观察。先点击当前照片上的虚线框，查看这处线索，再继续。'
     : nextMissingRequired
       ? missingXiaoyueMemory
         ? '还差一处观察。先听小月说完这一段，再继续。'
-        : '还差一处观察。先从下方地点按钮前往对应照片，点击＋完成观察，再继续。'
+        : '还差一处观察。先从下方地点按钮前往对应照片，再点击虚线框完成观察。'
       : act3ExitReason(stage, missingRequiredIds);
   const findMaterialLinks = (clueIds: string[]): InvestigationMaterialLink[] => clueIds.flatMap((clueId) => {
     const entry = hotspotByClue.get(clueId);
@@ -228,7 +228,6 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     || (stage === 'T06' && lens.id === 'LENS_A3_T06_007' && inspected.includes('CLUE_A3_T06_SHRINE'))
     || (stage === 'T07' && lens.id === 'LENS_A3_T07_007' && inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP'))
   );
-  const hasDedicatedEvidence = Boolean(lensHotspot && act3DetailImageIdForClue(lensHotspot.clueId));
   return <InvestigationShell
     className={`act3-investigation investigation-shell--exploration act3-investigation--${act3MovementClassForStage(stage)}`}
     ariaLabel="第三幕调查"
@@ -238,7 +237,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '已和小月离开旧址，手边的笔记还有内容可读。'
       : act3ObjectiveFor(stage, inspected)}
-    helpText="点击照片上的＋查看物件；底部地点按钮可移动。没点＋也可点右上“退出调查，返回桌面”，之后能继续当前镜头，不会丢线索。观察弹层可用 Esc、关闭按钮或点击遮罩返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
+    helpText="点击照片上的虚线框查看物件；底部地点按钮可移动。未查看全部虚线框也可点右上“退出调查，返回桌面”，之后能继续当前镜头，不会丢线索。观察弹层可用 Esc、关闭按钮或点击遮罩返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
     actions={actions}
     statusMessage={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
@@ -267,9 +266,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     {lensHotspot && <InvestigationDetail title={act3HotspotActionLabel(stage, lensHotspot.clueId, lensHotspot.label, inspected)} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`) ?? [...document.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent === act3HotspotActionLabel(stage, lensHotspot.clueId, lensHotspot.label, inspected)) ?? null}>
       {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。
           没有正文时宁可说明缺什么，也不回退到整段镜头说明。 */}
-      {hasDedicatedEvidence
-        ? <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />
-        : <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />}
+      <ClueDetailEvidence stage={stage} hotspot={lensHotspot} />
       {lensHotspot.observation
         ? <p>{lensHotspot.observation}</p>
         : <p className="act3-investigation__empty">这里暂时没有可记的观察文字。</p>}

@@ -24,13 +24,30 @@ describe('T05 school exploration', () => {
     expect(container.querySelector('.t05-school__indoor-plan')).toBeNull();
     for (const title of ['南门', '室外广场', '光荣榜', '宣传栏', '教学楼', '西操场', '东北宿舍']) expect(container.textContent).toContain(title);
     const visitedBeforeEnvironment = [...manager.getState().modules.act2Research.school.visitedAreaIds];
+    for (const [locationId, imageId] of [
+      ['CAMPUS_COURTYARD', 'IMG_A2_SCHOOL_COURTYARD_001'],
+      ['CAMPUS_PLAYGROUND', 'IMG_A2_SCHOOL_PLAYGROUND_001'],
+      ['CAMPUS_DORM', 'IMG_A2_SCHOOL_DORM_001'],
+    ]) {
+      await act(async () => { container.querySelector<HTMLButtonElement>(`[data-location-id="${locationId}"]`)?.click(); });
+      expect(container.querySelector('.t05-school__backdrop')?.getAttribute('data-asset-id')).toBe(imageId);
+      expect(manager.getState().modules.act2Research.school.visitedAreaIds).toEqual(visitedBeforeEnvironment);
+    }
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_COURTYARD"]')?.click(); });
-    expect(manager.getState().modules.act2Research.school.visitedAreaIds).toEqual(visitedBeforeEnvironment);
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_BUILDING"]')?.click(); });
+    expect(container.querySelector('.t05-school__backdrop')?.getAttribute('data-asset-id')).toBe('IMG_A2_SCHOOL_BUILDING_001');
+    expect(container.querySelector('.t05-school__indoor-plan')).toBeNull();
+    expect(container.querySelector('.t05-school__building-entry')?.textContent).toBe('进入教学楼走廊');
+    expect(manager.getState().modules.act2Research.school.visitedAreaIds).toEqual(visitedBeforeEnvironment);
+    await act(async () => { container.querySelector<HTMLButtonElement>('.t05-school__building-entry')?.click(); });
+    expect(container.querySelector('.t05-school__indoor-plan')).not.toBeNull();
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '返回校园总图')?.click(); });
     expect(container.querySelector('[data-location-id="CAMPUS_BUILDING"]')?.getAttribute('aria-current')).toBe('location');
     expect(container.querySelector('.t05-school__route-status')?.textContent).toContain('刚才走过的路线：室外广场 → 教学楼');
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
+    expect(container.querySelector('.t05-school__route-status')?.textContent).toContain('刚才走过的路线：教学楼 → 室外广场 → 光荣榜');
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_BUILDING"]')?.click(); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('.t05-school__building-entry')?.click(); });
     expect(container.querySelector('.t05-school__indoor-plan')).not.toBeNull();
     expect(container.querySelectorAll('.t05-school__indoor-plan [data-location-id]')).toHaveLength(5);
     for (const title of ['走廊', '小A旧教室', '小月旧教室', '厕所方向', '老师办公室']) expect(container.textContent).toContain(title);
@@ -44,6 +61,7 @@ describe('T05 school exploration', () => {
   it('moves keyboard focus into the teacher dialog and lets Escape close it', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_BUILDING"]')?.click(); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('.t05-school__building-entry')?.click(); });
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="AREA_A2_T05_TEACHER_OFFICE"]')?.click(); });
     expect(container.querySelector('.t05-school__route-status')?.textContent).toContain('刚才走过的路线：走廊 → 老师办公室');
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '老师办公室')?.click(); });
