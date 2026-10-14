@@ -338,7 +338,10 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 }
 @media (max-width: 520px) {
   .taskbar { grid-template-columns: minmax(0, 1fr) auto; column-gap: 4px; padding-inline: 8px; }
-  .taskbar__apps { min-width: 0; gap: 0; }
+  .taskbar__apps { width: 100%; min-width: 0; justify-self: stretch; gap: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #89948d transparent; }
+  .taskbar__apps .taskbar__app { flex: 0 0 40px; }
+  .taskbar__apps::-webkit-scrollbar { height: 4px; }
+  .taskbar__apps::-webkit-scrollbar-thumb { border-radius: 4px; background: #89948d; }
   .taskbar__system-area { min-width: 0; gap: 4px; }
 }
 @media (max-width: 899px) {
