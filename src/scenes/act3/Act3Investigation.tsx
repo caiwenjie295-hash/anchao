@@ -10,6 +10,7 @@ import { InvestigationDetail } from '../../components/investigation/Investigatio
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction, InvestigationMaterialLink } from '../../components/investigation/types';
 import { act3PhotoLayout } from '../../data/act3PhotoLayout';
+import { act3ComparisonPhotoDetailAssetId } from '../../data/act3ComparisonPhotoDetails';
 import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT, act3DetailImageIdForClue } from '../../data/act3Data';
 import { act3ExitReason, act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
@@ -44,15 +45,20 @@ const STANCE_LABEL: Record<Act3Lens['stance'], string> = {
 
 function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: string; alt: string; caption: string; placeholder: string }) {
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [detailImageFailed, setDetailImageFailed] = useState(false);
   const src = assetLoader.get(assetId)?.src;
+  const detailAssetId = act3ComparisonPhotoDetailAssetId(assetId);
+  const detailSource = detailAssetId ? assetLoader.get(detailAssetId)?.src : undefined;
   return <>
     <figure>
       {src ? <img src={src} alt={alt} /> : <div className="act3-investigation__comparison-placeholder">{placeholder}</div>}
       <figcaption>{caption}</figcaption>
-      <button type="button" disabled={!src} onClick={() => setZoomOpen(true)}>放大查看</button>
+      <button type="button" disabled={!src || !detailAssetId} onClick={() => setZoomOpen(true)}>放大查看</button>
     </figure>
-    {zoomOpen && src && <InvestigationDetail title={caption} onClose={() => setZoomOpen(false)}>
-      <img className="act3-investigation__comparison-zoom" src={src} alt={alt} />
+    {zoomOpen && detailAssetId && <InvestigationDetail title={caption} onClose={() => setZoomOpen(false)}>
+      {detailSource && !detailImageFailed
+        ? <img className="act3-investigation__comparison-zoom" src={detailSource} alt={alt} onError={() => setDetailImageFailed(true)} />
+        : <p className="act3-investigation__comparison-zoom-fallback" role="status">{alt}的独立放大近景暂不可用。</p>}
     </InvestigationDetail>}
   </>;
 }

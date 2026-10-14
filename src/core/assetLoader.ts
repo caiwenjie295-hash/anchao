@@ -1,5 +1,6 @@
 import images from '../../data/images.json';
 import compressedAssetMap from '../assets/compressed/asset-map.json';
+import { isAct4IllustrationZoomDetailAssetId } from '../data/narrative/act4IllustrationDetails';
 
 export interface AssetReference {
   id: string;
@@ -56,6 +57,8 @@ const isUxInvestigationAssetId = (id: string): boolean =>
   || id === 'IMG_A2_T07_TRAIL_WALK_001'
   || id === 'IMG_A3_SIGN_FULL_001'
   || id === 'IMG_A3_BOARD_FULL_001'
+  || id === 'IMG_A3_COMPARE_STATUE_DETAIL_001'
+  || isAct4IllustrationZoomDetailAssetId(id)
   || /^IMG_A3_DETAIL_T0[0-7]_[A-Z0-9_]+$/.test(id);
 export const uxInvestigationAssetPath = (id: string, file: string): string | null =>
   isUxInvestigationAssetId(id) && file === `${id}.webp`

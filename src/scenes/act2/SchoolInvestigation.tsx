@@ -178,6 +178,10 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
       selectCampusLocation('CAMPUS_SOUTH_GATE');
       return;
     }
+    if (mapLevel === 'campus' && schoolIndoorMapIds.has(nextAreaId)) {
+      setCampusRouteFromId(campusLocationId);
+      setCampusLocationId('CAMPUS_BUILDING');
+    }
     setIndoorRouteFromId(area?.id && schoolIndoorMapIds.has(area.id) ? area.id : 'AREA_A2_T05_CORRIDOR');
     setMapLevel('building');
     setAreaId(nextAreaId);

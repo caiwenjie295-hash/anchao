@@ -15,6 +15,7 @@ import {
   type Act4TextSegment,
 } from '../../data/narrative/act4Presentation';
 import { act4ReadingSpaceKey, sanitizeAct4ReadingPosition } from '../../core/readingPosition';
+import { act4IllustrationDetailAssetIdForSource } from '../../data/narrative/act4IllustrationDetails';
 import { getUiPreferences, setAct4ReadingPosition, subscribeUiPreferences } from '../../core/uiPreferences';
 import { Act4PrivateBlog } from './Act4PrivateBlog';
 import { runAct4ViewTransition as transitionAct4View } from '../../components/transition/sceneTransition';
@@ -44,7 +45,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const [loginMessage, setLoginMessage] = useState('');
   const [passwordHintLevel, setPasswordHintLevel] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
-  const [zoomedIllustration, setZoomedIllustration] = useState<{ assetId: string; alt: string } | null>(null);
+  const [zoomedIllustration, setZoomedIllustration] = useState<{ assetId?: string; alt: string } | null>(null);
   const [failedIllustrationAssetId, setFailedIllustrationAssetId] = useState<string | undefined>();
   const [hotelBackgroundExpanded, setHotelBackgroundExpanded] = useState(true);
   const [endingRecapExpanded, setEndingRecapExpanded] = useState(false);
@@ -419,7 +420,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     </section>
   </>;
 
-  const zoomIllustrationSource = zoomedIllustration ? assetLoader.get(zoomedIllustration.assetId)?.src : undefined;
+  const zoomIllustrationSource = zoomedIllustration?.assetId ? assetLoader.get(zoomedIllustration.assetId)?.src : undefined;
 
   return <InvestigationShell
     ariaLabel="第四幕故事阅读"
@@ -563,7 +564,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
                   wangaoMemory={isWangaoMemory}
                   zoomButtonRef={zoomButtonRef}
                   onImageError={() => { if (coverAssetId) setFailedIllustrationAssetId(coverAssetId); }}
-                  onZoom={() => { setZoomedIllustration({ assetId: coverAssetId!, alt: coverAlt }); setZoomOpen(true); }}
+                  onZoom={() => { setZoomedIllustration({ assetId: act4IllustrationDetailAssetIdForSource(coverAssetId!), alt: coverAlt }); setZoomOpen(true); }}
                 /> : <>
                 {pages.length > 1 && <Act4ReaderPager
                   stage={stage}
@@ -602,9 +603,10 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
         </details>}
       </article>
 
-      {zoomOpen && zoomedIllustration && zoomIllustrationSource && <Act4ReaderIllustrationDialog
+      {zoomOpen && zoomedIllustration && <Act4ReaderIllustrationDialog
         source={zoomIllustrationSource}
         alt={zoomedIllustration.alt}
+        fallback={`${zoomedIllustration.alt}的独立放大近景暂不可用。`}
         dialogRef={dialogRef}
         onKeyDown={handleZoomKeyDown}
         onClose={() => setZoomOpen(false)}
