@@ -336,6 +336,11 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
   .wechat-conversation__top time { display: none; }
   .wechat-chat__messages { padding: 16px 10px; }
 }
+@media (max-width: 520px) {
+  .taskbar { grid-template-columns: minmax(0, 1fr) auto; column-gap: 4px; padding-inline: 8px; }
+  .taskbar__apps { min-width: 0; gap: 0; }
+  .taskbar__system-area { min-width: 0; gap: 4px; }
+}
 @media (max-width: 899px) {
   .app-window:has(.browser-app) {
     top: 0 !important;
