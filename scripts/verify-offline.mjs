@@ -546,27 +546,49 @@ async function advanceAct2() {
   assert.equal(state().game.phase, 'A2_T05');
   assert.equal(state().game.flags.FLAG_A2_SCHOOL_ENTERED, true);
   assert.ok(query('.t05-school'));
+  assert.equal(query('.t05-school__campus-plan').getAttribute('data-asset-id'), 'IMG_A2_SCHOOL_MAP_001');
+  assertLocalImage(query('.t05-school__campus-plan img').src);
+  assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), 'IMG_A2_SCHOOL_GATE_001');
   assertLocalImage(query('.t05-school__backdrop img').src);
 
-  await textButton('走廊', '.t05-school__map button');
+  const visitedBeforeEnvironment = [...state().modules.act2Research.school.visitedAreaIds];
+  await textButton('室外广场', '.t05-school__campus-plan button');
+  assert.match(query('.t05-school__route-status').textContent, /刚才走过的路线：南门 → 室外广场/);
+  for (const [location, imageId] of [['西操场', 'IMG_A2_SCHOOL_PLAYGROUND_001'], ['东北宿舍', 'IMG_A2_SCHOOL_DORM_001']]) {
+    await textButton(location, '.t05-school__campus-plan button');
+    assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), imageId);
+    assertLocalImage(query('.t05-school__backdrop img').src);
+    assert.deepEqual(state().modules.act2Research.school.visitedAreaIds, visitedBeforeEnvironment, `${location} is browse-only and does not persist a visit`);
+  }
+  await textButton('室外广场', '.t05-school__campus-plan button');
+  await textButton('教学楼', '.t05-school__campus-plan button');
+  assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), 'IMG_A2_SCHOOL_BUILDING_001');
+  assertLocalImage(query('.t05-school__backdrop img').src);
+  assert.equal(document().querySelector('.t05-school__indoor-plan'), null, 'arriving at the building must show its exterior before entering');
+  assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, undefined);
+  await textButton('进入教学楼走廊', '.t05-school__building-entry');
+  assert.ok(query('.t05-school__indoor-plan'));
   assert.equal(state().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN, true);
   assert.equal(state().modules.notepad.autoEntryIds.some((id) => id.includes('HYDRANT')), false);
-  await textButton('老师办公室', '.t05-school__map button');
+  await textButton('老师办公室', '.t05-school__indoor-plan button');
   await textButton('听听老师回忆', '.t05-school__image-hotspot');
   assert.match(query('.t05-school__dialog').textContent, /高二那年休学了两个月/);
   await textButton('记下老师的回忆', '.t05-school__dialog button');
   await textButton('关闭 ×', '.t05-school__dialog button');
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T05_001'));
 
-  await textButton('走廊', '.t05-school__map button');
-  await textButton('光荣榜', '.t05-school__map button');
+  await textButton('走廊', '.t05-school__indoor-plan button');
+  await textButton('返回校园总图', '.t05-school__map button');
+  await textButton('光荣榜', '.t05-school__campus-plan button');
+  assert.match(query('.t05-school__route-status').textContent, /刚才走过的路线：教学楼 → 室外广场 → 光荣榜/);
   await textButton('查看历次名次', '.t05-school__image-hotspot');
   assert.deepEqual([...query('.t05-school__ranks').querySelectorAll('strong')].map((item) => Number(item.textContent)), [600, 400, 300, 130, 88, 53, 20]);
   await textButton('记下这组名次', '.t05-school__dialog button');
   await textButton('关闭 ×', '.t05-school__dialog button');
 
-  await textButton('走廊', '.t05-school__map button');
-  await textButton('小A旧教室', '.t05-school__map button');
+  await textButton('教学楼', '.t05-school__campus-plan button');
+  await textButton('进入教学楼走廊', '.t05-school__building-entry');
+  await textButton('小A旧教室', '.t05-school__indoor-plan button');
   await textButton('翻看学霸笔记', '.t05-school__image-hotspot');
   assert.ok(query('.t05-school__notebook-page'));
   await textButton('打开双 S 比对', '.t05-school__dialog button');
@@ -1036,11 +1058,13 @@ if (process.env.ANCHAO_OFFLINE_PHASE === 'finale') {
       assert.equal(state().modules.act2Research.stage, 'school');
       await click('.investigation-shell__exit');
       assert.equal(state().modules.act2Research.tales.inferenceAcknowledged, true);
-      // 学校阶段存档重载后从校门总览恢复。
+      // 学校阶段存档重载后从南门校园总图恢复。
       await mount(save());
       assert.equal(state().modules.act2Research.stage, 'school');
       assert.ok(query('.t05-school'), 'reload must resume the school stage');
-      assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), 'IMG_A2_T05_001');
+      assert.equal(query('.t05-school__campus-plan').getAttribute('data-asset-id'), 'IMG_A2_SCHOOL_MAP_001');
+      assertLocalImage(query('.t05-school__campus-plan img').src);
+      assert.equal(query('.t05-school__backdrop').getAttribute('data-asset-id'), 'IMG_A2_SCHOOL_GATE_001');
       assertLocalImage(query('.t05-school__backdrop img').src);
       assert.equal(query('main.desktop').getAttribute('aria-hidden'), 'true');
       await click('.investigation-shell__exit');

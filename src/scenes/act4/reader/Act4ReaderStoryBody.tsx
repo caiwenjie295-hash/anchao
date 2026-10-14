@@ -2,6 +2,7 @@ import type { Act4TextSegment } from '../../../data/narrative/act4Presentation';
 import { act4DateTimeValue, act4ParagraphKind } from '../../../data/narrative/act4Presentation';
 import type { ActiveAct4NarrativeStage } from '../../../story/act4/narrativePolicy';
 import { Act4LastConsciousness } from './Act4LastConsciousness';
+import { act4EmphasisRuns } from '../../../data/narrative/act4Emphasis';
 
 export function Act4ReaderStoryBody({
   stage,
@@ -57,9 +58,13 @@ export function Act4ReaderStoryBody({
           const kind = act4ParagraphKind(stage, blockId, index, paragraph);
           const dateTime = kind === 'social-date' ? act4DateTimeValue(paragraph) : undefined;
           const paragraphClass = kind ? `a4-reader__paragraph a4-reader__paragraph--${kind}` : 'a4-reader__paragraph';
+          const runs = isSelectedPage ? act4EmphasisRuns(stage, blockId, paragraph) : [{ text: paragraph, emphasized: false }];
+          const text = runs.map((run, runIndex) => run.emphasized
+            ? <strong key={`${blockId}-${index}-${runIndex}`}>{run.text}</strong>
+            : <span key={`${blockId}-${index}-${runIndex}`}>{run.text}</span>);
           return dateTime
-            ? <time className={paragraphClass} dateTime={dateTime} key={`${blockId}-${index}`}>{paragraph}</time>
-            : <p className={paragraphClass} key={`${blockId}-${index}`}>{paragraph}</p>;
+            ? <time className={paragraphClass} dateTime={dateTime} key={`${blockId}-${index}`}>{text}</time>
+            : <p className={paragraphClass} key={`${blockId}-${index}`}>{text}</p>;
         })}</div>}
       </section>;
     })}

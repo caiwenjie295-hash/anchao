@@ -1,0 +1,2396 @@
+{
+  "task": "UX-INV-20261014",
+  "base": "0a5579b5d9f8a1bbda6491fac9753868b624fe60",
+  "jobs": [
+    {
+      "id": "IMG_A2_SCHOOL_MAP_001",
+      "title": "高中校园俯视总图",
+      "kind": "school-map",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_MAP_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_001",
+          "path": "src/第二幕/IMG_A2_T05_001.jpg"
+        },
+        {
+          "assetId": "IMG_A2_T05_002",
+          "path": "src/第二幕/IMG_A2_T05_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "positions": {
+        "gate": [
+          50,
+          81.5
+        ],
+        "courtyard": [
+          50,
+          74.5
+        ],
+        "honor": [
+          64.6,
+          72.3
+        ],
+        "notice": [
+          37.2,
+          72.3
+        ],
+        "teachingBuilding": [
+          51.4,
+          40.5
+        ],
+        "playground": [
+          24.5,
+          43
+        ],
+        "dorm": [
+          83,
+          21.5
+        ]
+      },
+      "requirements": "校园俯视/鸟瞰总图，北朝上，南门与入口室外广场，北中教学楼、西侧操场、东北宿舍楼；排行榜及宣传栏均在室外广场两侧；树在室外绿化，不画房间剖面/室内桌椅/室内树木。新版校园图已通过，positions为依据实图校准的实物/入口坐标；代码4:3完整呈现底图，并将标注按钮用引线连接实物锚点，不以标签位置冒充实物位置。",
+      "approvedWebpSha256": "b567098f8eeff60e753bee1a64e7262228172c7a5a1ed1b7e60d38c93f9bbd5b"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_GATE_001",
+      "title": "校门",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_GATE_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_001",
+          "path": "src/第二幕/IMG_A2_T05_001.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "GATE",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_CORRIDOR_001",
+      "title": "主走廊",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_CORRIDOR_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_002",
+          "path": "src/第二幕/IMG_A2_T05_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "CORRIDOR",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_XIAOA_001",
+      "title": "小A旧教室",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_XIAOA_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_003",
+          "path": "src/第二幕/IMG_A2_T05_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "XIAOA",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_XIAOYUE_001",
+      "title": "小月旧教室",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_XIAOYUE_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_003",
+          "path": "src/第二幕/IMG_A2_T05_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "XIAOYUE",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_RESTROOM_001",
+      "title": "厕所方向",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_RESTROOM_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_002",
+          "path": "src/第二幕/IMG_A2_T05_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "RESTROOM",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_HONOR_001",
+      "title": "光荣榜",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_HONOR_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_004",
+          "path": "src/第二幕/IMG_A2_T05_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "HONOR",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_OFFICE_001",
+      "title": "班主任办公室",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_OFFICE_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_005",
+          "path": "src/第二幕/IMG_A2_T05_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "OFFICE",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_NOTICE_001",
+      "title": "宣传栏",
+      "kind": "school-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_NOTICE_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_007",
+          "path": "src/第二幕/IMG_A2_T05_007.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "schoolPosition": "NOTICE",
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_DORM_001",
+      "title": "校园东北宿舍楼",
+      "kind": "school-view",
+      "schoolPosition": "DORM",
+      "campusPosition": [
+        83,
+        21.5
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_DORM_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_PLAYGROUND_001",
+      "title": "校园西侧操场",
+      "kind": "school-view",
+      "schoolPosition": "PLAYGROUND",
+      "campusPosition": [
+        24.5,
+        43
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_PLAYGROUND_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_COURTYARD_001",
+      "title": "校门内室外广场",
+      "kind": "school-view",
+      "schoolPosition": "COURTYARD",
+      "campusPosition": [
+        50,
+        74.5
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_COURTYARD_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_BUILDING_001",
+      "title": "教学楼整体外景",
+      "kind": "school-view",
+      "schoolPosition": "BUILDING",
+      "campusPosition": [
+        51.4,
+        40.5
+      ],
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_BUILDING_001.webp",
+      "references": [],
+      "dependsOn": "IMG_A2_SCHOOL_MAP_001",
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "依据最终校园俯视总图里北中教学楼的同一建筑形态，第一人称从入口广场向北靠近楼前，完整展示教学楼整体外景。门窗/楼层/颜色/周边操场宿舍方向一致，进入走廊前能与总图位置对应。不同于校门/校园地图，不能以旧图镜像或裁切替代新生图。自然稀疏老化，避免鱼鳞/蜂巢/浮雕细纹。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_NOTE_001",
+      "title": "学霸笔记原页",
+      "kind": "school-note",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_NOTE_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_006",
+          "path": "src/第二幕/IMG_A2_T05_006.jpg"
+        }
+      ],
+      "aspect": "3:4",
+      "transparent": false,
+      "requirements": "旧纸手写学习笔记；页边线条状双S，细黑线不是黑圆。不得添加可读新剧情句子。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_NOTE_DETAIL_001",
+      "title": "学霸笔记页边特写",
+      "kind": "school-note-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_NOTE_DETAIL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_012",
+          "path": "src/第二幕/IMG_A2_T05_012.png"
+        },
+        {
+          "assetId": "IMG_A2_T05_006",
+          "path": "src/第二幕/IMG_A2_T05_006.jpg"
+        }
+      ],
+      "aspect": "3:4",
+      "transparent": false,
+      "requirements": "与原页同纸张和同符号位置；拉近页边细节，双S线条清楚。"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_RANK_PAPER_001",
+      "title": "发黄旧成绩记录纸面",
+      "kind": "rank-paper",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_RANK_PAPER_001.webp",
+      "references": [],
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "无数字无文字无折线的旧学校成绩记录纸，暖黄纸和轻微折痕，中心空白便于代码绘制准确7点折线图；不用鱼鳞裂纹。"
+    },
+    {
+      "id": "IMG_A2_T07_TRAIL_WALK_001",
+      "title": "采访视频沿山路行走",
+      "kind": "trail-view",
+      "output": "src/assets/ux-investigation-20261014/IMG_A2_T07_TRAIL_WALK_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_003",
+          "path": "src/第三幕/IMG_A3_T00_003.jpg"
+        },
+        {
+          "assetId": "IMG_A2_T07_005",
+          "path": "src/第二幕/IMG_A2_T07_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "同一森林山路向前走，湿石/树木与后续石庙镜头地域连续；此帧不出现石庙和可比建筑，不新增人脸或物证。"
+    },
+    {
+      "id": "IMG_A3_SIGN_FULL_001",
+      "title": "拨开爬山虎后的黄色启明牌匾",
+      "kind": "act3-full-edit",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_SIGN_FULL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_003",
+          "path": "src/第三幕/IMG_A3_T01_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "严格保留右柱位置、裂痕、铁门、藤叶和拨叶动作；黄色旧牌文字恰为“启明”，模糊磨损但近看可辨，锈蚀稀疏自然。"
+    },
+    {
+      "id": "IMG_A3_BOARD_FULL_001",
+      "title": "黑板近景上的歪扭S",
+      "kind": "act3-full-edit",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_BOARD_FULL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_004",
+          "path": "src/第三幕/IMG_A3_T02_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "同一黑板框墙面构图，黑板表面全是歪斜、颤抖、不规则粉笔S，文字恐怖谷效应，不能变成圆形、鳞片或整齐图案，不新增句子。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_DEPART",
+      "title": "继续向县城去",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_DEPART.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_001",
+          "path": "src/第三幕/IMG_A3_T00_001.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_001",
+      "clueId": "CLUE_A3_T00_DEPART",
+      "description": "阴天的公路在挡风玻璃前向远处延伸。坐了将近十小时，小月在副驾翻离线地图。",
+      "observation": "出发前，我们把宣传视频里出现的那栋建筑和山里的旧照片又对了一遍。车停在山脚，雨还没有停。",
+      "focus": {
+        "x": 0.52,
+        "y": 0.46,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_SUPPLIES",
+      "title": "收拾补给，准备进山",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_SUPPLIES.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_002",
+          "path": "src/第三幕/IMG_A3_T00_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_002",
+      "clueId": "CLUE_A3_T00_SUPPLIES",
+      "description": "傍晚的小超市门口，几颗核桃、新买的卡其色登山鞋。明早再上山。",
+      "observation": "手电、干电池、雨衣、相机，还有给小月带的热水。东西齐了，才好往山深处走。",
+      "focus": {
+        "x": 0.49,
+        "y": 0.52,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_APPROACH",
+      "title": "看向前方山口",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_APPROACH.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_003",
+          "path": "src/第三幕/IMG_A3_T00_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_003",
+      "clueId": "CLUE_A3_T00_APPROACH",
+      "description": "清晨的鸡公岭山脚。沿旧路向上，小月穿深灰防水外套走在前面。",
+      "observation": "前方山口比上次更难走。雨水把小路冲成两道浅沟，山脊线被雾吃掉了一半。",
+      "focus": {
+        "x": 0.55,
+        "y": 0.48,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CABLE",
+      "title": "靠近看看这段电缆",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CABLE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_004",
+          "path": "src/第三幕/IMG_A3_T00_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_004",
+      "clueId": "CLUE_A3_T00_CABLE",
+      "description": "雨水冲开的泥里横出一截旧电缆。从外形看是人造线，但前方坡面断了。",
+      "observation": "一段旧电缆从坡边露出来，外皮已经硬化开裂。它不是山里该有的东西。",
+      "focus": {
+        "x": 0.53,
+        "y": 0.735,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。 父对原生全尺寸照片复核后校准focus：严格靠近这个真实目标。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CABLE_BREAK",
+      "title": "记下电缆在这里断掉",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CABLE_BREAK.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_005",
+          "path": "src/第三幕/IMG_A3_T00_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_005",
+      "clueId": "CLUE_A3_T00_CABLE_BREAK",
+      "description": "蹲下看更清楚：电缆断在泥坡里。它不是引路绳。回头看小月，沿原路继续。",
+      "observation": "电缆在这里断了，断口是剪的，不是被山洪冲断的。有人来过，并且不想让它继续通着。",
+      "focus": {
+        "x": 0.55,
+        "y": 0.64,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。 父对原生全尺寸照片复核后校准focus：严格靠近这个真实目标。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CAVE_SHELTER",
+      "title": "进入山洞避雨",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CAVE_SHELTER.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_006",
+          "path": "src/第三幕/IMG_A3_T00_006.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_006",
+      "clueId": "CLUE_A3_T00_CAVE_SHELTER",
+      "description": "雨又大了，先回第一次避雨的洞。洞口方向与第一幕的山洞轮廓对应。",
+      "observation": "雨越下越大，我们躲进上次避雨的山洞。洞口不大，挤两个人刚好。",
+      "focus": {
+        "x": 0.46,
+        "y": 0.49,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CAVE_TALK",
+      "title": "听她说补母",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CAVE_TALK.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_007",
+          "path": "src/第三幕/IMG_A3_T00_007.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_007",
+      "clueId": "CLUE_A3_T00_CAVE_TALK",
+      "description": "小月谈起小A高中时的习惯，主角拿手机给她看先前拍下的石庙照片。补母的话题被她重新提起。",
+      "observation": "小月又提起那个名字。她说山里老人讲的是「吃什么补什么」，补进来的东西未必真是自己的。",
+      "focus": {
+        "x": 0.19,
+        "y": 0.42,
+        "kind": "sound"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_TEMPLE_REVISIT",
+      "title": "查看底座空位",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_TEMPLE_REVISIT.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_008",
+          "path": "src/第三幕/IMG_A3_T00_008.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_008",
+      "clueId": "CLUE_A3_T00_TEMPLE_REVISIT",
+      "description": "雨势转小，回到那座旧石庙。底座边缘露出空位，但只有一尊塑像原本的样子，留下了“这里或许原本有两尊”的疑问。",
+      "observation": "破庙还是老样子。神龛底座上积着灰，中间那块空的轮廓比上次更清楚。",
+      "focus": {
+        "x": 0.52,
+        "y": 0.55,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_WATER_ODDITY",
+      "title": "看向异常分叉",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_WATER_ODDITY.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_009",
+          "path": "src/第三幕/IMG_A3_T00_009.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_009",
+      "clueId": "CLUE_A3_T00_WATER_ODDITY",
+      "description": "下山途中见一片坡面水流分叉过于整齐。小月指了指那个方向。",
+      "observation": "水痕在坡面分了叉：左边顺山而下，右边横切进林子。这不是自然流的。",
+      "focus": {
+        "x": 0.21,
+        "y": 0.28,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。 父对原生全尺寸照片复核后校准focus：严格靠近这个真实目标。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_DRAIN_DISCOVERED",
+      "title": "记下排水沟在此",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_010",
+          "path": "src/第三幕/IMG_A3_T00_010.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_010",
+      "clueId": "CLUE_A3_T00_DRAIN_DISCOVERED",
+      "description": "蹲下拨开湿泥，露出旧损但笔直的混凝土排水沟边。水仍沿沟向下流。",
+      "observation": "拨开浮土，下面露出一条砌好的排水沟。沟壁平整，人工挖的。",
+      "focus": {
+        "x": 0.38,
+        "y": 0.67,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_OLD_ROAD",
+      "title": "记下残旧路基",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_OLD_ROAD.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_011",
+          "path": "src/第三幕/IMG_A3_T00_011.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_011",
+      "clueId": "CLUE_A3_T00_OLD_ROAD",
+      "description": "沿沟向上走，沟边散落几块红砖；树林间树距近乎等距，草下露出平整旧路。",
+      "observation": "沿着沟往上，脚下变成压实的旧路基。碎石被车轮碾过，早已长满杂草。",
+      "focus": {
+        "x": 0.54,
+        "y": 0.59,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_GATE_REACHED",
+      "title": "记下找到了外墙与锈门",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_GATE_REACHED.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_012",
+          "path": "src/第三幕/IMG_A3_T00_012.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T00",
+      "lensId": "LENS_A3_T00_012",
+      "clueId": "CLUE_A3_T00_GATE_REACHED",
+      "description": "旧路尽头是红砖围墙与一扇锈铁门。门口右侧水泥柱被爬山虎遮住，并不露出标牌全名。停在门外，等下一步。",
+      "observation": "红砖外墙和一道锈死的铁门从藤蔓里露出来。有人曾刻意把这里封起来。",
+      "focus": {
+        "x": 0.53,
+        "y": 0.47,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_GATE_VIEW",
+      "title": "查看锈门与右柱",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_GATE_VIEW.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_001",
+          "path": "src/第三幕/IMG_A3_T01_001.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_001",
+      "clueId": "CLUE_A3_T01_GATE_VIEW",
+      "description": "走到 T00 那扇锈门外。门缝、右柱裂痕、墙高与藤形须逐一对位。",
+      "observation": "铁门锈死在门框里，右边立柱上的编号被人为凿掉了一半。",
+      "focus": {
+        "x": 0.67,
+        "y": 0.42,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_PILLAR_CLOSE",
+      "title": "拨开爬山虎",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_PILLAR_CLOSE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_002",
+          "path": "src/第三幕/IMG_A3_T01_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_002",
+      "clueId": "CLUE_A3_T01_PILLAR_CLOSE",
+      "description": "走近右柱，手触到湿藤叶。叶下隐约露出黄底金属牌边。",
+      "observation": "爬山虎缠死了立柱。拨开叶子，柱面刻着「启明」两个字，刻痕很深。",
+      "focus": {
+        "x": 0.65,
+        "y": 0.38,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_SIGN_REVEALED",
+      "title": "对照旧宣传合影",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_SIGN_REVEALED.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_003",
+          "path": "src/第三幕/IMG_A3_T01_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_003",
+      "clueId": "CLUE_A3_T01_SIGN_REVEALED",
+      "description": "藤叶被拨到一边，旧黄底红字牌字面空处留给后期覆盖准确名称。可以调出旧宣传合影做比对。",
+      "observation": "叶子底下压着一块搪瓷标牌，「启明青少年成长中心」几个字缺了角。和宣传片里的合影能对上。",
+      "focus": {
+        "x": 0.63,
+        "y": 0.31,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "dependsOn": "IMG_A3_SIGN_FULL_001"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_GATE_ENTERED",
+      "title": "跟着小月进入",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_GATE_ENTERED.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_004",
+          "path": "src/第三幕/IMG_A3_T01_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_004",
+      "clueId": "CLUE_A3_T01_GATE_ENTERED",
+      "description": "小月先从门缝挤入；镜头仍能看见 001 的右柱作方位锚点。",
+      "observation": "锈门只推开一条缝，够侧身进去。小月先进去，回头等我。",
+      "focus": {
+        "x": 0.48,
+        "y": 0.48,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_INNER_FENCE",
+      "title": "穿过第二层围栏",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_INNER_FENCE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_005",
+          "path": "src/第三幕/IMG_A3_T01_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_005",
+      "clueId": "CLUE_A3_T01_INNER_FENCE",
+      "description": "回头偏左见第二层生锈铁丝围栏。顶端刀片铁丝网，没有上锁的窄门。",
+      "observation": "里面还有第二层围栏，比外面那道新。两道门之间站着人，就跑不掉。",
+      "focus": {
+        "x": 0.53,
+        "y": 0.53,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_BREAKER_OPTIONAL",
+      "title": "查看配电箱断线（可选）",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_BREAKER_OPTIONAL.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_006",
+          "path": "src/第三幕/IMG_A3_T01_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_006",
+      "clueId": "CLUE_A3_T01_BREAKER_OPTIONAL",
+      "description": "越过操场接近主楼。楼门口旧配电箱里有被剪断的粗线，与 T00 山坡电缆遥相呼应，但不阻止进入主楼。",
+      "observation": "配电箱的门敞着，里面的线被人整齐剪断，不是损坏。旁边的绝缘胶带还很新。",
+      "focus": {
+        "x": 0.83,
+        "y": 0.48,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_MAIN_BUILDING",
+      "title": "进入主楼",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_MAIN_BUILDING.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_006",
+          "path": "src/第三幕/IMG_A3_T01_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T01",
+      "lensId": "LENS_A3_T01_006",
+      "clueId": "CLUE_A3_T01_MAIN_BUILDING",
+      "description": "越过操场接近主楼。楼门口旧配电箱里有被剪断的粗线，与 T00 山坡电缆遥相呼应，但不阻止进入主楼。",
+      "observation": "主楼三层，窗户全用报纸糊死。二楼有几扇玻璃是新的，糊法和别处不一样。",
+      "focus": {
+        "x": 0.61,
+        "y": 0.43,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_CORRIDOR",
+      "title": "看向左侧教室",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_CORRIDOR.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_001",
+          "path": "src/第三幕/IMG_A3_T02_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T02",
+      "lensId": "LENS_A3_T02_001",
+      "clueId": "CLUE_A3_T02_CORRIDOR",
+      "description": "狭长走廊，左侧连续教室门、右侧旧窗。地面零星碎玻璃；远处右拐角自然出现一个不起眼的消防栓轮廓。",
+      "observation": "走廊很长，惨白的光从侧窗斜进来。地上是碎玻璃和翻倒的课桌。",
+      "focus": {
+        "x": 0.24,
+        "y": 0.52,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_CLASSROOM_DOOR",
+      "title": "走进教室",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_CLASSROOM_DOOR.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_002",
+          "path": "src/第三幕/IMG_A3_T02_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T02",
+      "lensId": "LENS_A3_T02_002",
+      "clueId": "CLUE_A3_T02_CLASSROOM_DOOR",
+      "description": "从 001 向左走近一间教室门。门框漆皮脱落，门内东倒西歪的课桌与没有靠背的椅子。",
+      "observation": "教室门虚掩着。门牌歪了，写着「高一（三）班」。",
+      "focus": {
+        "x": 0.28,
+        "y": 0.49,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_BLACKBOARD",
+      "title": "看向黑板",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_BLACKBOARD.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_003",
+          "path": "src/第三幕/IMG_A3_T02_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T02",
+      "lensId": "LENS_A3_T02_003",
+      "clueId": "CLUE_A3_T02_BLACKBOARD",
+      "description": "站在讲台前回望全室，旧课桌、粉尘与窗外灰光。前缘能看见黑板边框与两只旧广播喇叭。",
+      "observation": "黑板擦得很干净，槽里还留着粉笔灰。整块板被人从中间横着划了一道。",
+      "focus": {
+        "x": 0.54,
+        "y": 0.36,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_SS_SCRATCH",
+      "title": "检查黑板划痕",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_SS_SCRATCH.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_004",
+          "path": "src/第三幕/IMG_A3_T02_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T02",
+      "lensId": "LENS_A3_T02_004",
+      "clueId": "CLUE_A3_T02_SS_SCRATCH",
+      "description": "同一块黑板靠得更近，粉尘上有多处歪斜划痕，留位置给后期双 S 叠层。木框裂痕与 003 接得上。",
+      "observation": "那道划痕不是黑板留下的，是有人用硬物刻上去的：一个双 S，十字交叉，和山洞照片里那个一模一样。",
+      "focus": {
+        "x": 0.48,
+        "y": 0.57,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "dependsOn": "IMG_A3_BOARD_FULL_001"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_SLOGAN_SPEAKER",
+      "title": "记下标语与喇叭",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_SLOGAN_SPEAKER.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_005",
+          "path": "src/第三幕/IMG_A3_T02_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T02",
+      "lensId": "LENS_A3_T02_005",
+      "clueId": "CLUE_A3_T02_SLOGAN_SPEAKER",
+      "description": "讲台边仰视。墙上几条标语已经卷边，胶痕把纸固定在剥落的墙皮上；讲台上方吊着两只旧喇叭，垂下来的线还接着电。看清楚上面写了什么。",
+      "observation": "墙上贴着几条标语，纸边卷起来留着胶痕：「改变，从服从开始」「听父母的话，都是为了你好」。讲台正上方吊着两只旧喇叭，线还接着。",
+      "focus": {
+        "x": 0.75,
+        "y": 0.22,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_CORRIDOR_TURN",
+      "title": "走向拐角",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_CORRIDOR_TURN.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_006",
+          "path": "src/第三幕/IMG_A3_T02_006.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T02",
+      "lensId": "LENS_A3_T02_006",
+      "clueId": "CLUE_A3_T02_CORRIDOR_TURN",
+      "description": "从教室出来朝走廊尽头右拐角看，窗下老式消防栓箱在普通构图中自然入画，不显眼也不交互。右转后无窗区变暗，通向 T03。",
+      "observation": "走廊尽头要右转，窗光一下子退到身后。小月的手电停了一下。",
+      "focus": {
+        "x": 0.55,
+        "y": 0.5,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_CORRIDOR",
+      "title": "看向成排的窄门",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_CORRIDOR.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_001",
+          "path": "src/第三幕/IMG_A3_T03_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T03",
+      "lensId": "LENS_A3_T03_001",
+      "clueId": "CLUE_A3_T03_CORRIDOR",
+      "description": "墙上有数扇暗铁门，地上的碎玻璃渐少。回头还能看见一层教室的窗光，没有人追来。",
+      "observation": "一排窄门，没有一扇装窗。门牌是后来钉上去的，钉得很随意。",
+      "focus": {
+        "x": 0.29,
+        "y": 0.45,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_24H",
+      "title": "辨认二十四小时标记",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_24H.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_002",
+          "path": "src/第三幕/IMG_A3_T03_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T03",
+      "lensId": "LENS_A3_T03_002",
+      "clueId": "CLUE_A3_T03_24H",
+      "description": "第一扇门旁残留着“24 小时禁闭室”字样。门扇从走廊一侧开合，锈迹盖住了旧漆。",
+      "observation": "最靠里的那扇门写着「24」。门缝下面磨得很亮，像有人反复从里面摸过。",
+      "focus": {
+        "x": 0.28,
+        "y": 0.55,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_PEEPHOLES",
+      "title": "蹲下检查三个窥孔与外侧挡板",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_PEEPHOLES.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_003",
+          "path": "src/第三幕/IMG_A3_T03_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T03",
+      "lensId": "LENS_A3_T03_003",
+      "clueId": "CLUE_A3_T03_PEEPHOLES",
+      "description": "三个小孔和活动挡板都朝向走廊，挡板的扣具只在外侧。孔内漆黑，看不见曾经关过谁。",
+      "observation": "蹲下来才看清：每扇门外侧都开了三个指头粗的孔，正对着里面的铺位。孔外钉着挡板，从里面看不见。",
+      "focus": {
+        "x": 0.52,
+        "y": 0.48,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_48_72H",
+      "title": "逐扇核对四十八与七十二小时标记",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_48_72H.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_004",
+          "path": "src/第三幕/IMG_A3_T03_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T03",
+      "lensId": "LENS_A3_T03_004",
+      "clueId": "CLUE_A3_T03_48_72H",
+      "description": "继续向前，另两扇门分别留着“48 小时”和“72 小时”的标记。小月说，这些数字看起来像时间。旧论坛关于禁闭的说法，在这里有了现场对应；发帖人的身份仍无法核实。",
+      "observation": "中间两扇分别写着「48」和「72」。数字越大，门上划痕越多，72 那扇划到几乎看不清。",
+      "focus": {
+        "x": 0.26,
+        "y": 0.45,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_STAIRS",
+      "title": "用手电照向楼梯",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_STAIRS.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_005",
+          "path": "src/第三幕/IMG_A3_T03_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T03",
+      "lensId": "LENS_A3_T03_005",
+      "clueId": "CLUE_A3_T03_STAIRS",
+      "description": "走廊尽头有一段向下的旧水泥楼梯。扶手锈了，小月握紧手电，问你要不要先看看下面。",
+      "observation": "走廊尽头是往下的楼梯，水泥踏步上没有灰。有人在不久前走过。",
+      "focus": {
+        "x": 0.55,
+        "y": 0.58,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_DESCEND",
+      "title": "确认和小月一起下楼",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_DESCEND.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_006",
+          "path": "src/第三幕/IMG_A3_T03_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T03",
+      "lensId": "LENS_A3_T03_006",
+      "clueId": "CLUE_A3_T03_DESCEND",
+      "description": "手电只能照到前几级，地下长廊还藏在光斑之外。小月仍在身边；你们决定一起下楼。",
+      "observation": "小月握着手电的手心是汗。她说再往下看一遍，天黑前必须上去。",
+      "focus": {
+        "x": 0.49,
+        "y": 0.52,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_SIGN",
+      "title": "照亮档案室门牌",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_SIGN.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_001",
+          "path": "src/第三幕/IMG_A3_T04_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T04",
+      "lensId": "LENS_A3_T04_001",
+      "clueId": "CLUE_A3_T04_SIGN",
+      "description": "手电光在潮墙上衰减。近处门牌还辨得出“档案室”，走廊更深处另有旧门。小月与主角一同停在这里。",
+      "observation": "手电照到门牌：「档案室」。塑料牌下面还压着一块更小的，写着值班表。",
+      "focus": {
+        "x": 0.75,
+        "y": 0.45,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_EMPTY_ROOM",
+      "title": "走进空档案室",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_EMPTY_ROOM.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_002",
+          "path": "src/第三幕/IMG_A3_T04_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T04",
+      "lensId": "LENS_A3_T04_002",
+      "clueId": "CLUE_A3_T04_EMPTY_ROOM",
+      "description": "门后是一间狭长的旧档案室，几排金属架还在，纸张却几乎被搬空。",
+      "observation": "档案室是空的。架子在，人不在。",
+      "focus": {
+        "x": 0.48,
+        "y": 0.5,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_LABELS",
+      "title": "核对空架与年份编号",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_LABELS.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_003",
+          "path": "src/第三幕/IMG_A3_T04_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T04",
+      "lensId": "LENS_A3_T04_003",
+      "clueId": "CLUE_A3_T04_LABELS",
+      "description": "旧架上留有“2014 年 D”“2015 年 F”等年份字母编号，资料大多不见了。这里找不到小 A 的完整个人档案。",
+      "observation": "架上只剩标签：2008、2009、2010……每个年份都空着，盒子全被搬走了。有几张标签被撕掉，留下浅色方块。",
+      "focus": {
+        "x": 0.47,
+        "y": 0.48,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_PAPER_EDGE",
+      "title": "蹲下检查角落纸边",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_PAPER_EDGE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_004",
+          "path": "src/第三幕/IMG_A3_T04_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T04",
+      "lensId": "LENS_A3_T04_004",
+      "clueId": "CLUE_A3_T04_PAPER_EDGE",
+      "description": "小月提醒地上似乎还有一小张纸。降低手电，灰尘里的折旧纸边才露出来。",
+      "observation": "蹲下时手电扫到架脚有一角露在纸箱外。是纸，不是标签。",
+      "focus": {
+        "x": 0.7,
+        "y": 0.69,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_VVAKE_PAPER",
+      "title": "读清并收起 VVaKe 纸片",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_VVAKE_PAPER.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_005",
+          "path": "src/第三幕/IMG_A3_T04_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T04",
+      "lensId": "LENS_A3_T04_005",
+      "clueId": "CLUE_A3_T04_VVAKE_PAPER",
+      "description": "纸片标题是 VVaKe，下面依次写着：蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗。字能读清，含义仍不知道。",
+      "observation": "一张折旧清单的边角，上面印着一行词：蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗。纸背面是空白的。",
+      "focus": {
+        "x": 0.79,
+        "y": 0.74,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_BROADCAST_DOOR",
+      "title": "确认广播室方向",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_BROADCAST_DOOR.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_006",
+          "path": "src/第三幕/IMG_A3_T04_006.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T04",
+      "lensId": "LENS_A3_T04_006",
+      "clueId": "CLUE_A3_T04_BROADCAST_DOOR",
+      "description": "你把纸片收好，回到同一条地下走廊。另一端广播室的旧门还开着，纸上的词暂时没有解释。",
+      "observation": "走廊另一端那扇门上的漆掉得更多。推一下，是松的。",
+      "focus": {
+        "x": 0.55,
+        "y": 0.5,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_ENTRY",
+      "title": "检查广播室入口",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_ENTRY.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_001",
+          "path": "src/第三幕/IMG_A3_T05_001.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T05",
+      "lensId": "LENS_A3_T05_001",
+      "clueId": "CLUE_A3_T05_ENTRY",
+      "description": "门牌褪色，屋内没有播放声。你和小月从地下走廊走进这间广播室。",
+      "observation": "广播室门半掩着，锁被拆下来挂在门把上。",
+      "focus": {
+        "x": 0.75,
+        "y": 0.51,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_EMPTY_EQUIPMENT",
+      "title": "检查空设备位与断线",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_EMPTY_EQUIPMENT.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_002",
+          "path": "src/第三幕/IMG_A3_T05_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T05",
+      "lensId": "LENS_A3_T05_002",
+      "clueId": "CLUE_A3_T05_EMPTY_EQUIPMENT",
+      "description": "原先安放设备的位置只剩灰尘轮廓和几根断开的电线；这里没有仍在运转的机器。",
+      "observation": "设备位空着，只剩台面上的划痕和几个插孔。有人把机器整个搬走了。",
+      "focus": {
+        "x": 0.51,
+        "y": 0.34,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_DESK",
+      "title": "检查旧桌和桌脚",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_DESK.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_003",
+          "path": "src/第三幕/IMG_A3_T05_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T05",
+      "lensId": "LENS_A3_T05_003",
+      "clueId": "CLUE_A3_T05_DESK",
+      "description": "桌面刮痕很深，下面落着积灰。站着看不清桌脚后面，得改变视角。",
+      "observation": "一张旧桌，抽屉被拉开一半，桌脚垫着一片铁皮。",
+      "focus": {
+        "x": 0.6,
+        "y": 0.6,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_PAPER_EDGE",
+      "title": "蹲下取出纸片",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_PAPER_EDGE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_004",
+          "path": "src/第三幕/IMG_A3_T05_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T05",
+      "lensId": "LENS_A3_T05_004",
+      "clueId": "CLUE_A3_T05_PAPER_EDGE",
+      "description": "蹲下后才看见桌脚后卡着一张折起的纸。小月帮你照住光，你伸手把它取出来。",
+      "observation": "桌脚和地面之间夹着一角发黄的纸。",
+      "focus": {
+        "x": 0.66,
+        "y": 0.65,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_13ACK_PAPER",
+      "title": "读清并收起 13aCK 纸片",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_13ACK_PAPER.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_005",
+          "path": "src/第三幕/IMG_A3_T05_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T05",
+      "lensId": "LENS_A3_T05_005",
+      "clueId": "CLUE_A3_T05_13ACK_PAPER",
+      "description": "标题是 13aCK，下面依次写着：老鼠、血、草垛、木房子、玫瑰、表。它与档案室的 VVaKe 一样是一组不明词语，暂时看不出对应关系。",
+      "observation": "同一批纸，格式一样，上面还是六个词：老鼠、血、草垛、木房子、玫瑰、表。和前一张不是同一组。",
+      "focus": {
+        "x": 0.79,
+        "y": 0.76,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_KITCHEN_DIRECTION",
+      "title": "确认厨房方向",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_KITCHEN_DIRECTION.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_006",
+          "path": "src/第三幕/IMG_A3_T05_006.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T05",
+      "lensId": "LENS_A3_T05_006",
+      "clueId": "CLUE_A3_T05_KITCHEN_DIRECTION",
+      "description": "退出广播室后，走廊更深处飘来陈油和酸臭味。那里还有一扇通往厨房的门；气味来源尚不能确定。",
+      "observation": "走廊深处飘来一股甜腥味，越往里越重。这不是陈旧的味道。",
+      "focus": {
+        "x": 0.5,
+        "y": 0.48,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_DOOR",
+      "title": "查看门牌并进入",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_DOOR.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_001",
+          "path": "src/第三幕/IMG_A3_T06_001.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_001",
+      "clueId": "CLUE_A3_T06_DOOR",
+      "description": "厨房重地，闲人勿入。门后有旧油味与酸臭味，没有人声。",
+      "observation": "门牌写着「厨房重地，闲人勿入」，红字掉了一半。",
+      "focus": {
+        "x": 0.73,
+        "y": 0.35,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_ROOM",
+      "title": "扫视厨房全貌",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_ROOM.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_002",
+          "path": "src/第三幕/IMG_A3_T06_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_002",
+      "clueId": "CLUE_A3_T06_ROOM",
+      "description": "地板越往里越黏，鞋底抬起时发出轻微的吧唧声。小月捂住鼻子，你用手电扫过厨房里的锅和工作台。",
+      "observation": "地板越往里越黏，鞋底抬起时会发出轻微的吧唧声；空气里混着陈年油味、霉味和下水道的酸臭。",
+      "focus": {
+        "x": 0.53,
+        "y": 0.51,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_POT_KNIFE",
+      "title": "检查大锅与砍骨刀",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_POT_KNIFE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_003",
+          "path": "src/第三幕/IMG_A3_T06_003.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_003",
+      "clueId": "CLUE_A3_T06_POT_KNIFE",
+      "description": "一口生锈的大炖锅里有干硬残渣，旁边放着砍骨刀。这些物件说明这里曾大量处理食物，食材来源无法确认。",
+      "observation": "灶上架着一口大得离谱的锅，锅沿磨得发亮。旁边挂着一把砍骨刀，刀口卷了。",
+      "focus": {
+        "x": 0.26,
+        "y": 0.44,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_BONES",
+      "title": "蹲下查看大骨",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_BONES.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_004",
+          "path": "src/第三幕/IMG_A3_T06_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_004",
+      "clueId": "CLUE_A3_T06_BONES",
+      "description": "地面散着来源不明的大骨。小月猜可能是猪肉，也想起有人提过难吃的配餐与奖励的鲜肉；你们都无法在这里证实。",
+      "observation": "地上是一截粗长的大骨，像猪骨或牛骨。灰白的骨面蒙着灰，有一道明显裂痕；它不能说明肉的来源。",
+      "focus": {
+        "x": 0.44,
+        "y": 0.75,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_HOOKS",
+      "title": "抬头检查铁钩",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_HOOKS.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_005",
+          "path": "src/第三幕/IMG_A3_T06_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_005",
+      "clueId": "CLUE_A3_T06_HOOKS",
+      "description": "厨房中央垂着一只锈迹斑斑的大铁钩。手电照过钩身时，你们停了一下，但无法从铁钩判断它过去挂过什么。",
+      "observation": "天花板下垂着锈迹斑斑的铁钩。眼前只能看到铁钩，无法判断它曾经挂过什么。",
+      "focus": {
+        "x": 0.27,
+        "y": 0.37,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_SHRINE",
+      "title": "检查空木神龛",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_SHRINE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_006",
+          "path": "src/第三幕/IMG_A3_T06_006.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_006",
+      "clueId": "CLUE_A3_T06_SHRINE",
+      "description": "厨房最深处的角落立着一座奇怪的木制结构。小月看见它后突然催你先离开厨房，上去再说。",
+      "observation": "厨房最深处立着一座木制神龛，里面只剩一个底座。小月没有解释，只催你先上楼。",
+      "focus": {
+        "x": 0.64,
+        "y": 0.49,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_EMPTY_BASE",
+      "title": "拍下空底座",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_EMPTY_BASE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_007",
+          "path": "src/第三幕/IMG_A3_T06_007.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_007",
+      "clueId": "CLUE_A3_T06_EMPTY_BASE",
+      "description": "神龛只剩底座。你拍下空位，没有看到塑像，也无法判断供奉物何时、如何离开。",
+      "observation": "神龛里只剩一个底座。现场没有塑像，也没有说明塑像何时或如何离开。",
+      "focus": {
+        "x": 0.49,
+        "y": 0.53,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_TEMPLE_COMPARE",
+      "title": "对照破庙照片与空神龛并确认关联",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_TEMPLE_COMPARE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_008",
+          "path": "src/第三幕/IMG_A3_T06_008.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T06",
+      "lensId": "LENS_A3_T06_008",
+      "clueId": "CLUE_A3_T06_TEMPLE_COMPARE",
+      "description": "回到较亮的一层，小月拿出第一次进山时拍下的破庙照片，说厨房里的神龛“供奉的应该是这个”。她把照片中的塑像与厨房里只剩底座的空位联系起来；这仍是当时的联想，塑像的去向没有答案。",
+      "observation": "回到一层后，小月拿出手机：“底下的神龛，供奉的应该是这个。”照片里有一尊塑像和一个空着的石座；厨房神龛里也只剩底座。我盯着照片，只能想到：“那尊像不在那里。”",
+      "focus": {
+        "x": 0.49,
+        "y": 0.5,
+        "kind": "memory"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_UPSTAIRS",
+      "title": "确认一层回程",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_UPSTAIRS.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_001",
+          "path": "src/第三幕/IMG_A3_T07_001.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_001",
+      "clueId": "CLUE_A3_T07_UPSTAIRS",
+      "description": "你和小月一起上楼，穿过熟悉的走廊。身后的地下室安静下来，没有追逐声。",
+      "observation": "楼梯上来，一层的空气一下就干了。我先在门口站了一会儿，才敢往前。",
+      "focus": {
+        "x": 0.55,
+        "y": 0.51,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_CORNER",
+      "title": "听小月停步",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_CORNER.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_002",
+          "path": "src/第三幕/IMG_A3_T07_002.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_002",
+      "clueId": "CLUE_A3_T07_CORNER",
+      "description": "路过教室和厕所方向，窗下那只旧消防栓还在原处。小月忽然慢下来，似乎想起了什么。",
+      "observation": "走到教室和厕所之间的拐角，小月忽然停住。",
+      "focus": {
+        "x": 0.22,
+        "y": 0.45,
+        "kind": "sound"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_STANDING_HYDRANT",
+      "title": "从站姿看消防栓",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_STANDING_HYDRANT.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_003",
+          "path": "src/第三幕/IMG_A3_T07_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_003",
+      "clueId": "CLUE_A3_T07_STANDING_HYDRANT",
+      "description": "站着看，它只是一只普通的旧消防栓。背后的窄缝被栓体挡住，没有显眼标记。",
+      "observation": "墙角立着消防栓箱，玻璃早就碎了。站着看只是个锈盒子，箱子和墙之间却有条缝。",
+      "focus": {
+        "x": 0.69,
+        "y": 0.62,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_XIAOYUE_MEMORY",
+      "title": "听完小月的回忆",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_XIAOYUE_MEMORY.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_004",
+          "path": "src/第三幕/IMG_A3_T07_004.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_004",
+      "clueId": "CLUE_A3_T07_XIAOYUE_MEMORY",
+      "description": "小月说，小 A 高中时总在相似的窗下位置蹲着系鞋带。她也蹲下比了比高度，提醒你从低处看看。",
+      "observation": "小月说，他以前也是这样，每次路过都要蹲下去系一次鞋带。「我那时候还笑他。」",
+      "focus": {
+        "x": 0.43,
+        "y": 0.58,
+        "kind": "memory"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_BACK_GAP",
+      "title": "摸索消防栓背后",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_BACK_GAP.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_005",
+          "path": "src/第三幕/IMG_A3_T07_005.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_005",
+      "clueId": "CLUE_A3_T07_BACK_GAP",
+      "description": "你主动蹲下，视线落到消防栓侧背面。窄缝里露出透明胶的一角；站着时完全看不见。",
+      "observation": "蹲下来才看得见缝里有东西：一角透明胶带，在手电下反着光。",
+      "focus": {
+        "x": 0.68,
+        "y": 0.54,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_NOTEBOOK_PICKUP",
+      "title": "主动取出包裹的笔记本",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_NOTEBOOK_PICKUP.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_006",
+          "path": "src/第三幕/IMG_A3_T07_006.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_006",
+      "clueId": "CLUE_A3_T07_NOTEBOOK_PICKUP",
+      "description": "你从缝里取出塑料袋和透明胶包住的褐色笔记本。它被藏在这里，需要带到外面再细看。",
+      "observation": "用小刀挑开胶带，掉出一个塑料袋，里面是一本被包了两层的笔记本。外面那层已经发脆。",
+      "focus": {
+        "x": 0.44,
+        "y": 0.57,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_FIRST_PAGE",
+      "title": "确认 A.W 与字迹后合上",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_FIRST_PAGE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_007",
+          "path": "src/第三幕/IMG_A3_T07_007.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_007",
+      "clueId": "CLUE_A3_T07_FIRST_PAGE",
+      "description": "你只掀开扉页：A.W。那是小 A 熟悉的字迹——他曾重新来过这里，并有意把本子留在这个位置。后面几页的字开始变得歪斜，末页还能看见两个账号，其余要等有灯的地方再读。",
+      "observation": "扉页只有两个字母：A.W。是他的字迹。我把小月叫过来，她一眼就认出来了。",
+      "focus": {
+        "x": 0.29,
+        "y": 0.64,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_EXIT_ROUTE",
+      "title": "与小月一起离开旧址",
+      "kind": "act3-detail",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_EXIT_ROUTE.webp",
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_008",
+          "path": "src/第三幕/IMG_A3_T07_008.jpg"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "stage": "T07",
+      "lensId": "LENS_A3_T07_008",
+      "clueId": "CLUE_A3_T07_EXIT_ROUTE",
+      "description": "小月提醒天色越来越暗。你带着笔记与她一起穿过主楼、操场和围栏，回到来时的旧址入口。小 A 确实来过，并留下东西；后续仍待查。",
+      "observation": "外面天已经开始发暗。雨停了，山路比来时好走一些。",
+      "focus": {
+        "x": 0.52,
+        "y": 0.51,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_001",
+      "title": "王澳在晚自习时把日记藏在练习册下 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_001",
+          "path": "src/第四幕/T05/IMG_A4_T05_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "练习册下露出的日记页边与桌面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。练习册下露出的日记页边与桌面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_002",
+      "title": "李老师办公室里的茶杯与桌面 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_002",
+          "path": "src/第四幕/T05/IMG_A4_T05_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "办公室桌面的茶杯和纸面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。办公室桌面的茶杯和纸面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_003",
+      "title": "王澳生日当天回家的门厅与早饭 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_003",
+          "path": "src/第四幕/T05/IMG_A4_T05_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "门厅边的早餐与桌面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。门厅边的早餐与桌面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_005",
+      "title": "生日晚餐中父母交换眼色 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_005",
+          "path": "src/第四幕/T05/IMG_A4_T05_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "晚餐桌边父母原有的手部与眼色关系",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。晚餐桌边父母原有的手部与眼色关系。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_006",
+      "title": "王澳从房门缝边的镜面观察门外来人 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_006",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_006.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_006",
+          "path": "src/第四幕/T05/IMG_A4_T05_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "门缝旁镜面里的原有模糊倒影",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。门缝旁镜面里的原有模糊倒影。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_002",
+      "title": "王澳在机构吃到的固定早餐 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_002",
+          "path": "src/第四幕/T06/IMG_A4_T06_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "餐盘中的原有固定早餐，不判断肉来源",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。餐盘中的原有固定早餐，不判断肉来源。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_004",
+      "title": "机构走廊中的早晚广播设备 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_004",
+          "path": "src/第四幕/T06/IMG_A4_T06_004.png"
+        }
+      ],
+      "aspect": "16:9",
+      "transparent": false,
+      "focusTarget": "原墙面广播设备、接线与固定件",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原墙面广播设备、接线与固定件。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_005",
+      "title": "床铺上的纸团与逃离计划 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_005",
+          "path": "src/第四幕/T06/IMG_A4_T06_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "下铺被面上的折叠纸团",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。下铺被面上的折叠纸团。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "title": "2014 年仍在使用的禁闭室铁门，保留三个观察孔与送餐口 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_007",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_007.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_007",
+          "path": "src/第四幕/T06/IMG_A4_T06_007.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "铁门原有的三个观察孔与送餐口，保持2014仍在使用的状态",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。铁门原有的三个观察孔与送餐口，保持2014仍在使用的状态。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_001",
+      "title": "王澳梦中陌生城市的校园 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_001",
+          "path": "src/第四幕/T07/IMG_A4_T07_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "梦中校园道路和近处建筑细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。梦中校园道路和近处建筑细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_004",
+      "title": "王澳在梦里的镜前视角 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_004",
+          "path": "src/第四幕/T07/IMG_A4_T07_004.png"
+        }
+      ],
+      "aspect": "3:2",
+      "transparent": false,
+      "focusTarget": "洗手间镜面与模糊面容，面容继续模糊",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。洗手间镜面与模糊面容，面容继续模糊。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "title": "机构地下厨房深处的黑色塑像 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_005",
+          "path": "src/第四幕/T07/IMG_A4_T07_005.png"
+        }
+      ],
+      "aspect": "3:2",
+      "transparent": false,
+      "focusTarget": "同一地下厨房深处的黑色塑像与神龛，不改变厨房方位",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一地下厨房深处的黑色塑像与神龛，不改变厨房方位。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_001",
+      "title": "大学宿舍清晨，王澳查看手机邮件 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_001",
+          "path": "src/第四幕/T08/IMG_A4_T08_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "清晨宿舍中原手机与手边细节，屏幕不新增可读文本",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。清晨宿舍中原手机与手边细节，屏幕不新增可读文本。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_002",
+      "title": "王澳独自坐在湖边长椅上 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_002",
+          "path": "src/第四幕/T08/IMG_A4_T08_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "湖边长椅、水草与原远处人物的空间关系",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。湖边长椅、水草与原远处人物的空间关系。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_011",
+      "title": "大学校园里的日常生活 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_011",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_011.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_011",
+          "path": "src/第四幕/T08/IMG_A4_T08_011.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "大学日常场景中近处物件与路面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。大学日常场景中近处物件与路面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_003",
+      "title": "手机发信后准备夜行出发 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_003",
+          "path": "src/第四幕/T08/IMG_A4_T08_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "夜行行李旁的原手机和包袋",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。夜行行李旁的原手机和包袋。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_004",
+      "title": "山脚下准备上山的王澳 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_004",
+          "path": "src/第四幕/T08/IMG_A4_T08_004.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "山脚原小店柜台的笔记本、核桃、胶带与袋子",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。山脚原小店柜台的笔记本、核桃、胶带与袋子。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_006",
+      "title": "王澳翻越带有碎玻璃的围墙 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_006",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_006.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_006",
+          "path": "src/第四幕/T08/IMG_A4_T08_006.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "墙沿原碎玻璃、包扎手或原冲锋衣细节，保持原左右方向与动作",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。墙沿原碎玻璃、包扎手或原冲锋衣细节，保持原左右方向与动作。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_005",
+      "title": "凌晨时分通往旧址的道路 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_005",
+          "path": "src/第四幕/T08/IMG_A4_T08_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原夜间道路、石洞边或排水沟，手电光方向保持",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原夜间道路、石洞边或排水沟，手电光方向保持。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "title": "王澳进入启明旧址的广播室 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_007",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_007.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_007",
+          "path": "src/第四幕/T08/IMG_A4_T08_007.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "正在使用的广播室设备与原桌面纸片",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。正在使用的广播室设备与原桌面纸片。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "title": "启明旧址档案架与编号 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_008",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_008.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_008",
+          "path": "src/第四幕/T08/IMG_A4_T08_008.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原档案架的年份编号、书脊和材质",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原档案架的年份编号、书脊和材质。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_READING_DETAIL_001",
+      "title": "手机微光落在档案室的不锈钢书架上，反光里的轮廓难以辨认 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_READING_DETAIL_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_READING_DETAIL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_READING_DETAIL_001",
+          "path": "src/第四幕/UX-RHYTHM/IMG_A4_READING_DETAIL_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原金属架反光和手中文件；镜中身份轮廓继续难以辨认",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原金属架反光和手中文件；镜中身份轮廓继续难以辨认。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "title": "启明旧址厨房里的景象 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_010",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_010.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_010",
+          "path": "src/第四幕/T08/IMG_A4_T08_010.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原厨房门缝视线中的深处黑像，锅与铁钩方位保持；不判断肉来源",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原厨房门缝视线中的深处黑像，锅与铁钩方位保持；不判断肉来源。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "title": "王澳在地下厨房边惊惧地回望，视线开始模糊 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_FINALE_FEAR_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINALE_FEAR_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_FINALE_FEAR_001",
+          "path": "src/assets/ux-finale-20261008/IMG_A4_FINALE_FEAR_001.webp"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原地下厨房边模糊回望的近处门框/墙面与手；保留惊惧失焦，不揭示模糊人脸",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原地下厨房边模糊回望的近处门框/墙面与手；保留惊惧失焦，不揭示模糊人脸。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_012",
+      "title": "王澳逃出厨房后，倒在消防栓旁的低视角 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_012",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_012.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_012",
+          "path": "src/第四幕/T08/IMG_A4_T08_012.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原消防栓附近低机位的地面、包扎/衣料与柜体细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原消防栓附近低机位的地面、包扎/衣料与柜体细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_002",
+      "title": "手机上收到的回信 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_002",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_002",
+          "path": "src/第四幕/T09/IMG_A4_T09_002.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原颤抖手中手机和旁侧消防栓，屏幕不新增可读内容",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原颤抖手中手机和旁侧消防栓，屏幕不新增可读内容。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_003",
+      "title": "王澳写下笔记的最后一页 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_003",
+          "path": "src/第四幕/T09/IMG_A4_T09_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原褐色笔记本末页、笔尖、袋子和胶带；不新增可读字句",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原褐色笔记本末页、笔尖、袋子和胶带；不新增可读字句。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_001",
+      "title": "消防栓旁等待藏好的笔记 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_001",
+          "path": "src/第四幕/T09/IMG_A4_T09_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原消防栓侧背藏物处与袋包纸边细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原消防栓侧背藏物处与袋包纸边细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_004",
+      "title": "王澳走向旧址出口 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_004",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_004.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_004",
+          "path": "src/第四幕/T09/IMG_A4_T09_004.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一走廊朝出口前进的门框/地面近景，晨光方向保持",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一走廊朝出口前进的门框/地面近景，晨光方向保持。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "title": "旧址门槛与门外的晨光 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_005",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_005.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_005",
+          "path": "src/第四幕/T09/IMG_A4_T09_005.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一门槛、晨光和失焦边缘；不揭示意识中断后的去处",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一门槛、晨光和失焦边缘；不揭示意识中断后的去处。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINAL_READING_001",
+      "title": "桌灯旁摊开的无字纸张与模糊屏幕，邮件内容不可辨认 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_FINAL_READING_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINAL_READING_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_FINAL_READING_001",
+          "path": "src/第四幕/UX-RHYTHM/IMG_A4_FINAL_READING_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "原桌灯旁纸张、键盘和屏幕边缘，内容继续不可辨认",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原桌灯旁纸张、键盘和屏幕边缘，内容继续不可辨认。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T01_001",
+      "title": "酒店桌上摊开的旧笔记本 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T01_001",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T01_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T01_001",
+          "path": "src/第四幕/T01/IMG_A4_T01_001.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "酒店同一桌上笔记本的装订、纸张边缘；不提前显示尚未阅读的密码/文本",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。酒店同一桌上笔记本的装订、纸张边缘；不提前显示尚未阅读的密码/文本。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T10_003",
+      "title": "咖啡馆桌面的三杯饮料 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T10_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T10_003.webp",
+      "references": [
+        {
+          "assetId": "IMG_A4_T10_003",
+          "path": "src/第四幕/T10/IMG_A4_T10_003.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "focusTarget": "同一桌面三杯饮料的杯沿和凝水，必须仍是三杯且相对位置一致",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一桌面三杯饮料的杯沿和凝水，必须仍是三杯且相对位置一致。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。"
+    },
+    {
+      "id": "IMG_A3_COMPARE_STATUE_DETAIL_001",
+      "title": "第一次进山破庙塑像 · 对照放大近景",
+      "kind": "act3-comparison-detail",
+      "sourceAssetId": "IMG_A1_I_003",
+      "output": "src/assets/ux-investigation-20261014/IMG_A3_COMPARE_STATUE_DETAIL_001.webp",
+      "references": [
+        {
+          "assetId": "IMG_A1_I_003",
+          "path": "src/Photo_src/黑补母特写1.png"
+        }
+      ],
+      "aspect": "4:3",
+      "transparent": false,
+      "requirements": "从同一破庙原塑像向前靠近拍摄新的底座/残存雕像近景，保持残缺形态、左右与室内墙面关系。稀疏自然裂痕、平滑石质，不做密集鱼鳞/蜂巢纹。不恢复缺失肢体，不命名神像，不添加新线索。用于第三幕旧塑像/空神龛对照的放大查看。"
+    }
+  ],
+  "revision": "最新用户遗漏审计：校园总图+教学楼整体外景，78作业"
+}

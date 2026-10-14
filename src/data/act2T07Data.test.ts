@@ -38,7 +38,7 @@ describe('T07 promotion data', () => {
     expect(keyFrameAt(10000)?.id).toBe('FRAME_A2_T07_003');
     expect(keyFrameAt(7000)?.id).toBe('FRAME_A2_T07_001');
     expect(visualFrameAt(0)?.imageId).toBe('IMG_A2_T07_003');
-    expect(visualFrameAt(5000)?.imageId).toBe('IMG_A2_T07_004');
+    expect(visualFrameAt(5000)?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
     expect(visualFrameAt(7000)?.imageId).toBe('IMG_A2_T07_005');
     expect(visualFrameAt(8800)?.imageId).toBe('IMG_A2_T07_008');
     expect(visualFrameAt(10000)?.imageId).toBe('IMG_A2_T07_003');
@@ -50,6 +50,18 @@ describe('T07 promotion data', () => {
     // 关键画面短暂但容错，窗口不窄于 1 秒。
     const frame = keyFrameById.get('FRAME_A2_T07_001')!;
     expect(frame.endMs - frame.startMs).toBeGreaterThanOrEqual(1000);
+  });
+
+  it('uses a separate trail image for walking and preserves the turn evidence window', () => {
+    const walk = act2T07.video.segments.find((segment) => segment.id === 'SEG_A2_T07_002');
+    const turn = act2T07.video.segments.find((segment) => segment.id === 'SEG_A2_T07_003');
+    const walkingFrame = act2T07.video.keyFrames.find((frame) => frame.id === 'FRAME_A2_T07_002');
+    expect(walk?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
+    expect(turn?.imageId).toBe('IMG_A2_T07_004');
+    expect(walkingFrame).toMatchObject({ imageId: 'IMG_A2_T07_TRAIL_WALK_001', zoomImageId: 'IMG_A2_T07_TRAIL_WALK_001', startMs: 4000, endMs: 6499, supportsExteriorMatch: false });
+    expect(keyFrameAt(6800)?.id).toBe('FRAME_A2_T07_001');
+    expect(visualFrameAt(6500)?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
+    expect(visualFrameAt(6800)?.imageId).toBe('IMG_A2_T07_005');
   });
 
   it('reuses existing T06 pages as read-only recap without new progress', () => {

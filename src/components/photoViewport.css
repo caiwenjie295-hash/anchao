@@ -18,6 +18,9 @@
 .photo-viewport__marker>span:first-child{font-size:1.4rem;line-height:1}
 .photo-viewport__marker-label{position:absolute;top:100%;left:50%;z-index:2;transform:translateX(-50%);width:max-content;max-width:150px;padding:3px 7px;border-radius:6px;background:#102027ed;color:white;font-size:.72rem;line-height:1.3;white-space:normal;pointer-events:none;text-align:center}
 .photo-viewport__marker--sound,.photo-viewport__marker--memory{border-style:dashed!important}
+.photo-viewport__marker--focus-box{box-sizing:border-box;width:68px;min-width:68px;height:54px;min-height:44px;padding:2px!important;border:2px dashed #dcebb7!important;border-radius:4px!important;background:transparent!important;color:#fff!important;box-shadow:0 0 0 1px #17231d88,0 2px 12px #0007;backdrop-filter:none}
+.photo-viewport__marker--focus-box>span:first-child{display:none}
+.photo-viewport__marker--focus-box .photo-viewport__marker-label{top:calc(100% + 2px)}
 .photo-viewport__marker--active{border-color:#c4b777!important}
 .photo-viewport__marker:disabled{opacity:.55;cursor:not-allowed}
 .photo-viewport__controls{position:absolute;z-index:4;right:12px;top:12px;display:flex;align-items:center;gap:3px;padding:4px;border-radius:9px;background:#18252abd;backdrop-filter:blur(12px);color:white}

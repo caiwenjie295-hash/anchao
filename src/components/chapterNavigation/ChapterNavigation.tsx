@@ -8,11 +8,13 @@ type Confirmation = { kind: 'replay'; chapter: ChapterId } | { kind: 'reset' };
 export function ChapterNavigation({
   manager = defaultManager,
   blocked = false,
+  placement = 'floating',
   onReplay,
   onReset,
 }: {
   manager?: StateManager;
   blocked?: boolean;
+  placement?: 'floating' | 'taskbar' | 'header' | 'scene' | 'ending';
   onReplay?: (chapter: ChapterId) => void;
   onReset?: () => boolean;
 }) {
@@ -89,7 +91,7 @@ export function ChapterNavigation({
   };
 
   return <>
-    <div className="chapter-navigation">
+    <div className={`chapter-navigation chapter-navigation--${placement}`}>
       <button
         ref={triggerRef}
         type="button"

@@ -1,5 +1,6 @@
 import images from '../../data/images.json';
 import compressedAssetMap from '../assets/compressed/asset-map.json';
+import { isAct4IllustrationZoomDetailAssetId } from '../data/narrative/act4IllustrationDetails';
 
 export interface AssetReference {
   id: string;
@@ -22,6 +23,7 @@ export class AssetLoader {
 
 const compressedFiles = import.meta.glob<string>('../assets/compressed/**/*.{webp,png,jpg,jpeg}', { eager: true, query: '?url&no-inline', import: 'default' });
 const uxFinaleFiles = import.meta.glob<string>('../assets/ux-finale-20261008/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
+const uxInvestigationFiles = import.meta.glob<string>('../assets/ux-investigation-20261014/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const compressedEntries = compressedAssetMap.entries as Record<string, string>;
 const compressedSource = (sourcePath: string | null): string | undefined => {
   if (!sourcePath) return undefined;
@@ -50,6 +52,18 @@ export const uxFinaleA4AssetPath = (id: string, file: string): string | null =>
   uxFinaleA4ImageIds.includes(id as typeof uxFinaleA4ImageIds[number]) && file === `${id}.webp`
     ? `../assets/ux-finale-20261008/${file}`
     : null;
+const isUxInvestigationAssetId = (id: string): boolean =>
+  /^IMG_A2_SCHOOL_(?:MAP|BUILDING|GATE|CORRIDOR|XIAOA|XIAOYUE|RESTROOM|HONOR|OFFICE|NOTICE|NOTE|NOTE_DETAIL|RANK_PAPER|COURTYARD|PLAYGROUND|DORM)_001$/.test(id)
+  || id === 'IMG_A2_T07_TRAIL_WALK_001'
+  || id === 'IMG_A3_SIGN_FULL_001'
+  || id === 'IMG_A3_BOARD_FULL_001'
+  || id === 'IMG_A3_COMPARE_STATUE_DETAIL_001'
+  || isAct4IllustrationZoomDetailAssetId(id)
+  || /^IMG_A3_DETAIL_T0[0-7]_[A-Z0-9_]+$/.test(id);
+export const uxInvestigationAssetPath = (id: string, file: string): string | null =>
+  isUxInvestigationAssetId(id) && file === `${id}.webp`
+    ? `../assets/ux-investigation-20261014/${file}`
+    : null;
 const existingAssets = imageRecords.filter((image) => image.file).map((image) => [image.id, {
   id: image.id, type: 'image', src: compressedSource(`../Photo_src/${image.file}`) ?? compressedSource(`../第二幕/${image.file}`)
     ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!))
@@ -58,4 +72,9 @@ const existingAssets = imageRecords.filter((image) => image.file).map((image) =>
 const uxFinaleAssets = uxFinaleA4ImageIds.map((id) => [id, {
   id, type: 'image' as const, src: uxFinaleFiles[`../assets/ux-finale-20261008/${id}.webp`],
 }]);
-export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets]));
+const uxInvestigationAssets = imageRecords.flatMap((image) => {
+  if (!image.file) return [];
+  const path = uxInvestigationAssetPath(image.id, image.file);
+  return path ? [[image.id, { id: image.id, type: 'image' as const, src: uxInvestigationFiles[path] }] as const] : [];
+});
+export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets, ...uxInvestigationAssets]));

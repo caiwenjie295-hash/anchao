@@ -22,6 +22,8 @@ describe('Third-act investigation interface', () => {
     const click = async (button: HTMLButtonElement) => act(async () => { button.click(); });
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      expect(container.textContent).toContain('点击照片上的虚线框查看物件');
+      expect(container.textContent).not.toContain('点击照片上的＋');
       const route = container.querySelector<HTMLButtonElement>('[data-action-id="A3_ROUTE_T04_004_005"]');
       expect(route).not.toBeNull();
       expect(route?.disabled).toBe(false);
@@ -131,9 +133,9 @@ describe('Third-act investigation interface', () => {
 
   it('shows each paper transcription only after that paper has been opened and includes the discovered close-up art', async () => {
     for (const scenario of [
-      { stage: 'T04' as const, lensId: 'LENS_A3_T04_005', clueId: 'CLUE_A3_T04_VVAKE_PAPER', assetId: 'IMG_A3_T04_005', title: 'VVaKe', words: ['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗'] },
-      { stage: 'T05' as const, lensId: 'LENS_A3_T05_005', clueId: 'CLUE_A3_T05_13ACK_PAPER', assetId: 'IMG_A3_T05_005', title: '13aCK', words: ['老鼠', '血', '草垛', '木房子', '玫瑰', '表'] },
-      { stage: 'T06' as const, lensId: 'LENS_A3_T06_007', clueId: 'CLUE_A3_T06_EMPTY_BASE', assetId: 'IMG_A3_T06_009', title: '空神龛底座', words: [] },
+      { stage: 'T04' as const, lensId: 'LENS_A3_T04_005', clueId: 'CLUE_A3_T04_VVAKE_PAPER', assetId: 'IMG_A3_DETAIL_T04_VVAKE_PAPER', title: 'VVaKe', words: ['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗'] },
+      { stage: 'T05' as const, lensId: 'LENS_A3_T05_005', clueId: 'CLUE_A3_T05_13ACK_PAPER', assetId: 'IMG_A3_DETAIL_T05_13ACK_PAPER', title: '13aCK', words: ['老鼠', '血', '草垛', '木房子', '玫瑰', '表'] },
+      { stage: 'T06' as const, lensId: 'LENS_A3_T06_007', clueId: 'CLUE_A3_T06_EMPTY_BASE', assetId: 'IMG_A3_DETAIL_T06_EMPTY_BASE', title: '空神龛底座', words: [] },
     ]) {
       const state = createDefaultState();
       state.game.phase = `A3_${scenario.stage}` as typeof state.game.phase;

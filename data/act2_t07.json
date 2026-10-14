@@ -91,7 +91,7 @@
         "startMs": 4000,
         "endMs": 6500,
         "label": "山路行走",
-        "imageId": "IMG_A2_T07_004",
+        "imageId": "IMG_A2_T07_TRAIL_WALK_001",
         "placeholderNote": "他们一边走着一边录，背景是一段山路，山清水秀。",
         "line": "（脚步声）他们一边走一边录：孩子每天都要走一段山路，锻炼身体，也锻炼意志。"
       },
@@ -134,8 +134,8 @@
         "segmentId": "SEG_A2_T07_002",
         "startMs": 4000,
         "endMs": 6499,
-        "imageId": "IMG_A2_T07_004",
-        "zoomImageId": "IMG_A2_T07_004",
+        "imageId": "IMG_A2_T07_TRAIL_WALK_001",
+        "zoomImageId": "IMG_A2_T07_TRAIL_WALK_001",
         "altText": "镜头沿山路移动",
         "placeholderNote": "画面里是树木和山路，暂时看不清与外景相符的建筑轮廓。",
         "caption": "山路行进画面",
@@ -163,7 +163,7 @@
       {
         "startMs": 4000,
         "endMs": 6800,
-        "imageId": "IMG_A2_T07_004"
+        "imageId": "IMG_A2_T07_TRAIL_WALK_001"
       },
       {
         "startMs": 6800,

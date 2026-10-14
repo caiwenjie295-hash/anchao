@@ -99,6 +99,15 @@ export const act3StageClueIds = (stage: AuthoredAct3Stage): string[] => {
   return ids;
 };
 
+/** Each authored observation opens its own generated detail image; the ID suffix is the clue suffix. */
+export const ACT3_DETAIL_IMAGE_ID_BY_CLUE = Object.freeze(Object.fromEntries(
+  (Object.keys(stageDocs) as AuthoredAct3Stage[]).flatMap((stage) => act3StageClueIds(stage).map((clueId) => [
+    clueId,
+    `IMG_A3_DETAIL_${clueId.slice('CLUE_A3_'.length)}`,
+  ])),
+) as Record<string, string>);
+export const act3DetailImageIdForClue = (clueId: string): string | undefined => ACT3_DETAIL_IMAGE_ID_BY_CLUE[clueId];
+
 /** 核心结论所需证据；其它热点是可选环境观察，不阻止阶段离开。 */
 export const ACT3_REQUIRED_EVIDENCE: Record<AuthoredAct3Stage, Array<{ clueId: string; reason: string }>> = {
   T00: [

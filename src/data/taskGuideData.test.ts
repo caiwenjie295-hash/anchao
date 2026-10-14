@@ -36,6 +36,19 @@ describe('desktop task guides', () => {
     expect(browser).toMatchObject({ id: 'GUIDE_A1_003', completedCount: 1, actionAppId: 'browser' });
   });
 
+  it('shows a usable query for the active first-act browser step', () => {
+    const newsSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true }, 'C'));
+    expect(newsSearch?.id).toBe('GUIDE_A1_003');
+    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('XX县失踪');
+    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('打开并阅读');
+
+    const routeSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true, FLAG_A1_NEWS_FOUND: true }, 'D'));
+    expect(routeSearch?.id).toBe('GUIDE_A1_003');
+    expect(routeSearch?.steps.find((step) => step.current)?.label).toContain('鸡公岭徒步');
+    expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('鸡公岭徒步');
+    expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('长度和难度');
+  });
+
   it('evaluates the photo guide with the shared visibility threshold', () => {
     const state = withFlags({ FLAG_A1_TEMPLE_PHOTO_TAKEN: true }, 'J');
     state.modules.photos.openedPhotoIds = ['IMG_A1_H_003'];

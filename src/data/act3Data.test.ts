@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import imageDocument from '../../data/images.json';
-import { ACT3_REQUIRED_EVIDENCE, act3FirstLensId, act3RequiredClueIds, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage } from './act3Data';
+import { ACT3_DETAIL_IMAGE_ID_BY_CLUE, ACT3_REQUIRED_EVIDENCE, act3DetailImageIdForClue, act3FirstLensId, act3RequiredClueIds, act3StageClueIds, act3StageDoc, type AuthoredAct3Stage } from './act3Data';
 
 describe('third-act authored lens graph', () => {
   it('keeps each stage navigable with registered resource IDs and unique clues', () => {
-    const imageIds = new Set(imageDocument.items.map((image) => image.id));
+    const imageIds = new Set([...imageDocument.items.map((image) => image.id), 'IMG_A3_SIGN_FULL_001', 'IMG_A3_BOARD_FULL_001']);
     for (const stage of ['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]) {
       const doc = act3StageDoc(stage);
       const lensIds = new Set(doc.lenses.map((lens) => lens.id));
@@ -24,6 +24,16 @@ describe('third-act authored lens graph', () => {
         for (const clueId of lens.requiresClueIds ?? []) expect(act3StageClueIds(stage)).toContain(clueId);
       }
     }
+  });
+
+  it('maps every clue to one distinct authored detail image ID', () => {
+    const clueIds = (['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]).flatMap(act3StageClueIds);
+    const imageIds = clueIds.map((clueId) => act3DetailImageIdForClue(clueId));
+    expect(clueIds).toHaveLength(59);
+    expect(imageIds).toHaveLength(59);
+    expect(new Set(imageIds).size).toBe(59);
+    expect(Object.keys(ACT3_DETAIL_IMAGE_ID_BY_CLUE)).toHaveLength(59);
+    for (const clueId of clueIds) expect(act3DetailImageIdForClue(clueId)).toBe(`IMG_A3_DETAIL_${clueId.slice('CLUE_A3_'.length)}`);
   });
 
   it('declares a small, reasoned core evidence set for every stage', () => {

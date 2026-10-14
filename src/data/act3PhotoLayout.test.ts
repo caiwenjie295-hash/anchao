@@ -16,4 +16,11 @@ describe('third-act photo layout', () => {
       expect(point.y).toBeLessThanOrEqual(0.95);
     }
   });
+
+  it('anchors the T00 utility details to the visible cable, break, and uphill diversion', () => {
+    expect(act3PhotoLayout.LENS_A3_T00_004.CLUE_A3_T00_CABLE).toMatchObject({ x: 0.53, y: 0.735 });
+    expect(act3PhotoLayout.LENS_A3_T00_005.CLUE_A3_T00_CABLE_BREAK).toMatchObject({ x: 0.55, y: 0.64 });
+    expect(act3PhotoLayout.LENS_A3_T00_009.CLUE_A3_T00_WATER_ODDITY).toMatchObject({ x: 0.21, y: 0.28 });
+    expect(act3PhotoLayout.LENS_A3_T00_010.CLUE_A3_T00_DRAIN_DISCOVERED).toMatchObject({ x: 0.38, y: 0.67 });
+  });
 });

@@ -1,0 +1,12 @@
+PROMPT RECORD TYPE: reconstructed constraint summary; this is NOT the original verbatim image-generation prompt.
+Asset ID: IMG_A2_SCHOOL_MAP_001
+Title: 高中校园俯视总图
+Record reason: no saved verbatim prompt file was present in the art worktree when the final ledger was assembled. The wording below is reconstructed only from the read-only frozen asset job and does not claim to reproduce the original prompt.
+Aspect: 4:3
+Focus target from frozen job: unspecified
+Reference paths from frozen job:
+- IMG_A2_T05_001: `src/第二幕/IMG_A2_T05_001.jpg`
+- IMG_A2_T05_002: `src/第二幕/IMG_A2_T05_002.jpg`
+Frozen job requirements:
+校园俯视/鸟瞰总图，北朝上，南门与入口室外广场，北中教学楼、西侧操场、东北宿舍楼；排行榜及宣传栏均在室外广场两侧；树在室外绿化，不画房间剖面/室内桌椅/室内树木。新版校园图已通过，positions为依据实图校准的实物/入口坐标；代码4:3完整呈现底图，并将标注按钮用引线连接实物锚点，不以标签位置冒充实物位置。
+Exact generation wording, style clauses not written in the frozen job, and any transient prompt edits are not recoverable from the saved files; they are intentionally not invented here.

@@ -243,6 +243,11 @@
 .browser-address > span { display: grid; width: 16px; height: 16px; flex: 0 0 16px; place-items: center; }
 .browser-address > span .visual-icon { width: 16px; height: 16px; }
 .browser-history-button > .visual-icon { width: 16px; height: 16px; }
+.browser-home__task { display: grid; justify-items: start; gap: 8px; margin-top: 18px; padding: 14px; border-left: 3px solid var(--ui-accent); color: var(--ui-text); background: var(--ui-surface); text-align: left; }
+.browser-home__task p { margin: 0; line-height: 1.6; }
+.browser-home__task button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--ui-interactive-border); border-radius: 6px; color: var(--ui-text); background: var(--ui-surface); font: inherit; cursor: pointer; }
+.browser-home__task button:hover,
+.browser-home__task button:focus-visible { border-color: var(--ui-accent); background: var(--ui-accent-soft); }
 @container (max-width: 520px) {
   .browser-page .browser-thread__avatar.visual-avatar { width: 24px; height: 24px; flex-basis: 24px; }
   .browser-page .browser-thread__avatar .visual-icon { width: 14px; height: 14px; }

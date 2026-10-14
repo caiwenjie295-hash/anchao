@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { calculatePhotoPanLimits, PhotoViewport, type PhotoMarker } from './PhotoViewport';
+import { calculatePhotoInitialOffset, calculatePhotoPanLimits, PhotoViewport, type PhotoMarker } from './PhotoViewport';
 
 // React 19 需要在测试环境中显式开启 act 支持。
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -73,6 +73,15 @@ describe('PhotoViewport aspect ratio', () => {
     const resizedPlaneWidth = 1920 * Math.min(600 / 1920, 600 / 1080);
     const resizedPlaneHeight = 1080 * Math.min(600 / 1920, 600 / 1080);
     expect(calculatePhotoPanLimits(resizedPlaneWidth, resizedPlaneHeight, 600, 600, 2)).toEqual({ x: 300, y: 37.5 });
+  });
+
+  it('positions a requested focal point in the enlarged photo plane within real pan limits', () => {
+    const centered = calculatePhotoInitialOffset(800, 450, 800, 600, 2, { x: .65, y: .6 });
+    expect(centered.x).toBeCloseTo(-240);
+    expect(centered.y).toBeCloseTo(-90);
+    const clamped = calculatePhotoInitialOffset(800, 450, 800, 600, 2, { x: .95, y: .95 });
+    expect(clamped.x).toBe(-400);
+    expect(clamped.y).toBe(-150);
   });
 
   it('keeps the viewport stable and withholds hotspots while the natural dimensions are unknown', async () => {
