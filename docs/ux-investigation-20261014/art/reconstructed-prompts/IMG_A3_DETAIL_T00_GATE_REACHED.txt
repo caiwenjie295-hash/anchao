@@ -1,0 +1,11 @@
+PROMPT RECORD TYPE: reconstructed constraint summary; this is NOT the original verbatim image-generation prompt.
+Asset ID: IMG_A3_DETAIL_T00_GATE_REACHED
+Title: 记下找到了外墙与锈门
+Record reason: no saved verbatim prompt file was present in the art worktree when the final ledger was assembled. The wording below is reconstructed only from the read-only frozen asset job and does not claim to reproduce the original prompt.
+Aspect: 4:3
+Focus target from frozen job: unspecified
+Reference paths from frozen job:
+- IMG_A3_T00_012: `src/第三幕/IMG_A3_T00_012.png`
+Frozen job requirements:
+依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。
+Exact generation wording, style clauses not written in the frozen job, and any transient prompt edits are not recoverable from the saved files; they are intentionally not invented here.

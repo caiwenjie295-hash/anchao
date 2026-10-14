@@ -1,0 +1,11 @@
+PROMPT RECORD TYPE: reconstructed constraint summary; this is NOT the original verbatim image-generation prompt.
+Asset ID: IMG_A2_SCHOOL_BUILDING_001
+Title: 教学楼整体外景
+Record reason: no saved verbatim prompt file was present in the art worktree when the final ledger was assembled. The wording below is reconstructed only from the read-only frozen asset job and does not claim to reproduce the original prompt.
+Aspect: 4:3
+Focus target from frozen job: unspecified
+Reference paths from frozen job:
+- No source reference recorded in the frozen manifest.
+Frozen job requirements:
+依据最终校园俯视总图里北中教学楼的同一建筑形态，第一人称从入口广场向北靠近楼前，完整展示教学楼整体外景。门窗/楼层/颜色/周边操场宿舍方向一致，进入走廊前能与总图位置对应。不同于校门/校园地图，不能以旧图镜像或裁切替代新生图。自然稀疏老化，避免鱼鳞/蜂巢/浮雕细纹。
+Exact generation wording, style clauses not written in the frozen job, and any transient prompt edits are not recoverable from the saved files; they are intentionally not invented here.
