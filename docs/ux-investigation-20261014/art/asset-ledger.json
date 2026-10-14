@@ -1,0 +1,4786 @@
+{
+  "schema": "ux-investigation-20261014-art-ledger-v1",
+  "canonicalManifestRevision": "最新用户遗漏审计：校园总图+教学楼整体外景，78作业",
+  "canonicalJobCount": 112,
+  "producedCanonicalCount": 112,
+  "allCanonicalNativeAndWebpDecoded": true,
+  "verbatimPromptRecordCount": 62,
+  "reconstructedPromptRecordCount": 50,
+  "nativeAndWebpAspectMismatches": [],
+  "technicalFailures": [],
+  "assets": [
+    {
+      "id": "IMG_A2_SCHOOL_BUILDING_001",
+      "title": "教学楼整体外景",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [],
+      "focusTarget": null,
+      "requirements": "依据最终校园俯视总图里北中教学楼的同一建筑形态，第一人称从入口广场向北靠近楼前，完整展示教学楼整体外景。门窗/楼层/颜色/周边操场宿舍方向一致，进入走廊前能与总图位置对应。不同于校门/校园地图，不能以旧图镜像或裁切替代新生图。自然稀疏老化，避免鱼鳞/蜂巢/浮雕细纹。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_BUILDING_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3057089,
+        "sha256": "4f93a2ccb9139b924580db90b1f0c5c5b65836b814234150693ff0f521cbc709"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_BUILDING_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 417484,
+        "sha256": "31d5087f8d3f245d52619417a3ee24729e5e949ff1f4376f7a1e36a0adc2b4e2"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_BUILDING_001.txt",
+        "sha256": "c6352754197d3319977b84c32c53f76d4209820d726b49d56aa45d51c30c8606"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_CORRIDOR_001",
+      "title": "主走廊",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_002",
+          "path": "src/第二幕/IMG_A2_T05_002.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_CORRIDOR_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2624010,
+        "sha256": "780734fb1c93e8bb645d9c0dc11398f9c9f9e2228b42f9e4dbd142cd58519e2b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_CORRIDOR_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 266654,
+        "sha256": "bb85e19594daae6943cccc02ee94de5bf70c89b5bd0780de2f8cf35c2ff85574"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_CORRIDOR_001.txt",
+        "sha256": "affb7fe02c176fc8f59420bf5101b700a97a132ee8f1b3be4c3ed26e207522bb"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_COURTYARD_001",
+      "title": "校门内室外广场",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [],
+      "focusTarget": null,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_COURTYARD_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2820740,
+        "sha256": "eb3bd54222c1d9472d2ef295e066ff0b28e9b7d9a58e4ac2362947dfa8e6b688"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_COURTYARD_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 336476,
+        "sha256": "2d0bf510ab8fadc574881010fd53750d484991beb44424e74a5bd543fb97317d"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_COURTYARD_001.txt",
+        "sha256": "f2dc6fe89c08dc987ad9d0047683a001b2a9432e267daad5cf21458b534b0ab2"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_DORM_001",
+      "title": "校园东北宿舍楼",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [],
+      "focusTarget": null,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_DORM_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3226012,
+        "sha256": "9faf41c21679d86afcd0155b0f4f4289d561695cedf36498118c7669647340a9"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_DORM_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 430300,
+        "sha256": "ef0d1b250ed67a7fda140cab16549e2eb04655d48c6d8c75519aa81826eb308d"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_DORM_001.txt",
+        "sha256": "b355b6715c33f1bc271663c84225cf1019b639ba789d7151a98380b92bf2ae85"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_GATE_001",
+      "title": "校门",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_001",
+          "path": "src/第二幕/IMG_A2_T05_001.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_GATE_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2769443,
+        "sha256": "99a3816936354ad62c0a88d8d85f158d7ad7df079c2b5a7db75eadc70284cf01"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_GATE_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 319896,
+        "sha256": "2d0fc8c89215c350aa4a9100a12f6e7bf267c78992cbb2ba854de37a8e9fdbd4"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_GATE_001.txt",
+        "sha256": "89680e0aeb8d2ccb405f5423c032699baeccee2c1b1e62f3b8ac2e4ec4ec61dd"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_HONOR_001",
+      "title": "光荣榜",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_004",
+          "path": "src/第二幕/IMG_A2_T05_004.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_HONOR_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2996436,
+        "sha256": "c12353091e198a2ffa2a63e47a02ee71a01690aa0e73987ba99eb28ab4b85a1e"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_HONOR_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 406480,
+        "sha256": "f1b32e4b614c9f34940a1e42e18ad83dae914d65ccbbaaf91e6c92315a293821"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_HONOR_001.txt",
+        "sha256": "d3a444a04bc41ebcae0b9d655f4a874903e2414a1ff7ac03d845924374dafc69"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_MAP_001",
+      "title": "高中校园俯视总图",
+      "kind": "school-map",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_001",
+          "path": "src/第二幕/IMG_A2_T05_001.jpg"
+        },
+        {
+          "assetId": "IMG_A2_T05_002",
+          "path": "src/第二幕/IMG_A2_T05_002.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "校园俯视/鸟瞰总图，北朝上，南门与入口室外广场，北中教学楼、西侧操场、东北宿舍楼；排行榜及宣传栏均在室外广场两侧；树在室外绿化，不画房间剖面/室内桌椅/室内树木。新版校园图已通过，positions为依据实图校准的实物/入口坐标；代码4:3完整呈现底图，并将标注按钮用引线连接实物锚点，不以标签位置冒充实物位置。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_MAP_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3376581,
+        "sha256": "4e123bbdc07e5bf16a06d01eea06810f525a5d38762f89b85b3e4b7d523533ea"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_MAP_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 490238,
+        "sha256": "6f28a8e45981c9db38692fcf7abce3fdf26e7f41ccce2d43f884b4ce0718b79e"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_MAP_001.txt",
+        "sha256": "f86882078cab1196ae47ac91a2316da1cc21aa3f906d59434178ccf45dda66cf"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_MAP_001-initial-interior.png",
+        "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_MAP_001-initial-interior.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A2_SCHOOL_MAP_001-watercolor.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A2_SCHOOL_MAP_001-watercolor.webp"
+      ]
+    },
+    {
+      "id": "IMG_A2_SCHOOL_NOTE_001",
+      "title": "学霸笔记原页",
+      "kind": "school-note",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_006",
+          "path": "src/第二幕/IMG_A2_T05_006.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "旧纸手写学习笔记；页边线条状双S，细黑线不是黑圆。不得添加可读新剧情句子。",
+      "expectedAspect": "3:4",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_NOTE_001.png",
+        "format": "PNG",
+        "width": 1086,
+        "height": 1448,
+        "bytes": 2298121,
+        "sha256": "808591f22944533054dbf84da267806722c93a019e258461f007972b89db92e0"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_NOTE_001.webp",
+        "format": "WEBP",
+        "width": 1086,
+        "height": 1448,
+        "bytes": 171790,
+        "sha256": "651e634afe92a756667c80f3cc16de5d12bd96693f91edd7b6957975f0e383fe"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A2_SCHOOL_NOTE_001.txt",
+        "sha256": "9c8ceb1404c439cd33a01b07062c1b2bd526258f4598c24a2b500e39c404e6a5"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_NOTE_DETAIL_001",
+      "title": "学霸笔记页边特写",
+      "kind": "school-note-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_012",
+          "path": "src/第二幕/IMG_A2_T05_012.png"
+        },
+        {
+          "assetId": "IMG_A2_T05_006",
+          "path": "src/第二幕/IMG_A2_T05_006.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "与原页同纸张和同符号位置；拉近页边细节，双S线条清楚。",
+      "expectedAspect": "3:4",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_NOTE_DETAIL_001.png",
+        "format": "PNG",
+        "width": 1086,
+        "height": 1448,
+        "bytes": 1886944,
+        "sha256": "2ffb12f895563bc91762caf458219c689a23ab29a3aef781bc74befa6fa2450c"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_NOTE_DETAIL_001.webp",
+        "format": "WEBP",
+        "width": 1086,
+        "height": 1448,
+        "bytes": 89354,
+        "sha256": "f713e6163b2df0287f531c4dd471e01f42b4eaca8875428fcae8a7582fe20710"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A2_SCHOOL_NOTE_DETAIL_001.txt",
+        "sha256": "e86a2cb92a33bfaa78e78183d644a52ad83abf8a381cd7f77ff09c5ecac3d7b2"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_NOTICE_001",
+      "title": "宣传栏",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_007",
+          "path": "src/第二幕/IMG_A2_T05_007.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_NOTICE_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2897175,
+        "sha256": "6a23a1b0830a0206f844670a51b9d1dd830108dc3b9fe9aacebceea9cc6297c4"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_NOTICE_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 384640,
+        "sha256": "f41566ae2a8d90bfdff509b41044a463e416cf08318c616745efc293aa4a902b"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_NOTICE_001.txt",
+        "sha256": "bf6d5398b060bc48b5bf18d34c205cf53c6f02ee7021072ab995dbfc0ee3cc37"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_OFFICE_001",
+      "title": "班主任办公室",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_005",
+          "path": "src/第二幕/IMG_A2_T05_005.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_OFFICE_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2255634,
+        "sha256": "3c3560d532e71c47a6b6f8cd8c0f35b7f34b55e5447010653612c10ef0df9178"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_OFFICE_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 214096,
+        "sha256": "4d75db0d5dfc6edef9d93c6e045167c6b8c5ac92a7ceb68d8a1741e890772d72"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_OFFICE_001.txt",
+        "sha256": "fb1e683483c924198d354f58b268f93c277a8d2ecc9f12cdfc63724a9b467695"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_PLAYGROUND_001",
+      "title": "校园西侧操场",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [],
+      "focusTarget": null,
+      "requirements": "基于最终校园俯视总图生成同一地点的第一人称环境照片，教学楼/宿舍/操场的近远和方位正确，不出现新剧情材料。正常使用的旧校园，自然稀疏老化，不用鱼鳞/蜂巢纹理。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_PLAYGROUND_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2943811,
+        "sha256": "e8c3d95de73b87156cd3788f9429443d2012d33a3bcf67a640ab8fd991ec319d"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_PLAYGROUND_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 377470,
+        "sha256": "c4cf93c09b4e43deed043a95f2ec6a8d5ce489d6a2bcf0364295f117d4c5997d"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_PLAYGROUND_001.txt",
+        "sha256": "2c62f43ed21e67524ab16282ad9cf68698b0719c434764c234d272b3052acbd5"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_RANK_PAPER_001",
+      "title": "发黄旧成绩记录纸面",
+      "kind": "rank-paper",
+      "sourceAssetId": null,
+      "references": [],
+      "focusTarget": null,
+      "requirements": "无数字无文字无折线的旧学校成绩记录纸，暖黄纸和轻微折痕，中心空白便于代码绘制准确7点折线图；不用鱼鳞裂纹。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_RANK_PAPER_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2418152,
+        "sha256": "030e2e866180af33b1b595666f284cf6bbf93a179eca4210e68a4d4b3fd944db"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_RANK_PAPER_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 188304,
+        "sha256": "dd3766143a60a5fd1f77d687e2208b5363f519464da74a29c62f3df631b5ed44"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A2_SCHOOL_RANK_PAPER_001.txt",
+        "sha256": "4881802b408b5f57d24f666cf8b047e102c865e647daa61f7151d9ef06944e52"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_RESTROOM_001",
+      "title": "厕所方向",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_002",
+          "path": "src/第二幕/IMG_A2_T05_002.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_RESTROOM_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2581160,
+        "sha256": "872a16a42dbdaf19e0c5ce81d6b86683d9314aebc9db739a22a3e3154a7df139"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_RESTROOM_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 264576,
+        "sha256": "10975e6f897eea219575be6f507179bb6c34b0ba2dc73d19913d298a758b5c55"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_RESTROOM_001.txt",
+        "sha256": "0a30bedcdbb7c948f2e19795457cd1014d37a4a0db3086607b20f0fc8db5c38e"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_XIAOA_001",
+      "title": "小A旧教室",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_003",
+          "path": "src/第二幕/IMG_A2_T05_003.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_XIAOA_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2228530,
+        "sha256": "6811b34fa1fdfac6a473666936789ec79d0b8ef8ad1c98c2c660af9c3779c355"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_XIAOA_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 195372,
+        "sha256": "00013d21ad58d3d86be58cd43f16b3f0b47bfed0a84fc7de371deb8e8586a91d"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_XIAOA_001.txt",
+        "sha256": "cf0c5309fe4e28d5acd5fff01a19e03a4b518d5d7f4df565171af086ecfc4b27"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A2_SCHOOL_XIAOYUE_001",
+      "title": "小月旧教室",
+      "kind": "school-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A2_T05_003",
+          "path": "src/第二幕/IMG_A2_T05_003.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一正常使用的旧高中校园，各张独立机位。小A/小月教室相邻但各异；教学楼内部只有走廊/教室/办公室/厕所；光荣榜HONOR和宣传栏NOTICE是校门内室外广场两侧的展示板，不能在屋内。照片方向与校园总图/室内路线连续。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_SCHOOL_XIAOYUE_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2461320,
+        "sha256": "2aff63279b00c4be1d844533767b65b8fe40cc6702306b1b92fe1e7317c56d60"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_XIAOYUE_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 249622,
+        "sha256": "db097ea3d0fa9625500e3ec46adcdb9591fe6beb2430da064f3056286be27344"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A2_SCHOOL_XIAOYUE_001.txt",
+        "sha256": "b89c67e847ec7dd75d161a46ec6aba1032634987d448c201093e7d6777b29632"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_XIAOYUE_001-mirror.png",
+        "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_XIAOYUE_001-mirror.webp"
+      ]
+    },
+    {
+      "id": "IMG_A2_T07_TRAIL_WALK_001",
+      "title": "采访视频沿山路行走",
+      "kind": "trail-view",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_003",
+          "path": "src/第三幕/IMG_A3_T00_003.jpg"
+        },
+        {
+          "assetId": "IMG_A2_T07_005",
+          "path": "src/第二幕/IMG_A2_T07_005.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一森林山路向前走，湿石/树木与后续石庙镜头地域连续；此帧不出现石庙和可比建筑，不新增人脸或物证。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A2_T07_TRAIL_WALK_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 4283540,
+        "sha256": "ae6d23a18fc626de8d805c8c851b850cea06722dea83acd202141db45aa59214"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A2_T07_TRAIL_WALK_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 697378,
+        "sha256": "cd818dff0ec60cccf93573257ab7bd908787a3d5bd81c8d66357cb547513437b"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A2_T07_TRAIL_WALK_001.txt",
+        "sha256": "b78c76b353b395083d121d7606b9280de58a6c7ebff4cb32b4f40e7241895d49"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_BOARD_FULL_001",
+      "title": "黑板近景上的歪扭S",
+      "kind": "act3-full-edit",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_004",
+          "path": "src/第三幕/IMG_A3_T02_004.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "同一黑板框墙面构图，黑板表面全是歪斜、颤抖、不规则粉笔S，文字恐怖谷效应，不能变成圆形、鳞片或整齐图案，不新增句子。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_BOARD_FULL_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2653012,
+        "sha256": "a9a9f73187ead31a0a26ed7d084cc98b376644526154649394e69ae6e5fba11c"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_BOARD_FULL_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 283506,
+        "sha256": "06b43a23570cfdc2f074b1b83bc8dae6b11e3dcd9d1e501f3877f63c3f433996"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_BOARD_FULL_001.txt",
+        "sha256": "658a7030306a536d2066aa42c747938c85c7c2c0943b012fa1fc6a680f1b64fb"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_COMPARE_STATUE_DETAIL_001",
+      "title": "第一次进山破庙塑像 · 对照放大近景",
+      "kind": "act3-comparison-detail",
+      "sourceAssetId": "IMG_A1_I_003",
+      "references": [
+        {
+          "assetId": "IMG_A1_I_003",
+          "path": "src/Photo_src/黑补母特写1.png"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "从同一破庙原塑像向前靠近拍摄新的底座/残存雕像近景，保持残缺形态、左右与室内墙面关系。稀疏自然裂痕、平滑石质，不做密集鱼鳞/蜂巢纹。不恢复缺失肢体，不命名神像，不添加新线索。用于第三幕旧塑像/空神龛对照的放大查看。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_COMPARE_STATUE_DETAIL_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3462688,
+        "sha256": "0a05137470ed83875e146942ed284a4dddaa0d235ff99dc7ebeebe4e9502c087"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_COMPARE_STATUE_DETAIL_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 449606,
+        "sha256": "7bb6afbf4d9a87acf0c46949a57e4e9897bf5e03aea52a48dfe7fba3e8c1868d"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_COMPARE_STATUE_DETAIL_001.txt",
+        "sha256": "25a38be806e2251e607346e39b5a89320eec5a9003f838b7bd8825621c80b97d"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_APPROACH",
+      "title": "看向前方山口",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_003",
+          "path": "src/第三幕/IMG_A3_T00_003.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.55,
+        "y": 0.48,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_APPROACH.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 4014874,
+        "sha256": "3c4a5ef3b41ee0f06028b8c41f9f8437180d54574744acdd36e9e5da913df83b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_APPROACH.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 644588,
+        "sha256": "ebebdca2c7e3ecab58b1167948ee8e8f62d97140bbf042b81dc7823eddcdcd4e"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_APPROACH.txt",
+        "sha256": "ef0934ead08fa55a29698337d3e4ee84b746230390e5dd5d40c26e4274104163"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CABLE",
+      "title": "靠近看看这段电缆",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_004",
+          "path": "src/第三幕/IMG_A3_T00_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.53,
+        "y": 0.735,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。 父对原生全尺寸照片复核后校准focus：严格靠近这个真实目标。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_CABLE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3681511,
+        "sha256": "5dde6f23c13a3de1f58a9291ec1c09eafdf8e8c1d90fd6c60d3e9915a4bf3f25"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CABLE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 542176,
+        "sha256": "64ae08edbe3098c0e212dcaea385c337e81f7548b1a2d2fb59749c9f123cdd83"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_CABLE.txt",
+        "sha256": "3139daa47ff4fc3de95fa2ceccfbeabe3761a072cd3525038495d87a01f1b965"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CABLE_BREAK",
+      "title": "记下电缆在这里断掉",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_005",
+          "path": "src/第三幕/IMG_A3_T00_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.55,
+        "y": 0.64,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。 父对原生全尺寸照片复核后校准focus：严格靠近这个真实目标。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_CABLE_BREAK.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3517216,
+        "sha256": "edb279980472498ea8772dc0fae55dbd0aeb28522be6de805bf62c32d468de8d"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CABLE_BREAK.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 491554,
+        "sha256": "01faa5e078b695b18e29ca0127f9644e85421e28f2a35152a987836e73ebdd05"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_CABLE_BREAK.txt",
+        "sha256": "621d22e6f76b384312010f53395f3386c7d41cdfa467eea3ace2ca121fdd420f"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CAVE_SHELTER",
+      "title": "进入山洞避雨",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_006",
+          "path": "src/第三幕/IMG_A3_T00_006.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.46,
+        "y": 0.49,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_CAVE_SHELTER.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3606864,
+        "sha256": "5781af9e7488cd7c803194b8eb5b2013e286e853041a1f0b0c75c2364a686bb1"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CAVE_SHELTER.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 515508,
+        "sha256": "d4c6846d7b642f2832d79f447b101c76261527c55be587e2940d33c2cb78abb2"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_CAVE_SHELTER.txt",
+        "sha256": "26b76c6437009a89c77fb2f3fa84d827636e54be93c896c24eab486e7516dd5b"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_CAVE_TALK",
+      "title": "听她说补母",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_007",
+          "path": "src/第三幕/IMG_A3_T00_007.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.19,
+        "y": 0.42,
+        "kind": "sound"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_CAVE_TALK.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2651563,
+        "sha256": "c3d0b4b06b6dcd13af0e13cb6c9913b16bd9ef51469915f8419c8b9a8c3bb376"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_CAVE_TALK.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 271748,
+        "sha256": "0070c729c44b12e2465c30a00a52eff5320ed86e0ce50ac3010c0ebd55ff519b"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_CAVE_TALK.txt",
+        "sha256": "2bfd4ab2ebb1d52a297c13f38fe8cf718988e0e0eb07b67b6b44438dbca4bf84"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_DEPART",
+      "title": "继续向县城去",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_001",
+          "path": "src/第三幕/IMG_A3_T00_001.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.52,
+        "y": 0.46,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_DEPART.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2419196,
+        "sha256": "1ed1ce94afd68ab55cb7551a8416b7f265e1fecaf9165c3832f8cccec6c33e88"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_DEPART.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 222784,
+        "sha256": "111adc9c38bceb28588926f688e2f93c4f87fe3157eb462a47eaa7fd917ec884"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_DEPART.txt",
+        "sha256": "42541e19b74430b451130c8af04fdb643e5c925c5e571fb32caaf292f2cb0c86"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_DRAIN_DISCOVERED",
+      "title": "记下排水沟在此",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_010",
+          "path": "src/第三幕/IMG_A3_T00_010.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.38,
+        "y": 0.67,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3535174,
+        "sha256": "4bbfb77922e8ae97220afffa25a8ee048ffe7ee5610a677ee6040cdbad854314"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 479132,
+        "sha256": "f2df3ffea81ea8cb2f3f6dd513e28b7bea7c921e39aee4d08f81a08f86c581fd"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED.txt",
+        "sha256": "7644edbd191a85cac569279f413e2bb4cb2b48cf2b603b6ce30b963c0b0b9a29"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-targeted-reshoot.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-targeted-reshoot.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.txt",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-targeted-reshoot.txt"
+      ]
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_GATE_REACHED",
+      "title": "记下找到了外墙与锈门",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_012",
+          "path": "src/第三幕/IMG_A3_T00_012.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.53,
+        "y": 0.47,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_GATE_REACHED.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3718473,
+        "sha256": "1554ce3c23bc69b350347f052d10f356a9c3d70d7448dc6c584dd2a85595729a"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_GATE_REACHED.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 592154,
+        "sha256": "75101657b947df2dd562bacb47f0fa7efa326256935cf5934428917923748e46"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_GATE_REACHED.txt",
+        "sha256": "cbe6cbdeadfa89a6d8ac6a9e9e1336d7ece2068e9842db871835b23a415c725e"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_OLD_ROAD",
+      "title": "记下残旧路基",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_011",
+          "path": "src/第三幕/IMG_A3_T00_011.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.54,
+        "y": 0.59,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_OLD_ROAD.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 4128275,
+        "sha256": "ef564ab7189a140ebb8241c3c33632e76e7ed9e3d705abb7d2cbc59d3251b70a"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_OLD_ROAD.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 633660,
+        "sha256": "32a1ee4a5ddf7dcf3a06494814e76f679796c07f42eeff5512f54e8ab229d799"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T00_OLD_ROAD.txt",
+        "sha256": "c5ab3a947732cf868acd7ebe34023c06ce7559e14fb4f62c59a6dead81f2cdfd"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-pre-low-saturation.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-pre-low-saturation.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-targeted-reshoot.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-targeted-reshoot.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_OLD_ROAD-pre-low-saturation.txt",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_OLD_ROAD-targeted-reshoot.txt"
+      ]
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_SUPPLIES",
+      "title": "收拾补给，准备进山",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_002",
+          "path": "src/第三幕/IMG_A3_T00_002.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.49,
+        "y": 0.52,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_SUPPLIES.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2198892,
+        "sha256": "12948f0a561fdb607d464b516fa28068f0dcb556dccf92567c31080570472efb"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_SUPPLIES.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 170256,
+        "sha256": "0a02ee2fd6ab166cd3e543dba673274cb51828a7ecdbecb1179f612fdd62fa0f"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_SUPPLIES.txt",
+        "sha256": "2aaf2b76280eb9abea221545ac27376419e2b053d544753d6943cd563ce89623"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_TEMPLE_REVISIT",
+      "title": "查看底座空位",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_008",
+          "path": "src/第三幕/IMG_A3_T00_008.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.52,
+        "y": 0.55,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_TEMPLE_REVISIT.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3389498,
+        "sha256": "99041202859bd2c4277d9d8e00f7ab84c24e7f69b8d39eca32fdf1535add2df5"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_TEMPLE_REVISIT.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 471454,
+        "sha256": "26812192c5602926240d3058f61723427e6857f3ca2208511f9d8c9e8b446f3a"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T00_TEMPLE_REVISIT.txt",
+        "sha256": "11c2e76a5656464c32c39536420420de195f60be00cc4e0597be61e5ddcc5936"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T00_WATER_ODDITY",
+      "title": "看向异常分叉",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T00_009",
+          "path": "src/第三幕/IMG_A3_T00_009.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.21,
+        "y": 0.28,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。 父对原生全尺寸照片复核后校准focus：严格靠近这个真实目标。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T00_WATER_ODDITY.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 4134382,
+        "sha256": "7e0e9655acbee854c5fcde20d10f4ef37caf558f33a042db4c79941f035c3166"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T00_WATER_ODDITY.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 636994,
+        "sha256": "ea0b0f6507a11ebf71612aa442a20d3672a38695a75f5068256d0c47a4cacea4"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T00_WATER_ODDITY.txt",
+        "sha256": "ffcab95268df38d7a3112ec211cc727f2a26001f29834239aeedc3cfd336459c"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-pre-low-saturation.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-pre-low-saturation.webp",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-targeted-reshoot.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-targeted-reshoot.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_WATER_ODDITY-pre-low-saturation.txt",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_WATER_ODDITY-targeted-reshoot.txt"
+      ]
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_BREAKER_OPTIONAL",
+      "title": "查看配电箱断线（可选）",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_006",
+          "path": "src/第三幕/IMG_A3_T01_006.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.83,
+        "y": 0.48,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_BREAKER_OPTIONAL.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3387770,
+        "sha256": "ad10cbd7a779ec802a73ee45be6adce46bb758667fc174dc0e2978a52478cba3"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_BREAKER_OPTIONAL.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 479254,
+        "sha256": "87e9c6285686a47c99470f528ca1a3d740d973ca7c439ea7c095aa81b1b6e152"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T01_BREAKER_OPTIONAL.txt",
+        "sha256": "ad16b4a4497fa193410049bc264f190a979c5aa7803557065f13f6f839010c3c"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_GATE_ENTERED",
+      "title": "跟着小月进入",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_004",
+          "path": "src/第三幕/IMG_A3_T01_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.48,
+        "y": 0.48,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_GATE_ENTERED.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2689910,
+        "sha256": "df16545468841be03e6c1c1deb15b0178afd5b99b5ef229d7f00248635337277"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_GATE_ENTERED.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 300832,
+        "sha256": "cd3adeddbaaa754e9578cf65e65878396410576b202c337008a68e82fec2a391"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T01_GATE_ENTERED.txt",
+        "sha256": "6c9cc9f5fed55f8e45e2a2903490d25e05f4b22373cd472152d8bb122730ee62"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_GATE_VIEW",
+      "title": "查看锈门与右柱",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_001",
+          "path": "src/第三幕/IMG_A3_T01_001.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.67,
+        "y": 0.42,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_GATE_VIEW.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3456962,
+        "sha256": "607817421833f91d974e4e821106e4fa7ea784903efb1833eed25a52ff379b3b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_GATE_VIEW.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 547028,
+        "sha256": "c86b23a659e0be2a4ea19e59dd82b397d1d1ac18ff47b0cd7c616440a5b92cac"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T01_GATE_VIEW.txt",
+        "sha256": "72b341e76ed4a0507e9e2e95a1a266191420f6c36e60ad9d1c54c69d02a49065"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_INNER_FENCE",
+      "title": "穿过第二层围栏",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_005",
+          "path": "src/第三幕/IMG_A3_T01_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.53,
+        "y": 0.53,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_INNER_FENCE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3799857,
+        "sha256": "bcdb7ee40fe6f771cc91c834d17b8244cfbf42ef93341edfd5b2f32718c00311"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_INNER_FENCE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 593556,
+        "sha256": "f6dbd6b4bd05c2539e064db03a288c1727e1cadb322d1f62aba852cbd27ef2ee"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T01_INNER_FENCE.txt",
+        "sha256": "923bfb5b36bcb9f2b84ff5246e567cb5a70e53fd5c7057695368d696fc4862ff"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_MAIN_BUILDING",
+      "title": "进入主楼",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_006",
+          "path": "src/第三幕/IMG_A3_T01_006.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.61,
+        "y": 0.43,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_MAIN_BUILDING.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3548813,
+        "sha256": "f18bb4d0ca65bb8459da56b81bd4399a70af6f938267360cf7f729353dc369c0"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_MAIN_BUILDING.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 534230,
+        "sha256": "8297c3ea69a1abec47fa61cfc2ec30de28e3ebf370d215b05695d884d42e2468"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T01_MAIN_BUILDING.txt",
+        "sha256": "2686c2b9cac6f695ae0e467cfafbf8a57b1450b84d7b9ddc8d578be1645986a1"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_PILLAR_CLOSE",
+      "title": "拨开爬山虎",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_002",
+          "path": "src/第三幕/IMG_A3_T01_002.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.65,
+        "y": 0.38,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_PILLAR_CLOSE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3200194,
+        "sha256": "4000cf6dd23a037c1f1b30e6df2d0fbd733f4cfd3b1473dd5e749b3251b5e5f6"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_PILLAR_CLOSE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 419260,
+        "sha256": "d1f6fdf48285abb77628f078ca2db99a6a0c8cbe638952066be9a698bd75b379"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T01_PILLAR_CLOSE.txt",
+        "sha256": "4d7135420e59561684568721401f23542a6505623e21a52e305d2159a482c9a2"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_PILLAR_CLOSE-targeted-review-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_PILLAR_CLOSE-targeted-review-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T01_PILLAR_CLOSE-pre-targeted-review-fix-prompt-status.txt",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T01_PILLAR_CLOSE-pre-targeted-review-fix-reconstructed-summary.txt"
+      ]
+    },
+    {
+      "id": "IMG_A3_DETAIL_T01_SIGN_REVEALED",
+      "title": "对照旧宣传合影",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_003",
+          "path": "src/第三幕/IMG_A3_T01_003.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.63,
+        "y": 0.31,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T01_SIGN_REVEALED.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3245489,
+        "sha256": "bf1498fb7f99e6e344f98ac632c176d599225153ac48728c7ed3e39c7f87d3b5"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T01_SIGN_REVEALED.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 438078,
+        "sha256": "6662b9c99f3c0df9ef901997912094fac4e5db9accd3966988f51d8fdad00717"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T01_SIGN_REVEALED.txt",
+        "sha256": "2814268405d9eb1b5b860358929a3c7a4eb5499698f65adaa2b602c294d1d42c"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_SIGN_REVEALED-targeted-review-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_SIGN_REVEALED-targeted-review-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T01_SIGN_REVEALED-targeted-review-fix.txt"
+      ]
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_BLACKBOARD",
+      "title": "看向黑板",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_003",
+          "path": "src/第三幕/IMG_A3_T02_003.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.54,
+        "y": 0.36,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T02_BLACKBOARD.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2688318,
+        "sha256": "851f88fc4be4242f87cb83690c63e6a80634b09dc3e178620b1af929ed66e67e"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_BLACKBOARD.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 295324,
+        "sha256": "73cbc3afd94333c483a5c86b111ead1f32ff8c8ad2e8033d6c3d8d4302b11499"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T02_BLACKBOARD.txt",
+        "sha256": "6f00f48d03eba530cb85bfb0562bb246270dafb9ee9b719c40c464fd558debe0"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T02_BLACKBOARD-targeted-review-fix.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T02_BLACKBOARD-targeted-review-fix.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T02_BLACKBOARD-pre-targeted-review-fix-prompt-status.txt",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T02_BLACKBOARD-pre-targeted-review-fix-reconstructed-summary.txt"
+      ]
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_CLASSROOM_DOOR",
+      "title": "走进教室",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_002",
+          "path": "src/第三幕/IMG_A3_T02_002.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.28,
+        "y": 0.49,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T02_CLASSROOM_DOOR.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2763573,
+        "sha256": "7095707402700f96e47bdb2608ece990bd41462daef75f747976faf45038ecb4"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_CLASSROOM_DOOR.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 308600,
+        "sha256": "edb3f5b973e19385301781c7c3bcbc7c66d1e1089e31697ab453c5ad31522b12"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T02_CLASSROOM_DOOR.txt",
+        "sha256": "2dd2cdf915ad39ce041b1dd7f6b8322b4b7926ac721982a445cd504e6221a761"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_CORRIDOR",
+      "title": "看向左侧教室",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_001",
+          "path": "src/第三幕/IMG_A3_T02_001.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.24,
+        "y": 0.52,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T02_CORRIDOR.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2648272,
+        "sha256": "e00a21273b9512c2ca3910e65b697165a3e1eb066c8bd3d144bebad3f7d89743"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_CORRIDOR.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 296702,
+        "sha256": "9935f971ef5ee0f026133b96bf0a9abdd0b7939d3e120e69daa416a1cba92591"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T02_CORRIDOR.txt",
+        "sha256": "d84e73b8e3f3cdf426b807c1bec93f81d666540b00c0d5363f2f195b02b3b9bc"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_CORRIDOR_TURN",
+      "title": "走向拐角",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_006",
+          "path": "src/第三幕/IMG_A3_T02_006.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.55,
+        "y": 0.5,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T02_CORRIDOR_TURN.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2401595,
+        "sha256": "ed5ecbf2049e8c7b56b67fdc53eb552ef0906255bf2e65b0cd49ad5faa7230f5"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_CORRIDOR_TURN.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 215734,
+        "sha256": "178c83c3d29a2abc9349473e3216e1f946707f009ac0e020b4f3c2fe0ccc815d"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T02_CORRIDOR_TURN.txt",
+        "sha256": "391d15284ce0f9c3c892d068d5a4ddeae882c9f419ad04a558667a9b80f8be64"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_SLOGAN_SPEAKER",
+      "title": "记下标语与喇叭",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_005",
+          "path": "src/第三幕/IMG_A3_T02_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.75,
+        "y": 0.22,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T02_SLOGAN_SPEAKER.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2865704,
+        "sha256": "598a125bc05698467ee9f81e4945aea48b9f1b2839a7db77c2add192191bdfca"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_SLOGAN_SPEAKER.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 325996,
+        "sha256": "749d73e5dbcc10e0b2f7431f2cdd7660c66332db05bbff05e26d4a7047eb1d8b"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T02_SLOGAN_SPEAKER.txt",
+        "sha256": "f8a270518c88c0e20f540895a16a1b159af7cfcaf5033b8d72004aac6b1775ef"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T02_SS_SCRATCH",
+      "title": "检查黑板划痕",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T02_004",
+          "path": "src/第三幕/IMG_A3_T02_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.48,
+        "y": 0.57,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T02_SS_SCRATCH.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2924632,
+        "sha256": "0a7792aade7fd2288a7905267191688b328400cba2f8a77dffbbb0db803bd0fc"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T02_SS_SCRATCH.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 330360,
+        "sha256": "d309cc791820c34b84745fef381e0277b4be36cb09ff6b09382955d900a4efa2"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T02_SS_SCRATCH.txt",
+        "sha256": "bbf175b5b43bb731d0c5f702fb80c709ae15dc0ff7086b75aa4d908f14a0b8c1"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_24H",
+      "title": "辨认二十四小时标记",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_002",
+          "path": "src/第三幕/IMG_A3_T03_002.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.28,
+        "y": 0.55,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T03_24H.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3293923,
+        "sha256": "ad4a23ba5aa63fd637213e712e3968a90cf2b6a97fa2e8183cda229e13b98160"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_24H.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 447934,
+        "sha256": "82424b711d672ade60a8124d9e4eb54d65ff7bfe0b71e4cf1ef996169cd820f1"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T03_24H.txt",
+        "sha256": "7c7da08de14f7ba6965ad2d4b5a0ce2b2f3ee4d3b4a8891deffec546e5dc510e"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_48_72H",
+      "title": "逐扇核对四十八与七十二小时标记",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_004",
+          "path": "src/第三幕/IMG_A3_T03_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.26,
+        "y": 0.45,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T03_48_72H.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2961299,
+        "sha256": "130845b6b0ca93c976c98f3f8c9770cedb3d280bd95ac77fcf3b0bae6b4f26ea"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_48_72H.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 383828,
+        "sha256": "01f3c6be3b79fee495ad039d5b1bc9f16228263bdabb041ce346765032d7d2ba"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T03_48_72H.txt",
+        "sha256": "07293f561bafe26b59532c7030974224bd5ae3c98ceb3a9720bac56faf132f9b"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_CORRIDOR",
+      "title": "看向成排的窄门",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_001",
+          "path": "src/第三幕/IMG_A3_T03_001.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.29,
+        "y": 0.45,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T03_CORRIDOR.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2746137,
+        "sha256": "efd5d32ebb1043c8a6b681c6f7d3f869d055d1dc62a31c6394863494f06ddd98"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_CORRIDOR.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 306788,
+        "sha256": "9f7d5903fa3114e74a481554364db0251f100c8f48451829861a7eab57fece3d"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T03_CORRIDOR.txt",
+        "sha256": "d05251abe09770d095b7bd7108beb8d995cbd5af6cfb4f5e3c546890767dc164"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_DESCEND",
+      "title": "确认和小月一起下楼",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_006",
+          "path": "src/第三幕/IMG_A3_T03_006.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.49,
+        "y": 0.52,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T03_DESCEND.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2229446,
+        "sha256": "4eb4e9cb9c26e5715c09f4a865eee9507e5cc915f1ef8275bae69cdea6c062a0"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_DESCEND.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 164640,
+        "sha256": "f379aa0be97de88dbde5d2616d9303110fe3b8be31c7f1146b551669b6cf67d0"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T03_DESCEND.txt",
+        "sha256": "4bcb07dd4b2e0c16fff38a262e05410d4f65a6275233012021dd994194c38703"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_PEEPHOLES",
+      "title": "蹲下检查三个窥孔与外侧挡板",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_003",
+          "path": "src/第三幕/IMG_A3_T03_003.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.52,
+        "y": 0.48,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T03_PEEPHOLES.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2665084,
+        "sha256": "d6679ea363284ea11384a26ae8d82d704ee4d6e6c4d5ef75a9fca6056716d4aa"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_PEEPHOLES.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 294562,
+        "sha256": "29340dfed2f7ce6e1d501b6358336ff1ae4380f7e7aecf2559b7882f170bb6b7"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T03_PEEPHOLES.txt",
+        "sha256": "24392e97a3c34f4aa9a150eba4ad3dec59d2688aa294d7bbc6b1c08c5f86f884"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T03_STAIRS",
+      "title": "用手电照向楼梯",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T03_005",
+          "path": "src/第三幕/IMG_A3_T03_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.55,
+        "y": 0.58,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T03_STAIRS.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2479600,
+        "sha256": "842de8e8a021c1c24649bdfdca31a4fc8ecadcad5b20cd169fb1a809f812e80b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T03_STAIRS.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 225166,
+        "sha256": "83d0fddc66d7a0abbf19dc3855f8091c33458cde033768d233ae7e05ab6268e2"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T03_STAIRS.txt",
+        "sha256": "fbd95e21336e5290baa145217c3ebe1196b16dd6018522b7ab0921dbecc6a6a8"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_BROADCAST_DOOR",
+      "title": "确认广播室方向",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_006",
+          "path": "src/第三幕/IMG_A3_T04_006.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.55,
+        "y": 0.5,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T04_BROADCAST_DOOR.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2867060,
+        "sha256": "dd9560c5833de0b391d437e1e9103695a19e940b70d8cd90d541bdcce0cfea35"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_BROADCAST_DOOR.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 353438,
+        "sha256": "dde54eb6c5050789eafd3c77b66d01b6d67ca291fce93fef5f16e4df418a7252"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_BROADCAST_DOOR.txt",
+        "sha256": "1ac7582b26a0ba1b36bbce62831a924fd84a8eff0c67bed67edfb4760ccbc3f1"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_EMPTY_ROOM",
+      "title": "走进空档案室",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_002",
+          "path": "src/第三幕/IMG_A3_T04_002.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.48,
+        "y": 0.5,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T04_EMPTY_ROOM.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2626882,
+        "sha256": "205fa46f592ff5af2264a8741e4ce7026977718af9195ce328331dbf1d79b0b9"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_EMPTY_ROOM.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 270240,
+        "sha256": "e97925504d1046a80fe9508b4e9b137e7973c82242209c920852b0a202047eac"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_EMPTY_ROOM.txt",
+        "sha256": "510c2f6b56f08b7d203cfd06c82826e5d3e9f827bb181fa8eaece923dfa364e0"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_LABELS",
+      "title": "核对空架与年份编号",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_003",
+          "path": "src/第三幕/IMG_A3_T04_003.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.47,
+        "y": 0.48,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T04_LABELS.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2421623,
+        "sha256": "4ec27ea5cf8592caa4e19e75e0d9d6a7ff1bc56e64d88fd49cc5a7a602c0254f"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_LABELS.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 231334,
+        "sha256": "85c81344db83d040a33676fedea1572dd0b558a02738da9f976a31eb28f8bba9"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_LABELS.txt",
+        "sha256": "de54c75f99c2dadffe0200adc4beb957bf24ac6cb73a94a91674bfbdf23bd557"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_PAPER_EDGE",
+      "title": "蹲下检查角落纸边",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_004",
+          "path": "src/第三幕/IMG_A3_T04_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.7,
+        "y": 0.69,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T04_PAPER_EDGE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3027055,
+        "sha256": "43f5d6eca82b16ececa16eece9c83f202c6d11384ccca9dee63c9e9fa4182b24"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_PAPER_EDGE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 339646,
+        "sha256": "976f0696a57b31a414688f238cc9cd0ba3595c25ab719e5e4e5fb7c1b9091d7b"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_PAPER_EDGE.txt",
+        "sha256": "61197c5da33f5d08a591c036e06aa2a282d9175d72ee125cb2b774a7bcec7cef"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_SIGN",
+      "title": "照亮档案室门牌",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_001",
+          "path": "src/第三幕/IMG_A3_T04_001.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.75,
+        "y": 0.45,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T04_SIGN.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2434751,
+        "sha256": "bfd41cd86fb758cc54047ad526293b01451a540fccd9952466c5f30aa977a17f"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_SIGN.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 215730,
+        "sha256": "7500d3b95e9af4fbce844170660ea9088b3fd755e58061da05aa9ce2f7405fdf"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_SIGN.txt",
+        "sha256": "f1da866fe7d35f6d279f1a127f94b6260b17cda6d054d88d7bfe12bddbeca162"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T04_VVAKE_PAPER",
+      "title": "读清并收起 VVaKe 纸片",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T04_005",
+          "path": "src/第三幕/IMG_A3_T04_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.79,
+        "y": 0.74,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T04_VVAKE_PAPER.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3292429,
+        "sha256": "c0c4eb90ef7770243a4bc5a58c4f0fbd5a617bc4e563738866d15cda427f03f0"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T04_VVAKE_PAPER.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 407496,
+        "sha256": "4fff40a7f72c6434fa2dbaef28670c52c5728a7bbcd769eba3360c669aa99123"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T04_VVAKE_PAPER.txt",
+        "sha256": "4dcfa8a0930051b51a57f15b3b0075f37f0067f8dd751ff1afa47269aa8bae24"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_13ACK_PAPER",
+      "title": "读清并收起 13aCK 纸片",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_005",
+          "path": "src/第三幕/IMG_A3_T05_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.79,
+        "y": 0.76,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T05_13ACK_PAPER.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3065650,
+        "sha256": "7fd4dd3416b7bea65e19e46ec4ddcf6d6b75dc12e957808bc14bdbbf88bd4b87"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_13ACK_PAPER.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 365936,
+        "sha256": "54abeb8b4c1d4111c7323589445a973273e6f4b191c1af40d836536d7c312535"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T05_13ACK_PAPER.txt",
+        "sha256": "cc17ccabf397701874ee53f185b1944a913ea05ca325b14a22bf7c9bed262ca9"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_DESK",
+      "title": "检查旧桌和桌脚",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_003",
+          "path": "src/第三幕/IMG_A3_T05_003.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.6,
+        "y": 0.6,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T05_DESK.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3221559,
+        "sha256": "a0d4f4a72b12fc61e62566df9c9fcbf9561afd5ec643c4b9b25c8a5e6039075f"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_DESK.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 421552,
+        "sha256": "55c74bc522187f68030a43b3d4e6c796f03c7185ee448bef6f829da051e171ea"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T05_DESK.txt",
+        "sha256": "5f4eab06b4df9415859811786a275282113cc404b4ae1f1d05926e431e481840"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_EMPTY_EQUIPMENT",
+      "title": "检查空设备位与断线",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_002",
+          "path": "src/第三幕/IMG_A3_T05_002.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.51,
+        "y": 0.34,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T05_EMPTY_EQUIPMENT.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2936898,
+        "sha256": "bf4dd34249dc42a32c4e32a60dc57a0964c371f6036770f69234aaf6d15204a3"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_EMPTY_EQUIPMENT.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 359884,
+        "sha256": "416de7667064f517cfc4e8513eb712653a5ee0433fd4a9a886e5d3992fd75860"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T05_EMPTY_EQUIPMENT.txt",
+        "sha256": "3086f0d67df6a43d59ff8884eb488eae98b8a4db42711687c2db6298cc30e0ee"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_ENTRY",
+      "title": "检查广播室入口",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_001",
+          "path": "src/第三幕/IMG_A3_T05_001.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.75,
+        "y": 0.51,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T05_ENTRY.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2719394,
+        "sha256": "a3de338476949c51d5c6d9beac95ec2e60b65813799bcfea76e2835ccba9d91c"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_ENTRY.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 305928,
+        "sha256": "cc7239c772903722336c689a6dd9a2473b733555a42f5abf589d66d51669c014"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T05_ENTRY.txt",
+        "sha256": "31ca52953687826e5ca4759f9fc58234d29dbb9bf3e5f6246bfadc8418e5bd1d"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_KITCHEN_DIRECTION",
+      "title": "确认厨房方向",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_006",
+          "path": "src/第三幕/IMG_A3_T05_006.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.5,
+        "y": 0.48,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T05_KITCHEN_DIRECTION.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2750859,
+        "sha256": "630a77ae6fc7ea3e1655ddb15f867466b1a8a879e167dea2f21b0b3d572b98da"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_KITCHEN_DIRECTION.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 333884,
+        "sha256": "d4906e9a33941661fbdedd03cd81eed4b731f83b52aac903f1cb68e3f5769beb"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T05_KITCHEN_DIRECTION.txt",
+        "sha256": "1a0aaf73bb7abb352e53e6030ac9a358e701f6bb2a184fecd08ea4e494d45556"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T05_PAPER_EDGE",
+      "title": "蹲下取出纸片",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T05_004",
+          "path": "src/第三幕/IMG_A3_T05_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.66,
+        "y": 0.65,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T05_PAPER_EDGE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2900527,
+        "sha256": "adb60e1519b2e73df1b0d9f224422456d366ec2277c8f712c4f3eb4c3dfd7f78"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T05_PAPER_EDGE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 323938,
+        "sha256": "b451ffb1d16d819287c322b4904ddc71877256176f369980b4969ffb40003f49"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_DETAIL_T05_PAPER_EDGE.txt",
+        "sha256": "696444b93281bc9a1bd2f1deb982eb2f2e2d63b5c84dc7bbf99290df892c41aa"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_BONES",
+      "title": "蹲下查看大骨",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_004",
+          "path": "src/第三幕/IMG_A3_T06_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.44,
+        "y": 0.75,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_BONES.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2945249,
+        "sha256": "1afae681517f89eb326b471e22e3bf65093c619a1d71e30e3fed868657ee986b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_BONES.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 340798,
+        "sha256": "d282a60dcd5c067a7101ce16f5f3f10b62d7f0f8269a04b19fe706e24d3ffc75"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_BONES.txt",
+        "sha256": "792da24e85d4b1e353ed73d8b74f0dd578caae4f6999da3eaa6f80f4569fe73e"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_DOOR",
+      "title": "查看门牌并进入",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_001",
+          "path": "src/第三幕/IMG_A3_T06_001.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.73,
+        "y": 0.35,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_DOOR.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2776285,
+        "sha256": "8c9139b92e60b0815419e155e5df034a0f4c821f136e28dcf926e99acc3975e7"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_DOOR.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 315044,
+        "sha256": "bd1a1709020127fa669e223309eb15c294c8a9b9558219e83d41017a3df30879"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_DOOR.txt",
+        "sha256": "12671c44dd5852b041a71b1a1e60e11db22b77b64ca709978078e18afcdf8832"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_EMPTY_BASE",
+      "title": "拍下空底座",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_007",
+          "path": "src/第三幕/IMG_A3_T06_007.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.49,
+        "y": 0.53,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_EMPTY_BASE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2905778,
+        "sha256": "0a988e265e7b09add7714f2ce27203068223d81609b67ab6c34fb285e34ebd51"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_EMPTY_BASE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 335286,
+        "sha256": "ac2b46d8a6ed5145fc7839dc0e029947c884b3c4c9411e0484a4508ffab81acb"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_EMPTY_BASE.txt",
+        "sha256": "aabf1e39c5b7b540e792ef33376236c96f31e996f33e10142157d80f4deab838"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_HOOKS",
+      "title": "抬头检查铁钩",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_005",
+          "path": "src/第三幕/IMG_A3_T06_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.27,
+        "y": 0.37,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_HOOKS.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2488143,
+        "sha256": "abd6d4a3687cde83c5566e45e41d240f2af2ef58172dddc0efabaaad29f68feb"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_HOOKS.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 224348,
+        "sha256": "8408df6f49be6a47362b8ca626d2447b3e9d280cfa484bd0e26af91691f7280f"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_HOOKS.txt",
+        "sha256": "4ecc74be54f244aadb5b01d1ddb13827c4a72e4e5b39755f5b4680fe3d10aff2"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_POT_KNIFE",
+      "title": "检查大锅与砍骨刀",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_003",
+          "path": "src/第三幕/IMG_A3_T06_003.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.26,
+        "y": 0.44,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_POT_KNIFE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2818903,
+        "sha256": "c25e7f6d9279b996aeb1461d64e392a5a0afd1717aaabaff619c72df014bb5c6"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_POT_KNIFE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 299180,
+        "sha256": "10a94155ab766d7294eb25fd50a337edab8dc4721617a8ad66f7ec1668eebd1f"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_POT_KNIFE.txt",
+        "sha256": "e7816ad4bab1c2a2ad908edb4115880a66e21a6768a5b623b3c0385bea28f1b6"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_ROOM",
+      "title": "扫视厨房全貌",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_002",
+          "path": "src/第三幕/IMG_A3_T06_002.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.53,
+        "y": 0.51,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_ROOM.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3155121,
+        "sha256": "7ceaad92d8c1cb5d6156eb518ebf081a67b9b10d0911f8b5c80624e66a69c6fc"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_ROOM.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 424074,
+        "sha256": "7169c93dcb6767329512c79419a92607cd034e29ee3cae2edea6ebfdadd092f4"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_ROOM.txt",
+        "sha256": "cf58fc931d4d5373f02263420dc3efc0a9e87dbe5e863bef63a70ae875386e05"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_SHRINE",
+      "title": "检查空木神龛",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_006",
+          "path": "src/第三幕/IMG_A3_T06_006.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.64,
+        "y": 0.49,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_SHRINE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2798585,
+        "sha256": "7ddb6d57948960660558f51f1e760b0b3decf043f39fbd37e24b0436f0df491c"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_SHRINE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 318508,
+        "sha256": "def73f263df597a543dcc9ee3550855ce41f6c877ed4b10b41526a499d6f75b9"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_SHRINE.txt",
+        "sha256": "db622bf134c1e2cbce6eb9aa8999603f971018fec0d99437348360dd5cfb8436"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T06_TEMPLE_COMPARE",
+      "title": "对照破庙照片与空神龛并确认关联",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T06_008",
+          "path": "src/第三幕/IMG_A3_T06_008.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.49,
+        "y": 0.5,
+        "kind": "memory"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T06_TEMPLE_COMPARE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2329583,
+        "sha256": "a2ea77c2900b08a2e8531d70532d3ff507dd63b081bd1914b12f9c7ab4c721d3"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T06_TEMPLE_COMPARE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 188542,
+        "sha256": "a437e72751c2864d47e0bde0ca79b5b21afb5bcfddb7549e26fcd58daac0dd5d"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T06_TEMPLE_COMPARE.txt",
+        "sha256": "a8e6bc3f5e4055737eb3c6177ef5eb8eedd1306748e2a841e848f76efa0460c0"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_BACK_GAP",
+      "title": "摸索消防栓背后",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_005",
+          "path": "src/第三幕/IMG_A3_T07_005.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.68,
+        "y": 0.54,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_BACK_GAP.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2750184,
+        "sha256": "34d5667cd1a54e08525785b4ca51b5381369e292dba9bbd80a6a96189262aa79"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_BACK_GAP.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 298696,
+        "sha256": "76aaf522524457bea3beebc96971a0ada92c6ca30d8f0b305afeee0794f3fdce"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_BACK_GAP.txt",
+        "sha256": "c63121c288a16a9791da7cf3215657f3d60362d54064b802ea054f159193f1f8"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_CORNER",
+      "title": "听小月停步",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_002",
+          "path": "src/第三幕/IMG_A3_T07_002.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.22,
+        "y": 0.45,
+        "kind": "sound"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_CORNER.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2723052,
+        "sha256": "b7ea506832207bce176f6799a851b207fde082daa76e689eaa081206addfa48c"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_CORNER.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 310308,
+        "sha256": "054fbdfcd2c906414fe393c5041fd1b60f3014189fff20866384597085a6ee97"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_CORNER.txt",
+        "sha256": "8348427caf4729e87714698922ac4e184256b1a079190384c14b458dab0e0667"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_EXIT_ROUTE",
+      "title": "与小月一起离开旧址",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_008",
+          "path": "src/第三幕/IMG_A3_T07_008.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.52,
+        "y": 0.51,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_EXIT_ROUTE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3846735,
+        "sha256": "7d9d15d52eaf1609a3e86220889cd1a45e064fc6f3f7e0c2c952c506c7f2c9e2"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_EXIT_ROUTE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 590934,
+        "sha256": "4b5005169bed3731dae2532adfec7f23c5f057482bf31bddf26e47efc7f763c2"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_EXIT_ROUTE.txt",
+        "sha256": "b47b123a78c69d816f4f43743c89ab5bbe25c850274b19652c1cf1e460653aa1"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_FIRST_PAGE",
+      "title": "确认 A.W 与字迹后合上",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_007",
+          "path": "src/第三幕/IMG_A3_T07_007.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.29,
+        "y": 0.64,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_FIRST_PAGE.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2333486,
+        "sha256": "4865597305ada54b0d57ac243228db85b80e209317ab3c6feb65f8083dfe16d4"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_FIRST_PAGE.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 181230,
+        "sha256": "bfd276a50408d8d36af3c99f710b6d8284196708fb5c042a07b827cc46eb806d"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_FIRST_PAGE.txt",
+        "sha256": "f66173bc5b25c2abeb69a7c95c193e78076e7d469f9ba764b076fbe774f0ec4d"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_NOTEBOOK_PICKUP",
+      "title": "主动取出包裹的笔记本",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_006",
+          "path": "src/第三幕/IMG_A3_T07_006.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.44,
+        "y": 0.57,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_NOTEBOOK_PICKUP.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2669404,
+        "sha256": "99dac0a6cf59707052daf98c01c0b454d9708be5a649012103b7959089035efc"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_NOTEBOOK_PICKUP.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 272856,
+        "sha256": "25f4ab242ee469a2afb332e8e5bbef8ffb5a2eff220ad9782d20e1f885ef84d7"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_NOTEBOOK_PICKUP.txt",
+        "sha256": "d32af63f583addc3b3b2b4a2165d6fd9dea0af67d225320da60e85b96a2fa398"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_STANDING_HYDRANT",
+      "title": "从站姿看消防栓",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_003",
+          "path": "src/第三幕/IMG_A3_T07_003.png"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.69,
+        "y": 0.62,
+        "kind": "object"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_STANDING_HYDRANT.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2859994,
+        "sha256": "d0ddd5fd0848e21eef48d9c542352e3a176d3761fb82f993bce9dab822094468"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_STANDING_HYDRANT.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 333580,
+        "sha256": "915fea17a1018991546ffbd9cd6974332d47f9f1ff26a255bd1897bfee0e477c"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_STANDING_HYDRANT.txt",
+        "sha256": "46ef2ddebc28cca59206a7e675177c41c3a09422b2d2b0e9cb7470a0856f4b64"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_UPSTAIRS",
+      "title": "确认一层回程",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_001",
+          "path": "src/第三幕/IMG_A3_T07_001.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.55,
+        "y": 0.51,
+        "kind": "direction"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_UPSTAIRS.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2624281,
+        "sha256": "a53cec5fad1f22557bc81671478b4b284032ad42881a9530d4e9e5bf65ef66f5"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_UPSTAIRS.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 279160,
+        "sha256": "2f7c2a6623b417fa3129e00d40f1fb612ffab3b3286c12d6ce02a66d14dbf956"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_UPSTAIRS.txt",
+        "sha256": "c8fb75335fa7f3aa45e4ae178be8ff6de496523967a7d2c8decc07c47f134d57"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_DETAIL_T07_XIAOYUE_MEMORY",
+      "title": "听完小月的回忆",
+      "kind": "act3-detail",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T07_004",
+          "path": "src/第三幕/IMG_A3_T07_004.jpg"
+        }
+      ],
+      "focusTarget": {
+        "x": 0.43,
+        "y": 0.58,
+        "kind": "memory"
+      },
+      "requirements": "依据同一全景，向已知目标靠近的独立新细节图；门窗、楼梯方向、材质及物件连续。不要增加超出原 observation 的事实。电缆图清楚看电缆，异常水路图清楚看人工水渠。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_DETAIL_T07_XIAOYUE_MEMORY.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2700390,
+        "sha256": "00ee8f40e99f710614375be516cfda691eadecc7c4d8eddb236189ba1ba542bb"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_DETAIL_T07_XIAOYUE_MEMORY.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 282426,
+        "sha256": "cf2b6c4aa82080e3f4244c28aacb070815c4f0823230c83647ad32c0eee18759"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A3_DETAIL_T07_XIAOYUE_MEMORY.txt",
+        "sha256": "129026fa3cc186910700d6307b55f759b6e5bfd19ccecd6d3ac1771f7c9e84fa"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A3_SIGN_FULL_001",
+      "title": "拨开爬山虎后的黄色启明牌匾",
+      "kind": "act3-full-edit",
+      "sourceAssetId": null,
+      "references": [
+        {
+          "assetId": "IMG_A3_T01_003",
+          "path": "src/第三幕/IMG_A3_T01_003.jpg"
+        }
+      ],
+      "focusTarget": null,
+      "requirements": "严格保留右柱位置、裂痕、铁门、藤叶和拨叶动作；黄色旧牌文字恰为“启明”，模糊磨损但近看可辨，锈蚀稀疏自然。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A3_SIGN_FULL_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3249621,
+        "sha256": "90904138397fab6a53802ce03f93e0da045cb52149d5e174ce868c2fb66cc655"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A3_SIGN_FULL_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 443124,
+        "sha256": "ea3f745fed38eda15a9f54a0862b2813a092fe36b3129106e22e29d713e5f408"
+      },
+      "promptRecord": {
+        "type": "post-hoc reconstructed constraint summary, not verbatim original",
+        "path": "docs/ux-investigation-20261014/art/reconstructed-prompts/IMG_A3_SIGN_FULL_001.txt",
+        "sha256": "fbd7153802fc6a8c3e7b14051ad4bee63c1411914a727cc2070267361d70a761"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/rejected/IMG_A3_SIGN_FULL_001-fishscale.png",
+        "docs/ux-investigation-20261014/art/rejected/IMG_A3_SIGN_FULL_001-fishscale.webp"
+      ]
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "title": "王澳在地下厨房边惊惧地回望，视线开始模糊 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_FINALE_FEAR_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_FINALE_FEAR_001",
+          "path": "src/assets/ux-finale-20261008/IMG_A4_FINALE_FEAR_001.webp"
+        }
+      ],
+      "focusTarget": "原地下厨房边模糊回望的近处门框/墙面与手；保留惊惧失焦，不揭示模糊人脸",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原地下厨房边模糊回望的近处门框/墙面与手；保留惊惧失焦，不揭示模糊人脸。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_FINALE_FEAR_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2196386,
+        "sha256": "ab879c743a2b0b4db485346e9492b5b5b5e453e5536da88abab3f225bcff591f"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINALE_FEAR_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 166400,
+        "sha256": "df4b9cd188f417013045ecf0a4bcddba21f003c21f5a779bcb9e574fda6fa3e7"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_FINALE_FEAR_001.txt",
+        "sha256": "6ba1675cd86873040ce2089ec8e2171191ce0d2097632a8b5595724aea970556"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINAL_READING_001",
+      "title": "桌灯旁摊开的无字纸张与模糊屏幕，邮件内容不可辨认 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_FINAL_READING_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_FINAL_READING_001",
+          "path": "src/第四幕/UX-RHYTHM/IMG_A4_FINAL_READING_001.png"
+        }
+      ],
+      "focusTarget": "原桌灯旁纸张、键盘和屏幕边缘，内容继续不可辨认",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原桌灯旁纸张、键盘和屏幕边缘，内容继续不可辨认。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_FINAL_READING_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 1953105,
+        "sha256": "55267c2a84450e9094a788b96bcc9cdf24caf8ba6b08c333887c18aa4a5a1a78"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINAL_READING_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 110506,
+        "sha256": "e8c8624ce5f9b4f369534049ce0d9dcb6196a47e8562a996d32aeae19d60fcfa"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_FINAL_READING_001.txt",
+        "sha256": "ed2291d95d5fa0c749ddb0c79a11be7ad74802b383c9e9e642287172f40acfe6"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_READING_DETAIL_001",
+      "title": "手机微光落在档案室的不锈钢书架上，反光里的轮廓难以辨认 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_READING_DETAIL_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_READING_DETAIL_001",
+          "path": "src/第四幕/UX-RHYTHM/IMG_A4_READING_DETAIL_001.png"
+        }
+      ],
+      "focusTarget": "原金属架反光和手中文件；镜中身份轮廓继续难以辨认",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原金属架反光和手中文件；镜中身份轮廓继续难以辨认。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_READING_DETAIL_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2053161,
+        "sha256": "5afb6a226f3a1225f1255ac785a99969e87aea6968c97755cc49cd5f069359f5"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_READING_DETAIL_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 131092,
+        "sha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_READING_DETAIL_001.txt",
+        "sha256": "832ef722caf0e94fed3119c4fafeffb9cee0cb2b49fa2964e357f3155d050c1c"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T01_001",
+      "title": "酒店桌上摊开的旧笔记本 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T01_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_T01_001",
+          "path": "src/第四幕/T01/IMG_A4_T01_001.png"
+        }
+      ],
+      "focusTarget": "酒店同一桌上笔记本的装订、纸张边缘；不提前显示尚未阅读的密码/文本",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。酒店同一桌上笔记本的装订、纸张边缘；不提前显示尚未阅读的密码/文本。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T01_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2167706,
+        "sha256": "7008ca343d5e24040d8e98645071ad9c449019fdef197e751ac43f1b37ef1a67"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T01_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 177194,
+        "sha256": "b294af92dac0d6066b64530b3d4d133e93e3261be4b8bea0e8be2d82afb20abd"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T01_001.txt",
+        "sha256": "4e704673711b5eeebd2e69a90aa47c2522aa82537e75b4779fe7b8dfaeb02fca"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_001",
+      "title": "王澳在晚自习时把日记藏在练习册下 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_001",
+          "path": "src/第四幕/T05/IMG_A4_T05_001.png"
+        }
+      ],
+      "focusTarget": "练习册下露出的日记页边与桌面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。练习册下露出的日记页边与桌面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T05_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 1954450,
+        "sha256": "b69ca7fb36aa76c1e211da8077c4e991a2662a3a04c2dd706e12564fda312e24"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 132710,
+        "sha256": "725b5fb315a57f89291c928535afdcb5d9d65c5792d0fb310abc6e26ccbbf5e2"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T05_001.txt",
+        "sha256": "05968e8d7dce9708decaa733fe7d8981d46544fac200483b8ad2e7c9c16364ea"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_002",
+      "title": "李老师办公室里的茶杯与桌面 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_002",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_002",
+          "path": "src/第四幕/T05/IMG_A4_T05_002.png"
+        }
+      ],
+      "focusTarget": "办公室桌面的茶杯和纸面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。办公室桌面的茶杯和纸面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T05_002.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2239375,
+        "sha256": "767ec05d23a8e62d3d13d9b547956400dba34834e6478edf0fa83a65b7aae808"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_002.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 170528,
+        "sha256": "e35d685ddfd1c88ec66456036b3c790a365f9734512bd27aa76fa56890d30f10"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T05_002.txt",
+        "sha256": "e2c499c54a4c7722c2d3f3860ee3a2a97a36c81c0a311daa08a06a04fdff3686"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_003",
+      "title": "王澳生日当天回家的门厅与早饭 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_003",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_003",
+          "path": "src/第四幕/T05/IMG_A4_T05_003.png"
+        }
+      ],
+      "focusTarget": "门厅边的早餐与桌面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。门厅边的早餐与桌面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T05_003.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2105605,
+        "sha256": "27944ec49fc02e15684daf96b0e4bf628ab39dd58d0959fbd20117a93a6f1551"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_003.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 135686,
+        "sha256": "0df94c865ecea7bb58d137f35c4368e2e123b3b01ed1c5e9ab30224c5b72570f"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T05_003.txt",
+        "sha256": "476f5d61770775558c2812678ef0e512eae89c85b2a2baa6b9f76082015df146"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_005",
+      "title": "生日晚餐中父母交换眼色 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_005",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_005",
+          "path": "src/第四幕/T05/IMG_A4_T05_005.png"
+        }
+      ],
+      "focusTarget": "晚餐桌边父母原有的手部与眼色关系",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。晚餐桌边父母原有的手部与眼色关系。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T05_005.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2335387,
+        "sha256": "f3b22467f736f06761cc2fd3325c7b8a686697febe90a5fbad9d8b5ae334c515"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_005.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 208346,
+        "sha256": "d411090dde250e70a1b5ae8d8b75dbc427e559555d51171e936d5e85952badbb"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T05_005.txt",
+        "sha256": "051b4287e36b6da2434f7b6e5c888b1d76f2a2385aca5ac39b6237bc9af80634"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T05_006",
+      "title": "王澳从房门缝边的镜面观察门外来人 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T05_006",
+      "references": [
+        {
+          "assetId": "IMG_A4_T05_006",
+          "path": "src/第四幕/T05/IMG_A4_T05_006.png"
+        }
+      ],
+      "focusTarget": "门缝旁镜面里的原有模糊倒影",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。门缝旁镜面里的原有模糊倒影。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T05_006.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 1905607,
+        "sha256": "eb3d5769cbda8ca3586253b5e9dc69c2776ccb2e59a7d6500c5933471f389128"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T05_006.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 92952,
+        "sha256": "b3426a409c54c45ebb650fa428006162ae6828079bda6836458be80a84a192e3"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T05_006.txt",
+        "sha256": "d0da3ac8569f0443a7978cccabb271baa5d50e2effe2db395dce7748b5b6f266"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_002",
+      "title": "王澳在机构吃到的固定早餐 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_002",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_002",
+          "path": "src/第四幕/T06/IMG_A4_T06_002.png"
+        }
+      ],
+      "focusTarget": "餐盘中的原有固定早餐，不判断肉来源",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。餐盘中的原有固定早餐，不判断肉来源。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T06_002.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2394642,
+        "sha256": "313316fb19ea80f90615e6dbb9bd8828843dd14459aabe544ace3ce20b61dfb0"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_002.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 192844,
+        "sha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T06_002.txt",
+        "sha256": "c17f5b49137265fab9b379efe2fa1f1bcfbf13e92580a6eebbcbbca4a30c95a9"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_004",
+      "title": "机构走廊中的早晚广播设备 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_004",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_004",
+          "path": "src/第四幕/T06/IMG_A4_T06_004.png"
+        }
+      ],
+      "focusTarget": "原墙面广播设备、接线与固定件",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原墙面广播设备、接线与固定件。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "16:9",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T06_004.png",
+        "format": "PNG",
+        "width": 1672,
+        "height": 941,
+        "bytes": 1883926,
+        "sha256": "0876f47001d7779509ed9135ac5ca1d420460633c7f770de33e52da2ba5ec514"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_004.webp",
+        "format": "WEBP",
+        "width": 1672,
+        "height": 941,
+        "bytes": 81092,
+        "sha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T06_004.txt",
+        "sha256": "aa649b7b51ba3beb511f4b586e86c4c2ad9244ee61d2edd1557138a064b506ec"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_005",
+      "title": "床铺上的纸团与逃离计划 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_005",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_005",
+          "path": "src/第四幕/T06/IMG_A4_T06_005.png"
+        }
+      ],
+      "focusTarget": "下铺被面上的折叠纸团",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。下铺被面上的折叠纸团。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T06_005.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2405734,
+        "sha256": "fac9a9f9a916399b58322d3cd37570428ad02f54ef7ea3f047886655532d4a3c"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_005.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 207076,
+        "sha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T06_005.txt",
+        "sha256": "e30cad692b707e9be63029caabc7e8e01195495dd2960531f65f22056dcd1282"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "title": "2014 年仍在使用的禁闭室铁门，保留三个观察孔与送餐口 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T06_007",
+      "references": [
+        {
+          "assetId": "IMG_A4_T06_007",
+          "path": "src/第四幕/T06/IMG_A4_T06_007.png"
+        }
+      ],
+      "focusTarget": "铁门原有的三个观察孔与送餐口，保持2014仍在使用的状态",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。铁门原有的三个观察孔与送餐口，保持2014仍在使用的状态。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T06_007.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2537951,
+        "sha256": "5fdc3220b463bfdc900cedc752f8cef828cd88ce2be5e3288e70c8fb322a96b7"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_007.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 218044,
+        "sha256": "d98b644eaea1b6b402e2f8d6f2f60305a09c0d0f32cb3b72841422bd29f6c385"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T06_007.txt",
+        "sha256": "6b423db949cf973e708b0a3a7839f0dda79c723ab7e037da9ff4dd5091c47770"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_001",
+      "title": "王澳梦中陌生城市的校园 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_001",
+          "path": "src/第四幕/T07/IMG_A4_T07_001.png"
+        }
+      ],
+      "focusTarget": "梦中校园道路和近处建筑细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。梦中校园道路和近处建筑细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T07_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3496081,
+        "sha256": "cbd16fd73206c300b89d4413dbfa616be8560c5f2c8cbb24389acc45d653b5bd"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 480278,
+        "sha256": "bc4a0584040eb11ad93705bed8875fd065574f1c610b897721cc6482f2c7850d"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T07_001.txt",
+        "sha256": "1c1658d52edfe6d9d377ca4ad65d6f6e3be17e268201656c1a58491d39ad4ae9"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_004",
+      "title": "王澳在梦里的镜前视角 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_004",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_004",
+          "path": "src/第四幕/T07/IMG_A4_T07_004.png"
+        }
+      ],
+      "focusTarget": "洗手间镜面与模糊面容，面容继续模糊",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。洗手间镜面与模糊面容，面容继续模糊。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "3:2",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T07_004.png",
+        "format": "PNG",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 1792720,
+        "sha256": "4d6fcab8aef97530f9456d3c1b48edc9409ffd680ca99bd2aefc87d1a79f82e7"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_004.webp",
+        "format": "WEBP",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 69256,
+        "sha256": "14b2fa32e175a49a6f187a5a17ac5cf6fa8e2ad935febfa9392e51e8d30ad566"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T07_004.txt",
+        "sha256": "1f69203f17360a9a7ccd5120b0a9d291a799d7ac63f3d1d1cedf68ef11bd8d77"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "title": "机构地下厨房深处的黑色塑像 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T07_005",
+      "references": [
+        {
+          "assetId": "IMG_A4_T07_005",
+          "path": "src/第四幕/T07/IMG_A4_T07_005.png"
+        }
+      ],
+      "focusTarget": "同一地下厨房深处的黑色塑像与神龛，不改变厨房方位",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一地下厨房深处的黑色塑像与神龛，不改变厨房方位。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "3:2",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T07_005.png",
+        "format": "PNG",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 2327360,
+        "sha256": "3517ba43b81ec1eca216974def0af75b96e62f5c022d0a5513f3842b4ad1616b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_005.webp",
+        "format": "WEBP",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 181630,
+        "sha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T07_005.txt",
+        "sha256": "b2d9eadd9064f810037e866e5a118fa92b7765e9e2ff8afc134571308271620b"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_001",
+      "title": "大学宿舍清晨，王澳查看手机邮件 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_001",
+          "path": "src/第四幕/T08/IMG_A4_T08_001.png"
+        }
+      ],
+      "focusTarget": "清晨宿舍中原手机与手边细节，屏幕不新增可读文本",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。清晨宿舍中原手机与手边细节，屏幕不新增可读文本。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2020672,
+        "sha256": "aaf159efa803cd5c9efdb912dbf7845ca7c3e41711204c8929b96b2dced300cf"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 125232,
+        "sha256": "e490d6c183b3595b10715eb4b2d3978f7f95f85995d9f19d8173ff3ab43eb8be"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_001.txt",
+        "sha256": "2ed28b0201faeee89f266cb5054748eb67f313f68e985a1401150161988fe036"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_002",
+      "title": "王澳独自坐在湖边长椅上 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_002",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_002",
+          "path": "src/第四幕/T08/IMG_A4_T08_002.png"
+        }
+      ],
+      "focusTarget": "湖边长椅、水草与原远处人物的空间关系",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。湖边长椅、水草与原远处人物的空间关系。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_002.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3557524,
+        "sha256": "8e63e0d2bedd68d11b4a55bded2f84d0da2a7d072d7739f0a967a1114d8d6080"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_002.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 515094,
+        "sha256": "07eb77920e086e05a94cbe05f96ccd94d4ae80635a6448a6f70c4366f0cdbbc3"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_002.txt",
+        "sha256": "cdce0eecb4ad7e05916a816d06454df8d480bdb055fcd30079eb63d6002eaf0b"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_003",
+      "title": "手机发信后准备夜行出发 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_003",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_003",
+          "path": "src/第四幕/T08/IMG_A4_T08_003.png"
+        }
+      ],
+      "focusTarget": "夜行行李旁的原手机和包袋",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。夜行行李旁的原手机和包袋。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_003.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2267716,
+        "sha256": "8993f9f69220fa2439ba4227805ce83ff7cb1504eb326aacd160d6fe506edce0"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_003.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 161038,
+        "sha256": "be030406f48a9aad2522178e9068320b4821cd14d78937147ca0bab0e0d962bd"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_003.txt",
+        "sha256": "fefa86ca9fd0fac893468d653b877876b6e38864030abd1d3097f9b4eed88e4f"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_004",
+      "title": "山脚下准备上山的王澳 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_004",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_004",
+          "path": "src/第四幕/T08/IMG_A4_T08_004.png"
+        }
+      ],
+      "focusTarget": "山脚原小店柜台的笔记本、核桃、胶带与袋子",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。山脚原小店柜台的笔记本、核桃、胶带与袋子。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_004.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2702835,
+        "sha256": "79651f77a005f5c5f893bc9fc16d92876f55ae1ebbc6906704aa33a759e8142e"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_004.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 271304,
+        "sha256": "5e9a4f61fda2aca9b2af54c89e9c0eb296b780523d657ec4a51b35de9927b910"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_004.txt",
+        "sha256": "f9bfe96d96cbedf47be4cae7510dedbd656bc203fcdf3647e7a4807efbf6d0a8"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_005",
+      "title": "凌晨时分通往旧址的道路 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_005",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_005",
+          "path": "src/第四幕/T08/IMG_A4_T08_005.png"
+        }
+      ],
+      "focusTarget": "原夜间道路、石洞边或排水沟，手电光方向保持",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原夜间道路、石洞边或排水沟，手电光方向保持。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_005.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3325664,
+        "sha256": "b3e16bb0e59b34d99466d85b0c82897d90f2351e7bc1b039af6b2f9f824b1658"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_005.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 440362,
+        "sha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_005.txt",
+        "sha256": "efe36e5cf52e5dca34127b4427637609955d28765bae933c1ea6ac9bd5f50bb2"
+      },
+      "previousCandidates": [
+        "docs/ux-investigation-20261014/art/superseded/IMG_A4_ZOOM_T08_005-targeted-reshoot.png",
+        "docs/ux-investigation-20261014/art/superseded/IMG_A4_ZOOM_T08_005-targeted-reshoot.webp",
+        "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A4_ZOOM_T08_005-targeted-reshoot.txt"
+      ]
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_006",
+      "title": "王澳翻越带有碎玻璃的围墙 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_006",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_006",
+          "path": "src/第四幕/T08/IMG_A4_T08_006.png"
+        }
+      ],
+      "focusTarget": "墙沿原碎玻璃、包扎手或原冲锋衣细节，保持原左右方向与动作",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。墙沿原碎玻璃、包扎手或原冲锋衣细节，保持原左右方向与动作。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_006.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 3345701,
+        "sha256": "c3a534a87f7082695b2a10215c5ac9d19b4e3e3500a9290289ca94d5c1910eb9"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_006.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 466320,
+        "sha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_006.txt",
+        "sha256": "be776e5592af9df7549c298ab7815adf3588ec7daec685ef413061bc8f1035d8"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "title": "王澳进入启明旧址的广播室 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_007",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_007",
+          "path": "src/第四幕/T08/IMG_A4_T08_007.png"
+        }
+      ],
+      "focusTarget": "正在使用的广播室设备与原桌面纸片",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。正在使用的广播室设备与原桌面纸片。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_007.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2417419,
+        "sha256": "e938de75cc05af1d49e5f40dfa98e10c846b1ad6d2ebf8e2908b570b55151890"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_007.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 211832,
+        "sha256": "132da2dc057a8fe5ef9fae5dee317c5113298f8478a7d6f405ceda42f407bb18"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_007.txt",
+        "sha256": "23fc63947b1ab1f6a05640a1dc3949fe6c3a8daceb3fd77315787d8d544ca09e"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "title": "启明旧址档案架与编号 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_008",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_008",
+          "path": "src/第四幕/T08/IMG_A4_T08_008.png"
+        }
+      ],
+      "focusTarget": "原档案架的年份编号、书脊和材质",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原档案架的年份编号、书脊和材质。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_008.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2593826,
+        "sha256": "3eaa21904f5ecbd2b0bdde562387ef199a0253c46af521c5203894182f780dda"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_008.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 281170,
+        "sha256": "bc31dca02a81e96ae17a88cfc14cae99e722eb1c029ac440d8b22e5ae4f1a4a5"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_008.txt",
+        "sha256": "5edc011b141c771446a05376031883002d7cc39df58a7055cae2c7f4f5a68b45"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "title": "启明旧址厨房里的景象 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_010",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_010",
+          "path": "src/第四幕/T08/IMG_A4_T08_010.png"
+        }
+      ],
+      "focusTarget": "原厨房门缝视线中的深处黑像，锅与铁钩方位保持；不判断肉来源",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原厨房门缝视线中的深处黑像，锅与铁钩方位保持；不判断肉来源。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_010.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2530244,
+        "sha256": "109ad0821a8d43e2368a2ac0965e82e3df49bde46f07685da0902b9c9fbc014b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_010.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 248408,
+        "sha256": "adf0c4b7f52621c62d14c68d19118bd90e6b40f0ab95ef98c99cd097b3eee0af"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_010.txt",
+        "sha256": "197ac737075efb4f24c02cfdabeac6a162d5fb4d11f590d98f1e91055f062932"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_011",
+      "title": "大学校园里的日常生活 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_011",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_011",
+          "path": "src/第四幕/T08/IMG_A4_T08_011.png"
+        }
+      ],
+      "focusTarget": "大学日常场景中近处物件与路面",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。大学日常场景中近处物件与路面。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_011.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2181134,
+        "sha256": "b23c1004555f5f46be8bd7d0882535a8c07e42ab6d8867baa0c1e70da3eeae5a"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_011.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 164548,
+        "sha256": "2e5181d1c0d26169a0b82040d564c5d8d999faf2d49279bdb100c6274b4dc056"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_011.txt",
+        "sha256": "58d653cf2fb117807f7d31beba051088948e4417ed51e293f662bc1f51fe08dc"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_012",
+      "title": "王澳逃出厨房后，倒在消防栓旁的低视角 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T08_012",
+      "references": [
+        {
+          "assetId": "IMG_A4_T08_012",
+          "path": "src/第四幕/T08/IMG_A4_T08_012.png"
+        }
+      ],
+      "focusTarget": "原消防栓附近低机位的地面、包扎/衣料与柜体细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原消防栓附近低机位的地面、包扎/衣料与柜体细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T08_012.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2417629,
+        "sha256": "db5f90e1209a86fdda8bafd3639953f2be912dda9585af78ae85f594e876742a"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_012.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 229014,
+        "sha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T08_012.txt",
+        "sha256": "18be443defd9673d03b86310953829d991ebbaf3227bc5fa73b7417946a021a5"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_001",
+      "title": "消防栓旁等待藏好的笔记 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_001",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_001",
+          "path": "src/第四幕/T09/IMG_A4_T09_001.png"
+        }
+      ],
+      "focusTarget": "原消防栓侧背藏物处与袋包纸边细节",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原消防栓侧背藏物处与袋包纸边细节。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T09_001.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2618392,
+        "sha256": "d3c8b38dda549145cb7e10fdc4165ea17bdeee76306432bdaafda2fe9105e934"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 265362,
+        "sha256": "1a833aea2ee5e2a4c98093a9d992a8ed172d6cfbfd2783073a6966a103b0f7d3"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T09_001.txt",
+        "sha256": "ea019c45e4d86d2c892e74914b892e84f13c6cda8bd8cd1b11f02a471837fab3"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_002",
+      "title": "手机上收到的回信 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_002",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_002",
+          "path": "src/第四幕/T09/IMG_A4_T09_002.png"
+        }
+      ],
+      "focusTarget": "原颤抖手中手机和旁侧消防栓，屏幕不新增可读内容",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原颤抖手中手机和旁侧消防栓，屏幕不新增可读内容。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T09_002.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2307201,
+        "sha256": "fdaa0f3f27799999123900e8518d9a5192d971bf477b941ac8a1d218eb28fa8b"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 202546,
+        "sha256": "8979f9be5b6c877ba46b255c2ab6d1de35d374b2b9d4e9c66666c882fba59378"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T09_002.txt",
+        "sha256": "e103a41fdf28a60e7fc2f78b5cedb775eacb53e07317eb436338c11c6d1aac47"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_003",
+      "title": "王澳写下笔记的最后一页 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_003",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_003",
+          "path": "src/第四幕/T09/IMG_A4_T09_003.png"
+        }
+      ],
+      "focusTarget": "原褐色笔记本末页、笔尖、袋子和胶带；不新增可读字句",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。原褐色笔记本末页、笔尖、袋子和胶带；不新增可读字句。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T09_003.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2346201,
+        "sha256": "4a10596f6c5a12d7d988c59ccf74e478096f40ea1bd9b0695c925e06e6b75355"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_003.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 200834,
+        "sha256": "837a88629715cfb9111e2a07a0c33dce9dee6cfdd4e9158ef8c5292f06fc1a07"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T09_003.txt",
+        "sha256": "bb860a1994a8b30bcd6944f2b0c99678b7d176e364544578440099543dc02d3e"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_004",
+      "title": "王澳走向旧址出口 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_004",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_004",
+          "path": "src/第四幕/T09/IMG_A4_T09_004.png"
+        }
+      ],
+      "focusTarget": "同一走廊朝出口前进的门框/地面近景，晨光方向保持",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一走廊朝出口前进的门框/地面近景，晨光方向保持。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T09_004.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2546267,
+        "sha256": "30dd45f7975f2fd74d464af1b3b97c2e23c8b47395f3c4f72f7ae51462d04b91"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_004.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 268746,
+        "sha256": "50203a92815bf2ced7424981a3375d27c035d1b962ba16e6c2c000a1bf28bcfd"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T09_004.txt",
+        "sha256": "49c6eb2948bf1f2471c14d6926d5b6333f4aeaec9b68dfa01b37685d9ec16505"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "title": "旧址门槛与门外的晨光 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T09_005",
+      "references": [
+        {
+          "assetId": "IMG_A4_T09_005",
+          "path": "src/第四幕/T09/IMG_A4_T09_005.png"
+        }
+      ],
+      "focusTarget": "同一门槛、晨光和失焦边缘；不揭示意识中断后的去处",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一门槛、晨光和失焦边缘；不揭示意识中断后的去处。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T09_005.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2322492,
+        "sha256": "c04916df6efbc4323e7991fb7f141730dda18fdf0a3ed522cdb77a9f4b547330"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_005.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 210442,
+        "sha256": "9b902836b2706a11947f96dee97184fdd403d8e0a3f4cf8ff5bfc38e3382f288"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T09_005.txt",
+        "sha256": "d53801d062fdd25cf7b8114a8f783bab8d32fc3ec40e8982d3a64138e8aaec51"
+      },
+      "previousCandidates": []
+    },
+    {
+      "id": "IMG_A4_ZOOM_T10_003",
+      "title": "咖啡馆桌面的三杯饮料 · 放大近景",
+      "kind": "act4-zoom-detail",
+      "sourceAssetId": "IMG_A4_T10_003",
+      "references": [
+        {
+          "assetId": "IMG_A4_T10_003",
+          "path": "src/第四幕/T10/IMG_A4_T10_003.png"
+        }
+      ],
+      "focusTarget": "同一桌面三杯饮料的杯沿和凝水，必须仍是三杯且相对位置一致",
+      "requirements": "根据引用的原画面生成靠近目标的新照片资源；保持同一空间、左右/前后关系、人物与物件的位置、机位和年代。同一桌面三杯饮料的杯沿和凝水，必须仍是三杯且相对位置一致。近景展示真实材质/边缘细节，大面积平滑墙面与稀疏自然老化，避免密集鱼鳞/蜂巢/浮雕纹。不能新增可读文字、密码、人物身份、肉来源或因果结论；原有故意模糊必须保留。",
+      "expectedAspect": "4:3",
+      "actualAspectMatch": true,
+      "native": {
+        "path": "docs/ux-investigation-20261014/art/native/IMG_A4_ZOOM_T10_003.png",
+        "format": "PNG",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 2417928,
+        "sha256": "9d179d68fae0f26d0e6667f6bb16c503b300da8da1e37206c03648d7c391a870"
+      },
+      "webp": {
+        "path": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T10_003.webp",
+        "format": "WEBP",
+        "width": 1448,
+        "height": 1086,
+        "bytes": 213040,
+        "sha256": "0a28e65814c2029dd9f8083c278c7fd92683aa85f25eb3ab0ab735b24715cca6"
+      },
+      "promptRecord": {
+        "type": "original verbatim prompt (saved text file)",
+        "path": "docs/ux-investigation-20261014/art/prompts/IMG_A4_ZOOM_T10_003.txt",
+        "sha256": "3dda48df4286c78b7b02387229a7a08645cb52779d21c11c78760c8758f7f135"
+      },
+      "previousCandidates": []
+    }
+  ],
+  "supersededOrRejectedCandidates": [
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A2_SCHOOL_MAP_001-watercolor.png",
+      "bytes": 3551817,
+      "sha256": "aaa33e74503f40926ae18de657bed7ad4d41753f49ffb60a854f9e589e7120fa",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A2_SCHOOL_MAP_001-watercolor.webp",
+      "bytes": 551842,
+      "sha256": "b567098f8eeff60e753bee1a64e7262228172c7a5a1ed1b7e60d38c93f9bbd5b",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.png",
+      "bytes": 3825730,
+      "sha256": "bd921118e08651d1f51a15e043cdaee57632ccf9383cd43b1786f476dcbcd181",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.webp",
+      "bytes": 577832,
+      "sha256": "9e0a9f6628900ca5ec90031bc9eeedbf551d01e04666d200090bb4d00c77d688",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-targeted-reshoot.png",
+      "bytes": 3711609,
+      "sha256": "1dc79baa7690bb4ef305156a20ca6e86343cbdcea8bf4ddcd7b04d1d7cebbbc5",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-targeted-reshoot.webp",
+      "bytes": 524944,
+      "sha256": "10caef75afe8944d8df93b6ff09b47d88f30bae78d76e2f5412a4b921f5145c6",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-pre-low-saturation.png",
+      "bytes": 3973535,
+      "sha256": "647ffacdb8f717b440d5dbed259d6b8182cb40e4743bf3b6cfba437d7e38af8c",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-pre-low-saturation.webp",
+      "bytes": 634802,
+      "sha256": "f521d9bb80d2cd9f65b87010a65f8106a12359483ab6c8af2e56dc871dbe829c",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-targeted-reshoot.png",
+      "bytes": 4022203,
+      "sha256": "cfbc50dfa135bb258c7c9b55de7201b50ebae0ba6c0057f8cd86d82d69e16341",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_OLD_ROAD-targeted-reshoot.webp",
+      "bytes": 627514,
+      "sha256": "a1e8bac9b4bbd9fd31d130e95ef8f12f741c10b985e3aee6daed130fe0703bd5",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-pre-low-saturation.png",
+      "bytes": 3839405,
+      "sha256": "d3f8f090fb4510c2dc5a2d8b2a39b61a7a2e2f6864dc8a0e7307cc21c925dcff",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-pre-low-saturation.webp",
+      "bytes": 599550,
+      "sha256": "b69cf79fe5a6700180e7f73f07c56913ca7297762922523c72f8b795447ce710",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-targeted-reshoot.png",
+      "bytes": 3846162,
+      "sha256": "21dc0f6c00cfa8f059296f9330326731249df1dbe5dbc76e492c3bc1b83192dd",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T00_WATER_ODDITY-targeted-reshoot.webp",
+      "bytes": 574344,
+      "sha256": "6d4ace35c2cedbf57eb9c7ece85faefa2363ff7fb2cc3cce547ed06e2f90185a",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_PILLAR_CLOSE-targeted-review-fix.png",
+      "bytes": 3307289,
+      "sha256": "55b7ada3f9a4ba953266f3da07817b590284847ab09cf497c4b3cfa92f3b8045",
+      "reason": "Superseded because the earlier detail depicted “启明” engraved in concrete; replacement shows the two red characters on the yellow metal plaque."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_PILLAR_CLOSE-targeted-review-fix.webp",
+      "bytes": 454610,
+      "sha256": "71bd6eda5751198571e6ea45b3ab2ea331814bb3ad306aa740f653bff73b5140",
+      "reason": "Superseded because the earlier detail depicted “启明” engraved in concrete; replacement shows the two red characters on the yellow metal plaque."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_SIGN_REVEALED-targeted-review-fix.png",
+      "bytes": 3374831,
+      "sha256": "6f6bd6b90e414672d13b207c062d6c18f0092e4e56b0a12a80a13956c1d0dba6",
+      "reason": "Superseded because the earlier exposed plaque was blank; replacement shows red “启明” on the yellow metal plaque."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T01_SIGN_REVEALED-targeted-review-fix.webp",
+      "bytes": 474230,
+      "sha256": "03e24ed57576d0e5320ad5feee27242632007f644fa2a38ab87402bf233a51b1",
+      "reason": "Superseded because the earlier exposed plaque was blank; replacement shows red “启明” on the yellow metal plaque."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T02_BLACKBOARD-targeted-review-fix.png",
+      "bytes": 2594549,
+      "sha256": "9564992030d7731d3546667f92b8b4c6d491de7f50b836210a6b64cea3e05c58",
+      "reason": "Superseded because the earlier close detail left the board blank; replacement shows irregular crooked S chalk marks and retains speaker/podium anchors."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A3_DETAIL_T02_BLACKBOARD-targeted-review-fix.webp",
+      "bytes": 248212,
+      "sha256": "a9b907c5a77ba09efa9cc772ade8411dfdd10298fb717b9cca85afdb671237bd",
+      "reason": "Superseded because the earlier close detail left the board blank; replacement shows irregular crooked S chalk marks and retains speaker/podium anchors."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A4_ZOOM_T08_005-targeted-reshoot.png",
+      "bytes": 3276965,
+      "sha256": "113c46ef2c29f21669658ad4446d18d7170eafe5d248d22ea2a274c2b554feff",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/IMG_A4_ZOOM_T08_005-targeted-reshoot.webp",
+      "bytes": 447026,
+      "sha256": "44be49fcfd91e59be6ee55d762b0054e193da990afad404d1ca306c50e662ffe",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-pre-low-saturation.txt",
+      "bytes": 1431,
+      "sha256": "372f16246f6db97c9fa5d5aa7dbabf3a7e290b3b26ca8032443da009f242f148",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_DRAIN_DISCOVERED-targeted-reshoot.txt",
+      "bytes": 1431,
+      "sha256": "372f16246f6db97c9fa5d5aa7dbabf3a7e290b3b26ca8032443da009f242f148",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_OLD_ROAD-pre-low-saturation.txt",
+      "bytes": 1396,
+      "sha256": "ab1f60e489f5db3d0497fd0667c7207dbc47d0acff97476b8052651ea4f53ded",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_OLD_ROAD-targeted-reshoot.txt",
+      "bytes": 1396,
+      "sha256": "ab1f60e489f5db3d0497fd0667c7207dbc47d0acff97476b8052651ea4f53ded",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_WATER_ODDITY-pre-low-saturation.txt",
+      "bytes": 1519,
+      "sha256": "e751c622f65a52fd8f2437281e2065a9d524da941a0ee73a1ffa753fe7c0e95d",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T00_WATER_ODDITY-targeted-reshoot.txt",
+      "bytes": 1519,
+      "sha256": "e751c622f65a52fd8f2437281e2065a9d524da941a0ee73a1ffa753fe7c0e95d",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T01_PILLAR_CLOSE-pre-targeted-review-fix-prompt-status.txt",
+      "bytes": 412,
+      "sha256": "2ce75ec82023123ac9db610587a574cd6b75b8474f2b864701dc5ab52ce08cf5",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T01_PILLAR_CLOSE-pre-targeted-review-fix-reconstructed-summary.txt",
+      "bytes": 998,
+      "sha256": "1f0cae2b478e9ba604493dc6260f5a9c592aba12b9cae95a0eefe6177059eaf8",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T01_SIGN_REVEALED-targeted-review-fix.txt",
+      "bytes": 1598,
+      "sha256": "d8eab9a3ab94d428117ef2b9687143cbe84c1c646f5407a8e4912bb0953b3521",
+      "reason": "Superseded because the earlier exposed plaque was blank; replacement shows red “启明” on the yellow metal plaque."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T02_BLACKBOARD-pre-targeted-review-fix-prompt-status.txt",
+      "bytes": 410,
+      "sha256": "b8121515a905f26f8acc41969887b3a1e915d48744394b47e264b9be593f41d7",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A3_DETAIL_T02_BLACKBOARD-pre-targeted-review-fix-reconstructed-summary.txt",
+      "bytes": 993,
+      "sha256": "503a66597208075572648a8e4c21cbd2064e603afe546689e9cd265a6213d602",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/superseded/prompts/IMG_A4_ZOOM_T08_005-targeted-reshoot.txt",
+      "bytes": 1442,
+      "sha256": "95609b3b36a17d593a020019fc839391b2a5644bd658d3801614b41b0cb03c53",
+      "reason": "Superseded by the latest targeted regeneration per parent review; see replacement canonical file."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_MAP_001-initial-interior.png",
+      "bytes": 3324987,
+      "sha256": "9080966cbb447382f3095900bb8062e970351397a9b9fd88fd01f5b16af2ac3e",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_MAP_001-initial-interior.webp",
+      "bytes": 484144,
+      "sha256": "ccaedade86c377da827286c56d806966ac29c50157d6b3e7c50f12efbdd0323c",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_XIAOYUE_001-mirror.png",
+      "bytes": 2427635,
+      "sha256": "bde2aeb77df63cf7aef2f14ce45d004632bdaa26cc4b9c486543417d141b5a2b",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/rejected/IMG_A2_SCHOOL_XIAOYUE_001-mirror.webp",
+      "bytes": 228762,
+      "sha256": "91ac99e1300fa5cf21603959e5e68e05c714e2030f2bf367d609388e0510be88",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/rejected/IMG_A3_SIGN_FULL_001-fishscale.png",
+      "bytes": 2932204,
+      "sha256": "68f427d3ae65e6334150504182508fd89e31ded42842ead7407dfb5b7efea318",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    },
+    {
+      "path": "docs/ux-investigation-20261014/art/rejected/IMG_A3_SIGN_FULL_001-fishscale.webp",
+      "bytes": 371592,
+      "sha256": "7411520e455d354fa62daa13212afe503ddf284e703cb23b35c2989c08938429",
+      "reason": "Earlier non-canonical candidate retained with its relationship indicated by filename."
+    }
+  ],
+  "stagingFilesRetained": [],
+  "visualReview": "Parent final visual QA of the seven targeted replacements is pending; no acceptance is claimed by the art production ledger."
+}
