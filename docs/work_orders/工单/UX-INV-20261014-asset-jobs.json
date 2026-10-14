@@ -22,34 +22,35 @@
       "positions": {
         "gate": [
           50,
-          90
+          81.5
         ],
         "courtyard": [
           50,
-          72
+          74.5
         ],
         "honor": [
-          72,
-          76
+          64.6,
+          72.3
         ],
         "notice": [
-          28,
-          76
+          37.2,
+          72.3
         ],
         "teachingBuilding": [
-          48,
-          35
+          51.4,
+          40.5
         ],
         "playground": [
-          18,
-          42
+          24.5,
+          43
         ],
         "dorm": [
-          82,
-          26
+          83,
+          21.5
         ]
       },
-      "requirements": "最新用户修正：校园俯视/鸟瞰总图，北朝上，南门与入口室外广场，北中教学楼、西侧操场、东北宿舍楼；排行榜及宣传栏均在室外广场两侧；树在室外绿化，不画房间剖面/室内桌椅/室内树木。图像位置严格按positions。无需生成标签文字，代码叠准确按钮。"
+      "requirements": "校园俯视/鸟瞰总图，北朝上，南门与入口室外广场，北中教学楼、西侧操场、东北宿舍楼；排行榜及宣传栏均在室外广场两侧；树在室外绿化，不画房间剖面/室内桌椅/室内树木。新版校园图已通过，positions为依据实图校准的实物/入口坐标；代码4:3完整呈现底图，并将标注按钮用引线连接实物锚点，不以标签位置冒充实物位置。",
+      "approvedWebpSha256": "b567098f8eeff60e753bee1a64e7262228172c7a5a1ed1b7e60d38c93f9bbd5b"
     },
     {
       "id": "IMG_A2_SCHOOL_GATE_001",
@@ -185,8 +186,8 @@
       "kind": "school-view",
       "schoolPosition": "DORM",
       "campusPosition": [
-        82,
-        26
+        83,
+        21.5
       ],
       "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_DORM_001.webp",
       "references": [],
@@ -201,8 +202,8 @@
       "kind": "school-view",
       "schoolPosition": "PLAYGROUND",
       "campusPosition": [
-        18,
-        42
+        24.5,
+        43
       ],
       "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_PLAYGROUND_001.webp",
       "references": [],
@@ -218,7 +219,7 @@
       "schoolPosition": "COURTYARD",
       "campusPosition": [
         50,
-        72
+        74.5
       ],
       "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_COURTYARD_001.webp",
       "references": [],
@@ -233,8 +234,8 @@
       "kind": "school-view",
       "schoolPosition": "BUILDING",
       "campusPosition": [
-        48,
-        35
+        51.4,
+        40.5
       ],
       "output": "src/assets/ux-investigation-20261014/IMG_A2_SCHOOL_BUILDING_001.webp",
       "references": [],
