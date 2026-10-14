@@ -44,6 +44,7 @@ describe('desktop task guides', () => {
 
     const routeSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true, FLAG_A1_NEWS_FOUND: true }, 'D'));
     expect(routeSearch?.id).toBe('GUIDE_A1_003');
+    expect(routeSearch?.steps.find((step) => step.current)?.label).toContain('鸡公岭徒步');
     expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('鸡公岭徒步');
     expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('长度和难度');
   });
