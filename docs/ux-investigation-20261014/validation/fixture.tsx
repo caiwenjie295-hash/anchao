@@ -15,9 +15,17 @@ async function boot() {
     import('../../../src/data/act3Data'),
   ]);
   type Mode = 'browser' | 'school' | 't07' | 'act3' | 'act4';
+  type ReadingStage = 'T01' | 'T02' | 'T03' | 'T04' | 'T05' | 'T06' | 'T07' | 'T08' | 'T09' | 'T10';
+  const readingStages: { id: ReadingStage; label: string }[] = [
+    { id: 'T01', label: '旧笔记' }, { id: 'T02', label: '账户与记录' },
+    { id: 'T03', label: '阅读第三节' }, { id: 'T04', label: '醒来与邮件' },
+    { id: 'T05', label: '生日回忆' }, { id: 'T06', label: '宿舍回忆' },
+    { id: 'T07', label: '离开与店铺' }, { id: 'T08', label: '清醒后返山' },
+    { id: 'T09', label: '藏笔记与广播' }, { id: 'T10', label: '终章' },
+  ];
   const lensOptions = (['T00','T01','T02','T03','T04','T05','T06','T07'] as Act3ActiveStage[])
     .flatMap(stage => a3Data.act3StageDoc(stage).lenses);
-  const makeState = (mode: Mode, lensId: string, readingStage: 'T05' | 'T08' | 'T09'): AppState => {
+  const makeState = (mode: Mode, lensId: string, readingStage: ReadingStage): AppState => {
     const value = defaults.createDefaultState();
     if (mode === 'browser') {
       value.game.phase = 'D';
@@ -54,7 +62,7 @@ async function boot() {
   function Fixture() {
     const [mode,setMode] = useState<Mode>('school');
     const [lensId,setLensId] = useState('LENS_A3_T00_004');
-    const [readingStage,setReadingStage] = useState<'T05'|'T08'|'T09'>('T05');
+    const [readingStage,setReadingStage] = useState<ReadingStage>('T05');
     const [manager,setManager] = useState(()=>new state.StateManager(new bus.EventBus(),makeState('school',lensId,readingStage)));
     const [height,setHeight] = useState(54);
     const toolbar = useRef<HTMLElement>(null);
@@ -73,7 +81,7 @@ async function boot() {
           <option value="browser">第一幕搜索</option><option value="school">高中校园</option><option value="t07">旧资料对照</option><option value="act3">第三幕观察</option><option value="act4">第四幕阅读</option>
         </select></label>
         {mode==='act3'&&<label>镜头<select aria-label="第三幕镜头" value={lensId} onChange={e=>select(mode,e.target.value)}>{lensOptions.map(l=><option key={l.id} value={l.id}>{l.id} · {l.title}</option>)}</select></label>}
-        {mode==='act4'&&<label>章节<select aria-label="第四幕章节" value={readingStage} onChange={e=>select(mode,lensId,e.target.value as typeof readingStage)}><option value="T05">生日回忆</option><option value="T08">清醒后返山</option><option value="T09">藏笔记与广播</option></select></label>}
+        {mode==='act4'&&<label>章节<select aria-label="第四幕章节" value={readingStage} onChange={e=>select(mode,lensId,e.target.value as ReadingStage)}>{readingStages.map(stage=><option key={stage.id} value={stage.id}>{stage.id} · {stage.label}</option>)}</select></label>}
         <span className="qa-status">隔离内存状态 · QA</span>
       </header>
       <div className="qa-stage" key={`${mode}:${lensId}:${readingStage}`}>
