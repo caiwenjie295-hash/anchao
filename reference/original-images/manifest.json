@@ -1,0 +1,207 @@
+{
+  "task": "MAC-CLEAN-20261014",
+  "base": "78787aba2b7b00de66af3fd743ee79523518c0ea",
+  "snapshot": "开发包外层/交接记录/未提交整理-20261014/snapshot.json",
+  "items": [
+    {
+      "sourcePath": "bd764bb25d49a05105060185774ba14cd2c846f7.jpg",
+      "decision": "remove-duplicate",
+      "duplicateOf": "src/assets/desktop-wallpaper.jpg",
+      "sha256": "86316098369820b22ce0265e8d0149ebb321ff5f1d33b4aca004f6f7d74d3642"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (1).png",
+      "decision": "remove-duplicate",
+      "duplicateOf": "src/第三幕/IMG_A3_T00_012.png",
+      "sha256": "b377b1be974045b0c9bc5606f984b2a6304aea5851e2061d459406f1b64603f8"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (8).png",
+      "decision": "remove-duplicate",
+      "duplicateOf": "src/第三幕/IMG_A3_T03_001.png",
+      "sha256": "86d36240cd0c25c570792287535b33177c65b171362d5e6b8fce12e49fb0b2fc"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (9).png",
+      "decision": "remove-duplicate",
+      "duplicateOf": "src/第三幕/IMG_A3_T02_003.png",
+      "sha256": "ba060bbb6f29e6cf27358827a9f1aa71fc5cdb43d30f735bfbe461c89c9e340a"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (11).png",
+      "decision": "remove-duplicate",
+      "duplicateOf": "src/第三幕/IMG_A3_T01_006.png",
+      "sha256": "9d4ce5ae54ee43eb5cb41dda6f3470dd93c7d5da2bd24680f1672c8ffaa914e4"
+    },
+    {
+      "sourcePath": "暗潮.pdf",
+      "decision": "remove-duplicate",
+      "duplicateOf": "暗潮_0916_校订稿.pdf",
+      "sha256": "467b309362b50e57a636918190b9801d45f0e651a3f6d3c5c624b9c05a497ede"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (10).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (10).png",
+      "bytes": 2643508,
+      "sha256": "b484c3f6367ce605c2519ad6c38ac7ceb156981ed06301a27a1e02e9ff9d0ab7"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (2).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (2).png",
+      "bytes": 2765097,
+      "sha256": "652cb5061a23fddb383b520ee700eab6cb3439f695be19ed2a91369b23f256ce"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (3).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (3).png",
+      "bytes": 1327426,
+      "sha256": "eb4bc3ddb98c296152a7afd32b2655a6d24edb528d51f1e78c14bc8daa1fabfc"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (4).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (4).png",
+      "bytes": 1296281,
+      "sha256": "2df5182ba2c841e6f188f0b05352b85e53181c2f1a289ec829e1fc56fd5ab91f"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (5).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (5).png",
+      "bytes": 1669274,
+      "sha256": "9b1474a403638e7626b352332876e2ad16697ac2baa1c2c6777644444cfaf9ed"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (6).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (6).png",
+      "bytes": 1315027,
+      "sha256": "3e3acbdac4958a281c52b0f7237d776c6a5bc49eb1a4ed116eef2d66ce91c79a"
+    },
+    {
+      "sourcePath": "src/第三幕/1 (7).png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第三幕/1 (7).png",
+      "bytes": 2420781,
+      "sha256": "a2bf48c697078e1d5b4f602e18fb4f909c7c0bfdf02d57efbc25c251fd6d2ec6"
+    },
+    {
+      "sourcePath": "src/第二幕/光荣榜.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/光荣榜.png",
+      "bytes": 2005802,
+      "sha256": "d1906db175df737b08d80127e8f260eeb00c0d1a128d9589d7df9e1a91ea3d12"
+    },
+    {
+      "sourcePath": "src/第二幕/公告栏.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/公告栏.png",
+      "bytes": 2586621,
+      "sha256": "9002a88fa62ab0181969240ca47a2797b7436bc3ed41b5f4decdc938409a024b"
+    },
+    {
+      "sourcePath": "src/第二幕/办公室.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/办公室.png",
+      "bytes": 2194778,
+      "sha256": "66cca75a3cf20be66b167c1e369a89354bcb87f3022ca1110904197aae471d04"
+    },
+    {
+      "sourcePath": "src/第二幕/县图书馆.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/县图书馆.png",
+      "bytes": 2136061,
+      "sha256": "7667a076e09c887bd7f77973f035ade64ab9e3c34cdc496f4f8680ee58f507e8"
+    },
+    {
+      "sourcePath": "src/第二幕/小A旧照.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/小A旧照.png",
+      "bytes": 1933423,
+      "sha256": "b75af25035574fadb0ecb282ccd9b9b427dcc9ffb248788c9a5fc548fcc65b9f"
+    },
+    {
+      "sourcePath": "src/第二幕/小月日常.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/小月日常.png",
+      "bytes": 2033078,
+      "sha256": "48351ce7572974538e76422ee1a8566e1149783110f56c9b15026637fe5da405"
+    },
+    {
+      "sourcePath": "src/第二幕/教室.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/教室.png",
+      "bytes": 2203678,
+      "sha256": "2a76a6757dc8eaac828c1854bf2e05752dce05edf73926542d9d518b58ab5213"
+    },
+    {
+      "sourcePath": "src/第二幕/校门.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/校门.png",
+      "bytes": 2432029,
+      "sha256": "7b84fa4fb77c895c6217bf630ca2d8c3ebdf41b64beae15e51919d190fd3fa6f"
+    },
+    {
+      "sourcePath": "src/第二幕/烧烤合照.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/烧烤合照.png",
+      "bytes": 2464261,
+      "sha256": "fc9dbd288bebb8a517a52c1c1cfe15e232656f00609197220953c7ceb6e4ca4d"
+    },
+    {
+      "sourcePath": "src/第二幕/笔记.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/笔记.png",
+      "bytes": 2115768,
+      "sha256": "d8f539762b2d890cc2de01c0728371d83fd2fe986042dad3b8b92a04cec3d1a8"
+    },
+    {
+      "sourcePath": "src/第二幕/老人.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/老人.png",
+      "bytes": 2723125,
+      "sha256": "c166b241904fd4c6fdd33e5d403c19b53628058ad3c0a953ba78d3a3e221a353"
+    },
+    {
+      "sourcePath": "src/第二幕/走廊.png",
+      "decision": "archive-original",
+      "path": "reference/original-images/第二幕/走廊.png",
+      "bytes": 2408225,
+      "sha256": "53b4aaa6bf850ffda013010e37412f35b563e588ce985ab9c05e74b906149c58"
+    },
+    {
+      "sourcePath": "暗潮_0913.docx",
+      "decision": "accept-old-draft-deletion",
+      "recoverFrom": "78787aba:暗潮_0913.docx",
+      "sha256": "ac59c8505d73d3bbb75105d8a3ffb2ed73229e775a3189bc9ec5f71a1886f837"
+    },
+    {
+      "sourcePath": "暗潮_0914.docx",
+      "decision": "accept-old-draft-deletion",
+      "recoverFrom": "78787aba:暗潮_0914.docx",
+      "sha256": "19045295dd4a63047d5118379ef7a735c9c385ceafdc209616f7cd27561c0c76"
+    },
+    {
+      "sourcePath": "暗潮_0916_小A.docx",
+      "decision": "retain-authoritative-source",
+      "sha256": "a7e568847d2167aec9368cd3fb799e7f1340bf6d43622551cc6a7542353ffbf7"
+    },
+    {
+      "sourcePath": "暗潮_0916_校订稿.pdf",
+      "decision": "retain-authoritative-source",
+      "sha256": "467b309362b50e57a636918190b9801d45f0e651a3f6d3c5c624b9c05a497ede"
+    }
+  ],
+  "copyDecision": {
+    "kept": [
+      "TRANSITION_A1_B: 信→邮件"
+    ],
+    "restored": [
+      "TRANSITION_A1_INTRO: 从熟悉的人和事开始。",
+      "TRANSITION_A2_T02: 去听听当地人的说法。"
+    ]
+  }
+}

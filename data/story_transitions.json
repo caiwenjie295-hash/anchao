@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "items": [
     { "id": "TRANSITION_A1_INTRO", "presentation": "immediate", "phase": "A", "trigger": "phase", "requiredFlags": [], "eyebrow": "序幕", "title": "暗潮", "paragraphs": ["刚毕业的日子，被求职邮件、朋友闲聊和没整理完的旧文件填满。你打开这台用了多年的电脑，本来只想处理眼前的事。", "一段许久没有谈起的旧关系，却正在这些日常消息里重新浮出来。", "先看看收到的消息。从熟悉的人和事开始。"], "actionLabel": "进入桌面" },
-    { "id": "TRANSITION_A1_B", "targetAppId": "mail", "phase": "B", "trigger": "phase", "requiredFlags": ["FLAG_A1_XIAOA_MISSING_KNOWN"], "eyebrow": "第一幕 · 旧友", "title": "母亲的消息", "paragraphs": ["母亲又提起了小A。你们曾一起长大，而他已经失踪很多年。", "你想起邮箱里似乎还留着他当年发来的一封信。"], "actionLabel": "去翻旧邮件" },
+    { "id": "TRANSITION_A1_B", "targetAppId": "mail", "phase": "B", "trigger": "phase", "requiredFlags": ["FLAG_A1_XIAOA_MISSING_KNOWN"], "eyebrow": "第一幕 · 旧友", "title": "母亲的消息", "paragraphs": ["母亲又提起了小A。你们曾一起长大，而他已经失踪很多年。", "你想起邮箱里似乎还留着他当年发来的一封邮件。"], "actionLabel": "去翻旧邮件" },
     { "id": "TRANSITION_A1_C", "targetAppId": "browser", "phase": "C", "trigger": "phase", "requiredFlags": [], "eyebrow": "第一幕 · 旧邮件", "title": "日期停在那里", "paragraphs": ["那封邮件确实来自小A。多年过去，里面的时间和话仍让人无法轻易放下。", "只靠回忆得不到答案。查查当年的失踪报道，以及他可能去过的地方。"], "actionLabel": "继续查找" },
     { "id": "TRANSITION_A1_D", "phase": "D", "trigger": "phase", "requiredFlags": [], "eyebrow": "第一幕 · 旧日", "title": "大家都往前走了", "paragraphs": ["朋友们的近况仍在更新，小A却停在那些旧照片和聊天记录里。", "再看看留下的邮件和公开消息，也许能拼出他最后的去向。"], "actionLabel": "继续" },
     { "id": "TRANSITION_A1_E", "phase": "E", "trigger": "phase", "requiredFlags": [], "eyebrow": "第一幕 · 搜寻", "title": "线索指向山里", "paragraphs": ["公开报道与路线信息都指向鸡公岭，但没有一条记录能解释小A的失踪。", "你需要亲眼看看那条路。"], "actionLabel": "整理线索" },
