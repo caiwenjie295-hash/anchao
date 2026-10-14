@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import images from '../../data/images.json';
 import { birthdayImageSlots } from '../data/act4/assets';
 import { laterScenes } from '../data/act4/laterContent';
+import { act4IllustrationZoomDetailAssetIds } from '../data/narrative/act4IllustrationDetails';
 import { act4AssetPath, assetLoader, uxFinaleA4AssetPath, uxInvestigationAssetPath, uxRhythmA4AssetPath } from './assetLoader';
 import { act3StageClueIds, type AuthoredAct3Stage } from '../data/act3Data';
 
@@ -83,9 +84,14 @@ describe('UX investigation artwork paths', () => {
       'IMG_A2_SCHOOL_NOTE_001', 'IMG_A2_SCHOOL_NOTE_DETAIL_001', 'IMG_A2_SCHOOL_RANK_PAPER_001',
     ];
     const clueIds = (['T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07'] as AuthoredAct3Stage[]).flatMap(act3StageClueIds);
-    const ids = [...schoolIds, 'IMG_A2_T07_TRAIL_WALK_001', 'IMG_A3_SIGN_FULL_001', 'IMG_A3_BOARD_FULL_001', ...clueIds.map((id) => `IMG_A3_DETAIL_${id.slice('CLUE_A3_'.length)}`)];
-    expect(ids).toHaveLength(78);
-    expect(new Set(ids).size).toBe(78);
+    const ids = [
+      ...schoolIds,
+      'IMG_A2_T07_TRAIL_WALK_001', 'IMG_A3_SIGN_FULL_001', 'IMG_A3_BOARD_FULL_001',
+      ...clueIds.map((id) => `IMG_A3_DETAIL_${id.slice('CLUE_A3_'.length)}`),
+      'IMG_A3_COMPARE_STATUE_DETAIL_001', ...act4IllustrationZoomDetailAssetIds,
+    ];
+    expect(ids).toHaveLength(112);
+    expect(new Set(ids).size).toBe(112);
     for (const id of ids) expect(uxInvestigationAssetPath(id, `${id}.webp`)).toBe(`../assets/ux-investigation-20261014/${id}.webp`);
     expect(uxInvestigationAssetPath('IMG_A3_DETAIL_UNKNOWN', 'IMG_A3_DETAIL_UNKNOWN.webp')).toBeNull();
     expect(uxInvestigationAssetPath(ids[0], 'wrong.png')).toBeNull();
