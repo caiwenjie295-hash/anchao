@@ -1,0 +1,376 @@
+{
+  "baseline": "97842f719de0e17edf569dc1c1cd3678dc076c97",
+  "policy": "小A在机构的全部时间点均仍运营；只替换有破败状态错误者，已符合者保留",
+  "candidates": [
+    {
+      "id": "IMG_A4_T06_001",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_001.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_001.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "9f3ce8fb707b0c714cd6968f6eb23edbe9a7a37ddc06a2bc06fb4274db93a369",
+      "publishedPathSha256": "1acac8d5d76eabb15a7cd4b6b039fae8c587d35376b626ba66ceeb1ed647e786"
+    },
+    {
+      "id": "IMG_A4_T06_002",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_002.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_002.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "3677bd4415bf75de9f3a532a7cfbd5a13425a708d3802d7226492fbd038b2c72",
+      "publishedPathSha256": "231918aaba01bc951860635806374d65e367f5469add9dd68bef566311c053bc"
+    },
+    {
+      "id": "IMG_A4_T06_003",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_003.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_003.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "6e957ee938431d2bae186f0a4d362280f691bda03423fefa41da5b9c9ca080a3",
+      "publishedPathSha256": "05563fc8b1445f4e65ec9507631b8eb1a08c9a5358c2630fac5c70144efc1603"
+    },
+    {
+      "id": "IMG_A4_T06_004",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_004.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_004.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "d8f1d47b9c94c386cae315a8eea9a4113e4c032d211c02cbd61fc8c1d940cc3c",
+      "publishedPathSha256": "b34ba94ef58045ffa1fc03efa01648358db1923d39c6dbf6ef1c5ae04cc598ba"
+    },
+    {
+      "id": "IMG_A4_T06_005",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_005.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_005.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "103b60bd6a07195c86ec924dc22fe231bc02db9829538a643d97df7527110c21",
+      "publishedPathSha256": "d23fd9b75322aeda87bb8f97ea5e80e0ba5803b754b4d71360b32abe57afd762"
+    },
+    {
+      "id": "IMG_A4_T06_006",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_006.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_006.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "993d938c86b108ec865eebb955dd7fd9bb8c4886a1aa2930dbc92ebfe152a717",
+      "publishedPathSha256": "5796fb0d83e08215c4a3c5c9cf03267a047453bcd01649364c0729b84097fe1d"
+    },
+    {
+      "id": "IMG_A4_T06_007",
+      "sourcePath": "src/第四幕/T06/IMG_A4_T06_007.png",
+      "publishedPath": "src/assets/compressed/第四幕/T06/IMG_A4_T06_007.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "fe39bd971641b492bb7676a183715d6633e89720bacd4d45f093c610ee7f4adc",
+      "publishedPathSha256": "34e6b9e104f47c606d879d009c99c77fc89e47a56200444cef4ecb6022e68dc7"
+    },
+    {
+      "id": "IMG_A4_T07_002",
+      "sourcePath": "src/第四幕/T07/IMG_A4_T07_002.png",
+      "publishedPath": "src/assets/compressed/第四幕/T07/IMG_A4_T07_002.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "528a31c7f0800d1884ec5549bba3ed66acec882c7ed840769ccb062ba01dc37c",
+      "publishedPathSha256": "77dbb4a352db7a03106f021fad4e22427afc863951414dfd445c1bdc2ebfc6cb"
+    },
+    {
+      "id": "IMG_A4_T07_005",
+      "sourcePath": "src/第四幕/T07/IMG_A4_T07_005.png",
+      "publishedPath": "src/assets/compressed/第四幕/T07/IMG_A4_T07_005.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "a1bb8f6fa4efac0ad4ccc6683244c8c8bbba36b8033d695d8267b10e38cb127c",
+      "publishedPathSha256": "e274d51225936d15ede00de03a9c3aca9effa13f812cf57072d6e4f08cd21821"
+    },
+    {
+      "id": "IMG_A4_T08_005",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_005.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_005.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "a44f1469a84621a7c8545020a395d5c498797e9f38fa4a5d005dc7e31d17ca9b",
+      "publishedPathSha256": "45b36a0d14770c265078b0a14f2c5aea4d24109a7b426ba036b2180165daf126"
+    },
+    {
+      "id": "IMG_A4_T08_006",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_006.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_006.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "cd9bdc98edce0c84f7556ee8d3428133498787e613aed4c93f708adc6aa9980e",
+      "publishedPathSha256": "705d008b1d92d01ba4da13eeacff7154a0ae2722e1796817141aa838ba853834"
+    },
+    {
+      "id": "IMG_A4_T08_007",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_007.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_007.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "e158a81bb03abbadfd076bd20262164b77af8ba4c1234ba58d274b51b35b6c60",
+      "publishedPathSha256": "fb36a3282ceb4b3d887f0b534dcbbbeacfd612e19e9dd088c2158732614c29eb"
+    },
+    {
+      "id": "IMG_A4_T08_008",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_008.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_008.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "e653c42daae6a1dfbda0feb33666c00cf16df2f2a44d7428b1888949f7b2d913",
+      "publishedPathSha256": "ea19e9c092f411e2e62882af98a99c6eeb0d84323bca0f5a22aefd8734b76d66"
+    },
+    {
+      "id": "IMG_A4_T08_009",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_009.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_009.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "18cc565a92427d24f894d0beefe20807ab55868b51204582d0ca4326913de361",
+      "publishedPathSha256": "4f1bfb83bc31bb232738f19daeef35923a55e57766164ee248d43f8c54d9f324"
+    },
+    {
+      "id": "IMG_A4_T08_010",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_010.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_010.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "465f67ce0129a7ada0f81e50580f636a03f87cf7fb86d629e1febb0265d3f44f",
+      "publishedPathSha256": "333c0f66ad9a8adf183712db5ad20ac7481f3663196e092ddb5af0ecfa82364b"
+    },
+    {
+      "id": "IMG_A4_T08_012",
+      "sourcePath": "src/第四幕/T08/IMG_A4_T08_012.png",
+      "publishedPath": "src/assets/compressed/第四幕/T08/IMG_A4_T08_012.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "3de2e46defddf7d0b709fb1b9747e2e69afc2abc7c39546feb0f11c3246396f7",
+      "publishedPathSha256": "b7d2d8c3c7a73e1f2248bafa47012e7777c5d5463767ef33e083cb7f54b1d4b2"
+    },
+    {
+      "id": "IMG_A4_T09_001",
+      "sourcePath": "src/第四幕/T09/IMG_A4_T09_001.png",
+      "publishedPath": "src/assets/compressed/第四幕/T09/IMG_A4_T09_001.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "5f2d30e81523d565ad0c04351f1cfd374e3c3730303368ec9584812fc19d33d6",
+      "publishedPathSha256": "616c6c5a549cc391a673bc41e1281963d8d19caa87491f1362ff8313c9f04fbd"
+    },
+    {
+      "id": "IMG_A4_T09_002",
+      "sourcePath": "src/第四幕/T09/IMG_A4_T09_002.png",
+      "publishedPath": "src/assets/compressed/第四幕/T09/IMG_A4_T09_002.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "cdd5a85fb857e19b584bddbcbe25cb097536941b9c36eb8164d65e02e0ea166b",
+      "publishedPathSha256": "41aca69bdda4164d28b551618dfd6edc0405b7b97c146076813f359dbdafce6a"
+    },
+    {
+      "id": "IMG_A4_T09_003",
+      "sourcePath": "src/第四幕/T09/IMG_A4_T09_003.png",
+      "publishedPath": "src/assets/compressed/第四幕/T09/IMG_A4_T09_003.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "4314fa1570244bc04d82fa52d396cc2f7be0de88d860f1cb753b5a501f94a9e6",
+      "publishedPathSha256": "3cfb99351b7def52a28cc5c18721edf217ca3729091ab425d91db259d84985ef"
+    },
+    {
+      "id": "IMG_A4_T09_004",
+      "sourcePath": "src/第四幕/T09/IMG_A4_T09_004.png",
+      "publishedPath": "src/assets/compressed/第四幕/T09/IMG_A4_T09_004.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "f1d4edbe08eecd34eef33988122cd3c64fd75adf4defeb90877d068049c0b0f4",
+      "publishedPathSha256": "fc0be90685ab78983fd6e9c5005861e89a0d949b27b0a5ed75e174d17de7390c"
+    },
+    {
+      "id": "IMG_A4_T09_005",
+      "sourcePath": "src/第四幕/T09/IMG_A4_T09_005.png",
+      "publishedPath": "src/assets/compressed/第四幕/T09/IMG_A4_T09_005.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "5efcf0cdd9bcffcf44d647cb91328eea796265582b386d0efecc1ae819d6671c",
+      "publishedPathSha256": "175546145f44de670ee73efde72d16e33a76c2a8f0858a694437efa2a0a6969f"
+    },
+    {
+      "id": "IMG_A4_READING_DETAIL_001",
+      "sourcePath": "src/第四幕/UX-RHYTHM/IMG_A4_READING_DETAIL_001.png",
+      "publishedPath": "src/assets/compressed/ux-rhythm/IMG_A4_READING_DETAIL_001.webp",
+      "type": "source-and-published",
+      "sourcePathSha256": "dcddec1123395c6b8aa1d2f950563bee4d5b41754309addfd36f88874343e59d",
+      "publishedPathSha256": "f9f843a509fa58910bb606edc9b7d212215b1947a4a034317286e4a65c347dd5"
+    },
+    {
+      "id": "IMG_A4_FINALE_FEAR_001",
+      "sourcePath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_FEAR_001.webp",
+      "publishedPath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_FEAR_001.webp",
+      "type": "finale",
+      "sourcePathSha256": "4052fc6d4b1603be1126bbaec7b607d53dcf246c033990c0503d552aca525416",
+      "publishedPathSha256": "4052fc6d4b1603be1126bbaec7b607d53dcf246c033990c0503d552aca525416"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_001",
+      "sourcePath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_DOOR_001.webp",
+      "publishedPath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_DOOR_001.webp",
+      "type": "finale",
+      "sourcePathSha256": "eee32dfe718fdf7d3559c21a8247b878b271d9972ca9ca7a677bbab967a67d79",
+      "publishedPathSha256": "eee32dfe718fdf7d3559c21a8247b878b271d9972ca9ca7a677bbab967a67d79"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_002",
+      "sourcePath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_DOOR_002.webp",
+      "publishedPath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_DOOR_002.webp",
+      "type": "finale",
+      "sourcePathSha256": "a11f2938d1a91d7eb2f0426c5a2175cd2fce76631806c85a4c6cf5604bbb087d",
+      "publishedPathSha256": "a11f2938d1a91d7eb2f0426c5a2175cd2fce76631806c85a4c6cf5604bbb087d"
+    },
+    {
+      "id": "IMG_A4_FINALE_SURROUND_001",
+      "sourcePath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_SURROUND_001.webp",
+      "publishedPath": "src/assets/ux-finale-20261008/IMG_A4_FINALE_SURROUND_001.webp",
+      "type": "finale",
+      "sourcePathSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4",
+      "publishedPathSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4"
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINALE_FEAR_001.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_FINALE_FEAR_001.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_FINALE_FEAR_001",
+      "sourcePathSha256": "df4b9cd188f417013045ecf0a4bcddba21f003c21f5a779bcb9e574fda6fa3e7",
+      "publishedPathSha256": "df4b9cd188f417013045ecf0a4bcddba21f003c21f5a779bcb9e574fda6fa3e7"
+    },
+    {
+      "id": "IMG_A4_ZOOM_READING_DETAIL_001",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_READING_DETAIL_001.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_READING_DETAIL_001.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_READING_DETAIL_001",
+      "sourcePathSha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3",
+      "publishedPathSha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_002",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_002.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_002.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T06_002",
+      "sourcePathSha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23",
+      "publishedPathSha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_004",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_004.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_004.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T06_004",
+      "sourcePathSha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051",
+      "publishedPathSha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_005",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_005.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_005.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T06_005",
+      "sourcePathSha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8",
+      "publishedPathSha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_007.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T06_007.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T06_007",
+      "sourcePathSha256": "d98b644eaea1b6b402e2f8d6f2f60305a09c0d0f32cb3b72841422bd29f6c385",
+      "publishedPathSha256": "d98b644eaea1b6b402e2f8d6f2f60305a09c0d0f32cb3b72841422bd29f6c385"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_005.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T07_005.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T07_005",
+      "sourcePathSha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90",
+      "publishedPathSha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_005",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_005.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_005.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T08_005",
+      "sourcePathSha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65",
+      "publishedPathSha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_006",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_006.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_006.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T08_006",
+      "sourcePathSha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d",
+      "publishedPathSha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_007.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_007.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T08_007",
+      "sourcePathSha256": "132da2dc057a8fe5ef9fae5dee317c5113298f8478a7d6f405ceda42f407bb18",
+      "publishedPathSha256": "132da2dc057a8fe5ef9fae5dee317c5113298f8478a7d6f405ceda42f407bb18"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_008.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_008.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T08_008",
+      "sourcePathSha256": "bc31dca02a81e96ae17a88cfc14cae99e722eb1c029ac440d8b22e5ae4f1a4a5",
+      "publishedPathSha256": "bc31dca02a81e96ae17a88cfc14cae99e722eb1c029ac440d8b22e5ae4f1a4a5"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_010.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_010.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T08_010",
+      "sourcePathSha256": "adf0c4b7f52621c62d14c68d19118bd90e6b40f0ab95ef98c99cd097b3eee0af",
+      "publishedPathSha256": "adf0c4b7f52621c62d14c68d19118bd90e6b40f0ab95ef98c99cd097b3eee0af"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_012",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_012.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T08_012.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T08_012",
+      "sourcePathSha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444",
+      "publishedPathSha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_001",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T09_001",
+      "sourcePathSha256": "1a833aea2ee5e2a4c98093a9d992a8ed172d6cfbfd2783073a6966a103b0f7d3",
+      "publishedPathSha256": "1a833aea2ee5e2a4c98093a9d992a8ed172d6cfbfd2783073a6966a103b0f7d3"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_002",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T09_002",
+      "sourcePathSha256": "8979f9be5b6c877ba46b255c2ab6d1de35d374b2b9d4e9c66666c882fba59378",
+      "publishedPathSha256": "8979f9be5b6c877ba46b255c2ab6d1de35d374b2b9d4e9c66666c882fba59378"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_003",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_003.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_003.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T09_003",
+      "sourcePathSha256": "837a88629715cfb9111e2a07a0c33dce9dee6cfdd4e9158ef8c5292f06fc1a07",
+      "publishedPathSha256": "837a88629715cfb9111e2a07a0c33dce9dee6cfdd4e9158ef8c5292f06fc1a07"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_004",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_004.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_004.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T09_004",
+      "sourcePathSha256": "50203a92815bf2ced7424981a3375d27c035d1b962ba16e6c2c000a1bf28bcfd",
+      "publishedPathSha256": "50203a92815bf2ced7424981a3375d27c035d1b962ba16e6c2c000a1bf28bcfd"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_005.webp",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_005.webp",
+      "type": "zoom",
+      "parentId": "IMG_A4_T09_005",
+      "sourcePathSha256": "9b902836b2706a11947f96dee97184fdd403d8e0a3f4cf8ff5bfc38e3382f288",
+      "publishedPathSha256": "9b902836b2706a11947f96dee97184fdd403d8e0a3f4cf8ff5bfc38e3382f288"
+    }
+  ]
+}
