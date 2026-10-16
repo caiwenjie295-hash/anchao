@@ -1,6 +1,6 @@
 # BGM-INTERFACE-20261016 背景音乐接入预留
 
-> 状态：冻结执行工单
+> 状态：接口预留已完成，主审 APPROVED；实际选曲与播放接入待用户通知
 > 基线：`b7fa3916a90edac2b85669938135019b0e74d787`
 > 执行角色：单一执行 Agent
 > 分支：`agent/BGM-INTERFACE-20261016-placeholder`
