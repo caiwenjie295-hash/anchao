@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent }
 import { createPortal } from 'react-dom';
 import { stateManager as defaultManager, type StateManager } from '../../core/stateManager';
 import { getChapterChoices, type ChapterId } from '../../core/chapterNavigation';
+import { useBackgroundMusic } from '../../media/useBackgroundMusic';
 import './chapterNavigation.css';
 
 type Confirmation = { kind: 'replay'; chapter: ChapterId } | { kind: 'reset' };
@@ -20,6 +21,7 @@ export function ChapterNavigation({
   onReset?: () => boolean;
 }) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
+  const music = useBackgroundMusic();
   const history = manager.getChapterHistory();
   const choices = getChapterChoices(state, history.history);
   const [open, setOpen] = useState(false);
@@ -79,7 +81,7 @@ export function ChapterNavigation({
     }
     if (event.key !== 'Tab') return;
     event.stopPropagation();
-    const controls = [...(menuRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), summary') ?? [])]
+    const controls = [...(menuRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), summary, input:not(:disabled)') ?? [])]
       .filter((element) => !element.closest('details:not([open])') || element.tagName === 'SUMMARY');
     const first = controls[0], last = controls.at(-1);
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
@@ -144,6 +146,33 @@ export function ChapterNavigation({
       <section ref={menuRef} id="chapter-navigation-menu" className="chapter-navigation__menu chapter-navigation__menu--centered" role="dialog" aria-modal={confirmation ? undefined : true} aria-labelledby="chapter-navigation-menu-title" onKeyDown={onMenuKeyDown}>
         <div className="chapter-navigation__menu-heading"><h2 id="chapter-navigation-menu-title">从已到达的章节开头重玩</h2><button ref={closeMenuRef} type="button" className="chapter-navigation__close" aria-label="关闭章节选择" onClick={closeMenu}>关闭</button></div>
         <p>只列出实际进入过的章节。重玩不会收回已经解锁的后续章节。</p>
+        <section className="chapter-navigation__music" aria-label="背景音乐" role="group">
+          <div className="chapter-navigation__music-heading">
+            <strong>{music.enabled ? '背景音乐已开启' : '背景音乐已关闭'}</strong>
+            <button type="button" className="chapter-navigation__music-toggle" aria-pressed={music.enabled} onClick={() => { void music.setEnabled(!music.enabled); }}>
+              {music.enabled ? '关闭' : '开启'}
+            </button>
+          </div>
+          <label className="chapter-navigation__music-label" htmlFor="chapter-navigation-music-volume">
+            <span>音量</span><span>{Math.round(music.volume * 100)}%</span>
+          </label>
+          <input
+            id="chapter-navigation-music-volume"
+            className="chapter-navigation__music-range"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value={Math.round(music.volume * 100)}
+            aria-label="背景音乐音量"
+            aria-valuetext={`${Math.round(music.volume * 100)}%`}
+            onChange={(event) => { void music.setVolume(Number(event.currentTarget.value) / 100); }}
+          />
+          <p className="chapter-navigation__music-status" role="status">
+            {music.status === 'playing' ? '正在播放' : music.status === 'blocked' ? '浏览器暂未允许播放，请点击重试。' : music.status === 'error' ? '当前浏览器无法播放这段音乐。' : music.status === 'paused' ? (music.enabled ? '音乐已暂停。' : '音乐已关闭。') : '首次交互后开始播放。'}
+          </p>
+          {music.status === 'blocked' && <button type="button" className="chapter-navigation__music-retry" onClick={() => { void music.retry(); }}>重试播放</button>}
+        </section>
         <div className="chapter-navigation__choices">
           {choices.map((choice) => <button
             key={choice.id}

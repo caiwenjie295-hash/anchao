@@ -4,8 +4,20 @@ import { join } from 'node:path';
 
 export const MANIFEST_NAME = 'anchao-preload-manifest.json';
 const WORKER_NAME = 'anchao-preload-sw.js';
+const DOCUMENT_EXTENSIONS = new Set(['.md', '.markdown', '.mdown', '.mkd', '.rst', '.adoc', '.asciidoc', '.log', '.map']);
+const DOCUMENT_NAMES = new Set(['readme', 'license', 'licence', 'notice', 'changelog', 'contributing', 'authors', 'code_of_conduct']);
+const SYSTEM_FILES = new Set(['.ds_store', 'thumbs.db', 'desktop.ini', '.gitkeep']);
 const digest = (value) => createHash('sha256').update(value).digest('hex');
 const encodedPath = (path) => path.split('/').map(encodeURIComponent).join('/');
+
+function isNonRuntimeFile(fileName) {
+  const parts = fileName.replaceAll('\\', '/').split('/');
+  const name = parts.at(-1).toLowerCase();
+  const extension = name.includes('.') ? name.slice(name.lastIndexOf('.')) : '';
+  const stem = extension ? name.slice(0, -extension.length) : name;
+  return parts.some((part) => ['docs', 'documentation', 'developer-docs', 'dev-docs'].includes(part.toLowerCase()))
+    || name.startsWith('._') || SYSTEM_FILES.has(name) || DOCUMENT_NAMES.has(stem) || DOCUMENT_EXTENSIONS.has(extension);
+}
 
 async function publicFiles(directory, prefix = '') {
   if (!directory) return [];
@@ -22,7 +34,7 @@ async function publicFiles(directory, prefix = '') {
 }
 
 export function createStartupManifest(base, files) {
-  const resources = files.filter(({ fileName }) => !['index.html', MANIFEST_NAME, WORKER_NAME].includes(fileName))
+  const resources = files.filter(({ fileName }) => !['index.html', MANIFEST_NAME, WORKER_NAME].includes(fileName) && !isNonRuntimeFile(fileName))
     .map(({ fileName, source }) => {
       if (!fileName || fileName.startsWith('/') || fileName.split('/').some((part) => part === '..' || part === '.')) throw new Error('Unsafe startup resource path');
       const content = typeof source === 'string' ? Buffer.from(source) : source;

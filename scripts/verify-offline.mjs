@@ -28,6 +28,31 @@ function assertLocalImage(value) {
   assert.match(path, /^assets\/.+\.(png|jpe?g|webp)$/i);
   assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
 }
+async function assertLocalBackgroundMusic() {
+  const deadline = Date.now() + 2_000;
+  let audio;
+  while (Date.now() < deadline) {
+    audio = dom.window.document.querySelector('audio[data-background-music]');
+    if (audio) break;
+    await new Promise((resolve) => setTimeout(resolve, 30));
+  }
+  if (!audio) {
+    const root = dom.window.document.body.firstElementChild;
+    const rootState = root
+      ? `${root.tagName.toLowerCase()}#${root.id || '(no id)'} children=${root.childElementCount} text=${JSON.stringify(root.textContent.trim().slice(0, 100))}`
+      : 'body has no root element';
+    const recentErrors = errors.slice(-3).join(' | ') || '(none)';
+    throw new Error(`Background music element was not mounted within 2s; jsdom errors: ${recentErrors}; root: ${rootState}`);
+  }
+  const url = new URL(audio.getAttribute('src'), dom.window.location.href);
+  assert.equal(url.origin, 'https://anchao-offline.test');
+  const path = decodeURIComponent(url.pathname.slice(1));
+  assert.match(path, /^assets\/.+\.ogg$/i);
+  assert.ok(filePaths.has(path), `Background music missing from offline manifest: ${path}`);
+  assert.equal(audio.loop, true, 'Background music should loop');
+  assert.equal(audio.volume, 0.2, 'Background music should use the default volume');
+  assert.equal(audio.paused, true, 'Background music should wait for a user gesture');
+}
 const pages = JSON.parse(await readFile('data/browser_pages.json', 'utf8')).items;
 const imageAssets = JSON.parse(await readFile('data/images.json', 'utf8')).items;
 const compressedAssetMap = JSON.parse(await readFile('src/assets/compressed/asset-map.json', 'utf8')).entries;
@@ -111,6 +136,18 @@ async function mount(saved) {
       // jsdom lacks native dialog methods; this checks open/close wiring, not modal layout or focus.
       window.HTMLDialogElement.prototype.showModal = function showModal() { this.setAttribute('open', ''); };
       window.HTMLDialogElement.prototype.close = function close() { this.removeAttribute('open'); };
+      // jsdom does not implement media playback; model only the observable paused state and API calls.
+      const mediaPaused = new WeakMap();
+      Object.defineProperty(window.HTMLMediaElement.prototype, 'paused', {
+        configurable: true,
+        get() { return mediaPaused.get(this) ?? true; },
+      });
+      window.HTMLMediaElement.prototype.play = function play() {
+        mediaPaused.set(this, false);
+        return Promise.resolve();
+      };
+      window.HTMLMediaElement.prototype.pause = function pause() { mediaPaused.set(this, true); };
+      window.HTMLMediaElement.prototype.load = function load() { mediaPaused.set(this, true); };
       if (saved) {
         window.localStorage.setItem('anchao.save.v1', saved);
         if (retainedUiPreferences) window.localStorage.setItem('anchao.ui.v1', retainedUiPreferences);
@@ -123,6 +160,7 @@ async function mount(saved) {
     dom.window.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
   });
   await delay();
+  await assertLocalBackgroundMusic();
   await simulateOfflineImageDecodes();
   if (!saved) assert.equal(dom.window.document.querySelector('.story-transition')?.getAttribute('data-story-transition'), 'TRANSITION_A1_INTRO');
   await settle();
