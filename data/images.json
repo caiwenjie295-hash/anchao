@@ -2089,6 +2089,19 @@
       "file": "IMG_A4_T08_012.png"
     },
     {
+      "id": "IMG_A4_FINALE_RETREAT_001",
+      "title": "凌晨走廊 · 往回走",
+      "act": 4,
+      "phase": "A4_T08",
+      "source": "scene",
+      "purpose": "王澳拖着受伤的腿沿走廊撤离，抵达禁闭区与教室区交界，呈现摔倒前的第一人称视角。",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "AS-RETREAT-20261016：内置 imagegen 生成，低饱和自然手机照片；无可读内容、额外人物或新线索。原生图和提示词见 docs/as-retreat-20261016/art/。无独立近景，放大回退原图。",
+      "assetType": "image",
+      "file": "IMG_A4_FINALE_RETREAT_001.webp"
+    },
+    {
       "id": "IMG_A4_BLOG_WINDOW_001",
       "title": "宿舍窗边",
       "act": 4,

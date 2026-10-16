@@ -151,6 +151,20 @@ describe('Act4 reading experience', () => {
       expect(paragraphsInBlock(host, 'T08_ARCHIVE').join('')).toContain(archiveTarget);
       await selectLastPage(host, 'T08_ARCHIVE');
       await advanceReaderUntilBlock(host, 'T08_KITCHEN_ESCAPE');
+      const kitchenBlock = act4NarrativeSections.find((section) => section.stage === 'T08')!.blocks.find((block) => block.id === 'T08_KITCHEN_ESCAPE')!;
+      const kitchenPages = act4ReaderTextPages('T08', kitchenBlock.id, kitchenBlock.paragraphs, true)
+        .filter((page) => page.role === 'page' || page.role === 'whole');
+      const retreatPage = kitchenPages.findIndex((page) => page.sceneId === 'T08_KITCHEN_RETREAT');
+      expect(retreatPage).toBeGreaterThanOrEqual(0);
+      await selectPage(host, 'T08_KITCHEN_ESCAPE', retreatPage + 1, false);
+      const retreatCover = host.querySelector<HTMLElement>('.a4-reader__cover');
+      expect(retreatCover?.querySelector('.a4-reader__cover-art')?.getAttribute('data-illustration-id'))
+        .toBe('IMG_A4_FINALE_RETREAT_001');
+      await act(async () => { retreatCover?.querySelector<HTMLButtonElement>('button')?.click(); });
+      const zoomDialog = document.body.querySelector<HTMLElement>('[role="dialog"][aria-label="放大配图"]');
+      expect(zoomDialog?.querySelector<HTMLImageElement>('img')?.getAttribute('src'))
+        .toContain('IMG_A4_FINALE_RETREAT_001.webp');
+      await act(async () => { zoomDialog?.querySelector<HTMLButtonElement>('button')?.click(); });
       await selectLastPage(host, 'T08_KITCHEN_ESCAPE');
       expect(host.querySelector('[data-explanation-id="A4_EXPLAIN_T08"]')).not.toBeNull();
 

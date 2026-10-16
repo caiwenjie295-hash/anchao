@@ -44,6 +44,7 @@ export const uxRhythmA4AssetPath = (id: string, file: string): string | null =>
   uxRhythmA4ImageIds.has(id) && file === `${id}.png` ? `../第四幕/UX-RHYTHM/${file}` : null;
 const uxFinaleA4ImageIds = [
   'IMG_A4_FINALE_FEAR_001',
+  'IMG_A4_FINALE_RETREAT_001',
   'IMG_A4_FINALE_DOOR_001',
   'IMG_A4_FINALE_DOOR_002',
   'IMG_A4_FINALE_SURROUND_001',

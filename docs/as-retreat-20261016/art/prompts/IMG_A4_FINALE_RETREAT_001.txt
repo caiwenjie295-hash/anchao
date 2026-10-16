@@ -1,0 +1,13 @@
+Use case: photorealistic-natural
+Asset type: 16:9 horizontal still-image cover for a visual novel scene
+Primary request: A candid first-person smartphone photograph from the injured protagonist’s point of view, limping upstairs toward an exit shortly before falling. The moment is the retreat itself, before the fall.
+Input images: Image 1: preceding kitchen-fear scene, for visual style and first-person continuity only. Image 2: following corridor-and-fire-box scene, for the old school corridor’s location and visual continuity only. Do not copy either image’s composition.
+Scene/backdrop: A cheap old school building that is still operating, at night, at the junction between its confinement area and classroom wing. A modest corridor turns ahead toward an exit. Keep doors, walls, lights, and ordinary safety equipment complete and usable. The tiled floor is dry and clean, with only ordinary wear. A red fire-safety cabinet may be visible naturally near the corner as the known nearby landmark.
+Subject: The empty corridor ahead as seen by the person walking through it. At most, a partial hand at the image edge and a small, indistinct notebook may enter the foreground; no writing can be read. No face or identifiable body.
+Style/medium: Photorealistic, ordinary low-end smartphone snapshot, naturally imperfect rather than polished.
+Composition/framing: Wide landscape frame, approximately 16:9. Eye-level first-person view looking along the corridor and toward the turn; an unobstructed path leads forward. Keep the image usable as a scene cover and consistent with the adjacent moments.
+Lighting/mood: Soft, natural indoor ambient lighting for a quiet late-night school corridor; neutral white balance, gentle exposure, low contrast, restrained tension. Slight handheld movement and mild focus softness, without obscuring the scene.
+Color palette: Low saturation; warm off-white upper walls and muted gray-green lower walls, subdued neutral tile, modest colors from real school fixtures.
+Materials/textures: Complete painted plaster, lightly worn but maintained doors and fixtures, dry matte tile, subtle everyday marks. No broad peeling paint, rubble, leaves, puddles, mold, or abandoned-building decay.
+Text (verbatim): None.
+Constraints: Depict the protagonist’s retreat before the fall. Preserve the ordinary operating-school condition and the first-person phone-photo continuity. No readable text, numbers, passwords, labels, identity clues, or new clues. No blood, injury close-up, fallen person, extra people, pursuer, silhouette, creature, or implied identity. No dramatic horror lighting, cinematic grading, HDR, artificial CGI look, or watermark.
