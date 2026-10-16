@@ -15,6 +15,12 @@
       #anchao-startup-fill { position: relative; width: 3%; height: 100%; background: #d6ddd5; transition: width 300ms linear; }
       #anchao-startup-fill::after { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, #fff, transparent); transform: translateX(-100%); animation: anchao-startup-shine 1.8s ease-in-out infinite; content: ""; }
       #anchao-startup-progress { margin: 12px 0 0; color: #8f9a92; font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .1em; }
+       .anchao-startup__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; font-size: 11px; color: #9ca79e; }
+      .anchao-startup__stats dt { margin-bottom: 3px; }
+      .anchao-startup__stats dd { margin: 0; color: #c6cbc7; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      #anchao-startup-detail { min-height: 3.4em; margin: 18px 0 0; color: #9ca79e; font-size: 12px; overflow-wrap: anywhere; }
+      @media (max-width: 340px) { #anchao-startup { padding: 18px; } .anchao-startup__stats { grid-template-columns: 1fr; gap: 6px; } .anchao-startup__stats div { display: flex; justify-content: space-between; gap: 12px; } }
+      @media (max-height: 400px) { #anchao-startup { place-items: start center; padding-block: 18px; } .anchao-startup__title { margin-bottom: 12px; } }
       #anchao-startup-retry { min-height: 44px; margin-top: 20px; padding: 8px 24px; border: 1px solid #819087; border-radius: 3px; color: #e5e7e4; background: #17211b; font: inherit; cursor: pointer; }
       #anchao-startup-retry:focus-visible { outline: 2px solid #e5e7e4; outline-offset: 4px; }
       #anchao-startup-retry[hidden] { display: none; }
@@ -29,6 +35,12 @@
         <p id="anchao-startup-copy" role="status" aria-live="polite">精美图片加载中，请稍候……</p>
         <div class="anchao-startup__track" role="progressbar" aria-label="准备进入暗潮" aria-valuemin="0" aria-valuemax="100" aria-valuenow="3"><div id="anchao-startup-fill"></div></div>
         <p id="anchao-startup-progress" aria-hidden="true">3%</p>
+        <dl class="anchao-startup__stats" aria-label="资源下载统计">
+          <div><dt>总大小</dt><dd id="anchao-startup-total">待确认</dd></div>
+          <div><dt>已加载</dt><dd id="anchao-startup-loaded">0.00 MB</dd></div>
+          <div><dt>下载速度</dt><dd id="anchao-startup-speed">0.0 KB/s</dd></div>
+        </dl>
+        <p id="anchao-startup-detail">正在确认资源清单……</p>
         <button id="anchao-startup-retry" type="button" hidden>重新加载</button>
         <noscript>请开启 JavaScript 后重新打开。</noscript>
       </div>
@@ -37,10 +49,22 @@
     <script>
       window.addEventListener('error', function (event) {
         if (!document.getElementById('anchao-startup') || !(event.target instanceof HTMLScriptElement || event.target instanceof HTMLLinkElement)) return;
-        document.getElementById('anchao-startup').dataset.entryError = 'true';
-        document.getElementById('anchao-startup-copy').textContent = '加载暂时中断，请检查网络后重试。';
+        var shell = document.getElementById('anchao-startup');
+        shell.dataset.entryError = 'true';
+        shell.setAttribute('aria-busy', 'false');
+        var file = '入口脚本或样式';
+        try {
+          var path = new URL(event.target.src || event.target.href, location.href).pathname;
+          var directory = location.pathname.slice(0, location.pathname.lastIndexOf('/') + 1);
+          file = decodeURIComponent(path.startsWith(directory) ? path.slice(directory.length) : path).replace(/[\u0000-\u001f\u007f]/g, '').slice(0, 240);
+        } catch (_) {}
+        shell.dataset.entryFile = file;
+        document.getElementById('anchao-startup-copy').textContent = '页面未能完整加载，请刷新后重试。';
+        document.getElementById('anchao-startup-detail').textContent = '入口脚本或样式未能完整加载，需要刷新页面。文件：' + file;
+        document.getElementById('anchao-startup-speed').textContent = '0.0 KB/s';
         var retry = document.getElementById('anchao-startup-retry');
         retry.hidden = false;
+        retry.textContent = '刷新页面';
         retry.onclick = function () { location.reload(); };
       }, true);
     </script>

@@ -115,6 +115,27 @@ describe('ChapterNavigation', () => {
     expect(document.body.style.overflow).not.toBe('hidden');
   });
 
+  it('exposes accessible music controls in the centered menu and keeps the volume range in its keyboard flow', async () => {
+    await render();
+    const trigger = button('.chapter-navigation__trigger');
+    await act(async () => { trigger.click(); });
+    const toggle = button('.chapter-navigation__music-toggle');
+    const range = document.querySelector<HTMLInputElement>('#chapter-navigation-music-volume')!;
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
+    expect(range.type).toBe('range');
+    expect(range.getAttribute('aria-label')).toBe('背景音乐音量');
+    expect(range.value).toBe('20');
+
+    range.focus();
+    expect(document.activeElement).toBe(range);
+    const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    await act(async () => { range.dispatchEvent(tab); });
+    expect(tab.defaultPrevented).toBe(false);
+    await act(async () => { range.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(document.querySelector('#chapter-navigation-menu')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
   it('keeps reset hidden under the collapsed other-options disclosure and uses the default-cancel confirmation', async () => {
     await render();
     await act(async () => { button('.chapter-navigation__trigger').click(); });

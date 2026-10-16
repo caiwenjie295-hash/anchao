@@ -1,3 +1,5 @@
+import highSpiresUrl from '../assets/audio/drmseq_06_High_Spires_loop.ogg?url&no-inline';
+
 export interface BackgroundMusicTrack {
   readonly title: string;
   readonly src: string;
@@ -11,7 +13,7 @@ export interface BackgroundMusicConfig {
 }
 
 export const backgroundMusicConfig: BackgroundMusicConfig = {
-  track: null,
+  track: { title: 'High Spires', src: highSpiresUrl },
   volume: 0.2,
   loop: true,
 };
