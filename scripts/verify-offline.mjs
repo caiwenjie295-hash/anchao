@@ -28,8 +28,22 @@ function assertLocalImage(value) {
   assert.match(path, /^assets\/.+\.(png|jpe?g|webp)$/i);
   assert.ok(filePaths.has(path), `Image missing from manifest: ${path}`);
 }
-function assertLocalBackgroundMusic() {
-  const audio = query('audio[data-background-music]');
+async function assertLocalBackgroundMusic() {
+  const deadline = Date.now() + 2_000;
+  let audio;
+  while (Date.now() < deadline) {
+    audio = dom.window.document.querySelector('audio[data-background-music]');
+    if (audio) break;
+    await new Promise((resolve) => setTimeout(resolve, 30));
+  }
+  if (!audio) {
+    const root = dom.window.document.body.firstElementChild;
+    const rootState = root
+      ? `${root.tagName.toLowerCase()}#${root.id || '(no id)'} children=${root.childElementCount} text=${JSON.stringify(root.textContent.trim().slice(0, 100))}`
+      : 'body has no root element';
+    const recentErrors = errors.slice(-3).join(' | ') || '(none)';
+    throw new Error(`Background music element was not mounted within 2s; jsdom errors: ${recentErrors}; root: ${rootState}`);
+  }
   const url = new URL(audio.getAttribute('src'), dom.window.location.href);
   assert.equal(url.origin, 'https://anchao-offline.test');
   const path = decodeURIComponent(url.pathname.slice(1));
@@ -146,7 +160,7 @@ async function mount(saved) {
     dom.window.addEventListener('load', () => { clearTimeout(timer); resolve(); }, { once: true });
   });
   await delay();
-  assertLocalBackgroundMusic();
+  await assertLocalBackgroundMusic();
   await simulateOfflineImageDecodes();
   if (!saved) assert.equal(dom.window.document.querySelector('.story-transition')?.getAttribute('data-story-transition'), 'TRANSITION_A1_INTRO');
   await settle();
