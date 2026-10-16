@@ -1,14 +1,11 @@
-# 背景音乐接入预留
+# 背景音乐
 
-用户正在选曲，本轮只预留 `src/media/backgroundMusic.ts`，没有实现播放。默认配置：`track: null`、`volume: 0.2`（范围 0–1）、`loop: true`。`BackgroundMusicTrack` 保存曲名 `title` 和构建后资源 URL `src`，`BackgroundMusicConfig` 是后续接入的统一配置入口。
+用户已选定 High Spires 循环音轨并授权接入，覆盖之前“仅预留接口”的暂缓要求。正式源为 `src/assets/audio/drmseq_06_High_Spires_loop.ogg`，2655823字节、Vorbis双声道48kHz、约115秒；逐字节复制用户本地源文件，原件保留，SHA-256 `d6af93937c028124a64ff69df9102d07b4ae9c6af12de36aaf4181ddfcaeb9a4`，未生成/转码。
 
-模块不被入口/App 引用，不创建 Audio/AudioContext、不请求文件、不读写存储；现有第二幕 T07 调查环境声保持独立。当前上传包仍是 `暗潮网站-b7fa3916-AnChao`，这次无需重新上传。
+配置入口 `src/media/backgroundMusic.ts` 通过 `?url&no-inline` 引入本地资源，`volume: 0.2`（0–1）、`loop: true`。音轨作为独立文件进入网页预加载清单和file离线包，兼容 `/AnChao/`，不依赖原始Mac路径。当前发布目录和版本以开发包根 `release-main.json` 为准。
 
-## 用户选曲后再做
+`backgroundMusicPlayer.ts` 提供模块级播放器与订阅，`App.tsx` 顶层effect挂载/清理，body下仅一个 `audio[data-background-music]`。首次点击/键盘有效交互后尝试播放，拒绝不阻断剧情，可在章节窗口“重试播放”。切幕/打开章节窗口不重建；隐藏页面暂停，返回时仅按用户开启偏好恢复；卸载清理音频、监听和待完成播放状态，支持StrictMode。
 
-1. 根据用户提供的音轨和播放范围保存正式资源；以 `?url&no-inline` 导入本地音轨并填入配置，避免硬编码 `/assets/`，同时检查 `/AnChao/` 和 file 离线包。
-2. 实现用户交互后的播放、循环、暂停/静音和音量控制，处理 `play()` 被浏览器拒绝的情况；具体控件和淡入方式届时确认。
-3. 明确全局音乐与 T07 环境声的共存规则，音量偏好独立于剧情存档，切幕/卸载及时清理。
-4. 检查音轨是否进入首屏预加载清单与离线包、失败是否阻断启动；完成播放/静音/循环和宽窄屏验收后重建上传目录。
+居中“章节选择”窗口包含开关、音量滑条和播放状态；关闭后普通点击不重启。设置通过独立 `anchao.ui.backgroundMusic.v1` UI偏好保存，存储不可用时仍可操作，不改变存档schema/剧情。原T07环境声独立保持，没有新增duck或混音规则。
 
-以上均为待办，填写配置本身不会启用音乐。验收记录见 `docs/reviews/BGM-INTERFACE-20261016.md`。
+新增验证分为播放器行为测试、真实浏览器OGG解码/原生尾部循环、0→1挂载清理、宽窄/短屏控件与原清零取消，以及网页/离线包资源hash。jsdom不解码或播放音频，离线回归仅在测试夹具中模拟媒体API，保留零运行错误及本地资源断言。实际范围与日志见 `docs/reviews/LOAD-20261016.md` 和 `docs/load-20261016/validation/coverage.md`。
