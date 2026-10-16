@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>暗潮往回走补图 · 隔离验收</title>
+  <link rel="stylesheet" href="../../../src/styles.css" />
+  <style>
+    html,body,#root{margin:0;width:100%;min-height:100%;min-width:320px}
+    .qa-toolbar{position:fixed;inset:0 0 auto;z-index:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;background:#eef1ee;color:#182323;border-bottom:1px solid #8c9b91;font:14px system-ui}
+    .qa-toolbar label{display:flex;align-items:center;gap:6px}.qa-toolbar select{min-height:36px;max-width:calc(100vw - 90px)}
+    .qa-stage{padding-top:var(--qa-toolbar-height,54px)}
+    .qa-stage>.investigation-shell{top:var(--qa-toolbar-height,54px);height:calc(100dvh - var(--qa-toolbar-height,54px))}
+    .qa-browser{width:100%;height:calc(100dvh - var(--qa-toolbar-height,54px));background:white}
+    .qa-status{font-size:12px;color:#3e5a47}
+    @media(max-width:540px){.qa-toolbar{gap:4px;padding:6px}.qa-toolbar select{max-width:255px}}
+  </style>
+</head>
+<body><div id="root"></div><script type="module" src="../../ux-investigation-20261014/validation/fixture.tsx"></script></body>
+</html>
