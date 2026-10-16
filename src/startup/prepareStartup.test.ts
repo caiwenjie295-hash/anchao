@@ -5,7 +5,7 @@ import { sha256 } from './preload';
 const version = 'a'.repeat(64);
 function shell() {
   document.head.innerHTML = `<meta name="anchao-preload-version" content="${version}">`;
-  document.body.innerHTML = '<div id="anchao-startup"><p id="anchao-startup-copy"></p><div role="progressbar"><div id="anchao-startup-fill"></div></div><p id="anchao-startup-progress"></p><button id="anchao-startup-retry"></button></div>';
+  document.body.innerHTML = '<div id="anchao-startup"><p id="anchao-startup-copy"></p><div role="progressbar"><div id="anchao-startup-fill"></div></div><p id="anchao-startup-progress"></p><p id="anchao-startup-total"></p><p id="anchao-startup-loaded"></p><p id="anchao-startup-speed"></p><p id="anchao-startup-detail"></p><button id="anchao-startup-retry"></button></div>';
   vi.stubEnv('PROD', true);
   vi.stubEnv('BASE_URL', '/AnChao/');
   vi.useFakeTimers();
@@ -32,16 +32,26 @@ describe('startup gate', () => {
     }));
     let entered = false;
     const ready = prepareStartup().then(() => { entered = true; });
-    await vi.advanceTimersByTimeAsync(60_000);
+    // Keep the connection active window under the 60s idle timeout. A fetch
+    // promise that never settles now correctly triggers an automatic retry.
+    await vi.advanceTimersByTimeAsync(30_000);
     const shown = Number(document.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow'));
     expect(shown).toBeGreaterThan(3);
     expect(shown).toBeLessThanOrEqual(95);
     expect(entered).toBe(false);
+    expect(document.getElementById('anchao-startup-total')?.textContent).toBe('0.00 MB');
+    expect(document.getElementById('anchao-startup-loaded')?.textContent).toBe('0.00 MB');
+    expect(document.getElementById('anchao-startup-speed')?.textContent).toBe('0.0 KB/s');
     finish!(new Response('missing', { status: 404 }));
     await vi.advanceTimersByTimeAsync(1);
     const retry = document.getElementById('anchao-startup-retry') as HTMLButtonElement;
     expect(retry.hidden).toBe(false);
     expect(document.getElementById('anchao-startup-copy')?.textContent).toContain('加载暂时中断');
+    expect(document.getElementById('anchao-startup-detail')?.textContent).toContain('HTTP 404');
+    expect(document.getElementById('anchao-startup-detail')?.textContent).toContain('assets/photo.webp');
+    expect(document.getElementById('anchao-startup-total')?.textContent).toBe('0.00 MB');
+    expect(document.getElementById('anchao-startup-loaded')?.textContent).toBe('0.00 MB');
+    expect(document.getElementById('anchao-startup-speed')?.textContent).toBe('0.0 KB/s');
     expect(entered).toBe(false);
     first = false;
     retry.click();
