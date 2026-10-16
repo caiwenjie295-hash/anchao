@@ -36,6 +36,7 @@ import { deriveInvestigationProgress } from './data/investigationProgressData';
 import { act1Scenes } from './data/sceneData';
 import { SceneTransitionLayer } from './components/transition/SceneTransitionLayer';
 import { runAppSceneTransition as runSceneTransition } from './components/transition/sceneTransition';
+import { backgroundMusicPlayer } from './media/backgroundMusicPlayer';
 import { OpeningPrelude } from './components/scenePolish/OpeningPrelude';
 import { shouldShowOpeningPrelude } from './components/scenePolish/openingPreludeData';
 import { fitWindowBesideTaskRail } from './components/scenePolish/desktopTaskRailLayout';
@@ -81,6 +82,7 @@ export default function App() {
     const interval = window.setInterval(() => setTime(new Date()), 15_000);
     return () => window.clearInterval(interval);
   }, []);
+  useEffect(() => backgroundMusicPlayer.mount(), []);
   useEffect(() => {
     const updateViewport = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
     window.addEventListener('resize', updateViewport);

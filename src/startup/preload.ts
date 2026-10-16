@@ -1,13 +1,19 @@
+import { downloadFile, PRELOAD_HEADER, type StartupRetry } from './download';
+import { DownloadMetrics, type StartupStats } from './metrics';
+import { StartupLoadError, StartupVersionError } from './errors';
+export { StartupLoadError, StartupVersionError } from './errors';
+export type { StartupStats } from './metrics';
+export type { StartupRetry } from './download';
+
 export interface StartupResource { path: string; bytes: number; sha256: string }
 export interface StartupManifest { schema: 1; version: string; base: string; totalBytes: number; resources: StartupResource[] }
 
 const HASH = /^[a-f0-9]{64}$/;
-export class StartupVersionError extends Error {}
 export const cachePrefix = (base: URL) => `anchao-preload:${encodeURIComponent(base.href)}:`;
 
-export function parseManifest(value: unknown, base: URL, expectedVersion: string): StartupManifest {
+function checkedManifest(value: unknown, base: URL, expectedVersion: string): StartupManifest {
   const item = value as StartupManifest | null;
-  if (item && HASH.test(item.version) && item.version !== expectedVersion) throw new StartupVersionError('Page version changed');
+  if (item && HASH.test(item.version) && item.version !== expectedVersion) throw new StartupVersionError();
   if (!item || item.schema !== 1 || !HASH.test(item.version)
     || typeof item.base !== 'string' || new URL(item.base, base).href !== base.href
     || !Array.isArray(item.resources) || !item.resources.length) throw new Error('Invalid or outdated startup manifest');
@@ -27,6 +33,14 @@ export function parseManifest(value: unknown, base: URL, expectedVersion: string
   }
   if (!Number.isSafeInteger(item.totalBytes) || item.totalBytes !== bytes) throw new Error('Invalid total size');
   return item;
+}
+
+export function parseManifest(value: unknown, base: URL, expectedVersion: string): StartupManifest {
+  try { return checkedManifest(value, base, expectedVersion); }
+  catch (error) {
+    if (error instanceof StartupVersionError) throw error;
+    throw new StartupLoadError('manifest', 'anchao-preload-manifest.json', 'Invalid startup manifest');
+  }
 }
 
 // Secure contexts use the native digest. The small fallback also supports ordinary HTTP hosts.
@@ -61,24 +75,22 @@ export async function sha256(bytes: Uint8Array): Promise<string> {
   return hash.map((value) => (value >>> 0).toString(16).padStart(8, '0')).join('');
 }
 
-export async function fetchWithTimeout(url: string, init: RequestInit = {}, fetcher: typeof fetch = fetch): Promise<Response> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 120_000);
-  try {
-    const response = await fetcher(url, { ...init, signal: controller.signal });
-    if (!response.ok || response.type === 'opaque' || response.redirected) throw new Error(`Download failed: ${response.status}`);
-    // Keep the deadline over body consumption, rather than just response headers.
-    const bytes = await response.arrayBuffer();
-    return new Response(bytes, { status: response.status, statusText: response.statusText, headers: response.headers });
-  } finally { clearTimeout(timer); }
+// Compatibility export; timeout now measures inactivity, including body consumption.
+export async function fetchWithTimeout(url: string, init: RequestInit = {}, fetcher: typeof fetch = fetch, onRetry?: (retry: StartupRetry) => void): Promise<Response> {
+  const { bytes, headers } = await downloadFile(url, 'anchao-preload-manifest.json', init, { fetcher, onRetry });
+  return new Response(bytes as Uint8Array<ArrayBuffer>, { status: 200, headers });
 }
 
 export async function preloadResources(manifest: StartupManifest, base: URL, options: {
   cache?: Cache; fetcher?: typeof fetch; onProgress: (completed: number, total: number) => void;
+  onStats?: (stats: StartupStats) => void; onRetry?: (retry: StartupRetry) => void;
 }) {
   let cursor = 0, completed = 0;
   let cache = options.cache;
   let failure: unknown;
+  const metrics = new DownloadMetrics(manifest.totalBytes, manifest.resources.length, options.onStats);
+  const ticker = setInterval(() => metrics.emit(), 250);
+  metrics.emit();
   const worker = async () => {
     while (!failure && cursor < manifest.resources.length) {
       const resource = manifest.resources[cursor++];
@@ -87,23 +99,39 @@ export async function preloadResources(manifest: StartupManifest, base: URL, opt
         let stored: Response | undefined;
         try { stored = await cache?.match(url); } catch { cache = undefined; }
         if (stored?.headers.get('x-anchao-sha256') !== resource.sha256) {
-          const response = await fetchWithTimeout(url, { cache: 'reload', credentials: 'same-origin' }, options.fetcher);
-          const bytes = new Uint8Array(await response.arrayBuffer());
-          if (bytes.byteLength !== resource.bytes || await sha256(bytes) !== resource.sha256) throw new Error('Resource version mismatch');
+          const { bytes, headers: responseHeaders } = await downloadFile(url, resource.path, {
+            cache: 'reload', credentials: 'same-origin', headers: { [PRELOAD_HEADER]: '1' },
+          }, {
+            fetcher: options.fetcher, onRetry: options.onRetry,
+            onChunk: (bytes) => metrics.chunk(resource.path, bytes, resource.bytes),
+            onAttemptFailed: () => metrics.rollback(resource.path),
+            validate: async (bytes) => {
+              if (bytes.byteLength !== resource.bytes || await sha256(bytes) !== resource.sha256) {
+                throw new StartupLoadError('integrity', resource.path, 'Resource version mismatch');
+              }
+            },
+          });
           if (cache) {
-            const headers = new Headers(response.headers);
+            const headers = new Headers(responseHeaders);
             headers.set('x-anchao-sha256', resource.sha256);
             headers.delete('content-encoding');
             headers.delete('content-length');
-            try { await cache.put(url, new Response(bytes, { status: 200, headers })); }
+            try { await cache.put(url, new Response(bytes as Uint8Array<ArrayBuffer>, { status: 200, headers })); }
             catch { cache = undefined; } // Quota/private-mode restrictions fall back to the warmed HTTP cache.
           }
         }
         completed++;
+        metrics.verify(resource.path, resource.bytes);
         options.onProgress(completed, manifest.resources.length);
-      } catch (error) { failure = error; }
+      } catch (error) { failure ??= error; }
     }
   };
-  await Promise.all(Array.from({ length: Math.min(4, manifest.resources.length) }, worker));
-  if (failure) throw failure;
+  try {
+    await Promise.all(Array.from({ length: Math.min(4, manifest.resources.length) }, worker));
+    if (failure) throw failure;
+    const result = metrics.snapshot();
+    if (result.completed !== manifest.resources.length || result.verifiedBytes !== manifest.totalBytes) {
+      throw new StartupLoadError('integrity', 'anchao-preload-manifest.json', 'Incomplete resource verification');
+    }
+  } finally { clearInterval(ticker); metrics.stop(); }
 }

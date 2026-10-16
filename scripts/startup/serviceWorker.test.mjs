@@ -32,4 +32,40 @@ describe('versioned game-only service worker', () => {
     expect(open).toHaveBeenCalledWith(`anchao-preload:${encodeURIComponent('https://host.test/AnChao/')}:${version}`);
     expect(network).not.toHaveBeenCalled();
   });
+
+  it('lets explicit preload requests bypass an older cache entry', async () => {
+    const handlers = new Map();
+    const version = 'b'.repeat(64);
+    const match = vi.fn(async () => new Response('stale cached bytes'));
+    const open = vi.fn(async () => ({ match }));
+    const network = vi.fn(async () => new Response('fresh network bytes'));
+    runInNewContext(await readFile(new URL('../../public/anchao-preload-sw.js', import.meta.url), 'utf8'), {
+      URL, self: { location: { href: `https://host.test/AnChao/anchao-preload-sw.js?version=${version}` }, addEventListener: (name, handler) => handlers.set(name, handler) },
+      caches: { open }, fetch: network,
+    });
+    const event = {
+      request: { url: 'https://host.test/AnChao/assets/x.webp', mode: 'cors', method: 'GET', headers: new Headers({ 'X-Anchao-Preload': '1' }) },
+      respondWith: vi.fn(),
+    };
+    handlers.get('fetch')(event);
+    expect(event.respondWith).not.toHaveBeenCalled();
+    expect(open).not.toHaveBeenCalled();
+    expect(match).not.toHaveBeenCalled();
+  });
+
+  it('falls back to the network when CacheStorage reads fail', async () => {
+    const handlers = new Map();
+    const version = 'c'.repeat(64);
+    const fresh = new Response('network fallback');
+    const open = vi.fn(async () => { throw new Error('storage unavailable'); });
+    const network = vi.fn(async () => fresh);
+    runInNewContext(await readFile(new URL('../../public/anchao-preload-sw.js', import.meta.url), 'utf8'), {
+      URL, self: { location: { href: `https://host.test/AnChao/anchao-preload-sw.js?version=${version}` }, addEventListener: (name, handler) => handlers.set(name, handler) },
+      caches: { open }, fetch: network,
+    });
+    const event = { request: { url: 'https://host.test/AnChao/assets/x.webp', mode: 'cors', method: 'GET', headers: new Headers() }, respondWith: vi.fn() };
+    handlers.get('fetch')(event);
+    expect(await event.respondWith.mock.calls[0][0]).toBe(fresh);
+    expect(network).toHaveBeenCalledTimes(1);
+  });
 });
