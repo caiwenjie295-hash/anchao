@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { stateManager as defaultManager, type StateManager } from '../../core/stateManager';
 import { getChapterChoices, type ChapterId } from '../../core/chapterNavigation';
 import './chapterNavigation.css';
@@ -25,26 +26,64 @@ export function ChapterNavigation({
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
   const [error, setError] = useState('');
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
+  const closeMenuRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const originRef = useRef<HTMLElement | null>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (confirmation) cancelRef.current?.focus();
+    else if (originRef.current?.isConnected) {
+      originRef.current.focus();
+      originRef.current = null;
+    }
   }, [confirmation]);
+
+  useEffect(() => {
+    if (open) closeMenuRef.current?.focus();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open && !confirmation) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [open, confirmation]);
 
   if (blocked) return null;
 
   const closeConfirmation = () => {
     setConfirmation(null);
     setError('');
-    originRef.current?.focus();
   };
 
   const beginConfirmation = (next: Confirmation, origin: HTMLElement) => {
     originRef.current = origin;
     setError('');
     setConfirmation(next);
+  };
+
+  const closeMenu = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (confirmation) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      closeMenu();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    event.stopPropagation();
+    const controls = [...(menuRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), summary') ?? [])]
+      .filter((element) => !element.closest('details:not([open])') || element.tagName === 'SUMMARY');
+    const first = controls[0], last = controls.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
   };
 
   const confirm = () => {
@@ -100,14 +139,10 @@ export function ChapterNavigation({
         aria-controls="chapter-navigation-menu"
         onClick={() => setOpen((value) => !value)}
       >章节选择</button>
-      {open && <section id="chapter-navigation-menu" className="chapter-navigation__menu" role="region" aria-label="章节选择" onKeyDown={(event) => {
-        if (event.key !== 'Escape') return;
-        event.preventDefault();
-        event.stopPropagation();
-        setOpen(false);
-        triggerRef.current?.focus();
-      }}>
-        <h2>从已到达的章节开头重玩</h2>
+    </div>
+    {open && createPortal(<div className="chapter-navigation__backdrop chapter-navigation__menu-backdrop" inert={confirmation ? true : undefined} aria-hidden={confirmation ? true : undefined} onMouseDown={(event) => { if (event.target === event.currentTarget) closeMenu(); }}>
+      <section ref={menuRef} id="chapter-navigation-menu" className="chapter-navigation__menu chapter-navigation__menu--centered" role="dialog" aria-modal={confirmation ? undefined : true} aria-labelledby="chapter-navigation-menu-title" onKeyDown={onMenuKeyDown}>
+        <div className="chapter-navigation__menu-heading"><h2 id="chapter-navigation-menu-title">从已到达的章节开头重玩</h2><button ref={closeMenuRef} type="button" className="chapter-navigation__close" aria-label="关闭章节选择" onClick={closeMenu}>关闭</button></div>
         <p>只列出实际进入过的章节。重玩不会收回已经解锁的后续章节。</p>
         <div className="chapter-navigation__choices">
           {choices.map((choice) => <button
@@ -123,9 +158,9 @@ export function ChapterNavigation({
           <summary>其他选项</summary>
           <button type="button" className="chapter-navigation__clear" onClick={(event) => beginConfirmation({ kind: 'reset' }, event.currentTarget)}>清零进度</button>
         </details>
-      </section>}
-    </div>
-    {confirmation && <div className="chapter-navigation__backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) closeConfirmation(); }}>
+      </section>
+    </div>, document.body)}
+    {confirmation && createPortal(<div className="chapter-navigation__backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) closeConfirmation(); }}>
       <div
         className="chapter-navigation__confirmation"
         role="dialog"
@@ -145,6 +180,6 @@ export function ChapterNavigation({
           <button ref={confirmRef} type="button" className={confirmation.kind === 'reset' ? 'chapter-navigation__danger' : undefined} onClick={confirm}>{confirmation.kind === 'reset' ? '确认清零' : '确认重玩'}</button>
         </div>
       </div>
-    </div>}
+    </div>, document.body)}
   </>;
 }

@@ -8,7 +8,7 @@ export const ALLOWED_WINDOWS_MODE_ONLY_PATHS = new Set([
   'scripts/quality-gate.sh',
 ]);
 
-const SOURCE_DIRECTORIES = ['src', 'data', 'public'];
+const SOURCE_DIRECTORIES = ['src', 'data', 'public', 'scripts/startup'];
 const SOURCE_FILES = ['index.html', 'package.json', 'package-lock.json', '.node-version', 'vite.config.ts', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'scripts/build-offline.mjs', 'scripts/release/sourceState.mjs'];
 const normalize = (path) => path.split(sep).join('/');
 

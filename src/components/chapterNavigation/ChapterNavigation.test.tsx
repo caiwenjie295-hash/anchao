@@ -53,7 +53,7 @@ describe('ChapterNavigation', () => {
     await act(async () => { root.render(<ChapterNavigation manager={manager} {...props} />); });
   };
   const button = (selector: string) => {
-    const element = container.querySelector<HTMLButtonElement>(selector);
+    const element = document.querySelector<HTMLButtonElement>(selector);
     expect(element, `missing ${selector}`).not.toBeNull();
     return element!;
   };
@@ -61,11 +61,11 @@ describe('ChapterNavigation', () => {
   it('shows only reached chapters, and cancel leaves the save unchanged and returns focus to the choice', async () => {
     await render();
     await act(async () => { button('.chapter-navigation__trigger').click(); });
-    expect([...container.querySelectorAll<HTMLButtonElement>('.chapter-navigation__choice')].map((item) => item.disabled)).toEqual([false, false, false, true]);
+    expect([...document.querySelectorAll<HTMLButtonElement>('.chapter-navigation__choice')].map((item) => item.disabled)).toEqual([false, false, false, true]);
     const before = manager.exportSave();
     const firstChoice = button('.chapter-navigation__choice');
     await act(async () => { firstChoice.click(); });
-    expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).not.toBeNull();
     expect(document.activeElement).toBe(button('.chapter-navigation__confirmation-actions button:first-child'));
     await act(async () => { button('.chapter-navigation__confirmation-actions button:first-child').click(); });
     expect(manager.exportSave()).toBe(before);
@@ -74,19 +74,51 @@ describe('ChapterNavigation', () => {
 
   it('uses the requested placement class so taskbar and fullscreen entries share the same access behavior', async () => {
     await render({ placement: 'taskbar' });
-    expect(container.querySelector('.chapter-navigation--taskbar .chapter-navigation__trigger')).not.toBeNull();
+    expect(document.querySelector('.chapter-navigation--taskbar .chapter-navigation__trigger')).not.toBeNull();
     await render({ placement: 'header' });
-    expect(container.querySelector('.chapter-navigation--header .chapter-navigation__trigger')).not.toBeNull();
+    expect(document.querySelector('.chapter-navigation--header .chapter-navigation__trigger')).not.toBeNull();
     await render({ placement: 'scene' });
-    expect(container.querySelector('.chapter-navigation--scene .chapter-navigation__trigger')).not.toBeNull();
+    expect(document.querySelector('.chapter-navigation--scene .chapter-navigation__trigger')).not.toBeNull();
     await render({ placement: 'ending' });
-    expect(container.querySelector('.chapter-navigation--ending .chapter-navigation__trigger')).not.toBeNull();
+    expect(document.querySelector('.chapter-navigation--ending .chapter-navigation__trigger')).not.toBeNull();
+  });
+
+  it('renders both centered layers outside the filtered taskbar and traps focus only in the top layer', async () => {
+    await act(async () => { root.render(<footer style={{ backdropFilter: 'blur(16px)' }}><ChapterNavigation manager={manager} placement="taskbar" /></footer>); });
+    const trigger = button('.chapter-navigation__trigger');
+    await act(async () => { trigger.click(); });
+    const menu = document.querySelector<HTMLElement>('#chapter-navigation-menu')!;
+    expect(menu.parentElement?.parentElement).toBe(document.body);
+    expect(container.contains(menu)).toBe(false);
+    const close = button('.chapter-navigation__close');
+    expect(document.activeElement).toBe(close);
+    await act(async () => { close.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })); });
+    expect(document.activeElement).toBe(document.querySelector('.chapter-navigation__other summary'));
+    await act(async () => { document.querySelector<HTMLDetailsElement>('.chapter-navigation__other')!.querySelector('summary')!.click(); });
+    const clear = button('.chapter-navigation__clear');
+    await act(async () => { clear.click(); });
+    expect(menu.parentElement?.hasAttribute('inert')).toBe(true);
+    const dialog = document.querySelector<HTMLElement>('.chapter-navigation__confirmation')!;
+    expect(dialog.parentElement?.parentElement).toBe(document.body);
+    const cancel = button('.chapter-navigation__confirmation-actions button:first-child');
+    const confirm = button('.chapter-navigation__confirmation-actions button:last-child');
+    await act(async () => { cancel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })); });
+    expect(document.activeElement).toBe(confirm);
+    await act(async () => { confirm.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })); });
+    expect(document.activeElement).toBe(cancel);
+    await act(async () => { dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(menu.parentElement?.hasAttribute('inert')).toBe(false);
+    expect(document.activeElement).toBe(clear);
+    await act(async () => { menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(document.querySelector('#chapter-navigation-menu')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+    expect(document.body.style.overflow).not.toBe('hidden');
   });
 
   it('keeps reset hidden under the collapsed other-options disclosure and uses the default-cancel confirmation', async () => {
     await render();
     await act(async () => { button('.chapter-navigation__trigger').click(); });
-    const details = container.querySelector<HTMLDetailsElement>('.chapter-navigation__other')!;
+    const details = document.querySelector<HTMLDetailsElement>('.chapter-navigation__other')!;
     expect(details.open).toBe(false);
     expect(details.querySelector('.chapter-navigation__clear')).not.toBeNull();
     await act(async () => { details.querySelector('summary')!.click(); });
@@ -94,7 +126,7 @@ describe('ChapterNavigation', () => {
     const before = manager.exportSave();
     await act(async () => { clear.click(); });
     expect(document.activeElement).toBe(button('.chapter-navigation__confirmation-actions button:first-child'));
-    expect(container.querySelector('[role="dialog"]')?.textContent).toContain('手写笔记');
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')?.textContent).toContain('手写笔记');
     await act(async () => { button('.chapter-navigation__confirmation-actions button:first-child').click(); });
     expect(manager.exportSave()).toBe(before);
     expect(document.activeElement).toBe(clear);
@@ -106,25 +138,25 @@ describe('ChapterNavigation', () => {
     await act(async () => { button('.chapter-navigation__trigger').click(); });
     const choice = button('.chapter-navigation__choice');
     await act(async () => { choice.click(); });
-    const dialog = container.querySelector<HTMLDivElement>('[role="dialog"]')!;
+    const dialog = document.querySelector<HTMLDivElement>('.chapter-navigation__confirmation[role="dialog"]')!;
     parentKeyHandler.mockClear();
     await act(async () => { dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
     expect(parentKeyHandler).not.toHaveBeenCalled();
-    expect(container.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull();
     expect(document.activeElement).toBe(choice);
     parentKeyHandler.mockClear();
     await act(async () => { choice.click(); });
-    const nestedDialog = container.querySelector<HTMLDivElement>('[role="dialog"]')!;
+    const nestedDialog = document.querySelector<HTMLDivElement>('.chapter-navigation__confirmation[role="dialog"]')!;
     const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
     await act(async () => { nestedDialog.dispatchEvent(tab); });
     expect(parentKeyHandler).not.toHaveBeenCalled();
     parentKeyHandler.mockClear();
     await act(async () => { nestedDialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
-    expect(container.querySelector('[role="dialog"]')).toBeNull();
-    const menu = container.querySelector<HTMLElement>('#chapter-navigation-menu')!;
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull();
+    const menu = document.querySelector<HTMLElement>('#chapter-navigation-menu')!;
     await act(async () => { menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
     expect(parentKeyHandler).not.toHaveBeenCalled();
-    expect(container.querySelector('#chapter-navigation-menu')).toBeNull();
+    expect(document.querySelector('#chapter-navigation-menu')).toBeNull();
     expect(document.activeElement).toBe(button('.chapter-navigation__trigger'));
   });
 
@@ -135,21 +167,21 @@ describe('ChapterNavigation', () => {
     await act(async () => { button('.chapter-navigation__choice').click(); });
     await act(async () => { button('.chapter-navigation__confirmation-actions button:last-child').click(); });
     expect(manager.getState().game.act).toBe(3);
-    expect(container.querySelector('[role="alert"]')?.textContent).toContain('当前进度没有改变');
-    expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(document.querySelector('[role="alert"]')?.textContent).toContain('当前进度没有改变');
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).not.toBeNull();
   });
 
   it('keeps the current chapter and unlock history when clearing progress cannot save', async () => {
     storage.failSaveWrite = true;
     await render();
     await act(async () => { button('.chapter-navigation__trigger').click(); });
-    await act(async () => { container.querySelector<HTMLDetailsElement>('.chapter-navigation__other')!.querySelector('summary')!.click(); });
+    await act(async () => { document.querySelector<HTMLDetailsElement>('.chapter-navigation__other')!.querySelector('summary')!.click(); });
     await act(async () => { button('.chapter-navigation__clear').click(); });
     await act(async () => { button('.chapter-navigation__confirmation-actions button:last-child').click(); });
 
     expect(manager.getState().game.act).toBe(3);
     expect(readChapterHistory(storage).history.unlockedThrough).toBe(3);
-    expect(container.querySelector('[role="dialog"]')).not.toBeNull();
-    expect(container.querySelector('[role="alert"]')?.textContent).toContain('清零未完成');
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).not.toBeNull();
+    expect(document.querySelector('[role="alert"]')?.textContent).toContain('清零未完成');
   });
 });

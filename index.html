@@ -3,11 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#eef3f8" />
+    <meta name="theme-color" content="#080a09" />
     <title>暗潮 · 四幕互动调查体验</title>
+    <style>
+      html, body { margin: 0; background: #080a09; }
+      #anchao-startup { --startup-ink: #e5e7e4; position: fixed; z-index: 40000; inset: 0; box-sizing: border-box; display: grid; place-items: center; overflow: auto; padding: 28px; background: #080a09; color: var(--startup-ink); font: 14px/1.7 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .anchao-startup__content { width: min(340px, 100%); text-align: center; }
+      .anchao-startup__title { margin: 0 0 28px; color: #f1f1ec; font-size: 24px; font-weight: 400; letter-spacing: .45em; text-indent: .45em; }
+      #anchao-startup-copy { margin: 0 0 18px; color: #c6cbc7; font-size: 14px; font-weight: 400; }
+      .anchao-startup__track { position: relative; height: 2px; overflow: hidden; background: #303631; }
+      #anchao-startup-fill { position: relative; width: 3%; height: 100%; background: #d6ddd5; transition: width 300ms linear; }
+      #anchao-startup-fill::after { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, #fff, transparent); transform: translateX(-100%); animation: anchao-startup-shine 1.8s ease-in-out infinite; content: ""; }
+      #anchao-startup-progress { margin: 12px 0 0; color: #8f9a92; font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .1em; }
+      #anchao-startup-retry { min-height: 44px; margin-top: 20px; padding: 8px 24px; border: 1px solid #819087; border-radius: 3px; color: #e5e7e4; background: #17211b; font: inherit; cursor: pointer; }
+      #anchao-startup-retry:focus-visible { outline: 2px solid #e5e7e4; outline-offset: 4px; }
+      #anchao-startup-retry[hidden] { display: none; }
+      @keyframes anchao-startup-shine { to { transform: translateX(100%); } }
+      @media (prefers-reduced-motion: reduce) { #anchao-startup-fill { transition: none; } #anchao-startup-fill::after { animation: none; } }
+    </style>
   </head>
   <body>
+    <div id="anchao-startup" aria-busy="true">
+      <div class="anchao-startup__content">
+        <h1 class="anchao-startup__title">暗潮</h1>
+        <p id="anchao-startup-copy" role="status" aria-live="polite">精美图片加载中，请稍候……</p>
+        <div class="anchao-startup__track" role="progressbar" aria-label="准备进入暗潮" aria-valuemin="0" aria-valuemax="100" aria-valuenow="3"><div id="anchao-startup-fill"></div></div>
+        <p id="anchao-startup-progress" aria-hidden="true">3%</p>
+        <button id="anchao-startup-retry" type="button" hidden>重新加载</button>
+        <noscript>请开启 JavaScript 后重新打开。</noscript>
+      </div>
+    </div>
     <div id="root"></div>
+    <script>
+      window.addEventListener('error', function (event) {
+        if (!document.getElementById('anchao-startup') || !(event.target instanceof HTMLScriptElement || event.target instanceof HTMLLinkElement)) return;
+        document.getElementById('anchao-startup').dataset.entryError = 'true';
+        document.getElementById('anchao-startup-copy').textContent = '加载暂时中断，请检查网络后重试。';
+        var retry = document.getElementById('anchao-startup-retry');
+        retry.hidden = false;
+        retry.onclick = function () { location.reload(); };
+      }, true);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
