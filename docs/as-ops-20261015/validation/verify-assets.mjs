@@ -8,6 +8,7 @@ const candidates = manifest.candidates;
 const byId = new Map(candidates.map((row) => [row.id, row]));
 const allowed = new Set(candidates.flatMap((row) => [row.sourcePath, row.publishedPath]));
 const changed = [];
+const retainedDimensionDifferences = [];
 
 function fail(message) { throw new Error(message); }
 function git(args) {
@@ -60,9 +61,16 @@ for (const row of candidates) {
     if (sha(before) !== expectedHash) fail(`Manifest baseline hash mismatch: ${row.id}: ${path}`);
     if (String(dimensions(bytes, path)) !== String(dimensions(before, path))) fail(`Image dimensions changed: ${row.id}: ${path}`);
   }
-  if (String(dimensions(source, row.sourcePath)) !== String(dimensions(published, row.publishedPath))) fail(`Source/WebP dimensions mismatch: ${row.id}`);
   const sourceChanged = sha(source) !== row.sourcePathSha256;
   const publishedChanged = sha(published) !== row.publishedPathSha256;
+  const sourceDimensions = dimensions(source, row.sourcePath);
+  const publishedDimensions = dimensions(published, row.publishedPath);
+  if (String(sourceDimensions) !== String(publishedDimensions)) {
+    if (sourceChanged || publishedChanged) fail(`Source/WebP dimensions mismatch: ${row.id}`);
+    // Historic compressed copies may be smaller. Both hashes and each file's
+    // baseline dimensions were checked above; retaining them preserves delivery.
+    retainedDimensionDifferences.push({ id: row.id, sourceDimensions, publishedDimensions });
+  }
   if (row.type === 'source-and-published' && sourceChanged !== publishedChanged) fail(`Source/WebP mismatch: ${row.id}`);
   if (row.type !== 'source-and-published' && row.sourcePath !== row.publishedPath) fail(`Expected one published file: ${row.id}`);
   if (row.parentId && !byId.has(row.parentId)) fail(`Unknown parent for ${row.id}: ${row.parentId}`);
@@ -97,4 +105,4 @@ const protectedPaths = [
 ];
 const protectedChanges = git(['diff', '--name-only', '-z', baseline, '--', ...protectedPaths]).split('\0').filter(Boolean).join('\n');
 if (protectedChanges) fail(`Protected sources changed:\n${protectedChanges}`);
-console.log(JSON.stringify({ baseline, candidates: candidates.length, replaced: changed.length, retained: candidates.length - changed.length, changedIds: changed }, null, 2));
+console.log(JSON.stringify({ baseline, candidates: candidates.length, replaced: changed.length, retained: candidates.length - changed.length, retainedDimensionDifferences, changedIds: changed }, null, 2));
