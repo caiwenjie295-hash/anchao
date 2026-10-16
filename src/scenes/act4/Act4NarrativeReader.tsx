@@ -564,7 +564,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
                   wangaoMemory={isWangaoMemory}
                   zoomButtonRef={zoomButtonRef}
                   onImageError={() => { if (coverAssetId) setFailedIllustrationAssetId(coverAssetId); }}
-                  onZoom={() => { setZoomedIllustration({ assetId: act4IllustrationDetailAssetIdForSource(coverAssetId!), alt: coverAlt }); setZoomOpen(true); }}
+                  onZoom={() => { setZoomedIllustration({ assetId: act4IllustrationDetailAssetIdForSource(coverAssetId!) ?? coverAssetId!, alt: coverAlt }); setZoomOpen(true); }}
                 /> : <>
                 {pages.length > 1 && <Act4ReaderPager
                   stage={stage}
