@@ -4,7 +4,7 @@ import { assetLoader } from '../../../src/core/assetLoader';
 import manifest from '../../work_orders/工单/AS-OPS-20261015-assets.json';
 
 const rows = manifest.candidates as { id: string; parentId?: string }[];
-const pageSize = 6;
+const pageSize = 5;
 // QA-only: assetLoader has no StateManager dependency, so player storage is never read.
 function Gallery() {
   const [page, setPage] = useState(0);
