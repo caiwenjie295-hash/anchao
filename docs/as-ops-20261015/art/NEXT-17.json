@@ -1,0 +1,24 @@
+{
+  "batch": "NEXT-17",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 1,
+  "assets": [
+    {
+      "id": "IMG_A4_FINALE_SURROUND_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13ea6-238e-78d2-afc8-ea71244742fd/exec-d79b8048-3b72-4d33-8f5f-f8621e9d68ae.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_SURROUND_001-v3.png",
+      "nativeSha256": "4d3418377b07030094f7e65caae470ea3e009ac7ce048e27665c846b470643d0",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_SURROUND_001-v3.txt",
+      "reason": "v3保持v2四名面具人物、前景手臂、低机位、门框与庭院构图，全部位置姿态及门窗几何一致；全画面轻度柔化与极淡重影恢复意识模糊，面具轮廓仍可辨且身份完全遮挡。自然曝光与中性白平衡、完整墙面和洁净干燥地面保留，无暗角、过曝泛光或新增破败痕迹；原生PNG尺寸精确1672×941，画面检查通过。",
+      "promptSha256": "02bb6b325fb2c2324c54bc0a8e69e20e8ac455c71961e6b56d0d2c78ce0f667b",
+      "sourceSha256": "f681195b352d9fff8c6dc90889d8476edcd850fd0528125ad12b95d5ac1e4213",
+      "publishedSha256": "f681195b352d9fff8c6dc90889d8476edcd850fd0528125ad12b95d5ac1e4213"
+    }
+  ]
+}

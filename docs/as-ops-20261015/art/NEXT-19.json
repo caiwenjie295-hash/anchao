@@ -1,0 +1,24 @@
+{
+  "batch": "NEXT-19",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 1,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13eab-e74b-72a1-9779-328f2c6fc1e5/exec-3e536800-8583-4bec-bad7-fa3b5c080375.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_FINALE_FEAR_001.png",
+      "nativeSha256": "5642a56f3f2c232e526f757d311b49bc6280fd835803f41cff7c4b3cebde8335",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_FINALE_FEAR_001.txt",
+      "reason": "近景保持原门口机位、4:3构图、门框遮挡与手机手部，厨房案台厨具、排水沟和佛龛布局完整；墙面恢复连续完整的米白瓷砖与灰绿色瓷砖墙带，与已修正母图一致，地面干燥哑光。中央黑塑像及其旧损保留，未新增物件、人物或文字。整体为低饱和中性自然光，没有新增暗角、HDR、泛光或过锐；画面检查通过，原生尺寸1448×1086与源图一致。",
+      "promptSha256": "f3ca94d5c1ebcd30133b123e68de890c3fc329fa896645498e35b19faefe1f66",
+      "sourceSha256": "d9083c9ddfd3f17d5ddeea99c724d855684aad40046fc2b0b17e21e5b7e72bf3",
+      "publishedSha256": "d9083c9ddfd3f17d5ddeea99c724d855684aad40046fc2b0b17e21e5b7e72bf3"
+    }
+  ]
+}

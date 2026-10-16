@@ -1,0 +1,40 @@
+{
+  "batch": "NEXT-24",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14240-3482-78c1-ae67-1797f4eb5da7/exec-72d433a3-cdca-4294-a9d3-11ae26e7e964.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T08_008.png",
+      "nativeSha256": "ab0528b528ce4d1d70a7bdad38938446e20d251bd7f835d43e0beeb3b7039de7",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T08_008.txt",
+      "reason": "对应已修正母图IMG_A4_T08_008：近景原裁切、门口机位、档案架、卷宗、纸堆、桌面与顶灯均保持；后墙恢复完整米白上墙与灰绿色下墙，门框漆层完整且仍旧可用，无大片剥落；纸面和标签仍难辨。生成PNG为1448×1086，与原尺寸一致，画面检查通过。",
+      "promptSha256": "390538f9afdc851690fe36b667ab245ee178b61289237dee487444ec4ab42adc",
+      "sourceSha256": "a3dc5ad6e92c32f3269e0491b40b37ca700806b8170aefcb4e59f66e7f6fc7da",
+      "publishedSha256": "a3dc5ad6e92c32f3269e0491b40b37ca700806b8170aefcb4e59f66e7f6fc7da"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14240-3482-78c1-ae67-1797f4eb5da7/exec-d6bff8a4-22ba-40e5-94d2-22127e3b9468.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T08_010.png",
+      "nativeSha256": "8e46a42d8b8e2337789e011a1bacfc2d8364497f2c89c360ad8394d6abdac10e",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T08_010.txt",
+      "reason": "对应已修正母图IMG_A4_T08_010：近景原裁切、门口遮挡、吊钩、锅具案台、后门、木龛、黑塑像、过道与排水沟均保持；白色上墙与灰绿色墙带恢复完整干净，地面干燥哑光；黑塑像旧损保留，未添加手机或可读纸面内容。生成PNG为1448×1086，与原尺寸一致，画面检查通过。",
+      "promptSha256": "f2ec6247b6d064eb9aaf45f91b61b99772a9717be9704ec415eda5a3f8817ee8",
+      "sourceSha256": "793af0f4466ba5643fabd706f66fbe9ec3b149b9e4adcf148405c4b558df11bf",
+      "publishedSha256": "793af0f4466ba5643fabd706f66fbe9ec3b149b9e4adcf148405c4b558df11bf"
+    }
+  ]
+}

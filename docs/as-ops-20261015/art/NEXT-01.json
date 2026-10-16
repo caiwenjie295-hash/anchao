@@ -1,0 +1,29 @@
+{
+  "batch": "NEXT-01",
+  "id": "IMG_A4_T09_005",
+  "tool": "built-in image_gen",
+  "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e31-253b-7ad1-be70-6d02973130b2/exec-0b1c0dbe-9000-496a-b9ce-f24a2f0641f8.png",
+  "nativeSha256": "7071582e07b4c209573eb09a8a2591fc5455d44980552c40b09fdfdb1f356b90",
+  "dimensions": [
+    1672,
+    941
+  ],
+  "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T09_005.txt",
+  "promptSha256": "41ac965c6fc1026d2530516a0d7559ee5b1dd36da3ed37fde4c1834ddebba3b7",
+  "referencePaths": [
+    "src/第四幕/T09/IMG_A4_T09_005.png",
+    "docs/as-ops-20261015/art/native/IMG_A4_T09_003.png"
+  ],
+  "status": "saved-and-paired-awaiting-whole-batch-QA",
+  "newGenerationCalls": 1,
+  "recoveredImages": [
+    "IMG_A4_T09_003"
+  ],
+  "sourceSha256": "7071582e07b4c209573eb09a8a2591fc5455d44980552c40b09fdfdb1f356b90",
+  "publishedSha256": "e70440300f1d046b0de3c27b6a2b13df923080bcf14ddfa0099a0405efa0da32",
+  "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T09_005.png",
+  "publishedPath": "src/assets/compressed/第四幕/T09/IMG_A4_T09_005.webp",
+  "inspection": "Dry clean floor and intact maintained paint; original low first-person view, shoe/leg, corridor layout, hose reel and loss of focus preserved.",
+  "imageDataReturnedToConversation": true,
+  "nextSessionRequired": true
+}

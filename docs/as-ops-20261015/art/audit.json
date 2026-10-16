@@ -1,0 +1,555 @@
+{
+  "baseline": "97842f719de0e17edf569dc1c1cd3678dc076c97",
+  "candidates": [
+    {
+      "id": "IMG_A4_T06_001",
+      "status": "retained",
+      "reason": "这是机构操场围栏与校舍外景：楼体、窗户、围栏和篮球架完整，室内照明可见。浅积水与秋叶位于露天球场，符合雨后季节性环境；没有室内积水、大片破损或废弃杂物，保留原图。",
+      "sourceSha256": "9f3ce8fb707b0c714cd6968f6eb23edbe9a7a37ddc06a2bc06fb4274db93a369",
+      "publishedSha256": "1acac8d5d76eabb15a7cd4b6b039fae8c587d35376b626ba66ceeb1ed647e786"
+    },
+    {
+      "id": "IMG_A4_T06_002",
+      "status": "retained",
+      "reason": "这是机构食堂的固定早餐场景：餐盘、饭菜、桌椅和室内就餐者都显示空间正常使用；照明充足，桌椅与地面整洁干燥，无破败或积水问题，保留原图。",
+      "sourceSha256": "3677bd4415bf75de9f3a532a7cfbd5a13425a708d3802d7226492fbd038b2c72",
+      "publishedSha256": "231918aaba01bc951860635806374d65e367f5469add9dd68bef566311c053bc"
+    },
+    {
+      "id": "IMG_A4_T06_003",
+      "status": "retained",
+      "reason": "T06_003是仍在使用的普通教室：完整墙面、完好窗框与灯具、干燥地砖，课桌仅有常见磨痕；没有遗址式剥落、霉斑、积水或室内落叶，符合运营校舍状态，保留原图。",
+      "sourceSha256": "6e957ee938431d2bae186f0a4d362280f691bda03423fefa41da5b9c9ca080a3",
+      "publishedSha256": "05563fc8b1445f4e65ec9507631b8eb1a08c9a5358c2630fac5c70144efc1603"
+    },
+    {
+      "id": "IMG_A4_T06_004",
+      "status": "retained",
+      "reason": "T06_004是使用中的校舍走廊：墙砖、窗户、门框与顶灯完整，地面干燥洁净且无室内杂物；自然窗光下的轻微反光属于正常保洁后的地砖，不呈废弃状态，符合运营校舍要求，保留原图。",
+      "sourceSha256": "d8f1d47b9c94c386cae315a8eea9a4113e4c032d211c02cbd61fc8c1d940cc3c",
+      "publishedSha256": "b34ba94ef58045ffa1fc03efa01648358db1923d39c6dbf6ef1c5ae04cc598ba"
+    },
+    {
+      "id": "IMG_A4_T06_005",
+      "status": "retained",
+      "reason": "这是半个月后仍在使用的机构宿舍：床铺、桌椅和储物柜完整，床面纸团作为逃离计划线索保留；地面干燥，墙面只有零散轻微使用痕迹，没有大片剥落、霉斑、积水或室内落叶，符合运营中的旧校舍环境，保留原图。",
+      "sourceSha256": "103b60bd6a07195c86ec924dc22fe231bc02db9829538a643d97df7527110c21",
+      "publishedSha256": "d23fd9b75322aeda87bb8f97ea5e80e0ba5803b754b4d71360b32abe57afd762"
+    },
+    {
+      "id": "IMG_A4_T06_006",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e62-4ee9-74e2-b537-affb12a4a326/exec-d186a612-b901-4c60-a314-103fef37b4ed.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T06_006.png",
+      "nativeSha256": "159149384f3266cfcced0be68162e541f4fabcc3d8ee34e5733fd826f8acad3c",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "原图禁闭室墙面大面积剥落、门体重锈且地面湿亮，不符合2014年仍在使用的场景。修正版保留中央铁门三孔与送餐口、左侧床、右侧长凳与洗手盆、顶灯及原机位布局；墙面完整，仅有轻微使用痕迹，铁门旧而可用，地面干燥无落叶，低饱和低对比中性光，检查原尺寸1448×1086通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T06_006.txt",
+      "promptSha256": "f1f140d49597ace6832f652d65cb7ef51450dd126bf20543d6e10af0a4fe4a9d",
+      "sourceSha256": "159149384f3266cfcced0be68162e541f4fabcc3d8ee34e5733fd826f8acad3c",
+      "publishedSha256": "524525462c3a911a81c14148437110bbda30440df214f3a9b01621a17b2bf1b4"
+    },
+    {
+      "id": "IMG_A4_T06_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e6b-c6c6-7bf0-a8ed-60490f9ce683/exec-ca8f5890-dd14-4b5f-81be-172fa20007f4.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T06_007.png",
+      "nativeSha256": "00570fcb6cb63277187b10cd1e0fb8d4aad30e9c491ab1eea1e067325e93a2c3",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "运营期禁闭室入口：已修正墙面下缘大片剥落、门体与五金重锈及地面湿亮；保留原机位、墙地布局、门框、恰好三个圆窗、送餐口和右侧控制板，门体仍显旧而可用，地面干燥，低饱和自然光。视觉检查通过，PNG尺寸1448×1086与原图一致。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T06_007.txt",
+      "promptSha256": "4c30b73d3a706d8ef1bc25ad1f45886fa37531a8b7f6690fc59a9ba4608829ab",
+      "sourceSha256": "00570fcb6cb63277187b10cd1e0fb8d4aad30e9c491ab1eea1e067325e93a2c3",
+      "publishedSha256": "cf3d386638e45d99df55a602f5fb7ecb9fc815549b4af8c50aa32ee8394df351"
+    },
+    {
+      "id": "IMG_A4_T07_002",
+      "status": "retained",
+      "reason": "这是仍在使用的机构教室课桌场景：练习纸、笔记本、书本与书写笔摆放合理，课桌表面磨痕属于日常使用痕迹；背景桌椅和地面完整干燥，没有遗址式破损、霉斑、积水或室内落叶，保留原图。",
+      "sourceSha256": "528a31c7f0800d1884ec5549bba3ed66acec882c7ed840769ccb062ba01dc37c",
+      "publishedSha256": "77dbb4a352db7a03106f021fad4e22427afc863951414dfd445c1bdc2ebfc6cb"
+    },
+    {
+      "id": "IMG_A4_T07_005",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e6b-c6c6-7bf0-a8ed-60490f9ce683/exec-a8e60909-654f-4182-ba1a-c810dc4acca9.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T07_005.png",
+      "nativeSha256": "a04547e90673a5c4b0145cb4e25b164c24267cf79d7e6b3887751270ba6106ce",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "reason": "运营期厨房通道：仅将原大面积湿亮水渍反光修正为干燥、哑光、日常清洁的地面，保留原机位、地漏及所有人员、厨具、供台和物件位置；黑色塑像及其原有掉漆保持。视觉检查通过，PNG尺寸1536×1024与原图一致。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T07_005.txt",
+      "promptSha256": "38936e373b1f04b11c2fde4836aa78948e48bcf0015e8f6723752aa18e411000",
+      "sourceSha256": "a04547e90673a5c4b0145cb4e25b164c24267cf79d7e6b3887751270ba6106ce",
+      "publishedSha256": "ac9e3500cfb4d609a80136f9e5ef8144783ce4f309e274ed89018c42572a7830"
+    },
+    {
+      "id": "IMG_A4_T08_005",
+      "status": "retained",
+      "reason": "这是机构外的山林石阶与围墙路径，石面湿润、落叶和植被都属于自然室外环境痕迹，不能按运营楼内维护标准清除；未见室内破败问题，保留原图。",
+      "sourceSha256": "a44f1469a84621a7c8545020a395d5c498797e9f38fa4a5d005dc7e31d17ca9b",
+      "publishedSha256": "45b36a0d14770c265078b0a14f2c5aea4d24109a7b426ba036b2180165daf126"
+    },
+    {
+      "id": "IMG_A4_T08_006",
+      "status": "retained",
+      "reason": "这是夜间机构院外的出口门与山墙视角，门体、砖墙和立柱仍完整可通过；藤蔓、室外锈蚀、湿地石与落叶属于自然露天环境，符合山路及机构外围的场景边界，不应按室内运营空间翻新，保留原图。",
+      "sourceSha256": "cd9bdc98edce0c84f7556ee8d3428133498787e613aed4c93f708adc6aa9980e",
+      "publishedSha256": "705d008b1d92d01ba4da13eeacff7154a0ae2722e1796817141aa838ba853834"
+    },
+    {
+      "id": "IMG_A4_T08_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e76-5ac7-7a02-9be0-f3349d8a5a03/exec-6e58061f-465b-48b1-81c4-beaafad1239f.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_007.png",
+      "nativeSha256": "65759163350bde34cd4cf2c02ee246613f64f90a91dce9253105028e2e1531d5",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "运营中的朴素校舍音像设备室：已将墙面大片剥落修复为完整米白/灰绿色哑光墙面，将门框成片掉漆修复为完整旧门框；录音机、音响设备、货架、工作台、电话、纸张、家具、地面、顶棚、机位与构图均保留，设备仍显旧而可用，未新增人或文字。视觉检查及1448×1086原尺寸通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_007.txt",
+      "promptSha256": "35c7f1a7074b9910173b56d5368e4c4beb8014629d2e621b7e62d9f21c754cce",
+      "sourceSha256": "65759163350bde34cd4cf2c02ee246613f64f90a91dce9253105028e2e1531d5",
+      "publishedSha256": "b9205f9fd7a0a6d915db24366c5bebb8b3a30d5a62bc2d494e24c773d85aa9d6"
+    },
+    {
+      "id": "IMG_A4_T08_008",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e76-5ac7-7a02-9be0-f3349d8a5a03/exec-4ac01cf8-bab8-4823-b1be-c0039bff342b.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_008.png",
+      "nativeSha256": "5348b97cb439b0f3912570b860e0e9966242057459e78af926909523e00637e7",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "运营中的朴素校舍档案室：已修复后墙上缘成片剥落和门框掉漆，墙面恢复完整米白/灰绿色哑光饰面，仍保留旧校舍质感；档案架、卷宗、盒册、桌面、顶灯、地面、空间纵深与机位构图保留，未增加人或文字。视觉检查及1448×1086原尺寸通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_008.txt",
+      "promptSha256": "c020d258850825bad236e935083cbf739a0092a7bce61c4f97afaf68e4091cc9",
+      "sourceSha256": "5348b97cb439b0f3912570b860e0e9966242057459e78af926909523e00637e7",
+      "publishedSha256": "6b7b479c8e05bd0bc1fa9aa82656025f97a68aed7f43abe7c84d610164fdb370"
+    },
+    {
+      "id": "IMG_A4_T08_009",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e7c-7ef2-79a3-b415-65e2aaa08fda/exec-d21e3157-3e71-439d-9e1a-2e6427b34976.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_009.png",
+      "nativeSha256": "dac43c24c3375bdcaccef22d44a455116f18d146c01985c4e5435e797f202fe2",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "修复档案库后墙靠近顶棚处连续大面积剥落和斑驳，恢复完整朴素的米白/灰绿色运营期墙面；前景货架、旧卷宗、后方桌子、顶灯、地面与机位布局保持，未增加人或文字。视觉检查通过，原尺寸1448×1086。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_009.txt",
+      "promptSha256": "3571545c14b751bcdaf07d803c295a535c2f67d5ad1fde4cf4aa0862308975bd",
+      "sourceSha256": "dac43c24c3375bdcaccef22d44a455116f18d146c01985c4e5435e797f202fe2",
+      "publishedSha256": "e80195bde47482c75eccab4faaa3228c2863b8a09db6390b6a2e01fa077c3b61"
+    },
+    {
+      "id": "IMG_A4_T08_010",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e7c-7ef2-79a3-b415-65e2aaa08fda/exec-4aba797e-a72b-4e50-818c-f1b9741467bd.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_010.png",
+      "nativeSha256": "196afdadc9ca84baefd7a5e21730d53b62ca79dcb7225a8f2b75ea01be4f8cb8",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "修复后墙和两侧下半墙大面积剥落的灰绿色漆层，将地面湿积水反光恢复为干燥哑光；原厨房构图、案台蔬菜厨具、门口、吊灯、双排水沟、左下手与手机保留，中央黑色塑像及其旧损保留，未增人或文字。视觉检查通过，原尺寸1448×1086。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_010.txt",
+      "promptSha256": "f87ad871c2e2fe1cf3a1301ce00c9abaced90fc880dcdefa672979148ace1d12",
+      "sourceSha256": "196afdadc9ca84baefd7a5e21730d53b62ca79dcb7225a8f2b75ea01be4f8cb8",
+      "publishedSha256": "be25b35fcf96a3ed3b0303685def6513ba24b59ec7ec6589d539fb8a2f17c8cd"
+    },
+    {
+      "id": "IMG_A4_T08_012",
+      "status": "retained",
+      "reason": "这是仍在使用的校舍走廊：门窗、照明和消防水带设施完整，地砖干燥整洁；消防箱周围与柱脚只有局部轻微掉漆和日常磨痕，没有室内大片墙面剥落、霉斑、落叶或积水，符合朴素旧校舍状态，保留原图。",
+      "sourceSha256": "3de2e46defddf7d0b709fb1b9747e2e69afc2abc7c39546feb0f11c3246396f7",
+      "publishedSha256": "b7d2d8c3c7a73e1f2248bafa47012e7777c5d5463767ef33e083cb7f54b1d4b2"
+    },
+    {
+      "id": "IMG_A4_T09_001",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "e7afc08b7af8c9d501456bd000a431e13a0ca811033481bb7b28a9e15a8d20e4",
+      "publishedSha256": "a7f00e7039b59b1b4b0265803930fd5aada9e7cc04a7e31638445f8b8fa3fb71",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T09_001.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T09_001.png",
+      "nativeSha256": "e7afc08b7af8c9d501456bd000a431e13a0ca811033481bb7b28a9e15a8d20e4",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "IMG_A4_T09_002",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "673197f96953be343f0d4c828d02f97501f18266e28a7be7088d65d5f6af5dd4",
+      "publishedSha256": "a9376dfe5b514d6be7e4acc07a99d1b930500f0c3428bb28d2817c54e4996e57",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T09_002.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T09_002.png",
+      "nativeSha256": "673197f96953be343f0d4c828d02f97501f18266e28a7be7088d65d5f6af5dd4",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "IMG_A4_T09_003",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "57adb5e72032b434510d2103bb80d54da14835ebba79a3e53c23913a5e581221",
+      "publishedSha256": "267d330efbbc7501ac506e83cb69d4b3b5721017fffffb38105222e5b7f1c5e0",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T09_003.recovered-actual.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T09_003.png",
+      "nativeSha256": "57adb5e72032b434510d2103bb80d54da14835ebba79a3e53c23913a5e581221",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "IMG_A4_T09_004",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "86e3ac4452fe3c2b620f25a775116bce8027bb85eccf5c28a844f5781dfd88ce",
+      "publishedSha256": "723f403a8342b3e3ab55bdfd279bac8353a6846d266dc4fe2b9fe37aaf976ce0",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T09_004.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T09_004.png",
+      "nativeSha256": "86e3ac4452fe3c2b620f25a775116bce8027bb85eccf5c28a844f5781dfd88ce",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "IMG_A4_T09_005",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "7071582e07b4c209573eb09a8a2591fc5455d44980552c40b09fdfdb1f356b90",
+      "publishedSha256": "e70440300f1d046b0de3c27b6a2b13df923080bcf14ddfa0099a0405efa0da32",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T09_005.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T09_005.png",
+      "nativeSha256": "7071582e07b4c209573eb09a8a2591fc5455d44980552c40b09fdfdb1f356b90",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "IMG_A4_READING_DETAIL_001",
+      "status": "retained",
+      "reason": "夜间档案室内的不锈钢书架特写：卷宗整齐存放，通道与地面完整干燥，没有大片剥落、霉斑、积水或室内落叶；昏暗手机微光和难辨反光符合原场景，源PNG与发布WebP构图内容一致，保留。",
+      "sourceSha256": "dcddec1123395c6b8aa1d2f950563bee4d5b41754309addfd36f88874343e59d",
+      "publishedSha256": "f9f843a509fa58910bb606edc9b7d212215b1947a4a034317286e4a65c347dd5"
+    },
+    {
+      "id": "IMG_A4_FINALE_FEAR_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e89-0acd-7ed0-b6b6-47cf8671c15f/exec-3399f0b9-f441-43ad-a425-92cf40274b6e.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_FEAR_001.png",
+      "nativeSha256": "3632ef759b151fee6f8346c7baa5de08b9a995d69144cffd4c29c152a0325768",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "reason": "地下厨房回望镜头修正后墙面恢复完整的米白瓷砖与灰绿色墙带，地面干燥清洁且无室内落叶，保留原门口遮挡机位、中央通道、佛龛与旧损黑塑像、案台器具、前景手和手机及原有暗调；未增删人物、物件或文字。视觉检查通过，输出尺寸1672×941与原图一致。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_FEAR_001.txt",
+      "promptSha256": "e7b454ff55ae401f53d9ead0557fb5452076054f9b86248a0115ba0376030b84",
+      "sourceSha256": "906f6eb355b296d590608eced49e0ae273ed444fb08b5a7f8f7d38f0393d2888",
+      "publishedSha256": "906f6eb355b296d590608eced49e0ae273ed444fb08b5a7f8f7d38f0393d2888"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e91-2bfb-78b3-98ae-587629644c9d/exec-d5956ba7-32fa-4abf-96af-00329b81bb24.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_DOOR_001-v2.png",
+      "nativeSha256": "44d78d30403b52bd3be5a73d9c01291685d2e88596f612be3803dd72acb138c7",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_DOOR_001-v2.txt",
+      "reason": "与原图对照，远门、门窗几何、相机机位、庭院建筑和室外秋叶均保持；室内墙面完整，地面洁净干燥且无室内落叶，低饱和自然光。地砖仅有轻微日光高光，不呈积水或湿亮状态。输出为精确1672×941，符合原图尺寸。",
+      "promptSha256": "503984b3500e64e70c8eabfce1be551e90216b6e1f9c6e7de7dadfa1901d49c9",
+      "sourceSha256": "d58f3c557a4b398663e07c2e07078e2bdd81c627116f171ae1653d423d4d82d6",
+      "publishedSha256": "d58f3c557a4b398663e07c2e07078e2bdd81c627116f171ae1653d423d4d82d6"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_002",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e91-2bfb-78b3-98ae-587629644c9d/exec-42f4d7dd-91ce-4b89-a2a8-145f03079ca0.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_DOOR_002.png",
+      "nativeSha256": "01f68ba065690a45880942e4b0d18fcb472d374032559cef9c0b54e329268919",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_DOOR_002.txt",
+      "nativeDimensions": [
+        1671,
+        941
+      ],
+      "deliveryNormalization": {
+        "tool": "cwebp",
+        "operation": "one-pixel dimension normalization during WebP encoding",
+        "nativeUnmodified": true,
+        "publishedDimensions": [
+          1672,
+          941
+        ]
+      },
+      "reason": "近门原构图、门扇遮挡、庭院和失焦保持，室内墙地已修正；原生PNG1671×941原样保留，仅发布WebP编码时校准为原尺寸1672×941，无裁切或内容改动。",
+      "promptSha256": "487d80380c26348354d1c8b0290dc57d8af93d2fdb93606d51fa67fd3a4fd60b",
+      "sourceSha256": "77a90032f905da5046999ec2cd8dec91d4049bb9f60d51230f5a3f69ab1ac88a",
+      "publishedSha256": "77a90032f905da5046999ec2cd8dec91d4049bb9f60d51230f5a3f69ab1ac88a"
+    },
+    {
+      "id": "IMG_A4_FINALE_SURROUND_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13ea6-238e-78d2-afc8-ea71244742fd/exec-d79b8048-3b72-4d33-8f5f-f8621e9d68ae.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_SURROUND_001-v3.png",
+      "nativeSha256": "4d3418377b07030094f7e65caae470ea3e009ac7ce048e27665c846b470643d0",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_SURROUND_001-v3.txt",
+      "reason": "v3保持v2四名面具人物、前景手臂、低机位、门框与庭院构图，全部位置姿态及门窗几何一致；全画面轻度柔化与极淡重影恢复意识模糊，面具轮廓仍可辨且身份完全遮挡。自然曝光与中性白平衡、完整墙面和洁净干燥地面保留，无暗角、过曝泛光或新增破败痕迹；原生PNG尺寸精确1672×941，画面检查通过。",
+      "promptSha256": "02bb6b325fb2c2324c54bc0a8e69e20e8ac455c71961e6b56d0d2c78ce0f667b",
+      "sourceSha256": "f681195b352d9fff8c6dc90889d8476edcd850fd0528125ad12b95d5ac1e4213",
+      "publishedSha256": "f681195b352d9fff8c6dc90889d8476edcd850fd0528125ad12b95d5ac1e4213"
+    },
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13eab-e74b-72a1-9779-328f2c6fc1e5/exec-3e536800-8583-4bec-bad7-fa3b5c080375.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_FINALE_FEAR_001.png",
+      "nativeSha256": "5642a56f3f2c232e526f757d311b49bc6280fd835803f41cff7c4b3cebde8335",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_FINALE_FEAR_001.txt",
+      "reason": "近景保持原门口机位、4:3构图、门框遮挡与手机手部，厨房案台厨具、排水沟和佛龛布局完整；墙面恢复连续完整的米白瓷砖与灰绿色瓷砖墙带，与已修正母图一致，地面干燥哑光。中央黑塑像及其旧损保留，未新增物件、人物或文字。整体为低饱和中性自然光，没有新增暗角、HDR、泛光或过锐；画面检查通过，原生尺寸1448×1086与源图一致。",
+      "promptSha256": "f3ca94d5c1ebcd30133b123e68de890c3fc329fa896645498e35b19faefe1f66",
+      "sourceSha256": "d9083c9ddfd3f17d5ddeea99c724d855684aad40046fc2b0b17e21e5b7e72bf3",
+      "publishedSha256": "d9083c9ddfd3f17d5ddeea99c724d855684aad40046fc2b0b17e21e5b7e72bf3"
+    },
+    {
+      "id": "IMG_A4_ZOOM_READING_DETAIL_001",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_READING_DETAIL_001 是夜间档案室。当前近景只见不锈钢书架与排列整齐的卷宗，通道和地面完整干燥；昏暗环境与局部手机照明符合原场景，没有运营状态或破损问题，保留原图。",
+      "sourceSha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3",
+      "publishedSha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_002",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_T06_002 显示仍在使用的机构食堂。近景是完整餐盘中的正常饭菜，桌面整洁，母图背景有就餐者和完好桌椅；无破损、积水或废弃痕迹，保留原图。",
+      "sourceSha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23",
+      "publishedSha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_004",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_T06_004 是正常使用中的校舍走廊，墙砖、窗户和照明完整，地面干燥。近景扩音器可用，墙面仅有安装处轻微污痕与细小发丝裂纹，没有大片剥落或霉斑，属于旧校舍日常使用痕迹，保留原图。",
+      "sourceSha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051",
+      "publishedSha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_005",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_T06_005 是仍在使用的旧校舍宿舍。近景保留床铺上的纸张线索、完整床架与柜体，墙漆连续，地面干燥；被褥和地毯的日常旧痕不构成废弃或破败状态，保留原图。",
+      "sourceSha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8",
+      "publishedSha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14235-6d64-7601-92c2-099ad7adec47/exec-f98756c4-197b-40d2-9587-1c460c0cfd91.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T06_007.png",
+      "nativeSha256": "1eb97a1180a03e0e24b3d76c25de59e696f116ce454e07bb4da9b5d78c9a92a9",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T06_007.txt",
+      "reason": "按修正母图同步禁闭室近景：墙脚剥落已恢复为连续的米白/灰绿涂层，旧铁门与五金仅保留轻微使用痕迹，地面干燥；恰好三个圆孔、送餐口、右侧控制板、原机位和构图均保留，生成图1448×1086符合原尺寸。",
+      "promptSha256": "53789e9fd0b6d37b058ff8a3067280c20f0aa90e4b23d8b4796ce4d461b04390",
+      "sourceSha256": "4d3b5e4fe5c470b6c89c8c73c342502d43a46200bf6637e0c24c32981db8f7ae",
+      "publishedSha256": "4d3b5e4fe5c470b6c89c8c73c342502d43a46200bf6637e0c24c32981db8f7ae"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a1423b-537e-73a1-8e2c-87705d1eb226/exec-2853730d-66dc-47cf-ad7b-ae337d6541cb.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T07_005-v2.png",
+      "nativeSha256": "6f07b4cb248927ae6e5bed2048fe695dbd34cc8fcf99626b1dba143d2453d304",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T07_005-v2.txt",
+      "reason": "保持原近景裁切、机位和物件尺度，中央塑像、供台与供品仍占原画面相同比例；背景米白/灰绿色瓷砖完整并与修正母图维护状态一致，地面干燥哑光；黑塑像原有掉漆保留。视觉检查通过，原生尺寸1536×1024。",
+      "promptSha256": "cc0f8deb8592b44b5aec27edb1907a321c74415c1a99aaae4510b0fb4fd69c6b",
+      "sourceSha256": "f21a637212dd762a74ca2d6f7ffed9e2a40ee4fabd9e84ecadcc13a21ffaca62",
+      "publishedSha256": "f21a637212dd762a74ca2d6f7ffed9e2a40ee4fabd9e84ecadcc13a21ffaca62"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_005",
+      "status": "retained",
+      "reason": "近景与 IMG_A4_T08_005 对应同一处夜间室外山路与院门：石阶湿润、苔藓和自然落叶、砖墙及锈蚀铁门都符合雨后林地维护状态，画面空间一致；属于自然环境，没有室内运营维护问题，保留。",
+      "sourceSha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65",
+      "publishedSha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_006",
+      "status": "retained",
+      "reason": "近景与 IMG_A4_T08_006 同为院门外受困者的视角：砖墙、爬藤和锈蚀铁门及雨后落叶都相符，湿石和自然锈蚀属于室外环境状态；人物手脚与铁丝位置保持一致，不涉及室内运营维护问题，保留。",
+      "sourceSha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d",
+      "publishedSha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a1423b-537e-73a1-8e2c-87705d1eb226/exec-5f6035e6-1d0a-4bda-b5b4-4c32463ccb55.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T08_007.png",
+      "nativeSha256": "f4c98527685d42e9dc70c4bf94467f0cff472d37792d3c275a42cd417a213458",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T08_007.txt",
+      "reason": "保持原近景裁切、机位、门框两侧取景及设备/桌椅比例；墙面恢复连续完整的米白上墙与灰绿色下墙，门框掉漆修复，地面保持干燥，与修正母图维护状态一致。设备仍旧而可用，纸面和标签保持难辨，无新增人物、文字或线索。视觉检查通过，原生尺寸1448×1086。",
+      "promptSha256": "7ad687f1234056d69f25cf6ecfb4acc6f99703b37758e1d7e9cbfbca5bc38a36",
+      "sourceSha256": "b446a83f6b3f68a93d002ca9bee5dfa258aa8b6d5309e93ae405b85b07a8e3d1",
+      "publishedSha256": "b446a83f6b3f68a93d002ca9bee5dfa258aa8b6d5309e93ae405b85b07a8e3d1"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14240-3482-78c1-ae67-1797f4eb5da7/exec-72d433a3-cdca-4294-a9d3-11ae26e7e964.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T08_008.png",
+      "nativeSha256": "ab0528b528ce4d1d70a7bdad38938446e20d251bd7f835d43e0beeb3b7039de7",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T08_008.txt",
+      "reason": "对应已修正母图IMG_A4_T08_008：近景原裁切、门口机位、档案架、卷宗、纸堆、桌面与顶灯均保持；后墙恢复完整米白上墙与灰绿色下墙，门框漆层完整且仍旧可用，无大片剥落；纸面和标签仍难辨。生成PNG为1448×1086，与原尺寸一致，画面检查通过。",
+      "promptSha256": "390538f9afdc851690fe36b667ab245ee178b61289237dee487444ec4ab42adc",
+      "sourceSha256": "a3dc5ad6e92c32f3269e0491b40b37ca700806b8170aefcb4e59f66e7f6fc7da",
+      "publishedSha256": "a3dc5ad6e92c32f3269e0491b40b37ca700806b8170aefcb4e59f66e7f6fc7da"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14240-3482-78c1-ae67-1797f4eb5da7/exec-d6bff8a4-22ba-40e5-94d2-22127e3b9468.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T08_010.png",
+      "nativeSha256": "8e46a42d8b8e2337789e011a1bacfc2d8364497f2c89c360ad8394d6abdac10e",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T08_010.txt",
+      "reason": "对应已修正母图IMG_A4_T08_010：近景原裁切、门口遮挡、吊钩、锅具案台、后门、木龛、黑塑像、过道与排水沟均保持；白色上墙与灰绿色墙带恢复完整干净，地面干燥哑光；黑塑像旧损保留，未添加手机或可读纸面内容。生成PNG为1448×1086，与原尺寸一致，画面检查通过。",
+      "promptSha256": "f2ec6247b6d064eb9aaf45f91b61b99772a9717be9704ec415eda5a3f8817ee8",
+      "sourceSha256": "793af0f4466ba5643fabd706f66fbe9ec3b149b9e4adcf148405c4b558df11bf",
+      "publishedSha256": "793af0f4466ba5643fabd706f66fbe9ec3b149b9e4adcf148405c4b558df11bf"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_012",
+      "status": "retained",
+      "reason": "母图 IMG_A4_T08_012 保留，走廊门窗、照明和消防卷盘设施完整，地砖干燥；近景只见柱脚与消防箱周围少量局部掉漆及日常磨痕，未扩展为大片墙面破损、霉斑或积水，空间与维护状态和母图一致，保留原构图、设施和消防线索。",
+      "sourceSha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444",
+      "publishedSha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_001",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "744b049aa7043bd5a77566c1cd4d716f99f84e610feccb75f1fcc777bcd856ae",
+      "publishedSha256": "744b049aa7043bd5a77566c1cd4d716f99f84e610feccb75f1fcc777bcd856ae",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_001.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_001.png",
+      "nativeSha256": "4bf38b595283967800973d573357ca94fc351df20e7bc38af18b52d4656ddf2f",
+      "dimensions": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_002",
+      "status": "replaced",
+      "reason": "运营时期走廊或对应近景的墙面、地面和设施维护状态已修正，原视角与物件保持。",
+      "sourceSha256": "39c7266b5ddb66202e24a4af3981bc813c8e5a96d693cbc4008104f6abd64792",
+      "publishedSha256": "39c7266b5ddb66202e24a4af3981bc813c8e5a96d693cbc4008104f6abd64792",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_002.txt",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_002.png",
+      "nativeSha256": "d883f3c25a41c9a5ea187429d3230d9667e174d97e3cffbbeae305096aadefb5",
+      "dimensions": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_003",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e52-a8e3-7e00-8142-6a8a29ecf56b/exec-c6e28c00-053e-4a0c-ac48-04c918ee3e79.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_003.png",
+      "nativeSha256": "76444b1d4e6a5bd58888dac7f6cc2d048914b97f0d739cae489b1a96eb6bb747",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "原图室内落叶、湿地面和大面积墙漆剥落不符合运营校舍；生成图保留笔记本、双手、卷盘及走廊构图，状态与已修正母图一致，原尺寸检查通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_003.txt",
+      "promptSha256": "4546da3bf7b0a5817a450daef6dd1198858d1b9d199b4d23640a85c2ce4052e2",
+      "sourceSha256": "db5845f1c9c453efb19e042f2372076fe389078fe28c448286e3ba4c276494c7",
+      "publishedSha256": "db5845f1c9c453efb19e042f2372076fe389078fe28c448286e3ba4c276494c7"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_004",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e52-a8e3-7e00-8142-6a8a29ecf56b/exec-af1c4cb6-0f5d-4097-ad16-2ac951022757.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_004.png",
+      "nativeSha256": "637850cda65ccef968bb033f31e415c426cb7129844cd18f3e5e5a6273499e6c",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "原图室内落叶、积水反光和大面积墙漆剥落不符合运营校舍；生成图保留卷盘、窗门位置和走廊透视，状态与已修正母图一致，原尺寸检查通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_004.txt",
+      "promptSha256": "321f1c6fa9b75478b305a56948bbb8fdadb8196a6b95ef717f89bfc5575d64ed",
+      "sourceSha256": "33fe3bbdbe2fd04f013238958477a9bc5d192bed614d3b928f5edf231bae96c8",
+      "publishedSha256": "33fe3bbdbe2fd04f013238958477a9bc5d192bed614d3b928f5edf231bae96c8"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14246-a719-7ca1-a8e6-4a1d551a0fc3/exec-b42854bf-1946-485e-9172-b7574d0df23b.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_005.png",
+      "nativeSha256": "0c41f2a26bba23b9b4a7b0738e5b7c59d096f6578be559be2617ed154e5aeb2b",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_005.txt",
+      "reason": "保持原4:3门口低机位、左右门框/窗门位置、走廊消失点、右侧红色消防卷盘与左下失焦倒地轮廓；墙面已恢复连续完整的米白/灰绿旧校舍饰面，室内落叶、积水和湿地反光问题已清除，地面仅保留与修正母图一致的自然窗光反射。没有新增文字、人物、物件或身份信息，原有遮挡和失焦保持；普通手机自然柔光质感及PNG原尺寸1448×1086通过。",
+      "promptSha256": "eaf0ebdc58be2537c5fa542c9006757946cb32331c694ef34b51cb5d9a4ea30d",
+      "sourceSha256": "ca0b2dbc89a9eed572308f051dc68133a522c719f08f5444f7fee801f8b31d51",
+      "publishedSha256": "ca0b2dbc89a9eed572308f051dc68133a522c719f08f5444f7fee801f8b31d51"
+    }
+  ]
+}

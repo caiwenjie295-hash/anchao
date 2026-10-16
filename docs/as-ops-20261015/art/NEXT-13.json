@@ -1,0 +1,38 @@
+{
+  "batch": "NEXT-13",
+  "status": "completed-with-preserved-size-mismatch-awaiting-retry",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_FINALE_FEAR_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e89-0acd-7ed0-b6b6-47cf8671c15f/exec-3399f0b9-f441-43ad-a425-92cf40274b6e.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_FEAR_001.png",
+      "nativeSha256": "3632ef759b151fee6f8346c7baa5de08b9a995d69144cffd4c29c152a0325768",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "reason": "地下厨房回望镜头修正后墙面恢复完整的米白瓷砖与灰绿色墙带，地面干燥清洁且无室内落叶，保留原门口遮挡机位、中央通道、佛龛与旧损黑塑像、案台器具、前景手和手机及原有暗调；未增删人物、物件或文字。视觉检查通过，输出尺寸1672×941与原图一致。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_FEAR_001.txt",
+      "promptSha256": "e7b454ff55ae401f53d9ead0557fb5452076054f9b86248a0115ba0376030b84",
+      "sourceSha256": "906f6eb355b296d590608eced49e0ae273ed444fb08b5a7f8f7d38f0393d2888",
+      "publishedSha256": "906f6eb355b296d590608eced49e0ae273ed444fb08b5a7f8f7d38f0393d2888"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_001",
+      "status": "needs-generation",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e89-0acd-7ed0-b6b6-47cf8671c15f/exec-893998fc-777e-4067-b784-6370025cbaa3.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_DOOR_001.png",
+      "nativeSha256": "730dd02c8b215490d9891b774296539ffdabc0852b875f8c8f7bb13b619023ed",
+      "dimensions": [
+        1671,
+        941
+      ],
+      "reason": "已有维护状态修正图画面合格，但原生宽1671而授权原宽1672，保留该结果，需独立新版本按1672×941精确重试；原机位/门窗/庭院连续性保持。",
+      "sourceSha256": "eee32dfe718fdf7d3559c21a8247b878b271d9972ca9ca7a677bbab967a67d79",
+      "publishedSha256": "eee32dfe718fdf7d3559c21a8247b878b271d9972ca9ca7a677bbab967a67d79"
+    }
+  ]
+}

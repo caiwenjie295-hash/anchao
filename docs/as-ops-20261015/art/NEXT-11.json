@@ -1,0 +1,40 @@
+{
+  "batch": "NEXT-11",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_T08_009",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e7c-7ef2-79a3-b415-65e2aaa08fda/exec-d21e3157-3e71-439d-9e1a-2e6427b34976.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_009.png",
+      "nativeSha256": "dac43c24c3375bdcaccef22d44a455116f18d146c01985c4e5435e797f202fe2",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "修复档案库后墙靠近顶棚处连续大面积剥落和斑驳，恢复完整朴素的米白/灰绿色运营期墙面；前景货架、旧卷宗、后方桌子、顶灯、地面与机位布局保持，未增加人或文字。视觉检查通过，原尺寸1448×1086。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_009.txt",
+      "promptSha256": "3571545c14b751bcdaf07d803c295a535c2f67d5ad1fde4cf4aa0862308975bd",
+      "sourceSha256": "dac43c24c3375bdcaccef22d44a455116f18d146c01985c4e5435e797f202fe2",
+      "publishedSha256": "e80195bde47482c75eccab4faaa3228c2863b8a09db6390b6a2e01fa077c3b61"
+    },
+    {
+      "id": "IMG_A4_T08_010",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e7c-7ef2-79a3-b415-65e2aaa08fda/exec-4aba797e-a72b-4e50-818c-f1b9741467bd.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_010.png",
+      "nativeSha256": "196afdadc9ca84baefd7a5e21730d53b62ca79dcb7225a8f2b75ea01be4f8cb8",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "修复后墙和两侧下半墙大面积剥落的灰绿色漆层，将地面湿积水反光恢复为干燥哑光；原厨房构图、案台蔬菜厨具、门口、吊灯、双排水沟、左下手与手机保留，中央黑色塑像及其旧损保留，未增人或文字。视觉检查通过，原尺寸1448×1086。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_010.txt",
+      "promptSha256": "f87ad871c2e2fe1cf3a1301ce00c9abaced90fc880dcdefa672979148ace1d12",
+      "sourceSha256": "196afdadc9ca84baefd7a5e21730d53b62ca79dcb7225a8f2b75ea01be4f8cb8",
+      "publishedSha256": "be25b35fcf96a3ed3b0303685def6513ba24b59ec7ec6589d539fb8a2f17c8cd"
+    }
+  ]
+}

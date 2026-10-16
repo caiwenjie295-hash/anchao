@@ -1,0 +1,31 @@
+{
+  "batch": "NEXT-06",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 1,
+  "assets": [
+    {
+      "id": "IMG_A4_T06_005",
+      "status": "retained",
+      "reason": "这是半个月后仍在使用的机构宿舍：床铺、桌椅和储物柜完整，床面纸团作为逃离计划线索保留；地面干燥，墙面只有零散轻微使用痕迹，没有大片剥落、霉斑、积水或室内落叶，符合运营中的旧校舍环境，保留原图。",
+      "sourceSha256": "103b60bd6a07195c86ec924dc22fe231bc02db9829538a643d97df7527110c21",
+      "publishedSha256": "d23fd9b75322aeda87bb8f97ea5e80e0ba5803b754b4d71360b32abe57afd762"
+    },
+    {
+      "id": "IMG_A4_T06_006",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e62-4ee9-74e2-b537-affb12a4a326/exec-d186a612-b901-4c60-a314-103fef37b4ed.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T06_006.png",
+      "nativeSha256": "159149384f3266cfcced0be68162e541f4fabcc3d8ee34e5733fd826f8acad3c",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "原图禁闭室墙面大面积剥落、门体重锈且地面湿亮，不符合2014年仍在使用的场景。修正版保留中央铁门三孔与送餐口、左侧床、右侧长凳与洗手盆、顶灯及原机位布局；墙面完整，仅有轻微使用痕迹，铁门旧而可用，地面干燥无落叶，低饱和低对比中性光，检查原尺寸1448×1086通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T06_006.txt",
+      "promptSha256": "f1f140d49597ace6832f652d65cb7ef51450dd126bf20543d6e10af0a4fe4a9d",
+      "sourceSha256": "159149384f3266cfcced0be68162e541f4fabcc3d8ee34e5733fd826f8acad3c",
+      "publishedSha256": "524525462c3a911a81c14148437110bbda30440df214f3a9b01621a17b2bf1b4"
+    }
+  ]
+}

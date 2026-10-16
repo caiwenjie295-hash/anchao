@@ -1,0 +1,40 @@
+{
+  "batch": "NEXT-08",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_T06_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e6b-c6c6-7bf0-a8ed-60490f9ce683/exec-ca8f5890-dd14-4b5f-81be-172fa20007f4.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T06_007.png",
+      "nativeSha256": "00570fcb6cb63277187b10cd1e0fb8d4aad30e9c491ab1eea1e067325e93a2c3",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "运营期禁闭室入口：已修正墙面下缘大片剥落、门体与五金重锈及地面湿亮；保留原机位、墙地布局、门框、恰好三个圆窗、送餐口和右侧控制板，门体仍显旧而可用，地面干燥，低饱和自然光。视觉检查通过，PNG尺寸1448×1086与原图一致。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T06_007.txt",
+      "promptSha256": "4c30b73d3a706d8ef1bc25ad1f45886fa37531a8b7f6690fc59a9ba4608829ab",
+      "sourceSha256": "00570fcb6cb63277187b10cd1e0fb8d4aad30e9c491ab1eea1e067325e93a2c3",
+      "publishedSha256": "cf3d386638e45d99df55a602f5fb7ecb9fc815549b4af8c50aa32ee8394df351"
+    },
+    {
+      "id": "IMG_A4_T07_005",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e6b-c6c6-7bf0-a8ed-60490f9ce683/exec-a8e60909-654f-4182-ba1a-c810dc4acca9.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T07_005.png",
+      "nativeSha256": "a04547e90673a5c4b0145cb4e25b164c24267cf79d7e6b3887751270ba6106ce",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "reason": "运营期厨房通道：仅将原大面积湿亮水渍反光修正为干燥、哑光、日常清洁的地面，保留原机位、地漏及所有人员、厨具、供台和物件位置；黑色塑像及其原有掉漆保持。视觉检查通过，PNG尺寸1536×1024与原图一致。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T07_005.txt",
+      "promptSha256": "38936e373b1f04b11c2fde4836aa78948e48bcf0015e8f6723752aa18e411000",
+      "sourceSha256": "a04547e90673a5c4b0145cb4e25b164c24267cf79d7e6b3887751270ba6106ce",
+      "publishedSha256": "ac9e3500cfb4d609a80136f9e5ef8144783ce4f309e274ed89018c42572a7830"
+    }
+  ]
+}

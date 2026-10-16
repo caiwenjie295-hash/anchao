@@ -1,0 +1,22 @@
+{
+  "batch": "NEXT-05",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_T06_003",
+      "status": "retained",
+      "reason": "T06_003是仍在使用的普通教室：完整墙面、完好窗框与灯具、干燥地砖，课桌仅有常见磨痕；没有遗址式剥落、霉斑、积水或室内落叶，符合运营校舍状态，保留原图。",
+      "sourceSha256": "6e957ee938431d2bae186f0a4d362280f691bda03423fefa41da5b9c9ca080a3",
+      "publishedSha256": "05563fc8b1445f4e65ec9507631b8eb1a08c9a5358c2630fac5c70144efc1603"
+    },
+    {
+      "id": "IMG_A4_T06_004",
+      "status": "retained",
+      "reason": "T06_004是使用中的校舍走廊：墙砖、窗户、门框与顶灯完整，地面干燥洁净且无室内杂物；自然窗光下的轻微反光属于正常保洁后的地砖，不呈废弃状态，符合运营校舍要求，保留原图。",
+      "sourceSha256": "d8f1d47b9c94c386cae315a8eea9a4113e4c032d211c02cbd61fc8c1d940cc3c",
+      "publishedSha256": "b34ba94ef58045ffa1fc03efa01648358db1923d39c6dbf6ef1c5ae04cc598ba"
+    }
+  ]
+}

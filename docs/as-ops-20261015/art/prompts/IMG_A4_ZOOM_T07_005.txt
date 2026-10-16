@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Asset type: Fourth-act kitchen shrine close-up for a narrative game, photographed on an ordinary phone
+Primary request: Edit Image 1, the existing close photograph of the kitchen shrine. Synchronize the visible kitchen environment with the dry, maintained parent scene in Image 2 and use soft natural light, while preserving the black statue's original paint loss.
+Input images: Image 1 is the exact close-up edit target and controls the framing, shrine, statue, offerings, object identity, and layout. Image 2 is the already-corrected parent kitchen photograph and is a reference only for its dry, routinely maintained environment and natural, neutral light; do not copy its wider framing or add its people.
+Scene/backdrop: The same inexpensive, old but operating institutional basement kitchen.
+Subject: Preserve the same centered dark statue inside its wooden shrine, the tiled wall and green tile band, stone offering platform, candles, flowers, fruit, bowls, small cups, and all visible kitchen fixtures at the frame edges.
+Style/medium: Candid, unedited ordinary smartphone documentary photograph; realistic everyday surfaces, low saturation, low contrast, neutral white balance, natural exposure, soft daylight.
+Composition/framing: Keep Image 1's exact camera position, angle, perspective, close framing, 3:2 aspect ratio, proportions, and positions of the shrine, altar, statue, offerings, tiles, and fixtures. Keep the original 1536 × 1024 pixel size.
+Lighting/mood: Match the parent kitchen's soft, ordinary natural light with gentle open shadows and visible detail. Keep the existing candles exactly as they are; no theatrical glow.
+Materials/textures: Maintain the kitchen as dry, clean, and routinely used, with matte dry surfaces and no puddles or wet reflections. Preserve the black statue's chipped, peeling, worn paint exactly as an intentional exception. Keep the shrine wood, platform, tiles, offerings, and all kitchen objects unchanged.
+Text (verbatim): None.
+Constraints: Change only the visible kitchen environment's dry-maintenance appearance and natural-light quality. Preserve the original statue, paint loss, shrine and offering layout, item count, positions, and camera framing exactly. Add no people, writing, symbols, signs, clues, utensils, food, or objects; remove nothing.
+Avoid: Repainting or cleaning the statue, changing the statue's shape or softness, changing the shrine or any offering, adding or removing candles, flowers, fruit, bowls, or people, wet floor or reflections, altered grout or architecture, text, HDR, cinematic grading, vignette, bloom, over-sharpening, plastic or CGI surfaces, or strong color casts.

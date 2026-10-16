@@ -1,0 +1,40 @@
+{
+  "batch": "NEXT-23",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a1423b-537e-73a1-8e2c-87705d1eb226/exec-2853730d-66dc-47cf-ad7b-ae337d6541cb.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T07_005-v2.png",
+      "nativeSha256": "6f07b4cb248927ae6e5bed2048fe695dbd34cc8fcf99626b1dba143d2453d304",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T07_005-v2.txt",
+      "reason": "保持原近景裁切、机位和物件尺度，中央塑像、供台与供品仍占原画面相同比例；背景米白/灰绿色瓷砖完整并与修正母图维护状态一致，地面干燥哑光；黑塑像原有掉漆保留。视觉检查通过，原生尺寸1536×1024。",
+      "promptSha256": "cc0f8deb8592b44b5aec27edb1907a321c74415c1a99aaae4510b0fb4fd69c6b",
+      "sourceSha256": "f21a637212dd762a74ca2d6f7ffed9e2a40ee4fabd9e84ecadcc13a21ffaca62",
+      "publishedSha256": "f21a637212dd762a74ca2d6f7ffed9e2a40ee4fabd9e84ecadcc13a21ffaca62"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a1423b-537e-73a1-8e2c-87705d1eb226/exec-5f6035e6-1d0a-4bda-b5b4-4c32463ccb55.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T08_007.png",
+      "nativeSha256": "f4c98527685d42e9dc70c4bf94467f0cff472d37792d3c275a42cd417a213458",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T08_007.txt",
+      "reason": "保持原近景裁切、机位、门框两侧取景及设备/桌椅比例；墙面恢复连续完整的米白上墙与灰绿色下墙，门框掉漆修复，地面保持干燥，与修正母图维护状态一致。设备仍旧而可用，纸面和标签保持难辨，无新增人物、文字或线索。视觉检查通过，原生尺寸1448×1086。",
+      "promptSha256": "7ad687f1234056d69f25cf6ecfb4acc6f99703b37758e1d7e9cbfbca5bc38a36",
+      "sourceSha256": "b446a83f6b3f68a93d002ca9bee5dfa258aa8b6d5309e93ae405b85b07a8e3d1",
+      "publishedSha256": "b446a83f6b3f68a93d002ca9bee5dfa258aa8b6d5309e93ae405b85b07a8e3d1"
+    }
+  ]
+}

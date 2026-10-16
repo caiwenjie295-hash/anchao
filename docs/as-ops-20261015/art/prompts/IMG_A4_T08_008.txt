@@ -1,0 +1,14 @@
+Use case: photorealistic-natural
+Asset type: 1448×1086 in-game documentary photograph
+Primary request: Edit Image 1, the exact source photograph of a working archive and records room in a modest old school. Repair the broad peeling and flaking paint along the upper rear wall near the ceiling and the visibly chipped paint on the doorway edges. Restore a plain, intact matte finish in the existing two-tone school palette: simple off-white upper walls and muted grey-green lower walls. Leave only subtle signs of ordinary age so the archive appears in use and maintained.
+Input images: Image 1 is the edit target. Use it as the exact source photograph, not as loose inspiration.
+Scene/backdrop: Preserve this same narrow records room and its original depth and layout.
+Subject: Keep every existing steel shelving unit, archive box, binder, book, folder, loose paper stack, desk and visible item exactly in place, with the same count, shapes, labels and wear. Preserve the existing floor and ceiling.
+Style/medium: Natural, casual smartphone photograph; realistic old-school materials and restrained detail.
+Composition/framing: Keep the exact original camera position, viewpoint, perspective, geometry, crop, and full-frame composition. Preserve the source aspect ratio and output dimensions.
+Lighting/mood: Preserve the single existing fluorescent ceiling light and the original direction of light. Use neutral white balance, natural exposure, low contrast and low saturation; avoid dramatic shadows or cinematic grading.
+Color palette: Muted off-white and grey-green walls, subdued steel shelves and aged archive materials; no vivid colors.
+Materials/textures: Repair only the visible wall paint and chipped doorway paint. Wall surfaces should be intact and matte with very light everyday wear; the door edges should be intact but still old. Preserve the worn textures of all books, boxes, shelves and other objects.
+Text (verbatim): Add no text. Preserve all existing labels, markings, paper and readable content exactly as shown.
+Constraints: Change only peeling wall paint and chipped paint on the doorway edges. Preserve all room geometry, shelves, records, boxes, labels, object placement, floor, ceiling and visual clues. Do not modernize, redecorate, remove, clean up, rearrange or replace anything else. Keep this plainly functional archive room.
+Avoid: People, new objects, new text or answers, altered labels or paper, changed archive contents, moved shelves, changed perspective, changed architecture, luxury renovation, severe distress, grime, mold, water, debris, HDR, high contrast, strong warm tint, film look, illustration, CGI, oversharpening, repeated patterns, watermark.

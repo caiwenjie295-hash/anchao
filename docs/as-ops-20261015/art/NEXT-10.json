@@ -1,0 +1,40 @@
+{
+  "batch": "NEXT-10",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_T08_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e76-5ac7-7a02-9be0-f3349d8a5a03/exec-6e58061f-465b-48b1-81c4-beaafad1239f.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_007.png",
+      "nativeSha256": "65759163350bde34cd4cf2c02ee246613f64f90a91dce9253105028e2e1531d5",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "运营中的朴素校舍音像设备室：已将墙面大片剥落修复为完整米白/灰绿色哑光墙面，将门框成片掉漆修复为完整旧门框；录音机、音响设备、货架、工作台、电话、纸张、家具、地面、顶棚、机位与构图均保留，设备仍显旧而可用，未新增人或文字。视觉检查及1448×1086原尺寸通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_007.txt",
+      "promptSha256": "35c7f1a7074b9910173b56d5368e4c4beb8014629d2e621b7e62d9f21c754cce",
+      "sourceSha256": "65759163350bde34cd4cf2c02ee246613f64f90a91dce9253105028e2e1531d5",
+      "publishedSha256": "b9205f9fd7a0a6d915db24366c5bebb8b3a30d5a62bc2d494e24c773d85aa9d6"
+    },
+    {
+      "id": "IMG_A4_T08_008",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e76-5ac7-7a02-9be0-f3349d8a5a03/exec-4ac01cf8-bab8-4823-b1be-c0039bff342b.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_T08_008.png",
+      "nativeSha256": "5348b97cb439b0f3912570b860e0e9966242057459e78af926909523e00637e7",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "运营中的朴素校舍档案室：已修复后墙上缘成片剥落和门框掉漆，墙面恢复完整米白/灰绿色哑光饰面，仍保留旧校舍质感；档案架、卷宗、盒册、桌面、顶灯、地面、空间纵深与机位构图保留，未增加人或文字。视觉检查及1448×1086原尺寸通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_T08_008.txt",
+      "promptSha256": "c020d258850825bad236e935083cbf739a0092a7bce61c4f97afaf68e4091cc9",
+      "sourceSha256": "5348b97cb439b0f3912570b860e0e9966242057459e78af926909523e00637e7",
+      "publishedSha256": "6b7b479c8e05bd0bc1fa9aa82656025f97a68aed7f43abe7c84d610164fdb370"
+    }
+  ]
+}

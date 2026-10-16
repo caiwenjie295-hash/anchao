@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Asset type: Fourth-act environment image for an in-game ordinary phone photograph
+Primary request: Edit Image 1, changing only the large wet-looking aisle floor so it reads as dry and routinely cleaned in an operating institutional kitchen. Preserve the photograph and every other existing part of the scene.
+Input images: Image 1 is the edit target and the only visual reference.
+Scene/backdrop: The same inexpensive, old but operating school kitchen, with the exact camera position, perspective, framing, room layout, and lighting shown in Image 1.
+Subject: Preserve every existing person exactly as shown, with the same count, position, pose, orientation, and clothing. Preserve all existing kitchen fixtures and objects in their exact locations: the large cooking vessel at left, metal worktables and shelves, hooks and towels, pots, bowls, baskets, vegetables, utensils, the central floor drain, tiled walls, overhead lamps, altar and offerings, and the dark black statue.
+Style/medium: A candid ordinary smartphone photograph, low saturation, low contrast, neutral white balance, natural materials, no cinematic treatment.
+Composition/framing: Keep the original 1536 × 1024 pixel dimensions, aspect ratio, crop, camera angle, perspective, and all object geometry and positions exactly.
+Lighting/mood: Keep the existing soft overhead kitchen lighting and natural phone exposure; do not globally relight or recolor the scene.
+Materials/textures: Change only the existing aisle floor surface: remove the broad wet shine, puddle-like patches, and water reflections; make the floor dry, matte, and plausibly recently cleaned, retaining its original tile pattern, grout, wear, and exact floor drain. Keep the old black statue's chipped and peeling surface exactly as it appears; this is an intentional original detail.
+Text (verbatim): None.
+Constraints: Preserve the kitchen's operating but inexpensive old-school appearance. Keep every person, object, fixture, offering, and utensil in place and unchanged. Preserve the existing black statue and its paint loss; edit only the floor's wet appearance. No new people or objects.
+Avoid: Any change to people, count, faces, clothing, objects, shrine, statue, or their positions; remove no objects; do not repaint or clean the black statue; no new text, signs, clues, food, utensils, or answers; no wet reflections or puddles; no altered drain, grout geometry, framing, architecture, or lighting; no luxury renovation, HDR, dramatic color grading, oversharpening, plastic-looking surfaces, or repetitive artificial floor pattern.
