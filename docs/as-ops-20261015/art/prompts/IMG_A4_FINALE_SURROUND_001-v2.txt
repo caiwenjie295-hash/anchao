@@ -1,0 +1,14 @@
+Use case: lighting-weather
+Asset type: fixed narrative background photograph for the finale scene
+Primary request: Edit only the lighting and overall color tone of Image 1. Make the existing frame read as an ordinary handheld phone photograph with natural, softly balanced exposure.
+Input images: Image 1 is the sole edit target, the existing v1 frame. Preserve its scene and content. No separate style or geometry reference.
+Scene/backdrop: Keep the existing low, floor-level interior view through the open wooden door into the same courtyard. The room remains clean, dry, and in ordinary maintained use.
+Subject: Preserve exactly the people already present, including every masked figure leaning over the fallen person, the fallen person, and the foreground arm. Keep each person's position, pose, clothing, mask shape, and occlusion unchanged. Every identity remains completely concealed by the masks and framing.
+Style/medium: Photorealistic, candid ordinary-phone capture; retain the source image's existing intentional softness and defocus.
+Composition/framing: Preserve the exact low camera position, field of view, perspective, crop, and all spatial relationships. Keep the same door, windows, courtyard geometry, plants, and visible interior.
+Lighting/mood: Use balanced, soft natural daylight with gentle shadows and moderate highlights. Remove the heavy dark vignette, exaggerated backlight bloom/halo, and harsh contrast. Let the mask and clothing shadows retain enough neutral detail to show their existing contours while keeping identities fully hidden. Keep the courtyard naturally bright without clipping or glowing.
+Color palette: Low saturation, low contrast, neutral white balance, restrained natural colors. Remove the strong warm/cinematic cast.
+Materials/textures: Preserve the existing walls, dry floor, door, clothing, masks, and all textures as they are. Do not clean, repair, sharpen, or reinterpret any object.
+Text (verbatim): None.
+Constraints: Change illumination, exposure, white balance, and global tone only. Do not change people, props, architecture, geometry, perspective, layout, focus, blur, or framing. Preserve the scene's original soft focus; do not increase sharpness or detail. Keep exactly the original people and objects. No new text or watermark. Output at exactly 1672 x 941 pixels.
+Avoid: cinematic grading, HDR, crushed blacks, strong vignette, lens flare, bloom, glowing edges, oversharpening, added details, added or missing subjects, altered masks, visible faces or identities, changed pose, changed architecture, changed courtyard, cleaner-looking redesign, text, logos, or watermark.

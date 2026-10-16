@@ -1,0 +1,41 @@
+{
+  "batch": "NEXT-22",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14235-6d64-7601-92c2-099ad7adec47/exec-f98756c4-197b-40d2-9587-1c460c0cfd91.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T06_007.png",
+      "nativeSha256": "1eb97a1180a03e0e24b3d76c25de59e696f116ce454e07bb4da9b5d78c9a92a9",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T06_007.txt",
+      "reason": "按修正母图同步禁闭室近景：墙脚剥落已恢复为连续的米白/灰绿涂层，旧铁门与五金仅保留轻微使用痕迹，地面干燥；恰好三个圆孔、送餐口、右侧控制板、原机位和构图均保留，生成图1448×1086符合原尺寸。",
+      "promptSha256": "53789e9fd0b6d37b058ff8a3067280c20f0aa90e4b23d8b4796ce4d461b04390",
+      "sourceSha256": "4d3b5e4fe5c470b6c89c8c73c342502d43a46200bf6637e0c24c32981db8f7ae",
+      "publishedSha256": "4d3b5e4fe5c470b6c89c8c73c342502d43a46200bf6637e0c24c32981db8f7ae"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "status": "needs-generation",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14235-6d64-7601-92c2-099ad7adec47/exec-3150cf4f-47f2-4438-80ad-ab6578eefa9a.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T07_005.png",
+      "nativeSha256": "d60146dc55a2f208eb8cd8ccf1e307fe14ae0cc3c65940042ace52700d121bd3",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T07_005.txt",
+      "reason": "工具结果虽为1536×1024，但偏离原近景构图，实际呈现厨房广角，塑像与供台比例/机位不符；原近景构图未保留。已保留原生输出，不接受且本批不重复调用。",
+      "inspectionStatus": "not-accepted",
+      "inspectionReason": "工具结果虽为1536×1024，但偏离原近景构图，实际呈现厨房广角，塑像与供台比例/机位不符；原近景构图未保留。已保留原生输出，不接受且本批不重复调用。",
+      "sourceSha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90",
+      "publishedSha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90"
+    }
+  ]
+}

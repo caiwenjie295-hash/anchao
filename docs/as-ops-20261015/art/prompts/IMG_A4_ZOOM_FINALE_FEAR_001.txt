@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Asset type: 2014 narrative-game photographic kitchen detail, preserving the existing 4:3 close-up frame
+Primary request: Correct only the kitchen's maintenance state so this close-up matches the same operating kitchen shown in Image 2. Restore the lower gray-green wall band as intact, simple ceramic tile and keep the upper wall as complete, plain warm off-white ceramic tile. Make the floor dry, clean, and naturally matte, with only subtle ordinary surface reflections.
+Input images: Image 1 is the edit target; preserve its camera position, doorway framing, perspective, crop, objects, and foreground phone/hand. Image 2 is the already-corrected parent-scene reference for the kitchen's intact off-white tiled wall, gray-green tiled band, and dry floor only. Do not copy Image 2's wider framing, lighting grade, or vignette.
+Scene/backdrop: The same modest institutional kitchen, viewed from the same doorway at the same height and angle as Image 1.
+Subject: The existing kitchen interior and its unchanged arrangement of stainless worktables, pots, bowls, vegetables, hanging hooks, cloths, doorway, floor drains, and small shrine.
+Style/medium: Photorealistic ordinary handheld phone snapshot; muted, low saturation and low contrast, neutral white balance, natural soft light, and the original subdued indoor mood.
+Composition/framing: Match Image 1 exactly: same 4:3 crop, camera position, perspective, depth of field, door-edge occlusion, and relative object placement.
+Lighting/mood: Preserve Image 1's existing dim, subdued atmosphere and practical ceiling lights. Do not add darkening or corner shading.
+Materials/textures: Plain, modest, intact tilework with light everyday wear; dry floor with a soft, non-wet finish. Keep the central black statue visibly old and chipped exactly as before.
+Text (verbatim): None. Keep the phone screen dark and blank; add no text or interface.
+Constraints: Change only the wall maintenance state and wet-looking floor finish. Keep the black statue's existing damage. Preserve the doorway, kitchen geometry, all fixtures and objects, the hand and phone, and any existing phone/paper treatment. Add no people, objects, clues, or answers.
+Avoid: Peeling or mottled wall paint, mold, indoor leaves, puddles, wet mirror-like floor shine, renovation polish, cinematic color grading, stronger darkness, new vignette, HDR, bloom, oversharpening, plastic CGI surfaces, altered phone contents, or changed composition.

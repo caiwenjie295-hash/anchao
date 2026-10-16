@@ -1,0 +1,43 @@
+{
+  "batch": "NEXT-07",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_T06_007",
+      "status": "needs-generation",
+      "reason": "这是机构运营期的禁闭室铁门入口，中央三圆窗与送餐口、墙地布局应保留；现图墙面下缘大片剥落、铁门和五金重锈、地面湿亮，整体呈遗址式失修，需修复墙漆和门体维护并保持地面干燥。",
+      "sourceSha256": "fe39bd971641b492bb7676a183715d6633e89720bacd4d45f093c610ee7f4adc",
+      "publishedSha256": "34e6b9e104f47c606d879d009c99c77fc89e47a56200444cef4ecb6022e68dc7"
+    },
+    {
+      "id": "IMG_A4_T07_002",
+      "status": "retained",
+      "reason": "这是仍在使用的机构教室课桌场景：练习纸、笔记本、书本与书写笔摆放合理，课桌表面磨痕属于日常使用痕迹；背景桌椅和地面完整干燥，没有遗址式破损、霉斑、积水或室内落叶，保留原图。",
+      "sourceSha256": "528a31c7f0800d1884ec5549bba3ed66acec882c7ed840769ccb062ba01dc37c",
+      "publishedSha256": "77dbb4a352db7a03106f021fad4e22427afc863951414dfd445c1bdc2ebfc6cb"
+    },
+    {
+      "id": "IMG_A4_T07_005",
+      "status": "needs-generation",
+      "reason": "这是仍在使用的机构厨房，瓷砖墙、灯具、不锈钢操作台与厨具均完整，人物和供台保持原样；但通道地面大面积湿亮并呈明显水渍反光，不符合运营厨房干燥整洁的维护状态，需只修正地面为干燥日常清洁质感。",
+      "sourceSha256": "a1bb8f6fa4efac0ad4ccc6683244c8c8bbba36b8033d695d8267b10e38cb127c",
+      "publishedSha256": "e274d51225936d15ede00de03a9c3aca9effa13f812cf57072d6e4f08cd21821"
+    },
+    {
+      "id": "IMG_A4_T08_005",
+      "status": "retained",
+      "reason": "这是机构外的山林石阶与围墙路径，石面湿润、落叶和植被都属于自然室外环境痕迹，不能按运营楼内维护标准清除；未见室内破败问题，保留原图。",
+      "sourceSha256": "a44f1469a84621a7c8545020a395d5c498797e9f38fa4a5d005dc7e31d17ca9b",
+      "publishedSha256": "45b36a0d14770c265078b0a14f2c5aea4d24109a7b426ba036b2180165daf126"
+    },
+    {
+      "id": "IMG_A4_T08_006",
+      "status": "retained",
+      "reason": "这是夜间机构院外的出口门与山墙视角，门体、砖墙和立柱仍完整可通过；藤蔓、室外锈蚀、湿地石与落叶属于自然露天环境，符合山路及机构外围的场景边界，不应按室内运营空间翻新，保留原图。",
+      "sourceSha256": "cd9bdc98edce0c84f7556ee8d3428133498787e613aed4c93f708adc6aa9980e",
+      "publishedSha256": "705d008b1d92d01ba4da13eeacff7154a0ae2722e1796817141aa838ba853834"
+    }
+  ]
+}

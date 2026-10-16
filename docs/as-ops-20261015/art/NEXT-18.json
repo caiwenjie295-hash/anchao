@@ -1,0 +1,43 @@
+{
+  "batch": "NEXT-18",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_FINALE_FEAR_001",
+      "status": "needs-generation",
+      "reason": "对应母图 IMG_A4_FINALE_FEAR_001 已替换为运营期厨房：墙面恢复完整米白瓷砖与灰绿色墙带、地面干燥。当前近景仍见灰绿色墙带大片剥落和斑驳，空间状态未随母图修正；登记待下一独立生图批次同步，保留原机位、门口遮挡与厨房布局。",
+      "sourceSha256": "df4b9cd188f417013045ecf0a4bcddba21f003c21f5a779bcb9e574fda6fa3e7",
+      "publishedSha256": "df4b9cd188f417013045ecf0a4bcddba21f003c21f5a779bcb9e574fda6fa3e7"
+    },
+    {
+      "id": "IMG_A4_ZOOM_READING_DETAIL_001",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_READING_DETAIL_001 是夜间档案室。当前近景只见不锈钢书架与排列整齐的卷宗，通道和地面完整干燥；昏暗环境与局部手机照明符合原场景，没有运营状态或破损问题，保留原图。",
+      "sourceSha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3",
+      "publishedSha256": "dd5b5470fe58d1ae797c1ebfcad379167026400cf00be4bfe267b97d6b3537e3"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_002",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_T06_002 显示仍在使用的机构食堂。近景是完整餐盘中的正常饭菜，桌面整洁，母图背景有就餐者和完好桌椅；无破损、积水或废弃痕迹，保留原图。",
+      "sourceSha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23",
+      "publishedSha256": "d0780d0d2eb1962eab5941df1fc3126bd4b776e2585663f94ddf04a8693edc23"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_004",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_T06_004 是正常使用中的校舍走廊，墙砖、窗户和照明完整，地面干燥。近景扩音器可用，墙面仅有安装处轻微污痕与细小发丝裂纹，没有大片剥落或霉斑，属于旧校舍日常使用痕迹，保留原图。",
+      "sourceSha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051",
+      "publishedSha256": "d7c05085d5bf1c54c33856d1d8915873867bf780da1a887692638fecb8db4051"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T06_005",
+      "status": "retained",
+      "reason": "对应未替换的母图 IMG_A4_T06_005 是仍在使用的旧校舍宿舍。近景保留床铺上的纸张线索、完整床架与柜体，墙漆连续，地面干燥；被褥和地毯的日常旧痕不构成废弃或破败状态，保留原图。",
+      "sourceSha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8",
+      "publishedSha256": "029746c143c3f6ebc170bb3c57680638e46a1cdf199670a06e1939a4f2291ed8"
+    }
+  ]
+}

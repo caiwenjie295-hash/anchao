@@ -1,0 +1,40 @@
+{
+  "batch": "NEXT-03",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T09_003",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e52-a8e3-7e00-8142-6a8a29ecf56b/exec-c6e28c00-053e-4a0c-ac48-04c918ee3e79.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_003.png",
+      "nativeSha256": "76444b1d4e6a5bd58888dac7f6cc2d048914b97f0d739cae489b1a96eb6bb747",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "原图室内落叶、湿地面和大面积墙漆剥落不符合运营校舍；生成图保留笔记本、双手、卷盘及走廊构图，状态与已修正母图一致，原尺寸检查通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_003.txt",
+      "promptSha256": "4546da3bf7b0a5817a450daef6dd1198858d1b9d199b4d23640a85c2ce4052e2",
+      "sourceSha256": "db5845f1c9c453efb19e042f2372076fe389078fe28c448286e3ba4c276494c7",
+      "publishedSha256": "db5845f1c9c453efb19e042f2372076fe389078fe28c448286e3ba4c276494c7"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_004",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e52-a8e3-7e00-8142-6a8a29ecf56b/exec-af1c4cb6-0f5d-4097-ad16-2ac951022757.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_004.png",
+      "nativeSha256": "637850cda65ccef968bb033f31e415c426cb7129844cd18f3e5e5a6273499e6c",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "reason": "原图室内落叶、积水反光和大面积墙漆剥落不符合运营校舍；生成图保留卷盘、窗门位置和走廊透视，状态与已修正母图一致，原尺寸检查通过。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_004.txt",
+      "promptSha256": "321f1c6fa9b75478b305a56948bbb8fdadb8196a6b95ef717f89bfc5575d64ed",
+      "sourceSha256": "33fe3bbdbe2fd04f013238958477a9bc5d192bed614d3b928f5edf231bae96c8",
+      "publishedSha256": "33fe3bbdbe2fd04f013238958477a9bc5d192bed614d3b928f5edf231bae96c8"
+    }
+  ]
+}

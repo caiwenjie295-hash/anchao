@@ -1,0 +1,53 @@
+{
+  "batch": "NEXT-14",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_FINALE_DOOR_001",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e91-2bfb-78b3-98ae-587629644c9d/exec-d5956ba7-32fa-4abf-96af-00329b81bb24.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_DOOR_001-v2.png",
+      "nativeSha256": "44d78d30403b52bd3be5a73d9c01291685d2e88596f612be3803dd72acb138c7",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_DOOR_001-v2.txt",
+      "reason": "与原图对照，远门、门窗几何、相机机位、庭院建筑和室外秋叶均保持；室内墙面完整，地面洁净干燥且无室内落叶，低饱和自然光。地砖仅有轻微日光高光，不呈积水或湿亮状态。输出为精确1672×941，符合原图尺寸。",
+      "promptSha256": "503984b3500e64e70c8eabfce1be551e90216b6e1f9c6e7de7dadfa1901d49c9",
+      "sourceSha256": "d58f3c557a4b398663e07c2e07078e2bdd81c627116f171ae1653d423d4d82d6",
+      "publishedSha256": "d58f3c557a4b398663e07c2e07078e2bdd81c627116f171ae1653d423d4d82d6"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_002",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e91-2bfb-78b3-98ae-587629644c9d/exec-42f4d7dd-91ce-4b89-a2a8-145f03079ca0.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_DOOR_002.png",
+      "nativeSha256": "01f68ba065690a45880942e4b0d18fcb472d374032559cef9c0b54e329268919",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_DOOR_002.txt",
+      "nativeDimensions": [
+        1671,
+        941
+      ],
+      "deliveryNormalization": {
+        "tool": "cwebp",
+        "operation": "one-pixel dimension normalization during WebP encoding",
+        "nativeUnmodified": true,
+        "publishedDimensions": [
+          1672,
+          941
+        ]
+      },
+      "reason": "近门原构图、门扇遮挡、庭院和失焦保持，室内墙地已修正；原生PNG1671×941原样保留，仅发布WebP编码时校准为原尺寸1672×941，无裁切或内容改动。",
+      "promptSha256": "487d80380c26348354d1c8b0290dc57d8af93d2fdb93606d51fa67fd3a4fd60b",
+      "sourceSha256": "77a90032f905da5046999ec2cd8dec91d4049bb9f60d51230f5a3f69ab1ac88a",
+      "publishedSha256": "77a90032f905da5046999ec2cd8dec91d4049bb9f60d51230f5a3f69ab1ac88a"
+    }
+  ]
+}

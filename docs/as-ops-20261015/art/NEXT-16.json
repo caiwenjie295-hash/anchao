@@ -1,0 +1,25 @@
+{
+  "batch": "NEXT-16",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 1,
+  "assets": [
+    {
+      "id": "IMG_A4_FINALE_SURROUND_001",
+      "status": "needs-generation",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13ea1-f241-7fc2-b194-5ea0ea6f41bc/exec-202bfa49-ee0b-4675-9e1f-29268590041b.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_SURROUND_001-v2.png",
+      "nativeSha256": "0f1bb3353aeb283103c79f513dd6e75ac92b133e88bb1c955dd4d2c5151a6fa6",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_SURROUND_001-v2.txt",
+      "reason": "v2照明与中性白平衡改善，但面具、门框及衣物相对原图明显变清晰；保留v2原生图，下一版只恢复原有全画面轻度失焦与意识模糊，不改变已修好的自然光、墙地、几何、人物或遮挡。",
+      "inspectionStatus": "not-accepted",
+      "inspectionReason": "v2照明与中性白平衡改善，但面具、门框及衣物相对原图明显变清晰；保留v2原生图，下一版只恢复原有全画面轻度失焦与意识模糊，不改变已修好的自然光、墙地、几何、人物或遮挡。",
+      "sourceSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4",
+      "publishedSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4"
+    }
+  ]
+}

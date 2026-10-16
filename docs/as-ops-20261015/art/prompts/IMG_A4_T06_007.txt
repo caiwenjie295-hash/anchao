@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Asset type: Fourth-act environment image for an in-game ordinary phone photograph
+Primary request: Edit Image 1, preserving this exact photograph while correcting only the room's severe maintenance damage. The scene is an inexpensive old school institution that is still operating, not an abandoned ruin.
+Input images: Image 1 is the edit target and the only visual reference.
+Scene/backdrop: Keep the same confinement-room entrance, exact camera position, perspective, framing, and two-tone wall and floor layout from Image 1.
+Subject: Preserve the centered heavy steel door and its complete frame, exactly three circular viewing windows, the rectangular food hatch, hinges, latch hardware, the small control panel on the right wall, all wall seams, baseboards, and floor boundaries in their exact locations and shapes.
+Style/medium: A natural, candid ordinary smartphone photograph; low saturation, low contrast, neutral white balance, realistic surfaces, no polished cinematic treatment.
+Composition/framing: Keep the original 1448 × 1086 pixel dimensions, aspect ratio, crop, camera angle, perspective, and all object geometry and positions exactly.
+Lighting/mood: Retain the subdued indoor lighting and quiet institutional mood, with natural phone exposure that keeps the existing surfaces legible; neutralize color cast without dramatic relighting.
+Materials/textures: Restore the lower plaster walls to intact, inexpensive gray-beige and muted gray-green painted surfaces with only slight ordinary scuffs. Keep the steel door old and utilitarian but usable, with a maintained dark gray-green finish and modest wear; remove heavy rust from the door, frame, hinges, and hardware. Make the existing floor dry and matte with its original surface and seams.
+Text (verbatim): None.
+Constraints: Change only severe wall peeling, heavy corrosion, and the wet-looking floor sheen. Keep exactly three round windows and the existing food hatch, door hardware, wall layout, proportions, and every object in place. Preserve the original room design and maintain a cheap old-school appearance, not a luxury renovation.
+Avoid: Any change in geometry, framing, door features, or object positions; new people, text, clues, or objects; removed or added fixtures; large bare-plaster patches, mold, heavy rust, puddles, wet reflections, indoor leaves, HDR, cinematic color grading, strong yellow/blue/green cast, excessive sharpening, plastic-looking materials, or a newly modernized room.

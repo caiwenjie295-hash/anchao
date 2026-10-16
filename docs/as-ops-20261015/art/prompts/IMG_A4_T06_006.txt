@@ -1,0 +1,14 @@
+Use case: precise-object-edit
+Asset type: narrative game scene photograph, 1448 × 1086 pixels
+Primary request: Edit Image 1, the existing scene image, so it depicts a still-used institutional isolation room in 2014. Correct only the excessive deterioration and dampness while keeping the same place, time, and unsettling institutional mood.
+Input images: Image 1: edit target; preserve its room and framing.
+Scene/backdrop: A modest, old institutional isolation cell, kept in functional condition. Keep the same first-person viewpoint facing the centered steel door.
+Subject: Preserve the original centered steel door with exactly three round peepholes and the small lower flip-up food hatch; the cot at left; the long built-in bench at right; the stainless basin in the right foreground; and the single caged ceiling light. Keep each object, its shape, size, orientation, and position unchanged.
+Style/medium: Ordinary mobile-phone snapshot with realistic materials and natural, subdued exposure.
+Composition/framing: Match the source image's 4:3 crop, camera height, perspective, geometry, and composition exactly. Output exactly 1448 × 1086 pixels.
+Lighting/mood: Keep the dim but usable overhead light and restrained atmosphere. Use soft shadows and neutral white balance; no dramatic cinematic lighting.
+Color palette: Low saturation and low contrast, muted cream and gray-green walls, dull gray metal.
+Materials/textures: Replace only severe decay with believable age from ordinary use. Keep walls continuous and intact with modest scuffs and small wear marks; make the steel door and fixtures worn but functional with only light, localized surface aging. Keep the concrete floor dry and matte, with ordinary wear.
+Text (verbatim): None.
+Constraints: Preserve all original objects and their precise positions, including the three peepholes and food hatch. Keep the room visibly old and utilitarian, not newly renovated. Do not add, remove, move, or redesign objects.
+Avoid: Large areas of peeling plaster or paint, mold, heavy rust, standing water, wet reflections, indoor leaves, rubble, people, additional fixtures, bars, signs, labels, symbols, clues, answers, readable writing, watermark, high saturation, strong contrast, HDR, cinematic color grading, glossy CGI surfaces, or repetitive textures.

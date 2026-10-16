@@ -1,0 +1,24 @@
+{
+  "batch": "NEXT-25",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 1,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "status": "replaced",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a14246-a719-7ca1-a8e6-4a1d551a0fc3/exec-b42854bf-1946-485e-9172-b7574d0df23b.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_005.png",
+      "nativeSha256": "0c41f2a26bba23b9b4a7b0738e5b7c59d096f6578be559be2617ed154e5aeb2b",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_005.txt",
+      "reason": "保持原4:3门口低机位、左右门框/窗门位置、走廊消失点、右侧红色消防卷盘与左下失焦倒地轮廓；墙面已恢复连续完整的米白/灰绿旧校舍饰面，室内落叶、积水和湿地反光问题已清除，地面仅保留与修正母图一致的自然窗光反射。没有新增文字、人物、物件或身份信息，原有遮挡和失焦保持；普通手机自然柔光质感及PNG原尺寸1448×1086通过。",
+      "promptSha256": "eaf0ebdc58be2537c5fa542c9006757946cb32331c694ef34b51cb5d9a4ea30d",
+      "sourceSha256": "ca0b2dbc89a9eed572308f051dc68133a522c719f08f5444f7fee801f8b31d51",
+      "publishedSha256": "ca0b2dbc89a9eed572308f051dc68133a522c719f08f5444f7fee801f8b31d51"
+    }
+  ]
+}
