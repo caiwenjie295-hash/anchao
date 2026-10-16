@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Asset type: Fourth-act environmental close-up for a narrative game, photographed on an ordinary phone
+Primary request: Edit Image 1, the existing close photograph of the confinement-room entrance. Correct the wall-base peeling and heavy rust so this close view matches the maintained, dry room shown in Image 2.
+Input images: Image 1 is the exact close-up edit target and controls crop, camera position, object identity, and every object's geometry. Image 2 is the already-corrected parent photograph and is a reference only for the room's maintained wall finish, subdued neutral color, and dry floor; do not copy its wider framing.
+Scene/backdrop: The same inexpensive old institutional confinement-room entrance, still in use in 2014.
+Subject: Keep the same centered steel door and frame, exactly three circular viewing holes, the rectangular meal hatch, hinges, latch, small control panel on the right wall, two-tone walls, baseboards, and floor.
+Style/medium: Candid, unedited ordinary smartphone documentary photo; realistic modest materials, low saturation, low contrast, neutral white balance, normal natural exposure, soft ambient light.
+Composition/framing: Preserve Image 1's exact close-up camera position, angle, perspective, 4:3 crop, proportions, and object placement. Keep the original 1448 × 1086 pixel size.
+Lighting/mood: Match Image 2's soft, neutral, ordinary room light with open shadows and visible detail. No dramatic relighting.
+Materials/textures: Repair only the severe peeling at the wall foot, returning the lower walls to continuous inexpensive muted gray-green and warm gray-beige painted surfaces with slight ordinary scuffs. Reduce heavy corrosion on the old utilitarian door, frame, hinges, and hardware while retaining modest age and wear. Make the visible floor dry and matte, retaining its original seams and surface.
+Text (verbatim): None.
+Constraints: Keep all existing geometry, seams, door proportions, exactly three round holes, meal hatch, control panel, and all hardware in their existing positions. Do not modernize the room or make it luxurious. Add no people, writing, signs, clues, or objects; remove nothing.
+Avoid: Wall peeling or exposed plaster at the base, heavy rust, wet shine or puddles, altered door features, changed crop, extra or missing holes, changed control plate, text, people, indoor leaves, HDR, cinematic grading, vignette, bloom, oversharpening, plastic or CGI textures, or dramatic contrast.

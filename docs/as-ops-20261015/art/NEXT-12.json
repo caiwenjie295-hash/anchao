@@ -1,0 +1,43 @@
+{
+  "batch": "NEXT-12",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_READING_DETAIL_001",
+      "status": "retained",
+      "reason": "夜间档案室内的不锈钢书架特写：卷宗整齐存放，通道与地面完整干燥，没有大片剥落、霉斑、积水或室内落叶；昏暗手机微光和难辨反光符合原场景，源PNG与发布WebP构图内容一致，保留。",
+      "sourceSha256": "dcddec1123395c6b8aa1d2f950563bee4d5b41754309addfd36f88874343e59d",
+      "publishedSha256": "f9f843a509fa58910bb606edc9b7d212215b1947a4a034317286e4a65c347dd5"
+    },
+    {
+      "id": "IMG_A4_FINALE_FEAR_001",
+      "status": "needs-generation",
+      "reason": "地下厨房回望图与已修正的同段厨房基准不连贯：候选图出现墙面大片剥落和霉斑、室内积水及落叶。需排队修正空间维护状态；保留原门口机位、佛龛、案台器具、前景手和手机、回望线索及压暗的惊惧氛围。",
+      "sourceSha256": "4052fc6d4b1603be1126bbaec7b607d53dcf246c033990c0503d552aca525416",
+      "publishedSha256": "4052fc6d4b1603be1126bbaec7b607d53dcf246c033990c0503d552aca525416"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_001",
+      "status": "needs-generation",
+      "reason": "出口远门镜头的双开门、上方窗格和门外庭院构成正确空间，但室内墙面大面积剥落、地面湿亮并散有落叶，与已修正的同走廊T09_004/T09_005维护状态不连续。需排队修正室内状态；保留远景机位、门窗几何、庭院与室外秋叶及原有构图线索。",
+      "sourceSha256": "eee32dfe718fdf7d3559c21a8247b878b271d9972ca9ca7a677bbab967a67d79",
+      "publishedSha256": "eee32dfe718fdf7d3559c21a8247b878b271d9972ca9ca7a677bbab967a67d79"
+    },
+    {
+      "id": "IMG_A4_FINALE_DOOR_002",
+      "status": "needs-generation",
+      "reason": "同一出口的近门失焦镜头保留了前图的门扇和门外庭院，但室内大片掉漆、湿地反光与散落落叶仍不符合相邻T09_004/T09_005已修正的走廊状态。需排队修正室内维护状态；继续保持原失焦程度、近门机位、门扇遮挡、庭院和室外秋叶，不增人物或线索。",
+      "sourceSha256": "a11f2938d1a91d7eb2f0426c5a2175cd2fce76631806c85a4c6cf5604bbb087d",
+      "publishedSha256": "a11f2938d1a91d7eb2f0426c5a2175cd2fce76631806c85a4c6cf5604bbb087d"
+    },
+    {
+      "id": "IMG_A4_FINALE_SURROUND_001",
+      "status": "needs-generation",
+      "reason": "倒地低视角与前两张共享同一出口门扇和庭院，面具人、前景倒地人物及遮挡线索均应保留；当前室内墙面大面积剥落、地面湿亮且有落叶，与同走廊已修正的T09_004/T09_005状态不一致。需排队修正室内维护状态；保留低机位、现有失焦、人物数量与位置、面具遮挡、门窗几何及室外秋叶。",
+      "sourceSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4",
+      "publishedSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4"
+    }
+  ]
+}

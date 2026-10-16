@@ -1,0 +1,22 @@
+{
+  "batch": "NEXT-04",
+  "status": "completed-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_T06_001",
+      "status": "retained",
+      "reason": "这是机构操场围栏与校舍外景：楼体、窗户、围栏和篮球架完整，室内照明可见。浅积水与秋叶位于露天球场，符合雨后季节性环境；没有室内积水、大片破损或废弃杂物，保留原图。",
+      "sourceSha256": "9f3ce8fb707b0c714cd6968f6eb23edbe9a7a37ddc06a2bc06fb4274db93a369",
+      "publishedSha256": "1acac8d5d76eabb15a7cd4b6b039fae8c587d35376b626ba66ceeb1ed647e786"
+    },
+    {
+      "id": "IMG_A4_T06_002",
+      "status": "retained",
+      "reason": "这是机构食堂的固定早餐场景：餐盘、饭菜、桌椅和室内就餐者都显示空间正常使用；照明充足，桌椅与地面整洁干燥，无破败或积水问题，保留原图。",
+      "sourceSha256": "3677bd4415bf75de9f3a532a7cfbd5a13425a708d3802d7226492fbd038b2c72",
+      "publishedSha256": "231918aaba01bc951860635806374d65e367f5469add9dd68bef566311c053bc"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "batch": "NEXT-09",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_T08_007",
+      "status": "needs-generation",
+      "reason": "运营中的校舍音像设备室；留存录音设备、工作台和货架作为场景线索，但墙面多处大面积成片剥落，门框漆面也严重脱落，整体呈废弃破损状态，需修复室内维护状况。",
+      "sourceSha256": "e158a81bb03abbadfd076bd20262164b77af8ba4c1234ba58d274b51b35b6c60",
+      "publishedSha256": "fb36a3282ceb4b3d887f0b534dcbbbeacfd612e19e9dd088c2158732614c29eb"
+    },
+    {
+      "id": "IMG_A4_T08_008",
+      "status": "needs-generation",
+      "reason": "运营中的校舍档案室/资料库；书架、档案盒和顶灯表明空间仍有用途，但后墙上缘有连续大片漆层剥落，门框亦成片掉漆，属于室内维护问题，需修复墙面与门框并保留档案货架构图。",
+      "sourceSha256": "e653c42daae6a1dfbda0feb33666c00cf16df2f2a44d7428b1888949f7b2d913",
+      "publishedSha256": "ea19e9c092f411e2e62882af98a99c6eeb0d84323bca0f5a22aefd8734b76d66"
+    },
+    {
+      "id": "IMG_A4_T08_009",
+      "status": "needs-generation",
+      "reason": "校舍档案库的近景机位，前景货架与旧卷宗应保留；室内后墙贴近顶棚处连续多段大面积掉漆，并伴有明显斑驳破损，不属于轻微使用痕迹，需修复运营空间墙面。",
+      "sourceSha256": "18cc565a92427d24f894d0beefe20807ab55868b51204582d0ca4326913de361",
+      "publishedSha256": "4f1bfb83bc31bb232738f19daeef35923a55e57766164ee248d43f8c54d9f324"
+    },
+    {
+      "id": "IMG_A4_T08_010",
+      "status": "needs-generation",
+      "reason": "正在使用的机构厨房，案台蔬菜与厨具、排水沟和中央黑色塑像均保留原位，塑像自身旧损按剧情例外保留；后墙及两侧下半墙大面积漆层剥落，室内地面大范围积水发亮，需修复墙面并保持地面干燥。",
+      "sourceSha256": "465f67ce0129a7ada0f81e50580f636a03f87cf7fb86d629e1febb0265d3f44f",
+      "publishedSha256": "333c0f66ad9a8adf183712db5ad20ac7481f3663196e092ddb5af0ecfa82364b"
+    },
+    {
+      "id": "IMG_A4_T08_012",
+      "status": "retained",
+      "reason": "这是仍在使用的校舍走廊：门窗、照明和消防水带设施完整，地砖干燥整洁；消防箱周围与柱脚只有局部轻微掉漆和日常磨痕，没有室内大片墙面剥落、霉斑、落叶或积水，符合朴素旧校舍状态，保留原图。",
+      "sourceSha256": "3de2e46defddf7d0b709fb1b9747e2e69afc2abc7c39546feb0f11c3246396f7",
+      "publishedSha256": "b7d2d8c3c7a73e1f2248bafa47012e7777c5d5463767ef33e083cb7f54b1d4b2"
+    }
+  ]
+}

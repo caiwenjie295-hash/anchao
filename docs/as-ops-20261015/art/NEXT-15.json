@@ -1,0 +1,25 @@
+{
+  "batch": "NEXT-15",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 1,
+  "assets": [
+    {
+      "id": "IMG_A4_FINALE_SURROUND_001",
+      "status": "needs-generation",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e99-1137-76a0-81db-a30090aeddfb/exec-80077c93-ee28-483f-9a74-5b8ace924833.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_FINALE_SURROUND_001.png",
+      "nativeSha256": "58829666edf943f3c6840d9bccd3d2d9abd2abed7a78f900270d45cdfb50fafa",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_FINALE_SURROUND_001.txt",
+      "inspectionStatus": "not-accepted",
+      "inspectionReason": "墙地维护已修正，但生成图存在重暗角、逆光泛光及高反差，未达到普通手机低对比中性白平衡要求；保留已保存PNG并仅重试光照风格，固定构图、面具人物、遮挡及原有失焦，原发布图未变化。",
+      "reason": "墙地维护已修正，但生成图存在重暗角、逆光泛光及高反差，未达到普通手机低对比中性白平衡要求；保留已保存PNG并仅重试光照风格，固定构图、面具人物、遮挡及原有失焦，原发布图未变化。",
+      "sourceSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4",
+      "publishedSha256": "1cb736e7bacfe97e7dbe95409ae5c77a953d0625927440ee5fc10fec9709b6d4"
+    }
+  ]
+}

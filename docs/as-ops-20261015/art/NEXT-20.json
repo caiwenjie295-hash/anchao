@@ -1,0 +1,45 @@
+{
+  "batch": "NEXT-20",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T06_007",
+      "status": "needs-generation",
+      "reason": "已修正母图 IMG_A4_T06_007 的米白与灰绿墙面连续、无大片剥落，地面干燥且整体维护完整；旧近景墙脚仍有大面积漆层脱落与露底，和母图状态不一致，需按修正母图重做对应近景。",
+      "sourceSha256": "d98b644eaea1b6b402e2f8d6f2f60305a09c0d0f32cb3b72841422bd29f6c385",
+      "publishedSha256": "d98b644eaea1b6b402e2f8d6f2f60305a09c0d0f32cb3b72841422bd29f6c385"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T07_005",
+      "status": "needs-generation",
+      "reason": "主审依冻结的母图/近景同步规则调整：T07_005母图已修正湿地面，旧近景须以新母图重新生成对应版本。原近景塑像本身旧损允许保留，重生只同步其可见厨房环境、自然光与干燥地面，不改变塑像、机位、供台和物件。",
+      "sourceSha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90",
+      "publishedSha256": "1ca5d8d8a28dbfbe5634fd238058de3ff4474ce93fe0af5b9b0cd22948af9a90",
+      "initialAuditStatus": "retained",
+      "initialAuditReason": "对应 IMG_A4_T07_005 仍在使用的后厨：米白墙砖和灰绿墙带完整，台面与炉具可用；近景只呈现轻微旧污和磨耗，地面虽旧但干燥，没有大片剥落、霉斑或积水，与母图维护状态一致，保留。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_005",
+      "status": "retained",
+      "reason": "近景与 IMG_A4_T08_005 对应同一处夜间室外山路与院门：石阶湿润、苔藓和自然落叶、砖墙及锈蚀铁门都符合雨后林地维护状态，画面空间一致；属于自然环境，没有室内运营维护问题，保留。",
+      "sourceSha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65",
+      "publishedSha256": "3ec991744231eee27858481aaacc1ec727b3cc052d4a3ea432ea0557884b9c65"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_006",
+      "status": "retained",
+      "reason": "近景与 IMG_A4_T08_006 同为院门外受困者的视角：砖墙、爬藤和锈蚀铁门及雨后落叶都相符，湿石和自然锈蚀属于室外环境状态；人物手脚与铁丝位置保持一致，不涉及室内运营维护问题，保留。",
+      "sourceSha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d",
+      "publishedSha256": "f576bed65071571589047dfa2705c06c914f6c328875dac3b812abeed871391d"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_007",
+      "status": "needs-generation",
+      "reason": "已修正母图 IMG_A4_T08_007 的米白墙面与灰绿色墙带平整完整；旧近景墙面和门边仍有多处明显漆层剥落、露底，和母图维护状态不一致，需按修正母图同步重做近景。",
+      "sourceSha256": "132da2dc057a8fe5ef9fae5dee317c5113298f8478a7d6f405ceda42f407bb18",
+      "publishedSha256": "132da2dc057a8fe5ef9fae5dee317c5113298f8478a7d6f405ceda42f407bb18"
+    }
+  ]
+}

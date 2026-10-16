@@ -1,0 +1,14 @@
+Use case: photorealistic-natural
+Asset type: 1448×1086 in-game documentary photograph
+Primary request: Edit Image 1, the exact source photograph of a small audiovisual equipment room in an operating, modest old school. Repair only the widespread peeling and flaking wall paint and the badly chipped paint on the visible doorframe. Restore simple intact matte paint in the existing two-tone scheme: warm off-white upper walls and muted grey-green lower walls. Keep the room plain, aged through light ordinary use, and clearly maintained.
+Input images: Image 1 is the edit target. Use it as the exact source photograph, not as loose inspiration.
+Scene/backdrop: Preserve this same small school equipment room and every existing detail in it.
+Subject: Preserve the original reel-to-reel recorder, audio rack, speakers, shelves, tapes, workbench, desk lamp, telephone, chair, papers, cabinet, floor, ceiling, and all other objects in their exact positions, shapes, and visible condition.
+Style/medium: Natural, casual smartphone photograph; restrained detail and realistic older-school materials.
+Composition/framing: Keep the exact original camera position, viewpoint, perspective, geometry, crop, and full-frame composition. Preserve the source aspect ratio and output dimensions.
+Lighting/mood: Soft, ordinary room lighting with natural exposure and neutral white balance; low contrast and low saturation, without dramatic shadows or cinematic grading.
+Color palette: Muted neutral off-white and grey-green walls, consistent with a humble older school; no vivid colors.
+Materials/textures: Wall paint should be intact and matte with only subtle everyday wear. The doorframe should be intact with modest age. Preserve the existing textures and wear on every device, piece of furniture, and object.
+Text (verbatim): Add no text. Preserve all existing paper, labels, markings, and readable content exactly as shown.
+Constraints: Change only the wall paint condition and chipped paint on the visible doorframe. Preserve all room geometry, object count, object placement, equipment, furniture, floor, ceiling, papers, and existing visual clues. Do not modernize, redecorate, remove, clean up, or replace anything else. Keep the space plainly functional and in use.
+Avoid: People, new objects, new text or answers, altered labels or paper, changed equipment, moved furniture, changed perspective, changed architecture, new windows or doors, luxury renovation, severe distress, grime, mold, water, debris, HDR, high contrast, strong warm tint, film look, illustration, CGI, oversharpening, repeated patterns, watermark.

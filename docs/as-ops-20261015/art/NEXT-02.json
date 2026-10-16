@@ -1,0 +1,64 @@
+{
+  "batch": "NEXT-02",
+  "status": "completed-two-assets-awaiting-whole-batch-QA",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 2,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T09_001",
+      "status": "replaced-saved-awaiting-whole-batch-QA",
+      "reason": "原近景有大面积剥落墙皮、室内落叶和湿亮地面，和已修正母图的运营状态不一致；修复后保留原近景构图、消防卷盘、管道、窗门、走廊和前景膝部。",
+      "parentId": "IMG_A4_T09_001",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e3b-286d-75c2-9375-f8a476bdbb31/exec-b82ad14b-8412-4054-9dcb-2192f279af2d.png",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_001.txt",
+      "promptSha256": "495d0c19d7493d2f1906414c4700429df38fa8ca3f5b99348388aaa9a10b258c",
+      "referencePaths": [
+        "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+        "docs/as-ops-20261015/art/native/IMG_A4_T09_001.png"
+      ],
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+      "sourceSha256": "744b049aa7043bd5a77566c1cd4d716f99f84e610feccb75f1fcc777bcd856ae",
+      "baselinePath": "/Volumes/IOS开发/解密网页游戏/暗潮-Mac开发包-2026-10-13-78787aba/assets/as-ops-20261015/baseline/IMG_A4_ZOOM_T09_001.webp",
+      "baselineSha256": "1a833aea2ee5e2a4c98093a9d992a8ed172d6cfbfd2783073a6966a103b0f7d3",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_001.png",
+      "assetsNativePath": "/Volumes/IOS开发/解密网页游戏/暗潮-Mac开发包-2026-10-13-78787aba/assets/as-ops-20261015/native/IMG_A4_ZOOM_T09_001.png",
+      "nativeSha256": "4bf38b595283967800973d573357ca94fc351df20e7bc38af18b52d4656ddf2f",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_001.webp",
+      "publishedSha256": "744b049aa7043bd5a77566c1cd4d716f99f84e610feccb75f1fcc777bcd856ae",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "newGenerationCalls": 1,
+      "inspection": "清洁干燥地面、完整朴素墙漆；消防卷盘、管线、走廊构图、外窗树叶及下方膝部保留。尺寸与PNG/WebP哈希已核对；全批视觉验收待后续。"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_002",
+      "status": "replaced-saved-awaiting-whole-batch-QA",
+      "parentId": "IMG_A4_T09_002",
+      "sourcePath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+      "reason": "原近景有剥落墙皮、室内落叶和湿亮地面，需与已修正母图的运营状态统一。",
+      "promptPath": "docs/as-ops-20261015/art/prompts/IMG_A4_ZOOM_T09_002.txt",
+      "promptSha256": "a1f400ce12ebf634a3b85c256be40b59578271170ec13568d69c39cf2f8960ab",
+      "referencePaths": [
+        "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+        "docs/as-ops-20261015/art/native/IMG_A4_T09_002.png"
+      ],
+      "sourceSha256": "39c7266b5ddb66202e24a4af3981bc813c8e5a96d693cbc4008104f6abd64792",
+      "baselinePath": "/Volumes/IOS开发/解密网页游戏/暗潮-Mac开发包-2026-10-13-78787aba/assets/as-ops-20261015/baseline/IMG_A4_ZOOM_T09_002.webp",
+      "baselineSha256": "8979f9be5b6c877ba46b255c2ab6d1de35d374b2b9d4e9c66666c882fba59378",
+      "toolOutputPath": "/Users/jay/.codex/generated_images/01a13e3b-286d-75c2-9375-f8a476bdbb31/exec-52748590-3631-4ce2-aa98-4feb5a19141a.png",
+      "nativePath": "docs/as-ops-20261015/art/native/IMG_A4_ZOOM_T09_002.png",
+      "assetsNativePath": "/Volumes/IOS开发/解密网页游戏/暗潮-Mac开发包-2026-10-13-78787aba/assets/as-ops-20261015/native/IMG_A4_ZOOM_T09_002.png",
+      "nativeSha256": "d883f3c25a41c9a5ea187429d3230d9667e174d97e3cffbbeae305096aadefb5",
+      "publishedPath": "src/assets/ux-investigation-20261014/IMG_A4_ZOOM_T09_002.webp",
+      "publishedSha256": "39c7266b5ddb66202e24a4af3981bc813c8e5a96d693cbc4008104f6abd64792",
+      "dimensions": [
+        1448,
+        1086
+      ],
+      "newGenerationCalls": 1,
+      "inspection": "清洁干燥地面、完整朴素墙漆；原手机、手、袖口、失焦不可读屏幕、消防卷盘、管线、走廊与外窗树叶保留。尺寸与PNG/WebP哈希已核对；全批视觉验收待后续。"
+    }
+  ]
+}

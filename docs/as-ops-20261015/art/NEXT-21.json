@@ -1,0 +1,36 @@
+{
+  "batch": "NEXT-21",
+  "status": "completed-audit-awaiting-generation",
+  "tool": "built-in image_gen",
+  "totalCallsSoFar": 0,
+  "assets": [
+    {
+      "id": "IMG_A4_ZOOM_T08_008",
+      "status": "needs-generation",
+      "reason": "母图 IMG_A4_T08_008 已替换，修正版档案室后墙顶部恢复连续平整的米白墙面、门框漆层完整；当前近景仍见后墙大片剥落与露底，近门边也保留成片掉漆，不能与已修正母图同步，需依新母图重生近景。保留档案架、卷宗、桌面、原机位与空间关系。",
+      "sourceSha256": "bc31dca02a81e96ae17a88cfc14cae99e722eb1c029ac440d8b22e5ae4f1a4a5",
+      "publishedSha256": "bc31dca02a81e96ae17a88cfc14cae99e722eb1c029ac440d8b22e5ae4f1a4a5"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_010",
+      "status": "needs-generation",
+      "reason": "母图 IMG_A4_T08_010 已替换，修正版厨房灰绿色墙带完整、后墙及两侧瓷砖无大片剥落，地面恢复干燥哑光；当前近景仍有大面积墙漆剥落、地面湿亮反光，与母图不同步，需依新母图重生。重生保持原门口构图、案台与器具、前景手机手部、排水沟和塑像位置，并保留黑塑像本身旧损及手机现有处理。",
+      "sourceSha256": "adf0c4b7f52621c62d14c68d19118bd90e6b40f0ab95ef98c99cd097b3eee0af",
+      "publishedSha256": "adf0c4b7f52621c62d14c68d19118bd90e6b40f0ab95ef98c99cd097b3eee0af"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T08_012",
+      "status": "retained",
+      "reason": "母图 IMG_A4_T08_012 保留，走廊门窗、照明和消防卷盘设施完整，地砖干燥；近景只见柱脚与消防箱周围少量局部掉漆及日常磨痕，未扩展为大片墙面破损、霉斑或积水，空间与维护状态和母图一致，保留原构图、设施和消防线索。",
+      "sourceSha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444",
+      "publishedSha256": "b598a4bd049cf1d0fa57b94588e946e6db9d67cd11b0cf7d418a0fa145447444"
+    },
+    {
+      "id": "IMG_A4_ZOOM_T09_005",
+      "status": "needs-generation",
+      "reason": "母图 IMG_A4_T09_005 已替换，修正版走廊墙面连续完整、地面干燥洁净且无室内落叶；当前近景仍有门框和两侧墙面大片剥落、室内堆叶及积水湿亮反光，和已修正母图维护状态不一致，需按母图重生同步。保持原门口低机位、走廊透视、消防卷盘、前景倒地人物轮廓及原失焦/遮挡处理。",
+      "sourceSha256": "9b902836b2706a11947f96dee97184fdd403d8e0a3f4cf8ff5bfc38e3382f288",
+      "publishedSha256": "9b902836b2706a11947f96dee97184fdd403d8e0a3f4cf8ff5bfc38e3382f288"
+    }
+  ]
+}
