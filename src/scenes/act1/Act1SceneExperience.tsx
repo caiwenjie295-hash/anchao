@@ -11,15 +11,16 @@ const startScene = act1Scenes[0];
 
 type SceneTransitionRunner = (action: () => void) => void;
 
-function SceneTransition({ onSceneTransition }: { onSceneTransition?: SceneTransitionRunner }) {
+function SceneTransition({ onSceneTransition, onCancelJourneyIntro }: { onSceneTransition?: SceneTransitionRunner; onCancelJourneyIntro?: () => void }) {
   const progressContext = useInvestigationProgress();
-  const { closing, beginExit } = useCurtainExit(() => (onSceneTransition ?? ((action) => action()))(() => stateManager.startJourney(startScene.id)));
+  const { closing, beginExit } = useCurtainExit(() => (onSceneTransition ?? ((action) => action()))(() => stateManager.startJourney(startScene.id)), 520);
   return (
-    <section className={`journey-transition scene-polish-curtain${closing ? ' journey-transition--closing scene-polish-curtain--closing' : ''}`} aria-label="前往鸡公岭">
+    <section className={`journey-transition scene-polish-curtain${closing ? ' journey-transition--closing scene-polish-curtain--closing' : ''}`} style={closing ? { animationDuration: '520ms' } : undefined} aria-label="前往鸡公岭">
       {progressContext && <button type="button" className="investigation-progress-trigger journey-transition__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
       <div className="journey-transition__copy">
         <p>{startScene.journeyIntro}</p>
-        <button type="button" autoFocus disabled={closing} onClick={() => beginExit()}>继续</button>
+        <button type="button" autoFocus disabled={closing} onClick={() => beginExit()}>前往鸡公岭</button>
+        {onCancelJourneyIntro && <button type="button" className="journey-transition__cancel" disabled={closing} onClick={onCancelJourneyIntro}>暂不出发，返回资料</button>}
       </div>
     </section>
   );
@@ -109,8 +110,8 @@ function SceneView({ state, scene, onSceneTransition, onReturnToDesktop }: { sta
   );
 }
 
-export function Act1SceneExperience({ state, onSceneTransition, onReturnToDesktop }: { state: AppState; onSceneTransition?: SceneTransitionRunner; onReturnToDesktop?: () => void }) {
-  if (state.game.phase === 'F' && !state.modules.scene.journeyStarted) return <SceneTransition onSceneTransition={onSceneTransition} />;
+export function Act1SceneExperience({ state, onSceneTransition, onReturnToDesktop, onCancelJourneyIntro }: { state: AppState; onSceneTransition?: SceneTransitionRunner; onReturnToDesktop?: () => void; onCancelJourneyIntro?: () => void }) {
+  if (state.game.phase === 'F' && !state.modules.scene.journeyStarted) return <SceneTransition onSceneTransition={onSceneTransition} onCancelJourneyIntro={onCancelJourneyIntro} />;
   const currentId = state.modules.scene.currentSceneId;
   const scene = currentId ? sceneById.get(currentId) : null;
   return scene ? <SceneView key={scene.id} state={state} scene={scene} onSceneTransition={onSceneTransition} onReturnToDesktop={onReturnToDesktop} /> : null;

@@ -148,13 +148,13 @@
       "completionFlags": [
         "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
       ],
-      "summary": "在浏览器搜索一次与旧址有关的词；结果没有回答问题后，点击“去桥头问问当地人”继续",
+      "summary": "在浏览器搜索“鸡公岭 补”；也可搜索第一幕照片里已发现的“双S 十字”。结果没有回答问题后，点击“去桥头问问当地人”继续",
       "steps": [
         {
-          "label": "打开浏览器，搜索一次与鸡公岭旧址有关的词",
+          "label": "在浏览器搜索“鸡公岭 补”，查看地点与现场记号是否能对应",
           "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED",
           "appId": "browser",
-          "hint": "试试把鸡公岭和你记下的物件或记号放在一起搜。"
+          "hint": "直接搜索“鸡公岭 补”；也可以搜索第一幕照片里已经发现的“双S 十字”。"
         }
       ]
     },
@@ -307,21 +307,21 @@
       "completionFlags": [
         "FLAG_A2_OTHER_CASES_ABNORMAL"
       ],
-      "summary": "在浏览器核对已经出现的启明公开案例与后续报道，按人物逐组记录材料差异；无需复制姓名或查看论坛",
+      "summary": "在浏览器搜索“启明青少年成长中心”，核对公开案例与后续报道；姓名只有在阅读公开案例后再用于搜索",
       "steps": [
         {
-          "label": "读一读官网与地方报道",
+          "label": "搜索“启明青少年成长中心”，阅读官网与地方报道",
           "completionFlag": "FLAG_A2_QIMING_OFFICIAL_FOUND",
           "appId": "browser"
         },
         {
-          "label": "调查黄子山后续并记录材料差异",
+          "label": "公开案例出现姓名后，可搜索对应姓名核对后续报道并记录材料差异",
           "completionKind": "qiming-case-reviewed",
           "caseId": "huang",
           "appId": "browser"
         },
         {
-          "label": "调查钟子月后续并记录材料差异",
+          "label": "公开案例出现姓名后，可搜索对应姓名核对后续报道并记录材料差异",
           "completionKind": "qiming-case-reviewed",
           "caseId": "zhong",
           "appId": "browser"

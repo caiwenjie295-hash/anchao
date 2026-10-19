@@ -7,6 +7,8 @@ import { emptyChapterHistory, readChapterHistory, writeChapterHistory } from '..
 import type { BrowserStoragePort } from '../../core/persistence/browserStorage';
 import { SAVE_KEY, writeSaveState } from '../../core/saveManager';
 import { StateManager } from '../../core/stateManager';
+import { sha256, type StartupManifest, type StartupResource } from '../../startup/preload';
+import { StartupGroupReadiness } from '../../startup/groupReadiness';
 import { ChapterNavigation } from './ChapterNavigation';
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -70,6 +72,121 @@ describe('ChapterNavigation', () => {
     await act(async () => { button('.chapter-navigation__confirmation-actions button:first-child').click(); });
     expect(manager.exportSave()).toBe(before);
     expect(document.activeElement).toBe(firstChoice);
+  });
+
+  it('waits for an unlocked chapter before opening replay confirmation and lets the player cancel that wait', async () => {
+    const shared = new TextEncoder().encode('shared');
+    const chapter = new TextEncoder().encode('chapter three resource');
+    const sharedResource: StartupResource = { path: 'assets/shared.webp', bytes: shared.length, sha256: await sha256(shared), groups: ['shared'] };
+    const chapterResource: StartupResource = { path: 'assets/act3.webp', bytes: chapter.length, sha256: await sha256(chapter), groups: ['act3'] };
+    const manifest: StartupManifest = {
+      schema: 2, version: 'a'.repeat(64), base: '/AnChao/', totalBytes: shared.length + chapter.length,
+      groups: {
+        shared: { resources: 1, totalBytes: shared.length }, act1: { resources: 0, totalBytes: 0 },
+        act2: { resources: 0, totalBytes: 0 }, act3: { resources: 1, totalBytes: chapter.length }, act4: { resources: 0, totalBytes: 0 },
+      }, resources: [sharedResource, chapterResource],
+    };
+    let startFetch!: () => void;
+    const started = new Promise<void>((resolve) => { startFetch = resolve; });
+    let releaseResponse!: (response: Response) => void;
+    const fetcher = vi.fn(async () => {
+      startFetch();
+      return new Promise<Response>((resolve) => { releaseResponse = resolve; });
+    }) as unknown as typeof fetch;
+    const readiness = new StartupGroupReadiness({
+      manifest, base: new URL('https://example.test/AnChao/'), initialResources: [sharedResource], fetcher,
+    });
+    const before = manager.exportSave();
+    await render({ readiness });
+    await act(async () => { button('.chapter-navigation__trigger').click(); });
+    await act(async () => { button('.chapter-navigation__choice:nth-child(3)').click(); });
+    await act(async () => { await started; });
+    expect(document.querySelector('.chapter-navigation__wait')?.textContent).toContain('正在准备第3幕资源');
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull();
+    await act(async () => { button('.chapter-navigation__wait-actions button:last-child').click(); });
+    releaseResponse(new Response(chapter));
+    await vi.waitFor(() => expect(readiness.getSnapshot(3).state).toBe('ready'));
+    expect(document.querySelector('.chapter-navigation__wait')).toBeNull();
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull();
+    expect(manager.exportSave()).toBe(before);
+  });
+
+  it('invalidates a pending chapter wait when the menu closes, Escape is pressed, or the component unmounts', async () => {
+    const shared = new TextEncoder().encode('shared');
+    const chapter = new TextEncoder().encode('chapter three resource');
+    const sharedResource: StartupResource = { path: 'assets/shared.webp', bytes: shared.length, sha256: await sha256(shared), groups: ['shared'] };
+    const chapterResource: StartupResource = { path: 'assets/act3.webp', bytes: chapter.length, sha256: await sha256(chapter), groups: ['act3'] };
+    const manifest: StartupManifest = {
+      schema: 2, version: 'a'.repeat(64), base: '/AnChao/', totalBytes: shared.length + chapter.length,
+      groups: {
+        shared: { resources: 1, totalBytes: shared.length }, act1: { resources: 0, totalBytes: 0 },
+        act2: { resources: 0, totalBytes: 0 }, act3: { resources: 1, totalBytes: chapter.length }, act4: { resources: 0, totalBytes: 0 },
+      }, resources: [sharedResource, chapterResource],
+    };
+    let startFetch!: () => void;
+    const started = new Promise<void>((resolve) => { startFetch = resolve; });
+    let releaseResponse!: (response: Response) => void;
+    const readiness = new StartupGroupReadiness({
+      manifest, base: new URL('https://example.test/AnChao/'), initialResources: [sharedResource],
+      fetcher: (async () => { startFetch(); return new Promise<Response>((resolve) => { releaseResponse = resolve; }); }) as unknown as typeof fetch,
+    });
+    await render({ readiness });
+    const beginAct3Wait = async () => {
+      await act(async () => { button('.chapter-navigation__trigger').click(); });
+      await act(async () => { button('.chapter-navigation__choice:nth-child(3)').click(); });
+      await act(async () => { await started; });
+      expect(document.querySelector('.chapter-navigation__wait')).not.toBeNull();
+    };
+
+    await beginAct3Wait();
+    await act(async () => { button('.chapter-navigation__close').click(); });
+    expect(document.querySelector('.chapter-navigation__wait')).toBeNull();
+    await beginAct3Wait();
+    await act(async () => { document.querySelector<HTMLElement>('#chapter-navigation-menu')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(document.querySelector('.chapter-navigation__wait')).toBeNull();
+    await beginAct3Wait();
+    await act(async () => { root.unmount(); });
+    releaseResponse(new Response(chapter));
+    await vi.waitFor(() => expect(readiness.getSnapshot(3).state).toBe('ready'));
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull();
+  });
+
+  it('waits for shared plus both first-act groups before showing the clear-progress confirmation', async () => {
+    const shared = new TextEncoder().encode('shared');
+    const act1 = new TextEncoder().encode('first act');
+    const act2 = new TextEncoder().encode('second act');
+    const sharedResource: StartupResource = { path: 'assets/shared.webp', bytes: shared.length, sha256: await sha256(shared), groups: ['shared'] };
+    const act1Resource: StartupResource = { path: 'assets/act1.webp', bytes: act1.length, sha256: await sha256(act1), groups: ['act1'] };
+    const act2Resource: StartupResource = { path: 'assets/act2.webp', bytes: act2.length, sha256: await sha256(act2), groups: ['act2'] };
+    const manifest: StartupManifest = {
+      schema: 2, version: 'a'.repeat(64), base: '/AnChao/', totalBytes: shared.length + act1.length + act2.length,
+      groups: {
+        shared: { resources: 1, totalBytes: shared.length }, act1: { resources: 1, totalBytes: act1.length },
+        act2: { resources: 1, totalBytes: act2.length }, act3: { resources: 0, totalBytes: 0 }, act4: { resources: 0, totalBytes: 0 },
+      }, resources: [sharedResource, act1Resource, act2Resource],
+    };
+    const releaseResponse = new Map<string, (response: Response) => void>();
+    const readiness = new StartupGroupReadiness({
+      manifest, base: new URL('https://example.test/AnChao/'), initialResources: [sharedResource],
+      fetcher: (async (url: string) => {
+        const path = new URL(url).pathname.split('/').pop()!;
+        return new Promise<Response>((resolve) => { releaseResponse.set(path, resolve); });
+      }) as unknown as typeof fetch,
+    });
+    const before = manager.exportSave();
+    await render({ readiness });
+    await act(async () => { button('.chapter-navigation__trigger').click(); });
+    await act(async () => { document.querySelector<HTMLDetailsElement>('.chapter-navigation__other')!.querySelector('summary')!.click(); });
+    await act(async () => { button('.chapter-navigation__clear').click(); });
+    expect(document.querySelector('.chapter-navigation__wait')?.textContent).toContain('新游戏的第一、二幕资源');
+    expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull();
+    expect(manager.exportSave()).toBe(before);
+    await vi.waitFor(() => expect(releaseResponse.size).toBe(2));
+    releaseResponse.get('act1.webp')!(new Response(act1));
+    await vi.waitFor(() => expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).toBeNull());
+    releaseResponse.get('act2.webp')!(new Response(act2));
+    await vi.waitFor(() => expect(document.querySelector('.chapter-navigation__confirmation[role="dialog"]')).not.toBeNull());
+    expect(manager.exportSave()).toBe(before);
   });
 
   it('uses the requested placement class so taskbar and fullscreen entries share the same access behavior', async () => {

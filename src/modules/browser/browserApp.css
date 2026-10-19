@@ -248,6 +248,16 @@
 .browser-home__task button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--ui-interactive-border); border-radius: 6px; color: var(--ui-text); background: var(--ui-surface); font: inherit; cursor: pointer; }
 .browser-home__task button:hover,
 .browser-home__task button:focus-visible { border-color: var(--ui-accent); background: var(--ui-accent-soft); }
+.browser-search-guidance { display: grid; gap: 10px; margin: 16px auto; padding: 14px; border-left: 3px solid var(--ui-accent, #55745f); color: var(--ui-text, #252820); background: var(--ui-surface, #f2efe6); }
+.browser-search-guidance > p { margin: 0; font-weight: 700; line-height: 1.5; }
+.browser-search-guidance ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.browser-search-guidance li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; }
+.browser-search-guidance li > span { flex: 1 1 260px; line-height: 1.55; }
+.browser-search-guidance button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--ui-interactive-border, #74796d); border-radius: 5px; color: var(--ui-text, #252820); background: var(--ui-surface, #fff); font: inherit; cursor: pointer; }
+.browser-search-guidance button:hover,
+.browser-search-guidance button:focus-visible { border-color: var(--ui-accent, #55745f); background: var(--ui-accent-soft, #e8eee6); }
+.browser-search-guidance button:focus-visible { outline: 3px solid var(--ui-accent, #55745f); outline-offset: 2px; }
+.browser-results .browser-search-guidance { max-width: 900px; }
 @container (max-width: 520px) {
   .browser-page .browser-thread__avatar.visual-avatar { width: 24px; height: 24px; flex-basis: 24px; }
   .browser-page .browser-thread__avatar .visual-icon { width: 14px; height: 14px; }
