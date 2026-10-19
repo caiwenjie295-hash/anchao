@@ -350,7 +350,24 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
       </section>
     </details>
     {hotspot && <div className="t05-school__dialog-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setHotspotId(null); }}>
-      <section ref={dialogRef} className="t05-school__dialog" role="dialog" aria-modal="true" aria-labelledby="t05-school-dialog-title">
+      <section ref={dialogRef} className="t05-school__dialog" role="dialog" aria-modal="true" aria-labelledby="t05-school-dialog-title" onKeyDown={(event) => {
+        if (event.key !== 'Tab' || document.querySelector('.t05-school__handwritten-dialog[open]')) return;
+        const focusable = [...event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), summary, [tabindex]:not([tabindex="-1"])')]
+          .filter((element) => element.tabIndex >= 0 && !element.closest('dialog:not([open])'));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+        if (!event.currentTarget.contains(document.activeElement)) {
+          event.preventDefault();
+          first.focus();
+        } else if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }}>
         <header><h2 id="t05-school-dialog-title">{hotspot.title}</h2><button type="button" aria-label="关闭" onClick={() => setHotspotId(null)}>关闭 ×</button></header>
         {hotspot.id === 'HOTSPOT_A2_T05_RANKS' ? <>
           <p>光荣榜上的手写纸本 · 数字越小，名次越好。</p>

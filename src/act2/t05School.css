@@ -411,6 +411,7 @@
 .t05-school__ranks { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .t05-school__ranks li { border-radius: 2px; color: var(--school-muted); background: var(--school-muted-surface); }
 .t05-school__ranks strong { color: var(--school-ink); }
+.investigation-shell--act2-field-notes .t05-school__dialog-backdrop { z-index: 110; }
 .investigation-shell--act2-field-notes .t05-school button { min-height: 44px; }
 .t05-school__handwritten-zoom input { box-sizing: border-box; height: 44px; margin: 0; }
 @media (max-width: 760px) {
