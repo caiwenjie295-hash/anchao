@@ -15,7 +15,12 @@ function SceneTransition({ onSceneTransition, onCancelJourneyIntro }: { onSceneT
   const progressContext = useInvestigationProgress();
   const { closing, beginExit } = useCurtainExit(() => (onSceneTransition ?? ((action) => action()))(() => stateManager.startJourney(startScene.id)), 520);
   return (
-    <section className={`journey-transition scene-polish-curtain${closing ? ' journey-transition--closing scene-polish-curtain--closing' : ''}`} style={closing ? { animationDuration: '520ms' } : undefined} aria-label="前往鸡公岭">
+    <section className={`journey-transition scene-polish-curtain${closing ? ' journey-transition--closing scene-polish-curtain--closing' : ''}`} style={closing ? { animationDuration: '520ms' } : undefined} aria-label="前往鸡公岭" onKeyDown={(event) => {
+      if (event.key !== 'Escape' || closing || !onCancelJourneyIntro) return;
+      event.preventDefault();
+      event.stopPropagation();
+      onCancelJourneyIntro();
+    }}>
       {progressContext && <button type="button" className="investigation-progress-trigger journey-transition__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
       <div className="journey-transition__copy">
         <p>{startScene.journeyIntro}</p>

@@ -63,4 +63,13 @@ describe('Act1SceneExperience transitions', () => {
     expect(stateManager.getState().game.phase).toBe('F');
     expect(stateManager.getState().modules.scene.journeyStarted).toBe(false);
   });
+
+  it('lets Escape cancel the departure introduction without starting the journey', async () => {
+    const onCancel = vi.fn();
+    await act(async () => { root.render(<Act1SceneExperience state={stateManager.getState()} onCancelJourneyIntro={onCancel} />); });
+    const intro = container.querySelector<HTMLElement>('.journey-transition');
+    await act(async () => { intro!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })); });
+    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(stateManager.getState().modules.scene.journeyStarted).toBe(false);
+  });
 });

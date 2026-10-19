@@ -88,7 +88,7 @@ describe('DesktopTaskCard', () => {
     await act(async () => { (container.querySelector('.desktop-task-card__resume') as HTMLButtonElement).click(); });
     expect(onOpenApp).toHaveBeenCalledWith('browser');
     await act(async () => { (container.querySelector('.desktop-task-card__prepare') as HTMLButtonElement).click(); });
-    expect(onPrepareDeparture).toHaveBeenCalledTimes(1);
+    expect(onPrepareDeparture).toHaveBeenCalledWith(container.querySelector('.desktop-task-card__prepare'));
     expect(state.modules.scene.journeyStarted).toBe(false);
   });
 

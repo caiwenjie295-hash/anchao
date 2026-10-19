@@ -379,7 +379,15 @@ async function investigate() {
   await settle();
   await textButton(pages.find((page) => page.id === 'PAGE_A1_E_002').headline, '.browser-results button');
   assert.equal(state().game.phase, 'F');
-  await textButton('继续', '.journey-transition button');
+  assert.ok(query('.browser-page').textContent.includes(pages.find((page) => page.id === 'PAGE_A1_E_002').headline), 'The route article should remain available while departure is pending');
+  assert.equal(state().modules.scene.journeyStarted, false, 'Reading route material must not start the journey');
+  const prepareDeparture = query('.desktop-task-card__prepare');
+  await textButton('暂不出发，返回资料', '.journey-transition__cancel');
+  assert.equal(state().game.phase, 'F');
+  assert.equal(state().modules.scene.journeyStarted, false);
+  assert.equal(document().activeElement, prepareDeparture, 'Canceling the departure introduction should restore focus to its originating action');
+  await textButton('整理线索 / 准备出发', '.desktop-task-card__prepare');
+  await textButton('前往鸡公岭', '.journey-transition button:not(.investigation-progress-trigger)');
   for (let i = 0; i < 3; i++) await click('.scene-continue');
   assert.equal(state().game.phase, 'H');
   assert.equal(query('.scene-camera').disabled, true);
