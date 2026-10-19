@@ -1,11 +1,15 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { stateManager as defaultManager, type StateManager } from '../../core/stateManager';
 import { getChapterChoices, type ChapterId } from '../../core/chapterNavigation';
 import { useBackgroundMusic } from '../../media/useBackgroundMusic';
+import { describeStartupError, loadError } from '../../startup/errors';
+import { getStartupGroupReadiness, type StartupGroupReadiness, type StartupGroupSnapshot } from '../../startup/groupReadiness';
 import './chapterNavigation.css';
 
 type Confirmation = { kind: 'replay'; chapter: ChapterId } | { kind: 'reset' };
+type WaitingTarget = ChapterId | 'reset';
+const RESET_GROUPS = ['shared', 'act1', 'act2'] as const;
 
 export function ChapterNavigation({
   manager = defaultManager,
@@ -13,12 +17,14 @@ export function ChapterNavigation({
   placement = 'floating',
   onReplay,
   onReset,
+  readiness: readinessProp,
 }: {
   manager?: StateManager;
   blocked?: boolean;
   placement?: 'floating' | 'taskbar' | 'header' | 'scene' | 'ending';
   onReplay?: (chapter: ChapterId) => void;
   onReset?: () => boolean;
+  readiness?: StartupGroupReadiness | null;
 }) {
   const state = useSyncExternalStore(manager.subscribe, manager.getState, manager.getState);
   const music = useBackgroundMusic();
@@ -27,12 +33,20 @@ export function ChapterNavigation({
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
   const [error, setError] = useState('');
+  const [waitingChapter, setWaitingChapter] = useState<WaitingTarget | null>(null);
+  const [waitingError, setWaitingError] = useState('');
+  const [readinessRevision, setReadinessRevision] = useState(0);
+  const waitingChapterRef = useRef<{ target: WaitingTarget; requestId: number } | null>(null);
+  const waitingRequestIdRef = useRef(0);
+  const readiness = readinessProp === undefined ? getStartupGroupReadiness() : readinessProp;
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLElement>(null);
   const closeMenuRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const originRef = useRef<HTMLElement | null>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => readiness?.subscribe(() => setReadinessRevision((value) => value + 1)), [readiness]);
 
   useEffect(() => {
     if (confirmation) cancelRef.current?.focus();
@@ -53,12 +67,51 @@ export function ChapterNavigation({
     return () => { document.body.style.overflow = previousOverflow; };
   }, [open, confirmation]);
 
-  if (blocked) return null;
-
   const closeConfirmation = () => {
     setConfirmation(null);
     setError('');
   };
+
+  const cancelWait = () => {
+    waitingChapterRef.current = null;
+    waitingRequestIdRef.current += 1;
+    setWaitingChapter(null);
+    setWaitingError('');
+    if (originRef.current?.isConnected) originRef.current.focus();
+  };
+
+  useLayoutEffect(() => {
+    if (blocked) cancelWait();
+  }, [blocked]);
+
+  useLayoutEffect(() => () => { waitingChapterRef.current = null; waitingRequestIdRef.current += 1; }, []);
+
+  const requestResources = (target: WaitingTarget, origin: HTMLElement) => {
+    if (!readiness) {
+      beginConfirmation(target === 'reset' ? { kind: 'reset' } : { kind: 'replay', chapter: target }, origin);
+      return;
+    }
+    originRef.current = origin;
+    const requestId = ++waitingRequestIdRef.current;
+    waitingChapterRef.current = { target, requestId };
+    setWaitingChapter(target);
+    setWaitingError('');
+    const pending = target === 'reset' ? readiness.requestGroups(RESET_GROUPS, 20) : readiness.requestAct(target, 20);
+    void pending.then(() => {
+      if (waitingChapterRef.current?.requestId !== requestId) return;
+      waitingChapterRef.current = null;
+      setWaitingChapter(null);
+      beginConfirmation(target === 'reset' ? { kind: 'reset' } : { kind: 'replay', chapter: target }, origin);
+    }).catch((reason: unknown) => {
+      if (waitingChapterRef.current?.requestId !== requestId) return;
+      const label = target === 'reset' ? '第一、二幕资源' : `第${target}幕资源`;
+      setWaitingError(describeStartupError(loadError(reason, label)));
+    });
+  };
+
+  const waitSnapshot: StartupGroupSnapshot | undefined = waitingChapter === null ? undefined : waitingChapter === 'reset'
+    ? readiness?.getSnapshotForGroups(RESET_GROUPS)
+    : readiness?.getSnapshot(waitingChapter);
 
   const beginConfirmation = (next: Confirmation, origin: HTMLElement) => {
     originRef.current = origin;
@@ -67,6 +120,7 @@ export function ChapterNavigation({
   };
 
   const closeMenu = () => {
+    cancelWait();
     setOpen(false);
     triggerRef.current?.focus();
   };
@@ -110,6 +164,8 @@ export function ChapterNavigation({
     setOpen(false);
   };
 
+  if (blocked) return null;
+
   const onDialogKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
       event.preventDefault();
@@ -139,7 +195,7 @@ export function ChapterNavigation({
         className="chapter-navigation__trigger"
         aria-expanded={open}
         aria-controls="chapter-navigation-menu"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => open ? closeMenu() : setOpen(true)}
       >章节选择</button>
     </div>
     {open && createPortal(<div className="chapter-navigation__backdrop chapter-navigation__menu-backdrop" inert={confirmation ? true : undefined} aria-hidden={confirmation ? true : undefined} onMouseDown={(event) => { if (event.target === event.currentTarget) closeMenu(); }}>
@@ -179,13 +235,39 @@ export function ChapterNavigation({
             type="button"
             className="chapter-navigation__choice"
             disabled={!choice.unlocked || history.kind === 'unavailable'}
-            onClick={(event) => beginConfirmation({ kind: 'replay', chapter: choice.id }, event.currentTarget)}
+            onClick={(event) => requestResources(choice.id, event.currentTarget)}
           >{choice.unlocked ? choice.title : `第${choice.id}幕 · 尚未到达`}</button>)}
         </div>
+        {readiness && <div className="chapter-navigation__prefetch" aria-label="后续章节资源准备状态" data-readiness-revision={readinessRevision}>
+          {([3, 4] as const).map((act) => {
+            const choice = choices.find((item) => item.id === act);
+            if (!choice?.unlocked) return null;
+            const status = readiness.getSnapshot(act);
+            return <p key={act} className="chapter-navigation__prefetch-row" role="status">
+              <span>第{act}幕后台准备：{status.state === 'ready' ? '已就绪' : status.state === 'loading' ? '正在预取' : status.state === 'error' ? '预取遇到问题' : '等待预取'}</span>
+              {status.totalBytes > 0 && <>
+                <progress aria-label={`${choice.title}资源进度`} max={status.totalBytes} value={status.loadedBytes} />
+                <small>{(status.loadedBytes / 1_000_000).toFixed(2)} / {(status.totalBytes / 1_000_000).toFixed(2)} MB · {(status.bytesPerSecond / 1000).toFixed(1)} KB/s</small>
+              </>}
+            </p>;
+          })}
+        </div>}
+        {waitingChapter !== null && <section className="chapter-navigation__wait" aria-live="polite" aria-busy={!waitingError}>
+          <strong>{waitingChapter === 'reset' ? '正在准备新游戏的第一、二幕资源' : `正在准备第${waitingChapter}幕资源`}</strong>
+          {waitSnapshot && <>
+            <progress aria-label={waitingChapter === 'reset' ? '新游戏首批资源进度' : `第${waitingChapter}幕资源进度`} max={Math.max(1, waitSnapshot.totalBytes)} value={waitSnapshot.loadedBytes} />
+            <p>{(waitSnapshot.loadedBytes / 1_000_000).toFixed(2)} / {(waitSnapshot.totalBytes / 1_000_000).toFixed(2)} MB · {(waitSnapshot.bytesPerSecond / 1000).toFixed(1)} KB/s</p>
+          </>}
+          {waitingError && <p role="alert">{waitingError}</p>}
+          <div className="chapter-navigation__wait-actions">
+            {waitingError && <button type="button" onClick={() => requestResources(waitingChapter, originRef.current ?? triggerRef.current!)}>重试准备</button>}
+            <button type="button" onClick={cancelWait}>取消等待</button>
+          </div>
+        </section>}
         {history.kind === 'unavailable' && <p className="chapter-navigation__warning" role="status">章节记录暂不可读取，当前存档仍可继续游玩。</p>}
         <details className="chapter-navigation__other">
           <summary>其他选项</summary>
-          <button type="button" className="chapter-navigation__clear" onClick={(event) => beginConfirmation({ kind: 'reset' }, event.currentTarget)}>清零进度</button>
+          <button type="button" className="chapter-navigation__clear" onClick={(event) => requestResources('reset', event.currentTarget)}>清零进度</button>
         </details>
       </section>
     </div>, document.body)}

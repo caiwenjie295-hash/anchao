@@ -57,11 +57,13 @@ describe('DesktopTaskCard', () => {
     expect(container.querySelector('.desktop-task-card__body')).toBeNull();
   });
 
-  it('does not render outside an available guide', async () => {
+  it('keeps the phase-F return-to-material entry visible even without the optional prepare callback', async () => {
     const state = createDefaultState();
     state.game.phase = 'F';
     await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={vi.fn()} />); });
-    expect(container.innerHTML).toBe('');
+    expect(container.textContent).toContain('徒步资料已整理');
+    expect(container.querySelector('.desktop-task-card__resume')).not.toBeNull();
+    expect(container.querySelector('.desktop-task-card__prepare')).toBeNull();
   });
 
   it('keeps a direct next step and progress entry available in a no-guide desktop phase', async () => {
@@ -71,7 +73,34 @@ describe('DesktopTaskCard', () => {
       <DesktopTaskCard state={state} onOpenApp={vi.fn()} />
     </InvestigationProgressProvider>));
 
-    expect(container.textContent).toContain('点击“继续”开始现场调查。');
+    expect(container.textContent).toContain('继续查阅资料');
     expect(container.querySelector('[aria-label="打开调查进度"]')).not.toBeNull();
+  });
+
+  it('keeps phase-F material readable and offers a separate, explicit departure action', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'F';
+    const onOpenApp = vi.fn();
+    const onPrepareDeparture = vi.fn();
+    await act(async () => root.render(<DesktopTaskCard state={state} onOpenApp={onOpenApp} onPrepareDeparture={onPrepareDeparture} />));
+    expect(container.textContent).toContain('徒步资料已整理');
+    expect(container.textContent).toContain('资料仍可继续查阅');
+    await act(async () => { (container.querySelector('.desktop-task-card__resume') as HTMLButtonElement).click(); });
+    expect(onOpenApp).toHaveBeenCalledWith('browser');
+    await act(async () => { (container.querySelector('.desktop-task-card__prepare') as HTMLButtonElement).click(); });
+    expect(onPrepareDeparture).toHaveBeenCalledTimes(1);
+    expect(state.modules.scene.journeyStarted).toBe(false);
+  });
+
+  it('shows only the search terms available from the current stage and discovered material', async () => {
+    const state = createDefaultState();
+    state.game.act = 2;
+    state.game.phase = 'A2_T01';
+    state.game.flags.FLAG_A1_COMPLETE = true;
+    state.modules.act2Research.stage = 'search';
+    await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={vi.fn()} />); });
+    expect(container.querySelector('.desktop-task-card__search-guidance')?.textContent).toContain('鸡公岭 补');
+    expect(container.querySelector('.desktop-task-card__search-guidance')?.textContent).not.toContain('双S 十字');
+    expect(container.textContent).not.toContain('启明青少年成长中心');
   });
 });

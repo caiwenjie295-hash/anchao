@@ -7,6 +7,7 @@ export interface AppDisplayState {
   dismissedAct3: boolean;
   reviewAct3: boolean;
   dismissedAct4: boolean;
+  showAct1JourneyIntro?: boolean;
 }
 
 export interface AppViewModel {
@@ -39,7 +40,7 @@ export function deriveAppView(state: AppState, display: AppDisplayState): AppVie
       || display.reviewAct3
       || (!act4Active && state.game.flags.FLAG_A3_SITE_EXITED === true && act3Stage === 'T07'));
   const act2SceneOpen = act2SceneStage !== null && !act3Active && display.dismissedAct2Stage !== act2SceneStage;
-  const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted)
+  const act1SceneOpen = (state.game.phase === 'F' && !state.modules.scene.journeyStarted && display.showAct1JourneyIntro === true)
     || state.modules.scene.currentSceneId !== null;
   const sceneOpen = act1SceneOpen || act2SceneOpen || act3Open || act4Open;
   const secondActStarted = act2Stage !== 'inactive';

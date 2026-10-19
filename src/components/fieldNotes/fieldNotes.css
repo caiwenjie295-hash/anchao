@@ -1,0 +1,14 @@
+.field-resource-wait__backdrop { position: fixed; z-index: 24000; inset: 0; display: grid; place-items: center; overflow: auto; overscroll-behavior: contain; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: #171915d9; }
+.field-resource-wait { box-sizing: border-box; width: min(460px, 100%); max-height: calc(100dvh - 32px); overflow: auto; padding: clamp(18px, 4vw, 28px); border: 1px solid #847763; border-radius: 5px; color: #272923; background: #e9e2d2; box-shadow: 0 20px 70px #08090782; font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif; }
+.field-resource-wait__eyebrow { margin: 0 0 11px; color: #8b4535; font: 600 .76rem/1.4 system-ui, sans-serif; letter-spacing: .1em; }
+.field-resource-wait h2 { margin: 0 0 12px; font-size: clamp(1.3rem, 5vw, 1.65rem); font-weight: 600; }
+.field-resource-wait p { line-height: 1.65; }
+#field-resource-wait-copy { margin: 0 0 18px; }
+.field-resource-wait progress { width: 100%; height: 10px; accent-color: #8b4535; }
+.field-resource-wait__stats { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 16px; color: #53574f; font: 12px/1.5 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.field-resource-wait__error { overflow-wrap: anywhere; padding: 9px 10px; border-left: 3px solid #9b4837; color: #713326; background: #f0d8cb; font: 13px/1.55 system-ui, sans-serif; }
+.field-resource-wait__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; margin-top: 18px; }
+.field-resource-wait__actions button { min-width: 112px; min-height: 44px; padding: 7px 13px; border: 1px solid #5f6259; border-radius: 3px; color: #292b27; background: #f4efe5; font: 600 13px system-ui, sans-serif; cursor: pointer; }
+.field-resource-wait__actions button:first-child:not(:last-child) { border-color: #7f3e30; color: #fff8f3; background: #7f3e30; }
+.field-resource-wait__actions button:focus-visible { outline: 3px solid #bd6a51; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .field-resource-wait__backdrop,.field-resource-wait { scroll-behavior: auto; } }

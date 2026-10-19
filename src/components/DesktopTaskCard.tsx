@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { AppId, AppState } from '../core/types';
 import { getCurrentTaskGuide } from '../data/taskGuideData';
 import { getDesktopTaskPresentation } from '../data/investigationProgressData';
+import { getSearchGuidance } from '../data/searchGuidance';
 import { useInvestigationProgress } from './InvestigationProgressContext';
 
 export function DesktopTaskCard({
@@ -11,6 +12,7 @@ export function DesktopTaskCard({
   className,
   onResumeScene,
   resumeSceneLabel,
+  onPrepareDeparture,
   expanded: expandedProp,
   onExpandedChange,
 }: {
@@ -21,6 +23,7 @@ export function DesktopTaskCard({
   className?: string;
   onResumeScene?: () => void;
   resumeSceneLabel?: string;
+  onPrepareDeparture?: () => void;
   expanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }) {
@@ -29,13 +32,26 @@ export function DesktopTaskCard({
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const progressContext = useInvestigationProgress();
   const legacyGuide = getCurrentTaskGuide(state);
-  if (!progressContext && !legacyGuide) return null;
+  const pendingDeparture = state.game.phase === 'F' && !state.modules.scene.journeyStarted;
+  if (!progressContext && !legacyGuide && !pendingDeparture) return null;
   const setExpanded = (nextExpanded: boolean) => {
     if (onExpandedChange) onExpandedChange(nextExpanded);
     else setUncontrolledExpanded(nextExpanded);
   };
 
-  const presentation = getDesktopTaskPresentation(state);
+  const basePresentation = getDesktopTaskPresentation(state);
+  const searchGuidance = getSearchGuidance(state);
+  const presentation = pendingDeparture ? {
+    ...basePresentation,
+    title: '徒步资料已整理',
+    summary: '前往鸡公岭前的路线与准备资料已整理。你可以继续查阅，也可以整理线索、准备出发。',
+    nextAction: '资料仍可继续查阅；准备好后点击“整理线索 / 准备出发”，再确认前往鸡公岭。',
+    completedCount: 1,
+    totalCount: 1,
+    steps: [],
+    actionAppId: undefined,
+    actionLabel: undefined,
+  } : basePresentation;
   const bodyId = `desktop-task-card-${state.game.phase}`;
   return <aside className={`desktop-task-card${className ? ` ${className}` : ''}${expanded ? ' desktop-task-card--expanded' : ''}`} aria-label={presentation.title}>
     <div className="desktop-task-card__heading">
@@ -58,7 +74,11 @@ export function DesktopTaskCard({
       >调查进度</button>}
     </div>
     <p className="desktop-task-card__next"><strong>下一步</strong><span>{presentation.nextAction}</span></p>
-    {onResumeScene && resumeSceneLabel && <button type="button" className="desktop-task-card__resume" onClick={onResumeScene}>{resumeSceneLabel}</button>}
+    {searchGuidance.length > 0 && <p className="desktop-task-card__search-guidance"><strong>接下来在浏览器搜：</strong><span>{searchGuidance.map(({ query }) => `“${query}”`).join('、')}</span></p>}
+    {pendingDeparture ? <div className="desktop-task-card__departure-actions">
+      <button type="button" className="desktop-task-card__resume" onClick={() => onOpenApp('browser')}>继续查阅资料</button>
+      {onPrepareDeparture && <button type="button" className="desktop-task-card__prepare" onClick={onPrepareDeparture}>整理线索 / 准备出发</button>}
+    </div> : onResumeScene && resumeSceneLabel && <button type="button" className="desktop-task-card__resume" onClick={onResumeScene}>{resumeSceneLabel}</button>}
     {expanded && <div className="desktop-task-card__body" id={bodyId}>
       <p className="desktop-task-card__summary">{presentation.summary}</p>
       <ol className="desktop-task-card__steps">

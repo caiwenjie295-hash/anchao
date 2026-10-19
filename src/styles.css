@@ -50,9 +50,16 @@ button:focus-visible, .skip-link:focus-visible { outline: 3px solid var(--ui-acc
 .desktop-task-card__next { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin: 0; padding: 0 13px 12px; color: var(--ui-text); font-size: 12px; line-height: 1.45; }
 .desktop-task-card__next strong { color: var(--ui-text-muted); font-size: 11px; }
 .desktop-task-card__next span { min-width: 0; }
-.desktop-task-card__resume { display: block; width: calc(100% - 26px); min-height: 42px; margin: 0 13px 12px; padding: 6px 10px; border: 1px solid var(--ui-accent, #315f4a); border-radius: 5px; color: #fff; background: var(--ui-accent, #315f4a); cursor: pointer; text-align: left; font-size: 12px; font-weight: 600; }
+.desktop-task-card__search-guidance { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px; margin: 0; padding: 0 13px 12px; color: var(--ui-text); font-size: 12px; line-height: 1.45; }
+.desktop-task-card__search-guidance strong { color: var(--ui-accent-soft); font-size: 11px; }
+.desktop-task-card__search-guidance span { min-width: 0; overflow-wrap: anywhere; }
+.desktop-task-card__resume { display: block; width: calc(100% - 26px); min-height: 44px; margin: 0 13px 12px; padding: 6px 10px; border: 1px solid var(--ui-accent, #315f4a); border-radius: 5px; color: #fff; background: var(--ui-accent, #315f4a); cursor: pointer; text-align: left; font-size: 12px; font-weight: 600; }
 .desktop-task-card__resume:hover { background: #254b37; }
 .desktop-task-card__resume:focus-visible { outline: 3px solid var(--ui-accent, #315f4a); outline-offset: 2px; }
+.desktop-task-card__departure-actions { display: grid; gap: 0; }
+.desktop-task-card__prepare { display: block; width: calc(100% - 26px); min-height: 44px; margin: 0 13px 12px; padding: 6px 10px; border: 1px solid #823c2c; border-radius: 5px; color: #fff8f4; background: #823c2c; cursor: pointer; text-align: left; font-size: 12px; font-weight: 650; }
+.desktop-task-card__prepare:hover { background: #6b3025; }
+.desktop-task-card__prepare:focus-visible { outline: 3px solid #f0b29b; outline-offset: 2px; }
 .desktop-task-card__toggle:hover { background: var(--ui-accent-soft); }
 .desktop-task-card__toggle-title { font-size: 13px; font-weight: 650; letter-spacing: .08em; }
 .desktop-task-card__count { margin-left: auto; color: var(--ui-text-muted); font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 11px; }

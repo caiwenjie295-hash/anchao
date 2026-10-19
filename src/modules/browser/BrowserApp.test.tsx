@@ -266,3 +266,71 @@ describe('BrowserApp first-act search prompts', () => {
     expect(host.querySelector('.browser-home__task')).toBeNull();
   });
 });
+
+describe('BrowserApp stage-aware search prompts', () => {
+  let host: HTMLDivElement;
+  let root: Root;
+  let manager: StateManager;
+  beforeEach(() => {
+    host = document.createElement('div');
+    document.body.append(host);
+    root = createRoot(host);
+  });
+  afterEach(() => { act(() => root.unmount()); host.remove(); });
+
+  const submit = async (query: string) => {
+    await act(async () => {
+      const input = host.querySelector<HTMLInputElement>('#browser-search')!;
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, query);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await act(async () => { host.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); });
+  };
+
+  it('shows T01 terms on the home page and as a direct correction after a mistyped query', async () => {
+    const state = createDefaultState();
+    state.game.act = 2;
+    state.game.phase = 'A2_T01';
+    state.game.flags.FLAG_A1_COMPLETE = true;
+    state.modules.act2Research.stage = 'search';
+    manager = new StateManager(new EventBus(), state);
+    await act(async () => { root.render(createElement(BrowserApp, { manager })); });
+    const prompt = host.querySelector<HTMLButtonElement>('[data-search-query="鸡公岭 补"]');
+    expect(prompt).not.toBeNull();
+    expect(host.textContent).not.toContain('启明青少年成长中心');
+    await submit('错别字');
+    expect(host.querySelector('.browser-empty')?.textContent).toContain('上方已列出本阶段可用的搜索词');
+    expect(host.querySelector('.browser-search-guidance')?.textContent).toContain('鸡公岭 补');
+    await act(async () => { host.querySelector<HTMLButtonElement>('[data-search-query="鸡公岭 补"]')!.click(); });
+    expect(manager.getState().modules.browser.queryHistory[0]).toBe('鸡公岭 补');
+  });
+
+  it('reveals the institution only in legal T06 and people queries only after the official case page was read', async () => {
+    const state = createDefaultState();
+    state.game.act = 2;
+    state.game.phase = 'A2_T06';
+    state.game.flags.FLAG_A2_SS_MATCH_CONFIRMED = true;
+    state.modules.act2Research.stage = 'qiming';
+    manager = new StateManager(new EventBus(), state);
+    await act(async () => { root.render(createElement(BrowserApp, { manager })); });
+    await act(async () => { host.querySelector<HTMLButtonElement>('.browser-new-tab')!.click(); });
+    expect(host.querySelector('.browser-search-guidance')?.textContent).toContain('启明青少年成长中心');
+    expect(host.querySelector('.browser-search-guidance')?.textContent).not.toContain('黄子山');
+    expect(host.querySelector('.browser-search-guidance')?.textContent).not.toContain('钟子月');
+    await act(async () => {
+      const input = host.querySelector<HTMLInputElement>('#browser-search')!;
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, '启明');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    expect(host.querySelector('.browser-suggestions')?.textContent).not.toContain('黄子山');
+    expect(host.querySelector('.browser-suggestions')?.textContent).not.toContain('钟子月');
+    await act(async () => { manager.setFlag('FLAG_A2_QIMING_TESTIMONIALS_READ', true); });
+    expect(host.querySelector('.browser-search-guidance')?.textContent).toContain('启明 黄子山');
+    expect(host.querySelector('.browser-search-guidance')?.textContent).toContain('启明 钟子月');
+    await submit('启明 不存在');
+    expect(host.querySelector('.browser-empty')?.textContent).toContain('上方已列出本阶段可用的搜索词');
+    await act(async () => { host.querySelector<HTMLButtonElement>('[data-search-query="启明 黄子山"]')!.click(); });
+    expect(manager.getState().modules.browser.queryHistory[0]).toBe('启明 黄子山');
+  });
+});

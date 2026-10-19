@@ -42,4 +42,13 @@ describe('deriveAppView', () => {
     expect(deriveAppView(state, display)).toMatchObject({ act4Open: true, act3Open: false, sceneOpen: true });
     expect(deriveAppView(state, { ...display, dismissedAct4: true })).toMatchObject({ act4Open: false, act3Open: false });
   });
+
+  it('keeps the phase-F reading surface visible until the player explicitly opens the departure intro', () => {
+    const state = createDefaultState();
+    state.game.phase = 'F';
+    expect(deriveAppView(state, display)).toMatchObject({ act1SceneOpen: false, sceneOpen: false });
+    expect(deriveAppView(state, { ...display, showAct1JourneyIntro: true })).toMatchObject({ act1SceneOpen: true, sceneOpen: true });
+    state.modules.scene.currentSceneId = 'SCENE_A1_G1';
+    expect(deriveAppView(state, display)).toMatchObject({ act1SceneOpen: true, sceneOpen: true });
+  });
 });
