@@ -24,6 +24,7 @@ export class AssetLoader {
 const compressedFiles = import.meta.glob<string>('../assets/compressed/**/*.{webp,png,jpg,jpeg}', { eager: true, query: '?url&no-inline', import: 'default' });
 const uxFinaleFiles = import.meta.glob<string>('../assets/ux-finale-20261008/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const uxInvestigationFiles = import.meta.glob<string>('../assets/ux-investigation-20261014/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
+const uiFieldFiles = import.meta.glob<string>('../assets/ui-field-20261019/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const compressedEntries = compressedAssetMap.entries as Record<string, string>;
 const compressedSource = (sourcePath: string | null): string | undefined => {
   if (!sourcePath) return undefined;
@@ -65,6 +66,12 @@ export const uxInvestigationAssetPath = (id: string, file: string): string | nul
   isUxInvestigationAssetId(id) && file === `${id}.webp`
     ? `../assets/ux-investigation-20261014/${file}`
     : null;
+const isUiFieldAssetId = (id: string): boolean =>
+  id === 'IMG_A2_SCHOOL_RANK_RECORD_001' || id === 'IMG_A2_SCHOOL_QIMING_THANKS_001';
+export const uiFieldAssetPath = (id: string, file: string): string | null =>
+  isUiFieldAssetId(id) && file === `${id}.webp`
+    ? `../assets/ui-field-20261019/${file}`
+    : null;
 const existingAssets = imageRecords.filter((image) => image.file).map((image) => [image.id, {
   id: image.id, type: 'image', src: compressedSource(`../Photo_src/${image.file}`) ?? compressedSource(`../第二幕/${image.file}`)
     ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!))
@@ -78,4 +85,9 @@ const uxInvestigationAssets = imageRecords.flatMap((image) => {
   const path = uxInvestigationAssetPath(image.id, image.file);
   return path ? [[image.id, { id: image.id, type: 'image' as const, src: uxInvestigationFiles[path] }] as const] : [];
 });
-export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets, ...uxInvestigationAssets]));
+const uiFieldAssets = imageRecords.flatMap((image) => {
+  if (!image.file) return [];
+  const path = uiFieldAssetPath(image.id, image.file);
+  return path ? [[image.id, { id: image.id, type: 'image' as const, src: uiFieldFiles[path] }] as const] : [];
+});
+export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets, ...uxInvestigationAssets, ...uiFieldAssets]));

@@ -38,7 +38,7 @@ export function InvestigationShell({
   const [helpOpen, setHelpOpen] = useState(false);
   const progressContext = useInvestigationProgress();
   const onDemandGuidance = (className ?? '').split(/\s+/).some((name) =>
-    name === 'investigation-shell--reading' || name === 'investigation-shell--exploration' || name === 'investigation-shell--memory',
+    name === 'investigation-shell--reading' || name === 'investigation-shell--exploration' || name === 'investigation-shell--memory' || name === 'investigation-shell--act2-field-notes',
   );
   const navigationActions = actions.map((action) => ({
     ...action,

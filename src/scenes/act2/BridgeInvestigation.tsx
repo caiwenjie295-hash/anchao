@@ -116,7 +116,7 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
   return (
     <InvestigationShell
       ariaLabel="桥头调查"
-      className="investigation-shell--exploration investigation-shell--act2-spacious"
+      className="investigation-shell--exploration investigation-shell--act2-field-notes investigation-shell--act2-spacious"
       actLabel="第二幕 · 民俗疑问"
       locationLabel={bridgeScene.location}
       contextLabel={bridgeScene.title}
@@ -128,45 +128,52 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
     <section className="act2-bridge" aria-label={bridgeScene.title}>
       {!heard && <p className="act2-bridge__intro">{bridgeScene.intro}</p>}
 
-      <div className="act2-bridge__scene-workspace">
-        <div className="act2-bridge__stage" role="group" aria-label="桥头照片与人物入口">
-          {sceneImage && !sceneFailed
-            ? <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，四位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" onError={() => setSceneFailed(true)} />
-            : <div className="act2-bridge__scene-fallback" role="img" aria-label="桥头照片暂时无法显示，仍可从下方名单选择老人"><span aria-hidden="true">桥</span><p>桥头照片暂时无法显示；可以从下方名单选择老人继续交谈。</p></div>}
-          {!sceneFailed && sceneImage && bridgeElders.map((elder) => {
-            const target = ACT2_BRIDGE_ELDER_TARGETS.find((item) => item.elderId === elder.id);
-            if (!target) return null;
-            const talked = bridge.talkedElderIds.includes(elder.id);
-            const active = selectedElderId === elder.id;
-            return <button
-              key={elder.id}
-              type="button"
-              className={`act2-bridge__elder${active ? ' act2-bridge__elder--active' : ''}`}
-              style={{ ...bridgeRectToPercentStyle(target.rect), zIndex: elder.id.endsWith('_001') ? 3 : elder.id.endsWith('_002') ? 4 : elder.id.endsWith('_003') ? 5 : 2 }}
-              aria-label={`${elder.name}，${talked ? '聊过了' : '还没聊'}`}
-              aria-pressed={active}
-              data-elder-id={elder.id}
-              data-image-rect={`${target.rect.x},${target.rect.y},${target.rect.width},${target.rect.height}`}
-              onClick={() => selectElder(elder.id)}
-            ><span className="act2-bridge__elder-number" aria-hidden="true">{bridgeElders.indexOf(elder) + 1}</span></button>;
-          })}
-        </div>
+      <div className="act2-bridge__fieldbook">
+        <aside className="act2-bridge__fieldbook-index" aria-label="桥头现场与人物索引">
+          <figure className="act2-bridge__scene-record">
+            <div className="act2-bridge__stage" role="group" aria-label="桥头照片与人物入口">
+              {sceneImage && !sceneFailed
+                ? <img className="act2-bridge__scene-image" src={sceneImage} alt="桥头休息区，四位老人坐在石凳旁" data-asset-id="IMG_A2_T02_001" onError={() => setSceneFailed(true)} />
+                : <div className="act2-bridge__scene-fallback" role="img" aria-label="桥头照片暂时无法显示，仍可从下方名单选择老人"><span aria-hidden="true">桥</span><p>桥头照片暂时无法显示；可以从下方名单选择老人继续交谈。</p></div>}
+              {!sceneFailed && sceneImage && bridgeElders.map((elder) => {
+                const target = ACT2_BRIDGE_ELDER_TARGETS.find((item) => item.elderId === elder.id);
+                if (!target) return null;
+                const talked = bridge.talkedElderIds.includes(elder.id);
+                const active = selectedElderId === elder.id;
+                return <button
+                  key={elder.id}
+                  type="button"
+                  className={`act2-bridge__elder${active ? ' act2-bridge__elder--active' : ''}`}
+                  style={{ ...bridgeRectToPercentStyle(target.rect), zIndex: elder.id.endsWith('_001') ? 3 : elder.id.endsWith('_002') ? 4 : elder.id.endsWith('_003') ? 5 : 2 }}
+                  aria-label={`${elder.name}，${talked ? '聊过了' : '还没聊'}`}
+                  aria-pressed={active}
+                  data-elder-id={elder.id}
+                  data-image-rect={`${target.rect.x},${target.rect.y},${target.rect.width},${target.rect.height}`}
+                  onClick={() => selectElder(elder.id)}
+                ><span className="act2-bridge__elder-number" aria-hidden="true">{bridgeElders.indexOf(elder) + 1}</span></button>;
+              })}
+            </div>
+            <figcaption><span>桥头现场</span><span>点照片中的人物，或从人物索引选择。</span></figcaption>
+          </figure>
+        </aside>
 
         <nav className="act2-bridge__elder-list" aria-label="从文字名单选择老人">
-          {bridgeElders.map((elder, index) => {
-            const talked = bridge.talkedElderIds.includes(elder.id);
-            const active = selectedElderId === elder.id;
-            return <button key={elder.id} type="button" className={active ? 'is-active' : ''} aria-pressed={active} onClick={() => selectElder(elder.id)}>
-              <span className="act2-bridge__elder-list-number" aria-hidden="true">{index + 1}</span>
-              <span>{elder.name}</span><small>{talked ? '聊过了' : '开始闲谈'}</small>
-            </button>;
-          })}
+            <h2>人物索引 <small>已交谈 {bridge.talkedElderIds.length} / {bridgeElders.length}</small></h2>
+            {bridgeElders.map((elder, index) => {
+              const talked = bridge.talkedElderIds.includes(elder.id);
+              const active = selectedElderId === elder.id;
+              return <button key={elder.id} type="button" className={active ? 'is-active' : ''} aria-pressed={active} onClick={() => selectElder(elder.id)}>
+                <span className="act2-bridge__elder-list-number" aria-hidden="true">{index + 1}</span>
+                <span>{elder.name}</span><small>{talked ? '聊过了' : '开始闲谈'}</small>
+              </button>;
+            })}
         </nav>
 
-        {!selectedElder && <section className="act2-bridge__dialogue act2-bridge__dialogue--empty" aria-label="桥边闲谈"><h2>桥边闲谈</h2><p>选一位老人坐下聊聊。问到鸡公岭时，再看看他是否愿意多说几句。</p></section>}
-        {selectedElder && (
-          <section className="act2-bridge__dialogue" aria-live="polite" aria-label={`${selectedElder.name}的谈话`}>
-            <div className="act2-bridge__dialogue-heading"><p>桥边闲谈</p><h2>{selectedElder.name}</h2></div>
+        <article className="act2-bridge__fieldbook-page" aria-label="当前谈话与调查记录">
+          {!selectedElder && <section className="act2-bridge__dialogue act2-bridge__dialogue--empty" aria-label="桥边闲谈"><p className="act2-bridge__page-kicker">现场口述 · 01</p><h2>桥边闲谈</h2><p>选一位老人坐下聊聊。问到鸡公岭时，再看看他是否愿意多说几句。</p></section>}
+          {selectedElder && (
+            <section className="act2-bridge__dialogue" aria-live="polite" aria-label={`${selectedElder.name}的谈话`}>
+            <div className="act2-bridge__dialogue-heading"><div><p className="act2-bridge__page-kicker">当前口述 · {bridgeElders.indexOf(selectedElder) + 1}</p><h2>{selectedElder.name}</h2></div><span className="act2-bridge__spoken-tag">{bridge.talkedElderIds.includes(selectedElder.id) ? '已交谈' : '正在交谈'}</span></div>
             <div className="act2-bridge__chat-lines">{selectedElder.chat.map((line) => <p key={line}>{line}</p>)}</div>
             {!askedMountain && <button type="button" className="act2-bridge__ask" onClick={askMountain}>{bridgeScene.askMountainLabel}</button>}
             {askedMountain && <div className="act2-bridge__reply" aria-label="关于鸡公岭的回答">{selectedElder.mountainReply.map((line) => <p key={line}>{line}</p>)}</div>}
@@ -202,14 +209,10 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
               </div>
             )}
           </section>
-        )}
-      </div>
+          )}
 
-      {heard && !solved && (
-        <div
-          className="act2-bridge__puzzle"
-          aria-label={bridgePuzzle.question}
-        >
+          {heard && !solved && (
+        <div className="act2-bridge__puzzle" aria-label={bridgePuzzle.question}>
           <p className="act2-bridge__puzzle-prompt">{bridgePuzzle.notebookPrompt}</p>
           <h2>{bridgePuzzle.question}</h2>
           {namePartOrder.map((part) => {
@@ -239,16 +242,18 @@ export function BridgeInvestigation({ manager: injectedManager, onReturnDesktop 
           <p className="act2-bridge__guessing-note">{bridgePuzzle.guessingNote}</p>
           <button type="button" className="act2-bridge__confirm" disabled={!canConfirm} onClick={confirmName}>{bridgePuzzle.confirmLabel}</button>
         </div>
-      )}
+          )}
 
-      {solved && (
+          {solved && (
         <div className="act2-bridge__resolution" aria-live="polite">
           <h2 className="act2-bridge__entry-title">{bridgeResolution.entryTitle}</h2>
           <p className="act2-bridge__entry-body">{bridgeResolution.entryBody}</p>
           <p className="act2-bridge__entry-related">{bridgeResolution.entryRelated}</p>
           <p className="act2-bridge__elder-remark">{bridgeResolution.elderRemark}</p>
         </div>
-      )}
+          )}
+        </article>
+      </div>
     </section>
     </InvestigationShell>
   );

@@ -1,0 +1,39 @@
+{
+  "task": "UI-FIELD-20261019",
+  "batch": 1,
+  "generatedCount": 2,
+  "acceptedCount": 2,
+  "returnedForRevision": 0,
+  "assets": [
+    {
+      "id": "IMG_A2_SCHOOL_RANK_RECORD_001",
+      "promptPath": "docs/ui-field-20261019/art/prompts/IMG_A2_SCHOOL_RANK_RECORD_001-v01.txt",
+      "source": "Built-in image_gen, generated once",
+      "nativePath": "assets/ui-field-20261019/native/IMG_A2_SCHOOL_RANK_RECORD_001-v01.png",
+      "width": 1055,
+      "height": 1491,
+      "nativeSha256": "8a0a07d18b11661655b089084391f1ef547b731dcae817dd6368dfd0a85dd875",
+      "webpPath": "src/assets/ui-field-20261019/IMG_A2_SCHOOL_RANK_RECORD_001.webp",
+      "webpBytes": 252348,
+      "webpSha256": "8bb6d9a8b77c04fb832cb14e3c23e2ffd5b75d25cc3684aacca0bb38bc7cf4be",
+      "webpEncoding": "cwebp q=88, no resize",
+      "textCheck": "Pass: title 高三年级阶段成绩记录; name 王澳; values 600, 400, 300, 130, 88, 53, 20 in order; rising line; no extra text.",
+      "adoption": "Accepted by main reviewer; independent full-size text check passed."
+    },
+    {
+      "id": "IMG_A2_SCHOOL_QIMING_THANKS_001",
+      "promptPath": "docs/ui-field-20261019/art/prompts/IMG_A2_SCHOOL_QIMING_THANKS_001-v01.txt",
+      "source": "Built-in image_gen, generated once",
+      "nativePath": "assets/ui-field-20261019/native/IMG_A2_SCHOOL_QIMING_THANKS_001-v01.png",
+      "width": 1024,
+      "height": 1536,
+      "nativeSha256": "5ce456b4d59f1d8927514d1d022cb28549c8f02949057c180e66238a63113d7c",
+      "webpPath": "src/assets/ui-field-20261019/IMG_A2_SCHOOL_QIMING_THANKS_001.webp",
+      "webpBytes": 248872,
+      "webpSha256": "1364a5c07e2a77750910e8c6a007ef1b6a360b0cc8fb15982bda3df1ded2360f",
+      "webpEncoding": "cwebp q=88, no resize",
+      "textCheck": "Pass: 感谢启明青少年成长中心两个月来对我的教育和培养。 exact, including final full stop; no other text.",
+      "adoption": "Accepted by main reviewer; independent full-size text check passed."
+    }
+  ]
+}

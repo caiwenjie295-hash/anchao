@@ -161,3 +161,30 @@
 /* T02 bridge and T05 school share one content scroller while keeping the action rail fixed. */
 .investigation-shell--act2-spacious { overflow: hidden; }
 .investigation-shell--act2-spacious .investigation-shell__scene { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+
+/* T02/T05 use the light field-notes palette while other acts keep their existing shell themes. */
+.investigation-shell--act2-field-notes {
+  --ui-page: #eae8e1;
+  --ui-surface: #f8f6f0;
+  --ui-surface-muted: #f0eee8;
+  --ui-text: #282c2c;
+  --ui-text-muted: #646762;
+  --ui-border: #c7c8bf;
+  --ui-interactive-border: #90938c;
+  --ui-accent: #718087;
+  --ui-accent-soft: #e7eaeb;
+  --ui-success: #687a6e;
+}
+.investigation-shell--act2-field-notes .investigation-shell__header { background: #f8f6f0; }
+.investigation-shell--act2-field-notes .investigation-shell__goal--on-demand,
+.investigation-shell--act2-field-notes .investigation-shell__operations { background: #f8f6f0; }
+.investigation-shell--act2-field-notes .investigation-shell__scene { background: #eae8e1; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-details > summary::after { color: #718087; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-content p { color: #353938; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-content strong { color: #515652; }
+.investigation-shell--act2-field-notes .investigation-navigation__action--ready,
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"] { border-color: #718087; background: #718087; }
+.investigation-shell--act2-field-notes .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled) { border-color: #5d6d73; background: #5d6d73; }
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"] { border-color: #90938c; color: #353938; background: #f8f6f0; }
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled) { border-color: #718087; color: #282c2c; background: #e7eaeb; }

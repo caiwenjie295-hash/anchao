@@ -1,0 +1,13 @@
+Use case: game-asset
+Asset type: in-game archival paper document image for a narrative investigation game
+Primary request: Create one photorealistic, high-resolution image of a single portrait sheet of old white paper with a real handwritten school record. The writing must be directly rendered as legible Chinese handwriting in the image pixels, never typeset or printed. Preserve this exact title and name: “高三年级阶段成绩记录” and “姓名：王澳”. Show exactly seven handwritten rank values in this exact left-to-right order, each once: “600”, “400”, “300”, “130”, “88”, “53”, “20”. Arrange the seven values as labels along a simple hand-drawn line that rises from left to right, making the improvement clear as the rank number gets smaller. Keep all specified Chinese characters and digits exact and individually readable.
+Scene/backdrop: The whole image is a close, nearly straight-on scan-like view of one old paper sheet; no tabletop or other objects are visible.
+Subject: A school rank progress record written by hand on aged white paper.
+Style/medium: Natural dark blue ballpoint handwriting, slightly hurried and imperfect with believable pen pressure and line variation, but clear enough to read when zoomed. Authentic paper document photography.
+Composition/framing: Portrait page fills nearly the full frame with all four edges visible; title near the top, name below it, and the seven ranked values with their rising hand-drawn line centered below. Leave comfortable blank margins; target at least 1024 pixels on the long edge.
+Lighting/mood: Soft neutral daylight, even exposure, archival and matter-of-fact.
+Color palette: Original white paper with only subtle light yellowing at the edges; dark navy ink.
+Materials/textures: Fine paper grain and a few delicate age folds, with realistic handwritten strokes.
+Text (verbatim): “高三年级阶段成绩记录”; “姓名：王澳”; “600, 400, 300, 130, 88, 53, 20” in that exact order.
+Constraints: Include only the title, the name label and name, the seven exact rank numbers, and the simple line chart. No captions, dates, school name, extra text, stamps, seals, signatures, logos, or people. All text must be real handwriting inside the generated image pixels; no HTML/SVG overlay.
+Avoid: Printed handwriting fonts, calligraphy, brush strokes, poster typography, illegible or misspelled Chinese, changed or duplicated numbers, reversed rank direction, dirt, mold, burn marks, coffee stains, collage, dramatic shadows, watermark.

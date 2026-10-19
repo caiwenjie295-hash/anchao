@@ -3595,6 +3595,32 @@
       "notes": "UX-INV-20261014 进山后所有固定放大入口补图；厨房对照另复用新 IMG_A3_DETAIL_T06_EMPTY_BASE",
       "assetType": "image",
       "file": "IMG_A3_COMPARE_STATUE_DETAIL_001.webp"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_RANK_RECORD_001",
+      "title": "高三年级阶段成绩记录 · 手写纸本",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "T05 光荣榜中成绩记录的原件图片；准确文字仍由图片像素承载",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "UI-FIELD-20261019 新图片；标题、姓名与七次名次经独立核字",
+      "assetType": "image",
+      "file": "IMG_A2_SCHOOL_RANK_RECORD_001.webp"
+    },
+    {
+      "id": "IMG_A2_SCHOOL_QIMING_THANKS_001",
+      "title": "启明教育培养感谢文字 · 手写纸本",
+      "act": 2,
+      "phase": "A2_T05",
+      "source": "scene",
+      "purpose": "T05 光荣榜感谢落款的原件图片；准确原句仍由图片像素承载",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "UI-FIELD-20261019 新图片；感谢原句逐字核对",
+      "assetType": "image",
+      "file": "IMG_A2_SCHOOL_QIMING_THANKS_001.webp"
     }
   ]
 }
