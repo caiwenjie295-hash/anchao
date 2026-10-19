@@ -5,8 +5,14 @@ export { StartupLoadError, StartupVersionError } from './errors';
 export type { StartupStats } from './metrics';
 export type { StartupRetry } from './download';
 
-export interface StartupResource { path: string; bytes: number; sha256: string }
-export interface StartupManifest { schema: 1; version: string; base: string; totalBytes: number; resources: StartupResource[] }
+export type StartupGroup = 'shared' | 'act1' | 'act2' | 'act3' | 'act4';
+export const STARTUP_GROUPS: StartupGroup[] = ['shared', 'act1', 'act2', 'act3', 'act4'];
+export interface StartupResource { path: string; bytes: number; sha256: string; groups: StartupGroup[] }
+export interface StartupGroupSummary { resources: number; totalBytes: number }
+export interface StartupManifest {
+  schema: 2; version: string; base: string; totalBytes: number;
+  groups: Record<StartupGroup, StartupGroupSummary>; resources: StartupResource[];
+}
 
 const HASH = /^[a-f0-9]{64}$/;
 export const cachePrefix = (base: URL) => `anchao-preload:${encodeURIComponent(base.href)}:`;
@@ -14,14 +20,19 @@ export const cachePrefix = (base: URL) => `anchao-preload:${encodeURIComponent(b
 function checkedManifest(value: unknown, base: URL, expectedVersion: string): StartupManifest {
   const item = value as StartupManifest | null;
   if (item && HASH.test(item.version) && item.version !== expectedVersion) throw new StartupVersionError();
-  if (!item || item.schema !== 1 || !HASH.test(item.version)
+  if (!item || item.schema !== 2 || !HASH.test(item.version)
     || typeof item.base !== 'string' || new URL(item.base, base).href !== base.href
-    || !Array.isArray(item.resources) || !item.resources.length) throw new Error('Invalid or outdated startup manifest');
+    || !Array.isArray(item.resources) || !item.resources.length || !item.groups || typeof item.groups !== 'object') throw new Error('Invalid or outdated startup manifest');
   const seen = new Set<string>();
   let bytes = 0;
+  const groupBytes = Object.fromEntries(STARTUP_GROUPS.map((group) => [group, 0])) as Record<StartupGroup, number>;
+  const groupResources = Object.fromEntries(STARTUP_GROUPS.map((group) => [group, 0])) as Record<StartupGroup, number>;
   for (const resource of item.resources) {
     if (!resource || typeof resource.path !== 'string' || !resource.path || resource.path.startsWith('/')
-      || /[?#\\]/.test(resource.path) || !Number.isSafeInteger(resource.bytes) || resource.bytes < 0 || !HASH.test(resource.sha256)) throw new Error('Invalid resource');
+      || /[?#\\]/.test(resource.path) || !Number.isSafeInteger(resource.bytes) || resource.bytes < 0 || !HASH.test(resource.sha256)
+      || !Array.isArray(resource.groups) || !resource.groups.length
+      || resource.groups.some((group) => !STARTUP_GROUPS.includes(group))
+      || new Set(resource.groups).size !== resource.groups.length) throw new Error('Invalid resource');
     if (decodeURIComponent(resource.path).split('/').some((part) => part === '..' || part === '.')) throw new Error('Unsafe resource path');
     const url = new URL(resource.path, base);
     if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname)
@@ -30,9 +41,24 @@ function checkedManifest(value: unknown, base: URL, expectedVersion: string): St
       || seen.has(url.href)) throw new Error('Unsafe or duplicate resource');
     seen.add(url.href);
     bytes += resource.bytes;
+    for (const group of resource.groups) {
+      groupBytes[group] += resource.bytes;
+      groupResources[group] += 1;
+    }
   }
   if (!Number.isSafeInteger(item.totalBytes) || item.totalBytes !== bytes) throw new Error('Invalid total size');
+  for (const group of STARTUP_GROUPS) {
+    const summary = item.groups[group];
+    if (!summary || !Number.isSafeInteger(summary.resources) || summary.resources !== groupResources[group]
+      || !Number.isSafeInteger(summary.totalBytes) || summary.totalBytes !== groupBytes[group]) throw new Error('Invalid group summary');
+  }
   return item;
+}
+
+export function manifestForGroups(manifest: StartupManifest, requested: readonly StartupGroup[]): StartupManifest {
+  const groups = new Set(requested);
+  const resources = manifest.resources.filter((resource) => resource.groups.some((group) => groups.has(group)));
+  return { ...manifest, totalBytes: resources.reduce((sum, resource) => sum + resource.bytes, 0), resources };
 }
 
 export function parseManifest(value: unknown, base: URL, expectedVersion: string): StartupManifest {

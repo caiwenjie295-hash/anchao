@@ -75,6 +75,9 @@ describe('BridgeInvestigation', () => {
     expect(container.textContent).toContain(bridgeScene.title);
     expect(container.textContent).not.toMatch(/任务|T02|WB-0003/);
     expect(container.querySelectorAll('.act2-bridge__stage .act2-bridge__elder')).toHaveLength(4);
+    expect(container.querySelector('.act2-bridge__fieldbook-index .act2-bridge__stage')).not.toBeNull();
+    expect(container.querySelector('.act2-bridge__elder-list')).not.toBeNull();
+    expect(container.querySelector('.act2-bridge__fieldbook-page .act2-bridge__dialogue--empty')).not.toBeNull();
 
     const bystander = bridgeElders.find((elder) => !elder.isClueElder)!;
     await clickButton(bystander.name);

@@ -9,8 +9,9 @@ const encode = (value: string) => new TextEncoder().encode(value);
 
 async function manifestFor(content: Uint8Array): Promise<StartupManifest> {
   return {
-    schema: 1, version: 'a'.repeat(64), base: '/AnChao/', totalBytes: content.byteLength,
-    resources: [{ path: 'assets/music.ogg', bytes: content.byteLength, sha256: await sha256(content) }],
+    schema: 2, version: 'a'.repeat(64), base: '/AnChao/', totalBytes: content.byteLength,
+    groups: Object.fromEntries(['shared', 'act1', 'act2', 'act3', 'act4'].map((group) => [group, { resources: 1, totalBytes: content.byteLength }])) as StartupManifest['groups'],
+    resources: [{ path: 'assets/music.ogg', bytes: content.byteLength, sha256: await sha256(content), groups: ['shared', 'act1', 'act2', 'act3', 'act4'] }],
   };
 }
 

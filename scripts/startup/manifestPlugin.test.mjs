@@ -18,11 +18,18 @@ describe('production startup resource inventory', () => {
       { fileName: 'index.html', source: 'entry' }, { fileName: 'anchao-preload-sw.js', source: 'worker' },
       { fileName: 'anchao-preload-manifest.json', source: 'old' },
     ];
-    const manifest = createStartupManifest('/AnChao/', files);
+    const manifest = createStartupManifest('/AnChao/', files, new Map([
+      ['assets/app.js', ['shared']], ['placeholders/图.webp', ['act2']], ['assets/original.html', ['act4']],
+    ]));
+    expect(manifest.schema).toBe(2);
     expect(manifest.resources.map((item) => item.path)).toEqual([
       'assets/app.js', 'assets/music.ogg', 'assets/original.html', 'assets/site.css', 'fonts/game.woff2', 'placeholders/%E5%9B%BE.webp',
     ]);
     expect(manifest.totalBytes).toBe(27);
+    expect(manifest.groups.shared).toEqual({ resources: 4, totalBytes: 17 });
+    expect(manifest.groups.act2).toEqual({ resources: 1, totalBytes: 5 });
+    expect(manifest.groups.act4).toEqual({ resources: 1, totalBytes: 5 });
+    expect(manifest.resources.find(({ path }) => path === 'placeholders/%E5%9B%BE.webp').groups).toEqual(['act2']);
     expect(createStartupManifest('/Other/', files).version).not.toBe(manifest.version);
     expect(createStartupManifest('/AnChao/', [...files, { fileName: 'placeholders/a.webp', source: 'new' }]).version).not.toBe(manifest.version);
     expect(() => createStartupManifest('/', [{ fileName: '../outside', source: '' }])).toThrow();
@@ -52,6 +59,7 @@ describe('production startup resource inventory', () => {
       expect(html).toContain(`name="anchao-preload-version" content="${manifest.version}"`);
       expect(html).toContain('/AnChao/assets/');
       expect(manifest.resources.some(({ path }) => path === `placeholders/${encodeURIComponent('图.webp')}`)).toBe(true);
+      expect(manifest.resources.find(({ path }) => path === `placeholders/${encodeURIComponent('图.webp')}`).groups).toEqual(['shared']);
       for (const path of ['fonts/game.woff2', 'audio/theme.ogg', 'novel/original.html', 'runtime.css', 'runtime.js']) {
         expect(manifest.resources.some((item) => item.path === path), `${path} should be verified`).toBe(true);
       }

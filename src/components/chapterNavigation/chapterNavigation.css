@@ -16,6 +16,16 @@
 .chapter-navigation__music-status { min-height: 1.5em; margin: 2px 0 0 !important; color: #aebcb2 !important; font-size: .8rem !important; }
 .chapter-navigation__music-retry { margin-top: 5px; }
 .chapter-navigation__choices { display: grid; gap: 7px; }
+.chapter-navigation__prefetch { display: grid; gap: 8px; margin-top: 11px; }
+.chapter-navigation__prefetch-row { display: grid; gap: 4px; margin: 0 !important; padding: 9px 10px; border-left: 2px solid #82948a; background: #101813; font-size: .82rem !important; }
+.chapter-navigation__prefetch-row progress,.chapter-navigation__wait progress { width: 100%; height: 8px; accent-color: #a8bdae; }
+.chapter-navigation__prefetch-row small { color: #abb8b0; font-size: .75rem; font-variant-numeric: tabular-nums; }
+.chapter-navigation__wait { display: grid; gap: 7px; margin-top: 11px; padding: 11px; border: 1px solid #687b70; border-radius: 8px; background: #101813; }
+.chapter-navigation__wait p { margin: 0 !important; font-size: .82rem !important; font-variant-numeric: tabular-nums; }
+.chapter-navigation__wait [role="alert"] { overflow-wrap: anywhere; color: #ffc5ae; }
+.chapter-navigation__wait-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.chapter-navigation__wait-actions button { min-height: 44px; padding: 7px 12px; border: 1px solid #78897e; border-radius: 6px; color: #f3f5ef; background: #283730; font: inherit; cursor: pointer; }
+.chapter-navigation__wait-actions button:focus-visible { outline: 2px solid #c7e0cf; outline-offset: 2px; }
 .chapter-navigation__choice { width: 100%; padding: 8px 12px; border: 1px solid #78897e; border-radius: 8px; color: #f3f5ef; background: #283730; text-align: left; cursor: pointer; }
 .chapter-navigation__choice:not(:disabled):hover,.chapter-navigation__choice:not(:disabled):focus-visible { background: #384e41; outline: 2px solid #b9d2c1; outline-offset: 1px; }
 .chapter-navigation__choice:disabled { border-color: #4f5952; color: #a1aaa3; background: #202824; cursor: not-allowed; }

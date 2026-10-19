@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cachePrefix, parseManifest, preloadResources, sha256, StartupVersionError, type StartupManifest } from './preload';
+import { cachePrefix, manifestForGroups, parseManifest, preloadResources, sha256, StartupVersionError, type StartupGroup, type StartupManifest } from './preload';
 
 const base = new URL('https://example.test/AnChao/');
 const version = 'a'.repeat(64);
@@ -9,9 +9,14 @@ async function fixture(count = 6): Promise<StartupManifest> {
   const resources = await Promise.all(Array.from({ length: count }, async (_, index) => {
     const path = `assets/photo-${index}.webp`;
     const bytes = encoder.encode(path);
-    return { path, bytes: bytes.byteLength, sha256: await sha256(bytes) };
+    return { path, bytes: bytes.byteLength, sha256: await sha256(bytes), groups: ['shared'] as StartupGroup[] };
   }));
-  return { schema: 1, version, base: '/AnChao/', totalBytes: resources.reduce((sum, item) => sum + item.bytes, 0), resources };
+  const groupCounts: Record<StartupGroup, { resources: number; totalBytes: number }> = {
+    shared: { resources: count, totalBytes: resources.reduce((sum, item) => sum + item.bytes, 0) },
+    act1: { resources: 0, totalBytes: 0 }, act2: { resources: 0, totalBytes: 0 },
+    act3: { resources: 0, totalBytes: 0 }, act4: { resources: 0, totalBytes: 0 },
+  };
+  return { schema: 2, version, base: '/AnChao/', totalBytes: groupCounts.shared.totalBytes, groups: groupCounts, resources };
 }
 
 function memoryCache() {
@@ -40,6 +45,24 @@ describe('startup manifest and full resource downloads', () => {
     }
     expect(() => parseManifest({ ...valid, resources: [valid.resources[0], valid.resources[0]], totalBytes: valid.resources[0].bytes * 2 }, base, version)).toThrow();
     expect(cachePrefix(base)).not.toBe(cachePrefix(new URL('https://example.test/Other/')));
+  });
+
+  it('selects a deduplicated union of shared and requested act resources', async () => {
+    const manifest = await fixture(2);
+    const chapterManifest: StartupManifest = {
+      ...manifest,
+      resources: manifest.resources.map((resource, index) => ({ ...resource, groups: (index === 0 ? ['shared', 'act1'] : ['act2']) as StartupGroup[] })),
+      groups: {
+        shared: { resources: 1, totalBytes: manifest.resources[0].bytes },
+        act1: { resources: 1, totalBytes: manifest.resources[0].bytes },
+        act2: { resources: 1, totalBytes: manifest.resources[1].bytes },
+        act3: { resources: 0, totalBytes: 0 }, act4: { resources: 0, totalBytes: 0 },
+      },
+    };
+    const firstTwo = manifestForGroups(chapterManifest, ['shared', 'act1', 'act2']);
+    expect(firstTwo.resources).toHaveLength(2);
+    expect(firstTwo.totalBytes).toBe(manifest.totalBytes);
+    expect(manifestForGroups(chapterManifest, ['shared', 'act2']).resources.map(({ path }) => path)).toEqual(['assets/photo-0.webp', 'assets/photo-1.webp']);
   });
 
   it('does not finish after a failed download; retry reuses verified successes and fetches the missing file', async () => {

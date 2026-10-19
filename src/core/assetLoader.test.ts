@@ -3,7 +3,7 @@ import images from '../../data/images.json';
 import { birthdayImageSlots } from '../data/act4/assets';
 import { laterScenes } from '../data/act4/laterContent';
 import { act4IllustrationZoomDetailAssetIds } from '../data/narrative/act4IllustrationDetails';
-import { act4AssetPath, assetLoader, uxFinaleA4AssetPath, uxInvestigationAssetPath, uxRhythmA4AssetPath } from './assetLoader';
+import { act4AssetPath, assetLoader, uiFieldAssetPath, uxFinaleA4AssetPath, uxInvestigationAssetPath, uxRhythmA4AssetPath } from './assetLoader';
 import { act3StageClueIds, type AuthoredAct3Stage } from '../data/act3Data';
 
 describe('fourth act art registration', () => {
@@ -112,6 +112,21 @@ describe('second act art registration', () => {
       expect(assetLoader.get(id)?.src, id).toMatch(/IMG_A2_|data:image\/jpeg/);
       expect(assetLoader.isAvailable(id), id).toBe(true);
     }
+  });
+});
+
+describe('UI field-note artwork registration', () => {
+  it('registers only the two approved handwritten T05 originals from their dedicated WebP directory', () => {
+    const ids = ['IMG_A2_SCHOOL_RANK_RECORD_001', 'IMG_A2_SCHOOL_QIMING_THANKS_001'];
+    for (const id of ids) {
+      const record = images.items.find((item) => item.id === id);
+      expect(record?.file).toBe(`${id}.webp`);
+      expect(uiFieldAssetPath(id, record?.file ?? '')).toBe(`../assets/ui-field-20261019/${id}.webp`);
+      expect(assetLoader.get(id)?.src).toMatch(new RegExp(`ui-field-20261019/${id}\\.webp`));
+      expect(assetLoader.isAvailable(id)).toBe(true);
+    }
+    expect(uiFieldAssetPath('IMG_A2_SCHOOL_OTHER_001', 'IMG_A2_SCHOOL_OTHER_001.webp')).toBeNull();
+    expect(uiFieldAssetPath(ids[0], 'wrong.webp')).toBeNull();
   });
 });
 

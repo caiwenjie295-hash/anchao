@@ -27,7 +27,7 @@ export function act1Stage(state: AppState): { location: string; objective: strin
   if (state.game.phase === 'F' && !state.modules.scene.journeyStarted) return {
     location: '前往鸡公岭',
     objective: '已到出发提示页。',
-    nextAction: '点击“继续”开始现场调查。',
+    nextAction: '资料仍可查阅；准备好后点击“整理线索 / 准备出发”，再确认“前往鸡公岭”。',
   };
   const guide = getCurrentTaskGuide(state);
   if (guide) {

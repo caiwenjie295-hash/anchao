@@ -92,6 +92,53 @@
   .investigation-detail__header { flex-direction: column; }
   .investigation-detail__header button { align-self: flex-end; }
 }
+@media (max-width: 760px) {
+  .investigation-shell--act2-field-notes .investigation-shell__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    padding: 7px 10px;
+  }
+  .investigation-shell--act2-field-notes .investigation-shell__place {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 8px;
+  }
+  .investigation-shell--act2-field-notes .investigation-shell__place p { font-size: 11px; }
+  .investigation-shell--act2-field-notes .investigation-shell__place h1 { min-width: 0; font-size: 16px; }
+  .investigation-shell--act2-field-notes .investigation-shell__place span { grid-column: 1 / -1; font-size: 12px; }
+  .investigation-shell--act2-field-notes .investigation-shell__header-actions {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .investigation-shell--act2-field-notes .investigation-shell__header-actions > * { min-width: 0; }
+  .investigation-shell--act2-field-notes .investigation-shell__header-actions .investigation-progress-trigger {
+    min-height: 44px;
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  .investigation-shell--act2-field-notes .chapter-navigation--header .chapter-navigation__trigger {
+    min-height: 44px;
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+  .investigation-shell--act2-field-notes .investigation-shell__exit {
+    min-width: 76px;
+    min-height: 44px;
+    flex: 1 1 88px;
+    padding: 5px 7px;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: normal;
+  }
+}
 @media (max-height: 560px) and (min-width: 601px) {
   .investigation-shell__header { padding: 4px 12px; }
   .investigation-shell__goal { padding: 4px 12px; }
@@ -161,3 +208,30 @@
 /* T02 bridge and T05 school share one content scroller while keeping the action rail fixed. */
 .investigation-shell--act2-spacious { overflow: hidden; }
 .investigation-shell--act2-spacious .investigation-shell__scene { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+
+/* T02/T05 use the light field-notes palette while other acts keep their existing shell themes. */
+.investigation-shell--act2-field-notes {
+  --ui-page: #eae8e1;
+  --ui-surface: #f8f6f0;
+  --ui-surface-muted: #f0eee8;
+  --ui-text: #282c2c;
+  --ui-text-muted: #646762;
+  --ui-border: #c7c8bf;
+  --ui-interactive-border: #90938c;
+  --ui-accent: #718087;
+  --ui-accent-soft: #e7eaeb;
+  --ui-success: #687a6e;
+}
+.investigation-shell--act2-field-notes .investigation-shell__header { background: #f8f6f0; }
+.investigation-shell--act2-field-notes .investigation-shell__goal--on-demand,
+.investigation-shell--act2-field-notes .investigation-shell__operations { background: #f8f6f0; }
+.investigation-shell--act2-field-notes .investigation-shell__scene { background: #eae8e1; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-details > summary::after { color: #718087; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-content p { color: #353938; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-content strong { color: #515652; }
+.investigation-shell--act2-field-notes .investigation-navigation__action--ready,
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"] { border-color: #718087; background: #718087; }
+.investigation-shell--act2-field-notes .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled) { border-color: #5d6d73; background: #5d6d73; }
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"] { border-color: #90938c; color: #353938; background: #f8f6f0; }
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled) { border-color: #718087; color: #282c2c; background: #e7eaeb; }

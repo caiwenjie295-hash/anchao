@@ -29,6 +29,7 @@ describe('Act1SceneExperience transitions', () => {
     const runTransition = vi.fn((action: () => void) => action());
     const startJourney = vi.spyOn(stateManager, 'startJourney');
     await act(async () => { root.render(<Act1SceneExperience state={stateManager.getState()} onSceneTransition={runTransition} />); });
+    expect(container.textContent).toContain('前往鸡公岭');
     await act(async () => { container.querySelector<HTMLButtonElement>('.journey-transition button:not(.investigation-progress-trigger)')?.click(); });
 
     expect(runTransition).toHaveBeenCalledTimes(1);
@@ -48,5 +49,27 @@ describe('Act1SceneExperience transitions', () => {
     await act(async () => { container.querySelector<HTMLButtonElement>('.journey-transition button:not(.investigation-progress-trigger)')?.click(); });
     expect(stateManager.getState().modules.scene.journeyStarted).toBe(true);
     expect(stateManager.getState().modules.scene.currentSceneId).toBe(act1Scenes[0].id);
+  });
+
+  it('lets the player return to the still-readable materials without starting the journey', async () => {
+    const onCancel = vi.fn();
+    const startJourney = vi.spyOn(stateManager, 'startJourney');
+    await act(async () => { root.render(<Act1SceneExperience state={stateManager.getState()} onCancelJourneyIntro={onCancel} />); });
+    const cancel = [...container.querySelectorAll<HTMLButtonElement>('.journey-transition button')].find((button) => button.textContent?.includes('暂不出发'));
+    expect(cancel).not.toBeNull();
+    await act(async () => { cancel!.click(); });
+    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(startJourney).not.toHaveBeenCalled();
+    expect(stateManager.getState().game.phase).toBe('F');
+    expect(stateManager.getState().modules.scene.journeyStarted).toBe(false);
+  });
+
+  it('lets Escape cancel the departure introduction without starting the journey', async () => {
+    const onCancel = vi.fn();
+    await act(async () => { root.render(<Act1SceneExperience state={stateManager.getState()} onCancelJourneyIntro={onCancel} />); });
+    const intro = container.querySelector<HTMLElement>('.journey-transition');
+    await act(async () => { intro!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })); });
+    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(stateManager.getState().modules.scene.journeyStarted).toBe(false);
   });
 });

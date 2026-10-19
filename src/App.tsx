@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ComponentProps, ComponentType, CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
@@ -10,6 +10,7 @@ import { apps, appById } from './data/apps';
 import { AppWindow } from './components/AppWindow';
 import { DesktopIcon } from './components/DesktopIcon';
 import { DesktopTaskCard } from './components/DesktopTaskCard';
+import { ResourcePreparationDialog } from './components/fieldNotes/ResourcePreparationDialog';
 import { InvestigationProgressDrawer } from './components/InvestigationProgressDrawer';
 import { SaveRecoveryNotice } from './components/recovery/SaveRecoveryNotice';
 import { ChapterNavigation } from './components/chapterNavigation/ChapterNavigation';
@@ -42,6 +43,9 @@ import { shouldShowOpeningPrelude } from './components/scenePolish/openingPrelud
 import { fitWindowBesideTaskRail } from './components/scenePolish/desktopTaskRailLayout';
 import { shouldRenderAct1Scene } from './components/scenePolish/act1ScenePresentation';
 import { deriveAppView, isAct2SceneStage, type Act2SceneStage } from './core/presentation/appView';
+import { describeStartupError, loadError } from './startup/errors';
+import { getStartupGroupReadiness } from './startup/groupReadiness';
+import type { StartupGroup } from './startup/preload';
 import './styles.css';
 import './imageAssets.css';
 import './components/sceneTransition.css';
@@ -57,6 +61,9 @@ export default function App() {
   // “已返回桌面”只是瞬时显示状态；阶段一变或清零即刻失效。
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
   const [dismissedAct1SceneId, setDismissedAct1SceneId] = useState<string | null>(null);
+  const [showAct1JourneyIntro, setShowAct1JourneyIntro] = useState(false);
+  const departureOriginRef = useRef<HTMLElement | null>(null);
+  const pendingDepartureFocusRestoreRef = useRef<HTMLElement | null>(null);
   const [dismissedAct3, setDismissedAct3] = useState(false);
   const [reviewAct3, setReviewAct3] = useState(false);
   const [dismissedAct4, setDismissedAct4] = useState(false);
@@ -71,6 +78,9 @@ export default function App() {
   const [saveImportNoticeVisible, setSaveImportNoticeVisible] = useState(false);
   const [act4EndingNavigationHost, setAct4EndingNavigationHost] = useState<HTMLElement | null>(null);
   const [sceneNavigationHost, setSceneNavigationHost] = useState<HTMLElement | null>(null);
+  const [resourceWait, setResourceWait] = useState<{ groups: StartupGroup[]; title: string; error: string } | null>(null);
+  const resourceWaitRef = useRef<{ groups: StartupGroup[]; title: string; action: () => void; token: number } | null>(null);
+  const resourceWaitTokenRef = useRef(0);
   const saveImportNoticeTimerRef = useRef<number | null>(null);
   const act4WasCompleteRef = useRef(state.game.flags.FLAG_A4_COMPLETE === true);
   useEffect(() => {
@@ -100,6 +110,7 @@ export default function App() {
         && !imported.modules.storyTransitions.seenIds.includes('TRANSITION_A1_INTRO');
       setShowOpeningPrelude(atUnseenOpening);
       setOpenedTransitionId(null);
+      setShowAct1JourneyIntro(false);
       setSaveImportNoticeVisible(true);
       if (saveImportNoticeTimerRef.current !== null) window.clearTimeout(saveImportNoticeTimerRef.current);
       saveImportNoticeTimerRef.current = window.setTimeout(() => {
@@ -144,7 +155,42 @@ export default function App() {
   }, []);
 
   const act2Stage = state.modules.act2Research.stage;
-  const view = deriveAppView(state, { dismissedAct2Stage, dismissedAct3, reviewAct3, dismissedAct4 });
+  const view = deriveAppView(state, { dismissedAct2Stage, dismissedAct3, reviewAct3, dismissedAct4, showAct1JourneyIntro });
+
+  const beginResourcePreparation = useCallback((groups: StartupGroup[], title: string, action: () => void) => {
+    const readiness = getStartupGroupReadiness();
+    if (!readiness) { action(); return; }
+    const token = ++resourceWaitTokenRef.current;
+    const pending = { groups, title, action, token };
+    resourceWaitRef.current = pending;
+    setResourceWait({ groups, title, error: '' });
+    void readiness.requestGroups(groups, 20).then(() => {
+      if (resourceWaitRef.current?.token !== token) return;
+      resourceWaitRef.current = null;
+      setResourceWait(null);
+      action();
+    }).catch((reason: unknown) => {
+      if (resourceWaitRef.current?.token !== token) return;
+      setResourceWait({ groups, title, error: describeStartupError(loadError(reason, title)) });
+    });
+  }, []);
+
+  const cancelResourcePreparation = useCallback(() => {
+    resourceWaitTokenRef.current += 1;
+    resourceWaitRef.current = null;
+    setResourceWait(null);
+  }, []);
+
+  const retryResourcePreparation = useCallback(() => {
+    const pending = resourceWaitRef.current;
+    if (pending) beginResourcePreparation(pending.groups, pending.title, pending.action);
+  }, [beginResourcePreparation]);
+
+  useEffect(() => () => { resourceWaitTokenRef.current += 1; resourceWaitRef.current = null; }, []);
+
+  useEffect(() => {
+    if (state.game.phase !== 'F' || state.modules.scene.journeyStarted) setShowAct1JourneyIntro(false);
+  }, [state.game.phase, state.modules.scene.journeyStarted]);
 
   // 清零或离开第二幕场景阶段时，丢弃旧的“已返回桌面”标记，避免污染下一次游玩。
   useEffect(() => {
@@ -161,22 +207,22 @@ export default function App() {
   const startAct3FromInvestigation = useCallback(() => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A2_COMPLETE !== true || current.modules.act3.stage !== 'inactive') return;
-    runSceneTransition(() => {
+    beginResourcePreparation(['shared', 'act3'], '正在准备第三幕资源', () => runSceneTransition(() => {
       setDismissedAct2Stage(null);
       stateManager.startAct3();
       setDismissedAct3(false);
-    });
-  }, []);
+    }));
+  }, [beginResourcePreparation]);
   const startAct4FromInvestigation = useCallback(() => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A3_COMPLETE !== true || current.game.flags.FLAG_A3_SITE_EXITED !== true || current.modules.act3.stage !== 'T07') return;
-    runSceneTransition(() => {
+    beginResourcePreparation(['shared', 'act4'], '正在准备第四幕资源', () => runSceneTransition(() => {
       if (current.modules.act4.stage === 'inactive') stateManager.startAct4();
       setReviewAct3(false);
       setDismissedAct3(false);
       setDismissedAct4(false);
-    });
-  }, []);
+    }));
+  }, [beginResourcePreparation]);
   const reviewAct3FromInvestigation = useCallback(() => {
     const current = stateManager.getState();
     if (current.game.flags.FLAG_A3_COMPLETE !== true || current.modules.act3.stage !== 'T07') return;
@@ -220,13 +266,30 @@ export default function App() {
       return;
     }
     if (current.game.phase === 'F' && !current.modules.scene.journeyStarted) {
-      const firstScene = act1Scenes[0];
-      if (firstScene) runSceneTransition(() => stateManager.startJourney(firstScene.id));
+      departureOriginRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      setShowAct1JourneyIntro(true);
       return;
     }
     const currentProgress = deriveInvestigationProgress(current);
     if (currentProgress.nextActionAppId) openApp(currentProgress.nextActionAppId);
   }, [dismissedAct1SceneId, openApp, startAct3FromInvestigation, startAct4FromInvestigation]);
+  const openDepartureIntro = useCallback((origin: HTMLElement | null) => {
+    const current = stateManager.getState();
+    if (current.game.phase !== 'F' || current.modules.scene.journeyStarted) return;
+    departureOriginRef.current = origin;
+    setShowAct1JourneyIntro(true);
+  }, []);
+  const cancelDepartureIntro = useCallback(() => {
+    pendingDepartureFocusRestoreRef.current = departureOriginRef.current;
+    departureOriginRef.current = null;
+    setShowAct1JourneyIntro(false);
+  }, []);
+  useLayoutEffect(() => {
+    if (showAct1JourneyIntro) return;
+    const origin = pendingDepartureFocusRestoreRef.current;
+    pendingDepartureFocusRestoreRef.current = null;
+    if (origin?.isConnected && !origin.closest('[inert]')) origin.focus({ preventScroll: true });
+  }, [showAct1JourneyIntro]);
   const returnFromAct1Scene = useCallback(() => {
     const currentSceneId = stateManager.getState().modules.scene.currentSceneId;
     if (currentSceneId) runSceneTransition(() => setDismissedAct1SceneId(currentSceneId));
@@ -235,6 +298,7 @@ export default function App() {
   const restartProgress = useCallback(() => {
     if (!stateManager.resetProgress()) return false;
     setShowOpeningPrelude(true);
+    setShowAct1JourneyIntro(false);
     setOpenedTransitionId(null);
     setDismissedAct1SceneId(null);
     setDismissedAct2Stage(null);
@@ -248,6 +312,7 @@ export default function App() {
   }, []);
   const replayChapter = useCallback((chapter: ChapterId) => {
     setShowOpeningPrelude(chapter === 1);
+    setShowAct1JourneyIntro(false);
     setOpenedTransitionId(null);
     setDismissedAct1SceneId(null);
     setDismissedAct2Stage(null);
@@ -304,8 +369,9 @@ export default function App() {
   const exitAct4 = useCallback(() => runSceneTransition(() => setDismissedAct4(true)), []);
   if (view.act1EndingOpen) {
     return <InvestigationProgressProvider state={state} suppressed={curtainOpen || showAct4Ending} currentContentActive onContinueInvestigation={continueInvestigation} onReviewAct3={reviewAct3FromInvestigation}><>
-      <div className="act1-ending-flow" aria-hidden={curtainOpen} inert={curtainOpen}><Act1Ending onContinue={() => runSceneTransition(() => stateManager.startSecondAct())} />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
+      <div className="act1-ending-flow" aria-hidden={curtainOpen} inert={curtainOpen}><Act1Ending onContinue={() => beginResourcePreparation(['shared', 'act2'], '正在准备第二幕资源', () => runSceneTransition(() => stateManager.startSecondAct()))} />{transition && !transitionOpen && <div className="act1-ending-flow__next"><StoryTransitionLaunch transition={transition} onOpen={() => setOpenedTransitionId(transition.id)} /></div>}</div>
       <InvestigationProgressDrawer state={state} />
+      {resourceWait && getStartupGroupReadiness() && <ResourcePreparationDialog readiness={getStartupGroupReadiness()!} groups={resourceWait.groups} title={resourceWait.title} error={resourceWait.error} onRetry={retryResourcePreparation} onCancel={cancelResourcePreparation} />}
       {!curtainOpen && recoveryState.kind === 'none' && <ChapterNavigation placement="ending" onReplay={replayChapter} onReset={restartProgress} />}
       {transitionLayer}
       {saveImportNotice}
@@ -329,7 +395,7 @@ export default function App() {
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <SelectableDesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} selected={selectedAppId === app.appId} onSelect={() => setSelectedAppId(app.appId)} />)}
       </div>
-      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} expanded={taskCardExpanded} onExpandedChange={setTaskCardExpanded} onResumeScene={dismissedAct1Scene ? resumeAct1Scene : undefined} resumeSceneLabel={dismissedAct1Scene ? `回到${dismissedAct1Scene.title}现场` : undefined} />}
+      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} expanded={taskCardExpanded} onExpandedChange={setTaskCardExpanded} onPrepareDeparture={openDepartureIntro} onResumeScene={dismissedAct1Scene ? resumeAct1Scene : undefined} resumeSceneLabel={dismissedAct1Scene ? `回到${dismissedAct1Scene.title}现场` : undefined} />}
       {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
       <Act2T07Entry manager={stateManager} />
       {apps.map((app) => {
@@ -350,7 +416,7 @@ export default function App() {
       })}
       <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} time={time} chapterNavigation={!sceneOpen && !curtainOpen && !showAct4Ending && recoveryState.kind === 'none' ? <ChapterNavigation placement="taskbar" onReplay={replayChapter} onReset={restartProgress} /> : undefined} /></div>
     </main>
-    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} /></SceneTransitionLayer>}
+    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} onCancelJourneyIntro={cancelDepartureIntro} /></SceneTransitionLayer>}
     {act2SceneStage !== null && !act3Active && (
       <SceneTransitionLayer key={`${act2SceneStage}-${act2SceneOpen ? 'open' : 'resume'}`}>
         <Act2Experience
@@ -385,6 +451,7 @@ export default function App() {
     {transitionLayer}
     {saveImportNotice}
     <SaveRecoveryNotice manager={stateManager} />
+    {resourceWait && getStartupGroupReadiness() && <ResourcePreparationDialog readiness={getStartupGroupReadiness()!} groups={resourceWait.groups} title={resourceWait.title} error={resourceWait.error} onRetry={retryResourcePreparation} onCancel={cancelResourcePreparation} />}
     </>
     </InvestigationProgressProvider>
   );

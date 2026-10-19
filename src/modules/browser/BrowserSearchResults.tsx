@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import type { Act2Stage } from '../../core/types';
+import type { SearchGuidance } from '../../data/searchGuidance';
 import { getResultsForQuery, type BrowserPage } from '../../data/browserData';
 import { siteMarkForName } from '../../data/visualIdentityData';
 import { VisualIcon } from '../../components/VisualIcon';
@@ -32,7 +33,24 @@ function ResultItem({ page, onOpen }: { page: BrowserPage; onOpen: (pageId: stri
   </button>;
 }
 
-export function BrowserSearchResults({ query, stage, onOpen }: { query: string; stage: Act2Stage | null; onOpen: (pageId: string) => void }) {
+export function SearchGuidancePanel({ guidance, onSearch, className = '' }: { guidance: readonly SearchGuidance[]; onSearch: (query: string) => void; className?: string }) {
+  if (!guidance.length) return null;
+  return <aside className={`browser-search-guidance${className ? ` ${className}` : ''}`} aria-label="当前可用搜索词">
+    <p>接下来在浏览器搜：</p>
+    <ul>{guidance.map(({ query, prompt }) => <li key={query}>
+      <span>{prompt}</span>
+      <button type="button" data-search-query={query} onClick={() => onSearch(query)}>搜索“{query}”</button>
+    </li>)}</ul>
+  </aside>;
+}
+
+export function BrowserSearchResults({ query, stage, onOpen, searchGuidance = [], onSearch = () => undefined }: {
+  query: string;
+  stage: Act2Stage | null;
+  onOpen: (pageId: string) => void;
+  searchGuidance?: readonly SearchGuidance[];
+  onSearch?: (query: string) => void;
+}) {
   const results = getResultsForQuery(query, stage);
   const sourceCount = new Set(results.map((page) => page.domain)).size;
   return <section className="browser-results" aria-live="polite">
@@ -44,7 +62,8 @@ export function BrowserSearchResults({ query, stage, onOpen }: { query: string; 
         {results.length > 0 && <span>来自 {sourceCount} 个来源</span>}
       </p>
     </header>
+    <SearchGuidancePanel guidance={searchGuidance} onSearch={onSearch} />
     {results.length > 0 && <ol className="browser-results__list">{results.map((page) => <li key={page.id}><ResultItem page={page} onOpen={onOpen} /></li>)}</ol>}
-    {results.length === 0 && <p className="browser-empty">{stage === 'search' ? '可以缩短关键词、交换词序，或先记下疑问再向当地人求证。' : '试试“鸡公岭”“XX县失踪”或其他搜索建议。'}</p>}
+    {results.length === 0 && <p className="browser-empty">{searchGuidance.length ? '没有找到当前问题需要的材料。上方已列出本阶段可用的搜索词，可直接选择后重试。' : stage === 'search' ? '可以缩短关键词、交换词序，或先记下疑问再向当地人求证。' : '可以缩短关键词、交换词序，或回到当前任务查看已出现的搜索词。'}</p>}
   </section>;
 }

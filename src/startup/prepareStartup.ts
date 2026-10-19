@@ -1,5 +1,7 @@
-import { cachePrefix, fetchWithTimeout, parseManifest, preloadResources, StartupLoadError, type StartupRetry, type StartupStats } from './preload';
+import { cachePrefix, fetchWithTimeout, manifestForGroups, parseManifest, preloadResources, StartupLoadError, type StartupGroup, type StartupRetry, type StartupStats } from './preload';
 import { describeStartupError, loadError } from './errors';
+import { stateManager } from '../core/stateManager';
+import { configureStartupGroupReadiness } from './groupReadiness';
 
 const delay = (milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
 const limited = async <T>(task: Promise<T>, milliseconds: number): Promise<T | undefined> => {
@@ -44,6 +46,13 @@ export async function prepareStartup(): Promise<void> {
   const retry = document.getElementById('anchao-startup-retry') as HTMLButtonElement;
   const base = new URL(import.meta.env.BASE_URL, location.href);
   const expected = document.querySelector<HTMLMetaElement>('meta[name="anchao-preload-version"]')?.content ?? '';
+  const savedState = stateManager.getState();
+  const freshOpening = savedState.game.act === 1 && savedState.game.phase === 'A'
+    && savedState.game.discoveredClueIds.length === 0
+    && Object.values(savedState.game.flags).every((value) => value === false || value === 0 || value === '');
+  const initialGroups: StartupGroup[] = freshOpening
+    ? ['shared', 'act1', 'act2']
+    : ['shared', `act${savedState.game.act}` as StartupGroup];
   let progress = 3;
   const size = (bytes: number) => `${(bytes / 1_000_000).toFixed(2)} MB`;
   const entryError = () => new StartupLoadError('entry', shell.dataset.entryFile || '入口脚本或样式', 'Entry resource failed');
@@ -74,7 +83,7 @@ export async function prepareStartup(): Promise<void> {
       }
       retry.hidden = true;
       retry.onclick = null;
-      copy.textContent = '精美图片加载中，请稍候……';
+      copy.textContent = freshOpening ? '正在准备第一、二幕与共享内容……' : `正在准备第${savedState.game.act}幕与共享内容……`;
       setDetail('正在确认资源清单……');
       renderStats();
       shell.setAttribute('aria-busy', 'true');
@@ -95,24 +104,22 @@ export async function prepareStartup(): Promise<void> {
         try { value = await response.json(); }
         catch { throw new StartupLoadError('manifest', 'anchao-preload-manifest.json', 'Invalid manifest JSON'); }
         const manifest = parseManifest(value, base, expected);
-        stats = { totalBytes: manifest.totalBytes, loadedBytes: 0, verifiedBytes: 0, completed: 0, total: manifest.resources.length, networkBytes: 0, bytesPerSecond: 0 };
+        const initialManifest = manifestForGroups(manifest, initialGroups);
+        if (!initialManifest.resources.length) throw new StartupLoadError('manifest', 'anchao-preload-manifest.json', 'Initial startup groups are empty');
+        stats = { totalBytes: initialManifest.totalBytes, loadedBytes: 0, verifiedBytes: 0, completed: 0, total: initialManifest.resources.length, networkBytes: 0, bytesPerSecond: 0 };
         renderStats(stats);
-        setDetail('正在下载并校验资源……');
+        setDetail(`正在下载并校验首批${freshOpening ? '第一、二幕' : `第${savedState.game.act}幕`}资源……`);
         const cache = await prepareCache(base, manifest.version);
-        await preloadResources(manifest, base, {
+        await preloadResources(initialManifest, base, {
           cache, onRetry, onProgress: (completed, total) => { realFraction = completed / total; },
           onStats: (value) => { stats = value; },
         });
         if (shell.dataset.entryError) throw entryError();
-        // Delete only older versions belonging to this exact game URL, after complete verification.
-        if (cache) {
-          try { await Promise.all((await caches.keys()).filter((key) => key.startsWith(cachePrefix(base)) && key !== `${cachePrefix(base)}${manifest.version}`).map((key) => caches.delete(key))); }
-          catch { /* Cache cleanup is optional and never touches save storage. */ }
-        }
+        configureStartupGroupReadiness({ manifest, base, cache, initialResources: initialManifest.resources });
         clearInterval(timer);
         show(100);
         renderStats(stats);
-        setDetail('全部资源校验完成。');
+        setDetail(`首批${freshOpening ? '第一、二幕' : `第${savedState.game.act}幕`}与共享资源校验完成。`);
         copy.textContent = '准备就绪，即将进入……';
         shell.setAttribute('aria-busy', 'false');
         await delay(220);

@@ -40,9 +40,10 @@ export function act2Stage(state: AppState): { location: string; objective: strin
     if (!visited.has('PAGE_A2_T06_004') && !visited.has('PAGE_A2_T06_008') && !visited.has('PAGE_A2_T06_009')) return {
       location: '启明实名个案复核',
       objective: '从已出现的启明公开资料开始，分别核对宣传与后续报道。',
-      nextAction: '在浏览器中打开启明公开来源；顺序不限，复制姓名和论坛内容都不是必需步骤。',
+      nextAction: '在浏览器搜索“启明青少年成长中心”，打开并阅读官网与地方报道。',
       appId: 'browser',
     };
+    const namesKnown = visited.has('PAGE_A2_T06_004');
     const missingNames = (['huang', 'zhong'] as const).filter((caseId) => !reviewed.has(caseId));
     const alreadyRecorded = reviewed.size ? `已有 ${reviewed.size} 位人物的材料差异记录。` : '';
     const knownFollowup = (caseId: 'huang' | 'zhong') => visited.has(caseId === 'huang' ? 'PAGE_A2_T06_008' : 'PAGE_A2_T06_009');
@@ -52,14 +53,16 @@ export function act2Stage(state: AppState): { location: string; objective: strin
       return {
         location: '启明实名个案复核',
         objective: `${alreadyRecorded}核对当前已打开的${name}后续报道与宣传原文。`,
-        nextAction: `返回浏览器个案复核区，选择“核对${name}”，确认两份来源都已打开后记录材料差异。`,
+        nextAction: `可搜索“启明 ${name}”打开后续报道，再返回个案复核区记录材料差异。`,
         appId: 'browser',
       };
     }
     return {
       location: '启明实名个案复核',
       objective: `${alreadyRecorded}选择一位已在公开来源中出现的人物继续核对。`,
-      nextAction: '在浏览器个案复核区选择尚未记录的人物，打开其缺少的后续报道；顺序不限。',
+      nextAction: namesKnown
+        ? '可搜索“启明 黄子山”或“启明 钟子月”打开后续报道，再回到个案复核区记录材料差异。'
+        : '在浏览器搜索“启明青少年成长中心”并阅读公开案例；姓名出现后再搜索对应人物的后续报道。',
       appId: 'browser',
     };
   }

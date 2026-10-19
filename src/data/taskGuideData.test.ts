@@ -39,13 +39,12 @@ describe('desktop task guides', () => {
   it('shows a usable query for the active first-act browser step', () => {
     const newsSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true }, 'C'));
     expect(newsSearch?.id).toBe('GUIDE_A1_003');
-    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('XX县失踪');
-    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('打开并阅读');
+    expect(newsSearch?.steps.find((step) => step.current)?.label).toContain('XX县失踪');
+    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('失联时间');
 
     const routeSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true, FLAG_A1_NEWS_FOUND: true }, 'D'));
     expect(routeSearch?.id).toBe('GUIDE_A1_003');
     expect(routeSearch?.steps.find((step) => step.current)?.label).toContain('鸡公岭徒步');
-    expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('鸡公岭徒步');
     expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('长度和难度');
   });
 
@@ -77,6 +76,9 @@ describe('act2 desktop task guides', () => {
   it('points T01 at the browser and allows one related search to complete its step', () => {
     const guide = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true }));
     expect(guide).toMatchObject({ id: 'GUIDE_A2_T01_001', actionAppId: 'browser', totalCount: 1 });
+    expect(guide?.summary).toContain('鸡公岭 补');
+    expect(guide?.steps[0]?.label).toContain('鸡公岭 补');
+    expect(guide?.steps[0]?.hint).toContain('旧址记录');
     const afterOne = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true }));
     expect(afterOne).toBeNull();
     expect(getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true }))).not.toBeNull();
@@ -167,6 +169,9 @@ describe('act2 desktop task guides', () => {
   it('shows the T06 guide only after the browser research stage has been entered', () => {
     const base = act2State({ FLAG_A2_SS_MATCH_CONFIRMED: true }, 'A2_T06', 'qiming');
     expect(getCurrentTaskGuide(base)).toMatchObject({ id: 'GUIDE_A2_T06_001', actionAppId: 'browser', completedCount: 0 });
+    expect(getCurrentTaskGuide(base)?.summary).toContain('启明青少年成长中心');
+    expect(getCurrentTaskGuide(base)?.steps.map(({ label }) => label).join(' ')).not.toContain('黄子山');
+    expect(getCurrentTaskGuide(base)?.steps.map(({ label }) => label).join(' ')).not.toContain('钟子月');
     base.game.phase = 'A2_T05'; base.modules.act2Research.stage = 'school';
     expect(getCurrentTaskGuide(base)?.id).not.toBe('GUIDE_A2_T06_001');
   });

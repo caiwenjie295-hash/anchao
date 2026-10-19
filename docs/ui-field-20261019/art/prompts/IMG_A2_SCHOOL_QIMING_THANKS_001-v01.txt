@@ -1,0 +1,13 @@
+Use case: game-asset
+Asset type: in-game archival paper document image for a narrative investigation game
+Primary request: Create one photorealistic, high-resolution image of a single old white paper sheet bearing exactly one handwritten Chinese sentence. Render the sentence itself as clear, natural dark blue ballpoint handwriting directly in the image pixels, with every character and punctuation mark matching this exact text: “感谢启明青少年成长中心两个月来对我的教育和培养。” Keep the complete sentence legible and preserve the final Chinese full stop.
+Scene/backdrop: The whole image is a close, nearly straight-on scan-like view of one old paper sheet; no tabletop or other objects are visible.
+Subject: A brief handwritten expression of thanks on a paper record.
+Style/medium: Natural, slightly hurried but readable dark blue ballpoint handwriting with believable pen pressure and line variation; the same archival paper and ink character as a real school document.
+Composition/framing: Portrait page fills nearly the full frame with all four edges visible. Place the sentence in the upper-middle of the sheet with natural handwritten line breaks if needed; keep enough whitespace to read it comfortably and zoom it. Target at least 1024 pixels on the long edge.
+Lighting/mood: Soft neutral daylight, even exposure, archival and matter-of-fact.
+Color palette: Original white paper with only subtle light yellowing at the edges; dark navy ink.
+Materials/textures: Fine paper grain and a few delicate age folds, with realistic handwritten strokes.
+Text (verbatim): “感谢启明青少年成长中心两个月来对我的教育和培养。”
+Constraints: This sentence is the only text and must be handwritten directly into the image pixels. Preserve every character exactly, including “启明青少年成长中心” and the final “。”; no signature, name, date, school, other institution, stamp, seal, logo, or extra wording. No HTML/SVG overlay.
+Avoid: Printed handwriting fonts, calligraphy, brush strokes, poster typography, illegible or misspelled Chinese, missing or substituted characters, added text, dirt, mold, burn marks, coffee stains, collage, dramatic shadows, watermark.
