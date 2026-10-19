@@ -309,3 +309,117 @@
   .t05-school__backdrop { width: min(100%, 84vh); }
 }
 .investigation-shell:has(.t05-school) .investigation-navigation__material { min-height: 44px; padding: 7px 10px; }
+
+/* UI-FIELD-20261019: current place leads, campus navigation supports it, records open on demand. */
+.t05-school {
+  --school-ink: #282c2c;
+  --school-muted: #646762;
+  --school-surface: #f8f6f0;
+  --school-muted-surface: #f0eee8;
+  --school-border: #c7c8bf;
+  --school-accent: #718087;
+  --school-cinnabar: #944d3f;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  padding: clamp(12px, 1.5vw, 22px);
+  overflow: visible;
+  background: transparent;
+}
+.t05-school__layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(250px, .75fr); grid-template-areas: "room map"; align-items: start; gap: 12px; min-width: 0; }
+.t05-school__room { grid-area: room; min-width: 0; overflow: visible; padding: clamp(12px, 1.4vw, 20px); border: 1px solid var(--school-border); border-radius: 2px; background: var(--school-surface); box-shadow: none; }
+.t05-school__room > h2 { margin: 0 0 10px; color: var(--school-ink); font: 500 clamp(23px, 2.2vw, 32px)/1.3 Georgia, "Songti SC", serif; }
+.t05-school__map { grid-area: map; min-width: 0; overflow: visible; padding: 12px; border: 1px solid var(--school-border); border-radius: 2px; background: var(--school-surface); box-shadow: none; }
+.t05-school__map h2 { font: 600 16px/1.4 var(--font-ui, sans-serif); }
+.t05-school__backdrop { width: 100%; max-width: 1100px; aspect-ratio: 4 / 3; height: auto; margin: 0; border-color: var(--school-border); border-radius: 2px; background: #e4e2da; }
+.t05-school__route-status { color: #515652 !important; }
+.t05-school__map-anchor { fill: #77868b; stroke: #f8f6f0; }
+.t05-school__map-anchor.is-on-route { fill: #c28369; }
+.t05-school__map-anchor.is-current { fill: #fff; stroke: #3e4b50; }
+.t05-school__map-point { border-color: #f8f6f0 !important; border-radius: 2px !important; background: #353b3a !important; box-shadow: 0 1px 5px #0005; }
+.t05-school__map-point.is-current { border-color: #fff !important; background: #944d3f !important; box-shadow: 0 0 0 2px #f8f6f0, 0 3px 8px #10141480; }
+.t05-school__map-point.is-on-route:not(.is-current) { border-color: #e5c0b3 !important; }
+.t05-school__map-point:hover,
+.t05-school__map-point:focus-visible { outline-color: #944d3f; }
+.t05-school__building-entry { border-color: #606f75; border-radius: 2px; color: #fff; background: #606f75; }
+.t05-school__building-entry:hover,
+.t05-school__building-entry:focus-visible { background: #4f5c62; outline-color: #944d3f; }
+.t05-school__campus-plan,
+.t05-school__indoor-plan { border-color: #c7c8bf; border-radius: 2px; background-color: #e8e7e1; box-shadow: inset 0 0 0 2px #f8f6f0; }
+.t05-school__route-line { stroke: #eef0ed; filter: drop-shadow(0 1px 1px #283033); }
+.t05-school__route-line--active { stroke: #c28369; filter: drop-shadow(0 1px 1px #283033); }
+.t05-school__map-leader { stroke: #f1f1ec; filter: drop-shadow(0 1px 1px #30383a); }
+.t05-school__map-anchor { fill: #718087; stroke: #f8f6f0; }
+.t05-school__map-anchor.is-on-route { fill: #c28369; }
+.t05-school__map-anchor.is-current { fill: #fff; stroke: #3e4b50; }
+.t05-school__map-point { border-color: #f8f6f0 !important; border-radius: 2px !important; color: #fff !important; background: #41494b !important; box-shadow: 0 1px 5px #0005; }
+.t05-school__map-point.is-current { border-color: #fff !important; background: #944d3f !important; box-shadow: 0 0 0 2px #f8f6f0, 0 2px 6px #10141480; }
+.t05-school__map-point.is-on-route:not(.is-current) { border-color: #e5b9aa !important; }
+.t05-school__map-point:hover,
+.t05-school__map-point:focus-visible { outline: 2px solid #944d3f; outline-offset: 2px; }
+.t05-school__indoor-plan { background: repeating-linear-gradient(0deg, #e8e7e1 0 24%, #d7d7d1 24.5% 25.5%, #e8e7e1 26% 49%, #cfd3d1 49.5% 51%, #e8e7e1 52% 74%, #d7d7d1 74.5% 75.5%, #e8e7e1 76%); }
+.t05-school__indoor-plan::before { border-color: #aeb3b0; color: #51595a; background: #d6d9d6; }
+.t05-school__route-status { color: #515652 !important; }
+.t05-school__photo-fallback { color: #444b4b; background: linear-gradient(150deg, #e0dfd8, #f0eee8); }
+.t05-school__building-entry { border-color: #606f75; border-radius: 2px; color: #fff; background: #606f75; }
+.t05-school__building-entry:hover,
+.t05-school__building-entry:focus-visible { background: #4f5c62; outline-color: #944d3f; }
+.t05-school button.t05-school__image-hotspot { border: 2px solid #f8f6f0; border-radius: 2px; color: #fff; background: #46545aeF; }
+.t05-school button.t05-school__image-hotspot:hover,
+.t05-school button.t05-school__image-hotspot:focus-visible { color: #fff; background: #343f43; box-shadow: 0 0 0 2px #944d3f, 0 1px 4px #0008; }
+.t05-school__backdrop:not(.t05-school__backdrop--image) { background: #e4e2da; }
+.t05-school__backdrop:not(.t05-school__backdrop--image)::before { background: repeating-linear-gradient(90deg, transparent 0 17%, #f4f3edaa 17.2% 17.6%, transparent 18% 34%), linear-gradient(180deg, #d3d6d2, #e7e5df); }
+.t05-school__backdrop:not(.t05-school__backdrop--image)::after { background: repeating-linear-gradient(90deg, #a6aaa6 0 2px, transparent 2px 18%), linear-gradient(#b8bcb8, #8e9490); }
+.t05-school__timeline-disclosure { border: 1px solid var(--school-border); border-radius: 2px; background: var(--school-surface); }
+.t05-school__timeline-disclosure > summary { display: flex; min-height: 48px; flex-wrap: wrap; align-items: center; gap: 5px 12px; padding: 9px 13px; color: var(--school-ink); cursor: pointer; list-style: none; }
+.t05-school__timeline-disclosure > summary::-webkit-details-marker { display: none; }
+.t05-school__timeline-disclosure > summary::after { content: '＋'; margin-left: auto; color: #944d3f; font-size: 18px; }
+.t05-school__timeline-disclosure[open] > summary { border-bottom: 1px solid var(--school-border); }
+.t05-school__timeline-disclosure[open] > summary::after { content: '−'; }
+.t05-school__timeline-disclosure > summary strong { font-weight: 650; }
+.t05-school__timeline-disclosure > summary span { color: var(--school-muted); font-size: 12px; }
+.t05-school__timeline { width: 100%; margin: 0; padding: 14px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.t05-school__timeline > h2 { margin: 0 0 5px; color: var(--school-ink); font-size: 17px; }
+.t05-school__timeline > p { color: var(--school-muted); }
+.t05-school__evidence-options button,
+.t05-school__inferences button { min-height: 48px; border-radius: 2px; }
+.t05-school__evidence-options button[aria-pressed="true"],
+.t05-school__inferences button[aria-pressed="true"] { border-color: var(--school-accent); background: #e7eaeb; }
+.t05-school__handwritten-material { display: grid; gap: 10px; width: 100%; margin: 10px 0 14px; }
+.t05-school__handwritten-open { position: relative; display: grid; place-items: center; width: 100%; min-height: 0; padding: 0 !important; overflow: hidden; border: 1px solid var(--school-border) !important; border-radius: 2px !important; background: #ebe9e1 !important; cursor: zoom-in; }
+.t05-school__handwritten-open > img { display: block; width: 100%; max-height: 58dvh; object-fit: contain; }
+.t05-school__handwritten-open > span { position: absolute; right: 8px; bottom: 8px; padding: 4px 7px; color: #fff; background: #282c2ce8; font-size: 12px; }
+.t05-school__handwritten-open:focus-visible { outline: 3px solid #718087; outline-offset: 3px; }
+.t05-school__handwritten-fallback { display: grid; min-height: 130px; place-items: center; padding: 20px; border: 1px dashed var(--school-border); color: var(--school-muted); background: var(--school-muted-surface); text-align: center; }
+.t05-school__handwritten-dialog { box-sizing: border-box; width: min(1100px, calc(100vw - 24px)); max-width: calc(100vw - 24px); max-height: 92dvh; overflow: auto; padding: clamp(12px, 2vw, 20px); border: 1px solid var(--school-border); border-radius: 2px; color: var(--school-ink); background: #f8f6f0; }
+.t05-school__handwritten-dialog::backdrop { background: rgb(21 25 25 / 72%); }
+.t05-school__handwritten-dialog > header { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+.t05-school__handwritten-dialog > header button { flex: 0 0 auto; }
+.t05-school__handwritten-zoom { display: grid; grid-template-columns: auto auto; align-items: center; gap: 8px; margin: 12px 0; color: var(--school-muted); font-size: 12px; }
+.t05-school__handwritten-zoom input { grid-column: 1 / -1; width: 100%; accent-color: var(--school-accent); }
+.t05-school__handwritten-image-frame { max-width: 100%; max-height: 72dvh; overflow: auto; border: 1px solid var(--school-border); background: #ebe9e1; overscroll-behavior: contain; }
+.t05-school__handwritten-image-frame img { display: block; max-width: none; height: auto; }
+.t05-school__transcript { margin: 10px 0; border-top: 1px solid var(--school-border); border-bottom: 1px solid var(--school-border); }
+.t05-school__transcript > summary { min-height: 44px; padding: 9px 4px; color: #515f64; cursor: pointer; }
+.t05-school__transcript > p { margin: 0 0 12px; line-height: 1.7; }
+.t05-school__ranks { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.t05-school__ranks li { border-radius: 2px; color: var(--school-muted); background: var(--school-muted-surface); }
+.t05-school__ranks strong { color: var(--school-ink); }
+@media (max-width: 760px) {
+  .t05-school { padding: 10px; }
+  .t05-school__layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "room" "map"; }
+  .t05-school__memory-content { grid-template-columns: minmax(0, 1fr); }
+  .t05-school__map { padding: 10px; }
+  .t05-school__map nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .t05-school__ranks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .t05-school__map-point { min-width: 52px; max-width: 80px; padding: 3px 5px !important; font-size: .63rem; }
+  .t05-school__memory-photos { gap: 5px; }
+  .t05-school__handwritten-dialog { padding: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .t05-school *, .t05-comparison * { scroll-behavior: auto; animation: none; transition: none; } }

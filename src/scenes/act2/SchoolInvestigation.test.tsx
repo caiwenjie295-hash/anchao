@@ -11,6 +11,18 @@ describe('T05 school exploration', () => {
   let root: Root;
   let manager: StateManager;
   beforeEach(() => {
+    if (!HTMLDialogElement.prototype.showModal) {
+      HTMLDialogElement.prototype.showModal = function showModal() {
+        this.setAttribute('open', '');
+        this.querySelector<HTMLElement>('button')?.focus();
+      };
+    }
+    if (!HTMLDialogElement.prototype.close) {
+      HTMLDialogElement.prototype.close = function close() {
+        this.removeAttribute('open');
+        this.dispatchEvent(new Event('close'));
+      };
+    }
     container = document.createElement('div'); document.body.append(container); root = createRoot(container);
     const state = createDefaultState(); state.game.act = 2; state.game.phase = 'A2_T05'; state.game.flags = { FLAG_A2_TRANSFER_RULE_INFERRED: true, FLAG_A2_SCHOOL_ENTERED: true }; state.modules.act2Research.stage = 'school';
     manager = new StateManager(new EventBus(), state);
@@ -95,25 +107,77 @@ describe('T05 school exploration', () => {
     expect((document.activeElement as HTMLElement)?.textContent).toBe('听听老师回忆');
   });
 
-  it('draws the seven exact rank values over the paper background when opened from the outdoor honor board', async () => {
+  it('shows the approved rank original with an accessible transcript and keeps the read gate separate', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
     await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看历次名次')?.click(); });
-    const chart = container.querySelector<HTMLElement>('.t05-school__rank-chart');
-    expect(chart?.dataset.assetId).toBe('IMG_A2_SCHOOL_RANK_PAPER_001');
-    expect([...chart!.querySelectorAll('.t05-school__rank-value')].map((item) => item.textContent)).toEqual(['600', '400', '300', '130', '88', '53', '20']);
-    expect(chart?.getAttribute('aria-label')).toContain('600、400、300、130、88、53、20');
-    expect([...container.querySelectorAll('.t05-school__ranks strong')].map((item) => item.textContent)).toEqual(['600', '400', '300', '130', '88', '53', '20']);
+    const record = container.querySelector<HTMLElement>('[data-asset-id="IMG_A2_SCHOOL_RANK_RECORD_001"]');
+    const original = record?.querySelector<HTMLImageElement>('.t05-school__handwritten-open img');
+    expect(original?.getAttribute('alt')).toContain('高三年级阶段成绩记录');
+    expect(original?.getAttribute('alt')).toContain('王澳');
+    expect(original?.getAttribute('alt')).toContain('600、400、300、130、88、53、20');
+    expect(original?.getAttribute('src')).toContain('ui-field-20261019/IMG_A2_SCHOOL_RANK_RECORD_001.webp');
+    expect(container.querySelector('.t05-school__rank-chart svg')).toBeNull();
+    const rankTranscript = container.querySelector<HTMLDetailsElement>('.t05-school__transcript')!;
+    await act(async () => { rankTranscript.querySelector('summary')?.click(); });
+    expect([...rankTranscript.querySelectorAll('.t05-school__ranks li strong')].map((item) => item.textContent)).toEqual(['600', '400', '300', '130', '88', '53', '20']);
+    expect(manager.getState().game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).toBeUndefined();
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '记下这组名次')?.click(); });
+    expect(manager.getState().game.flags.FLAG_A2_SCORE_CHANGE_KNOWN).toBe(true);
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看成绩表下方的感谢文字')?.click(); });
+    const thanks = container.querySelector<HTMLImageElement>('[data-asset-id="IMG_A2_SCHOOL_QIMING_THANKS_001"] img');
+    expect(thanks?.getAttribute('src')).toContain('ui-field-20261019/IMG_A2_SCHOOL_QIMING_THANKS_001.webp');
+    expect(thanks?.getAttribute('alt')).toContain('感谢启明青少年成长中心两个月来对我的教育和培养。');
+    expect(container.querySelector('.t05-school__transcript[open] p')?.textContent).toBe('感谢启明青少年成长中心两个月来对我的教育和培养。');
+    expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).toBeUndefined();
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '记下这段文字')?.click(); });
+    expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).toBe(true);
+    expect(container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure')?.open).toBe(true);
   });
 
-  it('keeps a compact daily-memory entry and the evidence choices visible without opening folds', async () => {
+  it('keeps the school material open while the native original viewer handles Escape and restores focus', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看历次名次')?.click(); });
+    const trigger = container.querySelector<HTMLButtonElement>('.t05-school__handwritten-open');
+    await act(async () => { trigger?.click(); });
+    const imageDialog = container.querySelector<HTMLDialogElement>('.t05-school__handwritten-dialog');
+    expect(imageDialog?.open).toBe(true);
+    expect(container.querySelector('.t05-school__dialog[role="dialog"]')).not.toBeNull();
+
+    await act(async () => { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })); });
+    expect(imageDialog?.open).toBe(true);
+    expect(container.querySelector('.t05-school__dialog[role="dialog"]')).not.toBeNull();
+
+    await act(async () => { imageDialog?.dispatchEvent(new Event('cancel', { cancelable: true })); });
+    expect(imageDialog?.open).toBe(false);
+    expect(container.querySelector('.t05-school__dialog[role="dialog"]')).not.toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('keeps the exact transcript available when the original image fails to load', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看历次名次')?.click(); });
+    const original = container.querySelector<HTMLImageElement>('[data-asset-id="IMG_A2_SCHOOL_RANK_RECORD_001"] .t05-school__handwritten-open img');
+    await act(async () => { original?.dispatchEvent(new Event('error')); });
+    expect(container.querySelector('.t05-school__handwritten-fallback')?.textContent).toContain('请查看下方文字转录');
+    expect(container.querySelector('.t05-school__handwritten-open')).toBeNull();
+    expect(container.querySelector('.t05-school__transcript')?.textContent).toContain('600');
+    expect(container.querySelector('.t05-school__transcript')?.textContent).toContain('20');
+  });
+
+  it('keeps a compact daily-memory entry and opens evidence choices only on request', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
     const memory = container.querySelector('.t05-school__memory');
     const timeline = container.querySelector('.t05-school__timeline');
     expect(memory).not.toBeNull();
     expect(memory?.querySelector('details')).toBeNull();
-    expect(container.querySelector('.t05-school__timeline-disclosure')).toBeNull();
-    expect(timeline?.querySelector('h2')?.textContent).toContain('已读 0 / 3 · 已选不同来源 0 / 2');
+    const disclosure = container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure');
+    expect(disclosure?.open).toBe(false);
+    expect(disclosure?.querySelector('summary')?.textContent).toContain('已读 0 / 3 · 已选不同来源 0 / 2');
+    await act(async () => { disclosure?.querySelector('summary')?.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+    expect(disclosure?.open).toBe(true);
     expect(timeline?.querySelectorAll('.t05-school__evidence-options button')).toHaveLength(3);
     expect([...memory!.querySelectorAll('blockquote[data-message-id]')].map((node) => node.getAttribute('data-message-id'))).toEqual([
       'CHAT_A2_T05_001',
@@ -155,7 +219,8 @@ describe('T05 school exploration', () => {
     await act(async () => { teacherEvidence?.click(); });
     expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual(['teacher-account']);
     expect(manager.getState().game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN).toBe(true);
-    expect(container.querySelector('.t05-school__timeline h2')?.textContent).toContain('已读 2 / 3 · 已选不同来源 1 / 2');
+    expect(container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure')?.open).toBe(true);
+    expect(container.querySelector('.t05-school__timeline-disclosure summary')?.textContent).toContain('已读 2 / 3 · 已选不同来源 1 / 2');
     const remainingMaterial = container.querySelector('.investigation-navigation__reason .investigation-navigation__material');
     expect(remainingMaterial?.textContent).toContain('历次成绩记录 · 选作支持来源');
     expect(container.querySelectorAll('.investigation-navigation__reason .investigation-navigation__material')).toHaveLength(1);
