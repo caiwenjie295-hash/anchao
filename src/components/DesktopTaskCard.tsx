@@ -23,7 +23,7 @@ export function DesktopTaskCard({
   className?: string;
   onResumeScene?: () => void;
   resumeSceneLabel?: string;
-  onPrepareDeparture?: () => void;
+  onPrepareDeparture?: (trigger: HTMLButtonElement) => void;
   expanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
 }) {
@@ -77,7 +77,7 @@ export function DesktopTaskCard({
     {searchGuidance.length > 0 && <p className="desktop-task-card__search-guidance"><strong>接下来在浏览器搜：</strong><span>{searchGuidance.map(({ query }) => `“${query}”`).join('、')}</span></p>}
     {pendingDeparture ? <div className="desktop-task-card__departure-actions">
       <button type="button" className="desktop-task-card__resume" onClick={() => onOpenApp('browser')}>继续查阅资料</button>
-      {onPrepareDeparture && <button type="button" className="desktop-task-card__prepare" onClick={onPrepareDeparture}>整理线索 / 准备出发</button>}
+      {onPrepareDeparture && <button type="button" className="desktop-task-card__prepare" onClick={(event) => onPrepareDeparture(event.currentTarget)}>整理线索 / 准备出发</button>}
     </div> : onResumeScene && resumeSceneLabel && <button type="button" className="desktop-task-card__resume" onClick={onResumeScene}>{resumeSceneLabel}</button>}
     {expanded && <div className="desktop-task-card__body" id={bodyId}>
       <p className="desktop-task-card__summary">{presentation.summary}</p>

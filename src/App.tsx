@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ComponentProps, ComponentType, CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import desktopWallpaperUrl from './assets/compressed/assets/desktop-wallpaper.webp?no-inline';
@@ -62,6 +62,8 @@ export default function App() {
   const [dismissedAct2Stage, setDismissedAct2Stage] = useState<Act2SceneStage | null>(null);
   const [dismissedAct1SceneId, setDismissedAct1SceneId] = useState<string | null>(null);
   const [showAct1JourneyIntro, setShowAct1JourneyIntro] = useState(false);
+  const departureOriginRef = useRef<HTMLElement | null>(null);
+  const pendingDepartureFocusRestoreRef = useRef<HTMLElement | null>(null);
   const [dismissedAct3, setDismissedAct3] = useState(false);
   const [reviewAct3, setReviewAct3] = useState(false);
   const [dismissedAct4, setDismissedAct4] = useState(false);
@@ -264,12 +266,30 @@ export default function App() {
       return;
     }
     if (current.game.phase === 'F' && !current.modules.scene.journeyStarted) {
+      departureOriginRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setShowAct1JourneyIntro(true);
       return;
     }
     const currentProgress = deriveInvestigationProgress(current);
     if (currentProgress.nextActionAppId) openApp(currentProgress.nextActionAppId);
   }, [dismissedAct1SceneId, openApp, startAct3FromInvestigation, startAct4FromInvestigation]);
+  const openDepartureIntro = useCallback((origin: HTMLElement | null) => {
+    const current = stateManager.getState();
+    if (current.game.phase !== 'F' || current.modules.scene.journeyStarted) return;
+    departureOriginRef.current = origin;
+    setShowAct1JourneyIntro(true);
+  }, []);
+  const cancelDepartureIntro = useCallback(() => {
+    pendingDepartureFocusRestoreRef.current = departureOriginRef.current;
+    departureOriginRef.current = null;
+    setShowAct1JourneyIntro(false);
+  }, []);
+  useLayoutEffect(() => {
+    if (showAct1JourneyIntro) return;
+    const origin = pendingDepartureFocusRestoreRef.current;
+    pendingDepartureFocusRestoreRef.current = null;
+    if (origin?.isConnected && !origin.closest('[inert]')) origin.focus({ preventScroll: true });
+  }, [showAct1JourneyIntro]);
   const returnFromAct1Scene = useCallback(() => {
     const currentSceneId = stateManager.getState().modules.scene.currentSceneId;
     if (currentSceneId) runSceneTransition(() => setDismissedAct1SceneId(currentSceneId));
@@ -375,7 +395,7 @@ export default function App() {
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <SelectableDesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} selected={selectedAppId === app.appId} onSelect={() => setSelectedAppId(app.appId)} />)}
       </div>
-      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} expanded={taskCardExpanded} onExpandedChange={setTaskCardExpanded} onPrepareDeparture={() => { const current = stateManager.getState(); if (current.game.phase === 'F' && !current.modules.scene.journeyStarted) setShowAct1JourneyIntro(true); }} onResumeScene={dismissedAct1Scene ? resumeAct1Scene : undefined} resumeSceneLabel={dismissedAct1Scene ? `回到${dismissedAct1Scene.title}现场` : undefined} />}
+      {taskCardVisible && <DesktopTaskCard state={state} onOpenApp={openApp} expanded={taskCardExpanded} onExpandedChange={setTaskCardExpanded} onPrepareDeparture={openDepartureIntro} onResumeScene={dismissedAct1Scene ? resumeAct1Scene : undefined} resumeSceneLabel={dismissedAct1Scene ? `回到${dismissedAct1Scene.title}现场` : undefined} />}
       {/* T07 入口只在 T06 收束后出现；必须玩家主动点击才进入。 */}
       <Act2T07Entry manager={stateManager} />
       {apps.map((app) => {
@@ -396,7 +416,7 @@ export default function App() {
       })}
       <div id="taskbar" tabIndex={-1}><Taskbar desktop={state.desktop} onAppClick={taskbarClick} time={time} chapterNavigation={!sceneOpen && !curtainOpen && !showAct4Ending && recoveryState.kind === 'none' ? <ChapterNavigation placement="taskbar" onReplay={replayChapter} onReset={restartProgress} /> : undefined} /></div>
     </main>
-    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} onCancelJourneyIntro={() => setShowAct1JourneyIntro(false)} /></SceneTransitionLayer>}
+    {act1SceneOpen && <SceneTransitionLayer key={state.modules.scene.journeyStarted ? state.modules.scene.currentSceneId ?? 'journey' : 'journey'}><Act1SceneExperience state={state} onSceneTransition={runSceneTransition} onReturnToDesktop={returnFromAct1Scene} onCancelJourneyIntro={cancelDepartureIntro} /></SceneTransitionLayer>}
     {act2SceneStage !== null && !act3Active && (
       <SceneTransitionLayer key={`${act2SceneStage}-${act2SceneOpen ? 'open' : 'resume'}`}>
         <Act2Experience
