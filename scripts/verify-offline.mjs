@@ -382,6 +382,7 @@ async function investigate() {
   assert.ok(query('.browser-page').textContent.includes(pages.find((page) => page.id === 'PAGE_A1_E_002').headline), 'The route article should remain available while departure is pending');
   assert.equal(state().modules.scene.journeyStarted, false, 'Reading route material must not start the journey');
   const prepareDeparture = query('.desktop-task-card__prepare');
+  await textButton('整理线索 / 准备出发', '.desktop-task-card__prepare');
   await textButton('暂不出发，返回资料', '.journey-transition__cancel');
   assert.equal(state().game.phase, 'F');
   assert.equal(state().modules.scene.journeyStarted, false);
@@ -647,7 +648,7 @@ async function advanceAct2() {
   assert.notEqual(state().game.flags.FLAG_A2_SS_MATCH_CONFIRMED, true);
 
   const schoolMaterials = query('.t05-school__timeline');
-  assert.match(schoolMaterials.querySelector('h2').textContent, /学校记录/);
+  assert.match(query('.t05-school__timeline-disclosure > summary').textContent, /学校记录/);
   assert.match(schoolMaterials.textContent, /班主任的回忆/);
   assert.match(schoolMaterials.textContent, /历次成绩记录/);
   await textButton('班主任的回忆', '.t05-school__evidence-options button');

@@ -130,6 +130,21 @@ describe('T05 school exploration', () => {
     expect((document.activeElement as HTMLElement)?.textContent).toBe('听听老师回忆');
   });
 
+  it('keeps keyboard Tab navigation inside the school material modal', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
+    const hotspot = container.querySelector<HTMLButtonElement>('.t05-school__image-hotspot')!;
+    await act(async () => { hotspot.click(); });
+    const dialog = container.querySelector<HTMLElement>('.t05-school__dialog')!;
+    const close = dialog.querySelector<HTMLButtonElement>('[aria-label="关闭"]')!;
+    const logButton = [...dialog.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === '记下这组名次')!;
+    expect(document.activeElement).toBe(close);
+    await act(async () => { logButton.focus(); logButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })); });
+    expect(document.activeElement).toBe(close);
+    await act(async () => { close.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })); });
+    expect(document.activeElement).toBe(logButton);
+  });
+
   it('shows the approved rank original with an accessible transcript and keeps the read gate separate', async () => {
     await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
     await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
