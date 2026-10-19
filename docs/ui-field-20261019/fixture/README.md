@@ -2,12 +2,14 @@
 
 `memory-storage-seeds.json` 为隔离的 `localStorage` 键值表。每个场景均用 schema 13 `StateManager` 状态和内存存储构造；A3/A4 快照经现有 `startAct3()` / `startAct4()` 入口创建。文件只供测试注入，游戏运行时不会识别这些 fixture，也不读写玩家存档。
 
+两个 T06 场景从真实 T05 阅读路径构造：分别访问老师、历次成绩、感谢文字和双 S 记号，记下前两种来源并确认暂定时间线；随后才进入 T06。人物姓名场景再经 T06 控制器打开宣传资料和共用案例页。每个种子都经过新的 `StateManager` / schema 13 reload，并断言仍停在 qiming。
+
 | Scenario | 状态 | 用途 |
 | --- | --- | --- |
 | `act1-phase-f-waiting` | 第一幕 phase F，徒步尚未开始 | 确认徒步资料仍可读、出发由玩家决定 |
 | `act1-phase-f-resume` | 第一幕 phase F，当前场景已开始 | 确认刷新续玩不会自动显示待出发引言 |
 | `act2-t02-bridge` | 第二幕 T02 桥头 | 核查桥头资料与继续调查入口 |
-| `act2-t05-school` | 第二幕 T05 学校资料 | 核查渐进证据与两张新增纸本图片 |
+| `act2-t05-school` | 第二幕 T05 学校资料，保留第一幕已发现的双 S | 核查渐进证据、双 S 比对入口与两张新增纸本图片 |
 | `act3-resume-t00` | 第三幕合法 T00 入口 | 验证续玩优先请求 `shared + act3` |
 | `act4-resume-t01` | 第四幕合法 T01 入口 | 验证续玩优先请求 `shared + act4` |
 | `act1-news-search` | 第一幕已打开小 A 邮件、待搜索“XX县失踪” | 核查新闻前提示词与当前搜索路线 |

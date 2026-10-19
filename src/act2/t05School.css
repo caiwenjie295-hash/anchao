@@ -379,11 +379,13 @@
 .t05-school__timeline-disclosure > summary::-webkit-details-marker { display: none; }
 .t05-school__timeline-disclosure > summary::after { content: '＋'; margin-left: auto; color: #944d3f; font-size: 18px; }
 .t05-school__timeline-disclosure[open] > summary { border-bottom: 1px solid var(--school-border); }
+.t05-school__timeline-disclosure[open] > summary span { display: none; }
 .t05-school__timeline-disclosure[open] > summary::after { content: '−'; }
 .t05-school__timeline-disclosure > summary strong { font-weight: 650; }
 .t05-school__timeline-disclosure > summary span { color: var(--school-muted); font-size: 12px; }
 .t05-school__timeline { width: 100%; margin: 0; padding: 14px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .t05-school__timeline > h2 { margin: 0 0 5px; color: var(--school-ink); font-size: 17px; }
+.t05-school__timeline > h2 span { color: var(--school-muted); font: 500 12px/1.4 var(--font-ui, sans-serif); }
 .t05-school__timeline > p { color: var(--school-muted); }
 .t05-school__evidence-options button,
 .t05-school__inferences button { min-height: 48px; border-radius: 2px; }
@@ -409,6 +411,8 @@
 .t05-school__ranks { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .t05-school__ranks li { border-radius: 2px; color: var(--school-muted); background: var(--school-muted-surface); }
 .t05-school__ranks strong { color: var(--school-ink); }
+.investigation-shell--act2-field-notes .t05-school button { min-height: 44px; }
+.t05-school__handwritten-zoom input { box-sizing: border-box; height: 44px; margin: 0; }
 @media (max-width: 760px) {
   .t05-school { padding: 10px; }
   .t05-school__layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "room" "map"; }
