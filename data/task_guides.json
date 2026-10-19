@@ -71,13 +71,13 @@
           "label": "在浏览器搜索“XX县失踪”，打开并阅读旧报道",
           "completionFlag": "FLAG_A1_NEWS_FOUND",
           "appId": "browser",
-          "hint": "可以直接搜索“XX县失踪”，打开并阅读一篇旧报道。"
+          "hint": "核对报道中的失联时间和搜寻范围。"
         },
         {
           "label": "在浏览器搜索“鸡公岭徒步”，打开路线资料核对长度和难度",
           "completionFlag": "FLAG_A1_ROUTE_INFO_FOUND",
           "appId": "browser",
-          "hint": "搜索“鸡公岭徒步”，再打开路线资料核对长度和难度。"
+          "hint": "核对路线长度和难度后，再决定是否出发。"
         }
       ]
     },
@@ -148,13 +148,13 @@
       "completionFlags": [
         "FLAG_A2_OFFLINE_RESEARCH_NEEDED"
       ],
-      "summary": "在浏览器搜索“鸡公岭 补”；也可搜索第一幕照片里已发现的“双S 十字”。结果没有回答问题后，点击“去桥头问问当地人”继续",
+      "summary": "打开浏览器，搜索一次与鸡公岭旧址有关的词；可直接搜索“鸡公岭 补”，也可搜索第一幕照片里已发现的“双S 十字”。结果没有回答问题后，点击“去桥头问问当地人”继续",
       "steps": [
         {
           "label": "在浏览器搜索“鸡公岭 补”，查看地点与现场记号是否能对应",
           "completionFlag": "FLAG_A2_OFFLINE_RESEARCH_NEEDED",
           "appId": "browser",
-          "hint": "直接搜索“鸡公岭 补”；也可以搜索第一幕照片里已经发现的“双S 十字”。"
+          "hint": "核对地点、旧址记录与现场记号能否对应。"
         }
       ]
     },

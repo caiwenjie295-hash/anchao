@@ -81,7 +81,10 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [timelineFeedback, setTimelineFeedback] = useState('');
   const [pendingEvidenceFocusId, setPendingEvidenceFocusId] = useState<Act2SchoolEvidenceId | null>(null);
+  const [roomScrollRevision, setRoomScrollRevision] = useState(0);
   const dialogRef = useRef<HTMLElement>(null);
+  const roomHeadingRef = useRef<HTMLHeadingElement>(null);
+  const pendingRoomScrollRef = useRef(false);
   const previousTriggerRef = useRef<HTMLElement | null>(null);
   const evidenceButtonRefs = useRef(new Map<Act2SchoolEvidenceId, HTMLButtonElement>());
   const campusLocation = schoolCampusLocationById.get(campusLocationId)!;
@@ -98,6 +101,10 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   const selectedImage = assetLoader.get(selectedImageId)?.src;
   const rankRecordImage = assetLoader.get('IMG_A2_SCHOOL_RANK_RECORD_001')?.src;
   const qimingThanksImage = assetLoader.get('IMG_A2_SCHOOL_QIMING_THANKS_001')?.src;
+  const requestRoomScroll = () => {
+    pendingRoomScrollRef.current = true;
+    setRoomScrollRevision((revision) => revision + 1);
+  };
   const flags = state.game.flags;
   const schoolProgress = state.modules.act2Research.school;
   const isComplete = flags.FLAG_A2_SS_MATCH_CONFIRMED === true;
@@ -139,6 +146,13 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     setPendingHotspotId(null);
   }, [activeAreaId, manager, pendingHotspotId]);
   useEffect(() => {
+    if (!pendingRoomScrollRef.current) return;
+    pendingRoomScrollRef.current = false;
+    if (!window.matchMedia?.('(max-width: 760px)').matches) return;
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    roomHeadingRef.current?.scrollIntoView?.({ block: 'start', inline: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+  }, [activeAreaId, campusLocationId, mapLevel, roomScrollRevision]);
+  useEffect(() => {
     if (hotspotId && !comparisonOpen) dialogRef.current?.querySelector<HTMLElement>('button')?.focus();
     else if (!hotspotId && !comparisonOpen) previousTriggerRef.current?.focus();
   }, [hotspotId, comparisonOpen]);
@@ -170,6 +184,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     if (trigger) previousTriggerRef.current = trigger;
     const target = schoolCampusLocationById.get(id);
     if (!target) return;
+    requestRoomScroll();
     setCampusRouteFromId(campusLocationId);
     setCampusLocationId(id);
     setHotspotId(null);
@@ -177,6 +192,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     if (target.areaId) setAreaId(target.areaId);
   };
   const enterSchoolBuilding = () => {
+    requestRoomScroll();
     setMapLevel('building');
     setAreaId('AREA_A2_T05_CORRIDOR');
     setIndoorRouteFromId('AREA_A2_T05_CORRIDOR');
@@ -184,6 +200,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   };
   const selectSchoolArea = (nextAreaId: string, trigger?: HTMLElement) => {
     if (trigger) previousTriggerRef.current = trigger;
+    requestRoomScroll();
     if (nextAreaId === 'AREA_A2_T05_GATE') {
       selectCampusLocation('CAMPUS_SOUTH_GATE');
       return;
@@ -202,7 +219,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     else if (targetAreaId === 'AREA_A2_T05_NOTICE_BOARD') selectCampusLocation('CAMPUS_NOTICE');
     else selectSchoolArea(targetAreaId);
   };
-  const returnToCampusMap = () => { setMapLevel('campus'); setHotspotId(null); };
+  const returnToCampusMap = () => { requestRoomScroll(); setMapLevel('campus'); setHotspotId(null); };
 
   return <InvestigationShell
     ariaLabel="高中调查"
@@ -278,7 +295,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         </>}
       </aside>
       <main className="t05-school__room">
-        <h2>{mapLevel === 'building' ? area?.title ?? '教学楼' : campusLocation.title}</h2>
+        <h2 ref={roomHeadingRef}>{mapLevel === 'building' ? area?.title ?? '教学楼' : campusLocation.title}</h2>
         <div className={`t05-school__backdrop${selectedImage ? ' t05-school__backdrop--image' : ''}`} data-asset-id={selectedImageId}>
           {selectedImage
             ? <img src={selectedImage} alt={mapLevel === 'building' ? area?.title ?? '教学楼内景' : campusLocation.id === 'CAMPUS_BUILDING' ? '校园教学楼整体外景' : campusLocation.title} />
@@ -308,7 +325,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     <details className="t05-school__timeline-disclosure" open={timelineOpen} onToggle={(event) => setTimelineOpen(event.currentTarget.open)}>
       <summary><strong>学校记录与暂定时间线</strong><span>已读 {readEvidenceCount} / 3 · 已选不同来源 {selectedSourceCount} / 2</span></summary>
       <section className="t05-school__timeline" aria-label="休学前后对照">
-        <h2>分别记录材料，再判断能说明什么</h2>
+        <h2>分别记录材料，再判断能说明什么 <span>已读 {readEvidenceCount} / 3 · 已选不同来源 {selectedSourceCount} / 2</span></h2>
         <p>读过记录后，选择至少两种不同来源，再判断它们能说明什么。访问地点本身不计作证据。</p>
         <div className="t05-school__evidence-options">
           {timelineEvidence.map((item) => {
@@ -337,16 +354,16 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         <header><h2 id="t05-school-dialog-title">{hotspot.title}</h2><button type="button" aria-label="关闭" onClick={() => setHotspotId(null)}>关闭 ×</button></header>
         {hotspot.id === 'HOTSPOT_A2_T05_RANKS' ? <>
           <p>光荣榜上的手写纸本 · 数字越小，名次越好。</p>
-          <HandwrittenMaterial assetId="IMG_A2_SCHOOL_RANK_RECORD_001" source={rankRecordImage} caption="高三年级阶段成绩记录" alt="手写高三年级阶段成绩记录，姓名王澳，七次名次依次为600、400、300、130、88、53、20。" naturalWidth={1055} />
+          <HandwrittenMaterial key="IMG_A2_SCHOOL_RANK_RECORD_001" assetId="IMG_A2_SCHOOL_RANK_RECORD_001" source={rankRecordImage} caption="高三年级阶段成绩记录" alt="手写高三年级阶段成绩记录，姓名王澳，七次名次依次为600、400、300、130、88、53、20。" naturalWidth={1055} />
           <details className="t05-school__transcript"><summary>文字转录与无障碍名次表</summary>
             <p><strong>{hotspot.recordTitle}</strong> · 姓名：{hotspot.studentName}</p>
             <ol className="t05-school__ranks">{hotspot.ranks?.map((rank, index) => <li key={`${rank}-${index}`}>第 {index + 1} 次记录 <strong>{rank}</strong> 名</li>)}</ol>
           </details>
           <button type="button" onClick={() => { manager.readAct2SchoolRanks(); setTimelineOpen(true); }}>{flags.FLAG_A2_SCORE_CHANGE_KNOWN === true ? '已记下名次' : '记下这组名次'}</button>
-          {flags.FLAG_A2_SCORE_CHANGE_KNOWN === true && <button type="button" onClick={(event) => openHotspot('HOTSPOT_A2_T05_QIMING_TEXT', event.currentTarget)}>查看成绩表下方的感谢文字</button>}
+          {flags.FLAG_A2_SCORE_CHANGE_KNOWN === true && <button type="button" onClick={() => openHotspot('HOTSPOT_A2_T05_QIMING_TEXT')}>查看成绩表下方的感谢文字</button>}
         </> : hotspot.id === 'HOTSPOT_A2_T05_QIMING_TEXT' ? <>
           <p>成绩表下方的手写落款</p>
-          <HandwrittenMaterial assetId="IMG_A2_SCHOOL_QIMING_THANKS_001" source={qimingThanksImage} caption="成绩表下方的感谢文字" alt={`手写感谢文字：${hotspot.content}`} naturalWidth={1024} />
+          <HandwrittenMaterial key="IMG_A2_SCHOOL_QIMING_THANKS_001" assetId="IMG_A2_SCHOOL_QIMING_THANKS_001" source={qimingThanksImage} caption="成绩表下方的感谢文字" alt={`手写感谢文字：${hotspot.content}`} naturalWidth={1024} />
           <details className="t05-school__transcript" open><summary>文字转录</summary><p>{hotspot.content}</p></details>
           <button type="button" onClick={() => { manager.readAct2QimingTestimonial(); setTimelineOpen(true); }}>{flags.FLAG_A2_QIMING_NAME_FOUND === true ? '已记入笔记' : '记下这段文字'}</button>
         </>

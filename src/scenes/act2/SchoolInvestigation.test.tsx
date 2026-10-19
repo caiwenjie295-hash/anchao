@@ -1,6 +1,6 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
@@ -68,6 +68,29 @@ describe('T05 school exploration', () => {
     expect(manager.getState().game.flags.FLAG_A2_FIRE_HYDRANT_SEEN).toBe(true);
     expect(manager.getState().modules.notepad.autoEntryIds.some((id) => id.includes('HYDRANT'))).toBe(false);
     expect(container.querySelector('[aria-label="墙边的消防栓"]')?.tagName).not.toBe('BUTTON');
+  });
+
+  it('scrolls the newly selected place into view on mobile without forcing the initial view or moving focus', async () => {
+    const previousMatchMedia = window.matchMedia;
+    const media = vi.fn((query: string) => ({
+      matches: query === '(max-width: 760px)', media: query, onchange: null,
+      addListener: () => {}, removeListener: () => {}, addEventListener: () => {}, removeEventListener: () => {}, dispatchEvent: () => false,
+    } as MediaQueryList));
+    Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: media });
+    try {
+      await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+      const heading = container.querySelector<HTMLHeadingElement>('.t05-school__room h2')!;
+      const scroll = vi.fn();
+      heading.scrollIntoView = scroll;
+      expect(scroll).not.toHaveBeenCalled();
+      const destination = container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')!;
+      await act(async () => { destination.focus(); destination.click(); });
+      expect(scroll).toHaveBeenCalledWith({ block: 'start', inline: 'nearest', behavior: 'smooth' });
+      expect(document.activeElement).toBe(destination);
+    } finally {
+      if (previousMatchMedia) Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: previousMatchMedia });
+      else delete (window as unknown as { matchMedia?: unknown }).matchMedia;
+    }
   });
 
   it('keeps the building as the outdoor route origin after opening a classroom from a timeline material shortcut', async () => {
@@ -165,6 +188,24 @@ describe('T05 school exploration', () => {
     expect(container.querySelector('.t05-school__handwritten-open')).toBeNull();
     expect(container.querySelector('.t05-school__transcript')?.textContent).toContain('600');
     expect(container.querySelector('.t05-school__transcript')?.textContent).toContain('20');
+  });
+
+  it('resets the failed-image fallback when switching from the rank sheet to the thanks note', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    await act(async () => { container.querySelector<HTMLButtonElement>('[data-location-id="CAMPUS_HONOR"]')?.click(); });
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看历次名次')?.click(); });
+    const rankImage = container.querySelector<HTMLImageElement>('[data-asset-id="IMG_A2_SCHOOL_RANK_RECORD_001"] .t05-school__handwritten-open img');
+    await act(async () => { rankImage?.dispatchEvent(new Event('error')); });
+    expect(container.querySelector('[data-asset-id="IMG_A2_SCHOOL_RANK_RECORD_001"] .t05-school__handwritten-fallback')).not.toBeNull();
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '记下这组名次')?.click(); });
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '查看成绩表下方的感谢文字')?.click(); });
+    const thanks = container.querySelector<HTMLImageElement>('[data-asset-id="IMG_A2_SCHOOL_QIMING_THANKS_001"] .t05-school__handwritten-open img');
+    expect(thanks?.getAttribute('src')).toContain('ui-field-20261019/IMG_A2_SCHOOL_QIMING_THANKS_001.webp');
+    expect(container.querySelector('[data-asset-id="IMG_A2_SCHOOL_QIMING_THANKS_001"] .t05-school__handwritten-fallback')).toBeNull();
+    await act(async () => { [...container.querySelectorAll('button')].find((button) => button.textContent === '记下这段文字')?.click(); });
+    await act(async () => { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(container.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.activeElement).toBe(container.querySelector('.t05-school__image-hotspot'));
   });
 
   it('keeps a compact daily-memory entry and opens evidence choices only on request', async () => {

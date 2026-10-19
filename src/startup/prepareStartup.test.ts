@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { prepareStartup } from './prepareStartup';
 import { sha256, type StartupGroup, type StartupManifest } from './preload';
-import { stateManager } from '../core/stateManager';
+import { StateManager, stateManager } from '../core/stateManager';
 import { createDefaultState } from '../core/defaultState';
+import { EventBus } from '../core/eventBus';
 import type { AppState } from '../core/types';
 import fixtureSeeds from '../../docs/ui-field-20261019/fixture/memory-storage-seeds.json';
 
@@ -48,6 +49,14 @@ function fixtureState(scenario: keyof typeof fixtureSeeds.scenarios): AppState {
   return JSON.parse(fixtureSeeds.scenarios[scenario]['anchao.save.v1']) as AppState;
 }
 
+class MemoryStorage {
+  private readonly values: Map<string, string>;
+  constructor(entries: Record<string, string>) { this.values = new Map(Object.entries(entries)); }
+  getItem(key: string) { return this.values.get(key) ?? null; }
+  setItem(key: string, value: string) { this.values.set(key, value); }
+  removeItem(key: string) { this.values.delete(key); }
+}
+
 function installGroupedFetcher(fixture: Awaited<ReturnType<typeof groupedManifest>>, requested: string[]) {
   vi.stubGlobal('fetch', vi.fn(async (url: string) => {
     if (url.endsWith('anchao-preload-manifest.json')) return new Response(JSON.stringify(fixture.manifest));
@@ -60,6 +69,36 @@ function installGroupedFetcher(fixture: Awaited<ReturnType<typeof groupedManifes
 }
 
 describe('startup gate', () => {
+  it('reloads the T05 field-notes fixture with the first-act double-S discovery intact', () => {
+    const manager = new StateManager(new EventBus(), undefined, new MemoryStorage(fixtureSeeds.scenarios['act2-t05-school']));
+    const restored = manager.getState();
+    expect(restored.schemaVersion).toBe(13);
+    expect(restored.game.phase).toBe('A2_T05');
+    expect(restored.modules.act2Research.stage).toBe('school');
+    expect(restored.game.flags.FLAG_A1_SS_FOUND).toBe(true);
+  });
+
+  it.each(['act2-t06-institution-search', 'act2-t06-people-known'] as const)('reloads the legal %s schema-13 fixture into qiming', (scenario) => {
+    const saved = fixtureSeeds.scenarios[scenario];
+    const manager = new StateManager(new EventBus(), undefined, new MemoryStorage(saved));
+    const restored = manager.getState();
+    expect(restored.schemaVersion).toBe(13);
+    expect(restored.modules.act2Research.stage).toBe('qiming');
+    expect(restored.game.phase).toBe('A2_T06');
+    expect(restored.game.flags.FLAG_A2_SS_MATCH_CONFIRMED).toBe(true);
+    expect(restored.modules.act2Research.school.visitedAreaIds).toEqual([
+      'AREA_A2_T05_TEACHER_OFFICE', 'AREA_A2_T05_HONOR_ROLL', 'AREA_A2_T05_XIAOA_CLASSROOM',
+    ]);
+    expect(restored.modules.act2Research.school.inspectedHotspotIds).toEqual([
+      'HOTSPOT_A2_T05_TEACHER', 'HOTSPOT_A2_T05_RANKS', 'HOTSPOT_A2_T05_QIMING_TEXT', 'HOTSPOT_A2_T05_SCHOLAR_NOTE',
+    ]);
+    if (scenario === 'act2-t06-people-known') {
+      expect(restored.modules.browser.visitedPageIds).toEqual(['PAGE_A2_T06_001', 'PAGE_A2_T06_004']);
+      expect(restored.game.flags.FLAG_A2_QIMING_OFFICIAL_FOUND).toBe(true);
+      expect(restored.game.flags.FLAG_A2_QIMING_TESTIMONIALS_READ).toBe(true);
+    }
+  });
+
   it('enters after shared plus acts one and two only; unavailable later-act resources stay out of the first batch', async () => {
     shell(false);
     const fixture = await groupedManifest();

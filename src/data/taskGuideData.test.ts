@@ -39,13 +39,12 @@ describe('desktop task guides', () => {
   it('shows a usable query for the active first-act browser step', () => {
     const newsSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true }, 'C'));
     expect(newsSearch?.id).toBe('GUIDE_A1_003');
-    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('XX县失踪');
-    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('打开并阅读');
+    expect(newsSearch?.steps.find((step) => step.current)?.label).toContain('XX县失踪');
+    expect(newsSearch?.steps.find((step) => step.current)?.hint).toContain('失联时间');
 
     const routeSearch = getCurrentTaskGuide(withFlags({ FLAG_A1_MAIL_XIAOA_OPENED: true, FLAG_A1_NEWS_FOUND: true }, 'D'));
     expect(routeSearch?.id).toBe('GUIDE_A1_003');
     expect(routeSearch?.steps.find((step) => step.current)?.label).toContain('鸡公岭徒步');
-    expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('鸡公岭徒步');
     expect(routeSearch?.steps.find((step) => step.current)?.hint).toContain('长度和难度');
   });
 
@@ -79,7 +78,7 @@ describe('act2 desktop task guides', () => {
     expect(guide).toMatchObject({ id: 'GUIDE_A2_T01_001', actionAppId: 'browser', totalCount: 1 });
     expect(guide?.summary).toContain('鸡公岭 补');
     expect(guide?.steps[0]?.label).toContain('鸡公岭 补');
-    expect(guide?.steps[0]?.hint).toContain('双S 十字');
+    expect(guide?.steps[0]?.hint).toContain('旧址记录');
     const afterOne = getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_OFFLINE_RESEARCH_NEEDED: true }));
     expect(afterOne).toBeNull();
     expect(getCurrentTaskGuide(act2State({ FLAG_A1_COMPLETE: true, FLAG_A2_WEB_SEARCH_FAILED: true }))).not.toBeNull();
