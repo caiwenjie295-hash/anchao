@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { prepareStartup } from './prepareStartup';
-import { sha256, type StartupManifest } from './preload';
+import { sha256, type StartupGroup, type StartupManifest } from './preload';
 import { stateManager } from '../core/stateManager';
 import { createDefaultState } from '../core/defaultState';
 import type { AppState } from '../core/types';
@@ -25,18 +25,16 @@ afterEach(() => {
 });
 
 async function groupedManifest() {
-  const definitions = [
-    ['shared', ['shared']], ['act1', ['act1']], ['act2', ['act2']], ['act3', ['act3']], ['act4', ['act4']],
-  ] as const;
+  const definitions: StartupGroup[] = ['shared', 'act1', 'act2', 'act3', 'act4'];
   const bodies = new Map<string, Uint8Array>();
-  const resources = await Promise.all(definitions.map(async ([group, groups]) => {
+  const resources = await Promise.all(definitions.map(async (group) => {
     const path = `assets/${group}.webp`;
     const body = new TextEncoder().encode(`resource:${group}`);
     bodies.set(path, body);
-    return { path, bytes: body.byteLength, sha256: await sha256(body), groups };
+    return { path, bytes: body.byteLength, sha256: await sha256(body), groups: [group] };
   }));
-  const groupSummaries = Object.fromEntries(['shared', 'act1', 'act2', 'act3', 'act4'].map((group) => {
-    const resource = resources.find((item) => item.groups.includes(group as (typeof resources)[number]['groups'][number]))!;
+  const groupSummaries = Object.fromEntries(definitions.map((group) => {
+    const resource = resources.find((item) => item.groups.includes(group))!;
     return [group, { resources: 1, totalBytes: resource.bytes }];
   })) as StartupManifest['groups'];
   const manifest: StartupManifest = {
