@@ -38,6 +38,7 @@ Luna允许（路径皆相对本worktree）：
 - `src/data/act3Presentation.ts`及对应测试（可新增同名`.test.ts`）。
 - `src/scenes/act4/Act4NarrativeReader.tsx`、`Act4ReaderBehavior.test.tsx`、`reader/Act4ReaderStoryBody.tsx`及对应`.test.tsx`、`reader/Act4ReaderCover.tsx`、`reader/Act4ReaderPager.tsx`、`reader/readerVisibility.ts`及`.test.ts`、`reader/readerModel.ts`、`reader/useAct4ReaderSession.ts`及`.test.tsx`。
 - `src/data/narrative/act4Presentation.ts`及`.test.ts`。
+- `src/scenes/act4/reader/layoutPreferences.ts`与新增`layoutPreferences.test.ts`：仅当前560字分页到新表现布局的UI位置迁移；可提升独立reader-layout表现版本，保持游戏schema13/StateManager/故事Flags和原公共API，不伪造已读或动作。
 - `src/act2/t05School.css`、`src/act3/act3Scene.css`、`src/act4/act4.css`，仅本批新增状态/入口样式，避免全局改版。
 - 新增任务特定测试`src/data/firstPlayCopy.test.ts`。
 - `docs/ux-firstplay-20261020/implementation.md`和`validation.md`（实现/实际测试/未实施核查说明）。
