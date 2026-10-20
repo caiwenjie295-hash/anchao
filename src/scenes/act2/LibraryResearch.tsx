@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { assetLoader } from '../../core/assetLoader';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
@@ -53,6 +53,9 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
   const flags = state.game.flags;
   const [zoom, setZoom] = useState(LIBRARY_MIN_ZOOM);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(() => library.visitedSectionIds.includes(libraryCorrectSectionId) ? libraryCorrectSectionId : null);
+  /** P09：页角翻页短动效方向；底部分页器仍可用，页缘为主热区。 */
+  const [pageTurnDir, setPageTurnDir] = useState<'prev' | 'next' | null>(null);
+  const pageTurnTimerRef = useRef<number | null>(null);
 
   const enteredFlag = flags[libraryFlagIds.entered] === true;
   const gazetteFlag = flags[libraryFlagIds.gazetteFound] === true;
@@ -71,6 +74,10 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
     if (!targetPageActive || bumuzhiFlag) return;
     manager.readAct2GazetteTargetPage();
   }, [manager, targetPageActive, bumuzhiFlag]);
+
+  useEffect(() => () => {
+    if (pageTurnTimerRef.current !== null) window.clearTimeout(pageTurnTimerRef.current);
+  }, []);
 
   if (stage !== 'library') return null;
   const sceneImage = shelfImageSrc ?? assetLoader.get(librarySceneCopy.placeholderAssetId)?.src;
@@ -96,6 +103,27 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
   const markedKeywordIds = library.markedKeywordIds;
   const bookmarked = currentPage ? library.bookmarkedPageIds.includes(currentPage.id) : false;
   const excerpted = library.excerptedEntryIds.includes(libraryExcerpt.entryId);
+
+  const playPageTurnMotion = (dir: 'prev' | 'next') => {
+    if (pageTurnTimerRef.current !== null) window.clearTimeout(pageTurnTimerRef.current);
+    setPageTurnDir(dir);
+    pageTurnTimerRef.current = window.setTimeout(() => {
+      setPageTurnDir(null);
+      pageTurnTimerRef.current = null;
+    }, 300);
+  };
+
+  const goPrevPage = () => {
+    if (!prevPage) return;
+    playPageTurnMotion('prev');
+    manager.openGazettePage(prevPage.id);
+  };
+
+  const goNextPage = () => {
+    if (!nextPage) return;
+    playPageTurnMotion('next');
+    manager.openGazettePage(nextPage.id);
+  };
 
   const visitSection = (sectionId: string) => {
     setActiveSectionId(sectionId);
@@ -233,7 +261,11 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
                 })}
               </ol>
 
-              <article className="act2-library__page" data-page-id={currentPage.id} data-volume-id={currentPage.volumeId}>
+              <article
+                className={`act2-library__page${pageTurnDir === 'next' ? ' act2-library__page--turning-next' : ''}${pageTurnDir === 'prev' ? ' act2-library__page--turning-prev' : ''}`}
+                data-page-id={currentPage.id}
+                data-volume-id={currentPage.volumeId}
+              >
                 <header className="act2-library__page-head">
                   <h3>{currentPage.heading}</h3>
                   <p className="act2-library__page-leaf">{currentVolume?.title} · {currentPage.leafLabel}</p>
@@ -244,11 +276,30 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
                     <p key={`${currentPage.id}-p${index + 1}`}>{paragraph}</p>
                   ))}
                 </div>
+                <button
+                  type="button"
+                  className="act2-library__page-turn act2-library__page-turn--prev"
+                  aria-label="翻到上一页（页缘）"
+                  disabled={!prevPage}
+                  onClick={goPrevPage}
+                >
+                  <span className="act2-library__page-turn-corner" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="act2-library__page-turn act2-library__page-turn--next"
+                  aria-label="翻到下一页（页缘）"
+                  disabled={!nextPage}
+                  onClick={goNextPage}
+                >
+                  <span className="act2-library__page-turn-corner" aria-hidden="true" />
+                </button>
               </article>
 
-              {currentPage.id === libraryTargetPageId && <aside className="act2-library__excerpt" aria-label="地方志摘录">
+              {currentPage.id === libraryTargetPageId && <aside className="act2-library__excerpt" aria-label="地方志摘录" data-excerpt-state={excerpted ? 'saved' : undefined}>
                 <div><h3>{libraryExcerpt.title}</h3><p>读完这一页后，可以把这段现有摘录收入调查笔记。</p></div>
                 <blockquote>{libraryExcerpt.content}</blockquote>
+                {excerpted ? <p className="act2-library__excerpt-confirm" role="status">摘录已收入调查笔记。</p> : null}
                 <button type="button" className="act2-library__excerpt-button" aria-pressed={excerpted} disabled={excerpted} onClick={() => manager.excerptGazetteEntry(libraryExcerpt.entryId)}>{excerpted ? '已收入调查笔记' : '摘录到调查笔记'}</button>
               </aside>}
 
@@ -258,7 +309,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
                     type="button"
                     className="act2-library__prev"
                     disabled={!prevPage}
-                    onClick={() => prevPage && manager.openGazettePage(prevPage.id)}
+                    onClick={goPrevPage}
                   >
                     上一页
                   </button>
@@ -266,7 +317,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
                     type="button"
                     className="act2-library__next"
                     disabled={!nextPage}
-                    onClick={() => nextPage && manager.openGazettePage(nextPage.id)}
+                    onClick={goNextPage}
                   >
                     下一页
                   </button>

@@ -84,7 +84,7 @@ export function Act2ShelfMap({
           {entries.map((entry, index) => <button
             key={entry.id}
             type="button"
-            className={`act2-shelf-map__hotspot${selectedId === entry.id ? ' is-selected' : ''}`}
+            className={`act2-shelf-map__hotspot${disabled ? ' act2-shelf-map__hotspot--caption' : ''}${!disabled && selectedId === entry.id ? ' is-selected' : ''}`}
             style={normalizedRectToPercentStyle(entry.rect)}
             aria-label={disabled ? `书架第 ${index + 1} 区域。${lockedHint}` : entry.label}
             aria-pressed={!disabled && selectedId === entry.id}

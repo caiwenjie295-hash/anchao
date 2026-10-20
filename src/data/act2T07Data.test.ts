@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import flagsDocument from '../../data/flags.json';
 import notesDocument from '../../data/notes.json';
-import { ACT2_T07_FRAME_IDS, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, act2T07, act2T06RecapPages, formatClock, isFrameCapturableAt, keyFrameAt, keyFrameById, segmentAt, validateAct2T07Data, visualFrameAt } from './act2T07Data';
+import { ACT2_T07_FRAME_IDS, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, act2T07, act2T06RecapPages, formatClock, isFrameCapturableAt, keyFrameAt, keyFrameById, segmentAt, validateAct2T07Data, visualFrameAt, resolveT07MismatchNote } from './act2T07Data';
 
 const flags = (flagsDocument as { items: { id: string; defaultValue: boolean }[] }).items;
 const notes = (notesDocument as { items: { id: string }[] }).items;
@@ -58,7 +58,7 @@ describe('T07 promotion data', () => {
     const walkingFrame = act2T07.video.keyFrames.find((frame) => frame.id === 'FRAME_A2_T07_002');
     expect(walk?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
     expect(turn?.imageId).toBe('IMG_A2_T07_004');
-    expect(walkingFrame).toMatchObject({ imageId: 'IMG_A2_T07_TRAIL_WALK_001', zoomImageId: 'IMG_A2_T07_TRAIL_WALK_001', startMs: 4000, endMs: 6499, supportsExteriorMatch: false });
+    expect(walkingFrame).toMatchObject({ imageId: 'IMG_A2_T07_TRAIL_WALK_001', zoomImageId: 'IMG_A2_T07_TRAIL_WALK_001', startMs: 4000, endMs: 6499, supportsExteriorMatch: false, frameKind: 'trail', muteLabel: '树林·暂不可外景核对' });
     expect(keyFrameAt(6800)?.id).toBe('FRAME_A2_T07_001');
     expect(visualFrameAt(6500)?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
     expect(visualFrameAt(6800)?.imageId).toBe('IMG_A2_T07_005');
@@ -67,5 +67,16 @@ describe('T07 promotion data', () => {
   it('reuses existing T06 pages as read-only recap without new progress', () => {
     expect(act2T06RecapPages.length).toBeGreaterThan(0);
     for (const page of act2T06RecapPages) expect(page.id.startsWith('PAGE_A2_T06_')).toBe(true);
+  });
+
+  it('resolves typed mismatch notes by frame kind without changing matchFeatureId', () => {
+    expect(act2T07.comparison.matchFeatureId).toBe('square-opening');
+    const trail = keyFrameById.get('FRAME_A2_T07_002')!;
+    const interview = keyFrameById.get('FRAME_A2_T07_003')!;
+    const temple = keyFrameById.get('FRAME_A2_T07_001')!;
+    expect(resolveT07MismatchNote(trail, 'square-opening')).toBe(act2T07.comparison.mismatchNotesByKind.trail);
+    expect(resolveT07MismatchNote(interview, 'square-opening')).toBe(act2T07.comparison.mismatchNotesByKind.interview);
+    expect(resolveT07MismatchNote(temple, 'mountain-road')).toBe(act2T07.comparison.mismatchNotesByKind.templeRoad);
+    expect(resolveT07MismatchNote(temple, 'interview-background')).toBe(act2T07.comparison.mismatchNotesByKind.templeOther);
   });
 });

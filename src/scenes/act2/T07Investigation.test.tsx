@@ -246,7 +246,8 @@ describe('T07 promotion investigation', () => {
     await loadPendingImages();
     await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
-    expect(container.textContent).toContain(act2T07.comparison.mismatchNote);
+    expect(container.textContent).toContain(act2T07.comparison.mismatchNotesByKind.trail);
+    expect(container.querySelector('.t07-shell--mismatch-status, .investigation-shell.t07-shell--mismatch-status')).not.toBeNull();
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
   });
 

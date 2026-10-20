@@ -209,29 +209,57 @@
 .investigation-shell--act2-spacious { overflow: hidden; }
 .investigation-shell--act2-spacious .investigation-shell__scene { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 
-/* T02/T05 use the light field-notes palette while other acts keep their existing shell themes. */
+/* P13 — T02 field-notes: warm paper / tea ONLY (kill slate + exploration sage #315b45). */
 .investigation-shell--act2-field-notes {
-  --ui-page: #eae8e1;
+  --ui-page: #e6e1d6;
   --ui-surface: #f8f6f0;
-  --ui-surface-muted: #f0eee8;
-  --ui-text: #282c2c;
-  --ui-text-muted: #646762;
-  --ui-border: #c7c8bf;
-  --ui-interactive-border: #90938c;
-  --ui-accent: #718087;
-  --ui-accent-soft: #e7eaeb;
-  --ui-success: #687a6e;
+  --ui-surface-muted: #ebe6dc;
+  --ui-text: #2a2926;
+  --ui-text-muted: #5a564e;
+  --ui-border: #c9c2b4;
+  --ui-interactive-border: #a89878;
+  --ui-accent: #8a6a3b;
+  --ui-accent-soft: #f0e6d4;
+  --ui-success: #8a6a3b;
 }
-.investigation-shell--act2-field-notes .investigation-shell__header { background: #f8f6f0; }
+.investigation-shell--act2-field-notes,
+.investigation-shell--act2-field-notes .investigation-shell__scene { background: #e6e1d6; }
+.investigation-shell--act2-field-notes .investigation-shell__header { background: #f8f6f0; border-color: #c9c2b4; }
 .investigation-shell--act2-field-notes .investigation-shell__goal--on-demand,
-.investigation-shell--act2-field-notes .investigation-shell__operations { background: #f8f6f0; }
-.investigation-shell--act2-field-notes .investigation-shell__scene { background: #eae8e1; }
-.investigation-shell--act2-field-notes .investigation-shell__goal-details > summary::after { color: #718087; }
-.investigation-shell--act2-field-notes .investigation-shell__goal-content p { color: #353938; }
-.investigation-shell--act2-field-notes .investigation-shell__goal-content strong { color: #515652; }
+.investigation-shell--act2-field-notes .investigation-shell__operations { background: #f8f6f0; border-color: #c9c2b4; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-details > summary::after,
+.investigation-shell--act2-field-notes .investigation-shell__place span,
+.investigation-shell--act2-field-notes .investigation-progress-trigger { color: #8a6a3b; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-content p { color: #3a342c; }
+.investigation-shell--act2-field-notes .investigation-shell__goal-content strong { color: #5a564e; }
+/* Primary CTA incl. 去县图书馆 — tea, also when stacked with --exploration */
 .investigation-shell--act2-field-notes .investigation-navigation__action--ready,
-.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"] { border-color: #718087; background: #718087; }
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"],
+.investigation-shell--exploration.investigation-shell--act2-field-notes .investigation-navigation__action--ready,
+.investigation-shell--exploration.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"] {
+  background: #8a6a3b;
+  border-color: #6e542e;
+  color: #f7f5ef;
+}
 .investigation-shell--act2-field-notes .investigation-navigation__action--ready:hover:not(:disabled),
-.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled) { border-color: #5d6d73; background: #5d6d73; }
-.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"] { border-color: #90938c; color: #353938; background: #f8f6f0; }
-.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled) { border-color: #718087; color: #282c2c; background: #e7eaeb; }
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled),
+.investigation-shell--exploration.investigation-shell--act2-field-notes .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell--exploration.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled) {
+  background: #9a7a48;
+  border-color: #6e542e;
+  color: #fff;
+}
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"] {
+  border-color: #a89878;
+  color: #3a342c;
+  background: #f8f6f0;
+}
+.investigation-shell--act2-field-notes .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="secondary"]:hover:not(:disabled) {
+  border-color: #8a6a3b;
+  color: #2a2926;
+  background: #f0e6d4;
+}
+.investigation-shell--act2-field-notes :focus-visible {
+  outline: 2px solid #8a6a3b;
+  outline-offset: 2px;
+}

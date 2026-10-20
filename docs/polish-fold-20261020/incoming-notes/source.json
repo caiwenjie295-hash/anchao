@@ -1,0 +1,71 @@
+{
+  "zip": "/Volumes/IOS开发/解密网页游戏/anchao-polish-fold-delta-20261020.zip",
+  "zipSha256": "5207df6f22250ff3260adbe638cb8d1eafe877a7c4ef248c3f9d4092b0d7fd88",
+  "files": [
+    {
+      "path": "data/act2_t07.json",
+      "bytes": 12674,
+      "sha256": "de37b1c34c3c7bfc8ebd421bb430b1420034cc48406b5b71a16ad42340f6976b"
+    },
+    {
+      "path": "src/act2/act2ShelfMap.css",
+      "bytes": 6010,
+      "sha256": "590da8a06e4a901de9b48b5ba080c3a13b375a9e0a6a920dc658d9abb76a53d0"
+    },
+    {
+      "path": "src/act2/t02Bridge.css",
+      "bytes": 14664,
+      "sha256": "079d64a8db7e5b02dffb059073ae2a961684e55fae8477400791299bdd20deca"
+    },
+    {
+      "path": "src/act2/t03Library.css",
+      "bytes": 17978,
+      "sha256": "bb9048107d376e7cd24c40db15250978f2ae2a855a90c470aa39bb64d23f9c80"
+    },
+    {
+      "path": "src/act2/t07Finale.css",
+      "bytes": 32414,
+      "sha256": "b7aad23a2aa95acbc7a71c388ec07cf4e209b07405da5d3dfd1e8899131891b8"
+    },
+    {
+      "path": "src/components/investigation/investigation.css",
+      "bytes": 19667,
+      "sha256": "498ad5d7f605699e6e94af50b717828d3827d9f3d1d483658cc04292dc0b6fb6"
+    },
+    {
+      "path": "src/data/act2T07Data.test.ts",
+      "bytes": 5463,
+      "sha256": "e79e037647545e527dabe9909cd9f6eb069958d2698240a4450f2245d692b94d"
+    },
+    {
+      "path": "src/data/act2T07Data.ts",
+      "bytes": 14140,
+      "sha256": "b04a5b1ed2f0eaaa3ffcdfd26e59013850b68a23e189560e1c7c0c11e7ebd2c6"
+    },
+    {
+      "path": "src/scenes/act2/Act2ShelfMap.tsx",
+      "bytes": 4797,
+      "sha256": "e2b255057e1b3c81856d082de71245c56ff0e5ebb62041120df08ff26d2105f1"
+    },
+    {
+      "path": "src/scenes/act2/LibraryResearch.tsx",
+      "bytes": 19502,
+      "sha256": "973705c716136caad304a69f9dbe70692ec31d094d21efdd9bfc8d258210694f"
+    },
+    {
+      "path": "src/scenes/act2/T07Investigation.test.tsx",
+      "bytes": 18619,
+      "sha256": "2af3a2322377bdeef484714bf681a5f6fbc7a37ce5ec5da6c8b45f835bd767f0"
+    },
+    {
+      "path": "src/scenes/act2/T07Investigation.tsx",
+      "bytes": 40634,
+      "sha256": "e206ced82bcdd616cc416fe7b003936c2c7d3525bd8325161d15ced6b66b5823"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 81460,
+      "sha256": "69364e33741204a5360b6f2d8febaac032d5bf896b7c754c9a293987ae8d7e2b"
+    }
+  ]
+}
