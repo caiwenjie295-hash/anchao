@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
-import { LIBRARY_FORBIDDEN_TERMS, libraryTargetPageId } from '../../data/act2LibraryData';
+import { LIBRARY_FORBIDDEN_TERMS, libraryCorrectSectionId, libraryPagesByVolumeId, libraryTargetPageId, libraryVolumes } from '../../data/act2LibraryData';
 import { LibraryResearch } from './LibraryResearch';
 
 const CORRECT_SECTION = 'SECTION_A2_T03_009';
@@ -67,6 +67,23 @@ describe('LibraryResearch (act2 T03)', () => {
     expect(flags().FLAG_A2_LIBRARY_ENTERED).toBe(true);
     // 幂等：再次渲染不改变其它状态。
     expect(libraryState().visitedSectionIds).toEqual([]);
+  });
+
+  it('matches one-page and multi-page reader guidance to the current page controls', async () => {
+    await setup();
+    await openCatalog();
+    await click(pick(`[data-section-id="${libraryCorrectSectionId}"]`));
+    const onePageVolume = libraryVolumes.find((volume) => (libraryPagesByVolumeId.get(volume.id)?.length ?? 0) === 1);
+    expect(onePageVolume).toBeDefined();
+    await click(pick(`[data-shelf-entry-id="${onePageVolume!.id}"]`));
+    expect(pick('.act2-library__reader-instruction')?.textContent).toBe('当前卷册只有一页，已经读到末页。可以回到目录或选择另一册。');
+    expect(pick<HTMLButtonElement>('.act2-library__prev')?.disabled).toBe(true);
+    expect(pick<HTMLButtonElement>('.act2-library__next')?.disabled).toBe(true);
+
+    await reachTargetPage();
+    expect(pick('.act2-library__reader-instruction')?.textContent).toContain('当前卷册共 3 页，正在阅读第 3 页，已到末页');
+    expect(pick<HTMLButtonElement>('.act2-library__prev')?.disabled).toBe(false);
+    expect(pick<HTMLButtonElement>('.act2-library__next')?.disabled).toBe(true);
   });
 
   it('shows only the ordinary catalog note for a wrong section without advancing', async () => {

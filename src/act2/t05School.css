@@ -383,6 +383,13 @@
 .t05-school__timeline-disclosure[open] > summary::after { content: '−'; }
 .t05-school__timeline-disclosure > summary strong { font-weight: 650; }
 .t05-school__timeline-disclosure > summary span { color: var(--school-muted); font-size: 12px; }
+.t05-school__symbol-progress { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 12px 14px; border: 1px solid var(--school-border); border-left: 4px solid #9a7450; background: var(--school-surface); color: var(--school-ink); }
+.t05-school__symbol-progress[data-match-state="complete"] { border-left-color: #4d7258; }
+.t05-school__symbol-progress > div { min-width: min(100%, 260px); flex: 1 1 300px; }
+.t05-school__symbol-progress strong { display: block; margin-bottom: 3px; }
+.t05-school__symbol-progress p { margin: 0; color: var(--school-muted); line-height: 1.5; }
+.t05-school__symbol-progress button,.t05-school__symbol-state { min-height: 40px; padding: 8px 12px; border: 1px solid var(--school-border); border-radius: 2px; color: var(--school-ink); background: #fff; }
+.t05-school__symbol-state { display: inline-flex; align-items: center; color: #31563b; font-weight: 650; background: #edf2ed; }
 .t05-school__timeline { width: 100%; margin: 0; padding: 14px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .t05-school__timeline > h2 { margin: 0 0 5px; color: var(--school-ink); font-size: 17px; }
 .t05-school__timeline > h2 span { color: var(--school-muted); font: 500 12px/1.4 var(--font-ui, sans-serif); }

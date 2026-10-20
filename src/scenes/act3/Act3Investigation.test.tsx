@@ -62,8 +62,40 @@ describe('Third-act investigation interface', () => {
       const emptyRoom = container.querySelector('[data-clue-id="CLUE_A3_T04_EMPTY_ROOM"]')
         ?? [...container.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent?.includes('看看屋内'));
       expect(emptyRoom?.textContent).toContain('看看屋内');
-      expect(container.querySelector('[data-action-id="A3_ROUTE_T04_002_003"]')?.textContent).toContain('继续探索');
+      expect(container.querySelector('[data-action-id="A3_ROUTE_T04_002_003"]')?.textContent).toContain('下一张现场照片');
+      expect(container.querySelector('[data-action-id="A3_ROUTE_T04_002_003"]')?.textContent).not.toContain('结束本阶段');
       expect(container.querySelector('[data-action-id="A3_ROUTE_T04_002_003"]')?.textContent).not.toContain('档案室');
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
+  it('separates this stage’s required observations from hotspots on the current photo', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = 'A3_T02';
+    state.modules.act3.stage = 'T02';
+    state.modules.act3.currentLensId = 'LENS_A3_T02_001';
+    state.modules.act3.inspectedClueIds = ['CLUE_A3_T02_CORRIDOR'];
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      const progress = container.querySelector('.act3-investigation__observation-progress');
+      expect(progress?.textContent).toContain('本阶段必需观察0 / 2');
+      expect(progress?.textContent).toContain('当前照片已观察1 / 1');
+      expect(progress?.querySelector('[data-observation-state="observed"]')?.textContent).toContain('已观察');
+      const recover = progress?.querySelector<HTMLButtonElement>('.act3-investigation__missing-required button');
+      expect(recover?.textContent).toBe('前往并查看');
+      expect(container.querySelector('[data-action-id="A3_ROUTE_T02_001_002"]')?.textContent).toContain('下一张现场照片');
+      await act(async () => { recover?.click(); });
+      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T02_003');
+      expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T02_BLACKBOARD');
+      expect(container.querySelector('[role="dialog"] h2')?.textContent).toBeTruthy();
+      expect(container.querySelector('[data-action-id="A3_T02_LEAVE_AND_CONTINUE"]')?.textContent).toContain('结束本阶段');
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();
@@ -115,7 +147,7 @@ describe('Third-act investigation interface', () => {
         await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
         const initialDom = container.textContent ?? '';
         for (const word of scenario.forbidden) expect(initialDom).not.toContain(word);
-        expect(container.querySelector(`[data-action-id="${scenario.blockedRoute}"]`)?.textContent).toContain('继续探索');
+        expect(container.querySelector(`[data-action-id="${scenario.blockedRoute}"]`)?.textContent).toContain('下一张现场照片');
         expect(container.querySelector(`[data-action-id="${scenario.blockedRoute}"]`)?.getAttribute('data-action-state')).toBe('blocked');
 
         const route = container.querySelector<HTMLButtonElement>(`[data-action-id="${scenario.blockedRoute}"]`)!;
@@ -223,7 +255,7 @@ describe('Third-act investigation interface', () => {
       const beforePickup = container.textContent ?? '';
       for (const word of ['笔记本', '包裹', 'A.W']) expect(beforePickup).not.toContain(word);
       const firstPageRoute = container.querySelector<HTMLButtonElement>('[data-action-id="A3_ROUTE_T07_006_007"]')!;
-      expect(firstPageRoute.textContent).toContain('继续探索');
+      expect(firstPageRoute.textContent).toContain('下一张现场照片');
       expect(firstPageRoute.getAttribute('data-action-state')).toBe('blocked');
       await act(async () => { firstPageRoute.click(); });
       expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('当前取物动作');
@@ -264,7 +296,7 @@ describe('Third-act investigation interface', () => {
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
       const leave = container.querySelector<HTMLButtonElement>('[data-action-id="A3_T00_LEAVE_AND_CONTINUE"]')!;
-      expect(leave.textContent).toContain('离开这里，继续探索');
+      expect(leave.textContent).toContain('结束本阶段');
       await act(async () => { leave.click(); });
       expect(manager.getState().modules.act3.stage).toBe('T01');
       expect(manager.getState().game.flags.FLAG_A3_OLD_ROAD_FOUND).toBe(true);

@@ -15,6 +15,20 @@
 .act3-investigation .photo-viewport__controls{border:1px solid rgb(255 255 255 / 45%);background:rgb(25 31 35 / 82%);color:#fff}
 .act3-investigation .photo-viewport__controls button{color:#1f1f1f!important;background:#fff!important}
 .act3-investigation .photo-viewport__controls button:hover:not(:disabled){background:#eaf2ff!important}
+.act3-investigation .photo-viewport__marker--active.photo-viewport__marker--focus-box{border:3px solid #b8efc2!important;border-style:solid!important;background:rgb(24 82 53 / 82%)!important;box-shadow:0 0 0 2px #102c1d,0 0 0 5px #f4fff6,0 3px 14px #000b!important}
+.act3-investigation .photo-viewport__marker--active .photo-viewport__marker-label{background:#17492e;color:#fff;font-weight:700;box-shadow:0 0 0 2px #effff2}
+.act3-investigation__observation-progress{flex:none;max-height:min(34vh,230px);overflow:auto;padding:8px 12px;border-top:1px solid #b9c4bd;background:#f2f5f2;color:#233029}
+.act3-investigation__progress-counts{display:flex;flex-wrap:wrap;gap:4px 18px}
+.act3-investigation__progress-counts p{display:flex;gap:8px;margin:0;font-size:.8rem;line-height:1.45}
+.act3-investigation__progress-counts strong{font-weight:700}
+.act3-investigation__photo-status,.act3-investigation__missing-required ul{display:flex;flex-wrap:wrap;gap:5px 12px;margin:5px 0 0;padding:0;list-style:none}
+.act3-investigation__photo-status li,.act3-investigation__missing-required li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:3px 0;font-size:.76rem}
+.act3-investigation__photo-status li[data-observation-state="observed"] strong{color:#1b6436}
+.act3-investigation__photo-status li[data-observation-state="pending"] strong{color:#765c26}
+.act3-investigation__missing-required{margin-top:5px;padding-top:5px;border-top:1px solid #d4ddd6}
+.act3-investigation__missing-required h2{margin:0;color:#46534b;font-size:.75rem}
+.act3-investigation__missing-required button{min-height:34px;padding:4px 9px;border:1px solid #83978a;border-radius:4px;background:#fff;color:#1f4930;font-size:.75rem}
+.act3-investigation__missing-required small{color:#626c65;font-size:.72rem}
 .act3-investigation__caption{align-self:flex-start;max-width:min(70ch,75%);display:grid;gap:3px;padding:9px 12px;border:1px solid rgb(255 255 255 / 45%);border-radius:8px;background:rgb(25 31 35 / 86%);backdrop-filter:blur(10px);color:#fff;line-height:1.45;text-shadow:0 1px 3px #000}
 .act3-investigation__caption strong{font-size:1rem}
 .act3-investigation__caption span{font-size:.84rem}
@@ -39,7 +53,7 @@
 .act3-investigation__dialog h2{margin:0;font:600 1.3rem Georgia,serif}
 .act3-investigation__dialog p{line-height:1.7}
 .act3-investigation__empty{padding:2rem;color:var(--ui-text-muted,#595959)}
-@media(max-width:600px){.act3-investigation__header{padding:6px 10px}.act3-investigation__header h1{font-size:1rem}.act3-investigation__header span{display:none}.act3-investigation__caption{max-width:100%;font-size:.75rem}.act3-investigation__action{flex-wrap:wrap;justify-content:center}.act3-investigation__paper-compare,.act3-investigation__temple-compare{grid-template-columns:1fr}}
+@media(max-width:600px){.act3-investigation__header{padding:6px 10px}.act3-investigation__header h1{font-size:1rem}.act3-investigation__header span{display:none}.act3-investigation__caption{max-width:100%;font-size:.75rem}.act3-investigation__action{flex-wrap:wrap;justify-content:center}.act3-investigation__paper-compare,.act3-investigation__temple-compare{grid-template-columns:1fr}.act3-investigation__observation-progress{max-height:28vh;padding:6px 9px}.act3-investigation__missing-required ul{gap:3px 8px}}
 
 /* A34: spatial hierarchy stays local to Act3 while the shared shell owns structure. */
 .act3-investigation.investigation-shell--exploration{--act3-phase-accent:#647b6e}

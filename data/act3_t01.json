@@ -8,7 +8,7 @@
       "title": "外门正面",
       "stance": "look",
       "assetId": "IMG_A3_T01_001",
-      "description": "走到 T00 那扇锈门外。门缝、右柱裂痕、墙高与藤形须逐一对位。",
+      "description": "走到锈门外。门缝、右柱裂痕、墙高与藤形都与此前见过的照片相似。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_GATE_VIEW",
@@ -58,7 +58,7 @@
       "title": "标牌露出",
       "stance": "look",
       "assetId": "IMG_A3_SIGN_FULL_001",
-      "description": "藤叶被拨到一边，旧黄底红字牌字面空处留给后期覆盖准确名称。可以调出旧宣传合影做比对。",
+      "description": "藤叶被拨开，露出一块旧黄底红字牌；可以调出旧宣传合影做比对。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_SIGN_REVEALED",
@@ -80,7 +80,7 @@
       "title": "门缝内视角",
       "stance": "enter",
       "assetId": "IMG_A3_T01_004",
-      "description": "小月先从门缝挤入；镜头仍能看见 001 的右柱作方位锚点。",
+      "description": "小月先从门缝挤入。你从门内回望，仍能看见右侧水泥柱和藤蔓。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_GATE_ENTERED",
@@ -124,7 +124,7 @@
       "title": "操场配电箱",
       "stance": "look",
       "assetId": "IMG_A3_T01_006",
-      "description": "越过操场接近主楼。楼门口旧配电箱里有被剪断的粗线，与 T00 山坡电缆遥相呼应，但不阻止进入主楼。",
+      "description": "越过操场接近主楼。楼门口旧配电箱里，有一截被剪断的粗线；它和山坡上的电缆相似。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T01_BREAKER_OPTIONAL",

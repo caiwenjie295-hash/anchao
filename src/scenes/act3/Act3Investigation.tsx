@@ -12,9 +12,9 @@ import type { InvestigationAction, InvestigationMaterialLink } from '../../compo
 import { act3PhotoLayout } from '../../data/act3PhotoLayout';
 import { act3ComparisonPhotoDetailAssetId } from '../../data/act3ComparisonPhotoDetails';
 import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT, act3DetailImageIdForClue } from '../../data/act3Data';
-import { act3ExitReason, act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens } from '../../data/act3Presentation';
+import { act3ExitReason, act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens, act3RouteLabelFor, act3StageCompletionLabel } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
-import { act3HotspotActionLabel, act3RouteActionLabel, act3StageActionLabel } from '../../story/investigation/actionPresentation';
+import { act3HotspotActionLabel } from '../../story/investigation/actionPresentation';
 
 type Act3PhotoViewportProps = ComponentProps<typeof PhotoViewport> & { explorationMode?: boolean; revealBeat?: boolean };
 const Act3PhotoViewport = PhotoViewport as ComponentType<Act3PhotoViewportProps>;
@@ -124,6 +124,8 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const lensDescription = act3LensDescriptionFor(lens.id, lens.description, inspected);
   const requiredClueIds = act3RequiredClueIds(stage);
   const missingRequiredIds = requiredClueIds.filter((id) => !inspected.includes(id));
+  const completedRequiredCount = requiredClueIds.length - missingRequiredIds.length;
+  const observedPhotoHotspotCount = lens.hotspots.filter((hotspot) => inspected.includes(hotspot.clueId)).length;
   const stageAlreadyConfirmed = state.modules.act3.confirmedFlagIds.includes(ACT3_STAGE_COMPLETION_FLAG[stage]);
   const nextStage = ACT3_STAGE_NEXT[stage];
 
@@ -146,6 +148,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     if (!entry || !findAct3RoutePathToClue(stage, lens.id, clueId, inspected)) return [];
     return [{ id: clueId, label: act3HotspotActionLabel(stage, clueId, entry.hotspot.label, inspected) }];
   });
+  const hotspotLabel = (hotspot: Act3Hotspot) => act3HotspotActionLabel(stage, hotspot.clueId, hotspot.label, inspected);
 
   const openHotspot = (clueId: string) => {
     manager.inspectAct3Clue(clueId);
@@ -163,7 +166,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
 
   const photoHotspots: PhotoMarker[] = lens.hotspots.map((hotspot) => ({
     id: hotspot.clueId,
-    label: act3HotspotActionLabel(stage, hotspot.clueId, hotspot.label, inspected),
+    label: hotspotLabel(hotspot),
     ...act3PhotoLayout[lens.id]?.[hotspot.clueId],
     x: act3PhotoLayout[lens.id]?.[hotspot.clueId]?.x ?? .5,
     y: act3PhotoLayout[lens.id]?.[hotspot.clueId]?.y ?? .5,
@@ -176,7 +179,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     const target = act3LensById(stage, route.target);
     if (!target) return [];
     const availability = getAct3RouteAvailability(stage, lens.id, route.target, inspected);
-    const routeLabel = act3RouteActionLabel(route.kind);
+    const routeLabel = act3RouteLabelFor(route.kind);
     const routeReason = stage === 'T07' && route.target === 'LENS_A3_T07_007' && !inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP')
       ? '还没有先完成当前取物动作。'
       : availability.reason;
@@ -213,7 +216,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   } else {
     actions.push({
       actionId: `A3_${stage}_LEAVE_AND_CONTINUE`, kind: 'story', target: nextStage ?? undefined,
-      label: act3StageActionLabel(),
+      label: act3StageCompletionLabel(),
       state: missingRequiredIds.length ? 'blocked' : 'ready',
       reason: missingRequiredIds.length ? blockedForwardHint : undefined,
       relatedMaterials: findMaterialLinks(missingRequiredIds),
@@ -256,6 +259,34 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
       <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat}>
         <div className="act3-investigation__caption"><strong>{lensTitle}</strong><span>{lensDescription}</span></div>
       </Act3PhotoViewport>
+      <aside className="act3-investigation__observation-progress" aria-label="现场观察进度">
+        <div className="act3-investigation__progress-counts">
+          <p><strong>本阶段必需观察</strong><span>{completedRequiredCount} / {requiredClueIds.length}</span></p>
+          <p><strong>当前照片已观察</strong><span>{observedPhotoHotspotCount} / {lens.hotspots.length}</span></p>
+        </div>
+        <ul className="act3-investigation__photo-status" aria-label="当前照片观察状态">
+          {lens.hotspots.map((hotspot) => {
+            const known = inspected.includes(hotspot.clueId);
+            return <li key={hotspot.clueId} data-observation-state={known ? 'observed' : 'pending'}>
+              <span>{hotspotLabel(hotspot)}</span><strong>{known ? '已观察' : '待观察'}</strong>
+            </li>;
+          })}
+        </ul>
+        {missingRequiredIds.length > 0 && <section className="act3-investigation__missing-required" aria-label="本阶段仍缺的必需观察">
+          <h2>本阶段仍缺的必需观察</h2>
+          <ul>
+            {missingRequiredIds.map((clueId) => {
+              const entry = hotspotByClue.get(clueId);
+              const reachable = Boolean(entry && findAct3RoutePathToClue(stage, lens.id, clueId, inspected));
+              return <li key={clueId}>
+                {entry && reachable
+                  ? <><span>{hotspotLabel(entry.hotspot)}</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>前往并查看</button></>
+                  : <><span>还有必需观察暂不可从当前位置抵达</span><small>先沿可通行路线继续查找</small></>}
+              </li>;
+            })}
+          </ul>
+        </section>}
+      </aside>
       {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && <aside className="act3-investigation__paper-compare" aria-label="两张词表"><article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article><article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article><p>两张词表。含义暂时不明。</p></aside>}
       {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <>
         <details className="act3-investigation__exterior-photo">
