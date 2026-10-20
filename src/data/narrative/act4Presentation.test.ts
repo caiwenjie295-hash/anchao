@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { act4NarrativeSections } from './act4Narrative';
 import {
   act4CompatibleReaderPageIndex,
+  act4Existing560ReaderTextPages,
   act4LegacyReaderTextPages,
   act4PagePresentation,
   act4PrivateBlogPosts,
@@ -15,6 +16,47 @@ const block = (stage: Stage, id: string) => section(stage).blocks.find((item) =>
 const readablePages = (pages: ReturnType<typeof act4ReaderTextPages>) => pages.filter((page) => page.role === 'page' || page.role === 'whole');
 
 describe('Act 4 presentation boundaries', () => {
+  it('merges only the two approved ordinary terminal paragraphs inside their existing scene', () => {
+    const scenarios = [
+      { blockId: 'T08_RETURN', text: '“应该只是撞伤吧。”我安慰自己。', sceneId: 'T08_WALL' },
+      { blockId: 'T08_ARCHIVE', text: '我又看了 2014 年的档案，寻找我的名字。', sceneId: 'T08_ARCHIVE_MIRROR' },
+    ];
+    const normalize = (value: string) => value.replace(/[\s“”"‘’']/g, '');
+
+    for (const scenario of scenarios) {
+      const source = block('T08', scenario.blockId).paragraphs;
+      const tailIndex = source.findIndex((paragraph) => normalize(paragraph) === normalize(scenario.text));
+      const oldPages = readablePages(act4Existing560ReaderTextPages('T08', scenario.blockId, source, true));
+      const mergedPages = readablePages(act4ReaderTextPages('T08', scenario.blockId, source, true));
+      const oldTailPage = oldPages.find((page) => tailIndex >= page.from && tailIndex < page.to);
+      const mergedTailPage = mergedPages.find((page) => tailIndex >= page.from && tailIndex < page.to);
+
+      expect(tailIndex, scenario.blockId).toBeGreaterThanOrEqual(0);
+      expect(oldTailPage?.sceneId).toBe(scenario.sceneId);
+      expect(oldTailPage?.from).toBe(tailIndex);
+      expect(oldTailPage?.to).toBe(tailIndex + 1);
+      expect(mergedTailPage?.sceneId).toBe(scenario.sceneId);
+      expect(mergedTailPage?.from).toBeLessThan(tailIndex);
+      expect(mergedTailPage?.to).toBe(tailIndex + 1);
+      expect(mergedTailPage?.sceneIndex).toBe(oldTailPage?.sceneIndex);
+      expect(mergedTailPage!.to - mergedTailPage!.from).toBeLessThanOrEqual(6);
+      expect(source.slice(mergedTailPage!.from, mergedTailPage!.to).reduce((sum, paragraph) => sum + paragraph.length, 0))
+        .toBeLessThanOrEqual(560);
+    }
+  });
+
+  it('leaves suspense and action-driving paragraphs on their original page boundaries', () => {
+    const archive = block('T08', 'T08_ARCHIVE').paragraphs;
+    const original = act4Existing560ReaderTextPages('T08', 'T08_ARCHIVE', archive, true);
+    const merged = act4ReaderTextPages('T08', 'T08_ARCHIVE', archive, true);
+    const suspenseIndex = archive.findIndex((paragraph) => paragraph === '突然，外面响起了脚步声。我没来得及查看，匆忙把档案塞进包里，躲进旁边的铁柜。');
+    const originalPage = readablePages(original).find((page) => suspenseIndex >= page.from && suspenseIndex < page.to);
+    const mergedPage = readablePages(merged).find((page) => suspenseIndex >= page.from && suspenseIndex < page.to);
+
+    expect(suspenseIndex).toBeGreaterThanOrEqual(0);
+    expect(mergedPage).toMatchObject({ from: originalPage?.from, to: originalPage?.to, sceneId: originalPage?.sceneId });
+  });
+
   it('keeps the fourteen original T03 date and post pairs separate from its introduction and closing reaction', () => {
     const source = block('T03', 'T03_ORIGINAL').paragraphs;
     const posts = act4PrivateBlogPosts(source);
@@ -75,6 +117,29 @@ describe('Act 4 presentation boundaries', () => {
 });
 
 describe('Act4 reading presentation baseline checks', () => {
+  it('keeps every reader page contiguous and reconstructs all original paragraphs exactly', () => {
+    for (const narrativeSection of act4NarrativeSections) {
+      for (const narrativeBlock of narrativeSection.blocks) {
+        const pages = act4ReaderTextPages(
+          narrativeSection.stage,
+          narrativeBlock.id,
+          narrativeBlock.paragraphs,
+          narrativeBlock.kind === 'novel-excerpt',
+        );
+        let cursor = 0;
+        const reconstructed: string[] = [];
+        for (const page of pages) {
+          expect(page.from).toBe(cursor);
+          expect(page.to).toBeGreaterThan(page.from);
+          reconstructed.push(...narrativeBlock.paragraphs.slice(page.from, page.to));
+          cursor = page.to;
+        }
+        expect(cursor).toBe(narrativeBlock.paragraphs.length);
+        expect(reconstructed).toEqual(narrativeBlock.paragraphs);
+      }
+    }
+  });
+
   it('partitions every source block contiguously and reconstructs the exact original paragraphs', () => {
     for (const narrativeSection of act4NarrativeSections) {
       for (const narrativeBlock of narrativeSection.blocks) {

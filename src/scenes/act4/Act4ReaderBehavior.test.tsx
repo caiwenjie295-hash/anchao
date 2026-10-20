@@ -6,7 +6,7 @@ import { EventBus } from '../../core/eventBus';
 import { clearAct4ReadingPositions, setAct4ReadingPosition } from '../../core/uiPreferences';
 import { StateManager } from '../../core/stateManager';
 import { act4NarrativeSections } from '../../data/narrative/act4Narrative';
-import { act4LegacyReaderTextPages, act4PrivateBlogPosts, act4ReaderTextPages } from '../../data/narrative/act4Presentation';
+import { act4Existing560ReaderTextPages, act4LegacyReaderTextPages, act4PrivateBlogPosts, act4ReaderTextPages } from '../../data/narrative/act4Presentation';
 import { Act4Experience } from './Act4Experience';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -26,7 +26,55 @@ beforeEach(() => {
 });
 
 describe('Act 4 reader behavior', () => {
-  it('maps a saved legacy T08 archive page back to the paragraph it began with', async () => {
+  it('clears an old saved page layout before remounting the same block with the current layout', async () => {
+    const archiveReturn = act4NarrativeSections.find((item) => item.stage === 'T08')!.blocks.find((item) => item.id === 'T08_RETURN')!;
+    const paragraphIndex = archiveReturn.paragraphs.findIndex((paragraph) => paragraph.replace(/[\s“”"‘’']/g, '') === '应该只是撞伤吧。我安慰自己。');
+    const oldPages = act4Existing560ReaderTextPages('T08', archiveReturn.id, archiveReturn.paragraphs, true)
+      .filter((page) => page.role === 'page' || page.role === 'whole');
+    const savedPageIndex = oldPages.findIndex((page) => paragraphIndex >= page.from && paragraphIndex < page.to);
+    expect(savedPageIndex).toBeGreaterThanOrEqual(0);
+    window.localStorage.setItem('anchao.a4-reader-layout', '2');
+    setAct4ReadingPosition('T08:current', {
+      activeBlockId: archiveReturn.id,
+      pageIndexByBlock: { [archiveReturn.id]: savedPageIndex },
+      openedCoverKeys: [],
+    });
+    const state = createDefaultState();
+    state.game.act = 4;
+    state.game.phase = 'A4_T08';
+    state.modules.act4.stage = 'T08';
+    state.modules.act4.completedNarrativeSectionIds = Array.from({ length: 7 }, (_, index) => `A4_READ_T${String(index + 1).padStart(2, '0')}`);
+    state.modules.act4.completedNarrativeActionIds = ['A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED'];
+    const manager = new StateManager(new EventBus(), state);
+    let { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
+
+    try {
+      const pageControl = host.querySelector<HTMLElement>('[data-block-id="T08_RETURN"] .a4-reader__segment-pages')!;
+      expect(pageControl.getAttribute('data-active-page')).toBe(String(savedPageIndex + 1));
+      expect(pageControl.getAttribute('data-page-count')).toBe(String(oldPages.length));
+      expect(pageControl.textContent).toContain('应该只是撞伤吧');
+      expect(window.localStorage.getItem('anchao.a4-reader-layout')).toBe('3');
+
+      await act(async () => root.unmount());
+      host.remove();
+      clearAct4ReadingPositions();
+      ({ host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />));
+
+      const remountedPages = act4ReaderTextPages('T08', archiveReturn.id, archiveReturn.paragraphs, true)
+        .filter((page) => page.role === 'page' || page.role === 'whole');
+      expect(host.querySelector('.a4-reader__cover')).not.toBeNull();
+      expect(window.localStorage.getItem('anchao.a4-reader-layout-positions')).toBeNull();
+      await act(async () => { host.querySelector<HTMLButtonElement>('[data-action-id^="A4_T08_OPEN_COVER_T08_RETURN_"]')!.click(); });
+      const remountedPageControl = host.querySelector<HTMLElement>('[data-block-id="T08_RETURN"] .a4-reader__segment-pages')!;
+      expect(remountedPageControl.getAttribute('data-active-page')).toBe('1');
+      expect(remountedPageControl.getAttribute('data-page-count')).toBe(String(remountedPages.length));
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
+  it('keeps a saved unversioned T08 archive page on its original legacy boundary', async () => {
     const archive = act4NarrativeSections.find((item) => item.stage === 'T08')!.blocks.find((item) => item.id === 'T08_ARCHIVE')!;
     const legacyPages = act4LegacyReaderTextPages('T08', archive.id, archive.paragraphs, true)
       .filter((page) => page.role === 'page' || page.role === 'whole');
@@ -52,13 +100,14 @@ describe('Act 4 reader behavior', () => {
     try {
       const archiveView = host.querySelector<HTMLElement>(`[data-block-id="${archive.id}"]`)!;
       const newActivePage = Number(archiveView.querySelector('.a4-reader__segment-pages')?.getAttribute('data-active-page')) - 1;
-      const newSegmentPages = act4ReaderTextPages('T08', archive.id, archive.paragraphs, true)
+      const preservedPages = act4LegacyReaderTextPages('T08', archive.id, archive.paragraphs, true)
         .filter((page) => page.role === 'page' || page.role === 'whole');
-      const mappedPage = newSegmentPages[newActivePage];
+      const mappedPage = preservedPages[newActivePage];
 
       expect(mappedPage.sceneId).toBe('T08_ARCHIVE_MIRROR');
-      expect(mappedPage.from).toBeLessThanOrEqual(legacyPage.from);
-      expect(mappedPage.to).toBeGreaterThan(legacyPage.from);
+      expect(newActivePage).toBe(legacyPageIndex);
+      expect(mappedPage.from).toBe(legacyPage.from);
+      expect(mappedPage.to).toBe(legacyPage.to);
       expect(archiveView.textContent).toContain(archive.paragraphs[legacyPage.from]);
       expect(host.querySelector('.a4-reader__cover')).toBeNull();
       const persisted = JSON.parse(window.localStorage.getItem('anchao.ui.v1') ?? '{}');
@@ -69,7 +118,7 @@ describe('Act 4 reader behavior', () => {
     }
   });
 
-  it('moves directly from the final-mail action to its named cover without completing T10', async () => {
+  it('moves directly from the final-mail action into the mail without completing T10', async () => {
     const section = act4NarrativeSections.find((item) => item.stage === 'T10')!;
     const aftermath = section.blocks.find((block) => block.id === 'T10_AFTERMATH')!;
     const finalMail = section.blocks.find((block) => block.id === 'T10_FINAL_MAIL')!;
@@ -107,16 +156,14 @@ describe('Act 4 reader behavior', () => {
       await act(async () => { openMail.click(); });
 
       const mailBlock = host.querySelector<HTMLElement>('[data-block-id="T10_FINAL_MAIL"]')!;
-      expect(mailBlock.querySelector('.a4-reader__cover h3')?.textContent).toBe('最后一封邮件');
-      expect(host.querySelector('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]')?.textContent).toContain('翻开：最后一封邮件');
-      expect(mailBlock.textContent).not.toContain('主题：关于王澳同学相关事项的说明');
+      expect(mailBlock.querySelector('.a4-reader__cover')).toBeNull();
+      expect(host.querySelector('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]')).toBeNull();
+      expect(mailBlock.textContent).toContain('主题：关于王澳同学相关事项的说明');
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T10_FINAL_MAIL_OPENED');
       expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T10');
       expect(manager.getState().game.flags.FLAG_A4_T10_COMPLETE).not.toBe(true);
       expect(manager.getState().game.flags.FLAG_A4_COMPLETE).not.toBe(true);
 
-      await act(async () => { host.querySelector<HTMLButtonElement>('[data-action-id^="A4_T10_OPEN_COVER_T10_FINAL_MAIL_"]')!.click(); });
-      expect(mailBlock.querySelector('.a4-reader__cover')).toBeNull();
       expect(mailBlock.textContent).toContain('几个月后，我收到了一封邮件。');
       expect(mailBlock.textContent).toContain('主题：关于王澳同学相关事项的说明');
       expect(mailBlock.querySelector('.a4-reader__segment[data-reader-active="true"] h4')?.textContent).toBe('最后一封邮件');

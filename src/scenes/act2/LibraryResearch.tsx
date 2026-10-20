@@ -98,6 +98,15 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
   const currentIndex = currentPage ? volumePages.findIndex((page) => page.id === currentPage.id) : -1;
   const prevPage = currentIndex > 0 ? volumePages[currentIndex - 1] : null;
   const nextPage = currentIndex >= 0 && currentIndex < volumePages.length - 1 ? volumePages[currentIndex + 1] : null;
+  const readerInstruction = currentPage
+    ? volumePages.length === 1
+      ? '当前卷册只有一页，已经读到末页。可以回到目录或选择另一册。'
+      : currentIndex === 0
+        ? `当前卷册共 ${volumePages.length} 页，正在阅读第 1 页；可以翻到下一页继续。`
+        : currentIndex === volumePages.length - 1
+          ? `当前卷册共 ${volumePages.length} 页，正在阅读第 ${currentIndex + 1} 页，已到末页；可以回看上一页或回到目录。`
+          : `当前卷册共 ${volumePages.length} 页，正在阅读第 ${currentIndex + 1} 页；可按页序继续阅读。`
+    : librarySceneCopy.readerInstruction;
 
   const keywords = currentPage ? libraryKeywordsByPageId.get(currentPage.id) ?? [] : [];
   const markedKeywordIds = library.markedKeywordIds;
@@ -241,7 +250,7 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
             <div className="act2-library__paper-empty"><p className="act2-library__reader-idle">{gazetteFound ? '从书架选择一册，逐页翻阅。' : '先从目录找到地方传说，再查看书架上的卷册。'}</p></div>
           ) : (
             <>
-              <p className="act2-library__reader-instruction">{librarySceneCopy.readerInstruction}</p>
+              <p className="act2-library__reader-instruction">{readerInstruction}</p>
               {/* 静态页序：仅作进度展示，未到达的页不得是可激活控件，翻页只能经上一页/下一页。 */}
               <ol className="act2-library__leaves" aria-label="卷内页序" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
                 {volumePages.map((page) => {

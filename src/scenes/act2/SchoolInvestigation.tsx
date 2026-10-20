@@ -115,6 +115,9 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
   ];
   const readEvidenceCount = timelineEvidence.filter((item) => flags[item.flag] === true).length;
   const selectedSourceCount = schoolProgress.selectedEvidenceIds.length;
+  const symbolMatchFound = flags.FLAG_A2_SCHOOL_SS_FOUND === true;
+  const symbolMatchConfirmed = schoolProgress.symbolMatchConfirmed;
+  const qimingNameFound = flags.FLAG_A2_QIMING_NAME_FOUND === true;
   const readUnselectedEvidence = timelineEvidence.filter((item) => flags[item.flag] === true && !schoolProgress.selectedEvidenceIds.includes(item.id));
   const timelineReady = schoolProgress.symbolMatchConfirmed && selectedSourceCount >= 2 && schoolProgress.selectedInferenceId === 'bounded-timeline';
   const symbolMatchMaterials = flags.FLAG_A2_SCHOOL_SS_FOUND === true ? [] : [{ id: 'HOTSPOT_A2_T05_SCHOLAR_NOTE', label: '小 A 旧教室里的学霸笔记' }];
@@ -133,7 +136,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
       : '先到学校地点读到记录，再选出两种不同来源作为支持材料。';
   const actions: InvestigationAction[] = [
     { actionId: 'A2_T05_CONFIRM_TIMELINE', kind: 'story', target: 'school-timeline', label: isComplete ? '暂定时间线已记下' : '记录暂定时间线判断', state: isComplete ? 'completed' : timelineReady ? 'ready' : 'blocked', reason: !schoolProgress.symbolMatchConfirmed ? '先把旧笔记页边的记号与第一幕照片并排核对。' : selectedSourceCount < 2 ? sourceSelectionReason : !schoolProgress.selectedInferenceId ? '选出目前最能贴近材料的一种判断。' : '请回看所选判断，再记录这条暂定时间线。', relatedMaterials: [...symbolMatchMaterials, ...(!schoolProgress.symbolMatchConfirmed ? [] : sourceSelectionMaterials)], onActivate: () => manager.confirmAct2SchoolTimeline() },
-    { actionId: 'A2_T05_TO_QIMING', kind: 'move', target: 'qiming-research', label: '前往浏览器核查启明', state: isComplete ? 'ready' : 'blocked', reason: '先核对照片上的共同记号，再用至少两种来源记录休学前后的变化。', onActivate: () => { manager.enterAct2QimingResearch(); onReturnToDesktop?.(); manager.openApp('browser'); } },
+    { actionId: 'A2_T05_TO_QIMING', kind: 'move', target: 'qiming-research', label: qimingNameFound ? '前往浏览器核查启明' : '前往浏览器继续调查', state: isComplete ? 'ready' : 'blocked', reason: '先核对照片上的共同记号，再用至少两种来源记录休学前后的变化。', onActivate: () => { manager.enterAct2QimingResearch(); onReturnToDesktop?.(); manager.openApp('browser'); } },
   ];
   const notebookCloseupImage = assetLoader.get('IMG_A2_SCHOOL_NOTE_DETAIL_001')?.src;
   const notebookCloseupAssetId = 'IMG_A2_SCHOOL_NOTE_DETAIL_001';
@@ -220,6 +223,14 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
     else selectSchoolArea(targetAreaId);
   };
   const returnToCampusMap = () => { requestRoomScroll(); setMapLevel('campus'); setHotspotId(null); };
+  const openSchoolHotspot = (materialId: string) => {
+    const target = act2School.hotspots.find((item) => item.id === materialId);
+    if (!target) return;
+    campusDestinationArea(target.areaId);
+    setAreaId(target.areaId);
+    setPendingHotspotId(target.id);
+    setHotspotId(null);
+  };
 
   return <InvestigationShell
     ariaLabel="高中调查"
@@ -238,12 +249,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         setPendingEvidenceFocusId(evidenceId);
         return;
       }
-      const target = act2School.hotspots.find((item) => item.id === materialId);
-      if (!target) return;
-      campusDestinationArea(target.areaId);
-      setAreaId(target.areaId);
-      setPendingHotspotId(target.id);
-      setHotspotId(null);
+      openSchoolHotspot(materialId);
     }}
     onExit={() => onReturnToDesktop?.()}
   >
@@ -323,9 +329,9 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
       <p className="t05-school__route-intro">{act2School.intro}</p>
     </div>
     <details className="t05-school__timeline-disclosure" open={timelineOpen} onToggle={(event) => setTimelineOpen(event.currentTarget.open)}>
-      <summary><strong>学校记录与暂定时间线</strong><span>已读 {readEvidenceCount} / 3 · 已选不同来源 {selectedSourceCount} / 2</span></summary>
+      <summary><strong>学校记录与暂定时间线</strong><span>已读 {readEvidenceCount} / 3（仅三份学校材料） · 已选不同来源 {selectedSourceCount} / 2 · 双 S {symbolMatchConfirmed ? '已完成' : '待完成'}</span></summary>
       <section className="t05-school__timeline" aria-label="休学前后对照">
-        <h2>分别记录材料，再判断能说明什么 <span>已读 {readEvidenceCount} / 3 · 已选不同来源 {selectedSourceCount} / 2</span></h2>
+        <h2>分别记录材料，再判断能说明什么 <span>已读 {readEvidenceCount} / 3（仅三份学校材料） · 已选不同来源 {selectedSourceCount} / 2</span></h2>
         <p>读过记录后，选择至少两种不同来源，再判断它们能说明什么。访问地点本身不计作证据。</p>
         <div className="t05-school__evidence-options">
           {timelineEvidence.map((item) => {
@@ -349,6 +355,15 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         {isComplete && <p className="t05-school__ending" aria-live="polite"><strong>{act2School.matchNote}</strong> · 双 S 比对与两种来源支持的暂定时间线已记入笔记。</p>}
       </section>
     </details>
+    <aside className="t05-school__symbol-progress" aria-label="双 S 比对进度" data-match-state={symbolMatchConfirmed ? 'complete' : 'pending'}>
+      <div>
+        <strong>双 S 比对</strong>
+        <p role="status">{symbolMatchConfirmed ? '已完成：山洞照片与学校笔记中的记号已确认一致。' : symbolMatchFound ? '待完成：学校笔记已找到，请打开并完成图案比对。' : '待完成：先到小 A 旧教室查看笔记，再与第一幕照片比对。'}</p>
+      </div>
+      {symbolMatchConfirmed ? <span className="t05-school__symbol-state">已完成</span> : symbolMatchFound
+        ? <button type="button" onClick={() => setComparisonOpen(true)}>打开双 S 比对</button>
+        : <button type="button" onClick={() => openSchoolHotspot('HOTSPOT_A2_T05_SCHOLAR_NOTE')}>前往小 A 旧教室查看学霸笔记</button>}
+    </aside>
     {hotspot && <div className="t05-school__dialog-backdrop" role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setHotspotId(null); }}>
       <section ref={dialogRef} className="t05-school__dialog" role="dialog" aria-modal="true" aria-labelledby="t05-school-dialog-title" onKeyDown={(event) => {
         if (event.key !== 'Tab' || document.querySelector('.t05-school__handwritten-dialog[open]')) return;

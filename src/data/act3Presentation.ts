@@ -3,6 +3,14 @@ import type { AuthoredAct3Stage } from './act3Data';
 
 export type Act3NarrativeMovement = '进入' | '深入' | '撤离';
 
+export function act3RouteLabelFor(kind: 'move' | 'return'): string {
+  return kind === 'move' ? '下一张现场照片' : '返回上一张现场照片';
+}
+
+export function act3StageCompletionLabel(): string {
+  return '结束本阶段，前往下一处';
+}
+
 const MOVEMENT_BY_STAGE: Record<AuthoredAct3Stage, Act3NarrativeMovement> = {
   T00: '进入', T01: '进入', T02: '进入',
   T03: '深入', T04: '深入', T05: '深入', T06: '深入',

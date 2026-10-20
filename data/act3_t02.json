@@ -30,7 +30,7 @@
       "title": "教室门口",
       "stance": "approach",
       "assetId": "IMG_A3_T02_002",
-      "description": "从 001 向左走近一间教室门。门框漆皮脱落，门内东倒西歪的课桌与没有靠背的椅子。",
+      "description": "从当前位置向左走近一间教室门。门框漆皮脱落，门内东倒西歪的课桌与没有靠背的椅子。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_CLASSROOM_DOOR",
@@ -80,7 +80,7 @@
       "title": "黑板近景",
       "stance": "approach",
       "assetId": "IMG_A3_BOARD_FULL_001",
-      "description": "同一块黑板靠得更近，粉尘上有多处歪斜划痕，留位置给后期双 S 叠层。木框裂痕与 003 接得上。",
+      "description": "同一块黑板靠得更近，粉尘上有多处歪斜划痕。木框裂痕与刚才看到的一致。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_SS_SCRATCH",
@@ -124,7 +124,7 @@
       "title": "走廊拐角",
       "stance": "look",
       "assetId": "IMG_A3_T02_006",
-      "description": "从教室出来朝走廊尽头右拐角看，窗下老式消防栓箱在普通构图中自然入画，不显眼也不交互。右转后无窗区变暗，通向 T03。",
+      "description": "从教室出来，朝走廊尽头右拐角看。窗下有一只老式消防栓箱；右转后，无窗区变暗，通向另一段走廊。",
       "hotspots": [
         {
           "clueId": "CLUE_A3_T02_CORRIDOR_TURN",

@@ -231,7 +231,7 @@ describe('T05 school exploration', () => {
     expect(memory?.querySelector('details')).toBeNull();
     const disclosure = container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure');
     expect(disclosure?.open).toBe(false);
-    expect(disclosure?.querySelector('summary')?.textContent).toContain('已读 0 / 3 · 已选不同来源 0 / 2');
+    expect(disclosure?.querySelector('summary')?.textContent).toContain('已读 0 / 3（仅三份学校材料） · 已选不同来源 0 / 2');
     await act(async () => { disclosure?.querySelector('summary')?.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     expect(disclosure?.open).toBe(true);
     expect(timeline?.querySelectorAll('.t05-school__evidence-options button')).toHaveLength(3);
@@ -276,9 +276,42 @@ describe('T05 school exploration', () => {
     expect(manager.getState().modules.act2Research.school.selectedEvidenceIds).toEqual(['teacher-account']);
     expect(manager.getState().game.flags.FLAG_A2_LEAVE_OF_ABSENCE_KNOWN).toBe(true);
     expect(container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure')?.open).toBe(true);
-    expect(container.querySelector('.t05-school__timeline-disclosure summary')?.textContent).toContain('已读 2 / 3 · 已选不同来源 1 / 2');
+    expect(container.querySelector('.t05-school__timeline-disclosure summary')?.textContent).toContain('已读 2 / 3（仅三份学校材料） · 已选不同来源 1 / 2');
     const remainingMaterial = container.querySelector('.investigation-navigation__reason .investigation-navigation__material');
     expect(remainingMaterial?.textContent).toContain('历次成绩记录 · 选作支持来源');
     expect(container.querySelectorAll('.investigation-navigation__reason .investigation-navigation__material')).toHaveLength(1);
+  });
+
+  it('shows the pending double-S comparison, opens its existing note route, and reflects confirmation', async () => {
+    const state = createDefaultState();
+    state.game.act = 2;
+    state.game.phase = 'A2_T05';
+    state.game.flags = { FLAG_A2_SCHOOL_ENTERED: true, FLAG_A1_SS_FOUND: true };
+    state.modules.act2Research.stage = 'school';
+    manager = new StateManager(new EventBus(), state);
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+
+    expect(container.querySelector('.t05-school__symbol-progress')?.getAttribute('data-match-state')).toBe('pending');
+    expect(container.querySelector('.t05-school__symbol-progress')?.textContent).toContain('待完成');
+    expect(container.querySelector('.t05-school__timeline-disclosure summary')?.textContent).toContain('双 S 待完成');
+    await act(async () => { [...container.querySelectorAll<HTMLButtonElement>('.t05-school__symbol-progress button')][0].click(); });
+    expect(container.querySelector('.t05-school__dialog')?.textContent).toContain('旧学习笔记');
+    await act(async () => { [...container.querySelectorAll<HTMLButtonElement>('.t05-school__dialog button')].find((button) => button.textContent?.includes('打开双 S 比对'))?.click(); });
+    expect(manager.getState().game.flags.FLAG_A2_SCHOOL_SS_FOUND).toBe(true);
+    await act(async () => { [...container.querySelectorAll<HTMLButtonElement>('.t05-comparison__toolbar button')].find((button) => button.textContent?.includes('半透明重合'))?.click(); });
+    await act(async () => { [...container.querySelectorAll<HTMLButtonElement>('.t05-comparison footer button')].find((button) => button.textContent === '确认图案一致')?.click(); });
+    expect(manager.getState().modules.act2Research.school.symbolMatchConfirmed).toBe(true);
+    expect(container.querySelector('.t05-school__symbol-progress')?.getAttribute('data-match-state')).toBe('complete');
+    expect(container.querySelector('.t05-school__symbol-progress')?.textContent).toContain('已完成');
+  });
+
+  it('uses a neutral browser-action label until the existing Qiming-name flag is present', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    const action = () => container.querySelector<HTMLButtonElement>('[data-action-id="A2_T05_TO_QIMING"]');
+    expect(action()?.textContent).toContain('前往浏览器继续调查');
+    expect(action()?.textContent).not.toContain('核查启明');
+    await act(async () => { manager.setFlag('FLAG_A2_QIMING_NAME_FOUND', true); });
+    expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).toBe(true);
+    expect(action()?.textContent).toContain('前往浏览器核查启明');
   });
 });
