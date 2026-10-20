@@ -55,6 +55,11 @@ describe('desktop task guides', () => {
     const guide = getCurrentTaskGuide(state);
     expect(guide).toMatchObject({ id: 'GUIDE_A1_004', completedCount: 2, actionAppId: 'photos' });
     expect(guide?.steps.map((step) => step.complete)).toEqual([true, true, false]);
+    expect(guide?.summary).not.toMatch(/35|30|20/);
+    expect(guide?.steps[1]?.label).not.toMatch(/35|30|20/);
+    expect(guide?.steps[1]?.hint).toContain('曝光量至少 35');
+    expect(guide?.steps[1]?.hint).toContain('阴影至少 30');
+    expect(guide?.steps[1]?.hint).toContain('对比度至少 20');
   });
 
   it('shows the final collection guide in K and hides after the act is complete', () => {
