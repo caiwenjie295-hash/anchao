@@ -217,8 +217,100 @@ describe('T07 promotion investigation', () => {
     expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).toBe(true);
     expect(container.querySelector('.t07-finale__temple-confirm')).toBeNull();
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_002');
+    expect(container.textContent).toContain('基本确定是同一个地方');
     expect(container.querySelector('.t07-finale__outcomes .t07-finale__conclusion')).toBeNull();
     expect(container.querySelector('.t07-finale__outcomes .t07-finale__dialogue')).toBeNull();
+  });
+
+  it('switches between forest and temple references and keeps the forest feedback presentational', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await seek(5000);
+    await loadPendingImages();
+    await click('.t07-finale__capture');
+    await loadPendingImages();
+    await click('.t07-finale__capture-followup button');
+    await loadPendingImages();
+
+    const forestReferenceUrl = assetLoader.get('IMG_A2_T07_TRAIL_REFERENCE_001')?.src;
+    const rightImage = () => [...container.querySelectorAll<HTMLImageElement>('.t07-finale__compare-side img')]
+      .find((image) => image.getAttribute('src') === assetLoader.get('IMG_A2_T07_TRAIL_REFERENCE_001')?.src
+        || image.getAttribute('src') === assetLoader.get('IMG_A1_I_001')?.src);
+    expect(rightImage()?.getAttribute('src')).toBe(forestReferenceUrl);
+    expect(container.querySelectorAll('.t07-finale__candidate-list button[aria-pressed="true"]')).toHaveLength(1);
+    expect(container.querySelector('.t07-finale__source-line')?.textContent).toContain('第一次徒步拍下的树林照片');
+    expect(container.querySelectorAll('.t07-finale__compare-side figcaption')[1]?.textContent).toBe('第一次徒步拍下的树林照片');
+    expect(container.querySelectorAll('.t07-finale__compare-side .photo-viewport__frame')[1]?.getAttribute('aria-label')).toContain('第一次徒步时拍下的树林环境');
+    expect(container.querySelectorAll('.t07-finale__compare-side [data-clue-id^="T07_OBSERVE_EXTERIOR_"]')[0]?.getAttribute('aria-label')).toContain('树林环境相似处');
+    expect(container.querySelector('.t07-finale__feature-choice')).toBeNull();
+    expect(container.querySelectorAll('[aria-label="地点对照三步引导"] li')).toHaveLength(3);
+    expect(container.textContent).not.toContain('石砌开口附近');
+    expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_002']);
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
+
+    await click('.t07-finale__compare');
+    expect(container.textContent).toContain('树林环境很相似，值得继续核对视频中的庙轮廓');
+    expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual([]);
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_002', 'square-opening')).toBe('insufficient-evidence');
+    expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual([]);
+    expect(button('.t07-finale__compare').disabled).toBe(false);
+    await click('.t07-finale__guide-next');
+    expect(button('.t07-finale__tab.is-active').textContent).toBe('受访视频');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6800');
+    expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_002']);
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
+
+    await loadPendingImages();
+    await seek(7000);
+    await loadPendingImages();
+    await click('.t07-finale__capture');
+    await loadPendingImages();
+    await click('.t07-finale__capture-followup button');
+    await loadPendingImages();
+    expect(rightImage()?.getAttribute('src')).toBe(assetLoader.get('IMG_A1_I_001')?.src);
+    expect(container.querySelector('.t07-finale__source-line')?.textContent).toContain('第一次徒步拍下的破庙外景');
+    expect(container.querySelector('.t07-finale__comparison-record')).toBeNull();
+
+    const trailCandidate = [...container.querySelectorAll<HTMLButtonElement>('.t07-finale__candidate-list button')]
+      .find((item) => item.textContent?.includes('山路行进'))!;
+    await act(async () => { trailCandidate.click(); });
+    await loadPendingImages();
+    expect(rightImage()?.getAttribute('src')).toBe(forestReferenceUrl);
+    await act(async () => { trailCandidate.click(); });
+    expect(button('.t07-finale__compare').disabled).toBe(false);
+    await click('.t07-finale__guide-next');
+    await loadPendingImages();
+    expect(rightImage()?.getAttribute('src')).toBe(assetLoader.get('IMG_A1_I_001')?.src);
+    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
+    await click('.t07-finale__compare');
+    expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).toBe(true);
+    expect(container.textContent).toContain('基本确定是同一个地方');
+  });
+
+  it('blocks trail comparison when the selected reference image fails to load', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await seek(5000);
+    await loadPendingImages();
+    await click('.t07-finale__capture');
+    await loadPendingImages();
+    await click('.t07-finale__capture-followup button');
+    const expectedUrl = assetLoader.get('IMG_A2_T07_TRAIL_REFERENCE_001')?.src;
+    const failedReference = [...container.querySelectorAll<HTMLImageElement>('.t07-finale__compare-side img')]
+      .find((image) => image.getAttribute('src') === expectedUrl)!;
+    expect(failedReference).toBeDefined();
+    failedReference.dataset.testLoaded = 'true';
+    await act(async () => { failedReference.dispatchEvent(new Event('error')); });
+    await loadPendingImages();
+    expect(container.textContent).toContain('载入失败');
+    expect(button('.t07-finale__compare').disabled).toBe(true);
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_002', 'square-opening')).toBe('insufficient-evidence');
+    expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual([]);
+    expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
   });
 
   it('does not show a prior successful comparison as feedback for a different weak frame', async () => {
@@ -244,10 +336,11 @@ describe('T07 promotion investigation', () => {
     expect(secondFrame).toBeDefined();
     await act(async () => { secondFrame.click(); });
     await loadPendingImages();
-    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
     await click('.t07-finale__compare');
-    expect(container.textContent).toContain(act2T07.comparison.mismatchNotesByKind.trail);
-    expect(container.querySelector('.t07-shell--mismatch-status, .investigation-shell.t07-shell--mismatch-status')).not.toBeNull();
+    expect(container.textContent).toContain(act2T07.comparison.trailReference.note);
+    expect(container.querySelector('.t07-shell--mismatch-status, .investigation-shell.t07-shell--mismatch-status')).toBeNull();
+    expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
+    expect(manager.submitAct2T07Comparison('FRAME_A2_T07_002', 'square-opening')).toBe('insufficient-evidence');
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
   });
 

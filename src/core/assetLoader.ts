@@ -25,6 +25,7 @@ const compressedFiles = import.meta.glob<string>('../assets/compressed/**/*.{web
 const uxFinaleFiles = import.meta.glob<string>('../assets/ux-finale-20261008/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const uxInvestigationFiles = import.meta.glob<string>('../assets/ux-investigation-20261014/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const uiFieldFiles = import.meta.glob<string>('../assets/ui-field-20261019/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
+const t07RefFiles = import.meta.glob<string>('../assets/t07-ref-20261020/*.webp', { eager: true, query: '?url&no-inline', import: 'default' });
 const compressedEntries = compressedAssetMap.entries as Record<string, string>;
 const compressedSource = (sourcePath: string | null): string | undefined => {
   if (!sourcePath) return undefined;
@@ -72,6 +73,10 @@ export const uiFieldAssetPath = (id: string, file: string): string | null =>
   isUiFieldAssetId(id) && file === `${id}.webp`
     ? `../assets/ui-field-20261019/${file}`
     : null;
+export const t07RefAssetPath = (id: string, file: string): string | null =>
+  id === 'IMG_A2_T07_TRAIL_REFERENCE_001' && file === `${id}.webp`
+    ? `../assets/t07-ref-20261020/${file}`
+    : null;
 const existingAssets = imageRecords.filter((image) => image.file).map((image) => [image.id, {
   id: image.id, type: 'image', src: compressedSource(`../Photo_src/${image.file}`) ?? compressedSource(`../第二幕/${image.file}`)
     ?? compressedSource(`../第三幕/${image.file}`) ?? compressedSource(act4AssetPath(image.id, image.file!))
@@ -90,4 +95,9 @@ const uiFieldAssets = imageRecords.flatMap((image) => {
   const path = uiFieldAssetPath(image.id, image.file);
   return path ? [[image.id, { id: image.id, type: 'image' as const, src: uiFieldFiles[path] }] as const] : [];
 });
-export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets, ...uxInvestigationAssets, ...uiFieldAssets]));
+const t07RefAssets = imageRecords.flatMap((image) => {
+  if (!image.file) return [];
+  const path = t07RefAssetPath(image.id, image.file);
+  return path ? [[image.id, { id: image.id, type: 'image' as const, src: t07RefFiles[path] }] as const] : [];
+});
+export const assetLoader = new AssetLoader(Object.fromEntries([...existingAssets, ...uxFinaleAssets, ...uxInvestigationAssets, ...uiFieldAssets, ...t07RefAssets]));

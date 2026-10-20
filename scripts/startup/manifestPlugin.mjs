@@ -29,7 +29,12 @@ function investmentAssetSource(id, file) {
   return allowed && file === `${id}.webp` ? `src/assets/ux-investigation-20261014/${file}` : null;
 }
 
-async function loadAssetGroups(root) {
+export function t07ReferenceAssetSource(id, file) {
+  return id === 'IMG_A2_T07_TRAIL_REFERENCE_001' && file === `${id}.webp`
+    ? `src/assets/t07-ref-20261020/${file}` : null;
+}
+
+export async function loadAssetGroups(root) {
   try {
     const [imagesText, mapText] = await Promise.all([
       readFile(join(root, 'data/images.json'), 'utf8'),
@@ -51,6 +56,7 @@ async function loadAssetGroups(root) {
         `../Photo_src/${file}`, `../第二幕/${file}`, `../第三幕/${file}`,
         act4AssetSource(image.id, file), rhythmAssetSource(image.id, file),
         investmentAssetSource(image.id, file),
+        t07ReferenceAssetSource(image.id, file),
         `src/assets/ui-field-20261019/${file}`,
       ].filter(Boolean);
     };

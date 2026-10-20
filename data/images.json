@@ -3621,6 +3621,19 @@
       "notes": "UI-FIELD-20261019 新图片；感谢原句逐字核对",
       "assetType": "image",
       "file": "IMG_A2_SCHOOL_QIMING_THANKS_001.webp"
+    },
+    {
+      "id": "IMG_A2_T07_TRAIL_REFERENCE_001",
+      "title": "第一次徒步树林参照照片",
+      "act": 2,
+      "phase": "A2_T07",
+      "source": "scene",
+      "purpose": "T07 树林镜头的环境参照，不单独确认地点",
+      "unlockCondition": [],
+      "relatedFlags": [],
+      "notes": "T07-REF-20261020 保留素材；树林相似性仅指引玩家继续核对庙轮廓",
+      "assetType": "image",
+      "file": "IMG_A2_T07_TRAIL_REFERENCE_001.webp"
     }
   ]
 }

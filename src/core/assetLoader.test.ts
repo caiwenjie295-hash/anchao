@@ -3,7 +3,7 @@ import images from '../../data/images.json';
 import { birthdayImageSlots } from '../data/act4/assets';
 import { laterScenes } from '../data/act4/laterContent';
 import { act4IllustrationZoomDetailAssetIds } from '../data/narrative/act4IllustrationDetails';
-import { act4AssetPath, assetLoader, uiFieldAssetPath, uxFinaleA4AssetPath, uxInvestigationAssetPath, uxRhythmA4AssetPath } from './assetLoader';
+import { act4AssetPath, assetLoader, t07RefAssetPath, uiFieldAssetPath, uxFinaleA4AssetPath, uxInvestigationAssetPath, uxRhythmA4AssetPath } from './assetLoader';
 import { act3StageClueIds, type AuthoredAct3Stage } from '../data/act3Data';
 
 describe('fourth act art registration', () => {
@@ -127,6 +127,20 @@ describe('UI field-note artwork registration', () => {
     }
     expect(uiFieldAssetPath('IMG_A2_SCHOOL_OTHER_001', 'IMG_A2_SCHOOL_OTHER_001.webp')).toBeNull();
     expect(uiFieldAssetPath(ids[0], 'wrong.webp')).toBeNull();
+  });
+});
+
+describe('T07 trail reference registration', () => {
+  it('loads the approved forest WebP through its exact resource ID and filename', () => {
+    const id = 'IMG_A2_T07_TRAIL_REFERENCE_001';
+    const record = images.items.find((image) => image.id === id);
+    expect(record?.act).toBe(2);
+    expect(record?.file).toBe(`${id}.webp`);
+    expect(t07RefAssetPath(id, record?.file ?? '')).toBe(`../assets/t07-ref-20261020/${id}.webp`);
+    expect(assetLoader.get(id)?.src).toMatch(new RegExp(`t07-ref-20261020/${id}\\.webp`));
+    expect(assetLoader.isAvailable(id)).toBe(true);
+    expect(t07RefAssetPath('IMG_A2_T07_OTHER_001', 'IMG_A2_T07_OTHER_001.webp')).toBeNull();
+    expect(t07RefAssetPath(id, 'wrong.webp')).toBeNull();
   });
 });
 
