@@ -509,8 +509,10 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
         {capturedFrames.length === 0
           ? <p className="t07-finale__locked">{comparison.lockedHint}</p>
           : <>
-            <p className="t07-finale__xiaoyue">{comparison.xiaoyueLine}</p>
-            <p className="t07-finale__note">{comparison.replyLine}</p>
+            {templeConfirmed && <>
+              <p className="t07-finale__xiaoyue">{comparison.xiaoyueLine}</p>
+              <p className="t07-finale__note">{comparison.replyLine}</p>
+            </>}
             <div className="t07-finale__candidate-list" aria-label="选择要核对的截图">
               {capturedFrames.map((frame) => {
                 const capturedAt = t07.capturedAtMsByFrameId[frame.id];

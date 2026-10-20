@@ -248,9 +248,16 @@ describe('T07 promotion investigation', () => {
     expect(container.textContent).not.toContain('石砌开口附近');
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(['FRAME_A2_T07_002']);
     expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
+    const comparisonPanel = () => container.querySelector('.t07-finale__panel')?.textContent ?? '';
+    expect(comparisonPanel()).not.toContain(act2T07.comparison.xiaoyueLine);
+    expect(comparisonPanel()).not.toContain(act2T07.comparison.replyLine);
+    expect(comparisonPanel()).not.toContain('基本确定');
 
     await click('.t07-finale__compare');
     expect(container.textContent).toContain('树林环境很相似，值得继续核对视频中的庙轮廓');
+    expect(comparisonPanel()).not.toContain(act2T07.comparison.xiaoyueLine);
+    expect(comparisonPanel()).not.toContain(act2T07.comparison.replyLine);
+    expect(comparisonPanel()).not.toContain('基本确定');
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual([]);
     expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).not.toBe(true);
     expect(manager.submitAct2T07Comparison('FRAME_A2_T07_002', 'square-opening')).toBe('insufficient-evidence');
@@ -288,6 +295,25 @@ describe('T07 promotion investigation', () => {
     expect(manager.getState().modules.act2Research.t07.comparedFrameIds).toEqual(['FRAME_A2_T07_001']);
     expect(flags().FLAG_A2_TEMPLE_FRAME_FOUND).toBe(true);
     expect(container.textContent).toContain('基本确定是同一个地方');
+    expect(comparisonPanel()).toContain(act2T07.comparison.xiaoyueLine);
+    expect(comparisonPanel()).toContain(act2T07.comparison.replyLine);
+  });
+
+  it('restores the comparison dialogue from an existing temple-confirmed save', async () => {
+    const restoredState = manager.getState();
+    restoredState.game.flags = { ...restoredState.game.flags, FLAG_A2_TEMPLE_FRAME_FOUND: true };
+    restoredState.modules.act2Research.t07.capturedFrameIds = ['FRAME_A2_T07_001'];
+    // Older confirmed saves may retain the flag and screenshot without a comparison record.
+    restoredState.modules.act2Research.t07.capturedAtMsByFrameId = {};
+    manager = new StateManager(new EventBus(), restoredState);
+
+    await render();
+    await clickTab('外景对照');
+    await loadPendingImages();
+
+    const comparisonPanel = container.querySelector('.t07-finale__panel')?.textContent ?? '';
+    expect(comparisonPanel).toContain(act2T07.comparison.xiaoyueLine);
+    expect(comparisonPanel).toContain(act2T07.comparison.replyLine);
   });
 
   it('blocks trail comparison when the selected reference image fails to load', async () => {
