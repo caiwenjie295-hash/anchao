@@ -1,7 +1,7 @@
 # Fold round 2 notes — P07 + P13–P15 + P10–P12
 
-对照：现网 `AnChao/assets/anchao-polish.css`；计划 `polish-fold-plan.md`（④⑤⑥）。  
-源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`  
+对照：现网 `AnChao/assets/anchao-polish.css`；计划 `polish-fold-plan.md`（④⑤⑥）。
+源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`
 时间：2026-10-20（Asia/Shanghai）
 
 **未碰：** P09 页角翻页、P18/P19/P22、P03/P04 资源换图；解锁 / 验证 / `matchFeatureId` / 存档 / flag / stage；正确答案（桥头 黑/补/母）；第一刀 P08/P01/P16 未回滚。

@@ -1,7 +1,7 @@
 # Fold round 1 notes — P08 / P01 / P16
 
-对照：现网 `AnChao/assets/anchao-polish.css` + `anchao-patch.js`；计划 `polish-fold-plan.md` §6 最小第一刀。  
-源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`  
+对照：现网 `AnChao/assets/anchao-polish.css` + `anchao-patch.js`；计划 `polish-fold-plan.md` §6 最小第一刀。
+源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`
 时间：2026-10-20（Asia/Shanghai）
 
 **未碰：** P19 / P18 / P22；解锁 / 验证 / `matchFeatureId` / 存档；`anchao-polish` 外挂未删。

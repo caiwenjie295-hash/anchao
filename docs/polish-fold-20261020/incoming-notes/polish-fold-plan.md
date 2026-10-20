@@ -1,7 +1,7 @@
 # 把现网 polish 折进精简源码 —— 编号变更清单（群讨论用）
 
-> 对照日期：2026-10-20（Asia/Shanghai）  
-> **本清单只做对照与建议，未改任何源码文件。**  
+> 对照日期：2026-10-20（Asia/Shanghai）
+> **本清单只做对照与建议，未改任何源码文件。**
 > 解锁 / 验证 / 存档 schema 默认冻结；凡碰 flag / stage / 存档归一化的项已标「触解锁边界，需群点」。
 
 ---
@@ -20,7 +20,7 @@
 | 打包验证 | `打包验证.json`：`webBuild: PASS /AnChao/`，`implementationChanged: false` |
 | 说明注意 | 开发说明写明：本包**不含本轮未完成的图书馆/视频层级修改与山路新图**——与现网 polish 叠加层存在预期落差 |
 
-源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`  
+源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`
 现网 polish：`/workspace/anchao/AnChao/`（`index.html` cache `?v=1792455200`）
 
 ---
@@ -102,14 +102,14 @@
 
 ## 4. 建议落地顺序
 
-1. **展示层文案 / CSS（可并行、不碰锁）**  
+1. **展示层文案 / CSS（可并行、不碰锁）**
    P08（石砌空隙文案）→ P01/P07（缺口三态+暖纸）→ P16/P17（Act1 噪声）→ P13–P15（桥头）→ P10–P12（图书馆皮）→ P20（全局 token）
-2. **行为补丁（仍尽量不碰存档）**  
+2. **行为补丁（仍尽量不碰存档）**
    P03/P04/P06（裁切图+TRAIL 资源）→ P02（focus-box）→ P05（错帧教学）→ P09/P11（页角翻页/摘录条）→ P21（可选单击/滚底）
-3. **需群点口径**  
-   P18（blocked CTA 与「查看原因」无障碍是否保留）  
+3. **需群点口径**
+   P18（blocked CTA 与「查看原因」无障碍是否保留）
    P19（Act3/4 读档补全 —— **触解锁边界**）
-4. **最后再议**  
+4. **最后再议**
    P22 是否删除现网外挂 polish/patch（建议：主路径折完 + 冒烟 Act1→T07→桥→馆→Act3/4 后再摘）
 
 ---
@@ -140,8 +140,8 @@
 
 建议只收 **展示层、零解锁** 的 3 项：
 
-1. **P08** — `data/act2_t07.json`：正解 label / `FRAME_A2_T07_001` note 收到「石砌空隙 / 空隙」（id 不动）  
-2. **P01** — `src/act2/t07Finale.css`：缺口框暖灰三态（悬停/成功闪）定稿  
+1. **P08** — `data/act2_t07.json`：正解 label / `FRAME_A2_T07_001` note 收到「石砌空隙 / 空隙」（id 不动）
+2. **P01** — `src/act2/t07Finale.css`：缺口框暖灰三态（悬停/成功闪）定稿
 3. **P16** — `src/styles.css`：邮箱弱蓝点 + 微信未读降警报（不动已读状态）
 
 **不进第一刀：** P19（触解锁）、P18（与无障碍测试冲突）、P03/P04（资源换图，需验对照）、P22（删外挂过早）。
@@ -161,4 +161,3 @@
 | Act3/4 入口补档 / 防 T07 壳锁 | `saveMigration.ts`、`domain/act3.ts` `ACT3_ENTRY_FLAG`、`stateManager.ts` | 有落点；正式修复=改 migration（触解锁） |
 | blocked CTA 不可点 | `InvestigationNavigation.tsx`（`查看原因`）、`investigation.css` | 有落点；与 polish **口径冲突** |
 | 暖纸/茶边整体 | `t07Finale.css` / `t02Bridge.css` / `t03Library.css` / `styles.css` / `investigation.css` | 有落点，未统一茶 token |
-

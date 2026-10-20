@@ -1,7 +1,7 @@
 # Fold round 3 notes — ⑨ P05 + ⑩ P09 + ⑦ P17
 
-对照：现网 `AnChao/assets/anchao-polish.css` + `anchao-patch.js`（`installT07WrongFrameTeaching` / `installLibraryPolish`）；计划 `polish-fold-plan.md` P05/P09/P17。  
-源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`  
+对照：现网 `AnChao/assets/anchao-polish.css` + `anchao-patch.js`（`installT07WrongFrameTeaching` / `installLibraryPolish`）；计划 `polish-fold-plan.md` P05/P09/P17。
+源码根：`/workspace/anchao/source/暗潮-精简源码-fc11b3bc-20261020/`
 时间：2026-10-20（Asia/Shanghai）
 
 **未碰：** P20、P18、P19、P22、P03/P04 大换图；解锁 / 验证 / `matchFeatureId` / 存档 / flag / stage / `saveMigration` / `submitT07Comparison` 判定；第一刀 P08/P01/P16、第二刀 P07/P13–15/P10–12 未回滚。
@@ -74,7 +74,7 @@
 2. **P09**：卷内正文左右页缘可翻；角标短动效；底栏「上一页/下一页」仍可用但更淡；页序 leaves 不可点。
 3. **P17**：桌面任务卡计数偏静音；底栏纸茶玻璃感。
 4. 回归：P08 石砌空隙、P01 缺口三态、P16 微信「新」、P07 暖纸桌、桥头茶壳、图书馆摘录条仍在。
-5. 可选（未跑，本环境无 `node_modules`）：  
+5. 可选（未跑，本环境无 `node_modules`）：
    `npm test -- --run src/data/act2T07Data.test.ts src/scenes/act2/T07Investigation.test.tsx src/scenes/act2/LibraryResearch.test.tsx`
 
 ---
