@@ -9,7 +9,7 @@ import { investigationAudio, readInvestigationAudioPreference, writeInvestigatio
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
-import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, segmentAt, visualFrameAt } from '../../data/act2T07Data';
+import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import { T07FinaleCurtain } from '../../components/scenePolish/T07FinaleCurtain';
 import '../../act2/t07Finale.css';
 
@@ -307,10 +307,12 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     setTab('materials');
   };
 
+  const mismatchStatus = Boolean(compareFeedback && compareFeedback !== comparison.structureNote);
+
   return (
     <InvestigationShell
       ariaLabel="第二幕宣传视频与外景核对"
-      className="investigation-shell--exploration"
+      className={`investigation-shell--exploration${mismatchStatus ? ' t07-shell--mismatch-status' : ''}`}
       actLabel="第二幕 · 启明地点与出发"
       locationLabel="旧资料对照"
       contextLabel="时间回看 · 当前调查"
@@ -460,11 +462,13 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
           <div className="t07-finale__filmstrip-track">
             {capturedFrames.map((frame) => {
               const capturedAt = t07.capturedAtMsByFrameId[frame.id];
-              return <article key={frame.id} className="t07-finale__filmstrip-item">
+              const muted = !frame.supportsExteriorMatch;
+              return <article key={frame.id} className={`t07-finale__filmstrip-item${muted ? ' t07-finale__frame--muted' : ''}`} data-frame-kind={frame.frameKind} data-exterior-match={frame.supportsExteriorMatch ? 'true' : 'false'}>
                 <button type="button" className="t07-finale__filmstrip-select" aria-pressed={selectedFrameId === frame.id || (!selectedFrameId && activeFrame?.id === frame.id)} onClick={() => setSelectedFrameId(frame.id)}>
                   <FrameVisual assetId={frame.imageId} altText={frame.altText} note={frame.placeholderNote} className="t07-finale__filmstrip-image" />
                   <span>{frame.caption}</span>
                   <small>{capturedAt === undefined ? `画面 ${frameTimeWindow(frame)}` : `截取 ${formatMediaStamp(capturedAt)}`}</small>
+                  {muted && frame.muteLabel ? <span className="t07-finale__frame-tag">{frame.muteLabel}</span> : null}
                 </button>
                 <div className="t07-finale__filmstrip-actions">
                   <button type="button" className="t07-finale__screenshot-zoom" onClick={(event) => openShot(frame.id, event.currentTarget)}>{video.screenshotZoomLabel}</button>
@@ -485,7 +489,8 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             <div className="t07-finale__candidate-list" aria-label="选择要核对的截图">
               {capturedFrames.map((frame) => {
                 const capturedAt = t07.capturedAtMsByFrameId[frame.id];
-                return <button type="button" key={frame.id} aria-pressed={activeFrame?.id === frame.id} onClick={() => { if (frame.id !== activeFrame?.id) { setSelectedFrameId(frame.id); setComparisonFrameReady(false); setComparisonExteriorReady(false); } setSelectedFeatureId(''); setCompareFeedback(''); }}>{frame.caption} · {capturedAt === undefined ? `画面时段 ${frameTimeWindow(frame)}` : `截取于 ${formatMediaStamp(capturedAt)}`}</button>;
+                const muted = !frame.supportsExteriorMatch;
+                return <button type="button" key={frame.id} className={muted ? 't07-finale__frame--muted' : undefined} data-frame-kind={frame.frameKind} data-exterior-match={frame.supportsExteriorMatch ? 'true' : 'false'} aria-pressed={activeFrame?.id === frame.id} onClick={() => { if (frame.id !== activeFrame?.id) { setSelectedFrameId(frame.id); setComparisonFrameReady(false); setComparisonExteriorReady(false); } setSelectedFeatureId(''); setCompareFeedback(''); }}>{frame.caption} · {capturedAt === undefined ? `画面时段 ${frameTimeWindow(frame)}` : `截取于 ${formatMediaStamp(capturedAt)}`}{muted && frame.muteLabel ? <span className="t07-finale__frame-tag">{frame.muteLabel}</span> : null}</button>;
               })}
             </div>
             {activeFrame && <>
@@ -517,7 +522,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                 </div>
                 : <button type="button" className="t07-finale__compare" disabled={!selectedFeatureId || !comparisonFrameReady || !comparisonExteriorReady} onClick={() => {
                   const result = manager.submitAct2T07Comparison(activeFrame.id, selectedFeatureId);
-                  setCompareFeedback(result === 'recorded' || result === 'already-recorded' ? comparison.structureNote : comparison.mismatchNote);
+                  setCompareFeedback(result === 'recorded' || result === 'already-recorded' ? comparison.structureNote : resolveT07MismatchNote(activeFrame, selectedFeatureId));
                 }}>{comparison.compareLabel}</button>}
               {(!comparisonFrameReady || !comparisonExteriorReady) && <p className="t07-finale__hint" role="status">正在载入两份原图；图片可见后再记录外观对照。</p>}
             </>}

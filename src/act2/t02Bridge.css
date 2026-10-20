@@ -1,9 +1,10 @@
+/* P13/P14/P15 — bridge warm paper / tea elders + puzzle (from anchao-polish; answers untouched) */
 /* T02 field notes: the photograph is the scene index; the open page is the current voice. */
 .act2-bridge {
-  --bridge-ink: var(--ui-text, #282c2c);
-  --bridge-muted: var(--ui-text-muted, #646762);
-  --bridge-line: var(--ui-border, #c7c8bf);
-  --bridge-accent: var(--ui-accent, #6b7d83);
+  --bridge-ink: #2a2926;
+  --bridge-muted: #5a564e;
+  --bridge-line: #c9c2b4;
+  --bridge-accent: #8a6a3b;
   --bridge-margin: #944d3f;
   display: flex;
   box-sizing: border-box;
@@ -51,17 +52,37 @@
 .act2-bridge__scene-fallback p { max-width: 36ch; margin: 0; line-height: 1.6; }
 .act2-bridge__scene-record figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 7px 0; border-bottom: 1px solid var(--bridge-line); color: var(--bridge-muted); font-size: 12px; }
 .act2-bridge__scene-record figcaption span:first-child { color: var(--bridge-ink); font-weight: 650; }
-.investigation-shell .act2-bridge__stage > button.act2-bridge__elder { position: absolute; z-index: 2; box-sizing: border-box; display: grid; place-items: start; min-height: 0; padding: 0; border: 2px dashed #f7f8f3; border-radius: 2px; color: #fff; background: transparent; box-shadow: 0 0 0 1px rgb(24 40 31 / 72%), inset 0 0 0 1px rgb(24 40 31 / 24%); cursor: pointer; }
-.investigation-shell .act2-bridge__stage > button.act2-bridge__elder:hover:not(:disabled),
-.investigation-shell .act2-bridge__stage > button.act2-bridge__elder.act2-bridge__elder--active { border: 3px dashed #fff; background: rgb(148 77 63 / 12%); box-shadow: 0 0 0 2px rgb(36 43 43 / 90%), inset 0 0 0 1px rgb(36 43 43 / 35%); }
-.investigation-shell .act2-bridge__stage > button.act2-bridge__elder:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px #944d3f, inset 0 0 0 1px rgb(25 47 34 / 35%); }
-.act2-bridge__elder-number { position: absolute; top: -10px; left: -10px; display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid #fff; border-radius: 50%; color: #fff; background: var(--bridge-margin); box-shadow: 0 1px 5px #0008; font-size: 12px; font-weight: 700; }
+/* P14 — elder hotspot: light tea dashed focus-box; hover ≠ active */
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder,
+.investigation-shell--act2-field-notes .act2-bridge__stage > button.act2-bridge__elder {
+  position: absolute; z-index: 2; box-sizing: border-box; display: grid; place-items: start; min-height: 0; padding: 0;
+  border: 2px dashed rgba(138, 106, 59, 0.42); border-radius: 2px; color: transparent;
+  background: rgba(248, 246, 240, 0.06); box-shadow: inset 0 0 0 1px rgba(138, 106, 59, 0.12); cursor: pointer;
+}
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder:hover:not(:disabled):not(.act2-bridge__elder--active),
+.investigation-shell--act2-field-notes .act2-bridge__stage > button.act2-bridge__elder:hover:not(:disabled):not(.act2-bridge__elder--active) {
+  background: rgba(240, 230, 212, 0.28); border: 2px dashed rgba(138, 106, 59, 0.72);
+  box-shadow: 0 0 0 1px rgba(138, 106, 59, 0.2), inset 0 0 0 1px rgba(248, 246, 240, 0.25);
+}
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder.act2-bridge__elder--active,
+.investigation-shell--act2-field-notes .act2-bridge__stage > button.act2-bridge__elder.act2-bridge__elder--active {
+  background: rgba(138, 106, 59, 0.04); border: 2.5px dashed #8a6a3b; box-shadow: none;
+}
+.investigation-shell .act2-bridge__stage > button.act2-bridge__elder:focus-visible,
+.investigation-shell--act2-field-notes .act2-bridge__stage > button.act2-bridge__elder:focus-visible {
+  outline: 2px solid #8a6a3b; outline-offset: 3px; box-shadow: 0 0 0 2px rgba(138, 106, 59, 0.35);
+}
+.act2-bridge__elder-number {
+  position: absolute; top: -10px; left: -10px; display: grid; width: 24px; height: 24px; place-items: center;
+  border: 1px solid #f0e6d4; border-radius: 50%; color: #f7f5ef; background: #8a6a3b;
+  box-shadow: 0 1px 3px rgba(42, 41, 38, 0.25); font-size: 12px; font-weight: 700;
+}
 .act2-bridge__elder-list { grid-area: people; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; min-width: 0; }
 .act2-bridge__elder-list h2 { display: flex; grid-column: 1 / -1; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 2px; padding-bottom: 6px; border-bottom: 1px solid var(--bridge-line); font-size: 14px; font-weight: 600; }
 .act2-bridge__elder-list h2 small { color: var(--bridge-muted); font-size: 11px; font-weight: 400; }
 .act2-bridge__elder-list button { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; align-items: center; column-gap: 8px; min-width: 0; min-height: 50px; padding: 6px 7px; border: 1px solid var(--bridge-line); border-radius: 2px; color: var(--bridge-ink); background: transparent; font: inherit; text-align: left; cursor: pointer; }
-.act2-bridge__elder-list button:hover,
-.act2-bridge__elder-list button.is-active { border-color: var(--bridge-accent); background: var(--ui-accent-soft, #e8ebed); }
+.act2-bridge__elder-list button:hover { border-color: #8a6a3b; background: #f0e6d4; }
+.act2-bridge__elder-list button.is-active { border-color: #6e542e; background: #ebe6dc; box-shadow: inset 0 0 0 1px rgba(138, 106, 59, 0.35); }
 .act2-bridge__elder-list button:focus-visible,
 .act2-bridge__dialogue button:focus-visible,
 .act2-bridge__puzzle button:focus-visible { outline: 3px solid var(--bridge-accent); outline-offset: 2px; }
@@ -81,16 +102,18 @@
 .act2-bridge__chat-lines p { max-width: 64ch; margin: 0; padding-left: 12px; border-left: 1px solid var(--bridge-line); font: 500 clamp(16px, 1.25vw, 19px)/1.8 Georgia, "Songti SC", serif; }
 .act2-bridge__reply p,
 .act2-bridge__oral p { max-width: 68ch; margin: 5px 0; line-height: 1.75; }
-.act2-bridge__reply { margin: 14px 0 0; padding: 10px 13px; border-left: 2px solid var(--bridge-accent); color: var(--bridge-ink); background: #eceeea; }
+.act2-bridge__reply { margin: 14px 0 0; padding: 10px 13px; border-left: 2px solid #8a6a3b; color: var(--bridge-ink); background: #f0e6d4; }
 .act2-bridge__ask,
 .act2-bridge__replay,
 .act2-bridge__show,
 .act2-bridge__confirm { box-sizing: border-box; min-height: 44px; padding: 8px 13px; border: 1px solid var(--bridge-accent); border-radius: 2px; color: #35464b; background: transparent; font: inherit; font-size: 14px; cursor: pointer; }
 .act2-bridge__ask { margin-top: 2px; }
+.act2-bridge__ask,
+.act2-bridge__replay,
+.act2-bridge__show { border-color: #a89878; color: #3a342c; }
 .act2-bridge__ask:hover,
 .act2-bridge__replay:hover,
-.act2-bridge__show:hover,
-.act2-bridge__confirm:hover:not(:disabled) { background: var(--ui-accent-soft, #e8ebed); }
+.act2-bridge__show:hover { background: #f0e6d4; border-color: #8a6a3b; }
 .act2-bridge__evidence { margin-top: 17px; padding-top: 12px; border-top: 1px dashed var(--bridge-line); }
 .act2-bridge__evidence > summary { color: var(--bridge-ink); font-size: 14px; font-weight: 650; cursor: pointer; }
 .act2-bridge__evidence > p { margin: 4px 0 10px; color: var(--bridge-muted); font-size: 12px; }
@@ -115,16 +138,43 @@
 .act2-bridge__puzzle h2 { margin: 0; font-size: 18px; }
 .act2-bridge__part { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 14px; margin: 0; padding: 8px 10px; border: 1px solid var(--bridge-line); border-radius: 2px; }
 .act2-bridge__part legend { padding: 0 5px; color: var(--bridge-muted); font-size: 12px; }
-.act2-bridge__option { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; cursor: pointer; }
-.act2-bridge__option input { width: 18px; height: 18px; accent-color: var(--bridge-accent); }
+/* P15 — three-glyph feedback: warm tea; selected ≠ pass-green; confirm tea; resolution inline */
+.act2-bridge__option {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 42px; cursor: pointer;
+  border: 1px solid transparent; border-radius: 2px; padding: 4px 8px 4px 4px;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.act2-bridge__option:hover { background: #f0e6d4; border-color: #ddd6c8; }
+.act2-bridge__option:has(input:checked) {
+  background: #ebe6dc; border-color: #8a6a3b; box-shadow: inset 0 0 0 1px rgba(138, 106, 59, 0.2);
+}
+.act2-bridge__option input { width: 18px; height: 18px; accent-color: #8a6a3b; }
+.act2-bridge__part { background: #f8f6f0; border-color: #c9c2b4; }
 .act2-bridge__part-locked { width: 100%; margin: 0; color: var(--bridge-muted); font-size: 12px; }
-.act2-bridge__locked-hint,
-.act2-bridge__wrong-hint { margin: 0; padding: 9px 11px; border-left: 2px solid var(--bridge-accent); color: var(--bridge-ink); background: #e9ece9; line-height: 1.55; }
-.act2-bridge__wrong-hint { border-color: #a27642; background: #fbf5eb; }
-.act2-bridge__guessing-note { margin: 0; color: var(--bridge-muted); font-size: 13px; }
+.act2-bridge__locked-hint { margin: 0; padding: 9px 11px; border-left: 2px solid var(--bridge-line); color: #7a7468; background: #f0eee8; line-height: 1.55; font-size: 12px; font-weight: 400; }
+.act2-bridge__wrong-hint {
+  margin: 0; padding: 9px 11px; border-left: 3px solid #a27642; color: #5a4020; background: #fbf5eb;
+  line-height: 1.55; box-shadow: inset 0 0 0 1px rgba(162, 118, 66, 0.22); font-weight: 550;
+}
+.act2-bridge__guessing-note,
+.act2-bridge__phrase-after,
+.act2-bridge__evidence-lead { margin: 0; color: #7a7468; font-size: 12px; font-weight: 400; line-height: 1.55; }
 .act2-bridge__confirm { justify-self: start; min-width: 120px; }
+.act2-bridge__confirm:not(:disabled) {
+  background: #8a6a3b; border-color: #6e542e; color: #f7f5ef; font-weight: 650;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+.act2-bridge__confirm:not(:disabled):hover { background: #9a7a48; border-color: #6e542e; color: #fff; }
 .act2-bridge__confirm:disabled { color: #595959; border-color: #bfbfbf; background: #f0f0f0; cursor: not-allowed; }
-.act2-bridge__resolution { display: grid; gap: 8px; width: 100%; margin: 0; padding: 15px 0 0; border: 0; border-top: 1px solid var(--bridge-line); border-radius: 0; background: transparent; }
+.act2-bridge__resolution {
+  position: relative; z-index: 1; display: grid; gap: 8px; width: 100%;
+  margin: 8px 0 12px; padding: 14px 14px 16px; border: 1px solid #c9c2b4; border-radius: 2px;
+  background: #f8f6f0; box-shadow: inset 0 1px 0 rgba(255, 252, 245, 0.7);
+}
+.act2-bridge__resolution::before {
+  content: ""; display: block; height: 3px; margin: -14px -14px 12px; border-radius: 2px 2px 0 0;
+  background: linear-gradient(90deg, #8a6a3b, #c9b48a 55%, transparent);
+}
 .act2-bridge__entry-title { margin: 0; color: var(--bridge-ink); font: 500 24px/1.4 Georgia, serif; letter-spacing: .04em; }
 .act2-bridge__entry-body,
 .act2-bridge__elder-remark { margin: 0; line-height: 1.75; }

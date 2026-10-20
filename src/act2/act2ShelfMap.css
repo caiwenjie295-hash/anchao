@@ -1,36 +1,70 @@
+/* P10 — shelf map caption/disabled + warm selected (tea, no sage) */
 .act2-shelf-map { display: grid; gap: 8px; min-width: 0; }
 .act2-shelf-map__plane { position: relative; width: 100%; min-width: 0; overflow: hidden; border: 1px solid var(--ui-border, #d9d9d9); background: var(--ui-surface-muted, #f0f0f0); }
 .act2-shelf-map__plane > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
 .act2-shelf-map__fallback { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 5px; padding: 14px; color: var(--ui-text-muted, #595959); background: repeating-linear-gradient(135deg, #eceeea 0 12px, #f5f6f3 12px 24px); text-align: center; }
-.act2-shelf-map__fallback span { color: #315b45; font-size: 24px; font-weight: 650; }
+.act2-shelf-map__fallback span { color: #8a6a3b; font-size: 24px; font-weight: 650; }
 .act2-shelf-map__fallback p { max-width: 30ch; margin: 0; font-size: 12px; line-height: 1.55; }
 .act2-shelf-map__hotspots { position: absolute; inset: 0; }
 .act2-shelf-map__hotspot { position: absolute; display: grid; min-width: 44px; min-height: 44px; place-items: end stretch; padding: 0; overflow: hidden; border: 2px dashed rgb(246 246 236 / 96%); border-radius: 2px; color: #fff; background: rgb(20 38 29 / 12%); cursor: pointer; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 20%), 0 1px 3px rgb(0 0 0 / 38%); }
 .act2-shelf-map__hotspot > span { display: block; max-width: 100%; padding: 3px 5px; overflow: hidden; background: rgb(24 39 31 / 82%); font-size: clamp(9px, 1.05vw, 12px); line-height: 1.35; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
-.act2-shelf-map__hotspot:hover:not(:disabled),
-.act2-shelf-map__hotspot:focus-visible,
-.act2-shelf-map__hotspot.is-selected { border-color: #fff; background: rgb(28 77 49 / 32%); }
-.act2-shelf-map__hotspot:focus-visible { z-index: 2; outline: 3px solid #f4edc9; outline-offset: 1px; }
-.act2-shelf-map__hotspot.is-selected > span { background: #315b45; font-weight: 650; }
-.act2-shelf-map__hotspot:disabled { cursor: not-allowed; opacity: .94; }
-.act2-shelf-map__hotspot:disabled > span { color: #fff; background: rgb(35 43 38 / 82%); }
+/* P10 — disabled「待查阅」→ caption, not button chrome; selected warm ≠ hover */
+.act2-shelf-map__hotspot:hover:not(:disabled) {
+  background: rgba(138, 106, 59, 0.14); border-color: rgba(243, 239, 230, 0.85);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+.act2-shelf-map__hotspot:focus-visible { z-index: 2; outline: 2px solid #8a6a3b; outline-offset: 1px; }
+.act2-shelf-map__hotspot.is-selected:not(:disabled) {
+  background: rgba(42, 41, 38, 0.22); border-color: #f3efe6; border-style: solid;
+  box-shadow: inset 0 0 0 1px rgba(138, 106, 59, 0.55);
+}
+.act2-shelf-map__hotspot.is-selected:not(:disabled) > span { background: #2a2926; color: #f3efe6; font-weight: 650; }
+.act2-shelf-map__hotspot:disabled,
+.act2-shelf-map__hotspot--caption {
+  cursor: default; pointer-events: none; background: transparent; border: none; outline: none;
+  box-shadow: none; opacity: 1; filter: none; border-radius: 0; min-width: 0; min-height: 0; padding: 0;
+  appearance: none; -webkit-appearance: none;
+}
+.act2-shelf-map__hotspot:disabled > span,
+.act2-shelf-map__hotspot--caption > span {
+  display: inline-block; color: #7a7468; background: transparent; border: none; box-shadow: none;
+  font-weight: 400; font-size: 11px; letter-spacing: 0.08em; padding: 0; margin: 0;
+  pointer-events: none; cursor: default; text-shadow: 0 1px 0 rgba(255, 252, 245, 0.75); opacity: 0.92;
+}
 /* The shared investigation button reset is deliberately more specific than a local button class. */
 .investigation-shell .act2-shelf-map__hotspot { min-width: 44px; min-height: 44px; padding: 0; border: 2px dashed rgb(246 246 236 / 96%); border-radius: 2px; color: #fff; background: rgb(20 38 29 / 12%); }
-.investigation-shell .act2-shelf-map__hotspot:hover:not(:disabled),
-.investigation-shell .act2-shelf-map__hotspot:focus-visible,
-.investigation-shell .act2-shelf-map__hotspot.is-selected { border-color: #fff; background: rgb(28 77 49 / 32%); }
-.investigation-shell .act2-shelf-map__hotspot:focus-visible { outline: 3px solid #f4edc9; outline-offset: 1px; }
-.investigation-shell .act2-shelf-map__hotspot.is-selected > span { background: #315b45; font-weight: 650; }
-.investigation-shell .act2-shelf-map__hotspot:disabled { cursor: not-allowed; opacity: .94; }
-.investigation-shell .act2-shelf-map__hotspot:disabled > span { color: #fff; background: rgb(35 43 38 / 82%); }
+.investigation-shell .act2-shelf-map__hotspot:hover:not(:disabled) {
+  background: rgba(138, 106, 59, 0.14); border-color: rgba(243, 239, 230, 0.85);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+.investigation-shell .act2-shelf-map__hotspot:focus-visible { outline: 2px solid #8a6a3b; outline-offset: 1px; }
+.investigation-shell .act2-shelf-map__hotspot.is-selected:not(:disabled) {
+  background: rgba(42, 41, 38, 0.22); border-color: #f3efe6; border-style: solid;
+  box-shadow: inset 0 0 0 1px rgba(138, 106, 59, 0.55);
+}
+.investigation-shell .act2-shelf-map__hotspot.is-selected:not(:disabled) > span { background: #2a2926; color: #f3efe6; font-weight: 650; }
+.investigation-shell .act2-shelf-map__hotspot:disabled,
+.investigation-shell .act2-shelf-map__hotspot--caption {
+  cursor: default; pointer-events: none; background: transparent; border: none; outline: none;
+  box-shadow: none; opacity: 1; filter: none; border-radius: 0; min-width: 0; min-height: 0; padding: 0;
+}
+.investigation-shell .act2-shelf-map__hotspot:disabled > span,
+.investigation-shell .act2-shelf-map__hotspot--caption > span {
+  display: inline-block; color: #7a7468; background: transparent; font-weight: 400; font-size: 11px;
+  letter-spacing: 0.08em; padding: 0; text-shadow: 0 1px 0 rgba(255, 252, 245, 0.75); opacity: 0.92;
+}
 .act2-shelf-map__locked { margin: 0; color: var(--ui-text-muted, #595959); font-size: 12px; line-height: 1.5; }
 .act2-shelf-map__text-links { display: grid; gap: 5px; }
 .act2-shelf-map__text-links > p { margin: 0; color: var(--ui-text-muted, #595959); font-size: 11px; }
 .act2-shelf-map__text-links ul { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; padding: 0; list-style: none; }
 .act2-shelf-map__text-links button { min-height: 38px; padding: 5px 8px; border: 1px solid var(--ui-border, #d9d9d9); border-radius: 3px; color: var(--ui-text-muted, #454b48); background: transparent; cursor: pointer; font: inherit; font-size: 11px; text-align: left; }
-.act2-shelf-map__text-links button:hover:not(:disabled),
-.act2-shelf-map__text-links button[aria-current="true"] { border-color: var(--ui-accent, #315b45); color: var(--ui-text, #1f1f1f); background: var(--ui-accent-soft, #e9eee9); }
-.act2-shelf-map__text-links button:disabled { cursor: not-allowed; }
+.act2-shelf-map__text-links button:hover:not(:disabled) { border-color: #b8a889; color: #2a2926; background: #f7f2e8; }
+.act2-shelf-map__text-links button[aria-current="true"] { border-color: #8a6a3b; color: #2a2926; background: #e6e1d6; box-shadow: inset 0 0 0 1px rgba(138, 106, 59, 0.2); }
+.act2-shelf-map__text-links button:disabled {
+  cursor: default; pointer-events: none; border: none; background: transparent; color: #9a958c;
+  opacity: 1; filter: none; box-shadow: none; text-decoration: none; font-weight: 400; font-size: 11px;
+  min-height: 0; min-width: 0; padding: 1px 0; appearance: none;
+}
 @media (max-width: 680px) {
   .act2-shelf-map__hotspot > span { padding: 3px; font-size: 10px; }
   .act2-shelf-map__text-links button { min-height: 44px; }

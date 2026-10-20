@@ -125,9 +125,10 @@
         "imageId": "IMG_A2_T07_005",
         "zoomImageId": "IMG_A2_T07_006",
         "altText": "山路背景里短暂出现的石质建筑",
-        "placeholderNote": "用石头简易搭成的小石堆，中间留出一个方形缺口。",
+        "placeholderNote": "用石头简易搭成的小石堆，中间留出一块空隙。",
         "caption": "山路背景里的石质建筑",
-        "supportsExteriorMatch": true
+        "supportsExteriorMatch": true,
+        "frameKind": "temple"
       },
       {
         "id": "FRAME_A2_T07_002",
@@ -139,7 +140,9 @@
         "altText": "镜头沿山路移动",
         "placeholderNote": "画面里是树木和山路，暂时看不清与外景相符的建筑轮廓。",
         "caption": "山路行进画面",
-        "supportsExteriorMatch": false
+        "supportsExteriorMatch": false,
+        "frameKind": "trail",
+        "muteLabel": "树林·暂不可外景核对"
       },
       {
         "id": "FRAME_A2_T07_003",
@@ -151,7 +154,9 @@
         "altText": "视频切回受访者",
         "placeholderNote": "镜头切回受访者与机构门口，没有出现可供建筑对照的画面。",
         "caption": "受访者画面",
-        "supportsExteriorMatch": false
+        "supportsExteriorMatch": false,
+        "frameKind": "interview",
+        "muteLabel": "受访·暂不可外景核对"
       }
     ],
     "visualFrames": [
@@ -204,7 +209,7 @@
     "featureOptions": [
       {
         "id": "square-opening",
-        "label": "石堆中间留有方形缺口"
+        "label": "入口处可见规整的石砌空隙"
       },
       {
         "id": "mountain-road",
@@ -216,7 +221,13 @@
       }
     ],
     "matchFeatureId": "square-opening",
-    "mismatchNote": "这个画面或特征与破庙外景对不上。可以换一张已截画面或另选一个可见特征。"
+    "mismatchNote": "这个画面或特征与破庙外景对不上。可以换一张已截画面或另选一个可见特征。",
+    "mismatchNotesByKind": {
+      "trail": "这是山路树林镜头，看不清庙的轮廓，换一张帧再对照。",
+      "interview": "这是受访近景，对不上破庙外景，换一张帧再对照。",
+      "templeRoad": "偏了，这是路和树，不是庙门口那一带。",
+      "templeOther": "偏了，这一侧对不上破庙外景，换一个可见特征再试。"
+    }
   },
   "inference": {
     "title": "把两条线放在一起",

@@ -36,6 +36,8 @@ export type T07Segment = {
   line: string;
 };
 
+export type T07FrameKind = 'temple' | 'trail' | 'interview';
+
 export type T07KeyFrame = {
   id: string;
   segmentId: string;
@@ -47,6 +49,9 @@ export type T07KeyFrame = {
   placeholderNote: string;
   caption: string;
   supportsExteriorMatch: boolean;
+  /** P05：胶片分型；非外景帧静音标签用 muteLabel。 */
+  frameKind: T07FrameKind;
+  muteLabel?: string;
 };
 
 export type T07VisualFrame = { startMs: number; endMs: number; imageId: string };
@@ -95,6 +100,13 @@ export type Act2T07Data = {
     featureOptions: { id: string; label: string }[];
     matchFeatureId: string;
     mismatchNote: string;
+    /** P05：按帧型/特征分叉的失败提示（提交校验仍只用 matchFeatureId）。 */
+    mismatchNotesByKind: {
+      trail: string;
+      interview: string;
+      templeRoad: string;
+      templeOther: string;
+    };
   };
   inference: { title: string; jigonglingBranch: string[]; qimingBranch: string[]; conclusion: string; confirmLabel: string; caveat: string; lockedHint: string };
   trip: { title: string; lines: { speaker: string; text: string }[]; gearImageId: string; gearCaption: string; gearAltText: string; gearNote: string; confirmLabel: string; plannedNote: string; lockedHint: string };
@@ -119,6 +131,19 @@ export const visualFrameAt = (timeMs: number): T07VisualFrame | undefined => act
 export const isFrameCapturableAt = (frameId: string, timeMs: number): boolean => {
   const frame = keyFrameById.get(frameId);
   return frame !== undefined && Number.isFinite(timeMs) && timeMs >= frame.startMs && timeMs <= frame.endMs;
+};
+
+/** P05：错帧教学文案；不改提交对错，只改展示提示。 */
+export const resolveT07MismatchNote = (frame: T07KeyFrame | undefined, featureId: string): string => {
+  const notes = act2T07.comparison.mismatchNotesByKind;
+  if (!frame) return act2T07.comparison.mismatchNote;
+  if (frame.frameKind === 'trail') return notes.trail;
+  if (frame.frameKind === 'interview') return notes.interview;
+  if (frame.frameKind === 'temple') {
+    if (featureId === 'mountain-road') return notes.templeRoad;
+    return notes.templeOther;
+  }
+  return act2T07.comparison.mismatchNote;
 };
 
 /** T07 场景内可回看的 T06 公开资料；只读，不写入任何进度。 */
@@ -158,6 +183,14 @@ export function validateAct2T07Data(): void {
   if (new Set(video.segments.map((segment) => segment.id)).size !== video.segments.length) throw new Error('T07 视频片段 ID 必须唯一。');
   if (new Set(video.keyFrames.map((frame) => frame.id)).size !== video.keyFrames.length || video.keyFrames.length < 3) throw new Error('T07 截图候选帧 ID 必须唯一且至少有三个可选画面。');
   if (video.keyFrames.filter((frame) => frame.supportsExteriorMatch).length !== 1) throw new Error('T07 只有一个截图候选画面应与破庙外景轮廓相符。');
+  for (const frame of video.keyFrames) {
+    if (frame.frameKind !== 'temple' && frame.frameKind !== 'trail' && frame.frameKind !== 'interview') throw new Error(`T07 关键帧缺少合法 frameKind：${frame.id}`);
+    if (frame.supportsExteriorMatch !== (frame.frameKind === 'temple')) throw new Error(`T07 外景可对帧与 frameKind 不一致：${frame.id}`);
+    if (frame.frameKind === 'temple' && frame.muteLabel) throw new Error(`T07 外景可对帧不应带静音标签：${frame.id}`);
+    if (frame.frameKind !== 'temple' && !frame.muteLabel) throw new Error(`T07 非外景帧缺少 muteLabel：${frame.id}`);
+  }
+  const mismatchByKind = act2T07.comparison.mismatchNotesByKind;
+  if (!mismatchByKind?.trail || !mismatchByKind.interview || !mismatchByKind.templeRoad || !mismatchByKind.templeOther) throw new Error('T07 缺少分型 mismatchNotesByKind。');
   if (!act2T07.comparison.featureOptions.some((option) => option.id === act2T07.comparison.matchFeatureId)) throw new Error('T07 外景对照特征选项无效。');
   if (video.segments.length === 0 || video.segments[0].startMs !== 0 || video.segments[video.segments.length - 1].endMs !== video.durationMs) throw new Error('T07 视频片段必须覆盖完整时长。');
   for (let index = 1; index < video.segments.length; index += 1) {
@@ -190,7 +223,7 @@ export function validateAct2T07Data(): void {
     act2T07.intro, act2T07.promoSurfaceNote, ...act2T07.promoSurfaceText,
     ...act2T07.materials.flatMap((material) => [material.title, material.caption, material.placeholderNote, material.xiaoyueLine ?? '', material.symbolNote ?? '', material.logoSpeculation ?? '', material.confirmedNote ?? '']),
     ...video.segments.flatMap((segment) => [segment.label, segment.line, segment.placeholderNote]),
-    video.continuityNote, ...video.keyFrames.flatMap((frame) => [frame.caption, frame.altText, frame.placeholderNote]), ...act2T07.comparison.featureOptions.map((option) => option.label), act2T07.comparison.mismatchNote,
+    video.continuityNote, ...video.keyFrames.flatMap((frame) => [frame.caption, frame.altText, frame.placeholderNote]), ...act2T07.comparison.featureOptions.map((option) => option.label), act2T07.comparison.mismatchNote, ...Object.values(act2T07.comparison.mismatchNotesByKind), ...video.keyFrames.map((frame) => frame.muteLabel ?? ''),
     ...Object.values(act2T07.comparison), act2T07.inference.conclusion, act2T07.inference.caveat, act2T07.inference.lockedHint,
     ...act2T07.trip.lines.map((line) => line.text), act2T07.trip.plannedNote, act2T07.trip.gearNote,
     ...act2T07.finale.lines, act2T07.finale.closingNote,
