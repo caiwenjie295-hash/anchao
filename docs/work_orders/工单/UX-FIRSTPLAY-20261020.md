@@ -37,10 +37,12 @@ Luna允许（路径皆相对本worktree）：
 - `src/scenes/act3/Act3Investigation.tsx`及`.test.tsx`。
 - `src/data/act3Presentation.ts`及对应测试（可新增同名`.test.ts`）。
 - `src/scenes/act4/Act4NarrativeReader.tsx`、`Act4ReaderBehavior.test.tsx`、`reader/Act4ReaderStoryBody.tsx`及对应`.test.tsx`、`reader/Act4ReaderCover.tsx`、`reader/Act4ReaderPager.tsx`、`reader/readerVisibility.ts`及`.test.ts`、`reader/readerModel.ts`、`reader/useAct4ReaderSession.ts`及`.test.tsx`。
+- `src/scenes/act4/Act4LaterExperience.test.tsx`：仅同步本批封页→正文内配图/原图放大与T05部分回顾预期、F06邮件标题断言；其他行为保护断言保持。父审发现该未分配文件已被改写后逐hunk审查确属F04/F06必要回归，补充明确所有权；后续新增路径仍须先请求。
 - `src/data/narrative/act4Presentation.ts`及`.test.ts`。
 - `src/scenes/act4/reader/layoutPreferences.ts`与新增`layoutPreferences.test.ts`：仅当前560字分页到新表现布局的UI位置迁移；可提升独立reader-layout表现版本，保持游戏schema13/StateManager/故事Flags和原公共API，不伪造已读或动作。
 - `src/act2/t05School.css`、`src/act3/act3Scene.css`、`src/act4/act4.css`，仅本批新增状态/入口样式，避免全局改版。
 - 新增任务特定测试`src/data/firstPlayCopy.test.ts`。
+- `scripts/verify-offline.mjs`：仅T04开邮件、T08开档案、T09藏本/出门、T10最后邮件动作后/重新挂载的旧空推进或封页预期改为直达已揭示正文预期，并明确原动作完成但当前段/A4尚未自动完成；保留其余四幕/广播/结束/资源断言与测试机制。此为F04行为同步，不改超时/重试或绕过验证。
 - `docs/ux-firstplay-20261020/implementation.md`和`validation.md`（实现/实际测试/未实施核查说明）。
 
 主审独占：本合同、`docs/reviews/UX-FIRSTPLAY-20261020.md`、`维护导航.md`、`docs/progress_log.md`、`docs/todo.md`、`docs/changelog.md`、开发包根PROGRESS.md、外层本轮验证/报告。主审不写产品代码。

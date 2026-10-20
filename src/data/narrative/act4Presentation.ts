@@ -214,13 +214,19 @@ const SCENE_LABEL_FALLBACKS: Record<string, string> = {
 };
 const MAX_READER_PAGE_CHARACTERS = 560;
 const MAX_READER_PAGE_PARAGRAPHS = 6;
+const MERGEABLE_ORDINARY_TAILS = new Set([
+  '应该只是撞伤吧。我安慰自己。',
+  '我又看了2014年的档案，寻找我的名字。',
+]);
 
-/** Keeps existing scene ranges intact while splitting their complete paragraphs into readable pages. */
-export function act4ReaderTextPages(
+function scenePagedReaderTextPages(
   stage: Stage,
   blockId: string,
   paragraphs: readonly string[],
   includeSceneCovers: boolean,
+  maxCharacters: number,
+  maxParagraphs: number,
+  mergeOrdinaryTails: boolean,
 ): readonly Act4TextSegment[] {
   const sourceSegments = act4TextSegments(stage, blockId, paragraphs.length);
   if (!includeSceneCovers || !SCENE_PAGED_STAGES.has(stage)) {
@@ -248,8 +254,8 @@ export function act4ReaderTextPages(
       let characterCount = paragraphs[pageFrom].length;
       while (
         pageTo < sourceSegment.to
-        && pageTo - pageFrom < MAX_READER_PAGE_PARAGRAPHS
-        && characterCount + paragraphs[pageTo].length <= MAX_READER_PAGE_CHARACTERS
+        && pageTo - pageFrom < maxParagraphs
+        && characterCount + paragraphs[pageTo].length <= maxCharacters
       ) {
         characterCount += paragraphs[pageTo].length;
         pageTo += 1;
@@ -264,6 +270,30 @@ export function act4ReaderTextPages(
       });
       pageFrom = pageTo;
     }
+    if (mergeOrdinaryTails && pages.length > 1) {
+      const lastPage = pages.at(-1)!;
+      const lastParagraph = paragraphs[lastPage.from].replace(/[\s“”"‘’']/g, '');
+      const isOrdinaryTail = [...MERGEABLE_ORDINARY_TAILS].some((tail) => tail.replace(/[\s“”"‘’']/g, '') === lastParagraph);
+      if (lastPage.to - lastPage.from === 1 && isOrdinaryTail) {
+        const previousPage = pages.at(-2)!;
+        const previousCount = previousPage.to - previousPage.from;
+        const previousCharacters = paragraphs.slice(previousPage.from, previousPage.to).reduce((sum, paragraph) => sum + paragraph.length, 0);
+        if (previousCount + 1 <= maxParagraphs && previousCharacters + paragraphs[lastPage.from].length <= maxCharacters) {
+          pages.splice(pages.length - 2, 2, { ...previousPage, to: lastPage.to });
+        } else if (previousCount > 1) {
+          const movedParagraphIndex = previousPage.to - 1;
+          const pairedCharacters = paragraphs[movedParagraphIndex].length + paragraphs[lastPage.from].length;
+          if (pairedCharacters <= maxCharacters) {
+            pages.splice(
+              pages.length - 2,
+              2,
+              { ...previousPage, to: movedParagraphIndex },
+              { ...lastPage, from: movedParagraphIndex },
+            );
+          }
+        }
+      }
+    }
     return pages.map((page, scenePageIndex) => ({
       ...page,
       sceneId: sourceSegment.id,
@@ -275,43 +305,34 @@ export function act4ReaderTextPages(
   });
 }
 
-/** The earlier reader used six-paragraph source chunks and a 440-character / three-paragraph page budget. */
+/** Keeps original scene ranges while applying the current 560-character / six-paragraph layout. */
+export function act4Existing560ReaderTextPages(
+  stage: Stage,
+  blockId: string,
+  paragraphs: readonly string[],
+  includeSceneCovers: boolean,
+): readonly Act4TextSegment[] {
+  return scenePagedReaderTextPages(stage, blockId, paragraphs, includeSceneCovers, MAX_READER_PAGE_CHARACTERS, MAX_READER_PAGE_PARAGRAPHS, false);
+}
+
+/** The former reader used a 440-character / three-paragraph budget inside each baseline scene. */
 export function act4LegacyReaderTextPages(
   stage: Stage,
   blockId: string,
   paragraphs: readonly string[],
   includeSceneCovers: boolean,
 ): readonly Act4TextSegment[] {
-  const key = `${stage}:${blockId}`;
-  // Keep baseline scene IDs and ranges; only restore the old page budget inside them.
-  const legacySegments = act4TextSegments(stage, blockId, paragraphs.length);
+  return scenePagedReaderTextPages(stage, blockId, paragraphs, includeSceneCovers, 440, 3, false);
+}
 
-  if (!includeSceneCovers || !SCENE_PAGED_STAGES.has(stage)) return legacySegments;
-  let sceneIndex = 0;
-  return legacySegments.flatMap((sourceSegment) => {
-    if (sourceSegment.role !== 'page' && sourceSegment.role !== 'whole') return [sourceSegment];
-    const currentSceneIndex = sceneIndex++;
-    if (CONTINUOUS_BLOCKS.has(key)) return [{
-      ...sourceSegment, sceneId: sourceSegment.id, sceneLabel: sourceSegment.label,
-      sceneIndex: currentSceneIndex, scenePageIndex: 0, scenePageCount: 1,
-    }];
-    const pages: Act4TextSegment[] = [];
-    let from = sourceSegment.from;
-    while (from < sourceSegment.to) {
-      let to = from + 1;
-      let characterCount = paragraphs[from].length;
-      while (to < sourceSegment.to && to - from < 3 && characterCount + paragraphs[to].length <= 440) {
-        characterCount += paragraphs[to].length;
-        to += 1;
-      }
-      pages.push({ ...sourceSegment, id: `${sourceSegment.id}_TEXT_${pages.length + 1}`, from, to });
-      from = to;
-    }
-    return pages.map((page, scenePageIndex) => ({
-      ...page, sceneId: sourceSegment.id, sceneLabel: sourceSegment.label,
-      sceneIndex: currentSceneIndex, scenePageIndex, scenePageCount: pages.length,
-    }));
-  });
+/** Current first-play layout merges only the two approved ordinary sentence-only scene tails. */
+export function act4ReaderTextPages(
+  stage: Stage,
+  blockId: string,
+  paragraphs: readonly string[],
+  includeSceneCovers: boolean,
+): readonly Act4TextSegment[] {
+  return scenePagedReaderTextPages(stage, blockId, paragraphs, includeSceneCovers, MAX_READER_PAGE_CHARACTERS, MAX_READER_PAGE_PARAGRAPHS, true);
 }
 
 /** Reopens the new page that contains the first paragraph of a saved page from the former layout. */

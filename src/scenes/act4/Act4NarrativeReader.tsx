@@ -2,7 +2,7 @@ import { memo, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStor
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct4ReaderSnapshot, selectAct4ReaderSnapshot } from '../../core/store/selectors';
-import { act4NarrativeSections, act4NarrativeEnding, type Act4NarrativeBlock } from '../../data/narrative/act4Narrative';
+import { act4NarrativeSections, act4NarrativeEnding, type Act4NarrativeActionId, type Act4NarrativeBlock } from '../../data/narrative/act4Narrative';
 import { act4OldMails } from '../../data/act4/mail';
 import { assetLoader } from '../../core/assetLoader';
 import { act4NarrativeActionsSatisfied, type ActiveAct4NarrativeStage } from '../../story/act4/narrativePolicy';
@@ -19,7 +19,7 @@ import { act4IllustrationDetailAssetIdForSource } from '../../data/narrative/act
 import { getUiPreferences, setAct4ReadingPosition, subscribeUiPreferences } from '../../core/uiPreferences';
 import { Act4PrivateBlog } from './Act4PrivateBlog';
 import { runAct4ViewTransition as transitionAct4View } from '../../components/transition/sceneTransition';
-import { blockedReason, readerPagesForBlock } from './reader/readerModel';
+import { blockedReason } from './reader/readerModel';
 import { usePrivateBlogBookmarks } from './reader/blogPreferences';
 import { useAct4ReaderSession } from './reader/useAct4ReaderSession';
 import { Act4ReaderPager } from './reader/Act4ReaderPager';
@@ -28,7 +28,7 @@ import { Act4ReaderIllustrationDialog } from './reader/Act4ReaderIllustrationDia
 import { Act4ReaderStoryBody } from './reader/Act4ReaderStoryBody';
 import { Act4ReaderReviewPanels } from './reader/Act4ReaderReviewPanels';
 import { advanceReaderStage } from './reader/stageActions';
-import { migrateReaderLayoutPreferences, storedReaderPageIndex } from './reader/layoutPreferences';
+import { migrateReaderLayoutPreferences, readerPagesForStoredPosition, storedReaderPageIndex } from './reader/layoutPreferences';
 import { deriveReaderVisibility } from './reader/readerVisibility';
 import '../../act4/act4.css';
 
@@ -72,6 +72,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const privateBlogView = stage === 'T03' && privateBlogOpen;
   const readingSpaceKey = act4ReadingSpaceKey(stage, reviewing ? 'review' : 'current') ?? `${stage}:current`;
   const storedReadingPosition = uiPreferences.act4Reading[readingSpaceKey];
+  const pagesForBlock = (block: Act4NarrativeBlock) => readerPagesForStoredPosition(readingSpaceKey, stage, block);
   const storedPageIndex = (block: Act4NarrativeBlock, pages: readonly Act4TextSegment[]) => {
     const requested = storedReadingPosition?.pageIndexByBlock[block.id] ?? 0;
     return storedReaderPageIndex(stage, block, pages, requested);
@@ -142,7 +143,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const primaryBlock = section.blocks.find((block) => block.id === `${stage}_ORIGINAL`)
     ?? section.blocks.find((block) => block.kind === 'novel-excerpt');
   const primaryPages = primaryBlock
-    ? readerPagesForBlock(stage, primaryBlock).filter((item) => item.role === 'page' || item.role === 'whole')
+    ? pagesForBlock(primaryBlock).filter((item) => item.role === 'page' || item.role === 'whole')
     : [];
   const primaryPageIndex = primaryBlock && primaryPages.length
     ? storedPageIndex(primaryBlock, primaryPages)
@@ -158,16 +159,20 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const sectionCompleted = state.completedNarrativeSectionIds.includes(section.id);
   const finalCompleted = stage === 'T10' && sectionCompleted && isComplete;
   const visibleBlocks = section.blocks.filter((block) => !block.revealAfterActionId || hasAction(block.revealAfterActionId));
-  const needsCover = (kind: string) => (stage === 'T01' || isWangaoMemory || stage === 'T10') && kind === 'novel-excerpt';
+  const needsCover = (block: Act4NarrativeBlock, pageIndex: number) => block.kind === 'novel-excerpt' && (
+    stage === 'T01'
+      || (block.id === primaryBlock?.id && pageIndex === 0 && (isWangaoMemory || stage === 'T10'))
+  );
   const readingBounds = visibleBlocks.flatMap((block) => {
-    const pages = readerPagesForBlock(stage, block).filter((item) => item.role === 'page' || item.role === 'whole');
+    const pages = pagesForBlock(block).filter((item) => item.role === 'page' || item.role === 'whole');
     if (!pages.length) return [];
-    const coverKeys = needsCover(block.kind) ? pages.map((page) => {
+    const coverKeys = pages.flatMap((page, pageIndex) => {
+      if (!needsCover(block, pageIndex)) return [];
       const currentKey = `${stage}:${reviewing ? 'review' : 'current'}:${block.id}`;
-      return stage === 'T01' || stage === 'T10'
+      return [stage === 'T01' || stage === 'T10'
         ? `${currentKey}:cover`
-        : `${currentKey}:${page.sceneId ?? block.id}:cover`;
-    }) : [];
+        : `${currentKey}:${page.sceneId ?? block.id}:cover`];
+    });
     return [{ blockId: block.id, pageCount: pages.length, coverKeys }];
   });
   const readingPosition = sanitizeAct4ReadingPosition(storedReadingPosition, readingBounds);
@@ -179,9 +184,18 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const markNotebookPageRead = (blockId: string, pageIndex: number) => {
     if (stage === 'T01' && !reviewing && blockId === 'T01_ORIGINAL') manager.readAct4NotebookPage(pageIndex + 1);
   };
+  const performRevealAction = (actionId: Act4NarrativeActionId, blockId: string, action: () => void) => transitionAct4View(() => {
+    action();
+    if (!manager.getState().modules.act4.completedNarrativeActionIds.includes(actionId)) return;
+    setAct4ReadingPosition(readingSpaceKey, {
+      ...readingPosition,
+      activeBlockId: blockId,
+      pageIndexByBlock: { ...pageIndexByBlock, [blockId]: 0 },
+    });
+  });
   const pageTargets = visibleBlocks.flatMap((block) => {
     if (block.kind === 'adaptation-bridge') return [];
-    const pages = readerPagesForBlock(stage, block).filter((item) => item.role === 'page' || item.role === 'whole');
+    const pages = pagesForBlock(block).filter((item) => item.role === 'page' || item.role === 'whole');
     if (!pages.length) return [];
     const pageIndex = storedPageIndex(block, pages);
     const page = pages[pageIndex];
@@ -189,7 +203,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     const coverKey = stage === 'T01' || stage === 'T10'
       ? `${currentKey}:cover`
       : `${currentKey}:${page.sceneId ?? block.id}:cover`;
-    return [{ blockId: block.id, blockKind: block.kind, pages, pageIndex, page, coverKey, coverRequired: needsCover(block.kind), coverOpen: openedCoverKeys.has(coverKey) }];
+    return [{ blockId: block.id, blockKind: block.kind, pages, pageIndex, page, coverKey, coverRequired: needsCover(block, pageIndex), coverOpen: openedCoverKeys.has(coverKey) }];
   });
   const readingTargetTitle = (target: (typeof pageTargets)[number]) =>
     stage === 'T10' && target.blockId === 'T10_FINAL_MAIL'
@@ -219,7 +233,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     : activeReadingTarget && activeReadingTarget.coverRequired && !activeReadingTarget.coverOpen
       ? {
         actionId: `A4_${stage}_OPEN_COVER_${activeReadingTarget.blockId}_${activeReadingTarget.pageIndex + 1}`, kind: 'memory', target: activeReadingTarget.blockId,
-        label: stage === 'T01' ? '翻开小 A 的笔记' : `翻开：${readingTargetTitle(activeReadingTarget)}`, state: 'ready',
+        label: stage === 'T01' ? '翻开小 A 的笔记' : `开始阅读：${readingTargetTitle(activeReadingTarget)}`, state: 'ready',
         onActivate: () => {
           if (stage === 'T01') setHotelBackgroundExpanded(false);
           markNotebookPageRead(activeReadingTarget.blockId, activeReadingTarget.pageIndex);
@@ -268,7 +282,8 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     };
 
   const t05PartialRecapAvailable = stage === 'T05' && Boolean(primaryPage && primaryPage.from >= 8)
-    && activeReadingTarget?.blockId === primaryBlock?.id && activeReadingTarget.coverOpen;
+    && activeReadingTarget?.blockId === primaryBlock?.id
+    && Boolean(activeReadingTarget && (!activeReadingTarget.coverRequired || activeReadingTarget.coverOpen));
   const { visibleExplanationIds } = deriveReaderVisibility({
     visibleBlocks,
     pageTargets,
@@ -303,7 +318,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
           </>}
         <div className="a4-reader__mail-list">
           {act4OldMails.map((mail) => <article className="a4-reader__mail" key={mail.id}>
-            <h4>{mail.label}收到</h4>
+            <h4>{mail.label}</h4>
             <p><strong>发件人：</strong>{mail.from}</p>
             <p><strong>主题：</strong>{mail.subject}</p>
             <p><strong>时间：</strong><time>{mail.sentAt.slice(0, 10)} {mail.sentAt.slice(11, 16)}</time></p>
@@ -328,25 +343,25 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     if (stage === 'T04' && blockId === 'T04_CONTEXT' && !hasAction('A4_T04_WAKE_MAIL_OPENED')) {
       return <section className="a4-reader__interaction" aria-label="打开 VVaKe 邮件" key="T04_WAKE_MAIL_INTERACTION">
         <p>打开这封旧邮件，查看邮件内容。</p>
-        <button type="button" onClick={() => manager.viewAct4WakeMail()}>打开这封邮件</button>
+        <button type="button" onClick={() => performRevealAction('A4_T04_WAKE_MAIL_OPENED', 'T04_ORIGINAL', () => manager.viewAct4WakeMail())}>打开这封邮件</button>
       </section>;
     }
     if (stage === 'T08' && blockId === 'T08_RETURN' && !hasAction('A4_T08_ARCHIVE_OPENED')) {
       return <section className="a4-reader__interaction" aria-label="打开档案" key="T08_ARCHIVE_INTERACTION">
         <p>他停在档案架前。可以选一份档案继续查看。</p>
-        <button type="button" onClick={() => manager.openAct4Archive()}>查看 2008 年档案</button>
+        <button type="button" onClick={() => performRevealAction('A4_T08_ARCHIVE_OPENED', 'T08_ARCHIVE', () => { manager.openAct4Archive(); })}>查看 2008 年档案</button>
       </section>;
     }
     if (stage === 'T09' && blockId === 'T09_REPLY_AND_LAST_PAGE' && !hasAction('A4_T09_NOTE_HIDDEN')) {
       return <section className="a4-reader__interaction" aria-label="藏好最后一页笔记" key="T09_HIDE_NOTE_INTERACTION">
         <p>接下来，按他当时的做法安放写好的本子。</p>
-        <button type="button" onClick={() => manager.hideAct4NarrativeNote()}>把笔记藏到消防箱后</button>
+        <button type="button" onClick={() => performRevealAction('A4_T09_NOTE_HIDDEN', 'T09_NOTE_HIDDEN', () => { manager.hideAct4NarrativeNote(); })}>把笔记藏到消防箱后</button>
       </section>;
     }
     if (stage === 'T09' && blockId === 'T09_WALK_TO_DOOR' && !hasAction('A4_T09_DOOR_EXITED')) {
       return <section className="a4-reader__interaction" aria-label="走向门外" key="T09_EXIT_DOOR_INTERACTION">
         <p>准备继续走向门外。</p>
-        <button type="button" onClick={() => manager.exitAct4NarrativeDoor()}>走向门外，听完广播</button>
+        <button type="button" onClick={() => performRevealAction('A4_T09_DOOR_EXITED', 'T09_BROADCAST', () => { manager.exitAct4NarrativeDoor(); })}>走向门外，听完广播</button>
       </section>;
     }
     if (stage === 'T10' && blockId === 'T10_AFTERMATH' && !hasAction('A4_T10_FINAL_MAIL_OPENED')) {
@@ -431,7 +446,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
       ? privateBlogOpen ? '浏览王澳按日期留下的私人动态；读到末尾后可以继续。' : '查看登录后的王澳私人动态。'
       : stage === 'T10' ? '读完结尾与最后一封邮件，保留仍未确定的去向。'
         : activeReadingTarget ? '继续读完当前内容；需要行动时，会在这里出现。' : '这一部分已经读完，可以继续。'}
-    helpText={stage === 'T03' ? '可以按日期回看，也可以收藏想留意的一条。' : '先看这一段的场景，再读文字。已读内容可以回看；需要做的事仍由你决定。'}
+    helpText={stage === 'T03' ? '可以按日期回看，也可以收藏想留意的一条。' : '阅读故事文字；需要时可以放大配图。已读内容可以回看，需要做的事由你决定。'}
     actions={privateBlogView || (t01PageControls && !reviewing && activeReadingTarget && activeReadingTarget.pageIndex < activeReadingTarget.pages.length - 1) ? [] : [continueAction]}
     onExit={onExit}
   >
@@ -457,7 +472,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
         <div className="a4-reader__blocks">
           {visibleBlocks.map((block, blockOrder) => {
             if (blockOrder > activeReadingBlockIndex) return null;
-            const segments = readerPagesForBlock(stage, block);
+            const segments = pagesForBlock(block);
             const pages = segments.filter((item) => item.role === 'page' || item.role === 'whole');
             const pageIndex = storedPageIndex(block, pages);
             if (stage === 'T03' && block.id === 'T03_ORIGINAL') {
@@ -507,7 +522,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
             const coverKey = stage === 'T01' || stage === 'T10'
               ? `${currentKey}:cover`
               : `${currentKey}:${currentPage?.sceneId ?? block.id}:cover`;
-            const coverRequired = needsCover(block.kind);
+            const coverRequired = needsCover(block, pageIndex);
             const coverOpen = openedCoverKeys.has(coverKey);
             const showCover = coverRequired && !coverOpen;
             const blockPagePresentation = act4PagePresentation(stage, pageIndex, block.id, currentPage?.label, currentPage?.sceneIndex);
@@ -586,6 +601,15 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
                     {renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
                   </details>
                   : renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
+                {coverAssetId && <figure className="a4-reader__inline-art" data-illustration-id={coverAssetId}>
+                  {coverAvailable
+                    ? <img src={coverSource} alt={coverAlt} onError={() => setFailedIllustrationAssetId(coverAssetId)} />
+                    : <figcaption>{coverAlt}（配图暂不可用）</figcaption>}
+                  {coverAvailable && <button ref={zoomButtonRef} type="button" onClick={() => {
+                    setZoomedIllustration({ assetId: act4IllustrationDetailAssetIdForSource(coverAssetId) ?? coverAssetId, alt: coverAlt });
+                    setZoomOpen(true);
+                  }}>放大配图</button>}
+                </figure>}
                 </>}
               </section>
               {mayContinueBlock && renderInteractionAfter(block.id)}

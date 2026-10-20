@@ -131,21 +131,33 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
 
   const hotspotByClue = new Map(doc.lenses.flatMap((item) => item.hotspots.map((hotspot) => [hotspot.clueId, { hotspot, lensId: item.id }] as const)));
   const currentMissingRequiredHotspot = lens.hotspots.find((hotspot) => missingRequiredIds.includes(hotspot.clueId));
+  const missingOnCurrentPhotoCount = lens.hotspots.filter((hotspot) => missingRequiredIds.includes(hotspot.clueId)).length;
   const nextMissingRequired = missingRequiredIds.map((id) => hotspotByClue.get(id)?.hotspot).find((hotspot) => hotspot !== undefined);
   const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
     .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
-  const blockedForwardHint = currentMissingRequiredHotspot
-    ? missingXiaoyueMemory
-      ? '还差一处观察。先听小月说完这一段，再继续。'
-      : '还差一处观察。先点击当前照片上的虚线框，查看这处线索，再继续。'
-    : nextMissingRequired
-      ? missingXiaoyueMemory
-        ? '还差一处观察。先听小月说完这一段，再继续。'
-        : '还差一处观察。先从下方地点按钮前往对应照片，再点击虚线框完成观察。'
-      : act3ExitReason(stage, missingRequiredIds);
+  const blockedForwardHint = missingRequiredIds.length === 0
+    ? act3ExitReason(stage, missingRequiredIds)
+    : missingXiaoyueMemory
+      ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
+      : missingOnCurrentPhotoCount > 0
+        ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片还有${missingOnCurrentPhotoCount}处，先点击虚线框查看，再继续。`
+        : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片已无本地必需观察，请沿现有地点路线前往其他照片。`;
+  const safePathToMissingRequiredClue = (clueId: string, currentLens = lens.id, alreadyInspected = inspected): string[] | null => {
+    const path = findAct3RoutePathToClue(stage, currentLens, clueId, alreadyInspected);
+    const target = hotspotByClue.get(clueId);
+    if (path === null || !target) return null;
+    const inspectedAfterOpening = [...new Set([...alreadyInspected, clueId])];
+    const otherMissing = act3RequiredClueIds(stage).filter((requiredId) =>
+      requiredId !== clueId && !inspectedAfterOpening.includes(requiredId));
+    const reachableBeforeOpening = otherMissing.filter((requiredId) =>
+      findAct3RoutePathToClue(stage, currentLens, requiredId, alreadyInspected) !== null);
+    if (reachableBeforeOpening.some((requiredId) =>
+      findAct3RoutePathToClue(stage, target.lensId, requiredId, inspectedAfterOpening) === null)) return null;
+    return path;
+  };
   const findMaterialLinks = (clueIds: string[]): InvestigationMaterialLink[] => clueIds.flatMap((clueId) => {
     const entry = hotspotByClue.get(clueId);
-    if (!entry || !findAct3RoutePathToClue(stage, lens.id, clueId, inspected)) return [];
+    if (!entry || safePathToMissingRequiredClue(clueId) === null) return [];
     return [{ id: clueId, label: act3HotspotActionLabel(stage, clueId, entry.hotspot.label, inspected) }];
   });
   const hotspotLabel = (hotspot: Act3Hotspot) => act3HotspotActionLabel(stage, hotspot.clueId, hotspot.label, inspected);
@@ -156,7 +168,12 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   };
 
   const openRelatedMaterial = (clueId: string) => {
-    const path = findAct3RoutePathToClue(stage, lens.id, clueId, manager.getState().modules.act3.inspectedClueIds);
+    const liveState = manager.getState();
+    const path = safePathToMissingRequiredClue(
+      clueId,
+      liveState.modules.act3.currentLensId ?? lens.id,
+      liveState.modules.act3.inspectedClueIds,
+    );
     if (path === null) return;
     for (const lensId of path) {
       if (!manager.enterAct3Lens(lensId)) return;
@@ -277,11 +294,14 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
           <ul>
             {missingRequiredIds.map((clueId) => {
               const entry = hotspotByClue.get(clueId);
-              const reachable = Boolean(entry && findAct3RoutePathToClue(stage, lens.id, clueId, inspected));
+              const pathExists = Boolean(entry && findAct3RoutePathToClue(stage, lens.id, clueId, inspected));
+              const reachable = Boolean(entry && safePathToMissingRequiredClue(clueId));
               return <li key={clueId}>
                 {entry && reachable
                   ? <><span>{hotspotLabel(entry.hotspot)}</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>前往并查看</button></>
-                  : <><span>还有必需观察暂不可从当前位置抵达</span><small>先沿可通行路线继续查找</small></>}
+                  : pathExists
+                    ? <><span>{entry ? hotspotLabel(entry.hotspot) : '一处必需观察'}</span><small>先沿现有地点路线完成沿途必需观察，再使用直达入口。</small></>
+                    : <><span>还有必需观察暂不可从当前位置抵达</span><small>先沿可通行路线继续查找</small></>}
               </li>;
             })}
           </ul>

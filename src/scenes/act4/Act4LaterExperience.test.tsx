@@ -140,7 +140,11 @@ describe('Act4 reading experience', () => {
       await click('查看 2008 年档案');
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T08_ARCHIVE_OPENED');
       await advanceReaderUntilBlock(host, 'T08_ARCHIVE');
-      expect(host.querySelector('[data-block-id="T08_ARCHIVE"]')).not.toBeNull();
+      const archiveView = host.querySelector<HTMLElement>('[data-block-id="T08_ARCHIVE"]')!;
+      expect(archiveView.querySelector('.a4-reader__segment[data-reader-active="true"]')?.textContent)
+        .toContain('书架上整齐地陈列着不少资料');
+      expect(host.querySelector('[data-action-id="A4_T08_NEXT_BLOCK_T08_ARCHIVE"]')).toBeNull();
+      expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T08');
       const archiveBlock = act4NarrativeSections.find((section) => section.stage === 'T08')!.blocks.find((block) => block.id === 'T08_ARCHIVE')!;
       const archiveTarget = '黄子山，2008 年改造成功';
       const archiveParagraphIndex = archiveBlock.paragraphs.findIndex((paragraph) => paragraph.includes(archiveTarget));
@@ -157,10 +161,10 @@ describe('Act4 reading experience', () => {
       const retreatPage = kitchenPages.findIndex((page) => page.sceneId === 'T08_KITCHEN_RETREAT');
       expect(retreatPage).toBeGreaterThanOrEqual(0);
       await selectPage(host, 'T08_KITCHEN_ESCAPE', retreatPage + 1, false);
-      const retreatCover = host.querySelector<HTMLElement>('.a4-reader__cover');
-      expect(retreatCover?.querySelector('.a4-reader__cover-art')?.getAttribute('data-illustration-id'))
+      const retreatIllustration = host.querySelector<HTMLElement>('.a4-reader__inline-art');
+      expect(retreatIllustration?.getAttribute('data-illustration-id'))
         .toBe('IMG_A4_FINALE_RETREAT_001');
-      await act(async () => { retreatCover?.querySelector<HTMLButtonElement>('button')?.click(); });
+      await act(async () => { retreatIllustration?.querySelector<HTMLButtonElement>('button')?.click(); });
       const zoomDialog = document.body.querySelector<HTMLElement>('[role="dialog"][aria-label="放大配图"]');
       expect(zoomDialog?.querySelector<HTMLImageElement>('img')?.getAttribute('src'))
         .toContain('IMG_A4_FINALE_RETREAT_001.webp');
@@ -188,6 +192,9 @@ describe('Act4 reading experience', () => {
     try {
       expect(host.querySelector('[data-block-id="T02_PASSWORD_REVEAL"]')).toBeNull();
       await selectLastPage(host, 'T02_ORIGINAL');
+      expect([...host.querySelectorAll<HTMLElement>('.a4-reader__mail h4')].map((heading) => heading.textContent))
+        .toEqual(['主角收到', '小月收到']);
+      expect(host.querySelector('.a4-reader__mail')?.textContent).not.toContain('收到收到的邮件');
       const login = [...host.querySelectorAll<HTMLButtonElement>('.a4-reader__interaction button')].find((button) => button.textContent === '登录账号')!;
       expect(login.disabled).toBe(true);
       const mailButtons = [...host.querySelectorAll<HTMLButtonElement>('.a4-reader__mail button')];
@@ -211,6 +218,30 @@ describe('Act4 reading experience', () => {
     }
   });
 
+  it('opens the VVaKe mail directly after its required action', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'A4_T04';
+    state.modules.act4.stage = 'T04';
+    state.modules.act4.unlockedAccountIds = ['weibo', 'mail'];
+    state.modules.act4.completedNarrativeActionIds = ['A4_T02_LOGIN_SUCCEEDED'];
+    const manager = new StateManager(new EventBus(), state);
+    const { host, root } = await renderExperience(<Act4LaterExperience manager={manager} onExit={() => {}} />);
+    try {
+      await selectLastPage(host, 'T04_CONTEXT');
+      await act(async () => { host.querySelector<HTMLButtonElement>('.a4-reader__interaction[aria-label="打开 VVaKe 邮件"] button')!.click(); });
+
+      const mail = host.querySelector<HTMLElement>('[data-block-id="T04_ORIGINAL"]')!;
+      expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T04_WAKE_MAIL_OPENED');
+      expect(mail.querySelector('.a4-reader__segment[data-reader-active="true"]')).not.toBeNull();
+      expect(mail.textContent).toContain('VVaKe');
+      expect(host.querySelector('[data-action-id="A4_T04_NEXT_BLOCK_T04_ORIGINAL"]')).toBeNull();
+      expect(host.querySelector('[data-action-id="A4_T04_NEXT_PAGE_T04_ORIGINAL_1"]')?.getAttribute('data-action-state')).toBe('ready');
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
   it('reveals the last-page and broadcast blocks in order', async () => {
     const state = createDefaultState();
     state.game.phase = 'A4_T09';
@@ -228,6 +259,12 @@ describe('Act4 reading experience', () => {
       await click('把笔记藏到消防箱后');
       await advanceReaderUntilBlock(host, 'T09_NOTE_HIDDEN');
       expect(host.querySelector('[data-block-id="T09_NOTE_HIDDEN"]')).not.toBeNull();
+      const hiddenNote = host.querySelector<HTMLElement>('[data-block-id="T09_NOTE_HIDDEN"]')!;
+      const noteBody = hiddenNote.querySelector<HTMLElement>('.a4-reader__segment[data-reader-active="true"]')!;
+      const noteArt = hiddenNote.querySelector<HTMLElement>('.a4-reader__inline-art')!;
+      expect(noteBody.textContent)
+        .toContain('我把笔记塞进塑料袋');
+      expect(noteBody.compareDocumentPosition(noteArt) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
       expect(host.querySelector('[data-block-id="T09_WALK_TO_DOOR"]')).toBeNull();
       expect(host.querySelector('[data-block-id="T09_BROADCAST"]')).toBeNull();
       await selectLastPage(host, 'T09_NOTE_HIDDEN');
@@ -236,8 +273,13 @@ describe('Act4 reading experience', () => {
       await selectLastPage(host, 'T09_WALK_TO_DOOR');
       await click('走向门外，听完广播');
       await advanceReaderUntilBlock(host, 'T09_BROADCAST');
+      const broadcast = host.querySelector<HTMLElement>('[data-block-id="T09_BROADCAST"]')!;
+      expect(broadcast.querySelector('.a4-reader__segment[data-reader-active="true"]')?.textContent).toContain('广播传来声音：');
+      expect(broadcast.querySelector('.a4-last-consciousness')?.getAttribute('data-last-consciousness-index')).toBe('0');
+      expect(host.querySelector('[data-action-id="A4_T09_CONTINUE_READING"]')?.getAttribute('data-action-state')).toBe('blocked');
+      expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T09');
       await selectLastPage(host, 'T09_BROADCAST');
-      expect(host.querySelector('[data-block-id="T09_BROADCAST"]')).not.toBeNull();
+      expect(broadcast).not.toBeNull();
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toEqual(expect.arrayContaining(['A4_T09_NOTE_HIDDEN', 'A4_T09_DOOR_EXITED']));
       const source = act4NarrativeSections.find((section) => section.stage === 'T09')!.blocks.find((block) => block.id === 'T09_BROADCAST')!;
       expect(paragraphsInBlock(host, 'T09_BROADCAST')).toEqual(source.paragraphs);
@@ -322,8 +364,8 @@ describe('Act4 reading experience', () => {
       const t05Pages = act4ReaderTextPages('T05', t05Block.id, t05Block.paragraphs, true).filter((item) => item.role === 'page' || item.role === 'whole');
       const birthdayPage = t05Pages.findIndex((item) => item.sceneIndex === 2) + 1;
       await selectPage(host, 'T05_ORIGINAL', birthdayPage, false);
-      expect(host.querySelector('.a4-reader__cover-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_003');
-      await openCurrentCover(host, 'T05_ORIGINAL');
+      expect(host.querySelector('.a4-reader__inline-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_003');
+      expect(host.querySelector('.a4-reader__cover')).toBeNull();
       const birthdayRecap = host.querySelector<HTMLDetailsElement>('.a4-reader__explanation')!;
       expect(birthdayRecap.open).toBe(false);
       expect(birthdayRecap.querySelector('summary')?.textContent).toBe('当前阅读页回顾');
@@ -334,8 +376,8 @@ describe('Act4 reading experience', () => {
 
       const dinnerPage = t05Pages.findIndex((item) => item.sceneIndex === 3) + 1;
       await selectPage(host, 'T05_ORIGINAL', dinnerPage, false);
-      expect(host.querySelector('.a4-reader__cover-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_005');
-      await openCurrentCover(host, 'T05_ORIGINAL');
+      expect(host.querySelector('.a4-reader__inline-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_005');
+      expect(host.querySelector('.a4-reader__cover')).toBeNull();
       const dinnerRecap = host.querySelector<HTMLDetailsElement>('.a4-reader__explanation')!;
       expect(dinnerRecap.querySelector('summary')?.textContent).toBe('当前阅读页回顾');
       expect(dinnerRecap.textContent).toContain('晚饭中父亲又恢复原来的态度');
@@ -343,8 +385,8 @@ describe('Act4 reading experience', () => {
 
       const takenPage = t05Pages.findIndex((item) => item.sceneIndex === 4) + 1;
       await selectPage(host, 'T05_ORIGINAL', takenPage, false);
-      expect(host.querySelector('.a4-reader__cover-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_006');
-      await openCurrentCover(host, 'T05_ORIGINAL');
+      expect(host.querySelector('.a4-reader__inline-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_006');
+      expect(host.querySelector('.a4-reader__cover')).toBeNull();
       const finalTakenPage = t05Pages.map((item) => item.sceneIndex).lastIndexOf(4) + 1;
       await selectPage(host, 'T05_ORIGINAL', finalTakenPage);
       const takenRecap = host.querySelector<HTMLDetailsElement>('.a4-reader__explanation')!;

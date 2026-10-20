@@ -31,7 +31,7 @@ export function Act4ReaderCover({
     <div className="a4-reader__cover-copy">
       <p>{period}{wangaoMemory ? ' · 王澳当时的亲历' : ''}</p>
       <h3>{title}</h3>
-      <span>按下方按钮，翻开这一段。</span>
+      <span>章节配图 · 可以放大查看</span>
     </div>
   </section>;
 }
