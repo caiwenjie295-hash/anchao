@@ -142,7 +142,7 @@
         "caption": "山路行进画面",
         "supportsExteriorMatch": false,
         "frameKind": "trail",
-        "muteLabel": "树林·暂不可外景核对"
+        "muteLabel": "树林·环境相似，需核对庙轮廓"
       },
       {
         "id": "FRAME_A2_T07_003",
@@ -197,12 +197,28 @@
     "exteriorCaption": "第一次徒步拍下的破庙外景",
     "exteriorAltText": "用石头简易搭成的破庙外景，中间留出约一平方米的空间",
     "exteriorNote": "说是庙，实际上只是个用石头简易搭成的小石堆，中间留出约一平方米的空间。",
+    "trailReference": {
+      "imageId": "IMG_A2_T07_TRAIL_REFERENCE_001",
+      "caption": "第一次徒步拍下的树林照片",
+      "altText": "第一次徒步时拍下的树林环境，树木和林间小路清晰可见",
+      "note": "树林环境很相似，值得继续核对视频中的庙轮廓。普通树林不能单独确认是否同一地点。"
+    },
+    "guide": {
+      "steps": [
+        "树林很相似：先把环境当作参照，不能单独确认地点。",
+        "发现庙的轮廓一样：在受访视频里找到庙的画面，再和第一次徒步照片核对。",
+        "地点判断会在正确记录庙的轮廓后出现。"
+      ],
+      "findCapturedTemple": "切换到已截取的庙轮廓画面",
+      "findTempleInVideo": "去受访视频找庙轮廓",
+      "confirmedStep": "基本确定是同一个地方。"
+    },
     "openLabel": "调出第一次徒步的破庙外景",
     "zoomLabel": "放大",
     "zoomBothHint": "放大是可选的；也可以直接依据两张图片中看得见的部分作比较。",
     "compareLabel": "记录这项外观对照",
     "confirmLabel": "记录这项外观对照",
-    "structureNote": "受访镜头中的石砌开口与旧庙外景有可见相似处。这是一条外观线索，不能单独坐实地点。",
+    "structureNote": "受访镜头中的石砌开口与旧庙外景轮廓一样，基本确定是同一个地方；接下来再结合其他资料。",
     "xiaoyueLine": "“这张照片你哪来的，我觉得就是一个东西啊！”小月抓住我的手腕，夺过手机仔细对比起来。",
     "replyLine": "“就是小A失踪的地方。前两天我去了一趟，你还记得吗？”",
     "lockedHint": "先在视频里截到可疑的画面，再拿外景来对照。",
@@ -223,7 +239,7 @@
     "matchFeatureId": "square-opening",
     "mismatchNote": "这个画面或特征与破庙外景对不上。可以换一张已截画面或另选一个可见特征。",
     "mismatchNotesByKind": {
-      "trail": "这是山路树林镜头，看不清庙的轮廓，换一张帧再对照。",
+      "trail": "树林很相似，继续核对视频中的庙轮廓。",
       "interview": "这是受访近景，对不上破庙外景，换一张帧再对照。",
       "templeRoad": "偏了，这是路和树，不是庙门口那一带。",
       "templeOther": "偏了，这一侧对不上破庙外景，换一个可见特征再试。"

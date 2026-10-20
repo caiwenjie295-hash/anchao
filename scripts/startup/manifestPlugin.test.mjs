@@ -4,9 +4,26 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { build } from 'vite';
 import { describe, expect, it } from 'vitest';
-import { createStartupManifest, startupManifestPlugin } from './manifestPlugin.mjs';
+import { createStartupManifest, loadAssetGroups, startupManifestPlugin, t07ReferenceAssetSource } from './manifestPlugin.mjs';
 
 describe('production startup resource inventory', () => {
+  it('assigns only the registered T07 trail reference to the act2 startup group', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'anchao-t07-ref-groups-'));
+    const imageId = 'IMG_A2_T07_TRAIL_REFERENCE_001';
+    const source = `src/assets/t07-ref-20261020/${imageId}.webp`;
+    try {
+      await mkdir(join(directory, 'data'), { recursive: true });
+      await mkdir(join(directory, 'src/assets/compressed'), { recursive: true });
+      await writeFile(join(directory, 'data/images.json'), JSON.stringify({ items: [{ id: imageId, act: 2, file: `${imageId}.webp` }] }));
+      await writeFile(join(directory, 'src/assets/compressed/asset-map.json'), JSON.stringify({ entries: {} }));
+      const groups = await loadAssetGroups(directory);
+      expect(t07ReferenceAssetSource(imageId, `${imageId}.webp`)).toBe(source);
+      expect(t07ReferenceAssetSource('IMG_A2_T07_OTHER_001', 'IMG_A2_T07_OTHER_001.webp')).toBeNull();
+      expect(t07ReferenceAssetSource(imageId, 'wrong.webp')).toBeNull();
+      expect(Array.from(groups.get(source) ?? [])).toEqual(['act2']);
+    } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+
   it('versions runtime content and base, includes independent HTML assets, and filters documents and system files', () => {
     const files = [
       { fileName: 'assets/app.js', source: 'app' }, { fileName: 'assets/original.html', source: 'novel' },

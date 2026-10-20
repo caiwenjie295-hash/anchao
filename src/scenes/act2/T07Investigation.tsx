@@ -9,7 +9,7 @@ import { investigationAudio, readInvestigationAudioPreference, writeInvestigatio
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
-import { act2T07, act2T06RecapPages, formatClock, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
+import { act2T07, act2T06RecapPages, comparisonReferenceForFrame, formatClock, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import { T07FinaleCurtain } from '../../components/scenePolish/T07FinaleCurtain';
 import '../../act2/t07Finale.css';
 
@@ -107,6 +107,11 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   // StateManager 按实际截取次序保存 ID；目录和对照候选也按该顺序呈现。
   const capturedFrames = useMemo(() => t07.capturedFrameIds.map((id) => video.keyFrames.find((frame) => frame.id === id)).filter((frame): frame is (typeof video.keyFrames)[number] => frame !== undefined), [t07.capturedFrameIds]);
   const activeFrame = capturedFrames.find((frame) => frame.id === selectedFrameId) ?? capturedFrames[0];
+  const activeComparisonConfirmed = Boolean(activeFrame?.frameKind === 'temple'
+    && t07.comparedFrameIds.includes(activeFrame.id)
+    && t07.comparisonFeatureIdByFrameId[activeFrame.id] === comparison.matchFeatureId);
+  const activeReference = comparisonReferenceForFrame(activeFrame);
+  const capturedTempleFrame = capturedFrames.find((frame) => frame.frameKind === 'temple');
   const segment = segmentAt(timeMs);
   const capturableFrame = keyFrameAt(timeMs);
   const visualFrame = visualFrameAt(timeMs);
@@ -115,15 +120,17 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const watchedCount = video.requiredSegmentIds.filter((id) => t07.playedSegmentIds.includes(id)).length;
   const recapPages = useMemo(() => act2T06RecapPages.filter((page) => state.modules.browser.visitedPageIds.includes(page.id)), [state.modules.browser.visitedPageIds]);
   const photoSource = assetLoader.get(photoMaterial.imageId)?.src;
-  const exteriorSource = assetLoader.get(comparison.exteriorImageId)?.src;
+  const exteriorSource = assetLoader.get(activeReference.imageId)?.src;
   const onPhotoAvailability = useCallback((available: boolean) => setPhotoImageAvailable(available), []);
   const onComparisonFrameAvailability = useCallback((available: boolean) => setComparisonFrameReady(available), [activeFrame?.id]);
   const onComparisonExteriorAvailability = useCallback((available: boolean) => setComparisonExteriorReady(available), [activeFrame?.id]);
+  const videoObservationLabel = activeFrame?.frameKind === 'trail' ? '视频里的树林环境' : activeFrame?.frameKind === 'interview' ? '受访者与机构门口' : '视频里的庙轮廓';
+  const exteriorObservationLabel = activeFrame?.frameKind === 'trail' ? '树林环境相似处' : '旧庙石砌开口附近';
   const videoObservationMarkers: PhotoMarker[] = activeFrame ? [{
     id: `T07_OBSERVE_VIDEO_${activeFrame.id}`,
-    label: observedVideoFrameIds.includes(activeFrame.id) ? '已标记视频画面观察区域' : '点选查看视频画面区域',
-    x: 0.445,
-    y: 0.35,
+    label: observedVideoFrameIds.includes(activeFrame.id) ? `已标记${videoObservationLabel}` : `点选查看${videoObservationLabel}`,
+    x: activeFrame.frameKind === 'trail' ? 0.49 : 0.445,
+    y: activeFrame.frameKind === 'trail' ? 0.39 : 0.35,
     kind: 'memory',
     active: observedVideoFrameIds.includes(activeFrame.id),
     disabled: !comparisonFrameReady,
@@ -131,9 +138,9 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   }] : [];
   const exteriorObservationMarkers: PhotoMarker[] = activeFrame ? [{
     id: `T07_OBSERVE_EXTERIOR_${activeFrame.id}`,
-    label: observedExteriorFrameIds.includes(activeFrame.id) ? '已标记外景观察区域' : '点选查看外景石砌开口附近',
-    x: 0.525,
-    y: 0.46,
+    label: observedExteriorFrameIds.includes(activeFrame.id) ? `已标记${exteriorObservationLabel}` : `点选查看${exteriorObservationLabel}`,
+    x: activeFrame.frameKind === 'trail' ? 0.52 : 0.525,
+    y: activeFrame.frameKind === 'trail' ? 0.43 : 0.46,
     kind: 'memory',
     active: observedExteriorFrameIds.includes(activeFrame.id),
     disabled: !comparisonExteriorReady,
@@ -275,19 +282,37 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     else if (event.key === 'ArrowRight') { event.preventDefault(); step(video.frameMs); }
     else if (event.key === ' ' && target.tagName !== 'BUTTON') { event.preventDefault(); setPlaying((value) => !value); }
   };
+  const selectComparisonFrame = (frameId: string) => {
+    if (frameId !== activeFrame?.id) {
+      setSelectedFrameId(frameId);
+      setComparisonFrameReady(false);
+      setComparisonExteriorReady(false);
+    }
+    setSelectedFeatureId('');
+    setCompareFeedback('');
+  };
+  const findTempleFrame = () => {
+    if (capturedTempleFrame) {
+      selectComparisonFrame(capturedTempleFrame.id);
+      return;
+    }
+    const templeFrame = video.keyFrames.find((frame) => frame.frameKind === 'temple');
+    if (!templeFrame) return;
+    setPlaying(false);
+    setSelectedFeatureId('');
+    setCompareFeedback('');
+    seek(templeFrame.startMs);
+    focusAfterTab('video', () => videoPlayerRef.current);
+  };
   const capture = () => {
     if (!capturableFrame) return;
     manager.captureAct2T07Frame(capturableFrame.id, timeMs);
     setRecentlyCapturedFrameId(capturableFrame.id);
-    setSelectedFrameId(capturableFrame.id);
+    selectComparisonFrame(capturableFrame.id);
   };
   const openFrameInComparison = (frameId: string) => {
     if (!capturedFrames.some((frame) => frame.id === frameId)) return;
-    setSelectedFrameId(frameId);
-    setComparisonFrameReady(false);
-    setComparisonExteriorReady(false);
-    setSelectedFeatureId('');
-    setCompareFeedback('');
+    selectComparisonFrame(frameId);
     setTab('compare');
     window.setTimeout(() => comparisonPanelRef.current?.focus({ preventScroll: true }), 0);
   };
@@ -307,7 +332,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     setTab('materials');
   };
 
-  const mismatchStatus = Boolean(compareFeedback && compareFeedback !== comparison.structureNote);
+  const mismatchStatus = Boolean(compareFeedback && compareFeedback !== comparison.structureNote && activeFrame?.frameKind !== 'trail');
 
   return (
     <InvestigationShell
@@ -464,7 +489,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
               const capturedAt = t07.capturedAtMsByFrameId[frame.id];
               const muted = !frame.supportsExteriorMatch;
               return <article key={frame.id} className={`t07-finale__filmstrip-item${muted ? ' t07-finale__frame--muted' : ''}`} data-frame-kind={frame.frameKind} data-exterior-match={frame.supportsExteriorMatch ? 'true' : 'false'}>
-                <button type="button" className="t07-finale__filmstrip-select" aria-pressed={selectedFrameId === frame.id || (!selectedFrameId && activeFrame?.id === frame.id)} onClick={() => setSelectedFrameId(frame.id)}>
+                <button type="button" className="t07-finale__filmstrip-select" aria-pressed={selectedFrameId === frame.id || (!selectedFrameId && activeFrame?.id === frame.id)} onClick={() => selectComparisonFrame(frame.id)}>
                   <FrameVisual assetId={frame.imageId} altText={frame.altText} note={frame.placeholderNote} className="t07-finale__filmstrip-image" />
                   <span>{frame.caption}</span>
                   <small>{capturedAt === undefined ? `画面 ${frameTimeWindow(frame)}` : `截取 ${formatMediaStamp(capturedAt)}`}</small>
@@ -484,47 +509,61 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
         {capturedFrames.length === 0
           ? <p className="t07-finale__locked">{comparison.lockedHint}</p>
           : <>
-            <p className="t07-finale__xiaoyue">{comparison.xiaoyueLine}</p>
-            <p className="t07-finale__note">{comparison.replyLine}</p>
+            {templeConfirmed && <>
+              <p className="t07-finale__xiaoyue">{comparison.xiaoyueLine}</p>
+              <p className="t07-finale__note">{comparison.replyLine}</p>
+            </>}
             <div className="t07-finale__candidate-list" aria-label="选择要核对的截图">
               {capturedFrames.map((frame) => {
                 const capturedAt = t07.capturedAtMsByFrameId[frame.id];
                 const muted = !frame.supportsExteriorMatch;
-                return <button type="button" key={frame.id} className={muted ? 't07-finale__frame--muted' : undefined} data-frame-kind={frame.frameKind} data-exterior-match={frame.supportsExteriorMatch ? 'true' : 'false'} aria-pressed={activeFrame?.id === frame.id} onClick={() => { if (frame.id !== activeFrame?.id) { setSelectedFrameId(frame.id); setComparisonFrameReady(false); setComparisonExteriorReady(false); } setSelectedFeatureId(''); setCompareFeedback(''); }}>{frame.caption} · {capturedAt === undefined ? `画面时段 ${frameTimeWindow(frame)}` : `截取于 ${formatMediaStamp(capturedAt)}`}{muted && frame.muteLabel ? <span className="t07-finale__frame-tag">{frame.muteLabel}</span> : null}</button>;
+                return <button type="button" key={frame.id} className={muted ? 't07-finale__frame--muted' : undefined} data-frame-kind={frame.frameKind} data-exterior-match={frame.supportsExteriorMatch ? 'true' : 'false'} aria-pressed={activeFrame?.id === frame.id} onClick={() => selectComparisonFrame(frame.id)}>{frame.caption} · {capturedAt === undefined ? `画面时段 ${frameTimeWindow(frame)}` : `截取于 ${formatMediaStamp(capturedAt)}`}{muted && frame.muteLabel ? <span className="t07-finale__frame-tag">{frame.muteLabel}</span> : null}</button>;
               })}
             </div>
             {activeFrame && <>
-              <p className="t07-finale__source-line">来源一：创始人受访视频，画面时段 {frameTimeWindow(activeFrame)}。来源二：第一次徒步拍下的破庙外景。</p>
+              <section className="t07-finale__note" aria-label="地点对照三步引导">
+                <ol>
+                  <li>{comparison.guide.steps[0]}</li>
+                  <li>{comparison.guide.steps[1]}{activeFrame.frameKind === 'trail' ? <> <button type="button" className="t07-finale__guide-next" onClick={findTempleFrame}>{capturedTempleFrame ? comparison.guide.findCapturedTemple : comparison.guide.findTempleInVideo}</button></> : null}</li>
+                  <li>{activeComparisonConfirmed ? comparison.guide.confirmedStep : comparison.guide.steps[2]}</li>
+                </ol>
+              </section>
+              <p className="t07-finale__source-line">来源一：创始人受访视频，画面时段 {frameTimeWindow(activeFrame)}。来源二：{activeReference.caption}。</p>
               <div className="t07-finale__compare-grid">
                 <figure className="t07-finale__compare-side">
                   <PhotoViewport key={activeFrame.id} sceneKey={`A2_T07_COMPARE_${activeFrame.id}`} imageUrl={assetLoader.get(activeFrame.imageId)?.src} imageAlt={activeFrame.altText} hotspots={videoObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonFrameAvailability} />
                   <figcaption>{activeFrame.caption}</figcaption>
-                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedVideoFrameIds.includes(activeFrame.id)} disabled={!comparisonFrameReady} onClick={() => setObservedVideoFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记视频画面观察区域</button>
+                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedVideoFrameIds.includes(activeFrame.id)} disabled={!comparisonFrameReady} onClick={() => setObservedVideoFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记{videoObservationLabel}</button>
                 </figure>
                 <figure className="t07-finale__compare-side">
-                  <PhotoViewport key={activeFrame.id + comparison.exteriorImageId} sceneKey={`A2_T07_COMPARE_EXTERIOR_${activeFrame.id}`} imageUrl={exteriorSource} imageAlt={comparison.exteriorAltText} hotspots={exteriorObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonExteriorAvailability} />
-                  <figcaption>{comparison.exteriorCaption}</figcaption>
-                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedExteriorFrameIds.includes(activeFrame.id)} disabled={!comparisonExteriorReady} onClick={() => setObservedExteriorFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记外景观察区域</button>
+                  <PhotoViewport key={activeFrame.id + activeReference.imageId} sceneKey={`A2_T07_COMPARE_REFERENCE_${activeFrame.id}_${activeReference.imageId}`} imageUrl={exteriorSource} imageAlt={activeReference.altText} hotspots={exteriorObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonExteriorAvailability} />
+                  <figcaption>{activeReference.caption}</figcaption>
+                  <p className="t07-finale__note">{activeReference.note}</p>
+                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedExteriorFrameIds.includes(activeFrame.id)} disabled={!comparisonExteriorReady} onClick={() => setObservedExteriorFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记{exteriorObservationLabel}</button>
                 </figure>
               </div>
-              <fieldset className="t07-finale__feature-choice">
-                <legend>哪项可见特征能与外景互相印证？</legend>
-                {comparison.featureOptions.map((feature) => <label key={feature.id}><input type="radio" name="t07-comparison-feature" value={feature.id} checked={selectedFeatureId === feature.id} onChange={() => setSelectedFeatureId(feature.id)} />{feature.label}</label>)}
-              </fieldset>
-              {t07.comparedFrameIds.includes(activeFrame.id) && t07.comparisonFeatureIdByFrameId[activeFrame.id] === comparison.matchFeatureId
-                ? <div className="t07-finale__comparison-record" aria-label="已记录的外观对照" aria-live="polite">
-                  <p className="t07-finale__done">{comparison.structureNote}</p>
-                  <ul>
-                    <li>来源一：创始人受访视频，{t07.capturedAtMsByFrameId[activeFrame.id] === undefined ? `原截图保留了 ${frameTimeWindow(activeFrame)} 时段，未保留具体截取时刻` : `截取时刻 ${formatMediaStamp(t07.capturedAtMsByFrameId[activeFrame.id])}`}。</li>
-                    <li>来源二：第一次徒步拍下的破庙外景。</li>
-                    <li>依据：{comparison.featureOptions.find((feature) => feature.id === t07.comparisonFeatureIdByFrameId[activeFrame.id])?.label ?? '石砌开口外观'}。</li>
-                  </ul>
-                </div>
-                : <button type="button" className="t07-finale__compare" disabled={!selectedFeatureId || !comparisonFrameReady || !comparisonExteriorReady} onClick={() => {
-                  const result = manager.submitAct2T07Comparison(activeFrame.id, selectedFeatureId);
-                  setCompareFeedback(result === 'recorded' || result === 'already-recorded' ? comparison.structureNote : resolveT07MismatchNote(activeFrame, selectedFeatureId));
-                }}>{comparison.compareLabel}</button>}
-              {(!comparisonFrameReady || !comparisonExteriorReady) && <p className="t07-finale__hint" role="status">正在载入两份原图；图片可见后再记录外观对照。</p>}
+              {activeFrame.frameKind === 'trail'
+                ? <button type="button" className="t07-finale__compare" disabled={!comparisonFrameReady || !comparisonExteriorReady} onClick={() => setCompareFeedback(activeReference.note)}>核对树林相似处</button>
+                : <>
+                  <fieldset className="t07-finale__feature-choice">
+                    <legend>哪项可见特征能与外景互相印证？</legend>
+                    {comparison.featureOptions.map((feature) => <label key={feature.id}><input type="radio" name="t07-comparison-feature" value={feature.id} checked={selectedFeatureId === feature.id} onChange={() => setSelectedFeatureId(feature.id)} />{feature.label}</label>)}
+                  </fieldset>
+                  {activeComparisonConfirmed
+                    ? <div className="t07-finale__comparison-record" aria-label="已记录的外观对照" aria-live="polite">
+                      <p className="t07-finale__done">{comparison.structureNote}</p>
+                      <ul>
+                        <li>来源一：创始人受访视频，{t07.capturedAtMsByFrameId[activeFrame.id] === undefined ? `原截图保留了 ${frameTimeWindow(activeFrame)} 时段，未保留具体截取时刻` : `截取时刻 ${formatMediaStamp(t07.capturedAtMsByFrameId[activeFrame.id])}`}。</li>
+                        <li>来源二：{activeReference.caption}。</li>
+                        <li>依据：{comparison.featureOptions.find((feature) => feature.id === t07.comparisonFeatureIdByFrameId[activeFrame.id])?.label ?? '石砌开口外观'}。</li>
+                      </ul>
+                    </div>
+                    : <button type="button" className="t07-finale__compare" disabled={!selectedFeatureId || !comparisonFrameReady || !comparisonExteriorReady} onClick={() => {
+                      const result = manager.submitAct2T07Comparison(activeFrame.id, selectedFeatureId);
+                      setCompareFeedback(result === 'recorded' || result === 'already-recorded' ? comparison.structureNote : resolveT07MismatchNote(activeFrame, selectedFeatureId));
+                    }}>{comparison.compareLabel}</button>}
+                </>}
+              {(!comparisonFrameReady || !comparisonExteriorReady) && <p className="t07-finale__hint" role="status">正在载入两份原图；图片可见后再标记观察或继续核对。</p>}
             </>}
           </>}
       </div>}

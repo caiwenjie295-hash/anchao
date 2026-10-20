@@ -88,6 +88,8 @@ export type Act2T07Data = {
     exteriorCaption: string;
     exteriorAltText: string;
     exteriorNote: string;
+    trailReference: { imageId: string; caption: string; altText: string; note: string };
+    guide: { steps: [string, string, string]; findCapturedTemple: string; findTempleInVideo: string; confirmedStep: string };
     openLabel: string;
     zoomLabel: string;
     zoomBothHint: string;
@@ -123,6 +125,17 @@ export const ACT2_T07_FRAME_IDS = act2T07.video.keyFrames.map((frame) => frame.i
 
 export const isAct2T07MaterialId = (id: string): boolean => materialById.has(id);
 export const isAct2T07SegmentId = (id: string): boolean => segmentById.has(id);
+export type T07ComparisonReference = { imageId: string; caption: string; altText: string; note: string };
+/** Trees share visual context; only the temple and interview frames use the historic temple photograph. */
+export const comparisonReferenceForFrame = (frame: Pick<T07KeyFrame, 'frameKind'> | undefined): T07ComparisonReference =>
+  frame?.frameKind === 'trail'
+    ? act2T07.comparison.trailReference
+    : {
+      imageId: act2T07.comparison.exteriorImageId,
+      caption: act2T07.comparison.exteriorCaption,
+      altText: act2T07.comparison.exteriorAltText,
+      note: act2T07.comparison.exteriorNote,
+    };
 
 export const segmentAt = (timeMs: number): T07Segment | undefined => act2T07.video.segments.find((segment) => timeMs >= segment.startMs && timeMs < segment.endMs);
 export const keyFrameAt = (timeMs: number): T07KeyFrame | undefined => act2T07.video.keyFrames.find((frame) => timeMs >= frame.startMs && timeMs <= frame.endMs);
@@ -191,6 +204,9 @@ export function validateAct2T07Data(): void {
   }
   const mismatchByKind = act2T07.comparison.mismatchNotesByKind;
   if (!mismatchByKind?.trail || !mismatchByKind.interview || !mismatchByKind.templeRoad || !mismatchByKind.templeOther) throw new Error('T07 缺少分型 mismatchNotesByKind。');
+  if (!knownImages.has(act2T07.comparison.trailReference.imageId) || act2T07.comparison.trailReference.imageId !== 'IMG_A2_T07_TRAIL_REFERENCE_001') throw new Error('T07 树林参照图片未登记或资源 ID 不符。');
+  if (!act2T07.comparison.trailReference.caption || !act2T07.comparison.trailReference.altText || !act2T07.comparison.trailReference.note) throw new Error('T07 树林参照缺少图注、替代文本或说明。');
+  if (act2T07.comparison.guide.steps.length !== 3 || Object.values(act2T07.comparison.guide).some((value) => !value || (Array.isArray(value) && value.some((step) => !step)))) throw new Error('T07 对照区三步引导配置不完整。');
   if (!act2T07.comparison.featureOptions.some((option) => option.id === act2T07.comparison.matchFeatureId)) throw new Error('T07 外景对照特征选项无效。');
   if (video.segments.length === 0 || video.segments[0].startMs !== 0 || video.segments[video.segments.length - 1].endMs !== video.durationMs) throw new Error('T07 视频片段必须覆盖完整时长。');
   for (let index = 1; index < video.segments.length; index += 1) {
@@ -224,6 +240,8 @@ export function validateAct2T07Data(): void {
     ...act2T07.materials.flatMap((material) => [material.title, material.caption, material.placeholderNote, material.xiaoyueLine ?? '', material.symbolNote ?? '', material.logoSpeculation ?? '', material.confirmedNote ?? '']),
     ...video.segments.flatMap((segment) => [segment.label, segment.line, segment.placeholderNote]),
     video.continuityNote, ...video.keyFrames.flatMap((frame) => [frame.caption, frame.altText, frame.placeholderNote]), ...act2T07.comparison.featureOptions.map((option) => option.label), act2T07.comparison.mismatchNote, ...Object.values(act2T07.comparison.mismatchNotesByKind), ...video.keyFrames.map((frame) => frame.muteLabel ?? ''),
+    act2T07.comparison.trailReference.caption, act2T07.comparison.trailReference.altText, act2T07.comparison.trailReference.note,
+    ...act2T07.comparison.guide.steps, act2T07.comparison.guide.findCapturedTemple, act2T07.comparison.guide.findTempleInVideo, act2T07.comparison.guide.confirmedStep,
     ...Object.values(act2T07.comparison), act2T07.inference.conclusion, act2T07.inference.caveat, act2T07.inference.lockedHint,
     ...act2T07.trip.lines.map((line) => line.text), act2T07.trip.plannedNote, act2T07.trip.gearNote,
     ...act2T07.finale.lines, act2T07.finale.closingNote,

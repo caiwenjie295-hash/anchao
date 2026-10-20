@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import flagsDocument from '../../data/flags.json';
 import notesDocument from '../../data/notes.json';
-import { ACT2_T07_FRAME_IDS, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, act2T07, act2T06RecapPages, formatClock, isFrameCapturableAt, keyFrameAt, keyFrameById, segmentAt, validateAct2T07Data, visualFrameAt, resolveT07MismatchNote } from './act2T07Data';
+import { ACT2_T07_FRAME_IDS, ACT2_T07_MATERIAL_IDS, ACT2_T07_SEGMENT_IDS, act2T07, act2T06RecapPages, comparisonReferenceForFrame, formatClock, isFrameCapturableAt, keyFrameAt, keyFrameById, segmentAt, validateAct2T07Data, visualFrameAt, resolveT07MismatchNote } from './act2T07Data';
 
 const flags = (flagsDocument as { items: { id: string; defaultValue: boolean }[] }).items;
 const notes = (notesDocument as { items: { id: string }[] }).items;
@@ -58,7 +58,7 @@ describe('T07 promotion data', () => {
     const walkingFrame = act2T07.video.keyFrames.find((frame) => frame.id === 'FRAME_A2_T07_002');
     expect(walk?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
     expect(turn?.imageId).toBe('IMG_A2_T07_004');
-    expect(walkingFrame).toMatchObject({ imageId: 'IMG_A2_T07_TRAIL_WALK_001', zoomImageId: 'IMG_A2_T07_TRAIL_WALK_001', startMs: 4000, endMs: 6499, supportsExteriorMatch: false, frameKind: 'trail', muteLabel: '树林·暂不可外景核对' });
+    expect(walkingFrame).toMatchObject({ imageId: 'IMG_A2_T07_TRAIL_WALK_001', zoomImageId: 'IMG_A2_T07_TRAIL_WALK_001', startMs: 4000, endMs: 6499, supportsExteriorMatch: false, frameKind: 'trail', muteLabel: '树林·环境相似，需核对庙轮廓' });
     expect(keyFrameAt(6800)?.id).toBe('FRAME_A2_T07_001');
     expect(visualFrameAt(6500)?.imageId).toBe('IMG_A2_T07_TRAIL_WALK_001');
     expect(visualFrameAt(6800)?.imageId).toBe('IMG_A2_T07_005');
@@ -78,5 +78,18 @@ describe('T07 promotion data', () => {
     expect(resolveT07MismatchNote(interview, 'square-opening')).toBe(act2T07.comparison.mismatchNotesByKind.interview);
     expect(resolveT07MismatchNote(temple, 'mountain-road')).toBe(act2T07.comparison.mismatchNotesByKind.templeRoad);
     expect(resolveT07MismatchNote(temple, 'interview-background')).toBe(act2T07.comparison.mismatchNotesByKind.templeOther);
+    expect(resolveT07MismatchNote(trail, 'square-opening')).toContain('树林很相似');
+    expect(resolveT07MismatchNote(trail, 'square-opening')).toContain('继续核对视频中的庙轮廓');
+  });
+
+  it('selects the forest reference only for trail frames and keeps the temple reference for temple and interview', () => {
+    const trail = comparisonReferenceForFrame(keyFrameById.get('FRAME_A2_T07_002'));
+    const temple = comparisonReferenceForFrame(keyFrameById.get('FRAME_A2_T07_001'));
+    const interview = comparisonReferenceForFrame(keyFrameById.get('FRAME_A2_T07_003'));
+    expect(trail).toEqual(act2T07.comparison.trailReference);
+    expect(trail).toMatchObject({ imageId: 'IMG_A2_T07_TRAIL_REFERENCE_001', caption: '第一次徒步拍下的树林照片' });
+    expect(temple.imageId).toBe('IMG_A1_I_001');
+    expect(interview.imageId).toBe('IMG_A1_I_001');
+    expect(act2T07.comparison.guide.steps).toHaveLength(3);
   });
 });
