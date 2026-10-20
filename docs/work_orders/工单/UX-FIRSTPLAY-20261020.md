@@ -1,6 +1,6 @@
 # UX-FIRSTPLAY-20261020 首次试玩八项界面修复
 
-> 状态：权威执行合同（用户已授权实施8项）
+> 状态：8项实现已完成；主审恢复工程验收通过，APPROVED。用户明确无需再次盲测。
 > 基线：e23170010174d1a67c66ae6f125b6fbb5b34b3e7
 > 唯一产品代码写入者：gpt-6-luna / max
 > 分支：agent/UX-FIRSTPLAY-20261020-luna-max
@@ -43,7 +43,7 @@ Luna允许（路径皆相对本worktree）：
 - `src/act2/t05School.css`、`src/act3/act3Scene.css`、`src/act4/act4.css`，仅本批新增状态/入口样式，避免全局改版。
 - 新增任务特定测试`src/data/firstPlayCopy.test.ts`。
 - `scripts/verify-offline.mjs`：仅T04开邮件、T08开档案、T09藏本/出门、T10最后邮件动作后/重新挂载的旧空推进或封页预期改为直达已揭示正文预期，并明确原动作完成但当前段/A4尚未自动完成；保留其余四幕/广播/结束/资源断言与测试机制。此为F04行为同步，不改超时/重试或绕过验证。
-- `docs/ux-firstplay-20261020/implementation.md`和`validation.md`（实现/实际测试/未实施核查说明）。
+- 实现说明和验收记录原定由Luna交付，但停止时未创建；恢复阶段主审独占新增`docs/ux-firstplay-20261020/implementation.md`和`validation.md`，只整理既有实现及实际验证，不修改产品代码。
 
 主审独占：本合同、`docs/reviews/UX-FIRSTPLAY-20261020.md`、`维护导航.md`、`docs/progress_log.md`、`docs/todo.md`、`docs/changelog.md`、开发包根PROGRESS.md、外层本轮验证/报告。主审不写产品代码。
 
@@ -62,3 +62,7 @@ Luna必须：定向Vitest（含分页原文完整性/迁移、门槛未改、阅
 ## 报告
 
 Role / Delivered（逐8项） / Commit SHA / Changed paths / Validation实际命令结果 / 未完成与剧情核查（邮件时间、地名、可选对话） / 兼容风险 / Cross-boundary requests。禁止只回复完成，禁止声称未跑的检查通过。
+
+## 2026-10-20 恢复与收尾
+
+用户明确继续此前代码与测试工作，并要求不再盲测。恢复时已发现产品提交05bde99通过另一轮接续合入main 13ff141，树干净、产品树与停止快照一致；不重写已有提交或重复合并。父在独立`codex/UX-FIRSTPLAY-20261020-final-review`分支仅补齐维护/交付文档，保留Luna为唯一产品代码写入者。当前main已独立通过原npm test（125文件606项）和完整quality:gate，T04/T08动作直达及T10落幕宽窄工程检查通过；冻结首次报告保持。无推送/部署，历史ZIP不覆盖。
