@@ -23,7 +23,7 @@ describe('Act4ReaderStoryBody emphasis', () => {
       { id: 'current', label: '笔记第一页', from: 1, to: 2, role: 'page' },
       { id: 'after', label: '笔记第二页', from: 2, to: 3, role: 'page' },
     ];
-    await act(async () => { root.render(<Act4ReaderStoryBody stage="T01" blockId="T01_ORIGINAL" paragraphs={paragraphs} currentPage={segments[1]} visibleSegments={segments} pageIndex={1} pageCount={3} />); });
+    await act(async () => { root.render(<Act4ReaderStoryBody stage="T01" blockId="T01_ORIGINAL" paragraphs={paragraphs} currentPage={segments[1]} visibleSegments={segments} pageIndex={1} pageCount={3} headingTitle="笔记第一页" />); });
 
     expect([...host.querySelectorAll('.a4-reader__paragraph')].map((node) => node.textContent)).toEqual(paragraphs);
     expect([...host.querySelectorAll('strong')].map((node) => node.textContent)).toEqual(['凌晨一点']);

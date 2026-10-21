@@ -333,6 +333,7 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
       <section className="t05-school__timeline" aria-label="休学前后对照">
         <h2>分别记录材料，再判断能说明什么 <span>已读 {readEvidenceCount} / 3（仅三份学校材料） · 已选不同来源 {selectedSourceCount} / 2</span></h2>
         <p>读过记录后，选择至少两种不同来源，再判断它们能说明什么。访问地点本身不计作证据。</p>
+        <p className="t05-school__count-note">已读数只统计班主任回忆、历次成绩记录和成绩表下方的感谢文字；地点访问不计入，支持来源还需另行选择。</p>
         <div className="t05-school__evidence-options">
           {timelineEvidence.map((item) => {
             const available = flags[item.flag] === true;
@@ -345,11 +346,13 @@ export function SchoolInvestigation({ manager = defaultManager, onReturnToDeskto
         <p className="t05-school__evidence-count">已选不同来源：{selectedSourceCount} / 2</p>
         <h3>目前能作出的判断</h3>
         <div className="t05-school__inferences">
-          <button type="button" aria-pressed={schoolProgress.selectedInferenceId === 'bounded-timeline'} disabled={isComplete} onClick={() => { manager.selectAct2SchoolInference('bounded-timeline'); setTimelineFeedback('材料共同支持休学后的变化，以及同期成绩提升；它们没有证明变化的具体原因。'); }}>
-            休学后他的表现和成绩都有明显变化；启明的培养与这段时间有关，但材料没有证明因果。
+          <button type="button" aria-pressed={schoolProgress.selectedInferenceId === 'bounded-timeline'} disabled={isComplete} onClick={() => { manager.selectAct2SchoolInference('bounded-timeline'); setTimelineFeedback(qimingNameFound ? '材料共同支持休学后的变化，以及同期成绩提升；它们没有证明变化的具体原因。' : '材料共同支持休学后的变化，以及同期成绩提升；感谢文字提到的培养与这段时间有关，但它们没有证明变化的具体原因。'); }}>
+            {qimingNameFound
+              ? '休学后他的表现和成绩都有明显变化；启明的培养与这段时间有关，但材料没有证明因果。'
+              : '休学后他的表现和成绩都有明显变化；感谢文字提到的培养与这段时间有关，但材料没有证明因果。'}
           </button>
-          <button type="button" aria-pressed={schoolProgress.selectedInferenceId === 'qiming-caused-change'} disabled={isComplete} onClick={() => { manager.selectAct2SchoolInference('qiming-caused-change'); setTimelineFeedback('现有记录能说明时间上的关联，不能证明启明造成了性情或身份变化。'); }}>
-            启明的培养已经证明造成了小 A 的性情或身份变化。
+          <button type="button" aria-pressed={schoolProgress.selectedInferenceId === 'qiming-caused-change'} disabled={isComplete} onClick={() => { manager.selectAct2SchoolInference('qiming-caused-change'); setTimelineFeedback(qimingNameFound ? '现有记录能说明时间上的关联，不能证明启明造成了性情或身份变化。' : '现有记录能说明时间上的关联，不能证明感谢文字提到的培养造成了性情或身份变化。'); }}>
+            {qimingNameFound ? '启明的培养已经证明造成了小 A 的性情或身份变化。' : '感谢文字提到的培养已经证明造成了小 A 的性情或身份变化。'}
           </button>
         </div>
         {isComplete && <p className="t05-school__ending" aria-live="polite"><strong>{act2School.matchNote}</strong> · 双 S 比对与两种来源支持的暂定时间线已记入笔记。</p>}

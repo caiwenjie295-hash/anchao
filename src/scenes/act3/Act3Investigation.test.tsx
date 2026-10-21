@@ -4,12 +4,13 @@ import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
+import { act3RequiredClueIds } from '../../data/act3Data';
 import { Act3Investigation } from './Act3Investigation';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('Third-act investigation interface', () => {
-  it('explains a known blocked route and opens the related material with focus return', async () => {
+  it('explains a known blocked route and opens the related local material with focus return', async () => {
     localStorage.clear();
     const state = createDefaultState();
     state.modules.act3.stage = 'T04';
@@ -34,7 +35,6 @@ describe('Third-act investigation interface', () => {
       expect(material?.textContent).toContain('查看相关材料');
       material!.focus();
       await click(material!);
-      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T04_004');
       expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T04_PAPER_EDGE');
       expect(container.querySelector('[role="dialog"] h2')?.textContent).toContain('角落纸边');
       const close = container.querySelector<HTMLButtonElement>('[role="dialog"] button');
@@ -89,15 +89,67 @@ describe('Third-act investigation interface', () => {
       expect(progress?.textContent).toContain('当前照片已观察1 / 1');
       expect(progress?.querySelector('[data-observation-state="observed"]')?.textContent).toContain('已观察');
       expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('本阶段还缺2处必需观察');
-      expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('当前照片已无本地必需观察');
+      expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('当前照片热点已全部观察，本地没有本阶段必需观察');
       const recover = progress?.querySelector<HTMLButtonElement>('.act3-investigation__missing-required button');
-      expect(recover?.textContent).toBe('前往并查看');
+      expect(recover?.textContent).toBe('前往下一张现场照片');
       expect(container.querySelector('[data-action-id="A3_ROUTE_T02_001_002"]')?.textContent).toContain('下一张现场照片');
       await act(async () => { recover?.click(); });
+      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T02_002');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T02_BLACKBOARD');
+      expect(container.querySelector('[role="dialog"]')).toBeNull();
+      expect(container.querySelector('.act3-investigation__missing-required button')?.textContent).toBe('前往下一张现场照片');
+      await act(async () => { container.querySelector<HTMLButtonElement>('.act3-investigation__missing-required button')?.click(); });
       expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T02_003');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T02_BLACKBOARD');
+      expect(container.querySelector('.act3-investigation__missing-required button')?.textContent).toBe('查看这处观察');
+      await act(async () => { container.querySelector<HTMLButtonElement>('.act3-investigation__missing-required button')?.click(); });
       expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T02_BLACKBOARD');
       expect(container.querySelector('[role="dialog"] h2')?.textContent).toBeTruthy();
       expect(container.querySelector('[data-action-id="A3_T02_LEAVE_AND_CONTINUE"]')?.textContent).toContain('结束本阶段');
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
+  it('numbers different photos that share the same named location', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = 'A3_T04';
+    state.modules.act3.stage = 'T04';
+    state.modules.act3.currentLensId = 'LENS_A3_T04_004';
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      expect(container.querySelector('.act3-investigation__progress-counts')?.textContent).toContain('同名现场照片2 / 3');
+      expect(container.textContent).toContain('同名现场照片 2 / 3');
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
+  it('separates optional unobserved hotspots from completed required observations', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = 'A3_T01';
+    state.modules.act3.stage = 'T01';
+    state.modules.act3.currentLensId = 'LENS_A3_T01_006';
+    state.modules.act3.inspectedClueIds = act3RequiredClueIds('T01');
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      expect(container.querySelector('.act3-investigation__progress-counts')?.textContent).toContain('本阶段必需观察3 / 3');
+      expect(container.querySelector('.act3-investigation__progress-counts')?.textContent).toContain('当前照片已观察1 / 2');
+      expect(container.querySelector('.act3-investigation__photo-observation-note')?.textContent).toContain('本阶段必需观察已齐');
+      expect(container.querySelector('.act3-investigation__photo-observation-note')?.textContent).toContain('1处未观察热点');
+      expect(container.querySelector('.investigation-shell__status')?.textContent).not.toContain('已经看完');
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();
@@ -109,7 +161,7 @@ describe('Third-act investigation interface', () => {
     const state = createDefaultState();
     state.game.phase = 'A3_T00';
     state.modules.act3.stage = 'T00';
-    state.modules.act3.currentLensId = 'LENS_A3_T00_005';
+    state.modules.act3.currentLensId = 'LENS_A3_T00_004';
     const manager = new StateManager(new EventBus(), state);
     const container = document.createElement('div');
     document.body.append(container);
@@ -118,11 +170,11 @@ describe('Third-act investigation interface', () => {
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
       const missing = [...container.querySelectorAll<HTMLElement>('.act3-investigation__missing-required li')];
-      const cableItem = missing.find((item) => item.textContent?.includes('电缆'))!;
-      const drainItem = missing.find((item) => item.textContent?.includes('排水沟'))!;
-      expect(cableItem.querySelector('button')?.textContent).toBe('前往并查看');
+      const cableItem = missing.find((item) => item.getAttribute('data-missing-clue-id') === 'CLUE_A3_T00_CABLE_BREAK')!;
+      const drainItem = missing.find((item) => item.getAttribute('data-missing-clue-id') === 'CLUE_A3_T00_DRAIN_DISCOVERED')!;
+      expect(cableItem.querySelector('button')?.textContent).toBe('前往下一张现场照片');
       expect(drainItem.querySelector('button')).toBeNull();
-      expect(drainItem.textContent).toContain('先沿现有地点路线完成沿途必需观察');
+      expect(drainItem.textContent).toContain('先沿现有路线完成眼前可查看的必需观察');
 
       await click(container.querySelector<HTMLButtonElement>('[data-action-id="A3_T00_LEAVE_AND_CONTINUE"]')!);
       const related = [...container.querySelectorAll<HTMLButtonElement>('.investigation-navigation__material')];
@@ -130,16 +182,21 @@ describe('Third-act investigation interface', () => {
       expect(related[0].textContent).toContain('电缆');
       expect(related[0].textContent).not.toContain('排水沟');
 
-      await click(cableItem.querySelector<HTMLButtonElement>('button')!);
+      await click(related[0]);
+      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T00_005');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T00_CABLE_BREAK');
+      const cableAtDestination = container.querySelector<HTMLElement>('[data-missing-clue-id="CLUE_A3_T00_CABLE_BREAK"]')!;
+      expect(cableAtDestination.querySelector('button')?.textContent).toBe('查看这处观察');
+      await click(cableAtDestination.querySelector<HTMLButtonElement>('button')!);
       expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T00_CABLE_BREAK');
       const close = container.querySelector<HTMLButtonElement>('[role="dialog"] button');
       if (close) await click(close);
       const remainingDrain = [...container.querySelectorAll<HTMLElement>('.act3-investigation__missing-required li')]
-        .find((item) => item.textContent?.includes('排水沟'))!;
-      expect(remainingDrain.querySelector<HTMLButtonElement>('button')?.textContent).toBe('前往并查看');
+        .find((item) => item.getAttribute('data-missing-clue-id') === 'CLUE_A3_T00_DRAIN_DISCOVERED')!;
+      expect(remainingDrain.querySelector<HTMLButtonElement>('button')?.textContent).toBe('前往下一张现场照片');
       await click(remainingDrain.querySelector<HTMLButtonElement>('button')!);
-      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T00_010');
-      expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T00_DRAIN_DISCOVERED');
+      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T00_006');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T00_DRAIN_DISCOVERED');
       expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T00_CABLE_BREAK');
     } finally {
       await act(async () => { root.unmount(); });

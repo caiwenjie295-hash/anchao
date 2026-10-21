@@ -111,9 +111,11 @@ describe('T07 promotion investigation', () => {
     await click('.t07-finale__photo-zoom');
     await loadPendingImages();
     expect(container.querySelector('.t07-finale__photo-symbol')).not.toBeNull();
+    expect(container.textContent).not.toContain(act2T07.materials[0].logoSpeculation!);
     expect(flags().FLAG_A2_PROMO_PHOTO_SS_FOUND).not.toBe(true);
     await click('.t07-finale__photo-confirm');
     expect(flags().FLAG_A2_PROMO_PHOTO_SS_FOUND).toBe(true);
+    expect(container.textContent).toContain(act2T07.materials[0].logoSpeculation!);
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T07_001');
     await click('.t07-finale__photo-close');
     expect(container.querySelector('.t07-finale__photo-symbol')).toBeNull();

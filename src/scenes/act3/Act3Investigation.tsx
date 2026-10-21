@@ -12,7 +12,7 @@ import type { InvestigationAction, InvestigationMaterialLink } from '../../compo
 import { act3PhotoLayout } from '../../data/act3PhotoLayout';
 import { act3ComparisonPhotoDetailAssetId } from '../../data/act3ComparisonPhotoDetails';
 import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT, act3DetailImageIdForClue } from '../../data/act3Data';
-import { act3ExitReason, act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens, act3RouteLabelFor, act3StageCompletionLabel } from '../../data/act3Presentation';
+import { act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens, act3RouteLabelFor, act3StageCompletionLabel } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
 import { act3HotspotActionLabel } from '../../story/investigation/actionPresentation';
 
@@ -122,10 +122,13 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const inspected = state.modules.act3.inspectedClueIds;
   const lensTitle = act3LensTitleFor(lens.id, lens.title, inspected);
   const lensDescription = act3LensDescriptionFor(lens.id, lens.description, inspected);
+  const samePlaceLenses = doc.lenses.filter((item) => act3PlaceForLens(item.id, item.title) === act3PlaceForLens(lens.id, lens.title));
+  const samePlaceLensIndex = samePlaceLenses.findIndex((item) => item.id === lens.id) + 1;
   const requiredClueIds = act3RequiredClueIds(stage);
   const missingRequiredIds = requiredClueIds.filter((id) => !inspected.includes(id));
   const completedRequiredCount = requiredClueIds.length - missingRequiredIds.length;
   const observedPhotoHotspotCount = lens.hotspots.filter((hotspot) => inspected.includes(hotspot.clueId)).length;
+  const unobservedPhotoHotspotCount = lens.hotspots.length - observedPhotoHotspotCount;
   const stageAlreadyConfirmed = state.modules.act3.confirmedFlagIds.includes(ACT3_STAGE_COMPLETION_FLAG[stage]);
   const nextStage = ACT3_STAGE_NEXT[stage];
 
@@ -136,12 +139,16 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
     .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
   const blockedForwardHint = missingRequiredIds.length === 0
-    ? act3ExitReason(stage, missingRequiredIds)
+    ? unobservedPhotoHotspotCount > 0
+      ? `本阶段必需观察已齐；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，可按需要继续查看后离开。`
+      : `本阶段必需观察已齐，当前照片上的${lens.hotspots.length}处热点也都已观察。`
     : missingXiaoyueMemory
       ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
       : missingOnCurrentPhotoCount > 0
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片还有${missingOnCurrentPhotoCount}处，先点击虚线框查看，再继续。`
-        : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片已无本地必需观察，请沿现有地点路线前往其他照片。`;
+        ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片有${unobservedPhotoHotspotCount}处未观察热点，其中${missingOnCurrentPhotoCount}处是本阶段必需观察。`
+        : unobservedPhotoHotspotCount === 0
+          ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片热点已全部观察，本地没有本阶段必需观察，请沿现有地点路线前往其他照片。`
+          : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，但本地没有必需观察，请沿现有地点路线前往其他照片。`;
   const safePathToMissingRequiredClue = (clueId: string, currentLens = lens.id, alreadyInspected = inspected): string[] | null => {
     const path = findAct3RoutePathToClue(stage, currentLens, clueId, alreadyInspected);
     const target = hotspotByClue.get(clueId);
@@ -175,10 +182,11 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
       liveState.modules.act3.inspectedClueIds,
     );
     if (path === null) return;
-    for (const lensId of path) {
-      if (!manager.enterAct3Lens(lensId)) return;
+    if (path.length === 0) {
+      openHotspot(clueId);
+      return;
     }
-    openHotspot(clueId);
+    if (manager.enterAct3Lens(path[0])) setHotspotId(null);
   };
 
   const photoHotspots: PhotoMarker[] = lens.hotspots.map((hotspot) => ({
@@ -259,7 +267,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     ariaLabel="第三幕调查"
     actLabel={`第三幕 · ${movement}`}
     locationLabel={act3PlaceForLens(lens.id, lens.title)}
-    contextLabel={`${lensTitle} · ${STANCE_LABEL[lens.stance]} · ${doc.intro}`}
+    contextLabel={`${lensTitle} · ${STANCE_LABEL[lens.stance]}${samePlaceLenses.length > 1 ? ` · 同名现场照片 ${samePlaceLensIndex} / ${samePlaceLenses.length}` : ''} · ${doc.intro}`}
     objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '已和小月离开旧址，手边的笔记还有内容可读。'
       : act3ObjectiveFor(stage, inspected)}
@@ -268,7 +276,8 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     statusMessage={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
       : missingRequiredIds.length ? blockedForwardHint
-        : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
+        : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。'
+          : unobservedPhotoHotspotCount > 0 ? blockedForwardHint : undefined}
     onExit={onReturnToDesktop ?? (() => {})}
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
@@ -280,6 +289,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
         <div className="act3-investigation__progress-counts">
           <p><strong>本阶段必需观察</strong><span>{completedRequiredCount} / {requiredClueIds.length}</span></p>
           <p><strong>当前照片已观察</strong><span>{observedPhotoHotspotCount} / {lens.hotspots.length}</span></p>
+          {samePlaceLenses.length > 1 && <p><strong>同名现场照片</strong><span>{samePlaceLensIndex} / {samePlaceLenses.length}</span></p>}
         </div>
         <ul className="act3-investigation__photo-status" aria-label="当前照片观察状态">
           {lens.hotspots.map((hotspot) => {
@@ -289,18 +299,32 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
             </li>;
           })}
         </ul>
+        <p className="act3-investigation__photo-observation-note">{missingRequiredIds.length === 0
+          ? unobservedPhotoHotspotCount > 0
+            ? `本阶段必需观察已齐；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，可以自行选择是否查看。`
+            : '本阶段必需观察已齐，当前照片上的热点也都已查看。'
+          : missingOnCurrentPhotoCount > 0
+            ? `当前照片还有${unobservedPhotoHotspotCount}处未观察热点，其中${missingOnCurrentPhotoCount}处是本阶段必需观察。`
+            : unobservedPhotoHotspotCount === 0
+              ? '当前照片热点已全部观察；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。'
+              : `当前照片还有${unobservedPhotoHotspotCount}处未观察热点；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。`}</p>
         {missingRequiredIds.length > 0 && <section className="act3-investigation__missing-required" aria-label="本阶段仍缺的必需观察">
           <h2>本阶段仍缺的必需观察</h2>
           <ul>
             {missingRequiredIds.map((clueId) => {
               const entry = hotspotByClue.get(clueId);
-              const pathExists = Boolean(entry && findAct3RoutePathToClue(stage, lens.id, clueId, inspected));
-              const reachable = Boolean(entry && safePathToMissingRequiredClue(clueId));
-              return <li key={clueId}>
-                {entry && reachable
-                  ? <><span>{hotspotLabel(entry.hotspot)}</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>前往并查看</button></>
+              const path = entry ? findAct3RoutePathToClue(stage, lens.id, clueId, inspected) : null;
+              const pathExists = path !== null;
+              const safePath = entry ? safePathToMissingRequiredClue(clueId) : null;
+              const reachable = safePath !== null;
+              const local = reachable && safePath.length === 0;
+              return <li key={clueId} data-missing-clue-id={clueId}>
+                {entry && local
+                  ? <><span>{hotspotLabel(entry.hotspot)}</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>查看这处观察</button></>
+                  : entry && reachable
+                    ? <><span>尚缺一处必需观察</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>前往下一张现场照片</button></>
                   : pathExists
-                    ? <><span>{entry ? hotspotLabel(entry.hotspot) : '一处必需观察'}</span><small>先沿现有地点路线完成沿途必需观察，再使用直达入口。</small></>
+                    ? <><span>尚缺其他必需观察</span><small>先沿现有路线完成眼前可查看的必需观察，再继续前往。</small></>
                     : <><span>还有必需观察暂不可从当前位置抵达</span><small>先沿可通行路线继续查找</small></>}
               </li>;
             })}

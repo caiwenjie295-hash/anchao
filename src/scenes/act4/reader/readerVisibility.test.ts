@@ -49,4 +49,27 @@ describe('Act4 reader visibility', () => {
     expect(hidden.allVisibleTextDisplayed).toBe(true);
     expect(hidden.visibleExplanationIds.has('A4_EXPLAIN_T09')).toBe(false);
   });
+
+  it('does not count an unrevealed final reaction as displayed text', () => {
+    const block = { id: 'T01_ORIGINAL', kind: 'novel-excerpt', paragraphs: ['notebook', 'reaction'], explanationId: 'A4_EXPLAIN_T01' };
+    const pages = [page(0, 1)];
+    const hiddenEnding = deriveReaderVisibility({
+      visibleBlocks: [block],
+      pageTargets: [{
+        blockId: block.id,
+        pageIndex: 0,
+        pages,
+        page: pages[0],
+        coverRequired: false,
+        coverOpen: false,
+        displayedParagraphEnd: 1,
+      }],
+      sectionExplanationId: block.explanationId,
+      partialRecapAvailable: false,
+      explanationRevealAllowed: true,
+    });
+    expect(hiddenEnding.displayedEnds.get(block.id)).toBe(1);
+    expect(hiddenEnding.allVisibleTextDisplayed).toBe(false);
+    expect(hiddenEnding.visibleExplanationIds.has(block.explanationId)).toBe(false);
+  });
 });

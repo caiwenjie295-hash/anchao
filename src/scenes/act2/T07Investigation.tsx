@@ -402,7 +402,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             ? <button type="button" className="t07-finale__photo-zoom" disabled={!photoImageAvailable} onClick={() => { manager.viewAct2T07Material(photoMaterial.id); setPhotoZoomed(true); }}>{photoMaterial.zoomLabel}</button>
             : <>
               <p className="t07-finale__note">{photoMaterial.symbolNote}</p>
-              <p className="t07-finale__xiaoyue">{photoMaterial.logoSpeculation}</p>
+              {photoConfirmed && <p className="t07-finale__xiaoyue">{photoMaterial.logoSpeculation}</p>}
               {!photoConfirmed && <button type="button" className="t07-finale__photo-confirm" disabled={!photoImageAvailable} onClick={() => manager.confirmAct2T07PhotoSymbol()}>{photoMaterial.confirmLabel}</button>}
             </>}
           {photoConfirmed && <p className="t07-finale__done" aria-live="polite">{photoMaterial.confirmedNote}</p>}

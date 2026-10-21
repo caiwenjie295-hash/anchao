@@ -1,5 +1,6 @@
 import type { Act4TextSegment } from '../../../data/narrative/act4Presentation';
 import { act4DateTimeValue, act4ParagraphKind } from '../../../data/narrative/act4Presentation';
+import { backWords, wakeWords } from '../../../data/act4/content';
 import type { ActiveAct4NarrativeStage } from '../../../story/act4/narrativePolicy';
 import { Act4LastConsciousness } from './Act4LastConsciousness';
 import { act4EmphasisRuns } from '../../../data/narrative/act4Emphasis';
@@ -12,6 +13,7 @@ export function Act4ReaderStoryBody({
   visibleSegments,
   pageIndex,
   pageCount,
+  headingTitle,
   focusCurrentPage = true,
   onBroadcastCompleteChange,
 }: {
@@ -22,6 +24,7 @@ export function Act4ReaderStoryBody({
   visibleSegments: readonly Act4TextSegment[];
   pageIndex: number;
   pageCount: number;
+  headingTitle: string;
   focusCurrentPage?: boolean;
   onBroadcastCompleteChange?: (complete: boolean) => void;
 }) {
@@ -39,7 +42,10 @@ export function Act4ReaderStoryBody({
         : contentSegment.sceneId
           ? `${contentSegment.sceneLabel || ''}${(contentSegment.scenePageCount ?? 1) > 1 ? ` · 第 ${(contentSegment.scenePageIndex ?? 0) + 1} 页` : ''}`
           : contentSegment.label;
-      const showSegmentHeading = Boolean(pageHeading) && (stage === 'T01' || Boolean(contentSegment.sceneId) || !['T03', 'T05'].includes(stage));
+      const showSegmentHeading = Boolean(pageHeading)
+        && pageHeading !== headingTitle
+        && !/^第\s*\d+\s*(页|段)$/.test(pageHeading)
+        && (stage === 'T02' || (stage === 'T10' && blockId === 'T10_FINAL_MAIL' && pageIndex === 0));
       return <section
         className={`a4-reader__segment a4-reader__segment--${contentSegment.role}`}
         data-segment-id={contentSegment.id}
@@ -66,6 +72,16 @@ export function Act4ReaderStoryBody({
             ? <time className={paragraphClass} dateTime={dateTime} key={`${blockId}-${index}`}>{text}</time>
             : <p className={paragraphClass} key={`${blockId}-${index}`}>{text}</p>;
         })}</div>}
+        {stage === 'T10' && blockId === 'T10_AFTERMATH' && contentSegment.id === 'T10_WORDS' && <section className="a4-reader__wordlists" aria-label="两组广播词表">
+          <article>
+            <h5>VVaKe · 睡前广播</h5>
+            <ul>{wakeWords.map((word) => <li key={word}>{word}</li>)}</ul>
+          </article>
+          <article>
+            <h5>13aCK · 早间广播</h5>
+            <ul>{backWords.map((word) => <li key={word}>{word}</li>)}</ul>
+          </article>
+        </section>}
       </section>;
     })}
   </div>;
