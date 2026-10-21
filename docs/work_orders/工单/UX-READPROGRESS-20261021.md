@@ -8,7 +8,7 @@
 3. 回忆章封面已过、两封邮件时间不是bug：保持4983实现；08:17/23:41正文完全不改。其他旧报告项不扩大实施。
 
 ## 文件所有权
-Luna唯一写入：src/scenes/act4/Act4NarrativeReader.tsx；src/scenes/act4/Act4NarrativeReader.test.tsx（若存在）；src/scenes/act4/Act4ReaderBehavior.test.tsx；src/scenes/act4/Act4LaterExperience.test.tsx；src/scenes/act4/Act4ReadingProgress.test.tsx（可新增）；src/scenes/act4/reader/Act4ReaderPager.tsx及其同名.test.tsx；src/scenes/act4/Act4ReaderFinaleBehavior.test.tsx（仅相关断言）；src/scenes/act4/Act4NarrativeReader.css；src/scenes/act3/Act3Investigation.tsx及Act3Investigation.test.tsx；docs/ux-readprogress-20261021/implementation.md。若实际测试/CSS路径不同，先向父报告申请精确替换；禁止自行扩写。
+Luna唯一写入：src/scenes/act4/Act4NarrativeReader.tsx；src/scenes/act4/Act4NarrativeReader.test.tsx（若存在）；src/scenes/act4/Act4ReaderBehavior.test.tsx；src/scenes/act4/Act4LaterExperience.test.tsx；src/scenes/act4/Act4ReadingProgress.test.tsx（可新增）；src/scenes/act4/reader/Act4ReaderPager.tsx及其同名.test.tsx；src/scenes/act4/Act4ReaderFinaleBehavior.test.tsx（仅相关断言）；src/act4/act4.css；src/scenes/act3/Act3Investigation.tsx及Act3Investigation.test.tsx；docs/ux-readprogress-20261021/implementation.md。若实际测试/CSS路径不同，先向父报告申请精确替换；禁止自行扩写。
 主审唯一写入：本工单、docs/ux-readprogress-20261021/validation.md、docs/reviews/UX-READPROGRESS-20261021.md、维护导航.md、docs/progress_log.md、todo.md、changelog.md；开发包外层QA、精简源码和部署交付。
 只读：原剧情规范01–04（有需要再定向读）、readerProgress/layoutPreferences、core/stateManager、所有data/public/assets/参考原稿及其他worktree。禁止修改剧情、资源、依赖/锁文件、存档schema13/Flag/门槛、公开接口、路由和旧WIP；禁止格式化整仓及降低测试。
 
