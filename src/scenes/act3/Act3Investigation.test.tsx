@@ -89,7 +89,7 @@ describe('Third-act investigation interface', () => {
       expect(progress?.textContent).toContain('当前照片已观察1 / 1');
       expect(progress?.querySelector('[data-observation-state="observed"]')?.textContent).toContain('已观察');
       expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('本阶段还缺2处必需观察');
-      expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('当前照片仍有0处未观察热点，但本地没有必需观察');
+      expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('当前照片热点已全部观察，本地没有本阶段必需观察');
       const recover = progress?.querySelector<HTMLButtonElement>('.act3-investigation__missing-required button');
       expect(recover?.textContent).toBe('前往下一张现场照片');
       expect(container.querySelector('[data-action-id="A3_ROUTE_T02_001_002"]')?.textContent).toContain('下一张现场照片');

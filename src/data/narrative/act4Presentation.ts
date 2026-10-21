@@ -37,7 +37,7 @@ const EXPLICIT_SEGMENTS: Record<string, readonly Act4TextSegment[]> = {
     segment('T02_CONTEXT', '“那一天”', 0, 10),
     segment('T02_PROTAGONIST_MAIL', '主角收到的邮件', 10, 15),
     segment('T02_XIAOYUE_MAIL', '小月收到的邮件', 15, 21),
-    segment('T02_DATE_COMPARISON', '对照发送日期', 21, 23),
+    segment('T02_DATE_CONCLUSION', '对照发送日期', 21, 23, 'ending'),
   ],
   'T03:T03_ORIGINAL': [
     segment('T03_WEIBO_HEADING', '微博记录', 0, 1, 'lead'),

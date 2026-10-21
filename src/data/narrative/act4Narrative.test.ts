@@ -40,6 +40,8 @@ describe('fourth act source-mapped narrative', () => {
     const text = act4NarrativeExplanations.A4_EXPLAIN_T02.text;
     expect(text).not.toContain('微博');
     expect(text).not.toContain('玩家');
-    expect(text).toContain('2020 年 4 月 19 日 23:41');
+    expect(text).toContain('08:17');
+    expect(text).toContain('23:41');
+    expect(text).toContain('同属一天');
   });
 });

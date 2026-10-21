@@ -146,7 +146,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
       ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
       : missingOnCurrentPhotoCount > 0
         ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片有${unobservedPhotoHotspotCount}处未观察热点，其中${missingOnCurrentPhotoCount}处是本阶段必需观察。`
-        : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，但本地没有必需观察，请沿现有地点路线前往其他照片。`;
+        : unobservedPhotoHotspotCount === 0
+          ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片热点已全部观察，本地没有本阶段必需观察，请沿现有地点路线前往其他照片。`
+          : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，但本地没有必需观察，请沿现有地点路线前往其他照片。`;
   const safePathToMissingRequiredClue = (clueId: string, currentLens = lens.id, alreadyInspected = inspected): string[] | null => {
     const path = findAct3RoutePathToClue(stage, currentLens, clueId, alreadyInspected);
     const target = hotspotByClue.get(clueId);
@@ -303,7 +305,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
             : '本阶段必需观察已齐，当前照片上的热点也都已查看。'
           : missingOnCurrentPhotoCount > 0
             ? `当前照片还有${unobservedPhotoHotspotCount}处未观察热点，其中${missingOnCurrentPhotoCount}处是本阶段必需观察。`
-            : `当前照片还有${unobservedPhotoHotspotCount}处未观察热点；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。`}</p>
+            : unobservedPhotoHotspotCount === 0
+              ? '当前照片热点已全部观察；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。'
+              : `当前照片还有${unobservedPhotoHotspotCount}处未观察热点；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。`}</p>
         {missingRequiredIds.length > 0 && <section className="act3-investigation__missing-required" aria-label="本阶段仍缺的必需观察">
           <h2>本阶段仍缺的必需观察</h2>
           <ul>

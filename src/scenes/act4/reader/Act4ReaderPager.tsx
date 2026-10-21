@@ -7,6 +7,7 @@ export function Act4ReaderPager({
   paragraphs,
   pages,
   pageIndex,
+  highWaterPageIndex,
   onSelectPage,
   navLabel,
 }: {
@@ -15,6 +16,7 @@ export function Act4ReaderPager({
   paragraphs: readonly string[];
   pages: readonly Act4TextSegment[];
   pageIndex: number;
+  highWaterPageIndex: number;
   onSelectPage: (index: number) => void;
   navLabel: string;
 }) {
@@ -32,20 +34,29 @@ export function Act4ReaderPager({
           ? item.label || `第 ${index + 1} 段`
           : dateLabel || `第 ${index + 1} 页`;
   };
+  const safeHighWaterPageIndex = Math.max(-1, Math.min(pages.length - 1, highWaterPageIndex));
 
   return <>
     {pages.length > 1 && <>
       <nav className="a4-reader__pager" aria-label={navLabel}>
         <button type="button" disabled={pageIndex === 0} onClick={() => selectPage(Math.max(0, pageIndex - 1))}>上一页</button>
-        <span aria-live="polite">{pageIndex + 1} / {pages.length}</span>
+        <span className="a4-reader__pager-status">
+          <span role="status" aria-label={`当前页 ${pageIndex + 1} / ${pages.length}`} aria-live="polite">{pageIndex + 1} / {pages.length}</span>
+          {safeHighWaterPageIndex > pageIndex && <span className="a4-reader__displayed-progress">已显示至 {safeHighWaterPageIndex + 1} / {pages.length}</span>}
+        </span>
         <button type="button" disabled={pageIndex >= pages.length - 1} onClick={() => selectPage(Math.min(pages.length - 1, pageIndex + 1))}>下一页</button>
       </nav>
       <details className="a4-reader__page-directory">
-        <summary>已读目录：{pageIndex + 1} / {pages.length}</summary>
+        <summary>已显示页码：{safeHighWaterPageIndex + 1} / {pages.length}</summary>
         <nav aria-label={`${navLabel}目录`}>
-          {pages.slice(0, pageIndex + 1).map((item, index) => <button type="button" key={item.id} aria-current={pageIndex === index ? 'page' : undefined} onClick={() => selectPage(index)}>
-            {pageLabel(item, index)}
-          </button>)}
+          {pages.map((item, index) => {
+            const displayed = index <= safeHighWaterPageIndex;
+            return (
+              <button type="button" key={item.id} disabled={!displayed} aria-current={pageIndex === index ? 'page' : undefined} aria-label={displayed ? undefined : `第 ${index + 1} 页，尚未显示`} onClick={() => selectPage(index)}>
+                {displayed ? pageLabel(item, index) : `第 ${index + 1} 页`}
+              </button>
+            );
+          })}
         </nav>
       </details>
     </>}
