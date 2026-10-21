@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
-import { act3RequiredClueIds } from '../../data/act3Data';
+import { act3RequiredClueIds, act3StageDoc } from '../../data/act3Data';
 import { Act3Investigation } from './Act3Investigation';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -132,24 +132,46 @@ describe('Third-act investigation interface', () => {
     }
   });
 
-  it('separates optional unobserved hotspots from completed required observations', async () => {
+  it.each([
+    { stage: 'T00' as const, lensId: 'LENS_A3_T00_004', inspectedClueIds: [] as string[], requiredCount: 0, observedCount: 0 },
+    { stage: 'T01' as const, lensId: 'LENS_A3_T01_006', inspectedClueIds: act3RequiredClueIds('T01'), requiredCount: 3, observedCount: 1 },
+    { stage: 'T02' as const, lensId: 'LENS_A3_T02_001', inspectedClueIds: ['CLUE_A3_T02_CORRIDOR'], requiredCount: 0, observedCount: 1 },
+  ])('reports current-photo hotspots separately from stage requirements ($lensId)', async (scenario) => {
     localStorage.clear();
+    const lens = act3StageDoc(scenario.stage).lenses.find((item) => item.id === scenario.lensId)!;
     const state = createDefaultState();
-    state.game.phase = 'A3_T01';
-    state.modules.act3.stage = 'T01';
-    state.modules.act3.currentLensId = 'LENS_A3_T01_006';
-    state.modules.act3.inspectedClueIds = act3RequiredClueIds('T01');
+    state.game.phase = `A3_${scenario.stage}`;
+    state.modules.act3.stage = scenario.stage;
+    state.modules.act3.currentLensId = scenario.lensId;
+    state.modules.act3.inspectedClueIds = scenario.inspectedClueIds;
     const manager = new StateManager(new EventBus(), state);
     const container = document.createElement('div');
     document.body.append(container);
     const root = createRoot(container);
     try {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
-      expect(container.querySelector('.act3-investigation__progress-counts')?.textContent).toContain('本阶段必需观察3 / 3');
-      expect(container.querySelector('.act3-investigation__progress-counts')?.textContent).toContain('当前照片已观察1 / 2');
-      expect(container.querySelector('.act3-investigation__photo-observation-note')?.textContent).toContain('本阶段必需观察已齐');
-      expect(container.querySelector('.act3-investigation__photo-observation-note')?.textContent).toContain('1处未观察热点');
-      expect(container.querySelector('.investigation-shell__status')?.textContent).not.toContain('已经看完');
+      const requiredCount = act3RequiredClueIds(scenario.stage).filter((id) => scenario.inspectedClueIds.includes(id)).length;
+      const observedCount = lens.hotspots.filter((hotspot) => scenario.inspectedClueIds.includes(hotspot.clueId)).length;
+      const counts = container.querySelector('.act3-investigation__progress-counts');
+      const note = container.querySelector('.act3-investigation__photo-observation-note')?.textContent ?? '';
+      const hotspotRows = [...container.querySelectorAll<HTMLElement>('.act3-investigation__photo-status li')];
+
+      expect(requiredCount).toBe(scenario.requiredCount);
+      expect(observedCount).toBe(scenario.observedCount);
+      expect(counts?.textContent).toContain(`本阶段必需观察${requiredCount} / ${act3RequiredClueIds(scenario.stage).length}`);
+      expect(counts?.textContent).toContain(`当前照片已观察${observedCount} / ${lens.hotspots.length}`);
+      expect(hotspotRows).toHaveLength(lens.hotspots.length);
+      expect(hotspotRows.filter((row) => row.dataset.observationState === 'observed')).toHaveLength(observedCount);
+      expect(hotspotRows.filter((row) => row.dataset.observationState === 'pending')).toHaveLength(lens.hotspots.length - observedCount);
+
+      if (observedCount < lens.hotspots.length) {
+        expect(note).toContain(`${lens.hotspots.length - observedCount}处未观察热点`);
+        expect(note).not.toContain('热点已全部观察');
+        expect(note).not.toContain('热点也都已查看');
+      } else {
+        expect(note).toContain('当前照片热点已全部观察');
+        expect(note).not.toContain('未观察热点');
+      }
     } finally {
       await act(async () => { root.unmount(); });
       container.remove();
