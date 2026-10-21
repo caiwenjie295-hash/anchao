@@ -164,6 +164,9 @@ describe('Act 4 reader behavior', () => {
       expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T10');
       expect(manager.getState().game.flags.FLAG_A4_T10_COMPLETE).not.toBe(true);
       expect(manager.getState().game.flags.FLAG_A4_COMPLETE).not.toBe(true);
+      const readingIndex = host.querySelector<HTMLDetailsElement>('.a4-reader__index')!;
+      const readingIndexSummary = readingIndex.querySelector('summary')!;
+      expect(readingIndexSummary.textContent).toContain('当前材料：最后一封邮件 · 已显示 1 / 2 页');
 
       expect(mailBlock.textContent).toContain('几个月后，我收到了一封邮件。');
       expect(mailBlock.textContent).toContain('主题：关于王澳同学相关事项的说明');
@@ -180,12 +183,17 @@ describe('Act 4 reader behavior', () => {
       expect(host.querySelector('.investigation-shell__place h1')?.textContent).toBe('最后一封邮件');
       expect(mailBlock.querySelector('.a4-reader__pager span[aria-live="polite"]')?.textContent).toBe('2 / 2');
       expect(mailBlock.querySelector('.a4-reader__displayed-progress')).toBeNull();
+      expect(readingIndexSummary.textContent).toContain('当前材料：最后一封邮件 · 已显示 2 / 2 页');
       await act(async () => { mailBlock.querySelector<HTMLButtonElement>('.a4-reader__pager button:first-child')!.click(); });
       expect(mailBlock.querySelector('.a4-reader__pager span[aria-live="polite"]')?.textContent).toBe('1 / 2');
       expect(mailBlock.querySelector('.a4-reader__displayed-progress')?.textContent).toBe('已显示至 2 / 2');
       expect(mailBlock.querySelector('.a4-reader__page-directory')?.textContent).not.toContain('第 2 段');
-      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('已完成章节 9/10');
-      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('当前内容已显示 2 / 2 页');
+      expect(readingIndexSummary.textContent).toContain('当前材料：最后一封邮件 · 当前第 1 / 2 页，已显示至第 2 / 2 页');
+      expect(readingIndexSummary.textContent).not.toContain('已完成章节');
+      expect(readingIndex.open).toBe(false);
+      await act(async () => { readingIndexSummary.click(); });
+      expect(readingIndex.querySelector('.a4-reader__index-chapter-progress')?.textContent).toContain('章节推进：已完成章节 9 / 10');
+      expect(readingIndexSummary.textContent).not.toContain('已完成章节');
       expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T10');
       expect(manager.getState().game.flags.FLAG_A4_COMPLETE).not.toBe(true);
     } finally {
@@ -213,7 +221,7 @@ describe('Act 4 reader behavior', () => {
 
     try {
       expect(host.querySelector('.a4-private-blog-gateway__source')?.textContent).toBe('微博：');
-      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('私人动态按日期浏览');
+      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('当前材料：私人动态 · 按日期浏览');
       expect(host.querySelector('.a4-reader__index summary')?.textContent).not.toContain('已显示 1 / 14 页');
       const viewBlog = host.querySelector<HTMLButtonElement>('[data-action-id="A4_T03_VIEW_PRIVATE_BLOG"]')!;
       expect(viewBlog.textContent).toBe('查看动态');

@@ -436,8 +436,14 @@ describe('Act4 reading experience', () => {
       expect(pageDirectoryButtons).toHaveLength(9);
       expect(pageDirectoryButtons[0].textContent).toContain('笔记第 1 页');
       expect(pageDirectoryButtons.slice(1).every((button) => button.textContent?.match(/^第 \d+ 页$/) && button.disabled)).toBe(true);
-      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('已完成章节 0/10');
-      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('笔记已显示 1 / 9 页');
+      const readingIndex = host.querySelector<HTMLDetailsElement>('.a4-reader__index')!;
+      const readingIndexSummary = readingIndex.querySelector('summary')!;
+      expect(readingIndex.open).toBe(false);
+      expect(readingIndexSummary.textContent).toContain('当前材料：笔记 · 已显示 1 / 9 页');
+      expect(readingIndexSummary.textContent).not.toContain('已完成章节');
+      await act(async () => { readingIndexSummary.click(); });
+      expect(readingIndex.querySelector('.a4-reader__index-chapter-progress')?.textContent).toContain('章节推进：已完成章节 0 / 10');
+      expect(readingIndexSummary.textContent).not.toContain('已完成章节');
       const collected = [...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--lead .a4-reader__paragraph')].map((item) => item.textContent ?? '');
       for (let page = 1; page <= 9; page += 1) {
         await selectPage(host, 'T01_ORIGINAL', page);
@@ -446,8 +452,8 @@ describe('Act4 reading experience', () => {
           expect(host.querySelector('[data-block-id="T01_ORIGINAL"] [data-segment-id="T01_AFTER_NOTE"]')).toBeNull();
           const revealReaction = host.querySelector<HTMLButtonElement>('[data-action-id="A4_T01_REVEAL_REACTION"]')!;
           expect(revealReaction.textContent).toBe('读完笔记，看看两人的反应');
-          expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('已完成章节 0/10');
-          expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('笔记已显示 9 / 9 页');
+          expect(readingIndexSummary.textContent).toContain('当前材料：笔记 · 已显示 9 / 9 页');
+          expect(readingIndexSummary.textContent).not.toContain('已完成章节');
           await act(async () => { revealReaction.click(); });
           expect(manager.getState().modules.act4.stage).toBe('T01');
           expect(host.querySelector('[data-block-id="T01_ORIGINAL"] [data-segment-id="T01_AFTER_NOTE"]')).not.toBeNull();
@@ -482,11 +488,13 @@ describe('Act4 reading experience', () => {
       await act(async () => { prior.click(); });
       expect(host.querySelector('.a4-reader')?.getAttribute('data-reading-stage')).toBe('T04');
       expect(host.querySelector('.a4-reader__return-current')?.textContent).toBe('回到当前阅读');
+      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('回看材料：');
       expect(manager.getState().modules.act4.stage).toBe('T05');
 
       await act(async () => { host.querySelector<HTMLButtonElement>('.a4-reader__return-current')!.click(); });
       expect(host.querySelector('.a4-reader')?.getAttribute('data-reading-stage')).toBe('T05');
       expect(host.querySelector('[data-block-id="T05_ORIGINAL"] .a4-reader__segment-pages')?.getAttribute('data-active-page')).toBe('2');
+      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('当前材料：');
       expect(manager.getState().modules.act4.stage).toBe('T05');
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toEqual(['A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED']);
     } finally {
