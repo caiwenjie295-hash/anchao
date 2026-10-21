@@ -14,6 +14,7 @@ export interface ReaderVisibilityPageTarget {
   page: Act4TextSegment;
   coverRequired: boolean;
   coverOpen: boolean;
+  displayedParagraphEnd?: number;
 }
 
 export function deriveReaderVisibility({
@@ -36,7 +37,7 @@ export function deriveReaderVisibility({
   const displayedEnds = new Map(pageTargets.map((target) => {
     const coverAllowsText = !target.coverRequired || target.coverOpen;
     const atEnd = target.pageIndex === target.pages.length - 1;
-    return [target.blockId, !coverAllowsText ? 0 : atEnd ? visibleBlocks.find((block) => block.id === target.blockId)?.paragraphs.length ?? 0 : target.page.to] as const;
+    return [target.blockId, !coverAllowsText ? 0 : target.displayedParagraphEnd ?? (atEnd ? visibleBlocks.find((block) => block.id === target.blockId)?.paragraphs.length ?? 0 : target.page.to)] as const;
   }));
   const hasDisplayedBlock = (block: ReaderVisibilityBlock) => (displayedEnds.get(block.id) ?? 0) >= block.paragraphs.length;
   const allVisibleTextDisplayed = visibleBlocks.filter((block) => block.kind !== 'adaptation-bridge').every(hasDisplayedBlock);

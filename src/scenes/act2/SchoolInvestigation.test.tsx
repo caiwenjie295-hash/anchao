@@ -314,4 +314,22 @@ describe('T05 school exploration', () => {
     expect(manager.getState().game.flags.FLAG_A2_QIMING_NAME_FOUND).toBe(true);
     expect(action()?.textContent).toContain('前往浏览器核查启明');
   });
+
+  it('keeps school inferences and feedback neutral until the name has been read', async () => {
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    const disclosure = container.querySelector<HTMLDetailsElement>('.t05-school__timeline-disclosure')!;
+    await act(async () => { disclosure.querySelector('summary')?.click(); });
+    expect(container.querySelector('.t05-school__count-note')?.textContent).toContain('班主任回忆、历次成绩记录和成绩表下方的感谢文字');
+    expect(container.querySelector('.t05-school__count-note')?.textContent).toContain('地点访问不计入');
+    const inferences = container.querySelector<HTMLElement>('.t05-school__inferences')!;
+    expect(inferences.textContent).not.toContain('启明');
+    const conservative = inferences.querySelectorAll<HTMLButtonElement>('button')[0];
+    await act(async () => { conservative.click(); });
+    expect(container.querySelector('.investigation-shell__status')?.textContent).not.toContain('启明');
+
+    await act(async () => { manager.setFlag('FLAG_A2_QIMING_NAME_FOUND', true); });
+    expect(inferences.textContent).toContain('启明');
+    await act(async () => { inferences.querySelectorAll<HTMLButtonElement>('button')[1].click(); });
+    expect(container.querySelector('.investigation-shell__status')?.textContent).toContain('启明');
+  });
 });

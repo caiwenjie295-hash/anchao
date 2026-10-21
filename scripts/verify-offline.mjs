@@ -925,6 +925,13 @@ async function investigateAct4() {
           continue;
         }
         const actionId = action.getAttribute('data-action-id');
+        if (actionId === 'A4_T01_REVEAL_REACTION') {
+          await click(`[data-action-id="${actionId}"]`);
+          assert.equal(state().modules.act4.stage, 'T01', 'showing the notebook reaction does not advance the narrative section');
+          assert.ok(document().querySelector('[data-block-id="T01_ORIGINAL"] [data-segment-id="T01_AFTER_NOTE"]'), 'the original reaction appears only after the final-page action');
+          assert.ok(!state().modules.act4.completedNarrativeSectionIds.includes('A4_READ_T01'), 'showing the notebook reaction does not complete T01');
+          continue;
+        }
         if (actionId === `A4_${stage}_CONTINUE_READING`) {
           assert.equal(action.disabled, false, `${stage} should unlock its continue action after all required reading and interactions`);
           await click(`[data-action-id="${actionId}"]`);

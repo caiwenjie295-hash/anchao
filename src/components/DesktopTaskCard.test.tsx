@@ -103,4 +103,19 @@ describe('DesktopTaskCard', () => {
     expect(container.querySelector('.desktop-task-card__search-guidance')?.textContent).not.toContain('双S 十字');
     expect(container.textContent).not.toContain('启明青少年成长中心');
   });
+
+  it('keeps photo thresholds behind the explicit hint action', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'J';
+    state.game.flags.FLAG_A1_TEMPLE_PHOTO_TAKEN = true;
+    state.modules.photos.openedPhotoIds = ['IMG_A1_H_003'];
+    await act(async () => { root.render(<DesktopTaskCard state={state} onOpenApp={vi.fn()} />); });
+    await act(async () => { (container.querySelector('.desktop-task-card__toggle') as HTMLButtonElement).click(); });
+    expect(container.querySelector('.desktop-task-card__summary')?.textContent).toContain('调整曝光、阴影和对比度');
+    expect(container.querySelector('.desktop-task-card__body')?.textContent).not.toMatch(/至少 35|至少 30|至少 20/);
+    await act(async () => { container.querySelector<HTMLButtonElement>('.desktop-task-card__hint-toggle')?.click(); });
+    expect(container.querySelector('.desktop-task-card__hint')?.textContent).toContain('至少 35');
+    expect(container.querySelector('.desktop-task-card__hint')?.textContent).toContain('至少 30');
+    expect(container.querySelector('.desktop-task-card__hint')?.textContent).toContain('至少 20');
+  });
 });

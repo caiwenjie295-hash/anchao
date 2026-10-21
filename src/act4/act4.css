@@ -260,6 +260,8 @@
 @media (max-width: 600px) {
   .a4-reader__page-index { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; }
   .a4-reader__page-index button { white-space: nowrap; }
+  .a4-reader__pager { gap: 6px; }
+  .a4-reader__pager button { padding-inline: 7px; }
   .a4-reader__source { font-size: .78rem; }
   .a4-reader__segment--page { padding-inline: 0; }
 }
@@ -377,6 +379,8 @@
 .a4-reader__notebook-pager button:disabled { color: #666d72; background: #e7e9ea; cursor: not-allowed; }
 .a4-reader__page-index button { min-height: 44px; }
 .a4-reader__pager { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; width: min(100%, 560px); margin: 18px auto 8px; text-align: center; }
+.a4-reader__pager-status { display: grid; justify-items: center; gap: 2px; min-width: 0; }
+.a4-reader__displayed-progress { color: #62696d; font-size: .82em; }
 .a4-reader__pager button, .a4-reader__page-directory button { min-width: 0; min-height: 44px; padding: 7px 12px; border: 1px solid #92989e; border-radius: 6px; color: #272b30; background: #f7f8f9; font: inherit; cursor: pointer; }
 .a4-reader__pager button:first-child { justify-self: start; }
 .a4-reader__pager button:last-child { justify-self: end; }
@@ -385,6 +389,11 @@
 .a4-reader__page-directory summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
 .a4-reader__page-directory nav { display: flex; flex-wrap: wrap; gap: 7px; padding: 8px 0 4px; }
 .a4-reader__page-directory button[aria-current="page"] { border-color: #51585f; background: #d5d8db; font-weight: 700; }
+.a4-reader__wordlists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0 4px; }
+.a4-reader__wordlists article { min-width: 0; padding: 12px 14px; border: 1px solid #c7ccca; border-radius: 7px; background: #e9edeb; }
+.a4-reader__wordlists h5 { margin: 0 0 7px; color: #33423a; font-size: .95rem; }
+.a4-reader__wordlists ul { display: flex; flex-wrap: wrap; gap: 5px 13px; margin: 0; padding: 0; list-style: none; }
+.a4-reader__wordlists li { color: #303b35; }
 .a4-reader__pager button:focus-visible, .a4-reader__page-directory summary:focus-visible, .a4-reader__page-directory button:focus-visible { outline: 3px solid #52685e; outline-offset: 2px; }
 .a4-reader__return-current { min-height: 44px; margin-top: 9px; padding: 7px 12px; border: 1px solid #92989e; border-radius: 6px; color: #272b30; background: #f7f8f9; font: inherit; cursor: pointer; }
 .a4-reader__return-current:focus-visible, .a4-reader__notebook-pager button:focus-visible, .a4-reader__page-index button:focus-visible { outline: 3px solid #52685e; outline-offset: 2px; }
@@ -448,6 +457,7 @@
   .a4-reader__inline-art img { max-height: min(28dvh, 260px); }
   .a4-reader__notebook-pager { gap: 8px; }
   .a4-reader__notebook-pager button { padding-inline: 10px; }
+  .a4-reader__wordlists { grid-template-columns: minmax(0, 1fr); gap: 8px; }
 }
 .act4-ending__actions a {
   display: inline-flex;

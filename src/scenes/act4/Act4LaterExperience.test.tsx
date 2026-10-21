@@ -9,6 +9,8 @@ import { act4NarrativeSections, act4NarrativeSources } from '../../data/narrativ
 import { act4ReaderTextPages } from '../../data/narrative/act4Presentation';
 import { Act4Experience } from './Act4Experience';
 import { Act4LaterExperience } from './Act4LaterExperience';
+import { blockedReason } from './reader/readerModel';
+import { clearAct4ReaderProgress } from './reader/readerProgress';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -83,7 +85,7 @@ const advanceReaderUntilBlock = async (host: HTMLElement, blockId: string) => {
   throw new Error(`${blockId} did not become visible through the reader actions`);
 };
 
-beforeEach(() => { clearAct4ReadingPositions(); });
+beforeEach(() => { clearAct4ReadingPositions(); clearAct4ReaderProgress(); });
 
 const paragraphsInBlock = (host: HTMLElement, blockId: string) =>
   [...host.querySelectorAll<HTMLElement>(`[data-block-id="${blockId}"] .a4-reader__paragraph`)].map((element) => element.textContent ?? '');
@@ -141,6 +143,7 @@ describe('Act4 reading experience', () => {
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T08_ARCHIVE_OPENED');
       await advanceReaderUntilBlock(host, 'T08_ARCHIVE');
       const archiveView = host.querySelector<HTMLElement>('[data-block-id="T08_ARCHIVE"]')!;
+      expect(host.querySelector('.investigation-shell__place h1')?.textContent).toContain('档案编号');
       expect(archiveView.querySelector('.a4-reader__segment[data-reader-active="true"]')?.textContent)
         .toContain('书架上整齐地陈列着不少资料');
       expect(host.querySelector('[data-action-id="A4_T08_NEXT_BLOCK_T08_ARCHIVE"]')).toBeNull();
@@ -191,7 +194,20 @@ describe('Act4 reading experience', () => {
     const click = async (button: HTMLButtonElement) => act(async () => { button.click(); });
     try {
       expect(host.querySelector('[data-block-id="T02_PASSWORD_REVEAL"]')).toBeNull();
+      expect(host.querySelector('.investigation-shell__place h1')?.textContent).toBe('“那一天”');
+      expect(host.querySelector('[data-block-id="T02_ORIGINAL"] .a4-reader__segment[data-reader-active="true"] h4')).toBeNull();
       await selectLastPage(host, 'T02_ORIGINAL');
+      expect(host.querySelector('.a4-reader__password-label')?.textContent).toBe('输入八位数字密码');
+      expect(blockedReason.T02).toBe('先核对两封邮件，再输入八位数字密码登录。');
+      expect(blockedReason.T02).not.toMatch(/20200419|共同日期|同一天/);
+      await selectPage(host, 'T02_ORIGINAL', 2);
+      const originalText = host.querySelector<HTMLElement>('[data-block-id="T02_ORIGINAL"]')!.textContent ?? '';
+      expect(originalText).toContain('时间：2020 年 4 月 19 日 08:17');
+      await selectPage(host, 'T02_ORIGINAL', 3);
+      const lastMailText = host.querySelector<HTMLElement>('[data-block-id="T02_ORIGINAL"]')!.textContent ?? '';
+      expect(lastMailText).toContain('时间：2020 年 4 月 19 日 23:41');
+      expect(lastMailText).not.toContain('看来是同一天发送的');
+      expect(host.querySelector('[data-segment-id="T02_DATE_CONCLUSION"]')).toBeNull();
       expect([...host.querySelectorAll<HTMLElement>('.a4-reader__mail h4')].map((heading) => heading.textContent))
         .toEqual(['主角收到', '小月收到']);
       expect(host.querySelector('.a4-reader__mail')?.textContent).not.toContain('收到收到的邮件');
@@ -209,6 +225,7 @@ describe('Act4 reading experience', () => {
       });
       await click(login);
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T02_LOGIN_SUCCEEDED');
+      expect(host.querySelector('[data-segment-id="T02_DATE_CONCLUSION"]')?.textContent).toContain('看来是同一天发送的');
       await advanceReaderUntilBlock(host, 'T02_PASSWORD_REVEAL');
       expect(host.querySelector('[data-block-id="T02_PASSWORD_REVEAL"]')).not.toBeNull();
       expect(host.querySelector('[data-explanation-id="A4_EXPLAIN_T02"]')).not.toBeNull();
@@ -231,6 +248,7 @@ describe('Act4 reading experience', () => {
       await act(async () => { host.querySelector<HTMLButtonElement>('.a4-reader__interaction[aria-label="打开 VVaKe 邮件"] button')!.click(); });
 
       const mail = host.querySelector<HTMLElement>('[data-block-id="T04_ORIGINAL"]')!;
+      expect(host.querySelector('.investigation-shell__place h1')?.textContent).toContain('凌晨零点的启明邮件');
       expect(manager.getState().modules.act4.completedNarrativeActionIds).toContain('A4_T04_WAKE_MAIL_OPENED');
       expect(mail.querySelector('.a4-reader__segment[data-reader-active="true"]')).not.toBeNull();
       expect(mail.textContent).toContain('VVaKe');
@@ -340,7 +358,8 @@ describe('Act4 reading experience', () => {
       expect(host.querySelector('.a4-reader__perspective')?.textContent).toBe('2014 年 12 月 28 日 · 王澳 · 王澳当时的回忆');
       expect(host.querySelectorAll('.a4-reader__perspective')).toHaveLength(1);
       expect(host.querySelector('.a4-reader__eyebrow')).toBeNull();
-      expect(host.querySelector('.a4-reader__cover-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_001');
+      expect(host.querySelector('.a4-reader__cover')).toBeNull();
+      expect(host.querySelector('.a4-reader__inline-art')?.getAttribute('data-illustration-id')).toBe('IMG_A4_T05_001');
       const eveningText = host.textContent ?? '';
       for (const term of forbiddenBeforeReached) expect(eveningText).not.toContain(term);
       expect(host.querySelector('.a4-reader__explanation')).toBeNull();
@@ -352,8 +371,9 @@ describe('Act4 reading experience', () => {
       expect(t05Source.endAnchor).toBeTruthy();
       await selectPage(host, 'T05_ORIGINAL', 1);
       const firstDirectory = [...host.querySelectorAll<HTMLButtonElement>('[data-block-id="T05_ORIGINAL"] .a4-reader__page-directory button')];
-      expect(firstDirectory).toHaveLength(1);
+      expect(firstDirectory.length).toBeGreaterThan(1);
       expect(firstDirectory[0].textContent).toMatch(/^晚自习/);
+      expect(firstDirectory.slice(1).every((button) => button.textContent?.match(/^第 \d+ 页$/) && button.disabled)).toBe(true);
 
       const bridge = host.querySelector<HTMLDetailsElement>('.a4-reader__past-block')!;
       expect(bridge.open).toBe(false);
@@ -411,11 +431,32 @@ describe('Act4 reading experience', () => {
       await selectPage(host, 'T01_ORIGINAL', 1);
       const pageButtons = host.querySelectorAll<HTMLButtonElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__pager button');
       expect([...pageButtons].map((button) => button.textContent)).toEqual(['上一页', '下一页']);
+      const pageDirectory = host.querySelector<HTMLDetailsElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__page-directory')!;
+      const pageDirectoryButtons = [...pageDirectory.querySelectorAll<HTMLButtonElement>('button')];
+      expect(pageDirectoryButtons).toHaveLength(9);
+      expect(pageDirectoryButtons[0].textContent).toContain('笔记第 1 页');
+      expect(pageDirectoryButtons.slice(1).every((button) => button.textContent?.match(/^第 \d+ 页$/) && button.disabled)).toBe(true);
+      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('已完成章节 0/10');
+      expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('笔记已显示 1 / 9 页');
       const collected = [...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--lead .a4-reader__paragraph')].map((item) => item.textContent ?? '');
       for (let page = 1; page <= 9; page += 1) {
         await selectPage(host, 'T01_ORIGINAL', page);
         collected.push(...[...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--page .a4-reader__paragraph')].map((item) => item.textContent ?? ''));
-        if (page === 9) collected.push(...[...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--ending .a4-reader__paragraph')].map((item) => item.textContent ?? ''));
+        if (page === 9) {
+          expect(host.querySelector('[data-block-id="T01_ORIGINAL"] [data-segment-id="T01_AFTER_NOTE"]')).toBeNull();
+          const revealReaction = host.querySelector<HTMLButtonElement>('[data-action-id="A4_T01_REVEAL_REACTION"]')!;
+          expect(revealReaction.textContent).toBe('读完笔记，看看两人的反应');
+          expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('已完成章节 0/10');
+          expect(host.querySelector('.a4-reader__index summary')?.textContent).toContain('笔记已显示 9 / 9 页');
+          await act(async () => { revealReaction.click(); });
+          expect(manager.getState().modules.act4.stage).toBe('T01');
+          expect(host.querySelector('[data-block-id="T01_ORIGINAL"] [data-segment-id="T01_AFTER_NOTE"]')).not.toBeNull();
+          collected.push(...[...host.querySelectorAll<HTMLElement>('[data-block-id="T01_ORIGINAL"] .a4-reader__segment--ending .a4-reader__paragraph')].map((item) => item.textContent ?? ''));
+          expect(manager.getState().modules.act4.completedNarrativeSectionIds).not.toContain('A4_READ_T01');
+          expect(host.querySelector<HTMLButtonElement>('[data-action-id="A4_T01_CONTINUE_READING"]')?.textContent).toBe('读完这一段，继续');
+          await act(async () => { host.querySelector<HTMLButtonElement>('[data-action-id="A4_T01_CONTINUE_READING"]')!.click(); });
+          expect(manager.getState().modules.act4.stage).toBe('T02');
+        }
       }
       expect(collected).toEqual(source.paragraphs);
       expect(manager.getState().modules.act4.readNotebookPages).toEqual(expect.arrayContaining([1, 2, 3, 4, 5, 6, 7, 8, 9]));
@@ -454,6 +495,38 @@ describe('Act4 reading experience', () => {
     }
   });
 
+  it('shows the completed T01 reaction when reviewing its last page without changing current progress', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'A4_T05';
+    state.modules.act4.stage = 'T05';
+    state.modules.act4.completedNarrativeSectionIds = ['A4_READ_T01', 'A4_READ_T02', 'A4_READ_T03', 'A4_READ_T04'];
+    state.modules.act4.completedNarrativeActionIds = ['A4_T02_LOGIN_SUCCEEDED', 'A4_T04_WAKE_MAIL_OPENED'];
+    const manager = new StateManager(new EventBus(), state);
+    const { host, root } = await renderExperience(<Act4Experience manager={manager} onExit={() => {}} />);
+    try {
+      await selectPage(host, 'T05_ORIGINAL', 2);
+      const persistedBeforeReview = JSON.parse(window.localStorage.getItem('anchao.ui.v1') ?? '{}').act4Reading['T05:current'];
+      await act(async () => { host.querySelector<HTMLElement>('.a4-reader__index summary')!.click(); });
+      await act(async () => { host.querySelector<HTMLButtonElement>('[data-review-trigger="index-T01"]')!.click(); });
+
+      expect(host.querySelector('.a4-reader')?.getAttribute('data-reading-stage')).toBe('T01');
+      await selectPage(host, 'T01_ORIGINAL', 9);
+
+      expect(host.querySelector('[data-block-id="T01_ORIGINAL"] [data-segment-id="T01_AFTER_NOTE"]')).not.toBeNull();
+      expect(host.querySelector('[data-action-id="A4_T01_REVEAL_REACTION"]')).toBeNull();
+      expect(manager.getState().modules.act4.stage).toBe('T05');
+      expect(JSON.parse(window.localStorage.getItem('anchao.ui.v1') ?? '{}').act4Reading['T05:current']).toEqual(persistedBeforeReview);
+
+      await act(async () => { host.querySelector<HTMLButtonElement>('.a4-reader__return-current')!.click(); });
+      expect(host.querySelector('.a4-reader')?.getAttribute('data-reading-stage')).toBe('T05');
+      expect(host.querySelector('[data-block-id="T05_ORIGINAL"] .a4-reader__segment-pages')?.getAttribute('data-active-page')).toBe('2');
+      expect(manager.getState().modules.act4.stage).toBe('T05');
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
   it('places the T10 recap behind both final-mail completion and an explicit open action', async () => {
     const state = createDefaultState();
     state.game.phase = 'A4_T10';
@@ -473,6 +546,7 @@ describe('Act4 reading experience', () => {
       expect(openMail).toBeDefined();
       await act(async () => { openMail.click(); });
       await advanceReaderUntilBlock(host, 'T10_FINAL_MAIL');
+      expect(host.querySelector('.investigation-shell__place h1')?.textContent).toBe('最后一封邮件');
       expect(host.querySelector('[data-block-id="T10_FINAL_MAIL"]')).not.toBeNull();
       expect(host.querySelector('.a4-reader__final-recap')).toBeNull();
 
@@ -487,6 +561,27 @@ describe('Act4 reading experience', () => {
       expect(recap.open).toBe(true);
       expect(recap.querySelector('.a4-reader__ending h3')?.textContent).toContain('第四幕阅读完成');
       expect(recap.textContent).toContain('时间线');
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
+  it('shows both complete broadcast word lists on the T10 word-association page', async () => {
+    const state = createDefaultState();
+    state.game.phase = 'A4_T10';
+    state.modules.act4.stage = 'T10';
+    state.modules.act4.completedNarrativeSectionIds = Array.from({ length: 9 }, (_, index) => `A4_READ_T${String(index + 1).padStart(2, '0')}`);
+    const manager = new StateManager(new EventBus(), state);
+    const { host, root } = await renderExperience(<Act4LaterExperience manager={manager} onExit={() => {}} />);
+    try {
+      await selectPage(host, 'T10_AFTERMATH', 2);
+      const wordlists = host.querySelector<HTMLElement>('.a4-reader__wordlists')!;
+      expect(wordlists.getAttribute('aria-label')).toBe('两组广播词表');
+      expect(wordlists.querySelector('article:first-child')?.textContent).toContain('VVaKe · 睡前广播');
+      expect([...wordlists.children[0]!.querySelectorAll('li')].map((item) => item.textContent)).toEqual(['蜘蛛', '雨伞', '白走廊', '台灯', '风车', '曼陀罗']);
+      expect(wordlists.querySelector('article:last-child')?.textContent).toContain('13aCK · 早间广播');
+      expect([...wordlists.children[1]!.querySelectorAll('li')].map((item) => item.textContent)).toEqual(['老鼠', '血', '草垛', '木房子', '玫瑰', '表']);
     } finally {
       await act(async () => root.unmount());
       host.remove();

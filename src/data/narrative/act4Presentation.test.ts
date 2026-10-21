@@ -16,6 +16,15 @@ const block = (stage: Stage, id: string) => section(stage).blocks.find((item) =>
 const readablePages = (pages: ReturnType<typeof act4ReaderTextPages>) => pages.filter((page) => page.role === 'page' || page.role === 'whole');
 
 describe('Act 4 presentation boundaries', () => {
+  it('keeps the two email times distinct and places the date conclusion after the login reveal', () => {
+    const emailBlock = block('T02', 'T02_ORIGINAL');
+    const pages = act4ReaderTextPages('T02', emailBlock.id, emailBlock.paragraphs, true);
+
+    expect(emailBlock.paragraphs).toContain('时间：2020 年 4 月 19 日 08:17');
+    expect(emailBlock.paragraphs).toContain('时间：2020 年 4 月 19 日 23:41');
+    expect(pages.find((item) => item.id === 'T02_DATE_CONCLUSION')).toMatchObject({ from: 21, to: 23, role: 'ending' });
+  });
+
   it('merges only the two approved ordinary terminal paragraphs inside their existing scene', () => {
     const scenarios = [
       { blockId: 'T08_RETURN', text: '“应该只是撞伤吧。”我安慰自己。', sceneId: 'T08_WALL' },
