@@ -28,6 +28,8 @@ export interface PhotoViewportProps {
   routes: PhotoMarker[];
   children?: ReactNode;
   imageOverlay?: ReactNode;
+  /** Opt-in framing for a photo-led scene; all existing callers keep the uncropped contain default. */
+  fit?: PhotoFit;
   /** Optional first view for a real photo-plane detail view. Coordinates are fractions of the image. */
   initialView?: { zoom: number; focus?: { x: number; y: number } };
   transitionDirection?: 'forward' | 'back' | 'fade';
@@ -37,11 +39,24 @@ export interface PhotoViewportProps {
   revealBeat?: boolean;
   onImageAvailabilityChange?: (available: boolean) => void;
 }
+export type PhotoFit = 'contain' | 'cover';
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 export const calculatePhotoPanLimits = (planeWidth: number, planeHeight: number, frameWidth: number, frameHeight: number, scale: number) => ({
   x: Math.max(0, (planeWidth * scale - frameWidth) / 2),
   y: Math.max(0, (planeHeight * scale - frameHeight) / 2),
 });
+export const calculatePhotoFitScale = (
+  mode: PhotoFit,
+  imageWidth: number,
+  imageHeight: number,
+  frameWidth: number,
+  frameHeight: number,
+) => {
+  if (imageWidth <= 0 || imageHeight <= 0 || frameWidth <= 0 || frameHeight <= 0) return 0;
+  const horizontal = frameWidth / imageWidth;
+  const vertical = frameHeight / imageHeight;
+  return mode === 'cover' ? Math.max(horizontal, vertical) : Math.min(horizontal, vertical);
+};
 export const calculatePhotoInitialOffset = (
   planeWidth: number,
   planeHeight: number,
@@ -57,8 +72,9 @@ export const calculatePhotoInitialOffset = (
   };
 };
 
-export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, onImageAvailabilityChange }: PhotoViewportProps) {
+export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, fit = 'contain', initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, onImageAvailabilityChange }: PhotoViewportProps) {
   const [zoom, setZoom] = useState(1);
+  const [fullImageView, setFullImageView] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
@@ -69,6 +85,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   const [failedResourceKey, setFailedResourceKey] = useState<string | null>(null);
   const [handoffImage, setHandoffImage] = useState<{ url: string; width: number; height: number } | null>(null);
   const imageLoaded = Boolean(imageUrl && loadedResourceKey === resourceKey && imageSize.width > 0 && imageSize.height > 0);
+  const effectiveFit = fullImageView ? 'contain' : fit;
   const imageFailed = Boolean(imageUrl && failedResourceKey === resourceKey);
   const frame = useRef<HTMLDivElement>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
@@ -114,12 +131,11 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     const width = frameSize.width || box?.width || 0;
     const height = frameSize.height || box?.height || 0;
     const currentFit = imageLoaded && imageSize.width > 0 && imageSize.height > 0 && width > 0 && height > 0
-      ? Math.min(width / imageSize.width, height / imageSize.height)
+      ? calculatePhotoFitScale(effectiveFit, imageSize.width, imageSize.height, width, height)
       : 0;
     const planeWidth = imageSize.width * currentFit;
     const planeHeight = imageSize.height * currentFit;
-    // 边界必须按 contain 后真正绘制的照片平面计算；宽图在窄 frame 中、
-    // 或高图在矮 frame 中，未被照片覆盖的方向不应继续平移出空白。
+    // Bounds follow the exact plane used for this selected fit, per axis.
     const { x: maxX, y: maxY } = calculatePhotoPanLimits(planeWidth, planeHeight, width, height, scale);
     return {
       x: clamp(next.x, -maxX, maxX),
@@ -134,6 +150,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   useEffect(() => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
+    setFullImageView(false);
     pointers.current.clear();
   }, [sceneKey]);
   // 工单 §16.2：imageUrl 变化时必须使上一张图的尺寸失效，
@@ -154,7 +171,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   useEffect(() => {
     if (!initialView || !imageLoaded || frameSize.width <= 0 || frameSize.height <= 0 || initialViewAppliedResource.current === resourceKey) return;
     const nextZoom = clamp(initialView.zoom, 1, 3);
-    const imageFit = Math.min(frameSize.width / imageSize.width, frameSize.height / imageSize.height);
+    const imageFit = calculatePhotoFitScale(effectiveFit, imageSize.width, imageSize.height, frameSize.width, frameSize.height);
     const focus = initialView.focus ?? { x: 0.5, y: 0.5 };
     const nextOffset = calculatePhotoInitialOffset(
       imageSize.width * imageFit,
@@ -167,7 +184,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     setZoom(nextZoom);
     setOffset(bound(nextOffset, nextZoom));
     initialViewAppliedResource.current = resourceKey;
-  }, [initialView, imageLoaded, imageSize.width, imageSize.height, frameSize.width, frameSize.height, resourceKey]);
+  }, [initialView, imageLoaded, imageSize.width, imageSize.height, frameSize.width, frameSize.height, resourceKey, effectiveFit]);
 
   // Swap the story scene immediately; this short crossfade is presentation only and never gates an action.
   useLayoutEffect(() => {
@@ -219,11 +236,18 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     const [a, b] = [...pointers.current.values()];
     return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0;
   };
-  const fit = imageLoaded && imageSize.width > 0 && imageSize.height > 0 && frameSize.width > 0 && frameSize.height > 0
-    ? Math.min(frameSize.width / imageSize.width, frameSize.height / imageSize.height)
+  const fitScale = imageLoaded && imageSize.width > 0 && imageSize.height > 0 && frameSize.width > 0 && frameSize.height > 0
+    ? calculatePhotoFitScale(effectiveFit, imageSize.width, imageSize.height, frameSize.width, frameSize.height)
     : 0;
-  const planeStyle: CSSProperties = fit > 0
-    ? { width: imageSize.width * fit, height: imageSize.height * fit }
+  const currentPanLimits = calculatePhotoPanLimits(
+    imageSize.width * fitScale,
+    imageSize.height * fitScale,
+    frameSize.width,
+    frameSize.height,
+    zoom,
+  );
+  const planeStyle: CSSProperties = fitScale > 0
+    ? { width: imageSize.width * fitScale, height: imageSize.height * fitScale }
     : { width: 0, height: 0, visibility: 'hidden' };
   const routeActions: InvestigationAction[] = routes.map((route) => ({
     actionId: route.id,
@@ -236,9 +260,33 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
     onActivate: (trigger) => route.onActivate(trigger),
     onOpenMaterial: route.onOpenMaterial,
   }));
+  const ensureMarkerVisible = (marker: HTMLButtonElement) => {
+    if (effectiveFit !== 'cover') return;
+    const frameRect = frame.current?.getBoundingClientRect();
+    const markerRect = marker.getBoundingClientRect();
+    if (!frameRect || frameRect.width <= 0 || frameRect.height <= 0) return;
+    const inset = 10;
+    const dx = markerRect.left < frameRect.left + inset
+      ? frameRect.left + inset - markerRect.left
+      : markerRect.right > frameRect.right - inset
+        ? frameRect.right - inset - markerRect.right
+        : 0;
+    const dy = markerRect.top < frameRect.top + inset
+      ? frameRect.top + inset - markerRect.top
+      : markerRect.bottom > frameRect.bottom - inset
+        ? frameRect.bottom - inset - markerRect.bottom
+        : 0;
+    if (dx || dy) setOffset((previous) => {
+      const markerMargin = 38;
+      return {
+        x: clamp(previous.x + dx, -currentPanLimits.x - markerMargin, currentPanLimits.x + markerMargin),
+        y: clamp(previous.y + dy, -currentPanLimits.y - markerMargin, currentPanLimits.y + markerMargin),
+      };
+    });
+  };
 
   return (
-    <div className={'photo-viewport photo-viewport--' + transitionDirection + (explorationMode ? ' photo-viewport--exploration' : '')}>
+    <div className={'photo-viewport photo-viewport--' + transitionDirection + (explorationMode ? ' photo-viewport--exploration' : '') + (effectiveFit === 'cover' ? ' photo-viewport--cover' : '')}>
       <div className={'photo-viewport__scene' + (handoffImage ? ' is-transitioning' : '')} key={sceneKey} style={{ '--scene-transition-ms': `${transitionMs}ms` } as CSSProperties} onFocusCapture={(event) => {
         if (restoringFocus.current) return;
         const target = event.target as HTMLElement;
@@ -256,7 +304,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           const step = 45;
           if (event.key === '+' || event.key === '=') changeZoom(zoom + 0.25);
           else if (event.key === '-') changeZoom(zoom - 0.25);
-          else if (event.key === '0') { changeZoom(1); setOffset({ x: 0, y: 0 }); }
+          else if (event.key === '0') { setFullImageView(false); changeZoom(1); setOffset({ x: 0, y: 0 }); }
           else if (event.key.startsWith('Arrow')) {
             setOffset(bound({
               x: offset.x + (event.key === 'ArrowLeft' ? step : event.key === 'ArrowRight' ? -step : 0),
@@ -265,9 +313,12 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           } else return;
           event.preventDefault();
         }}
-        onWheel={(event) => { if (imageLoaded) changeZoom(zoom + (event.deltaY < 0 ? 0.2 : -0.2)); }}
+        onWheel={(event) => {
+          if ((event.target as HTMLElement).closest('[data-photo-control]')) return;
+          if (imageLoaded) changeZoom(zoom + (event.deltaY < 0 ? 0.2 : -0.2));
+        }}
         onPointerDown={(event) => {
-          if ((event.target as HTMLElement).closest('button')) return;
+          if ((event.target as HTMLElement).closest('button, summary, a, input, select, textarea, [role="button"], [data-photo-control]')) return;
           frame.current?.setPointerCapture(event.pointerId);
           pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
           pinch.current = pointers.current.size === 2 ? distance() : null;
@@ -282,7 +333,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
             if (pinch.current) changeZoom(zoom * now / pinch.current);
             pinch.current = now;
             pointerMoved.current = true;
-          } else if (zoom > 1 && imageLoaded) {
+          } else if (imageLoaded && (zoom > 1 || currentPanLimits.x > 0 || currentPanLimits.y > 0)) {
             const dx = event.clientX - prior.x;
             const dy = event.clientY - prior.y;
             if (Math.abs(dx) + Math.abs(dy) > 0) {
@@ -342,6 +393,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
                 title={marker.label}
                 aria-label={marker.label}
                 onPointerDown={(event) => event.stopPropagation()}
+                onFocus={(event) => ensureMarkerVisible(event.currentTarget)}
                 onClick={(event) => marker.onActivate(event.currentTarget)}
               >
                 <span aria-hidden="true">{marker.presentation === 'focus-box' ? '＋' : marker.kind === 'sound' ? '◖))' : marker.kind === 'memory' ? '◌' : '＋'}</span>
@@ -356,8 +408,9 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
         <div className="photo-viewport__controls" aria-label="画面操作">
           <button type="button" onClick={() => changeZoom(zoom - 0.25)} aria-label="缩小">−</button>
           <span>{Math.round(zoom * 100)}%</span>
-          <button type="button" onClick={() => changeZoom(zoom + 0.25)} aria-label="放大">＋</button>
-          <button type="button" onClick={() => { changeZoom(1); setOffset({ x: 0, y: 0 }); }}>复位</button>
+          <button type="button" className={fit === 'cover' ? 'photo-viewport__zoom-in' : undefined} onClick={() => changeZoom(zoom + 0.25)} aria-label={fit === 'cover' ? '放大画面' : '放大'} title={fit === 'cover' ? '放大画面' : undefined}>{fit === 'cover' ? '放大' : '＋'}</button>
+          {fit === 'cover' && <button type="button" aria-pressed={fullImageView} onClick={() => { setFullImageView((current) => !current); setZoom(1); setOffset({ x: 0, y: 0 }); }}>{fullImageView ? '铺满画面' : '全图查看'}</button>}
+          <button type="button" onClick={() => { setFullImageView(false); changeZoom(1); setOffset({ x: 0, y: 0 }); }}>复位</button>
         </div>
         {children && <div className="photo-viewport__overlay">{children}</div>}
       </div>
