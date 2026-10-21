@@ -1,4 +1,5 @@
-import { useEffect, useState, type ComponentProps, type ComponentType } from 'react';
+import { useEffect, useRef, useState, type ComponentProps, type ComponentType } from 'react';
+import { createPortal } from 'react-dom';
 import { assetLoader } from '../../core/assetLoader';
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
@@ -11,7 +12,7 @@ import { InvestigationShell } from '../../components/investigation/Investigation
 import type { InvestigationAction, InvestigationMaterialLink } from '../../components/investigation/types';
 import { act3PhotoLayout } from '../../data/act3PhotoLayout';
 import { act3ComparisonPhotoDetailAssetId } from '../../data/act3ComparisonPhotoDetails';
-import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_COMPLETION_FLAG, ACT3_STAGE_NEXT, act3DetailImageIdForClue } from '../../data/act3Data';
+import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_STAGE_NEXT, act3DetailImageIdForClue } from '../../data/act3Data';
 import { act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens, act3RouteLabelFor, act3StageCompletionLabel } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
 import { act3HotspotActionLabel } from '../../story/investigation/actionPresentation';
@@ -46,20 +47,25 @@ const STANCE_LABEL: Record<Act3Lens['stance'], string> = {
 function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: string; alt: string; caption: string; placeholder: string }) {
   const [zoomOpen, setZoomOpen] = useState(false);
   const [detailImageFailed, setDetailImageFailed] = useState(false);
+  const zoomTrigger = useRef<HTMLButtonElement>(null);
   const src = assetLoader.get(assetId)?.src;
   const detailAssetId = act3ComparisonPhotoDetailAssetId(assetId);
   const detailSource = detailAssetId ? assetLoader.get(detailAssetId)?.src : undefined;
+  const detail = zoomOpen && detailAssetId && typeof document !== 'undefined' ? createPortal(
+    <InvestigationDetail title={caption} onClose={() => setZoomOpen(false)} fallbackFocus={() => zoomTrigger.current}>
+      {detailSource && !detailImageFailed
+        ? <img className="act3-investigation__comparison-zoom" src={detailSource} alt={alt} onError={() => setDetailImageFailed(true)} />
+        : <p className="act3-investigation__comparison-zoom-fallback" role="status">{alt}的独立放大近景暂不可用。</p>}
+    </InvestigationDetail>,
+    document.body,
+  ) : null;
   return <>
     <figure>
       {src ? <img src={src} alt={alt} /> : <div className="act3-investigation__comparison-placeholder">{placeholder}</div>}
       <figcaption>{caption}</figcaption>
-      <button type="button" disabled={!src || !detailAssetId} onClick={() => setZoomOpen(true)}>放大查看</button>
+      <button ref={zoomTrigger} type="button" disabled={!src || !detailAssetId} onClick={() => setZoomOpen(true)}>放大查看</button>
     </figure>
-    {zoomOpen && detailAssetId && <InvestigationDetail title={caption} onClose={() => setZoomOpen(false)}>
-      {detailSource && !detailImageFailed
-        ? <img className="act3-investigation__comparison-zoom" src={detailSource} alt={alt} onError={() => setDetailImageFailed(true)} />
-        : <p className="act3-investigation__comparison-zoom-fallback" role="status">{alt}的独立放大近景暂不可用。</p>}
-    </InvestigationDetail>}
+    {detail}
   </>;
 }
 
@@ -129,7 +135,6 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const completedRequiredCount = requiredClueIds.length - missingRequiredIds.length;
   const observedPhotoHotspotCount = lens.hotspots.filter((hotspot) => inspected.includes(hotspot.clueId)).length;
   const unobservedPhotoHotspotCount = lens.hotspots.length - observedPhotoHotspotCount;
-  const stageAlreadyConfirmed = state.modules.act3.confirmedFlagIds.includes(ACT3_STAGE_COMPLETION_FLAG[stage]);
   const nextStage = ACT3_STAGE_NEXT[stage];
 
   const hotspotByClue = new Map(doc.lenses.flatMap((item) => item.hotspots.map((hotspot) => [hotspot.clueId, { hotspot, lensId: item.id }] as const)));
@@ -278,79 +283,105 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     || (stage === 'T06' && lens.id === 'LENS_A3_T06_007' && inspected.includes('CLUE_A3_T06_SHRINE'))
     || (stage === 'T07' && lens.id === 'LENS_A3_T07_007' && inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP'))
   );
+  const conciseStatus = unobservedPhotoHotspotCount > 0
+    ? `本图待看${unobservedPhotoHotspotCount}处 · 本阶段还差${missingRequiredIds.length}项`
+    : missingRequiredIds.length > 0
+      ? `本图已清 · 本阶段还差${missingRequiredIds.length}项`
+      : stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
+        ? '本图已清 · 旧址调查已收束'
+        : '本图已清 · 本阶段必需观察已齐';
   return <InvestigationShell
-    className={`act3-investigation investigation-shell--exploration act3-investigation--${act3MovementClassForStage(stage)}`}
+    className={`act3-investigation investigation-shell--exploration investigation-shell--act3-photo-stage act3-investigation--${act3MovementClassForStage(stage)}`}
+    photoStage
     ariaLabel="第三幕调查"
     actLabel={`第三幕 · ${movement}`}
     locationLabel={act3PlaceForLens(lens.id, lens.title)}
-    contextLabel={`${lensTitle} · ${STANCE_LABEL[lens.stance]}${samePlaceLenses.length > 1 ? ` · 同名现场照片 ${samePlaceLensIndex} / ${samePlaceLenses.length}` : ''} · ${doc.intro}`}
+    contextLabel={samePlaceLenses.length > 1 ? `同名现场照片 ${samePlaceLensIndex} / ${samePlaceLenses.length}` : STANCE_LABEL[lens.stance]}
     objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '已和小月离开旧址，手边的笔记还有内容可读。'
       : act3ObjectiveFor(stage, inspected)}
-    helpText="点击照片上的虚线框查看物件；底部地点按钮可移动。未查看全部虚线框也可点右上“退出调查，返回桌面”，之后能继续当前镜头，不会丢线索。观察弹层可用 Esc、关闭按钮或点击遮罩返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
+    helpText="滚轮或双指放大画面；放大后可拖动查看上下左右，方向键也可平移。“全图查看”显示完整原图，“复位”恢复默认视图。热点只在主动点击或按回车后记录。观察弹层可用 Esc、关闭按钮或点击遮罩返回。"
     actions={actions}
-    statusMessage={unobservedPhotoHotspotCount > 0 ? blockedForwardHint
-      : stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
-        ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
-        : missingRequiredIds.length ? blockedForwardHint
-          : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
+    statusMessage={conciseStatus}
     onExit={onReturnToDesktop ?? (() => {})}
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
-    <main className={`act3-investigation__lens${lens.id === 'LENS_A3_T06_008' ? ' act3-investigation__lens--temple-compare' : ''}`} data-act3-stage={stage} data-asset-id={lens.assetId} data-observation-stance={lens.stance}>
-      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat}>
-        <div className="act3-investigation__caption"><strong>{lensTitle}</strong><span>{lensDescription}</span></div>
-      </Act3PhotoViewport>
-      <aside className="act3-investigation__observation-progress" aria-label="现场观察进度">
-        <div className="act3-investigation__progress-counts">
-          <p><strong>本阶段必需观察</strong><span>{completedRequiredCount} / {requiredClueIds.length}</span></p>
-          <p><strong>当前照片已观察</strong><span>{observedPhotoHotspotCount} / {lens.hotspots.length}</span></p>
-          {samePlaceLenses.length > 1 && <p><strong>同名现场照片</strong><span>{samePlaceLensIndex} / {samePlaceLenses.length}</span></p>}
+    <main className="act3-investigation__lens" data-act3-stage={stage} data-asset-id={lens.assetId} data-observation-stance={lens.stance}>
+      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat}>
+        <div className="act3-investigation__photo-overlay" data-photo-control>
+          <details className="act3-investigation__narration">
+            <summary>现场旁白</summary>
+            <div className="act3-investigation__narration-panel">
+              <h2>{lensTitle}</h2>
+              <p>{lensDescription}</p>
+              <p>{doc.intro}</p>
+            </div>
+          </details>
+          <details className="act3-investigation__field-record">
+            <summary>现场记录与阶段观察</summary>
+            <div className="act3-investigation__field-record-panel">
+              <aside className="act3-investigation__observation-progress" aria-label="现场观察进度">
+                <div className="act3-investigation__progress-counts">
+                  <p><strong>本阶段必需观察</strong><span>{completedRequiredCount} / {requiredClueIds.length}</span></p>
+                  <p><strong>当前照片已观察</strong><span>{observedPhotoHotspotCount} / {lens.hotspots.length}</span></p>
+                  {samePlaceLenses.length > 1 && <p><strong>同名现场照片</strong><span>{samePlaceLensIndex} / {samePlaceLenses.length}</span></p>}
+                </div>
+                <ul className="act3-investigation__photo-status" aria-label="当前照片观察状态">
+                  {lens.hotspots.map((hotspot) => {
+                    const known = inspected.includes(hotspot.clueId);
+                    return <li key={hotspot.clueId} data-observation-state={known ? 'observed' : 'pending'}>
+                      <span>{hotspotLabel(hotspot)}</span><strong>{known ? '已观察' : '待观察'}</strong>
+                    </li>;
+                  })}
+                </ul>
+                <p className="act3-investigation__photo-observation-note">{photoObservationNote}</p>
+                {missingRequiredIds.length > 0 && <section className="act3-investigation__missing-required" aria-label="本阶段仍缺的必需观察">
+                  <h2>本阶段仍缺的必需观察</h2>
+                  <ul>
+                    {missingRequiredIds.map((clueId) => {
+                      const entry = hotspotByClue.get(clueId);
+                      const path = entry ? findAct3RoutePathToClue(stage, lens.id, clueId, inspected) : null;
+                      const safePath = entry ? safePathToMissingRequiredClue(clueId) : null;
+                      return <li key={clueId} data-missing-clue-id={clueId}>
+                        <span>{entry && entry.lensId === lens.id ? hotspotLabel(entry.hotspot) : '尚缺一处必需观察'}</span>
+                        <small>{path === null
+                          ? '当前路线尚未抵达；沿可通行地点继续查找。'
+                          : safePath === null
+                            ? '先沿现有路线完成眼前可查看的必需观察，再继续前往。'
+                            : safePath.length === 0
+                              ? '就在这张照片上；请主动选择黄色热点查看。'
+                              : '可沿现有地点路线前往；抵达后仍需主动查看热点。'}</small>
+                      </li>;
+                    })}
+                  </ul>
+                </section>}
+              </aside>
+              {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && <details className="act3-investigation__paper-compare">
+                <summary>打开两张词表</summary>
+                <div className="act3-investigation__paper-compare-content">
+                  <article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article>
+                  <article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article>
+                  <p>两张词表。含义暂时不明。</p>
+                </div>
+              </details>}
+              {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <details className="act3-investigation__comparison-record">
+                <summary>打开旧庙照片对照</summary>
+                <div className="act3-investigation__comparison-record-content">
+                  <details className="act3-investigation__exterior-photo">
+                    <summary>查看当时的环境照片</summary>
+                    <figure>{assetLoader.get('IMG_A1_I_001')?.src ? <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" /> : <div className="act3-investigation__comparison-placeholder">第一次进山时拍下的破庙外景。</div>}<figcaption>第一次进山 · 破庙外景</figcaption></figure>
+                  </details>
+                  <aside className="act3-investigation__temple-compare" aria-label="破庙塑像与厨房空神龛照片对照">
+                    <p className="act3-investigation__compare-note">把这两张照片放在一起看看。</p>
+                    <ComparisonPhoto assetId="IMG_A1_I_003" alt="第一次进山拍下的破庙塑像" caption="第一次进山 · 庙内塑像" placeholder="第一次进山时，庙里那尊塑像已经残缺，只剩底座和半截身子。" />
+                    <ComparisonPhoto assetId="IMG_A3_T06_007" alt="厨房尽头空木神龛的石质底座" caption="启明厨房 · 空神龛" placeholder="厨房尽头只剩一座空木神龛，边角积着灰。" />
+                  </aside>
+                </div>
+              </details>}
+            </div>
+          </details>
         </div>
-        <ul className="act3-investigation__photo-status" aria-label="当前照片观察状态">
-          {lens.hotspots.map((hotspot) => {
-            const known = inspected.includes(hotspot.clueId);
-            return <li key={hotspot.clueId} data-observation-state={known ? 'observed' : 'pending'}>
-              <span>{hotspotLabel(hotspot)}</span><strong>{known ? '已观察' : '待观察'}</strong>
-            </li>;
-          })}
-        </ul>
-        <p className="act3-investigation__photo-observation-note">{photoObservationNote}</p>
-        {missingRequiredIds.length > 0 && <section className="act3-investigation__missing-required" aria-label="本阶段仍缺的必需观察">
-          <h2>本阶段仍缺的必需观察</h2>
-          <ul>
-            {missingRequiredIds.map((clueId) => {
-              const entry = hotspotByClue.get(clueId);
-              const path = entry ? findAct3RoutePathToClue(stage, lens.id, clueId, inspected) : null;
-              const pathExists = path !== null;
-              const safePath = entry ? safePathToMissingRequiredClue(clueId) : null;
-              const reachable = safePath !== null;
-              const local = reachable && safePath.length === 0;
-              return <li key={clueId} data-missing-clue-id={clueId}>
-                {entry && local
-                  ? <><span>{hotspotLabel(entry.hotspot)}</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>查看这处观察</button></>
-                  : entry && reachable
-                    ? <><span>尚缺一处必需观察</span><button type="button" onClick={() => openRelatedMaterial(clueId)}>前往下一张现场照片</button></>
-                  : pathExists
-                    ? <><span>尚缺其他必需观察</span><small>先沿现有路线完成眼前可查看的必需观察，再继续前往。</small></>
-                    : <><span>还有必需观察暂不可从当前位置抵达</span><small>先沿可通行路线继续查找</small></>}
-              </li>;
-            })}
-          </ul>
-        </section>}
-      </aside>
-      {stage === 'T05' && state.game.flags.FLAG_A3_13ACK_PAPER_FOUND && <aside className="act3-investigation__paper-compare" aria-label="两张词表"><article><h2>VVaKe</h2><p>蜘蛛、雨伞、白走廊、台灯、风车、曼陀罗</p></article><article><h2>13aCK</h2><p>老鼠、血、草垛、木房子、玫瑰、表</p></article><p>两张词表。含义暂时不明。</p></aside>}
-      {stage === 'T06' && lens.id === 'LENS_A3_T06_008' && <>
-        <details className="act3-investigation__exterior-photo">
-          <summary>查看当时的环境照片</summary>
-          <figure>{assetLoader.get('IMG_A1_I_001')?.src ? <img src={assetLoader.get('IMG_A1_I_001')!.src} alt="第一次进山拍下的鸡公岭破庙外景" /> : <div className="act3-investigation__comparison-placeholder">第一次进山时拍下的破庙外景。</div>}<figcaption>第一次进山 · 破庙外景</figcaption></figure>
-        </details>
-        <aside className="act3-investigation__temple-compare" aria-label="破庙塑像与厨房空神龛照片对照">
-          <p className="act3-investigation__compare-note">把这两张照片放在一起看看。</p>
-          <ComparisonPhoto assetId="IMG_A1_I_003" alt="第一次进山拍下的破庙塑像" caption="第一次进山 · 庙内塑像" placeholder="第一次进山时，庙里那尊塑像已经残缺，只剩底座和半截身子。" />
-          <ComparisonPhoto assetId="IMG_A3_T06_007" alt="厨房尽头空木神龛的石质底座" caption="启明厨房 · 空神龛" placeholder="厨房尽头只剩一座空木神龛，边角积着灰。" />
-        </aside>
-      </>}
+      </Act3PhotoViewport>
     </main>
     {lensHotspot && <InvestigationDetail title={act3HotspotActionLabel(stage, lensHotspot.clueId, lensHotspot.label, inspected)} onClose={() => setHotspotId(null)} fallbackFocus={() => document.querySelector<HTMLElement>(`[data-clue-id="${lensHotspot.clueId}"]`) ?? [...document.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent === act3HotspotActionLabel(stage, lensHotspot.clueId, lensHotspot.label, inspected)) ?? null}>
       {/* A34-NARRATIVE-0001 D-3：热点详情只讲这一件物品。
