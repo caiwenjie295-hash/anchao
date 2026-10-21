@@ -272,7 +272,8 @@
 .a4-reader__heading p { margin: 4px 0; color: #555b61; }
 .a4-reader__eyebrow { font-size: .92rem; letter-spacing: .04em; }
 .a4-reader__index { margin: 0 0 24px; padding: 12px 14px; border: 1px solid #c3c7cb; border-radius: 8px; background: #e8eaec; }
-.a4-reader__index summary { cursor: pointer; font-weight: 700; }
+.a4-reader__index summary { cursor: pointer; font-weight: 700; overflow-wrap: anywhere; }
+.a4-reader__index-chapter-progress { margin: 10px 0 0; color: #555b61; font-size: .9em; }
 .a4-reader__index nav, .a4-reader__previous { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .a4-reader__index button, .a4-reader__previous button { min-height: 40px; padding: 7px 10px; border: 1px solid #9fa5aa; border-radius: 6px; color: #292d31; background: #f7f8f9; font: inherit; cursor: pointer; text-align: left; }
 .a4-reader__index button[aria-current="page"] { border-color: #51585f; background: #d5d8db; font-weight: 700; }

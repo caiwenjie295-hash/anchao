@@ -255,11 +255,22 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
   const displayedPageCount = activeReadingTarget
     ? Math.max(0, Math.min(activeReadingTarget.pages.length, displayedPageIndexForTarget(activeReadingTarget) + 1))
     : 0;
+  const progressMaterialTitle = stage === 'T01' && activeReadingTarget?.blockId === 'T01_ORIGINAL' ? '笔记' : displayTitle;
+  const currentPageNumber = activeReadingTarget ? activeReadingTarget.pageIndex + 1 : 0;
+  const totalPageCount = activeReadingTarget?.pages.length ?? 0;
+  const currentPageDisplayed = activeReadingTarget
+    ? displayedPageIndexForTarget(activeReadingTarget) >= activeReadingTarget.pageIndex
+    : false;
+  const readingPositionLabel = !activeReadingTarget || totalPageCount === 0
+    ? '尚无分页内容'
+    : !currentPageDisplayed
+      ? `尚未显示（当前第 ${currentPageNumber} / ${totalPageCount} 页）`
+      : displayedPageCount > currentPageNumber
+        ? `当前第 ${currentPageNumber} / ${totalPageCount} 页，已显示至第 ${displayedPageCount} / ${totalPageCount} 页`
+        : `已显示 ${displayedPageCount} / ${totalPageCount} 页`;
   const currentReadingProgressLabel = stage === 'T03'
-    ? '私人动态按日期浏览'
-    : stage === 'T01' && activeReadingTarget?.blockId === 'T01_ORIGINAL'
-      ? `笔记已显示 ${displayedPageCount} / ${activeReadingTarget.pages.length} 页`
-      : `当前内容已显示 ${displayedPageCount} / ${activeReadingTarget?.pages.length ?? 0} 页`;
+    ? `${reviewing ? '回看材料' : '当前材料'}：私人动态 · 按日期浏览`
+    : `${reviewing ? '回看材料' : '当前材料'}：${progressMaterialTitle} · ${readingPositionLabel}`;
   const t01ReactionPending = stage === 'T01'
     && !reviewing
     && activeReadingTarget?.blockId === 'T01_ORIGINAL'
@@ -552,7 +563,8 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
         </header>
 
         <details className="a4-reader__index">
-          <summary>已读目录与前文（已完成章节 {completedSectionIds.length}/10 · {currentReadingProgressLabel}）</summary>
+          <summary>阅读进度与目录：{currentReadingProgressLabel}</summary>
+          <p className="a4-reader__index-chapter-progress">章节推进：已完成章节 {completedSectionIds.length} / 10</p>
           <nav aria-label="已读章节目录">
             {availableSections.map((item) => <button type="button" key={item.id} data-review-trigger={`index-${item.stage}`} aria-current={stage === item.stage ? 'page' : undefined} onClick={() => openReview(item.stage, `index-${item.stage}`)}>
               {item.stage === currentStage ? '当前：' : ''}{item.stage === stage ? displayTitle : item.title}
