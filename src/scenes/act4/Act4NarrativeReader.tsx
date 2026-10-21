@@ -277,6 +277,16 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     && activeReadingTarget.pageIndex === activeReadingTarget.pages.length - 1
     && displayedPageIndexForTarget(activeReadingTarget) >= activeReadingTarget.pages.length - 1
     && !activeBlockProgress.endingRevealed;
+  const t01ReactionRevealed = stage === 'T01'
+    && !reviewing
+    && activeReadingTarget?.blockId === 'T01_ORIGINAL'
+    && activeReadingTarget.pageIndex === activeReadingTarget.pages.length - 1
+    && activeBlockProgress.endingRevealed;
+  const t01NextStepHint = t01ReactionPending
+    ? '九页笔记已显示完，接下来查看两人的反应。'
+    : t01ReactionRevealed
+      ? '两人的反应已显示；读完这一段后，再继续阅读。'
+      : undefined;
   const mustFinishLastConsciousness = !reviewing && stage === 'T09' && activeReadingTarget?.blockId === 'T09_BROADCAST';
   const lastConsciousnessComplete = completedBroadcastStageEpoch === currentStageEpochRef.current.epoch;
   const currentReadingReady = actionCompleted && (!mustFinishLastConsciousness || lastConsciousnessComplete);
@@ -564,13 +574,14 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
 
         <details className="a4-reader__index">
           <summary>阅读进度与目录：{currentReadingProgressLabel}</summary>
-          <p className="a4-reader__index-chapter-progress">章节推进：已完成章节 {completedSectionIds.length} / 10</p>
+          <p className="a4-reader__index-chapter-progress">章节推进：已完成章节 {completedSectionIds.length} / 10。完成本章并继续后更新；页数另记当前材料的阅读进度。</p>
           <nav aria-label="已读章节目录">
             {availableSections.map((item) => <button type="button" key={item.id} data-review-trigger={`index-${item.stage}`} aria-current={stage === item.stage ? 'page' : undefined} onClick={() => openReview(item.stage, `index-${item.stage}`)}>
               {item.stage === currentStage ? '当前：' : ''}{item.stage === stage ? displayTitle : item.title}
             </button>)}
           </nav>
         </details>
+        {t01NextStepHint && <p className="a4-reader__next-step">{t01NextStepHint}</p>}
 
         <div className="a4-reader__blocks">
           {visibleBlocks.map((block, blockOrder) => {

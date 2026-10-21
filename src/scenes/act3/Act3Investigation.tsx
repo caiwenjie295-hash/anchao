@@ -138,17 +138,33 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const nextMissingRequired = missingRequiredIds.map((id) => hotspotByClue.get(id)?.hotspot).find((hotspot) => hotspot !== undefined);
   const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
     .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
-  const blockedForwardHint = missingRequiredIds.length === 0
-    ? unobservedPhotoHotspotCount > 0
-      ? `本阶段必需观察已齐；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，可按需要继续查看后离开。`
-      : `本阶段必需观察已齐，当前照片上的${lens.hotspots.length}处热点也都已观察。`
-    : missingXiaoyueMemory
-      ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
+  const currentPhotoNeedsObservationHint = `当前照片还有${unobservedPhotoHotspotCount}处未观察热点，请先查看黄色热点。`;
+  const blockedForwardHint = unobservedPhotoHotspotCount > 0
+    ? `${currentPhotoNeedsObservationHint} ${missingRequiredIds.length === 0
+      ? '本阶段必需观察已齐。'
       : missingOnCurrentPhotoCount > 0
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片有${unobservedPhotoHotspotCount}处未观察热点，其中${missingOnCurrentPhotoCount}处是本阶段必需观察。`
-        : unobservedPhotoHotspotCount === 0
-          ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片热点已全部观察，本地没有本阶段必需观察，请沿现有地点路线前往其他照片。`
-          : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，但本地没有必需观察，请沿现有地点路线前往其他照片。`;
+        ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
+        : missingXiaoyueMemory
+          ? `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，再听小月说完这一段。`
+          : `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，沿现有地点路线继续寻找。`}`
+    : missingRequiredIds.length === 0
+      ? '本阶段必需观察已齐，当前照片上的热点也都已观察。'
+      : missingXiaoyueMemory
+        ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
+        : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片热点已全部观察，请沿现有地点路线前往其他照片。`;
+  const photoObservationNote = unobservedPhotoHotspotCount > 0
+    ? `${currentPhotoNeedsObservationHint} ${missingRequiredIds.length === 0
+      ? '本阶段必需观察已齐。'
+      : missingOnCurrentPhotoCount > 0
+        ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
+        : missingXiaoyueMemory
+          ? `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，再听小月说完这一段。`
+          : `本阶段还缺${missingRequiredIds.length}处必需观察。`}`
+    : missingRequiredIds.length === 0
+      ? '本阶段必需观察已齐，当前照片上的热点也都已查看。'
+      : missingXiaoyueMemory
+        ? `当前照片热点已全部观察；本阶段还缺${missingRequiredIds.length}处必需观察，先听小月说完这一段。`
+        : `当前照片热点已全部观察；本阶段还缺${missingRequiredIds.length}处必需观察，请沿现有地点路线继续寻找。`;
   const safePathToMissingRequiredClue = (clueId: string, currentLens = lens.id, alreadyInspected = inspected): string[] | null => {
     const path = findAct3RoutePathToClue(stage, currentLens, clueId, alreadyInspected);
     const target = hotspotByClue.get(clueId);
@@ -273,11 +289,11 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
       : act3ObjectiveFor(stage, inspected)}
     helpText="点击照片上的虚线框查看物件；底部地点按钮可移动。未查看全部虚线框也可点右上“退出调查，返回桌面”，之后能继续当前镜头，不会丢线索。观察弹层可用 Esc、关闭按钮或点击遮罩返回。可用滚轮、双指或加减按钮缩放，复位不会改变调查进度。"
     actions={actions}
-    statusMessage={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
-      ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
-      : missingRequiredIds.length ? blockedForwardHint
-        : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。'
-          : unobservedPhotoHotspotCount > 0 ? blockedForwardHint : undefined}
+    statusMessage={unobservedPhotoHotspotCount > 0 ? blockedForwardHint
+      : stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
+        ? '旧址调查已收束。翻开笔记，开始阅读下一段。'
+        : missingRequiredIds.length ? blockedForwardHint
+          : stageAlreadyConfirmed ? '本处结论已记录。选择一次离开行动即可继续。' : undefined}
     onExit={onReturnToDesktop ?? (() => {})}
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
@@ -299,15 +315,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
             </li>;
           })}
         </ul>
-        <p className="act3-investigation__photo-observation-note">{missingRequiredIds.length === 0
-          ? unobservedPhotoHotspotCount > 0
-            ? `本阶段必需观察已齐；当前照片仍有${unobservedPhotoHotspotCount}处未观察热点，可以自行选择是否查看。`
-            : '本阶段必需观察已齐，当前照片上的热点也都已查看。'
-          : missingOnCurrentPhotoCount > 0
-            ? `当前照片还有${unobservedPhotoHotspotCount}处未观察热点，其中${missingOnCurrentPhotoCount}处是本阶段必需观察。`
-            : unobservedPhotoHotspotCount === 0
-              ? '当前照片热点已全部观察；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。'
-              : `当前照片还有${unobservedPhotoHotspotCount}处未观察热点；本地没有本阶段必需观察，请沿路线继续寻找缺失项目。`}</p>
+        <p className="act3-investigation__photo-observation-note">{photoObservationNote}</p>
         {missingRequiredIds.length > 0 && <section className="act3-investigation__missing-required" aria-label="本阶段仍缺的必需观察">
           <h2>本阶段仍缺的必需观察</h2>
           <ul>
