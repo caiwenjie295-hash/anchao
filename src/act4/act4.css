@@ -274,6 +274,7 @@
 .a4-reader__index { margin: 0 0 24px; padding: 12px 14px; border: 1px solid #c3c7cb; border-radius: 8px; background: #e8eaec; }
 .a4-reader__index summary { cursor: pointer; font-weight: 700; overflow-wrap: anywhere; }
 .a4-reader__index-chapter-progress { margin: 10px 0 0; color: #555b61; font-size: .9em; }
+.a4-reader__next-step { margin: 0 0 16px; padding: 10px 12px; border-left: 3px solid #68747f; background: #eef0f2; color: #343a40; }
 .a4-reader__index nav, .a4-reader__previous { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .a4-reader__index button, .a4-reader__previous button { min-height: 40px; padding: 7px 10px; border: 1px solid #9fa5aa; border-radius: 6px; color: #292d31; background: #f7f8f9; font: inherit; cursor: pointer; text-align: left; }
 .a4-reader__index button[aria-current="page"] { border-color: #51585f; background: #d5d8db; font-weight: 700; }
