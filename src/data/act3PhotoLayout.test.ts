@@ -52,4 +52,10 @@ describe('Act 3 photo-only hotspot layout', () => {
       }
     }
   });
+
+  it('keeps the T02 speaker target under the photo toolbar while covering the speaker and plate', () => {
+    const speaker = act3PhotoLayout.LENS_A3_T02_005?.CLUE_A3_T02_SLOGAN_SPEAKER;
+    expect(speaker).toMatchObject({ x: 0.8, y: 0.18, region: { width: 0.27, height: 0.35 } });
+    expect(speaker!.y - speaker!.region!.height / 2).toBeCloseTo(0.005, 6);
+  });
 });
