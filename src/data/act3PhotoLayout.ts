@@ -76,7 +76,7 @@ export const act3PhotoLayout: Record<string, Record<string, PhotoPoint>> = {
     CLUE_A3_T02_SS_SCRATCH: { x: 0.5, y: 0.46, kind: 'object', region: { width: 0.34, height: 0.22 } },
   },
   LENS_A3_T02_005: {
-    CLUE_A3_T02_SLOGAN_SPEAKER: { x: 0.8, y: 0.145, kind: 'object', region: { width: 0.27, height: 0.28 } },
+    CLUE_A3_T02_SLOGAN_SPEAKER: { x: 0.8, y: 0.18, kind: 'object', region: { width: 0.27, height: 0.35 } },
   },
   LENS_A3_T02_006: {
     CLUE_A3_T02_CORRIDOR_TURN: { x: 0.52, y: 0.48, kind: 'direction', region: { width: 0.38, height: 0.42 } },
