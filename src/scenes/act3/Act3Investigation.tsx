@@ -16,6 +16,7 @@ import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_
 import { act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens, act3RouteLabelFor, act3StageCompletionLabel } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
 import { act3HotspotActionLabel } from '../../story/investigation/actionPresentation';
+import { act3HotspotPrompt } from './act3HotspotPrompt';
 
 type Act3PhotoViewportProps = ComponentProps<typeof PhotoViewport> & { explorationMode?: boolean; revealBeat?: boolean };
 const Act3PhotoViewport = PhotoViewport as ComponentType<Act3PhotoViewportProps>;
@@ -43,6 +44,20 @@ const STANCE_LABEL: Record<Act3Lens['stance'], string> = {
   crouch: '低处观察',
   enter: '进入室内',
 };
+
+function displayedLensTitle(stage: Act3ActiveStage, lens: Act3Lens, inspectedClueIds: readonly string[]): string {
+  const title = act3LensTitleFor(lens.id, lens.title, inspectedClueIds);
+  if (stage === 'T03' && lens.id === 'LENS_A3_T03_002' && !inspectedClueIds.includes('CLUE_A3_T03_24H')) return '门牌近处';
+  if (stage === 'T03' && lens.id === 'LENS_A3_T03_004' && !inspectedClueIds.includes('CLUE_A3_T03_48_72H')) return '门牌近处';
+  return title;
+}
+
+function displayedLensPlace(stage: Act3ActiveStage, lens: Act3Lens, inspectedClueIds: readonly string[]): string {
+  const hasObserved24HourMarker = inspectedClueIds.includes('CLUE_A3_T03_24H');
+  if (stage === 'T03' && ['LENS_A3_T03_002', 'LENS_A3_T03_003'].includes(lens.id) && !hasObserved24HourMarker) return '走廊房门';
+  if (stage === 'T03' && lens.id === 'LENS_A3_T03_004' && !inspectedClueIds.includes('CLUE_A3_T03_48_72H')) return '走廊房门';
+  return act3PlaceForLens(lens.id, lens.title);
+}
 
 function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: string; alt: string; caption: string; placeholder: string }) {
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -105,6 +120,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const state = useAppSelector(manager, selectAct3Snapshot, equalAct3Snapshot);
   const stage = state.modules.act3.stage;
   const [hotspotId, setHotspotId] = useState<string | null>(null);
+  const [readNarrationLensIds, setReadNarrationLensIds] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
     if (stage === 'inactive') return;
@@ -126,7 +142,8 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const assetSrc = assetLoader.get(lens.assetId)?.src;
   const lensHotspot = hotspotId ? lens.hotspots.find((item) => item.clueId === hotspotId) : undefined;
   const inspected = state.modules.act3.inspectedClueIds;
-  const lensTitle = act3LensTitleFor(lens.id, lens.title, inspected);
+  const lensTitle = displayedLensTitle(stage, lens, inspected);
+  const lensPlace = displayedLensPlace(stage, lens, inspected);
   const lensDescription = act3LensDescriptionFor(lens.id, lens.description, inspected);
   const samePlaceLenses = doc.lenses.filter((item) => act3PlaceForLens(item.id, item.title) === act3PlaceForLens(lens.id, lens.title));
   const samePlaceLensIndex = samePlaceLenses.findIndex((item) => item.id === lens.id) + 1;
@@ -186,9 +203,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const findMaterialLinks = (clueIds: string[]): InvestigationMaterialLink[] => clueIds.flatMap((clueId) => {
     const entry = hotspotByClue.get(clueId);
     if (!entry || safePathToMissingRequiredClue(clueId) === null) return [];
-    return [{ id: clueId, label: act3HotspotActionLabel(stage, clueId, entry.hotspot.label, inspected) }];
+    return [{ id: clueId, label: act3HotspotPrompt(stage, clueId, entry.hotspot.label, inspected) }];
   });
-  const hotspotLabel = (hotspot: Act3Hotspot) => act3HotspotActionLabel(stage, hotspot.clueId, hotspot.label, inspected);
+  const hotspotLabel = (hotspot: Act3Hotspot) => act3HotspotPrompt(stage, hotspot.clueId, hotspot.label, inspected);
 
   const openHotspot = (clueId: string) => {
     manager.inspectAct3Clue(clueId);
@@ -295,7 +312,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     photoStage
     ariaLabel="第三幕调查"
     actLabel={`第三幕 · ${movement}`}
-    locationLabel={act3PlaceForLens(lens.id, lens.title)}
+    locationLabel={lensPlace}
     contextLabel={samePlaceLenses.length > 1 ? `同名现场照片 ${samePlaceLensIndex} / ${samePlaceLenses.length}` : STANCE_LABEL[lens.stance]}
     objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '已和小月离开旧址，手边的笔记还有内容可读。'
@@ -307,10 +324,24 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
     <main className="act3-investigation__lens" data-act3-stage={stage} data-asset-id={lens.assetId} data-observation-stance={lens.stance}>
-      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat}>
+      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat} quietHotspotLabels compactMobileControls>
         <div className="act3-investigation__photo-overlay" data-photo-control>
-          <details className="act3-investigation__narration">
-            <summary>现场旁白</summary>
+          <details
+            key={lens.id}
+            className="act3-investigation__narration"
+            onToggle={(event) => {
+              if (!event.currentTarget.open) return;
+              setReadNarrationLensIds((previous) => {
+                if (previous.has(lens.id)) return previous;
+                const next = new Set(previous);
+                next.add(lens.id);
+                return next;
+              });
+            }}
+          >
+            <summary aria-label={readNarrationLensIds.has(lens.id) ? '现场旁白' : '现场旁白，未读'}>
+              现场旁白{!readNarrationLensIds.has(lens.id) && <span className="act3-investigation__narration-unread" aria-hidden="true" />}
+            </summary>
             <div className="act3-investigation__narration-panel">
               <h2>{lensTitle}</h2>
               <p>{lensDescription}</p>

@@ -71,6 +71,93 @@ describe('Third-act investigation interface', () => {
     }
   });
 
+  it('keeps T03 room titles, places and marker prompts neutral until the matching observation', async () => {
+    const cases = [
+      { lensId: 'LENS_A3_T03_002', clueId: 'CLUE_A3_T03_24H', neutralTitle: '门牌近处', neutralPlace: '走廊房门', neutralPrompt: '查看门上标记', forbidden: '二十四小时', knownTitle: '二十四小时门', knownPlace: '二十四小时房门' },
+      { lensId: 'LENS_A3_T03_003', clueId: 'CLUE_A3_T03_PEEPHOLES', neutralTitle: '门外的孔与挡板', neutralPlace: '走廊房门', neutralPrompt: '检查窥孔与挡板', forbidden: '二十四小时', knownTitle: '门外的孔与挡板', knownPlace: '走廊房门' },
+      { lensId: 'LENS_A3_T03_004', clueId: 'CLUE_A3_T03_48_72H', neutralTitle: '门牌近处', neutralPlace: '走廊房门', neutralPrompt: '核对门上标记', forbidden: '七十二小时', knownTitle: '四十八与七十二小时门', knownPlace: '四十八与七十二小时门' },
+    ];
+    for (const scenario of cases) {
+      localStorage.clear();
+      const state = createDefaultState();
+      state.game.phase = 'A3_T03';
+      state.modules.act3.stage = 'T03';
+      state.modules.act3.currentLensId = scenario.lensId;
+      const manager = new StateManager(new EventBus(), state);
+      const container = document.createElement('div');
+      document.body.append(container);
+      const root = createRoot(container);
+      try {
+        await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+        const heading = container.querySelector('.investigation-shell__place h1')?.textContent;
+        const frame = container.querySelector('.photo-viewport__frame');
+        const marker = container.querySelector<HTMLButtonElement>('.photo-viewport__fallback button');
+        expect(heading).toBe(scenario.neutralPlace);
+        expect(frame?.getAttribute('aria-label')).toContain(scenario.neutralTitle);
+        expect(marker?.textContent).toBe(scenario.neutralPrompt);
+        for (const value of [heading, frame?.getAttribute('aria-label'), marker?.textContent]) expect(value).not.toContain(scenario.forbidden);
+
+        marker?.focus();
+        expect(manager.getState().modules.act3.inspectedClueIds).not.toContain(scenario.clueId);
+        await act(async () => { marker?.click(); });
+        expect(manager.getState().modules.act3.inspectedClueIds).toContain(scenario.clueId);
+        await act(async () => { container.querySelector<HTMLButtonElement>('[role="dialog"] button')?.click(); });
+        expect(container.querySelector('.photo-viewport__fallback button')?.textContent).not.toBe(scenario.neutralPrompt);
+        if (scenario.lensId === 'LENS_A3_T03_003') {
+          expect(container.querySelector('.investigation-shell__place h1')?.textContent).toBe(scenario.neutralPlace);
+          await act(async () => {
+            manager.enterAct3Lens('LENS_A3_T03_002');
+            manager.inspectAct3Clue('CLUE_A3_T03_24H');
+            manager.enterAct3Lens('LENS_A3_T03_003');
+          });
+          expect(container.querySelector('.investigation-shell__place h1')?.textContent).toBe('二十四小时房门');
+        } else {
+          expect(container.querySelector('.investigation-shell__place h1')?.textContent).toBe(scenario.knownPlace);
+        }
+        expect(container.querySelector('.photo-viewport__frame')?.getAttribute('aria-label')).toContain(scenario.knownTitle);
+      } finally {
+        await act(async () => { root.unmount(); });
+        container.remove();
+      }
+    }
+  });
+
+  it('tracks narration unread state per lens without reopening text or changing observation state', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = 'A3_T04';
+    state.modules.act3.stage = 'T04';
+    state.modules.act3.currentLensId = 'LENS_A3_T04_002';
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      const getNarration = () => container.querySelector<HTMLDetailsElement>('.act3-investigation__narration')!;
+      expect(getNarration().open).toBe(false);
+      expect(getNarration().querySelector('summary')?.getAttribute('aria-label')).toBe('现场旁白，未读');
+      await act(async () => { getNarration().querySelector('summary')?.click(); });
+      expect(getNarration().open).toBe(true);
+      expect(getNarration().querySelector('summary')?.getAttribute('aria-label')).toBe('现场旁白');
+      expect(manager.getState().modules.act3.inspectedClueIds).toEqual([]);
+
+      await act(async () => { manager.enterAct3Lens('LENS_A3_T04_003'); });
+      expect(getNarration().open).toBe(false);
+      expect(getNarration().querySelector('summary')?.getAttribute('aria-label')).toBe('现场旁白，未读');
+      await act(async () => { getNarration().querySelector('summary')?.click(); });
+      expect(getNarration().querySelector('summary')?.getAttribute('aria-label')).toBe('现场旁白');
+
+      await act(async () => { manager.enterAct3Lens('LENS_A3_T04_002'); });
+      expect(getNarration().open).toBe(false);
+      expect(getNarration().querySelector('summary')?.getAttribute('aria-label')).toBe('现场旁白');
+      expect(getNarration().querySelector('.act3-investigation__narration-unread')).toBeNull();
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
   it('separates this stage’s required observations from hotspots on the current photo', async () => {
     localStorage.clear();
     const state = createDefaultState();
