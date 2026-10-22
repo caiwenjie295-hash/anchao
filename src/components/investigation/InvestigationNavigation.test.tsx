@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { describe, expect, it, vi } from 'vitest';
 import { InvestigationNavigation } from './InvestigationNavigation';
 
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
 describe('InvestigationNavigation', () => {
   it('keeps a blocked action focusable and shows a nearby reason and material link', async () => {
     const onOpenMaterial = vi.fn();
@@ -46,6 +48,39 @@ describe('InvestigationNavigation', () => {
       expect(host.textContent).not.toContain('未来房间');
       await act(async () => host.querySelector<HTMLButtonElement>('[data-action-id="continue"]')!.click());
       expect(onActivate).toHaveBeenCalledTimes(1);
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
+  it('keeps one previous/next pair and preserves named branches, blocked reasons, and stage actions in the secondary menu', async () => {
+    const onOpenMaterial = vi.fn();
+    const onActivate = vi.fn();
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = createRoot(host);
+    try {
+      await act(async () => root.render(<InvestigationNavigation presentation="photo-stage" actions={[
+        { actionId: 'back', kind: 'return', label: '返回前厅', state: 'ready', onActivate },
+        { actionId: 'next', kind: 'move', label: '下一张现场照片', state: 'ready', onActivate },
+        { actionId: 'branch', kind: 'move', label: '沿山路返回入口', state: 'ready', onActivate },
+        { actionId: 'finish', kind: 'story', label: '结束本阶段', state: 'blocked', reason: '还有一处必需观察。', relatedMaterials: [{ id: 'photo', label: '当前照片' }], onOpenMaterial },
+      ]} />));
+      const primary = [...host.querySelectorAll<HTMLButtonElement>('[data-action-emphasis="primary"]')];
+      expect(primary).toHaveLength(2);
+      expect(primary.map((button) => button.textContent)).toEqual(['上一张', '下一张']);
+
+      const menu = host.querySelector<HTMLDetailsElement>('.investigation-navigation__other-actions')!;
+      expect(menu.open).toBe(false);
+      expect(host.querySelector('[data-action-id="branch"]')?.closest('details')).toBe(menu);
+      await act(async () => { menu.querySelector('summary')?.click(); });
+      expect(host.querySelector('[data-action-id="branch"]')?.textContent).toContain('沿山路返回入口');
+      expect(host.querySelector('[data-action-id="finish"]')?.textContent).toContain('结束本阶段');
+      await act(async () => { host.querySelector<HTMLButtonElement>('[data-action-id="finish"]')!.click(); });
+      expect(host.querySelector('.investigation-navigation__reason')?.textContent).toContain('还有一处必需观察。');
+      await act(async () => { host.querySelector<HTMLButtonElement>('.investigation-navigation__material')!.click(); });
+      expect(onOpenMaterial).toHaveBeenCalledWith({ id: 'photo', label: '当前照片' });
     } finally {
       await act(async () => root.unmount());
       host.remove();

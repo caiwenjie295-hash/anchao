@@ -61,6 +61,32 @@ describe('InvestigationShell guidance variants', () => {
     expect(host.querySelector('.investigation-shell__help')?.textContent).toBe('逐篇阅读，再选取支持片段。');
   });
 
+  it('offers an opt-in compact photo-stage header while retaining the chapter portal anchor', async () => {
+    await act(async () => root.render(<InvestigationShell
+      ariaLabel="现场调查"
+      actLabel="第三幕 · 接近"
+      locationLabel="厨房"
+      contextLabel="同名现场照片 2 / 3"
+      objective="查看厨房门牌。"
+      helpText="拖动画面查看细节。"
+      photoStage
+      onExit={vi.fn()}
+    >照片</InvestigationShell>));
+    const photoHelp = host.querySelector<HTMLDetailsElement>('.investigation-shell__photo-help')!;
+    expect(photoHelp.open).toBe(false);
+    expect(photoHelp.querySelector('summary')?.getAttribute('aria-label')).toBe('打开看图操作说明');
+    expect(photoHelp.textContent).toContain('拖动画面查看细节');
+    await act(async () => { photoHelp.querySelector('summary')?.click(); });
+    expect(photoHelp.open).toBe(true);
+    const tools = host.querySelector<HTMLDetailsElement>('.investigation-shell__photo-tools')!;
+    expect(tools.querySelector('summary')?.textContent).toBe('更多');
+    expect(host.querySelector('.investigation-shell__goal')).toBeNull();
+    expect(host.querySelector('.investigation-shell__header-actions')).not.toBeNull();
+    expect(host.querySelector('.investigation-shell__photo-tools-panel')?.textContent).toContain('查看厨房门牌。');
+    await act(async () => { tools.querySelector('summary')?.click(); });
+    expect(tools.querySelector('.investigation-shell__exit')?.textContent).toBe('退出调查，返回桌面');
+  });
+
   it('keeps blocked reasons and their related materials available in a semantic shell', async () => {
     await render('investigation-shell--reading', [{
       actionId: 'open-source',

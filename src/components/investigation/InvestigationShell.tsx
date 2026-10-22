@@ -15,6 +15,7 @@ export interface InvestigationShellProps {
   className?: string;
   actions?: InvestigationAction[];
   statusMessage?: string;
+  photoStage?: boolean;
   children: ReactNode;
   onExit: () => void;
   onOpenMaterial?: (actionId: string, materialId: string) => void;
@@ -31,6 +32,7 @@ export function InvestigationShell({
   className,
   actions = [],
   statusMessage,
+  photoStage = false,
   children,
   onExit,
   onOpenMaterial,
@@ -55,12 +57,28 @@ export function InvestigationShell({
           <h1>{locationLabel}</h1>
           {contextLabel && <span>{contextLabel}</span>}
         </div>
-        <div className="investigation-shell__header-actions">
+        {photoStage ? <div className="investigation-shell__photo-header-tools">
+          {helpText && <details className="investigation-shell__photo-help">
+            <summary aria-label="打开看图操作说明"><span>看图操作</span></summary>
+            <div className="investigation-shell__photo-help-panel"><p>{helpText}</p></div>
+          </details>}
+          <details className="investigation-shell__photo-tools">
+            <summary aria-label="打开现场信息和更多操作">更多</summary>
+            <div className="investigation-shell__photo-tools-panel">
+              {contextLabel && <p><strong>当前现场</strong><span>{contextLabel}</span></p>}
+              <p><strong>当前目标</strong><span>{objective}</span></p>
+              <div className="investigation-shell__header-actions investigation-shell__photo-tools-actions">
+                {progressContext && <button type="button" className="investigation-progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
+                <button type="button" className="investigation-shell__exit" onClick={onExit}>{exitLabel}</button>
+              </div>
+            </div>
+          </details>
+        </div> : <div className="investigation-shell__header-actions">
           {progressContext && <button type="button" className="investigation-progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
           <button type="button" className="investigation-shell__exit" onClick={onExit}>{exitLabel}</button>
-        </div>
+        </div>}
       </header>
-      <div className={`investigation-shell__goal${onDemandGuidance ? ' investigation-shell__goal--on-demand' : ''}`}>
+      {!photoStage && <div className={`investigation-shell__goal${onDemandGuidance ? ' investigation-shell__goal--on-demand' : ''}`}>
         {onDemandGuidance ? (
           <details className="investigation-shell__goal-details">
             <summary>当前目标与操作提示</summary>
@@ -79,12 +97,12 @@ export function InvestigationShell({
             )}
           </>
         )}
-      </div>
+      </div>}
       {!onDemandGuidance && helpOpen && <p className="investigation-shell__help" role="status">{helpText}</p>}
       <main className="investigation-shell__scene">{children}</main>
       {actions.length > 0 && (
         <div className="investigation-shell__operations">
-          <InvestigationNavigation actions={navigationActions} />
+          <InvestigationNavigation actions={navigationActions} presentation={photoStage ? 'photo-stage' : 'standard'} />
         </div>
       )}
       {statusMessage && <p className="investigation-shell__status" role="status" aria-live="polite">{statusMessage}</p>}
