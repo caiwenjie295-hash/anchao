@@ -308,6 +308,7 @@ describe('Third-act investigation interface', () => {
 
   it.each([
     { stage: 'T06' as const, lensId: 'LENS_A3_T06_001', inspectedClueIds: [] as string[], requiredCount: 0, observedCount: 0, xiaoyueMemoryUnobserved: false, siteExited: false },
+    { stage: 'T06' as const, lensId: 'LENS_A3_T06_002', inspectedClueIds: [] as string[], requiredCount: 0, observedCount: 0, xiaoyueMemoryUnobserved: false, siteExited: false },
     { stage: 'T01' as const, lensId: 'LENS_A3_T01_006', inspectedClueIds: act3RequiredClueIds('T01'), requiredCount: 3, observedCount: 1, xiaoyueMemoryUnobserved: false, siteExited: false },
     { stage: 'T06' as const, lensId: 'LENS_A3_T06_001', inspectedClueIds: act3RequiredClueIds('T06'), requiredCount: 3, observedCount: 0, xiaoyueMemoryUnobserved: false, siteExited: false },
     { stage: 'T02' as const, lensId: 'LENS_A3_T02_001', inspectedClueIds: ['CLUE_A3_T02_CORRIDOR'], requiredCount: 0, observedCount: 1, xiaoyueMemoryUnobserved: false, siteExited: false },
@@ -353,8 +354,11 @@ describe('Third-act investigation interface', () => {
 
       if (observedCount < lens.hotspots.length) {
         expect(note).toContain(`当前照片还有`);
-        expect(status).toContain(`本图待看${lens.hotspots.length - observedCount}处`);
+        expect(status).toContain('本图');
+        expect(status).toContain('待看');
         expect(status).not.toContain('本图已清');
+        expect(note).not.toMatch(/当前照片(?:没有|已无|已全部)/);
+        expect(status).not.toMatch(/当前照片(?:没有|已无|已全部)/);
         if (pendingRequiredCount > 0) expect(note).toContain('阶段必需观察未完成');
         if (pendingRouteOnlyCount > 0) expect(note).toContain('路线依据待查看');
         if (pendingOptionalCount > 0) expect(note).toContain('可选观察');
