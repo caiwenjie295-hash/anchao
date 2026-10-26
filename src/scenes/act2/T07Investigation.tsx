@@ -356,13 +356,19 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     timeRef.current = value;
     setTimeMs(value);
   };
+  const togglePlayback = () => {
+    if (playing) { setPlaying(false); return; }
+    if (videoImageFailed) return;
+    if (timeMs >= video.durationMs) seek(0);
+    setPlaying(true);
+  };
   const step = (delta: number) => seek(timeMs + delta);
   const onPlayerKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
     if (target instanceof HTMLInputElement) return;
     if (event.key === 'ArrowLeft') { event.preventDefault(); step(-video.frameMs); }
     else if (event.key === 'ArrowRight') { event.preventDefault(); step(video.frameMs); }
-    else if (event.key === ' ' && target.tagName !== 'BUTTON') { event.preventDefault(); setPlaying((value) => !value); }
+    else if (event.key === ' ' && target.tagName !== 'BUTTON') { event.preventDefault(); togglePlayback(); }
   };
   const selectComparisonFrame = (frameId: string) => {
     if (frameId !== activeFrame?.id) {
@@ -430,10 +436,12 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
           : '清晰原图已显示，可以在当前时刻截图。';
   const videoPlaybackStatus = videoImageFailed
     ? '当前原图载入失败，播放已暂停。可在画面内重试载入。'
-    : !videoImageReady
+    : !playing && timeMs >= video.durationMs && videoImageReady
+      ? '视频播放结束，最后显示的画面仍保留。点“重新播放”可从头开始。'
+      : !videoImageReady
       ? playing
         ? '当前原图正在载入，视频会停在这里；载入后自动继续。按“暂停”可取消自动继续。'
-        : '当前原图正在载入，视频会停在这里；载入后可以播放。'
+        : '当前原图正在载入，视频会停在这里；可先点播放等待载入，也可以等载入完成后再播放。'
       : '当前原图已完整显示，可以播放或定位。';
 
   return (
@@ -530,12 +538,12 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
           ? <p className="t07-finale__locked">先在“宣传资料”里打开创始人受访视频。</p>
           : <div ref={videoPlayerRef} className="t07-finale__player" tabIndex={-1} onKeyDown={onPlayerKeyDown}>
             <FrameVisual key={`${currentVideoImageId}:${videoRetryToken}:visit${videoVisitGeneration}`} assetId={currentVideoImageId} resourceIdentity={`video:${currentVideoImageId}:visit${videoVisitGeneration}`} retryToken={videoRetryToken} onRetry={() => setVideoRetryToken((token) => token + 1)} onImageStatusChange={onVideoImageStatus} altText={capturableFrame?.altText ?? segment?.label ?? videoMaterial.altText} note={capturableFrame?.placeholderNote ?? segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen">
-              <p className="t07-finale__screen-label">{segment?.label ?? '视频封面'}</p>
+              <p className="t07-finale__screen-label">{timeMs >= video.durationMs ? '播放结束' : segment?.label ?? '视频封面'}</p>
             </FrameVisual>
             <p id="t07-video-playback-status" className="t07-finale__media-status" role="status">{videoPlaybackStatus}</p>
             <p className="t07-finale__subtitle">{segment?.line ?? ''}</p>
             <div className="t07-finale__controls" role="group" aria-label="视频播放、截图与进度">
-              <button type="button" className="t07-finale__play" disabled={!playing && !videoImageReady} aria-describedby="t07-video-playback-status" onClick={() => setPlaying((value) => !value)}>{playing ? '暂停' : '播放'}</button>
+              <button type="button" className="t07-finale__play" disabled={!playing && videoImageFailed} aria-describedby="t07-video-playback-status" onClick={togglePlayback}>{playing ? '暂停' : timeMs >= video.durationMs ? '重新播放' : '播放'}</button>
               <button
                 type="button"
                 className="t07-finale__capture"

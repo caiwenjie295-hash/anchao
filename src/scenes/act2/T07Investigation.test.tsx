@@ -195,10 +195,18 @@ describe('T07 promotion investigation', () => {
     await click('.t07-finale__video-open');
     await loadPendingImages();
     await seek(6600);
-    await loadPendingImages();
     const previousImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
     expect(previousImage.getAttribute('src')).toBe(assetLoader.get('IMG_A2_T07_TRAIL_WALK_001')?.src);
 
+    expect(button('.t07-finale__play').disabled).toBe(false);
+    await click('.t07-finale__play');
+    expect(button('.t07-finale__play').textContent).toBe('暂停');
+    expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('载入后自动继续');
+    await play(1000);
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6600');
+    await click('.t07-finale__play');
+    expect(button('.t07-finale__play').textContent).toBe('播放');
+    await loadPendingImages();
     await click('.t07-finale__play');
     await play(act2T07.video.frameMs);
     expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6800');
@@ -209,7 +217,7 @@ describe('T07 promotion investigation', () => {
     expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6800');
     await click('.t07-finale__play');
     expect(button('.t07-finale__play').textContent).toBe('播放');
-    expect(button('.t07-finale__play').disabled).toBe(true);
+    expect(button('.t07-finale__play').disabled).toBe(false);
 
     await act(async () => { previousImage.dispatchEvent(new Event('load')); });
     expect(button('.t07-finale__capture').disabled).toBe(true);
@@ -219,6 +227,12 @@ describe('T07 promotion investigation', () => {
     expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('载入失败');
     expect(container.querySelector('.t07-frame__placeholder')?.textContent).toContain('不能完成这项观察或核对');
     expect(button('.t07-finale__capture').disabled).toBe(true);
+    expect(button('.t07-finale__play').disabled).toBe(true);
+    await act(async () => {
+      container.querySelector<HTMLDivElement>('.t07-finale__player')?.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    });
+    expect(button('.t07-finale__play').disabled).toBe(true);
+    expect(button('.t07-finale__play').textContent).toBe('播放');
 
     await click('.t07-frame__retry');
     const retryImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
@@ -348,6 +362,45 @@ describe('T07 promotion investigation', () => {
     expect(progress.getAttribute('aria-valuetext')).toBe('00:06.9 / 00:16.0');
     expect(container.querySelector('.t07-finale__clock')?.textContent).toBe('00:06.9 / 00:16.0');
     expect(container.querySelector('.t07-finale__capture-followup')?.textContent).toContain('00:06.9');
+  });
+
+  it('keeps the last displayed frame at the end and restarts from zero only on request', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await loadPendingImages();
+    await seek(act2T07.video.durationMs - act2T07.video.frameMs);
+    const lastDisplayedImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
+    expect(lastDisplayedImage.getAttribute('src')).toBe(assetLoader.get('IMG_A2_T07_003')?.src);
+
+    await click('.t07-finale__play');
+    await play(act2T07.video.frameMs);
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(String(act2T07.video.durationMs));
+    expect(button('.t07-finale__play').textContent).toBe('重新播放');
+    expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('视频播放结束');
+    expect(container.querySelector('.t07-finale__screen-label')?.textContent).toBe('播放结束');
+    expect(container.querySelector<HTMLImageElement>('.t07-finale__screen img')).toBe(lastDisplayedImage);
+    expect(lastDisplayedImage.getAttribute('aria-hidden')).toBe('false');
+    expect(button('.t07-finale__capture').disabled).toBe(true);
+    expect(container.querySelector('#t07-capture-status')?.textContent).toContain('当前画面不在可截取范围内');
+
+    await click('.t07-finale__play');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('0');
+    expect(button('.t07-finale__play').textContent).toBe('暂停');
+    expect(container.querySelector('.t07-finale__screen-label')?.textContent).toBe('受访开场');
+    await play(act2T07.video.frameMs);
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(String(act2T07.video.frameMs));
+
+    await click('.t07-finale__play');
+    await seek(act2T07.video.durationMs);
+    expect(button('.t07-finale__play').textContent).toBe('重新播放');
+    await act(async () => {
+      container.querySelector<HTMLDivElement>('.t07-finale__player')?.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    });
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('0');
+    expect(button('.t07-finale__play').textContent).toBe('暂停');
+    await click('.t07-finale__play');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('0');
   });
 
   it('records the frame-to-exterior comparison with one semantic confirmation', async () => {
@@ -486,8 +539,12 @@ describe('T07 promotion investigation', () => {
     await click('.t07-finale__frame-assessment button');
     expect(button('.t07-finale__tab.is-active').textContent).toBe('受访视频');
     expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(timeBeforeReturn);
-    expect(button('.t07-finale__play').disabled).toBe(true);
+    expect(button('.t07-finale__play').disabled).toBe(false);
     expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('正在载入');
+    await click('.t07-finale__play');
+    expect(button('.t07-finale__play').textContent).toBe('暂停');
+    await click('.t07-finale__play');
+    expect(button('.t07-finale__play').textContent).toBe('播放');
     await loadPendingImages();
     expect(button('.t07-finale__play').disabled).toBe(false);
     expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(capturedBeforeReturn);
