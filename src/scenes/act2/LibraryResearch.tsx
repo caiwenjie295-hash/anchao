@@ -306,9 +306,9 @@ export function LibraryResearch({ manager = stateManager, onReturnToDesktop, she
               </article>
 
               {currentPage.id === libraryTargetPageId && <aside className="act2-library__excerpt" aria-label="地方志摘录" data-excerpt-state={excerpted ? 'saved' : undefined}>
-                <div><h3>{libraryExcerpt.title}</h3><p>读完这一页后，可以把这段现有摘录收入调查笔记。</p></div>
+                <div><h3>{libraryExcerpt.title}</h3><p>本页来源已随阅读自动记入调查笔记；摘录是可选的，不影响继续对照。</p></div>
                 <blockquote>{libraryExcerpt.content}</blockquote>
-                {excerpted ? <p className="act2-library__excerpt-confirm" role="status">摘录已收入调查笔记。</p> : null}
+                <p className="act2-library__excerpt-confirm" role="status">{excerpted ? '本页来源与摘录都已记入调查笔记。' : '本页来源已自动登记；这段摘录尚未收入笔记。'}</p>
                 <button type="button" className="act2-library__excerpt-button" aria-pressed={excerpted} disabled={excerpted} onClick={() => manager.excerptGazetteEntry(libraryExcerpt.entryId)}>{excerpted ? '已收入调查笔记' : '摘录到调查笔记'}</button>
               </aside>}
 

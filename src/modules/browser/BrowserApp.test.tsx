@@ -110,6 +110,32 @@ describe('BrowserApp T06 visibility gates', () => {
     expect(manager.getState().modules.browser.visitedPageIds).not.toContain('PAGE_A2_T06_008');
     expect(manager.getState().modules.browser.visitedPageIds).not.toContain('PAGE_A2_T06_006');
   });
+  it('accepts the follow-up-first reading order and records the comparison only after both sources are read', async () => {
+    manager.enterAct2QimingResearch();
+    await render();
+    await act(async () => { (host.querySelector('.browser-qiming-toolbar button') as HTMLButtonElement).click(); });
+    await search('启明 钟子月');
+    const followup = [...host.querySelectorAll<HTMLButtonElement>('.browser-result')].find((button) => button.textContent?.includes('钟子月后续：离家后一直没有确切消息'));
+    expect(followup).toBeDefined();
+    await act(async () => { followup?.click(); });
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('正在调查：钟子月');
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('共用宣传案例待打开');
+    expect(manager.getState().modules.act2Research.t06.reviewedCases).toEqual([]);
+
+    await act(async () => {
+      [...host.querySelectorAll<HTMLButtonElement>('.browser-page__case-path button')].find((button) => button.textContent === '打开共用宣传案例')?.click();
+    });
+    expect(manager.getState().modules.browser.visitedPageIds).toEqual(expect.arrayContaining(['PAGE_A2_T06_004', 'PAGE_A2_T06_009']));
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('共用宣传案例已打开');
+    expect(host.querySelector('.browser-page__case-path')?.textContent).toContain('钟子月后续报道已打开');
+    await act(async () => { (host.querySelector('.browser-page__case-context-return') as HTMLButtonElement).click(); });
+    const validFinding = [...host.querySelectorAll<HTMLLabelElement>('.browser-case-review__choices label')].find((label) => label.textContent?.includes('后续报道转述家属说她后来离家'));
+    expect(validFinding).toBeDefined();
+    await act(async () => { validFinding?.click(); });
+    await act(async () => { (host.querySelector('[data-case-action="record"]') as HTMLButtonElement).click(); });
+    expect(manager.getState().modules.act2Research.t06.reviewedCases.map(({ caseId }) => caseId)).toEqual(['zhong']);
+    expect(host.querySelector('.browser-case-review__feedback--success')?.textContent).toContain('已记录这组实名材料与后续报道的差异');
+  });
   it('keeps legacy T06 completion accurate after one additional case review', async () => {
     manager.getState().modules.act2Research.t06.legacyCompletionMigrated = true;
     manager.enterAct2QimingResearch();
