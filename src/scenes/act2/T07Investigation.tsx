@@ -11,6 +11,7 @@ import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
 import { act2T07, act2T06RecapPages, comparisonReferenceForFrame, formatClock, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import { T07FinaleCurtain } from '../../components/scenePolish/T07FinaleCurtain';
+import { createT07MediaResource, isT07MediaLoaded, shouldPauseT07Playback, updateT07MediaState, type T07MediaState, type T07MediaStatus } from './t07MediaState';
 import '../../act2/t07Finale.css';
 
 export const ACT2_T07_ENTRY_LABEL = act2T07.entryLabel;
@@ -27,23 +28,38 @@ const tabLabels: { id: TabId; label: string }[] = [
 const { video, comparison, inference, trip, finale } = act2T07;
 
 /** 无正式图片时显示可操作的替代画面与文字说明，绝不渲染破图。 */
-function FrameVisual({ assetId, altText, note, className = '', children, onImageAvailabilityChange }: { assetId: string; altText: string; note: string; className?: string; children?: ReactNode; onImageAvailabilityChange?: (available: boolean) => void }) {
+function FrameVisual({ assetId, resourceIdentity = assetId, altText, note, className = '', children, retryToken = 0, onRetry, onImageAvailabilityChange, onImageStatusChange }: {
+  assetId: string;
+  resourceIdentity?: string;
+  altText: string;
+  note: string;
+  className?: string;
+  children?: ReactNode;
+  retryToken?: number;
+  onRetry?: () => void;
+  onImageAvailabilityChange?: (available: boolean) => void;
+  onImageStatusChange?: (resourceKey: string, status: T07MediaStatus) => void;
+}) {
   const source = assetLoader.get(assetId)?.src ?? '';
-  const resourceKey = `${assetId}\u0000${source}`;
+  const [localRetryToken, setLocalRetryToken] = useState(0);
+  const mediaResource = createT07MediaResource(resourceIdentity, source, onRetry ? retryToken : localRetryToken);
+  const resourceKey = mediaResource.resourceKey;
   const latestResourceKey = useRef(resourceKey);
   latestResourceKey.current = resourceKey;
   const [imageState, setImageState] = useState<{ key: string; status: 'loading' | 'loaded' | 'failed'; width: number; height: number }>({ key: '', status: 'loading', width: 0, height: 0 });
   const imageAvailable = Boolean(source && imageState.key === resourceKey && imageState.status === 'loaded');
   const imageFailed = Boolean(!source || (imageState.key === resourceKey && imageState.status === 'failed'));
-  useEffect(() => { setImageState({ key: resourceKey, status: 'loading', width: 0, height: 0 }); }, [resourceKey]);
+  const imageStatus: T07MediaStatus = imageAvailable ? 'loaded' : imageFailed ? 'failed' : 'loading';
+  useEffect(() => { setImageState({ key: resourceKey, status: source ? 'loading' : 'failed', width: 0, height: 0 }); }, [resourceKey, source]);
   useEffect(() => { onImageAvailabilityChange?.(imageAvailable); }, [imageAvailable, onImageAvailabilityChange]);
+  useEffect(() => { onImageStatusChange?.(resourceKey, imageStatus); }, [resourceKey, imageStatus, onImageStatusChange]);
   return (
-    <div className={`t07-frame${imageAvailable ? ' t07-frame--image' : ''}${className ? ` ${className}` : ''}`} data-asset-id={assetId} style={imageAvailable ? { aspectRatio: `${imageState.width} / ${imageState.height}` } : undefined}>
-      {source && <div className="t07-frame__image-plane"><img key={resourceKey} src={source} alt={imageAvailable ? altText : ''} aria-hidden={!imageAvailable} data-resource-key={resourceKey} onLoad={(event) => {
+    <div className={`t07-frame${imageAvailable ? ' t07-frame--image' : ''}${className ? ` ${className}` : ''}`} data-asset-id={assetId} data-image-status={imageStatus} style={imageAvailable ? { aspectRatio: `${imageState.width} / ${imageState.height}` } : undefined}>
+      {source && <div className="t07-frame__image-plane"><img key={resourceKey} src={mediaResource.requestSource} alt={imageAvailable ? altText : ''} aria-hidden={!imageAvailable} data-resource-key={resourceKey} onLoad={(event) => {
         if (latestResourceKey.current !== resourceKey || event.currentTarget.dataset.resourceKey !== resourceKey || event.currentTarget.naturalWidth <= 0 || event.currentTarget.naturalHeight <= 0) return;
         setImageState({ key: resourceKey, status: 'loaded', width: event.currentTarget.naturalWidth, height: event.currentTarget.naturalHeight });
       }} onError={(event) => { if (latestResourceKey.current === resourceKey && event.currentTarget.dataset.resourceKey === resourceKey) setImageState({ key: resourceKey, status: 'failed', width: 0, height: 0 }); }} />{imageAvailable && children}</div>}
-      {!imageAvailable && <div className="t07-frame__placeholder" role="img" aria-label={altText}><span aria-hidden="true">{imageFailed ? '!' : '…'}</span><p>{imageFailed ? '图片载入失败；可依据文字资料继续调查。' : note}</p></div>}
+      {!imageAvailable && <div className="t07-frame__placeholder" role="status" aria-label={`${altText}。${imageFailed ? '图片载入失败。' : '正在载入图片。'}`}><span aria-hidden="true">{imageFailed ? '!' : '…'}</span><p>{imageFailed ? (source ? '图片载入失败；它恢复显示前不能完成这项观察或核对。' : '未提供原图资源，当前无法完成图像观察。') : note}</p>{imageFailed && source && <button type="button" className="t07-frame__retry" aria-label={`重试载入${altText}`} onClick={() => onRetry ? onRetry() : setLocalRetryToken((token) => token + 1)}>重试载入</button>}</div>}
     </div>
   );
 }
@@ -60,14 +76,19 @@ export interface T07InvestigationProps { manager?: StateManager; onReturnToDeskt
 export function T07Investigation({ manager = defaultManager, onReturnToDesktop, onEnterAct3 }: T07InvestigationProps) {
   const state = useAppSelector(manager, selectAct2T07Snapshot, equalAct2T07Snapshot);
   const [tab, setTab] = useState<TabId>('materials');
+  const [videoVisitGeneration, setVideoVisitGeneration] = useState(0);
+  const [compareVisitGeneration, setCompareVisitGeneration] = useState(0);
   const [timeMs, setTimeMs] = useState(0);
   const [playing, setPlaying] = useState(false);
   const timeRef = useRef(0);
-  const [loadedVideoAssetId, setLoadedVideoAssetId] = useState('');
+  const [videoRetryToken, setVideoRetryToken] = useState(0);
+  const [videoMediaState, setVideoMediaState] = useState<T07MediaState | null>(null);
+  const [comparisonFrameRetryToken, setComparisonFrameRetryToken] = useState(0);
+  const [comparisonExteriorRetryToken, setComparisonExteriorRetryToken] = useState(0);
+  const [comparisonFrameMediaState, setComparisonFrameMediaState] = useState<T07MediaState | null>(null);
+  const [comparisonExteriorMediaState, setComparisonExteriorMediaState] = useState<T07MediaState | null>(null);
   const [photoZoomed, setPhotoZoomed] = useState(false);
   const [photoImageAvailable, setPhotoImageAvailable] = useState(false);
-  const [comparisonFrameReady, setComparisonFrameReady] = useState(false);
-  const [comparisonExteriorReady, setComparisonExteriorReady] = useState(false);
   const [zoomedShotId, setzoomedShotId] = useState<string | null>(null);
   const [selectedFrameId, setSelectedFrameId] = useState<string | null>(null);
   const [recentlyCapturedFrameId, setRecentlyCapturedFrameId] = useState<string | null>(() => manager.getState().modules.act2Research.t07.capturedFrameIds.at(-1) ?? null);
@@ -97,6 +118,15 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const tripArticleRef = useRef<HTMLElement>(null);
   const [tripConversationPresented, setTripConversationPresented] = useState(false);
 
+  const changeTab = (nextTab: TabId) => {
+    if (nextTab !== tab) {
+      if (tab === 'video') setPlaying(false);
+      if (nextTab === 'video') setVideoVisitGeneration((generation) => generation + 1);
+      if (nextTab === 'compare') setCompareVisitGeneration((generation) => generation + 1);
+    }
+    setTab(nextTab);
+  };
+
   const videoFound = flags.FLAG_A2_PROMO_VIDEO_FOUND === true;
   const photoConfirmed = flags.FLAG_A2_PROMO_PHOTO_SS_FOUND === true;
   const templeConfirmed = flags.FLAG_A2_TEMPLE_FRAME_FOUND === true;
@@ -116,14 +146,36 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const capturableFrame = keyFrameAt(timeMs);
   const visualFrame = visualFrameAt(timeMs);
   const currentVideoImageId = visualFrame?.imageId ?? videoMaterial.imageId;
-  const canCaptureCurrentFrame = Boolean(capturableFrame && loadedVideoAssetId === capturableFrame.imageId);
+  const currentVideoResource = createT07MediaResource(`video:${currentVideoImageId}:visit${videoVisitGeneration}`, assetLoader.get(currentVideoImageId)?.src, videoRetryToken);
+  const videoImageReady = isT07MediaLoaded(videoMediaState, currentVideoResource.resourceKey);
+  const videoImageFailed = Boolean(videoMediaState?.resourceKey === currentVideoResource.resourceKey && videoMediaState.status === 'failed');
+  const canCaptureCurrentFrame = Boolean(capturableFrame && videoImageReady);
   const watchedCount = video.requiredSegmentIds.filter((id) => t07.playedSegmentIds.includes(id)).length;
   const recapPages = useMemo(() => act2T06RecapPages.filter((page) => state.modules.browser.visitedPageIds.includes(page.id)), [state.modules.browser.visitedPageIds]);
   const photoSource = assetLoader.get(photoMaterial.imageId)?.src;
   const exteriorSource = assetLoader.get(activeReference.imageId)?.src;
+  const comparisonFrameResource = createT07MediaResource(activeFrame ? `compare:${activeFrame.id}:${activeFrame.imageId}:visit${compareVisitGeneration}` : '', activeFrame ? assetLoader.get(activeFrame.imageId)?.src : undefined, comparisonFrameRetryToken);
+  const comparisonExteriorResource = createT07MediaResource(activeFrame ? `compare:${activeFrame.id}:${activeReference.imageId}:visit${compareVisitGeneration}` : '', exteriorSource, comparisonExteriorRetryToken);
+  const comparisonFrameReady = isT07MediaLoaded(comparisonFrameMediaState, comparisonFrameResource.resourceKey);
+  const comparisonExteriorReady = isT07MediaLoaded(comparisonExteriorMediaState, comparisonExteriorResource.resourceKey);
   const onPhotoAvailability = useCallback((available: boolean) => setPhotoImageAvailable(available), []);
-  const onComparisonFrameAvailability = useCallback((available: boolean) => setComparisonFrameReady(available), [activeFrame?.id]);
-  const onComparisonExteriorAvailability = useCallback((available: boolean) => setComparisonExteriorReady(available), [activeFrame?.id]);
+  const currentVideoResourceKeyRef = useRef(currentVideoResource.resourceKey);
+  const comparisonFrameResourceKeyRef = useRef(comparisonFrameResource.resourceKey);
+  const comparisonExteriorResourceKeyRef = useRef(comparisonExteriorResource.resourceKey);
+  currentVideoResourceKeyRef.current = currentVideoResource.resourceKey;
+  comparisonFrameResourceKeyRef.current = comparisonFrameResource.resourceKey;
+  comparisonExteriorResourceKeyRef.current = comparisonExteriorResource.resourceKey;
+  const onVideoImageStatus = useCallback((resourceKey: string, status: T07MediaStatus) => {
+    setVideoMediaState((previous) => updateT07MediaState(previous, currentVideoResourceKeyRef.current, resourceKey, status));
+  }, []);
+  const onComparisonFrameAvailability = useCallback((available: boolean) => {
+    const eventResourceKey = comparisonFrameResource.resourceKey;
+    setComparisonFrameMediaState((previous) => updateT07MediaState(previous, comparisonFrameResourceKeyRef.current, eventResourceKey, available ? 'loaded' : 'loading'));
+  }, [comparisonFrameResource.resourceKey]);
+  const onComparisonExteriorAvailability = useCallback((available: boolean) => {
+    const eventResourceKey = comparisonExteriorResource.resourceKey;
+    setComparisonExteriorMediaState((previous) => updateT07MediaState(previous, comparisonExteriorResourceKeyRef.current, eventResourceKey, available ? 'loaded' : 'loading'));
+  }, [comparisonExteriorResource.resourceKey]);
   const videoObservationLabel = activeFrame?.frameKind === 'trail' ? '视频里的树林环境' : activeFrame?.frameKind === 'interview' ? '受访者与机构门口' : '视频里的庙轮廓';
   const exteriorObservationLabel = activeFrame?.frameKind === 'trail' ? '树林环境相似处' : '旧庙石砌开口附近';
   const videoObservationMarkers: PhotoMarker[] = activeFrame ? [{
@@ -150,16 +202,34 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   // 播放推进只由计时器驱动；暂停时拖动进度条不计入覆盖。
   useEffect(() => {
     if (!playing) return;
+    if (shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) {
+      setPlaying(false);
+      return;
+    }
     const timer = window.setInterval(() => {
+      if (shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) {
+        setPlaying(false);
+        return;
+      }
       const next = Math.min(timeRef.current + video.frameMs, video.durationMs);
+      const nextImageId = visualFrameAt(next)?.imageId ?? videoMaterial.imageId;
+      const nextResource = createT07MediaResource(`video:${nextImageId}:visit${videoVisitGeneration}`, assetLoader.get(nextImageId)?.src, videoRetryToken);
       timeRef.current = next;
       setTimeMs(next);
       if (next >= video.durationMs) setPlaying(false);
+      if (nextResource.resourceKey !== currentVideoResource.resourceKey) {
+        setPlaying(false);
+        return;
+      }
       const current = segmentAt(next);
       if (current) manager.markAct2T07SegmentPlayed(current.id);
     }, video.frameMs);
     return () => window.clearInterval(timer);
-  }, [playing, manager]);
+  }, [playing, manager, videoMediaState, currentVideoResource.resourceKey, video.frameMs, video.durationMs, videoMaterial.imageId, videoRetryToken, videoVisitGeneration]);
+
+  useEffect(() => {
+    if (playing && shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) setPlaying(false);
+  }, [playing, videoMediaState, currentVideoResource.resourceKey]);
 
   useEffect(() => { if (zoomedShotId && !capturedFrames.some((frame) => frame.id === zoomedShotId)) setzoomedShotId(null); }, [capturedFrames, zoomedShotId]);
 
@@ -180,7 +250,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   useEffect(() => () => { investigationAudio.stop(); }, []);
 
   const focusAfterTab = (nextTab: TabId, getTarget: () => HTMLElement | null) => {
-    setTab(nextTab);
+    changeTab(nextTab);
     window.setTimeout(() => {
       const target = getTarget();
       target?.scrollIntoView({ block: 'center', behavior: reducedMotion ? 'auto' : 'smooth' });
@@ -285,8 +355,6 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const selectComparisonFrame = (frameId: string) => {
     if (frameId !== activeFrame?.id) {
       setSelectedFrameId(frameId);
-      setComparisonFrameReady(false);
-      setComparisonExteriorReady(false);
     }
     setSelectedFeatureId('');
     setCompareFeedback('');
@@ -305,7 +373,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     focusAfterTab('video', () => videoPlayerRef.current);
   };
   const capture = () => {
-    if (!capturableFrame) return;
+    if (!capturableFrame || !canCaptureCurrentFrame || t07.capturedFrameIds.includes(capturableFrame.id)) return;
     manager.captureAct2T07Frame(capturableFrame.id, timeMs);
     setRecentlyCapturedFrameId(capturableFrame.id);
     selectComparisonFrame(capturableFrame.id);
@@ -313,7 +381,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const openFrameInComparison = (frameId: string) => {
     if (!capturedFrames.some((frame) => frame.id === frameId)) return;
     selectComparisonFrame(frameId);
-    setTab('compare');
+    changeTab('compare');
     window.setTimeout(() => comparisonPanelRef.current?.focus({ preventScroll: true }), 0);
   };
   const openRecentCaptureInComparison = () => { if (recentlyCapturedFrameId) openFrameInComparison(recentlyCapturedFrameId); };
@@ -329,10 +397,30 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     investigationAudio.stop();
     setAmbienceEnabled(false);
     setFinaleOpen(false);
-    setTab('materials');
+    changeTab('materials');
+  };
+
+  const returnToVideoToFindBuilding = () => {
+    setPlaying(false);
+    changeTab('video');
+    window.setTimeout(() => videoPlayerRef.current?.focus({ preventScroll: true }), 0);
   };
 
   const mismatchStatus = Boolean(compareFeedback && compareFeedback !== comparison.structureNote && activeFrame?.frameKind !== 'trail');
+  const captureStatus = !capturableFrame
+    ? '当前画面不在可截取范围内。'
+    : t07.capturedFrameIds.includes(capturableFrame.id)
+      ? '这张画面已保存；已有截图不会被后续播放改写。'
+      : videoImageFailed
+        ? '清晰原图载入失败，截图暂不可用。重试载入原图，或回看其他资料。'
+        : !canCaptureCurrentFrame
+          ? '正在载入当前清晰原图；载入完成前不能截图。'
+          : '清晰原图已显示，可以在当前时刻截图。';
+  const videoPlaybackStatus = videoImageFailed
+    ? '当前原图载入失败，播放已暂停。可在画面内重试载入。'
+    : !videoImageReady
+      ? '当前原图正在载入，视频会停在这里；原图显示后可以继续播放。'
+      : '当前原图已完整显示，可以播放或定位。';
 
   return (
     <InvestigationShell
@@ -346,7 +434,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
       actions={actions}
       statusMessage={compareFeedback}
       onExit={leaveInvestigation}
-      onOpenMaterial={(_actionId, materialId) => setTab(materialId === 'photo' ? 'materials' : materialId === 'video' ? 'video' : 'compare')}
+      onOpenMaterial={(_actionId, materialId) => changeTab(materialId === 'photo' ? 'materials' : materialId === 'video' ? 'video' : 'compare')}
     >
     <section className="t07-finale" aria-label="第二幕宣传资料调查" data-asset-id={photoMaterial.imageId}>
       <p className="t07-finale__step-indicator" aria-live="polite">{complete ? `第二幕已收束 · ${currentStepName}` : `当前步骤 · ${Math.min(currentStep, 5)} / 5 · ${currentStepName}`}</p>
@@ -363,7 +451,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             type="button"
             className={`t07-finale__tab${tab === item.id ? ' is-active' : ''}`}
             aria-current={tab === item.id ? 'step' : undefined}
-            onClick={() => setTab(item.id)}
+            onClick={() => changeTab(item.id)}
           >
             {item.label}
           </button>
@@ -414,7 +502,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
           <p className="t07-finale__note">{videoMaterial.caption}</p>
           {videoFound
             ? <p className="t07-finale__done">视频已经在播放器里打开了。</p>
-            : <button type="button" className="t07-finale__video-open" onClick={() => { manager.viewAct2T07Material(video.materialId); setTab('video'); }}>{videoMaterial.openLabel}</button>}
+            : <button type="button" className="t07-finale__video-open" onClick={() => { manager.viewAct2T07Material(video.materialId); changeTab('video'); }}>{videoMaterial.openLabel}</button>}
         </article>
 
         {recapPages.length > 0 && <aside className="t07-finale__recap" aria-label="已查到的公开资料">
@@ -427,32 +515,18 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
         {!videoFound
           ? <p className="t07-finale__locked">先在“宣传资料”里打开创始人受访视频。</p>
           : <div ref={videoPlayerRef} className="t07-finale__player" tabIndex={-1} onKeyDown={onPlayerKeyDown}>
-            <FrameVisual key={currentVideoImageId} assetId={currentVideoImageId} altText={capturableFrame?.altText ?? segment?.label ?? videoMaterial.altText} note={capturableFrame?.placeholderNote ?? segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen" onImageAvailabilityChange={(available) => setLoadedVideoAssetId(available ? currentVideoImageId : '')}>
+            <FrameVisual key={`${currentVideoImageId}:${videoRetryToken}:visit${videoVisitGeneration}`} assetId={currentVideoImageId} resourceIdentity={`video:${currentVideoImageId}:visit${videoVisitGeneration}`} retryToken={videoRetryToken} onRetry={() => setVideoRetryToken((token) => token + 1)} onImageStatusChange={onVideoImageStatus} altText={capturableFrame?.altText ?? segment?.label ?? videoMaterial.altText} note={capturableFrame?.placeholderNote ?? segment?.placeholderNote ?? videoMaterial.placeholderNote} className="t07-finale__screen">
               <p className="t07-finale__screen-label">{segment?.label ?? '视频封面'}</p>
             </FrameVisual>
-            <div className="t07-finale__timeline" role="group" aria-label="中性分段时间轴">
-              <p>按分段定位（定位不会计作已播放）</p>
-              <div className="t07-finale__timeline-track">
-                {video.segments.map((item, index) => <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={segment?.id === item.id}
-                  aria-label={`第 ${index + 1} 段，${formatMediaStamp(item.startMs)} 到 ${formatMediaStamp(item.endMs)}`}
-                  onClick={() => { setPlaying(false); seek(item.startMs); }}
-                ><span>第 {index + 1} 段</span><small>{formatMediaStamp(item.startMs)}–{formatMediaStamp(item.endMs)}</small></button>)}
-              </div>
-            </div>
+            <p id="t07-video-playback-status" className="t07-finale__media-status" role="status">{videoPlaybackStatus}</p>
             <p className="t07-finale__subtitle">{segment?.line ?? ''}</p>
-            <div className="t07-finale__controls">
-              <button type="button" className="t07-finale__play" onClick={() => setPlaying((value) => !value)}>{playing ? '暂停' : '播放'}</button>
-              <button type="button" className="t07-finale__back" onClick={() => step(-video.stepMs)}>后退 5 秒</button>
-              <button type="button" className="t07-finale__forward" onClick={() => step(video.stepMs)}>前进 5 秒</button>
-              <button type="button" className="t07-finale__prev-frame" onClick={() => step(-video.frameMs)}>上一帧</button>
-              <button type="button" className="t07-finale__next-frame" onClick={() => step(video.frameMs)}>下一帧</button>
+            <div className="t07-finale__controls" role="group" aria-label="视频播放、截图与进度">
+              <button type="button" className="t07-finale__play" disabled={!playing && !videoImageReady} aria-describedby="t07-video-playback-status" onClick={() => setPlaying((value) => !value)}>{playing ? '暂停' : '播放'}</button>
               <button
                 type="button"
                 className="t07-finale__capture"
                 disabled={!capturableFrame || !canCaptureCurrentFrame || t07.capturedFrameIds.includes(capturableFrame.id)}
+                aria-describedby="t07-capture-status t07-video-playback-status"
                 onClick={capture}
               >
                 {capturableFrame ? (t07.capturedFrameIds.includes(capturableFrame.id) ? '这一帧已经截下' : video.captureLabel) : video.captureOutsideLabel}
@@ -473,13 +547,34 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                 <span className="t07-finale__clock">{formatClock(timeMs)} / {formatClock(video.durationMs)}</span>
               </label>
             </div>
+            <p id="t07-capture-status" className="t07-finale__media-status" role="status">{captureStatus}</p>
+            <details className="t07-finale__fine-controls">
+              <summary>按片段定位与画面微调</summary>
+              <div className="t07-finale__timeline" role="group" aria-label="视频片段定位">
+                <p>选择一段查看；定位不会计作已播放。</p>
+                <div className="t07-finale__timeline-track">
+                  {video.segments.map((item, index) => <button
+                    key={item.id}
+                    type="button"
+                    aria-pressed={segment?.id === item.id}
+                    aria-label={`第 ${index + 1} 段，${formatMediaStamp(item.startMs)} 到 ${formatMediaStamp(item.endMs)}`}
+                    onClick={() => { setPlaying(false); seek(item.startMs); }}
+                  ><span>第 {index + 1} 段</span><small>{formatMediaStamp(item.startMs)}–{formatMediaStamp(item.endMs)}</small></button>)}
+                </div>
+              </div>
+              <div className="t07-finale__fine-controls-buttons" role="group" aria-label="精细调整画面">
+                <button type="button" className="t07-finale__back" onClick={() => step(-video.stepMs)}>后退 5 秒</button>
+                <button type="button" className="t07-finale__forward" onClick={() => step(video.stepMs)}>前进 5 秒</button>
+                <button type="button" className="t07-finale__prev-frame" onClick={() => step(-video.frameMs)}>上一帧</button>
+                <button type="button" className="t07-finale__next-frame" onClick={() => step(video.frameMs)}>下一帧</button>
+              </div>
+            </details>
             {recentlyCapturedFrameId && capturedFrames.some((frame) => frame.id === recentlyCapturedFrameId) && <div className="t07-finale__capture-followup" role="status" aria-live="polite">
               <p>截图已收进调查资料，截取时刻 {formatMediaStamp(t07.capturedAtMsByFrameId[recentlyCapturedFrameId] ?? 0)}。接下来可以和第一次徒步的旧庙外景并排核对。</p>
               <button type="button" onClick={openRecentCaptureInComparison}>拿这张截图去并排核对</button>
             </div>}
             <p className="t07-finale__note">{video.continuityNote}</p>
             <p className="t07-finale__note">已看过主要片段：{watchedCount} / {video.requiredSegmentIds.length}{videoWatched ? ` · ${video.watchedNote}` : ''}</p>
-              {capturableFrame && !t07.capturedFrameIds.includes(capturableFrame.id) && <p className="t07-finale__hint" aria-live="polite">{canCaptureCurrentFrame ? video.captureHint : '先等当前原图载入；载入失败时可继续查看其他资料。'}</p>}
           </div>}
 
         {capturedFrames.length > 0 && <section className="t07-finale__filmstrip" aria-label="已截取的视频画面">
@@ -489,9 +584,9 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
               const capturedAt = t07.capturedAtMsByFrameId[frame.id];
               const muted = !frame.supportsExteriorMatch;
               return <article key={frame.id} className={`t07-finale__filmstrip-item${muted ? ' t07-finale__frame--muted' : ''}`} data-frame-kind={frame.frameKind} data-exterior-match={frame.supportsExteriorMatch ? 'true' : 'false'}>
+                <FrameVisual assetId={frame.imageId} altText={frame.altText} note={frame.placeholderNote} className="t07-finale__filmstrip-image" />
                 <button type="button" className="t07-finale__filmstrip-select" aria-pressed={selectedFrameId === frame.id || (!selectedFrameId && activeFrame?.id === frame.id)} onClick={() => selectComparisonFrame(frame.id)}>
-                  <FrameVisual assetId={frame.imageId} altText={frame.altText} note={frame.placeholderNote} className="t07-finale__filmstrip-image" />
-                  <span>{frame.caption}</span>
+                  {frame.caption}
                   <small>{capturedAt === undefined ? `画面 ${frameTimeWindow(frame)}` : `截取 ${formatMediaStamp(capturedAt)}`}</small>
                   {muted && frame.muteLabel ? <span className="t07-finale__frame-tag">{frame.muteLabel}</span> : null}
                 </button>
@@ -529,23 +624,36 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                 </ol>
               </section>
               <p className="t07-finale__source-line">来源一：创始人受访视频，画面时段 {frameTimeWindow(activeFrame)}。来源二：{activeReference.caption}。</p>
+              {activeFrame.frameKind !== 'temple' && <aside className="t07-finale__frame-assessment" aria-label="当前截图能说明什么">
+                <strong>{activeFrame.frameKind === 'trail' ? '树林路段' : '受访画面'}</strong>
+                <p>{activeFrame.frameKind === 'trail'
+                  ? '这张图可以用于比较树林和路线；画面没有建筑轮廓，因此还不能确认与旧庙是同一处地点。'
+                  : '这张图能看到受访者和机构门口，但没有可与旧庙外景核对的石砌开口，因此还不能确认地点。'}</p>
+                <button type="button" onClick={returnToVideoToFindBuilding}>返回视频，继续寻找建筑画面</button>
+              </aside>}
               <div className="t07-finale__compare-grid">
                 <figure className="t07-finale__compare-side">
-                  <PhotoViewport key={activeFrame.id} sceneKey={`A2_T07_COMPARE_${activeFrame.id}`} imageUrl={assetLoader.get(activeFrame.imageId)?.src} imageAlt={activeFrame.altText} hotspots={videoObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonFrameAvailability} />
+                  <div className="t07-finale__compare-image-recovery">
+                    <PhotoViewport key={comparisonFrameResource.resourceKey} sceneKey={`A2_T07_COMPARE_${activeFrame.id}_${comparisonFrameRetryToken}_visit${compareVisitGeneration}`} imageUrl={comparisonFrameResource.requestSource || undefined} imageAlt={activeFrame.altText} hotspots={videoObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonFrameAvailability} />
+                    {!comparisonFrameReady && <><p className="t07-finale__media-status" role="status">视频截图原图仍在载入或未能显示；原图恢复前不能标记观察或核对。</p>{comparisonFrameResource.source && <button type="button" className="t07-finale__image-retry" onClick={() => setComparisonFrameRetryToken((token) => token + 1)}>重试载入视频截图</button>}</>}
+                  </div>
                   <figcaption>{activeFrame.caption}</figcaption>
-                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedVideoFrameIds.includes(activeFrame.id)} disabled={!comparisonFrameReady} onClick={() => setObservedVideoFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记{videoObservationLabel}</button>
+                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedVideoFrameIds.includes(activeFrame.id)} aria-describedby="t07-compare-media-status" disabled={!comparisonFrameReady} onClick={() => setObservedVideoFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记{videoObservationLabel}</button>
                 </figure>
                 <figure className="t07-finale__compare-side">
-                  <PhotoViewport key={activeFrame.id + activeReference.imageId} sceneKey={`A2_T07_COMPARE_REFERENCE_${activeFrame.id}_${activeReference.imageId}`} imageUrl={exteriorSource} imageAlt={activeReference.altText} hotspots={exteriorObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonExteriorAvailability} />
+                  <div className="t07-finale__compare-image-recovery">
+                    <PhotoViewport key={comparisonExteriorResource.resourceKey} sceneKey={`A2_T07_COMPARE_REFERENCE_${activeFrame.id}_${activeReference.imageId}_${comparisonExteriorRetryToken}_visit${compareVisitGeneration}`} imageUrl={comparisonExteriorResource.requestSource || undefined} imageAlt={activeReference.altText} hotspots={exteriorObservationMarkers} routes={[]} onImageAvailabilityChange={onComparisonExteriorAvailability} />
+                    {!comparisonExteriorReady && <><p className="t07-finale__media-status" role="status">外景原图仍在载入或未能显示；原图恢复前不能标记观察或核对。</p>{comparisonExteriorResource.source && <button type="button" className="t07-finale__image-retry" onClick={() => setComparisonExteriorRetryToken((token) => token + 1)}>重试载入外景</button>}</>}
+                  </div>
                   <figcaption>{activeReference.caption}</figcaption>
                   <p className="t07-finale__note">{activeReference.note}</p>
-                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedExteriorFrameIds.includes(activeFrame.id)} disabled={!comparisonExteriorReady} onClick={() => setObservedExteriorFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记{exteriorObservationLabel}</button>
+                  <button type="button" className="t07-finale__observe-text" aria-pressed={observedExteriorFrameIds.includes(activeFrame.id)} aria-describedby="t07-compare-media-status" disabled={!comparisonExteriorReady} onClick={() => setObservedExteriorFrameIds((ids) => ids.includes(activeFrame.id) ? ids : [...ids, activeFrame.id])}>用文字入口标记{exteriorObservationLabel}</button>
                 </figure>
               </div>
               {activeFrame.frameKind === 'trail'
-                ? <button type="button" className="t07-finale__compare" disabled={!comparisonFrameReady || !comparisonExteriorReady} onClick={() => setCompareFeedback(activeReference.note)}>核对树林相似处</button>
+                ? <button type="button" className="t07-finale__compare" aria-describedby="t07-compare-media-status" disabled={!comparisonFrameReady || !comparisonExteriorReady} onClick={() => setCompareFeedback(activeReference.note)}>核对树林相似处</button>
                 : <>
-                  <fieldset className="t07-finale__feature-choice">
+                  <fieldset className="t07-finale__feature-choice" disabled={!comparisonFrameReady || !comparisonExteriorReady} aria-describedby="t07-compare-media-status">
                     <legend>哪项可见特征能与外景互相印证？</legend>
                     {comparison.featureOptions.map((feature) => <label key={feature.id}><input type="radio" name="t07-comparison-feature" value={feature.id} checked={selectedFeatureId === feature.id} onChange={() => setSelectedFeatureId(feature.id)} />{feature.label}</label>)}
                   </fieldset>
@@ -558,12 +666,12 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                         <li>依据：{comparison.featureOptions.find((feature) => feature.id === t07.comparisonFeatureIdByFrameId[activeFrame.id])?.label ?? '石砌开口外观'}。</li>
                       </ul>
                     </div>
-                    : <button type="button" className="t07-finale__compare" disabled={!selectedFeatureId || !comparisonFrameReady || !comparisonExteriorReady} onClick={() => {
+                    : <button type="button" className="t07-finale__compare" aria-describedby="t07-compare-media-status" disabled={!selectedFeatureId || !comparisonFrameReady || !comparisonExteriorReady} onClick={() => {
                       const result = manager.submitAct2T07Comparison(activeFrame.id, selectedFeatureId);
                       setCompareFeedback(result === 'recorded' || result === 'already-recorded' ? comparison.structureNote : resolveT07MismatchNote(activeFrame, selectedFeatureId));
                     }}>{comparison.compareLabel}</button>}
                 </>}
-              {(!comparisonFrameReady || !comparisonExteriorReady) && <p className="t07-finale__hint" role="status">正在载入两份原图；图片可见后再标记观察或继续核对。</p>}
+              <p id="t07-compare-media-status" className="t07-finale__media-status" role="status">{comparisonFrameReady && comparisonExteriorReady ? '两张原图均已显示，可以标记观察或继续核对。' : '必要原图正在载入或载入失败；图片恢复显示前不能标记观察、选取核对特征或提交对照。'}</p>
             </>}
           </>}
       </div>}
