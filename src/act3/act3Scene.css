@@ -23,6 +23,7 @@
 .act3-investigation__progress-counts strong{font-weight:700}
 .act3-investigation__photo-status,.act3-investigation__missing-required ul{display:flex;flex-wrap:wrap;gap:5px 12px;margin:5px 0 0;padding:0;list-style:none}
 .act3-investigation__photo-status li,.act3-investigation__missing-required li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:3px 0;font-size:.76rem}
+.act3-investigation__observation-role{flex:none;color:#53635a;font-size:.68rem}
 .act3-investigation__photo-status li[data-observation-state="observed"] strong{color:#1b6436}
 .act3-investigation__photo-status li[data-observation-state="pending"] strong{color:#765c26}
 .act3-investigation__missing-required{margin-top:5px;padding-top:5px;border-top:1px solid #d4ddd6}
@@ -150,6 +151,7 @@
 .act3-investigation__field-record-panel .act3-investigation__photo-status li,.act3-investigation__field-record-panel .act3-investigation__missing-required li{justify-content:space-between;gap:4px 10px;padding:5px 0;border-bottom:1px solid #46554c;color:#eef2ee;font-size:.8rem;}
 .act3-investigation__field-record-panel .act3-investigation__photo-status li[data-observation-state="observed"] strong{color:#a7e0b4;}
 .act3-investigation__field-record-panel .act3-investigation__photo-status li[data-observation-state="pending"] strong{color:#e5c78c;}
+.act3-investigation__field-record-panel .act3-investigation__observation-role{color:#c6d1c8;font-size:.72rem;}
 .act3-investigation__field-record-panel .act3-investigation__photo-observation-note{margin:10px 0;color:#dce5dd;font-size:.82rem;}
 .act3-investigation__field-record-panel .act3-investigation__missing-required{margin-top:10px;padding-top:8px;border-top:1px solid #57665d;}
 .act3-investigation__field-record-panel .act3-investigation__missing-required h2{margin:0 0 4px;color:#cbd7cd;font-size:.82rem;}
