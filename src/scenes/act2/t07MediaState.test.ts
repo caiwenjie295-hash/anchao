@@ -14,6 +14,23 @@ describe('T07 media request identity', () => {
     expect(new Set([first.resourceKey, retry.resourceKey, secondRetry.resourceKey]).size).toBe(3);
   });
 
+  it('only adds a retry query to HTTP and relative URLs, preserving local source schemes', () => {
+    const http = createT07MediaResource('web', 'https://example.test/frame.webp?width=640#preview', 2);
+    const relative = createT07MediaResource('relative', '../assets/frame.webp', 1);
+    const data = createT07MediaResource('data', 'data:image/webp;base64,abc', 1);
+    const blob = createT07MediaResource('blob', 'blob:https://example.test/asset-id', 1);
+    const file = createT07MediaResource('file', 'file:///tmp/frame.webp', 1);
+
+    expect(http.requestSource).toBe('https://example.test/frame.webp?width=640&t07-retry=2#preview');
+    expect(relative.requestSource).toBe('../assets/frame.webp?t07-retry=1');
+    expect(data.requestSource).toBe(data.source);
+    expect(blob.requestSource).toBe(blob.source);
+    expect(file.requestSource).toBe(file.source);
+    expect(data.resourceKey).not.toBe(createT07MediaResource('data', data.source).resourceKey);
+    expect(blob.resourceKey).not.toBe(createT07MediaResource('blob', blob.source).resourceKey);
+    expect(file.resourceKey).not.toBe(createT07MediaResource('file', file.source).resourceKey);
+  });
+
   it('ignores callbacks from a previous frame and pauses until the current image is loaded', () => {
     const oldFrame = createT07MediaResource('IMG_A2_T07_TRAIL_WALK_001', '/assets/trail.webp');
     const currentFrame = createT07MediaResource('IMG_A2_T07_005', '/assets/temple.webp');
