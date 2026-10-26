@@ -356,13 +356,19 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
     timeRef.current = value;
     setTimeMs(value);
   };
+  const togglePlayback = () => {
+    if (playing) { setPlaying(false); return; }
+    if (videoImageFailed) return;
+    if (timeMs >= video.durationMs) seek(0);
+    setPlaying(true);
+  };
   const step = (delta: number) => seek(timeMs + delta);
   const onPlayerKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
     if (target instanceof HTMLInputElement) return;
     if (event.key === 'ArrowLeft') { event.preventDefault(); step(-video.frameMs); }
     else if (event.key === 'ArrowRight') { event.preventDefault(); step(video.frameMs); }
-    else if (event.key === ' ' && target.tagName !== 'BUTTON') { event.preventDefault(); setPlaying((value) => !value); }
+    else if (event.key === ' ' && target.tagName !== 'BUTTON') { event.preventDefault(); togglePlayback(); }
   };
   const selectComparisonFrame = (frameId: string) => {
     if (frameId !== activeFrame?.id) {
@@ -537,11 +543,7 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
             <p id="t07-video-playback-status" className="t07-finale__media-status" role="status">{videoPlaybackStatus}</p>
             <p className="t07-finale__subtitle">{segment?.line ?? ''}</p>
             <div className="t07-finale__controls" role="group" aria-label="视频播放、截图与进度">
-              <button type="button" className="t07-finale__play" disabled={!playing && videoImageFailed} aria-describedby="t07-video-playback-status" onClick={() => {
-                if (playing) setPlaying(false);
-                else if (timeMs >= video.durationMs) { seek(0); setPlaying(true); }
-                else setPlaying(true);
-              }}>{playing ? '暂停' : timeMs >= video.durationMs ? '重新播放' : '播放'}</button>
+              <button type="button" className="t07-finale__play" disabled={!playing && videoImageFailed} aria-describedby="t07-video-playback-status" onClick={togglePlayback}>{playing ? '暂停' : timeMs >= video.durationMs ? '重新播放' : '播放'}</button>
               <button
                 type="button"
                 className="t07-finale__capture"

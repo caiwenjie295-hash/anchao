@@ -228,6 +228,11 @@ describe('T07 promotion investigation', () => {
     expect(container.querySelector('.t07-frame__placeholder')?.textContent).toContain('不能完成这项观察或核对');
     expect(button('.t07-finale__capture').disabled).toBe(true);
     expect(button('.t07-finale__play').disabled).toBe(true);
+    await act(async () => {
+      container.querySelector<HTMLDivElement>('.t07-finale__player')?.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    });
+    expect(button('.t07-finale__play').disabled).toBe(true);
+    expect(button('.t07-finale__play').textContent).toBe('播放');
 
     await click('.t07-frame__retry');
     const retryImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
@@ -385,6 +390,17 @@ describe('T07 promotion investigation', () => {
     expect(container.querySelector('.t07-finale__screen-label')?.textContent).toBe('受访开场');
     await play(act2T07.video.frameMs);
     expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(String(act2T07.video.frameMs));
+
+    await click('.t07-finale__play');
+    await seek(act2T07.video.durationMs);
+    expect(button('.t07-finale__play').textContent).toBe('重新播放');
+    await act(async () => {
+      container.querySelector<HTMLDivElement>('.t07-finale__player')?.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    });
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('0');
+    expect(button('.t07-finale__play').textContent).toBe('暂停');
+    await click('.t07-finale__play');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('0');
   });
 
   it('records the frame-to-exterior comparison with one semantic confirmation', async () => {
