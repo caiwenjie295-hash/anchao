@@ -37,7 +37,7 @@ export function scenePhotoGuidance(
   const continueReason = missingRequiredFlags.length === 0
     ? ''
     : requiredPhotoMissing && scene.capturePhotoId
-      ? `${reason}先拍照保存，之后才能${scene.continueLabel}。`
+      ? `保存现场照片后才能${scene.continueLabel}。`
       : '还有一项现场记录未完成，完成后才能继续。';
 
   return {

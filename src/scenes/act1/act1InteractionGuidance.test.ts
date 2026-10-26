@@ -20,13 +20,14 @@ describe('Act 1 scene interaction guidance', () => {
     const blocked = scenePhotoGuidance(scene, hotspots, state)!;
     expect(blocked.canCapture).toBe(false);
     expect(blocked.reason).toContain('A.W');
-    expect(blocked.continueReason).toContain('A.W');
+    expect(blocked.continueReason).not.toContain('A.W');
+    expect(blocked.continueReason).toBe('保存现场照片后才能继续前行。');
 
     state.game.flags.FLAG_A1_AW_FOUND = true;
     const ready = scenePhotoGuidance(scene, hotspots, state)!;
     expect(ready.canCapture).toBe(true);
     expect(ready.reason).toContain('可以保存');
-    expect(ready.continueReason).toContain('拍照保存');
+    expect(ready.continueReason).toBe('保存现场照片后才能继续前行。');
 
     state.modules.scene.capturedPhotoIds.push(scene.capturePhotoId!);
     state.game.flags.FLAG_A1_AW_PHOTO_TAKEN = true;
