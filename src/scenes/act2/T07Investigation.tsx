@@ -9,7 +9,7 @@ import { investigationAudio, readInvestigationAudioPreference, writeInvestigatio
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
-import { act2T07, act2T06RecapPages, comparisonReferenceForFrame, formatClock, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
+import { act2T07, act2T06RecapPages, comparisonReferenceForFrame, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import { T07FinaleCurtain } from '../../components/scenePolish/T07FinaleCurtain';
 import { createT07MediaResource, isT07MediaLoaded, shouldPauseT07Playback, updateT07MediaState, type T07MediaState, type T07MediaStatus } from './t07MediaState';
 import '../../act2/t07Finale.css';
@@ -540,13 +540,13 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                   type="range"
                   min={0}
                   max={video.durationMs}
-                  step={video.frameMs}
+                  step={Math.min(100, video.frameMs)}
                   value={timeMs}
                   aria-label="播放进度"
-                  aria-valuetext={`${formatClock(timeMs)} / ${formatClock(video.durationMs)}`}
+                  aria-valuetext={`${formatMediaStamp(timeMs)} / ${formatMediaStamp(video.durationMs)}`}
                   onChange={(event) => seek(Number(event.target.value))}
                 />
-                <span className="t07-finale__clock">{formatClock(timeMs)} / {formatClock(video.durationMs)}</span>
+                <span className="t07-finale__clock">{formatMediaStamp(timeMs)} / {formatMediaStamp(video.durationMs)}</span>
               </label>
             </div>
             <p id="t07-capture-status" className="t07-finale__media-status" role="status">{captureStatus}</p>

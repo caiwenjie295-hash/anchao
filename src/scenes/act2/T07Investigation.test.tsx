@@ -289,6 +289,33 @@ describe('T07 promotion investigation', () => {
     expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(String(act2T07.video.frameMs));
   });
 
+  it('shows and saves the same tenth-second when stepping from 6500ms to 6900ms', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await loadPendingImages();
+    await act(async () => { container.querySelector('.t07-finale__fine-controls summary')?.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+    await click('.t07-finale__timeline-track button:nth-child(3)');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6500');
+
+    await click('.t07-finale__next-frame');
+    await click('.t07-finale__next-frame');
+    await loadPendingImages();
+
+    const progress = container.querySelector<HTMLInputElement>('.t07-finale__seek')!;
+    expect(progress.value).toBe('6900');
+    expect(progress.getAttribute('aria-valuetext')).toBe('00:06.9 / 00:16.0');
+    expect(container.querySelector('.t07-finale__clock')?.textContent).toBe('00:06.9 / 00:16.0');
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-asset-id')).toBe('IMG_A2_T07_005');
+
+    await click('.t07-finale__capture');
+    expect(manager.getState().modules.act2Research.t07.capturedAtMsByFrameId.FRAME_A2_T07_001).toBe(6900);
+    expect(progress.value).toBe('6900');
+    expect(progress.getAttribute('aria-valuetext')).toBe('00:06.9 / 00:16.0');
+    expect(container.querySelector('.t07-finale__clock')?.textContent).toBe('00:06.9 / 00:16.0');
+    expect(container.querySelector('.t07-finale__capture-followup')?.textContent).toContain('00:06.9');
+  });
+
   it('records the frame-to-exterior comparison with one semantic confirmation', async () => {
     await render();
     await loadPendingImages();
