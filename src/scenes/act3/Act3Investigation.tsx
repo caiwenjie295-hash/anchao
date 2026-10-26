@@ -181,7 +181,6 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
 
   const hotspotByClue = new Map(doc.lenses.flatMap((item) => item.hotspots.map((hotspot) => [hotspot.clueId, { hotspot, lensId: item.id }] as const)));
   const currentMissingRequiredHotspot = lens.hotspots.find((hotspot) => missingRequiredIds.includes(hotspot.clueId));
-  const missingOnCurrentPhotoCount = pendingPhotoRequiredCount;
   const nextMissingRequired = missingRequiredIds.map((id) => hotspotByClue.get(id)?.hotspot).find((hotspot) => hotspot !== undefined);
   const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
     .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
@@ -199,11 +198,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   })();
   const missingRequiredHint = missingRequiredIds.length === 0
     ? '本阶段必需观察已齐。'
-    : missingOnCurrentPhotoCount > 0
-      ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
-      : missingXiaoyueMemory
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片没有这项必需观察，可沿现有路线去听小月说完这一段。`
-        : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片没有未完成的本阶段必需项，请沿现有地点路线前往相关照片。`;
+    : missingXiaoyueMemory
+      ? `本阶段还缺${missingRequiredIds.length}处必需观察，请沿现有路线去听小月说完这一段。`
+      : `本阶段还缺${missingRequiredIds.length}处必需观察，请沿现有地点路线继续寻找。`;
   const blockedForwardHint = unobservedPhotoHotspotCount > 0
     ? `${currentPhotoNeedsObservationHint} ${missingRequiredHint}`
     : missingRequiredIds.length === 0
@@ -337,7 +334,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     ...(pendingPhotoOptionalCount > 0 ? [`${pendingPhotoOptionalCount}处可选观察`] : []),
   ].join('、');
   const conciseStatus = unobservedPhotoHotspotCount > 0
-    ? `本图待看${unobservedPhotoHotspotCount}处${pendingPhotoRoleSummary ? `：${pendingPhotoRoleSummary}` : ''} · ${missingRequiredIds.length ? `本阶段还差${missingRequiredIds.length}项` : '本阶段必需观察已齐'}`
+    ? `${pendingPhotoRoleSummary ? `本图${pendingPhotoRoleSummary}待看` : `本图待看${unobservedPhotoHotspotCount}处`} · ${missingRequiredIds.length ? `本阶段还差${missingRequiredIds.length}项` : '本阶段必需观察已齐'}`
     : missingRequiredIds.length > 0
       ? `本图已清 · 本阶段还差${missingRequiredIds.length}项`
       : stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
