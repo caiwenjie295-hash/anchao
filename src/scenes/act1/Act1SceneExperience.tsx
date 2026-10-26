@@ -6,6 +6,8 @@ import type { AppState } from '../../core/types';
 import { act1Scenes, hotspotsBySceneId, sceneById, type SceneHotspot, type SceneRecord } from '../../data/sceneData';
 import { SceneClueFocus } from './SceneClueFocus';
 import { useCurtainExit } from '../../components/scenePolish/useCurtainExit';
+import { optionalEnvironmentHint, scenePhotoGuidance } from './act1InteractionGuidance';
+import './act1InteractionGuidance.css';
 
 const startScene = act1Scenes[0];
 
@@ -58,9 +60,11 @@ function SceneView({ state, scene, onSceneTransition, onReturnToDesktop }: { sta
   const visibleBackground = background && !backgroundFailed;
   const flags = state.game.flags;
   const photoCaptured = scene.capturePhotoId !== null && state.modules.scene.capturedPhotoIds.includes(scene.capturePhotoId);
-  const triggerFlags = [...new Set(hotspots.flatMap((hotspot) => hotspot.triggerFlags))];
-  const canCapture = scene.capturePhotoId !== null && triggerFlags.every((flagId) => flags[flagId] === true) && !photoCaptured;
+  const photoGuidance = scenePhotoGuidance(scene, hotspots, state);
+  const canCapture = photoGuidance?.canCapture ?? false;
+  const optionalHint = optionalEnvironmentHint(hotspots);
   const canLeave = scene.requiredFlagIds.every((flagId) => flags[flagId] === true);
+  const continueReason = canLeave ? '' : photoGuidance?.continueReason || scene.blockedObservation || '还有一项现场记录未完成，完成后才能继续。';
   const next = scene.nextSceneId ? sceneById.get(scene.nextSceneId) : null;
   const { closing, beginExit } = useCurtainExit(() => (onSceneTransition ?? ((action) => action()))(() => {
     if (next) stateManager.enterScene(next.id);
@@ -83,6 +87,7 @@ function SceneView({ state, scene, onSceneTransition, onReturnToDesktop }: { sta
           {progressContext && <button type="button" className="investigation-progress-trigger act1-scene__progress-trigger" aria-label="打开调查进度" onClick={(event) => progressContext.openProgress(event.currentTarget)}>调查进度</button>}
         </div>
       </header>
+      {optionalHint && <p className="act1-interaction-guidance__optional" role="status">{optionalHint}</p>}
       <div className={`act1-scene__canvas act1-scene__canvas--${scene.visualVariant}${visibleBackground ? ' act1-scene__canvas--image' : ''}`} data-asset-id={scene.backgroundAssetId}>
         {visibleBackground ? <div className="scene-image-frame">
           <img key={`${scene.backgroundAssetId}-${backgroundRetry}`} className="scene-background" src={`${background}${backgroundRetry ? `${background.includes('?') ? '&' : '?'}retry=${backgroundRetry}` : ''}`} alt={scene.title} onError={() => setBackgroundFailed(true)} />
@@ -100,9 +105,12 @@ function SceneView({ state, scene, onSceneTransition, onReturnToDesktop }: { sta
       <footer className="act1-scene__footer">
         <p>{scene.ambience}</p>
         <div className="act1-scene__actions">
-          {scene.capturePhotoId !== null && <button type="button" className="scene-camera" disabled={!canCapture} onClick={() => stateManager.captureScenePhoto(scene.id, scene.capturePhotoId!)}>{photoCaptured ? '照片已保存' : '拍一张'}</button>}
+          {scene.capturePhotoId !== null && <>
+            <p id={`scene-photo-guidance-${scene.id}`} className="act1-interaction-guidance__photo" role="status">{photoGuidance?.reason}</p>
+            <button type="button" className="scene-camera" aria-describedby={`scene-photo-guidance-${scene.id}`} disabled={!canCapture} onClick={() => stateManager.captureScenePhoto(scene.id, scene.capturePhotoId!)}>{photoGuidance?.buttonLabel ?? (photoCaptured ? '照片已保存' : '拍一张')}</button>
+          </>}
           <button type="button" className="scene-continue" disabled={!canLeave} onClick={leave}>{scene.continueLabel}</button>
-          {!canLeave && scene.blockedObservation && <span className="scene-continue__hint">{scene.blockedObservation}</span>}
+          {!canLeave && <span className="scene-continue__hint act1-interaction-guidance__continue" role="status">{continueReason}</span>}
         </div>
       </footer>
       {activeHotspot && <SceneClueFocus

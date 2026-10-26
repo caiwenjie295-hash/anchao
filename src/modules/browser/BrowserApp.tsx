@@ -7,6 +7,7 @@ import { browserPageById, findSearchQuery, getSuggestions, isAct2T06Query, isAct
 import { siteIdentity } from './browserPresentation';
 import { BrowserPageView } from './BrowserPageView';
 import { BrowserSearchResults, SearchGuidancePanel } from './BrowserSearchResults';
+import { subscribeToBrowserSearchRequest, type BrowserSearchRequest } from './browserSearchRequest';
 import { getSearchGuidance } from '../../data/searchGuidance';
 import './browserApp.css';
 
@@ -32,6 +33,7 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     return saved.some((item) => item.caseId === 'huang') && !saved.some((item) => item.caseId === 'zhong') ? 'zhong' : 'huang';
   });
   const qimingWorkspaceRef = useRef<HTMLDivElement>(null);
+  const searchRequestHandlerRef = useRef<(request: BrowserSearchRequest) => void>(() => undefined);
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
   const stage = state.modules.act2Research.stage;
   const searchGuidance = getSearchGuidance(manager.getState());
@@ -85,6 +87,8 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
     setHistoryOpen(false);
     if (currentStage === 'qiming') setQimingView('browser');
   };
+  searchRequestHandlerRef.current = (request) => submitSearch(request.query);
+  useEffect(() => subscribeToBrowserSearchRequest(manager, (request) => searchRequestHandlerRef.current(request)), [manager]);
   const selectCase = (caseId: QimingCaseId) => {
     setFocusedCase(caseId);
     setTabs((current) => current.map((tab) => {
@@ -127,6 +131,24 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
       if (nextView.kind === 'page' && nextView.casePerson) setFocusedCase(nextView.casePerson);
     }
     if (nextView.kind === 'page') manager.recordBrowserPageVisit(nextView.pageId);
+  };
+  const returnToCurrentTask = () => {
+    const currentQueries = new Set(searchGuidance.map(({ query }) => query));
+    let targetIndex = -1;
+    for (let index = activeTab.stackIndex - 1; index >= 0; index -= 1) {
+      const view = activeTab.stack[index];
+      if (view.kind === 'results' && currentQueries.has(findSearchQuery(view.query)?.query ?? view.query)) {
+        targetIndex = index;
+        break;
+      }
+    }
+    if (targetIndex >= 0) {
+      const target = activeTab.stack[targetIndex];
+      setTabs((current) => current.map((tab) => tab.id === activeTabId ? { ...tab, view: visibleView(target), stackIndex: targetIndex } : tab));
+      setDraft(null);
+      return;
+    }
+    if (searchGuidance[0]) submitSearch(searchGuidance[0].query);
   };
   const newTab = () => {
     const id = Math.max(...tabs.map((tab) => tab.id)) + 1;
@@ -178,9 +200,12 @@ export function BrowserApp({ manager = stateManager }: { manager?: StateManager 
         onStartQimingCase={stage === 'qiming' ? focusCaseReview : undefined}
         onReturnToQimingCase={stage === 'qiming' ? focusCaseReview : undefined}
         onOpenQimingSource={stage === 'qiming' ? (person, pageId) => openPage(pageId, person) : undefined}
+        searchGuidance={searchGuidance}
+        onSearch={submitSearch}
+        onReturnToCurrentTask={stage !== 'qiming' && searchGuidance.length > 0 ? returnToCurrentTask : undefined}
       />}
     {stage === 'search' && state.game.flags.FLAG_A2_OFFLINE_RESEARCH_NEEDED === true && <aside className="browser-next-investigation" aria-label="下一步调查">
-      <p>这次搜索没有找到能回答问题的资料。可以先把疑问留给当地人。</p>
+      <p>网上资料还不足以回答当前问题；已读内容与搜索记录会保留，可以回到桥头问当地人。</p>
       <button type="button" onClick={() => manager.setAct2Stage('bridge')}>去桥头问问当地人</button>
     </aside>}
     </div>

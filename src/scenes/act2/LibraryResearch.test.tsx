@@ -198,10 +198,13 @@ describe('LibraryResearch (act2 T03)', () => {
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T03_001');
     expect(libraryState().excerptedEntryIds).toEqual([]);
     expect(pick('.act2-library__excerpt')).not.toBeNull();
+    expect(pick('.act2-library__excerpt [role="status"]')?.textContent).toContain('本页来源已自动登记');
+    expect(pick('.act2-library__excerpt [role="status"]')?.textContent).toContain('尚未收入笔记');
     expect(pick('.act2-library__keyword-list')).not.toBeNull();
     await click(pick('.act2-library__excerpt-button'));
     expect(libraryState().excerptedEntryIds).toEqual(['ENTRY_A2_T03_001']);
     expect(pick('.act2-library__excerpt-button')?.textContent).toBe('已收入调查笔记');
+    expect(pick('.act2-library__excerpt [role="status"]')?.textContent).toContain('本页来源与摘录都已记入');
   });
 
   it('keeps T03 and opens T04 only after the player chooses the story action', async () => {

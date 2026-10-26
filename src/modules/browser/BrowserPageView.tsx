@@ -2,6 +2,8 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { EvidenceImage } from '../../components/EvidenceImage';
 import { VisualAvatar } from '../../components/VisualAvatar';
 import { VisualIcon } from '../../components/VisualIcon';
+import { SearchGuidancePanel } from './BrowserSearchResults';
+import type { SearchGuidance } from '../../data/searchGuidance';
 import type { StateManager } from '../../core/stateManager';
 import { type BrowserPage, type BrowserPageInteraction, type BrowserPageType } from '../../data/browserData';
 import { forumAvatarForAuthor, siteMarkForName } from '../../data/visualIdentityData';
@@ -226,6 +228,9 @@ type BrowserPageViewProps = {
   onStartQimingCase?: (person: QimingCaseId) => void;
   onReturnToQimingCase?: (person: QimingCaseId) => void;
   onOpenQimingSource?: (person: QimingCaseId, pageId: string) => void;
+  searchGuidance?: readonly SearchGuidance[];
+  onSearch?: (query: string) => void;
+  onReturnToCurrentTask?: () => void;
 };
 
 function QimingCasePath({ page, person, onStart, onReturn, onOpenSource, manager }: {
@@ -268,7 +273,7 @@ function QimingCasePath({ page, person, onStart, onReturn, onOpenSource, manager
   </aside>;
 }
 
-export function BrowserPageView({ page, manager, copyContextKey, casePerson, onStartQimingCase, onReturnToQimingCase, onOpenQimingSource }: BrowserPageViewProps) {
+export function BrowserPageView({ page, manager, copyContextKey, casePerson, onStartQimingCase, onReturnToQimingCase, onOpenQimingSource, searchGuidance = [], onSearch = () => undefined, onReturnToCurrentTask }: BrowserPageViewProps) {
   const [copyStatus, setCopyStatus] = useState<{ tone: 'success' | 'failure'; text: string } | null>(null);
   useEffect(() => setCopyStatus(null), [page?.id, copyContextKey]);
   const visited = manager.getState().modules.browser.visitedPageIds;
@@ -295,6 +300,13 @@ export function BrowserPageView({ page, manager, copyContextKey, casePerson, onS
     <SiteMasthead identity={identity} crumbs={urlCrumbs(page.url)} />
     <Template page={page} identity={identity} />
     <QimingCasePath page={page} person={casePerson} onStart={onStartQimingCase} onReturn={onReturnToQimingCase} onOpenSource={onOpenQimingSource} manager={manager} />
+    {onReturnToCurrentTask && <aside className="browser-page__current-task" aria-label="当前调查入口">
+      <div><p className="browser-page__current-task-eyebrow">当前调查</p><h2>从这里继续</h2></div>
+      {searchGuidance.length > 0
+        ? <SearchGuidancePanel guidance={searchGuidance} onSearch={onSearch} />
+        : <p>这页之外的搜索记录和已读内容都已保留。可以回到刚才的调查入口继续。</p>}
+      <button type="button" className="browser-page__current-task-return" onClick={onReturnToCurrentTask}>返回当前调查</button>
+    </aside>}
     <footer className="browser-page__footer"><p className="browser-page__url">{page.url}</p></footer>
     {interactions.map((interaction, index) => <div className="browser-page__actions" key={`${page.id}-interaction-${index}`}><p>{interaction.prompt}</p>{interaction.type === 'copy-names' ? <>{copyStatus && <p className={`browser-page__copy-feedback browser-page__copy-feedback--${copyStatus.tone}`} role="status">{copyStatus.text}</p>}{interaction.names.map((name) => <button type="button" key={name.value} onClick={() => void copyName(interaction, name.value)}>{name.buttonLabel}</button>)}</> : <button type="button" onClick={() => runInteraction(interaction)}>{interaction.buttonLabel}</button>}</div>)}
   </article>;

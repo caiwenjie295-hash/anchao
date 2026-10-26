@@ -13,6 +13,10 @@ import { Act2ShelfMap } from './Act2ShelfMap';
 import '../../act2/act2ReadingRoom.css';
 import '../../act2/t04Tales.css';
 
+export function countDistinctTaleSources(evidenceIds: readonly string[], evidenceById: ReadonlyMap<string, { taleId: string }>): number {
+  return new Set(evidenceIds.map((id) => evidenceById.get(id)?.taleId).filter((id): id is string => Boolean(id))).size;
+}
+
 export interface TalesInvestigationProps { manager?: StateManager; onReturnToDesktop?: () => void; shelfImageSrc?: string; }
 type InferenceId = 'accompanied-change' | 'recovery-or-imitation' | 'complete-transfer';
 
@@ -26,7 +30,7 @@ export function TalesInvestigation({ manager = stateManager, onReturnToDesktop, 
   const readerRef = useRef<HTMLElement>(null);
   const selected = selectedId ? act2Tales.records.find((record) => record.id === selectedId) ?? null : null;
   const readTales = useMemo(() => tales.filter((tale) => progress.readTaleIds.includes(tale.id)), [progress.readTaleIds]);
-  const selectedSourceCount = new Set(progress.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter(Boolean)).size;
+  const selectedSourceCount = countDistinctTaleSources(progress.supportingEvidenceIds, taleEvidenceById);
   const selectedTaleIds = new Set(progress.supportingEvidenceIds.map((id) => taleEvidenceById.get(id)?.taleId).filter((id): id is string => Boolean(id)));
   const readUnselectedTales = tales.filter((tale) => progress.readTaleIds.includes(tale.id) && !selectedTaleIds.has(tale.id));
   const unreadTales = tales.filter((tale) => !progress.readTaleIds.includes(tale.id));
