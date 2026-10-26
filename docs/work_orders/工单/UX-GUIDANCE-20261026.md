@@ -100,3 +100,7 @@ Luna只可写以下精确路径（含新文件）；所有其他文件只读。�
 最终Luna运行npm test、npm run build、npm run build:offline、npm run test:offline全部通过；git diff --check基线..HEAD无错后只提交自己分支，不合main、不推送。报告SHA/路径/测试数/每项状态/剩余疑点。父审查scope/资源hash、独立完整quality:gate、真实1280与390/320及视频慢载/快切；APPROVED后才no-ff main，合后门禁并生成/AnChao/静态与同源精简源码文件夹。旧快照、旧A3树、发布目录全部保留，无公网部署。
 
 运行环境固定Node24.15.0（父准备于/private/tmp/anchao-guidance-node-20261026/node-v24.15.0-darwin-arm64/bin/node），npm CLI位于/Users/jay/.nvm/versions/node/v25.8.0/lib/node_modules/npm/bin/npm-cli.js；前置Node24 bin到PATH。Chrome /Applications/Google Chrome.app/Contents/MacOS/Google Chrome。测试日志放外层本轮QA/luna-max。父为两个worktree复制独立node_modules，禁止链接/修改旧树依赖。
+
+## 前轮依赖收尾
+
+父同时独占docs/reviews/UX-A3-REFINE-20261022.md与docs/ux-a3-refine-20261022/validation.md，用于把950d30d/6ac600d两项前轮产品及其已有真实验收记录纳入本次APPROVED与同源交付。旧工作树未跟踪验收草稿保持原样；不要求执行代理写前轮文档或扩大产品范围。
