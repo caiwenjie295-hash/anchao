@@ -296,11 +296,13 @@ describe('BrowserApp first-act search prompts', () => {
     await act(async () => { root.render(createElement(BrowserApp, { manager })); });
     await act(async () => { host.querySelector<HTMLButtonElement>('[data-search-query="XX县失踪"]')!.click(); });
     const historyBeforeArticle = [...manager.getState().modules.browser.queryHistory];
-    const target = host.querySelector<HTMLButtonElement>('.browser-result');
+    const target = [...host.querySelectorAll<HTMLButtonElement>('.browser-result')]
+      .find((button) => button.textContent?.includes('两名驴友在石门沟迷路后获救'));
     expect(target).not.toBeNull();
     await act(async () => { target!.click(); });
     const articleId = host.querySelector<HTMLElement>('.browser-page')?.className;
     const visitedBeforeReturn = [...manager.getState().modules.browser.visitedPageIds];
+    expect(host.querySelector('.browser-page h1')?.textContent).toContain('两名驴友在石门沟迷路后获救');
     expect(host.querySelector('.browser-page__current-task')).not.toBeNull();
 
     await act(async () => { host.querySelector<HTMLButtonElement>('.browser-page__current-task-return')!.click(); });

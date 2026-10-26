@@ -72,10 +72,22 @@ export function act3LensTitleFor(lensId: string, authoredTitle: string, inspecte
 
 export function act3LensDescriptionFor(lensId: string, authoredDescription: string, inspectedClueIds: readonly string[]): string {
   if (lensId === 'LENS_A3_T04_005' && !inspectedClueIds.includes('CLUE_A3_T04_VVAKE_PAPER')) {
-    return '一张折旧纸片上还有文字，先检查内容，再决定是否带走。';
+    return '一张折旧纸片已经移到近处，字还没有读清。选择“查看纸片”会一次完成阅读和收好，再把这项发现记进调查记录。';
+  }
+  if (lensId === 'LENS_A3_T04_005' && inspectedClueIds.includes('CLUE_A3_T04_VVAKE_PAPER')) {
+    return '纸片已读清并收好，调查记录已更新。词语之间的对应关系仍不清楚；可以沿相邻走廊继续查看。';
+  }
+  if (lensId === 'LENS_A3_T05_004' && !inspectedClueIds.includes('CLUE_A3_T05_PAPER_EDGE')) {
+    return '蹲下后，桌脚和地面之间露出一角发黄的纸。纸片还卡在原处；查看纸边后，可沿现有路线移近核对内容。';
+  }
+  if (lensId === 'LENS_A3_T05_004' && inspectedClueIds.includes('CLUE_A3_T05_PAPER_EDGE')) {
+    return '纸片已从桌脚处取出；还要移近查看，才能读清上面的内容。';
   }
   if (lensId === 'LENS_A3_T05_005' && !inspectedClueIds.includes('CLUE_A3_T05_13ACK_PAPER')) {
-    return '折起的纸片上写着一行标题和几项词语；内容尚未辨认。';
+    return '折起的纸片已经移到近处，标题与词语还没有核实。选择“查看纸片”会一次完成阅读和收好，再把这项发现记进调查记录。';
+  }
+  if (lensId === 'LENS_A3_T05_005' && inspectedClueIds.includes('CLUE_A3_T05_13ACK_PAPER')) {
+    return '纸片已读清并收好，调查记录已更新。它与档案室那张词表的对应关系仍未确认；可以继续沿走廊查看。';
   }
   if (lensId === 'LENS_A3_T07_006') {
     return inspectedClueIds.includes('CLUE_A3_T07_NOTEBOOK_PICKUP')
