@@ -13,17 +13,28 @@ export interface T07MediaResource {
   requestSource: string;
 }
 
+function appendRetryIdentity(source: string, retryToken: number): string {
+  if (retryToken <= 0) return source;
+  // data:, blob: and file: URLs cannot safely take an HTTP query parameter.
+  // Their React key/resource key still changes, so a retry remounts the image.
+  const usesHttp = /^https?:\/\//i.test(source);
+  const isRelative = !/^[a-z][a-z\d+.-]*:/i.test(source);
+  if (!usesHttp && !isRelative) return source;
+  const hashIndex = source.indexOf('#');
+  const pathAndQuery = hashIndex < 0 ? source : source.slice(0, hashIndex);
+  const hash = hashIndex < 0 ? '' : source.slice(hashIndex);
+  const separator = pathAndQuery.includes('?') ? '&' : '?';
+  return `${pathAndQuery}${separator}t07-retry=${retryToken}${hash}`;
+}
+
 export function createT07MediaResource(assetId: string, source: string | undefined, retryToken = 0): T07MediaResource {
   const stableSource = source ?? '';
-  const requestSource = stableSource && retryToken > 0
-    ? `${stableSource}${stableSource.includes('?') ? '&' : '?'}t07-retry=${retryToken}`
-    : stableSource;
   return {
     assetId,
     source: stableSource,
     retryToken,
     resourceKey: `${assetId}\u0000${stableSource}\u0000${retryToken}`,
-    requestSource,
+    requestSource: appendRetryIdentity(stableSource, retryToken),
   };
 }
 

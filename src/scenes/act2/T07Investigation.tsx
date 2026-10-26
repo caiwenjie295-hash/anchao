@@ -9,7 +9,7 @@ import { investigationAudio, readInvestigationAudioPreference, writeInvestigatio
 import { StateManager, stateManager as defaultManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
 import { equalAct2T07EntrySnapshot, equalAct2T07Snapshot, selectAct2T07EntrySnapshot, selectAct2T07Snapshot } from '../../core/store/selectors';
-import { act2T07, act2T06RecapPages, comparisonReferenceForFrame, formatClock, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
+import { act2T07, act2T06RecapPages, comparisonReferenceForFrame, keyFrameAt, resolveT07MismatchNote, segmentAt, visualFrameAt } from '../../data/act2T07Data';
 import { T07FinaleCurtain } from '../../components/scenePolish/T07FinaleCurtain';
 import { createT07MediaResource, isT07MediaLoaded, shouldPauseT07Playback, updateT07MediaState, type T07MediaState, type T07MediaStatus } from './t07MediaState';
 import '../../act2/t07Finale.css';
@@ -202,33 +202,33 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   // 播放推进只由计时器驱动；暂停时拖动进度条不计入覆盖。
   useEffect(() => {
     if (!playing) return;
-    if (shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) {
-      setPlaying(false);
-      return;
-    }
+    // 保留玩家的播放意图，但只在当前原图已显示时推进。跨静帧时
+    // 当前资源身份变化会清除计时器；新图载入后此 effect 自动续播。
+    if (shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) return;
     const timer = window.setInterval(() => {
-      if (shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) {
-        setPlaying(false);
-        return;
-      }
+      if (shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) return;
+      const previousTime = timeRef.current;
+      const previousSegment = segmentAt(previousTime);
       const next = Math.min(timeRef.current + video.frameMs, video.durationMs);
+      const nextSegment = segmentAt(next);
       const nextImageId = visualFrameAt(next)?.imageId ?? videoMaterial.imageId;
       const nextResource = createT07MediaResource(`video:${nextImageId}:visit${videoVisitGeneration}`, assetLoader.get(nextImageId)?.src, videoRetryToken);
       timeRef.current = next;
       setTimeMs(next);
       if (next >= video.durationMs) setPlaying(false);
+      // 新图未显示时，不 count 新段覆盖。载入后计时器继续并从当前画面计数。
       if (nextResource.resourceKey !== currentVideoResource.resourceKey) {
-        setPlaying(false);
+        if (previousSegment) manager.markAct2T07SegmentPlayed(previousSegment.id);
         return;
       }
-      const current = segmentAt(next);
+      const current = nextSegment ?? previousSegment;
       if (current) manager.markAct2T07SegmentPlayed(current.id);
     }, video.frameMs);
     return () => window.clearInterval(timer);
   }, [playing, manager, videoMediaState, currentVideoResource.resourceKey, video.frameMs, video.durationMs, videoMaterial.imageId, videoRetryToken, videoVisitGeneration]);
 
   useEffect(() => {
-    if (playing && shouldPauseT07Playback(videoMediaState, currentVideoResource.resourceKey)) setPlaying(false);
+    if (playing && videoMediaState?.resourceKey === currentVideoResource.resourceKey && videoMediaState.status === 'failed') setPlaying(false);
   }, [playing, videoMediaState, currentVideoResource.resourceKey]);
 
   useEffect(() => { if (zoomedShotId && !capturedFrames.some((frame) => frame.id === zoomedShotId)) setzoomedShotId(null); }, [capturedFrames, zoomedShotId]);
@@ -419,7 +419,9 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
   const videoPlaybackStatus = videoImageFailed
     ? '当前原图载入失败，播放已暂停。可在画面内重试载入。'
     : !videoImageReady
-      ? '当前原图正在载入，视频会停在这里；原图显示后可以继续播放。'
+      ? playing
+        ? '当前原图正在载入，视频会停在这里；载入后自动继续。按“暂停”可取消自动继续。'
+        : '当前原图正在载入，视频会停在这里；载入后可以播放。'
       : '当前原图已完整显示，可以播放或定位。';
 
   return (
@@ -538,13 +540,13 @@ export function T07Investigation({ manager = defaultManager, onReturnToDesktop, 
                   type="range"
                   min={0}
                   max={video.durationMs}
-                  step={video.frameMs}
+                  step={Math.min(100, video.frameMs)}
                   value={timeMs}
                   aria-label="播放进度"
-                  aria-valuetext={`${formatClock(timeMs)} / ${formatClock(video.durationMs)}`}
+                  aria-valuetext={`${formatMediaStamp(timeMs)} / ${formatMediaStamp(video.durationMs)}`}
                   onChange={(event) => seek(Number(event.target.value))}
                 />
-                <span className="t07-finale__clock">{formatClock(timeMs)} / {formatClock(video.durationMs)}</span>
+                <span className="t07-finale__clock">{formatMediaStamp(timeMs)} / {formatMediaStamp(video.durationMs)}</span>
               </label>
             </div>
             <p id="t07-capture-status" className="t07-finale__media-status" role="status">{captureStatus}</p>
