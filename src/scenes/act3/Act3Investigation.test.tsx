@@ -122,6 +122,45 @@ describe('Third-act investigation interface', () => {
     }
   });
 
+  it('keeps the exterior view separate from the close pillar action and its revealed lettering', async () => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = 'A3_T01';
+    state.modules.act3.stage = 'T01';
+    state.modules.act3.currentLensId = 'LENS_A3_T01_001';
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    const click = async (button: HTMLButtonElement) => act(async () => { button.click(); });
+    const marker = (clueId: string, fallbackText: string) => container.querySelector<HTMLButtonElement>(`[data-clue-id="${clueId}"]`)
+      ?? [...container.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent?.includes(fallbackText))!;
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      expect(container.querySelector('.photo-viewport__frame')?.getAttribute('aria-label')).toContain('外门正面');
+      expect(container.querySelector('.photo-viewport__frame')?.getAttribute('aria-label')).not.toContain('启明');
+      expect(marker('CLUE_A3_T01_GATE_VIEW', '锈门')?.textContent).toBe('查看锈门与右柱');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T01_PILLAR_CLOSE');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T01_SIGN_REVEALED');
+
+      await click(container.querySelector<HTMLButtonElement>('[data-action-id="A3_ROUTE_T01_001_002"]')!);
+      expect(manager.getState().modules.act3.currentLensId).toBe('LENS_A3_T01_002');
+      expect(container.querySelector('.photo-viewport__frame')?.getAttribute('aria-label')).toContain('右柱近景');
+      expect(container.querySelector('.photo-viewport__frame')?.getAttribute('aria-label')).not.toContain('启明');
+      expect(container.querySelector('.act3-investigation__narration-panel')?.textContent).toContain('金属牌边');
+      expect(container.querySelector('.act3-investigation__narration-panel')?.textContent).not.toContain('启明青少年成长中心');
+      expect(marker('CLUE_A3_T01_PILLAR_CLOSE', '爬山虎')?.textContent).toBe('拨开爬山虎');
+      expect(manager.getState().modules.act3.inspectedClueIds).not.toContain('CLUE_A3_T01_PILLAR_CLOSE');
+
+      await click(marker('CLUE_A3_T01_PILLAR_CLOSE', '爬山虎'));
+      expect(manager.getState().modules.act3.inspectedClueIds).toContain('CLUE_A3_T01_PILLAR_CLOSE');
+      expect(container.querySelector('[role="dialog"]')?.textContent).toContain('启明');
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
   it('tracks narration unread state per lens without reopening text or changing observation state', async () => {
     localStorage.clear();
     const state = createDefaultState();
@@ -431,6 +470,63 @@ describe('Third-act investigation interface', () => {
         } else {
           expect(detail.querySelector('.act3-investigation__detail-evidence figcaption')?.textContent).toContain('近景');
         }
+      } finally {
+        await act(async () => { root.unmount(); });
+        container.remove();
+      }
+    }
+  });
+
+  it('keeps archive and broadcast paper discovery, close-up reading and put-away on their original inspect actions', async () => {
+    for (const scenario of [
+      { stage: 'T04' as const, from: 'LENS_A3_T04_004', to: 'LENS_A3_T04_005', routeId: 'A3_ROUTE_T04_004_005', edgeClue: 'CLUE_A3_T04_PAPER_EDGE', paperClue: 'CLUE_A3_T04_VVAKE_PAPER', forbidden: ['VVaKe', '蜘蛛'], readTitle: 'VVaKe', nextHint: '相邻走廊' },
+      { stage: 'T05' as const, from: 'LENS_A3_T05_004', to: 'LENS_A3_T05_005', routeId: 'A3_ROUTE_T05_004_005', edgeClue: 'CLUE_A3_T05_PAPER_EDGE', paperClue: 'CLUE_A3_T05_13ACK_PAPER', forbidden: ['13aCK', '老鼠'], readTitle: '13aCK', nextHint: '并排核对' },
+    ]) {
+      localStorage.clear();
+      const state = createDefaultState();
+      state.game.phase = `A3_${scenario.stage}` as typeof state.game.phase;
+      state.modules.act3.stage = scenario.stage;
+      state.modules.act3.currentLensId = scenario.from;
+      const manager = new StateManager(new EventBus(), state);
+      const container = document.createElement('div');
+      document.body.append(container);
+      const root = createRoot(container);
+      const click = async (button: HTMLButtonElement) => act(async () => { button.click(); });
+      const marker = (clueId: string, fallbackText: string) => container.querySelector<HTMLButtonElement>(`[data-clue-id="${clueId}"]`)
+        ?? [...container.querySelectorAll<HTMLButtonElement>('.photo-viewport__fallback button')].find((button) => button.textContent?.includes(fallbackText))!;
+      const closeDetail = async () => {
+        const close = container.querySelector<HTMLButtonElement>('[role="dialog"] button');
+        if (close) await click(close);
+      };
+      try {
+        await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+        const nearLensCopy = container.querySelector('.act3-investigation__narration-panel')?.textContent ?? '';
+        if (scenario.stage === 'T05') {
+          expect(nearLensCopy).toContain('还卡在原处');
+          expect(nearLensCopy).not.toContain('纸片已从桌脚处取出');
+        }
+
+        await click(marker(scenario.edgeClue, '纸'));
+        expect(manager.getState().modules.act3.inspectedClueIds).toEqual([scenario.edgeClue]);
+        if (scenario.stage === 'T05') {
+          expect(container.querySelector('.act3-investigation__narration-panel')?.textContent).toContain('纸片已从桌脚处取出');
+        }
+        await closeDetail();
+        await click(container.querySelector<HTMLButtonElement>(`[data-action-id="${scenario.routeId}"]`)!);
+        expect(manager.getState().modules.act3.currentLensId).toBe(scenario.to);
+
+        const beforeRead = container.querySelector('.act3-investigation__narration-panel')?.textContent ?? '';
+        expect(beforeRead).toContain('查看纸片');
+        for (const word of scenario.forbidden) expect(beforeRead).not.toContain(word);
+        expect(marker(scenario.paperClue, '纸片')?.textContent).toBe('查看纸片');
+        expect(container.querySelector('.act3-investigation__paper-transcript')).toBeNull();
+
+        await click(marker(scenario.paperClue, '纸片'));
+        expect(manager.getState().modules.act3.inspectedClueIds).toEqual([scenario.edgeClue, scenario.paperClue]);
+        expect(container.querySelector('[role="dialog"] .act3-investigation__paper-transcript strong')?.textContent).toBe(scenario.readTitle);
+        expect(container.querySelector('[role="dialog"]')?.textContent).toContain('观察已记入调查记录');
+        expect(container.querySelector('.act3-investigation__narration-panel')?.textContent).toContain('收好');
+        expect(container.querySelector('.investigation-shell__photo-tools-panel')?.textContent).toContain(scenario.nextHint);
       } finally {
         await act(async () => { root.unmount(); });
         container.remove();
