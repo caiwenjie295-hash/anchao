@@ -263,6 +263,50 @@ describe('Third-act investigation interface', () => {
   });
 
   it.each([
+    { stage: 'T00' as const, lensId: 'LENS_A3_T00_001', clueId: 'CLUE_A3_T00_DEPART', role: 'optional', label: '可选观察', note: '可按需要查看，也可沿现有地点路线继续。', routeActionId: 'A3_ROUTE_T00_001_002', routeTarget: 'LENS_A3_T00_002', routeState: 'ready' },
+    { stage: 'T00' as const, lensId: 'LENS_A3_T00_005', clueId: 'CLUE_A3_T00_CABLE_BREAK', role: 'required', label: '阶段必需', note: '阶段必需观察未完成', routeActionId: 'A3_ROUTE_T00_005_006', routeTarget: 'LENS_A3_T00_006', routeState: 'ready' },
+    { stage: 'T04' as const, lensId: 'LENS_A3_T04_004', clueId: 'CLUE_A3_T04_PAPER_EDGE', role: 'route', label: '路线依据', note: '路线依据待查看', routeActionId: 'A3_ROUTE_T04_004_005', routeTarget: 'LENS_A3_T04_005', routeState: 'blocked' },
+    { stage: 'T06' as const, lensId: 'LENS_A3_T06_007', clueId: 'CLUE_A3_T06_EMPTY_BASE', role: 'required route', label: '阶段必需 · 路线依据', note: '阶段必需观察未完成', routeActionId: 'A3_ROUTE_T06_007_008', routeTarget: 'LENS_A3_T06_008', routeState: 'blocked' },
+    { stage: 'T06' as const, lensId: 'LENS_A3_T06_002', clueId: 'CLUE_A3_T06_ROOM', role: 'optional', label: '可选观察', note: '可按需要查看，也可沿现有地点路线继续。', routeActionId: 'A3_ROUTE_T06_002_003', routeTarget: 'LENS_A3_T06_003', routeState: 'ready' },
+  ])('labels $clueId by its existing stage and route role without changing access', async (scenario) => {
+    localStorage.clear();
+    const state = createDefaultState();
+    state.game.phase = `A3_${scenario.stage}`;
+    state.modules.act3.stage = scenario.stage;
+    state.modules.act3.currentLensId = scenario.lensId;
+    const manager = new StateManager(new EventBus(), state);
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
+      const fieldRecord = container.querySelector<HTMLDetailsElement>('.act3-investigation__field-record')!;
+      await act(async () => { fieldRecord.querySelector('summary')?.click(); });
+      const matchingRow = container.querySelector<HTMLElement>(`.act3-investigation__photo-status li[data-observation-clue-id="${scenario.clueId}"]`)!;
+      expect(matchingRow).toBeTruthy();
+      expect(matchingRow.dataset.observationRole).toBe(scenario.role);
+      expect(matchingRow.querySelector('.act3-investigation__observation-role')?.textContent).toBe(scenario.label);
+      expect(container.querySelector('.act3-investigation__photo-observation-note')?.textContent).toContain(scenario.note);
+      expect(container.querySelector('.investigation-shell__status')?.textContent).not.toContain('本图已清');
+
+      const route = container.querySelector<HTMLButtonElement>(`[data-action-id="${scenario.routeActionId}"]`)!;
+      expect(route.getAttribute('data-action-state')).toBe(scenario.routeState);
+      if (scenario.routeState === 'blocked') {
+        await act(async () => { route.click(); });
+        expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('还没有核对');
+      }
+      else {
+        await act(async () => { route.click(); });
+        expect(manager.getState().modules.act3.currentLensId).toBe(scenario.routeTarget);
+        expect(manager.getState().modules.act3.inspectedClueIds).not.toContain(scenario.clueId);
+      }
+    } finally {
+      await act(async () => { root.unmount(); });
+      container.remove();
+    }
+  });
+
+  it.each([
     { stage: 'T06' as const, lensId: 'LENS_A3_T06_001', inspectedClueIds: [] as string[], requiredCount: 0, observedCount: 0, xiaoyueMemoryUnobserved: false, siteExited: false },
     { stage: 'T01' as const, lensId: 'LENS_A3_T01_006', inspectedClueIds: act3RequiredClueIds('T01'), requiredCount: 3, observedCount: 1, xiaoyueMemoryUnobserved: false, siteExited: false },
     { stage: 'T06' as const, lensId: 'LENS_A3_T06_001', inspectedClueIds: act3RequiredClueIds('T06'), requiredCount: 3, observedCount: 0, xiaoyueMemoryUnobserved: false, siteExited: false },
@@ -286,6 +330,11 @@ describe('Third-act investigation interface', () => {
       await act(async () => { root.render(<Act3Investigation manager={manager} onReturnToDesktop={() => {}} />); });
       const requiredCount = act3RequiredClueIds(scenario.stage).filter((id) => scenario.inspectedClueIds.includes(id)).length;
       const observedCount = lens.hotspots.filter((hotspot) => scenario.inspectedClueIds.includes(hotspot.clueId)).length;
+      const routeRequiredIds = new Set(act3StageDoc(scenario.stage).lenses.flatMap((item) => item.requiresClueIds ?? []));
+      const pendingHotspots = lens.hotspots.filter((hotspot) => !scenario.inspectedClueIds.includes(hotspot.clueId));
+      const pendingRequiredCount = pendingHotspots.filter((hotspot) => act3RequiredClueIds(scenario.stage).includes(hotspot.clueId)).length;
+      const pendingRouteOnlyCount = pendingHotspots.filter((hotspot) => routeRequiredIds.has(hotspot.clueId) && !act3RequiredClueIds(scenario.stage).includes(hotspot.clueId)).length;
+      const pendingOptionalCount = pendingHotspots.length - pendingRequiredCount - pendingRouteOnlyCount;
       const fieldRecord = container.querySelector<HTMLDetailsElement>('.act3-investigation__field-record')!;
       expect(fieldRecord.open).toBe(false);
       await act(async () => { fieldRecord.querySelector('summary')?.click(); });
@@ -303,15 +352,16 @@ describe('Third-act investigation interface', () => {
       expect(hotspotRows.filter((row) => row.dataset.observationState === 'pending')).toHaveLength(lens.hotspots.length - observedCount);
 
       if (observedCount < lens.hotspots.length) {
-        const localHotspotHint = `当前照片还有${lens.hotspots.length - observedCount}处未观察热点，请先查看黄色热点。`;
-        expect(note).toContain(localHotspotHint);
+        expect(note).toContain(`当前照片还有`);
         expect(status).toContain(`本图待看${lens.hotspots.length - observedCount}处`);
-        expect(status).not.toContain('本地没有本阶段必需观察');
-        expect(note.indexOf(localHotspotHint)).toBe(0);
-        expect(note).not.toContain('本地没有本阶段必需观察');
-        expect(status).not.toContain('本地没有本阶段必需观察');
-        expect(note).not.toContain('可按需要继续查看');
-        expect(status).not.toContain('可按需要继续查看');
+        expect(status).not.toContain('本图已清');
+        if (pendingRequiredCount > 0) expect(note).toContain('阶段必需观察未完成');
+        if (pendingRouteOnlyCount > 0) expect(note).toContain('路线依据待查看');
+        if (pendingOptionalCount > 0) expect(note).toContain('可选观察');
+        if (pendingRequiredCount === 0 && pendingRouteOnlyCount === 0) {
+          expect(note).toContain('可按需要查看，也可沿现有地点路线继续');
+          expect(note).not.toContain('请主动查看对应热点');
+        }
         if (scenario.xiaoyueMemoryUnobserved) {
           expect(status).not.toMatch(/^本阶段还缺\d+处必需观察。先听小月/);
         }
@@ -321,7 +371,7 @@ describe('Third-act investigation interface', () => {
         expect(note).not.toContain('未观察热点');
         if (requiredCount < act3RequiredClueIds(scenario.stage).length) {
           expect(note).toContain('本阶段还缺');
-          expect(note).toContain('沿现有地点路线继续寻找');
+          expect(note).toContain('沿现有地点路线');
         }
       }
     } finally {
@@ -583,8 +633,8 @@ describe('Third-act investigation interface', () => {
       expect(exit.textContent).toContain('与小月一起离开旧址');
       expect(exit.getAttribute('data-action-state')).toBe('blocked');
       await act(async () => { exit.click(); });
-      expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('当前照片还有1处未观察热点，请先查看黄色热点。');
-      expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('再听小月说完这一段');
+      expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('当前照片还有1处可选观察；可按需要查看，也可沿现有地点路线继续。');
+      expect(container.querySelector('.investigation-navigation__reason')?.textContent).toContain('听小月说完这一段');
       expect(container.querySelector('.investigation-navigation__material')?.textContent).toContain('小月的回忆');
       const completeDom = container.textContent ?? '';
       for (const word of ['消防栓', '缝隙', '包裹', '笔记本']) expect(completeDom).not.toContain(word);

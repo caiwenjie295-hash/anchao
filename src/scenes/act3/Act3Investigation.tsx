@@ -59,6 +59,18 @@ function displayedLensPlace(stage: Act3ActiveStage, lens: Act3Lens, inspectedClu
   return act3PlaceForLens(lens.id, lens.title);
 }
 
+function observationRoleForClue(clueId: string, requiredClueIds: ReadonlySet<string>, routeRequiredClueIds: ReadonlySet<string>): { value: string; label: string; isRequired: boolean; isRouteRequired: boolean } {
+  const isRequired = requiredClueIds.has(clueId);
+  const isRouteRequired = routeRequiredClueIds.has(clueId);
+  const roles = [
+    ...(isRequired ? ['required'] : []),
+    ...(isRouteRequired ? ['route'] : []),
+  ];
+  if (!roles.length) roles.push('optional');
+  const labels = roles.map((role) => role === 'required' ? '阶段必需' : role === 'route' ? '路线依据' : '可选观察');
+  return { value: roles.join(' '), label: labels.join(' · '), isRequired, isRouteRequired };
+}
+
 function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: string; alt: string; caption: string; placeholder: string }) {
   const [zoomOpen, setZoomOpen] = useState(false);
   const [detailImageFailed, setDetailImageFailed] = useState(false);
@@ -148,40 +160,59 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const samePlaceLenses = doc.lenses.filter((item) => act3PlaceForLens(item.id, item.title) === act3PlaceForLens(lens.id, lens.title));
   const samePlaceLensIndex = samePlaceLenses.findIndex((item) => item.id === lens.id) + 1;
   const requiredClueIds = act3RequiredClueIds(stage);
+  const requiredClueIdSet = new Set(requiredClueIds);
+  const routeRequiredClueIdSet = new Set(doc.lenses.flatMap((item) => item.requiresClueIds ?? []));
   const missingRequiredIds = requiredClueIds.filter((id) => !inspected.includes(id));
   const completedRequiredCount = requiredClueIds.length - missingRequiredIds.length;
   const observedPhotoHotspotCount = lens.hotspots.filter((hotspot) => inspected.includes(hotspot.clueId)).length;
   const unobservedPhotoHotspotCount = lens.hotspots.length - observedPhotoHotspotCount;
+  const hotspotRole = (hotspot: Act3Hotspot) => observationRoleForClue(hotspot.clueId, requiredClueIdSet, routeRequiredClueIdSet);
+  const pendingPhotoHotspots = lens.hotspots.filter((hotspot) => !inspected.includes(hotspot.clueId));
+  const pendingPhotoRequiredCount = pendingPhotoHotspots.filter((hotspot) => hotspotRole(hotspot).isRequired).length;
+  const pendingPhotoRouteOnlyCount = pendingPhotoHotspots.filter((hotspot) => {
+    const role = hotspotRole(hotspot);
+    return role.isRouteRequired && !role.isRequired;
+  }).length;
+  const pendingPhotoOptionalCount = pendingPhotoHotspots.filter((hotspot) => {
+    const role = hotspotRole(hotspot);
+    return !role.isRequired && !role.isRouteRequired;
+  }).length;
   const nextStage = ACT3_STAGE_NEXT[stage];
 
   const hotspotByClue = new Map(doc.lenses.flatMap((item) => item.hotspots.map((hotspot) => [hotspot.clueId, { hotspot, lensId: item.id }] as const)));
   const currentMissingRequiredHotspot = lens.hotspots.find((hotspot) => missingRequiredIds.includes(hotspot.clueId));
-  const missingOnCurrentPhotoCount = lens.hotspots.filter((hotspot) => missingRequiredIds.includes(hotspot.clueId)).length;
+  const missingOnCurrentPhotoCount = pendingPhotoRequiredCount;
   const nextMissingRequired = missingRequiredIds.map((id) => hotspotByClue.get(id)?.hotspot).find((hotspot) => hotspot !== undefined);
   const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
     .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
-  const currentPhotoNeedsObservationHint = `当前照片还有${unobservedPhotoHotspotCount}处未观察热点，请先查看黄色热点。`;
+  const currentPhotoNeedsObservationHint = (() => {
+    if (pendingPhotoRequiredCount > 0) {
+      const routeNote = pendingPhotoRouteOnlyCount > 0 ? `另有${pendingPhotoRouteOnlyCount}处路线依据待查看。` : '';
+      const optionalNote = pendingPhotoOptionalCount > 0 ? `另外${pendingPhotoOptionalCount}处是可选观察。` : '';
+      return `当前照片还有${pendingPhotoRequiredCount}处阶段必需观察未完成，请主动查看对应热点。${routeNote}${optionalNote}`;
+    }
+    if (pendingPhotoRouteOnlyCount > 0) {
+      const optionalNote = pendingPhotoOptionalCount > 0 ? `另有${pendingPhotoOptionalCount}处可选观察。` : '';
+      return `当前照片还有${pendingPhotoRouteOnlyCount}处路线依据待查看；查看后可进入关联镜头。${optionalNote}`;
+    }
+    return `当前照片还有${pendingPhotoOptionalCount}处可选观察；可按需要查看，也可沿现有地点路线继续。`;
+  })();
+  const missingRequiredHint = missingRequiredIds.length === 0
+    ? '本阶段必需观察已齐。'
+    : missingOnCurrentPhotoCount > 0
+      ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
+      : missingXiaoyueMemory
+        ? `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片没有这项必需观察，可沿现有路线去听小月说完这一段。`
+        : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片没有未完成的本阶段必需项，请沿现有地点路线前往相关照片。`;
   const blockedForwardHint = unobservedPhotoHotspotCount > 0
-    ? `${currentPhotoNeedsObservationHint} ${missingRequiredIds.length === 0
-      ? '本阶段必需观察已齐。'
-      : missingOnCurrentPhotoCount > 0
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
-        : missingXiaoyueMemory
-          ? `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，再听小月说完这一段。`
-          : `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，沿现有地点路线继续寻找。`}`
+    ? `${currentPhotoNeedsObservationHint} ${missingRequiredHint}`
     : missingRequiredIds.length === 0
       ? '本阶段必需观察已齐，当前照片上的热点也都已观察。'
       : missingXiaoyueMemory
         ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
         : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片热点已全部观察，请沿现有地点路线前往其他照片。`;
   const photoObservationNote = unobservedPhotoHotspotCount > 0
-    ? `${currentPhotoNeedsObservationHint} ${missingRequiredIds.length === 0
-      ? '本阶段必需观察已齐。'
-      : missingOnCurrentPhotoCount > 0
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
-        : missingXiaoyueMemory
-          ? `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，再听小月说完这一段。`
-          : `本阶段还缺${missingRequiredIds.length}处必需观察。`}`
+    ? `${currentPhotoNeedsObservationHint} ${missingRequiredHint}`
     : missingRequiredIds.length === 0
       ? '本阶段必需观察已齐，当前照片上的热点也都已查看。'
       : missingXiaoyueMemory
@@ -300,8 +331,13 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     || (stage === 'T06' && lens.id === 'LENS_A3_T06_007' && inspected.includes('CLUE_A3_T06_SHRINE'))
     || (stage === 'T07' && lens.id === 'LENS_A3_T07_007' && inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP'))
   );
+  const pendingPhotoRoleSummary = [
+    ...(pendingPhotoRequiredCount > 0 ? [`${pendingPhotoRequiredCount}处阶段必需观察`] : []),
+    ...(pendingPhotoRouteOnlyCount > 0 ? [`${pendingPhotoRouteOnlyCount}处路线依据`] : []),
+    ...(pendingPhotoOptionalCount > 0 ? [`${pendingPhotoOptionalCount}处可选观察`] : []),
+  ].join('、');
   const conciseStatus = unobservedPhotoHotspotCount > 0
-    ? `本图待看${unobservedPhotoHotspotCount}处 · 本阶段还差${missingRequiredIds.length}项`
+    ? `本图待看${unobservedPhotoHotspotCount}处${pendingPhotoRoleSummary ? `：${pendingPhotoRoleSummary}` : ''} · ${missingRequiredIds.length ? `本阶段还差${missingRequiredIds.length}项` : '本阶段必需观察已齐'}`
     : missingRequiredIds.length > 0
       ? `本图已清 · 本阶段还差${missingRequiredIds.length}项`
       : stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
@@ -360,8 +396,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
                 <ul className="act3-investigation__photo-status" aria-label="当前照片观察状态">
                   {lens.hotspots.map((hotspot) => {
                     const known = inspected.includes(hotspot.clueId);
-                    return <li key={hotspot.clueId} data-observation-state={known ? 'observed' : 'pending'}>
-                      <span>{hotspotLabel(hotspot)}</span><strong>{known ? '已观察' : '待观察'}</strong>
+                    const role = hotspotRole(hotspot);
+                    return <li key={hotspot.clueId} data-observation-clue-id={hotspot.clueId} data-observation-role={role.value} data-observation-state={known ? 'observed' : 'pending'}>
+                      <span>{hotspotLabel(hotspot)}</span><small className="act3-investigation__observation-role">{role.label}</small><strong>{known ? '已观察' : '待观察'}</strong>
                     </li>;
                   })}
                 </ul>
