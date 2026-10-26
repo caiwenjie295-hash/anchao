@@ -3,7 +3,10 @@ import { VisualAvatar } from '../../components/VisualAvatar';
 import { VisualIcon } from '../../components/VisualIcon';
 import { stateManager, type StateManager } from '../../core/stateManager';
 import { useAppSelector } from '../../core/hooks/useAppSelector';
-import { selectMail } from '../../core/store/selectors';
+import { selectAppState, selectMail } from '../../core/store/selectors';
+import { XIAOA_MAIL_ID } from '../../data/mailData';
+import { getSearchGuidance } from '../../data/searchGuidance';
+import { requestBrowserSearch } from '../browser/browserSearchRequest';
 import {
   attachmentById,
   getFolderCount,
@@ -61,7 +64,7 @@ function MailRow({ mail, selected, read, starred, onOpen, onToggleStar }: {
   </div>;
 }
 
-function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starred: boolean; onBack: () => void; onToggleStar: () => void }) {
+function MailDetail({ mail, starred, onBack, onToggleStar, searchGuidance, onSearch }: { mail: Mail; starred: boolean; onBack: () => void; onToggleStar: () => void; searchGuidance: ReturnType<typeof getSearchGuidance>; onSearch: (query: string) => void }) {
   return (
     <article className="mail-detail" aria-label={`邮件详情：${mail.subject}`}>
       <header className="mail-detail__header">
@@ -75,6 +78,10 @@ function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starr
         <time dateTime={mail.sentAt}>{fullDateLabel(mail.sentAt)}</time>
       </div>
       <div className="mail-detail__body">{mail.body}</div>
+      {searchGuidance.length > 0 && <aside className="mail-detail__investigation-step" aria-label="当前调查的下一步">
+        <p>邮件里的线索已经读过。接下来需要在浏览器里查：{searchGuidance[0].prompt}</p>
+        <button type="button" data-search-query={searchGuidance[0].query} onClick={() => onSearch(searchGuidance[0].query)}>在浏览器搜索“{searchGuidance[0].query}”</button>
+      </aside>}
       {mail.attachmentIds.length > 0 && (
         <section className="mail-attachments" aria-label="附件">
           <h3>附件</h3>
@@ -94,6 +101,7 @@ function MailDetail({ mail, starred, onBack, onToggleStar }: { mail: Mail; starr
 
 export function MailApp({ manager = stateManager }: { manager?: StateManager }) {
   const mailState = useAppSelector(manager, selectMail);
+  const appState = useAppSelector(manager, selectAppState);
   const [folderKey, setFolderKey] = useState<MailFolderKey>('inbox');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMailId, setSelectedMailId] = useState<string | null>(null);
@@ -101,6 +109,13 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
   const [foldersOpen, setFoldersOpen] = useState(false);
   const groups = useMemo(() => getMailGroups(folderKey, mailState, searchTerm), [folderKey, searchTerm, mailState]);
   const selectedMail = selectedMailId ? mailById.get(selectedMailId) : undefined;
+  const searchGuidance = selectedMail?.id === XIAOA_MAIL_ID
+    && isMailRead(selectedMail, mailState)
+    && appState.game.act === 1
+    && ['C', 'D', 'E'].includes(appState.game.phase)
+    && appState.game.flags.FLAG_A1_MAIL_XIAOA_OPENED === true
+    ? getSearchGuidance(appState)
+    : [];
 
   const openMail = (mailId: string) => {
     setSelectedMailId(mailId);
@@ -114,6 +129,10 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
     setNotice('');
   };
   const toggleStar = (mailId: string) => manager.toggleMailStarred(mailId);
+  const searchFromMail = (query: string) => {
+    requestBrowserSearch(manager, query);
+    manager.openApp('browser');
+  };
   const refresh = () => {
     setNotice('收件箱已刷新');
     window.setTimeout(() => setNotice(''), 1800);
@@ -142,7 +161,7 @@ export function MailApp({ manager = stateManager }: { manager?: StateManager }) 
         </div>
       </section>
       <section className="mail-reading-pane" aria-label="阅读面板">
-        {selectedMail ? <MailDetail mail={selectedMail} starred={isMailStarred(selectedMail, mailState)} onBack={() => setSelectedMailId(null)} onToggleStar={() => toggleStar(selectedMail.id)} /> : <div className="mail-empty mail-empty--reading"><span aria-hidden="true"><VisualIcon name="mail" size={30} /></span><p>选择一封邮件开始阅读</p></div>}
+        {selectedMail ? <MailDetail mail={selectedMail} starred={isMailStarred(selectedMail, mailState)} onBack={() => setSelectedMailId(null)} onToggleStar={() => toggleStar(selectedMail.id)} searchGuidance={searchGuidance} onSearch={searchFromMail} /> : <div className="mail-empty mail-empty--reading"><span aria-hidden="true"><VisualIcon name="mail" size={30} /></span><p>选择一封邮件开始阅读</p></div>}
       </section>
     </section>
   );
