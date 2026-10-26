@@ -274,6 +274,40 @@ describe('T07 promotion investigation', () => {
     expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('7000');
   });
 
+  it('recognizes a cached interview image when playback returns to the same source after other frames', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await loadPendingImages();
+    await seek(6500);
+    await loadPendingImages();
+    await seek(8601);
+    await loadPendingImages();
+
+    const cachedSource = assetLoader.get('IMG_A2_T07_003')?.src;
+    expect(cachedSource).toBeTruthy();
+    const completeGetter = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'complete')?.get;
+    const widthGetter = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalWidth')?.get;
+    const heightGetter = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalHeight')?.get;
+    vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockImplementation(function (this: HTMLImageElement) {
+      return this.getAttribute('src') === cachedSource || Boolean(completeGetter?.call(this));
+    });
+    vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockImplementation(function (this: HTMLImageElement) {
+      return this.getAttribute('src') === cachedSource ? 1448 : (widthGetter?.call(this) ?? 0);
+    });
+    vi.spyOn(HTMLImageElement.prototype, 'naturalHeight', 'get').mockImplementation(function (this: HTMLImageElement) {
+      return this.getAttribute('src') === cachedSource ? 1086 : (heightGetter?.call(this) ?? 0);
+    });
+
+    await seek(9000);
+    const returnedImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
+    expect(returnedImage.getAttribute('src')).toBe(cachedSource);
+    expect(returnedImage.getAttribute('aria-hidden')).toBe('false');
+    expect(container.querySelector('.t07-finale__screen')?.getAttribute('data-image-status')).toBe('loaded');
+    expect(button('.t07-finale__capture').disabled).toBe(false);
+    expect(button('.t07-finale__play').disabled).toBe(false);
+  });
+
   it('keeps only play, capture and progress in the primary controls and preserves keyboard stepping', async () => {
     await render();
     await loadPendingImages();

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { DoubleSSymbol } from '../../components/DoubleSSymbol';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import { PhotoViewport } from '../../components/PhotoViewport';
@@ -46,16 +46,28 @@ function FrameVisual({ assetId, resourceIdentity = assetId, altText, note, class
   const resourceKey = mediaResource.resourceKey;
   const latestResourceKey = useRef(resourceKey);
   latestResourceKey.current = resourceKey;
+  const imageRef = useRef<HTMLImageElement>(null);
   const [imageState, setImageState] = useState<{ key: string; status: 'loading' | 'loaded' | 'failed'; width: number; height: number }>({ key: '', status: 'loading', width: 0, height: 0 });
   const imageAvailable = Boolean(source && imageState.key === resourceKey && imageState.status === 'loaded');
   const imageFailed = Boolean(!source || (imageState.key === resourceKey && imageState.status === 'failed'));
   const imageStatus: T07MediaStatus = imageAvailable ? 'loaded' : imageFailed ? 'failed' : 'loading';
-  useEffect(() => { setImageState({ key: resourceKey, status: source ? 'loading' : 'failed', width: 0, height: 0 }); }, [resourceKey, source]);
+  // A resource-key mismatch already renders as loading. Avoid resetting in a
+  // passive effect: a cached image can fire onLoad first, and that later reset
+  // would leave the successfully displayed resource marked as loading.
+  useLayoutEffect(() => {
+    const image = imageRef.current;
+    if (!image?.complete || latestResourceKey.current !== resourceKey) return;
+    if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+      setImageState({ key: resourceKey, status: 'loaded', width: image.naturalWidth, height: image.naturalHeight });
+    } else if (source) {
+      setImageState({ key: resourceKey, status: 'failed', width: 0, height: 0 });
+    }
+  }, [resourceKey, source]);
   useEffect(() => { onImageAvailabilityChange?.(imageAvailable); }, [imageAvailable, onImageAvailabilityChange]);
   useEffect(() => { onImageStatusChange?.(resourceKey, imageStatus); }, [resourceKey, imageStatus, onImageStatusChange]);
   return (
     <div className={`t07-frame${imageAvailable ? ' t07-frame--image' : ''}${className ? ` ${className}` : ''}`} data-asset-id={assetId} data-image-status={imageStatus} style={imageAvailable ? { aspectRatio: `${imageState.width} / ${imageState.height}` } : undefined}>
-      {source && <div className="t07-frame__image-plane"><img key={resourceKey} src={mediaResource.requestSource} alt={imageAvailable ? altText : ''} aria-hidden={!imageAvailable} data-resource-key={resourceKey} onLoad={(event) => {
+      {source && <div className="t07-frame__image-plane"><img ref={imageRef} key={resourceKey} src={mediaResource.requestSource} alt={imageAvailable ? altText : ''} aria-hidden={!imageAvailable} data-resource-key={resourceKey} onLoad={(event) => {
         if (latestResourceKey.current !== resourceKey || event.currentTarget.dataset.resourceKey !== resourceKey || event.currentTarget.naturalWidth <= 0 || event.currentTarget.naturalHeight <= 0) return;
         setImageState({ key: resourceKey, status: 'loaded', width: event.currentTarget.naturalWidth, height: event.currentTarget.naturalHeight });
       }} onError={(event) => { if (latestResourceKey.current === resourceKey && event.currentTarget.dataset.resourceKey === resourceKey) setImageState({ key: resourceKey, status: 'failed', width: 0, height: 0 }); }} />{imageAvailable && children}</div>}
