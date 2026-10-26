@@ -303,6 +303,12 @@ describe('T05 school exploration', () => {
     expect(manager.getState().modules.act2Research.school.symbolMatchConfirmed).toBe(true);
     expect(container.querySelector('.t05-school__symbol-progress')?.getAttribute('data-match-state')).toBe('complete');
     expect(container.querySelector('.t05-school__symbol-progress')?.textContent).toContain('已完成');
+
+    await act(async () => { root.unmount(); });
+    root = createRoot(container);
+    await act(async () => { root.render(<SchoolInvestigation manager={manager} />); });
+    expect(container.querySelector('.t05-school__symbol-progress')?.getAttribute('data-match-state')).toBe('complete');
+    expect(container.querySelector('.t05-school__symbol-progress')?.textContent).toContain('山洞照片与学校笔记中的记号已确认一致');
   });
 
   it('uses a neutral browser-action label until the existing Qiming-name flag is present', async () => {

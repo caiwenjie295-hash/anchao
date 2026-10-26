@@ -1,0 +1,4 @@
+.act1-interaction-guidance__optional{box-sizing:border-box;width:min(100% - 2rem,1100px);margin:.6rem auto;padding:.55rem .75rem;border-left:3px solid #8a7656;border-radius:4px;background:#f0ede5;color:#4b4539;font-size:.9rem;line-height:1.5}
+.act1-interaction-guidance__photo{flex:1 1 100%;margin:0;padding:.5rem .65rem;border-radius:5px;background:#f0ede5;color:#48443c;font-size:.9rem;line-height:1.5}
+.act1-interaction-guidance__continue{display:block;max-width:46ch;line-height:1.5}
+.act1-scene .act1-interaction-guidance__photo[role=status]{color:#48443c}

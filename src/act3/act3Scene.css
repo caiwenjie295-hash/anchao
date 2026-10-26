@@ -23,6 +23,7 @@
 .act3-investigation__progress-counts strong{font-weight:700}
 .act3-investigation__photo-status,.act3-investigation__missing-required ul{display:flex;flex-wrap:wrap;gap:5px 12px;margin:5px 0 0;padding:0;list-style:none}
 .act3-investigation__photo-status li,.act3-investigation__missing-required li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:3px 0;font-size:.76rem}
+.act3-investigation__observation-role{flex:none;color:#53635a;font-size:.68rem}
 .act3-investigation__photo-status li[data-observation-state="observed"] strong{color:#1b6436}
 .act3-investigation__photo-status li[data-observation-state="pending"] strong{color:#765c26}
 .act3-investigation__missing-required{margin-top:5px;padding-top:5px;border-top:1px solid #d4ddd6}
@@ -134,6 +135,7 @@
 .act3-investigation__photo-overlay summary:focus-visible{outline:3px solid #d2efbc;outline-offset:2px;}
 .act3-investigation__narration>summary{max-width:min(48vw,440px);}
 .act3-investigation__narration>summary span{flex:none;color:#c7d4cb;font-size:.68rem;}
+.act3-investigation__narration-unread{width:7px;height:7px;border:1px solid #e2d1a8;border-radius:50%;background:#c5ad75;box-shadow:0 0 0 2px rgb(197 173 117 / 20%);}
 .act3-investigation__narration>summary strong{min-width:0;overflow:hidden;font-size:.78rem;text-overflow:ellipsis;white-space:nowrap;}
 .act3-investigation__narration-panel,.act3-investigation__field-record-panel{position:absolute;z-index:12;width:min(620px,calc(100vw - 24px));max-height:min(58dvh,520px);overflow:auto;padding:13px 15px;border:1px solid #87958b;border-radius:8px;color:#f4f7f3;background:rgb(22 31 27 / 96%);box-shadow:0 12px 34px #0008;backdrop-filter:blur(14px);font-size:.85rem;line-height:1.6;}
 .act3-investigation__narration-panel{top:calc(100% + 6px);left:0;}
@@ -149,6 +151,7 @@
 .act3-investigation__field-record-panel .act3-investigation__photo-status li,.act3-investigation__field-record-panel .act3-investigation__missing-required li{justify-content:space-between;gap:4px 10px;padding:5px 0;border-bottom:1px solid #46554c;color:#eef2ee;font-size:.8rem;}
 .act3-investigation__field-record-panel .act3-investigation__photo-status li[data-observation-state="observed"] strong{color:#a7e0b4;}
 .act3-investigation__field-record-panel .act3-investigation__photo-status li[data-observation-state="pending"] strong{color:#e5c78c;}
+.act3-investigation__field-record-panel .act3-investigation__observation-role{color:#c6d1c8;font-size:.72rem;}
 .act3-investigation__field-record-panel .act3-investigation__photo-observation-note{margin:10px 0;color:#dce5dd;font-size:.82rem;}
 .act3-investigation__field-record-panel .act3-investigation__missing-required{margin-top:10px;padding-top:8px;border-top:1px solid #57665d;}
 .act3-investigation__field-record-panel .act3-investigation__missing-required h2{margin:0 0 4px;color:#cbd7cd;font-size:.82rem;}
@@ -179,6 +182,7 @@
   .act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place>span{display:block;max-width:none;font-size:.62rem;}
   .act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls{top:5px;right:5px;gap:2px;padding:3px;}
   .act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button{min-height:36px!important;padding:3px 5px!important;font-size:.7rem;}
+  .act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls--compact-mobile button{min-height:44px!important;padding:4px 8px!important;}
   .act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls .photo-viewport__zoom-in{min-width:48px!important;}
   .act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions>summary{width:48px;min-width:48px;grid-auto-flow:row;gap:0;}
   .act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions>summary>span:first-child{display:none;}
@@ -197,3 +201,234 @@
   .act3-investigation__photo-overlay summary{min-height:34px;padding:3px 8px;}
   .act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button{min-height:34px!important;}
 }
+
+/* UX-A3-REFINE-20261022: keep the photo stage's controls and information panels in a blue-gray palette. */
+.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration {
+  --ui-page: #142331;
+  --ui-surface: #eff3f7;
+  --ui-surface-muted: #e3eaf0;
+  --ui-text: #142331;
+  --ui-text-muted: #506779;
+  --ui-border: #a2b3c1;
+  --ui-accent: #24486a;
+  --ui-accent-soft: #dce7f0;
+  --ui-success: #24486a;
+  --act3-blue-deep: #142331;
+  --act3-blue-panel: #192b3a;
+  --act3-blue-primary: #24486a;
+  --act3-blue-chrome: #eff3f7;
+  --act3-blue-border: #607a90;
+  --act3-blue-light: #eef4f8;
+}
+.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__header {
+  border-bottom-color: var(--act3-blue-border);
+  background: linear-gradient(105deg, #eff3f7 0%, #e3eaf0 100%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place > p,
+.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place > span { color: #506779; }
+.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place h1 { color: #142331; }
+.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__scene,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__lens,
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__frame { background: #142331; }
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls {
+  border-color: rgb(238 244 248 / 38%);
+  background: rgb(20 35 49 / 92%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button {
+  border-color: #607a90 !important;
+  color: #eef4f8 !important;
+  background: #24486a !important;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button:hover:not(:disabled) { background: #335f82 !important; }
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls .photo-viewport__zoom-in {
+  border-color: #8ea9bd !important;
+  color: #eef4f8 !important;
+  background: #24486a !important;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__adjustment-panel {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: rgb(20 35 49 / 97%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__marker--active:not(.photo-viewport__marker--focus-box) {
+  border-color: #d2e2ee !important;
+  color: #eef4f8 !important;
+  background: rgb(36 72 106 / 94%) !important;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__marker--active.photo-viewport__marker--focus-box {
+  border: 3px solid #d2e2ee !important;
+  border-style: solid !important;
+  background: rgb(36 72 106 / 92%) !important;
+  box-shadow: 0 0 0 2px #142331, 0 0 0 5px #eff3f7, 0 3px 14px #000b !important;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__marker--active .photo-viewport__marker-label {
+  border: 1px solid #8ea9bd;
+  color: #eef4f8;
+  background: #24486a;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px #eff3f7;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__marker:focus-visible {
+  outline-color: #eef4f8 !important;
+  box-shadow: 0 0 0 2px #142331, 0 0 0 7px #77a7c9, 0 3px 14px #000b !important;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__observation-progress {
+  border-color: #a2b3c1;
+  color: #142331;
+  background: #eff3f7;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__photo-status li[data-observation-state="observed"] strong { color: #24486a; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__photo-status li[data-observation-state="pending"] strong { color: #765c26; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__narration-panel {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: rgb(20 35 49 / 97%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__photo-overlay summary {
+  border-color: rgb(202 219 232 / 62%);
+  color: #eef4f8;
+  background: rgb(25 43 58 / 94%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__photo-overlay summary:focus-visible { outline-color: #9ec5e0; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__progress-counts { border-bottom-color: #607a90; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__photo-status li,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__missing-required li { border-bottom-color: #405a70; color: #eef4f8; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__photo-status li[data-observation-state="observed"] strong { color: #b7d7ec; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__photo-status li[data-observation-state="pending"] strong { color: #f0d294; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__missing-required,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__paper-compare,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__comparison-record { border-color: #607a90; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__missing-required h2,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__progress-counts strong { color: #c7d9e7; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__photo-observation-note { color: #d5e1ea; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__paper-compare > summary,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__comparison-record > summary,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__exterior-photo > summary { color: #eef4f8; background: #24486a; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__paper-compare-content article { border-color: #607a90; background: #192b3a; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__temple-compare { border-color: #607a90; background: #192b3a; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__field-record-panel .act3-investigation__comparison-placeholder { border-color: #607a90; background: #24486a; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__paper-transcript { border-color: #8ea9bd; color: #eef4f8; background: #192b3a; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__paper-transcript h3,
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__paper-transcript p { color: #c7d9e7; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help > summary,
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools > summary {
+  border-color: #a2b3c1;
+  color: #24486a;
+  background: #eff3f7;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help > summary:focus-visible,
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools > summary:focus-visible,
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help-panel :focus-visible,
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel :focus-visible { outline-color: #24486a; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help-panel {
+  border-color: #a2b3c1;
+  color: #142331;
+  background: rgb(239 243 247 / 98%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: rgb(20 35 49 / 97%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel > p strong { color: #b7c9d8; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-actions { border-top-color: #405a70; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel button {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: #24486a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel button:hover:not(:disabled) { background: #335f82; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__status {
+  border-top-color: #8ea9bd;
+  color: #142331;
+  background: #eff3f7;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__operations { border-top-color: #a2b3c1; background: #e3eaf0; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="primary"] {
+  border-color: #24486a;
+  color: #eef4f8;
+  background: #24486a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="primary"]:hover:not(:disabled) {
+  border-color: #183854;
+  background: #183854;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="secondary"] {
+  border-color: #a2b3c1;
+  color: #344b5e;
+  background: #dce5ed;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="secondary"]:hover:not(:disabled) {
+  border-color: #7893a8;
+  color: #142331;
+  background: #cbd9e4;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-empty {
+  border-color: #a2b3c1;
+  color: #607487;
+  background: #e3eaf0;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary {
+  border-color: #a2b3c1;
+  color: #24486a;
+  background: #eff3f7;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary > span:last-child { color: #eef4f8; background: #24486a; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions[open] > .investigation-navigation__actions {
+  border-color: #607a90;
+  background: rgb(20 35 49 / 97%);
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--ready {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: #24486a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--ready:hover:not(:disabled) { background: #335f82; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--blocked {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: #192b3a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--completed {
+  border-color: #405a70;
+  color: #b6c5d1;
+  background: #192b3a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__reason {
+  border-left-color: #8ea9bd;
+  color: #eef4f8;
+  background: #192b3a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__material {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: #24486a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__material:hover:not(:disabled) { background: #335f82; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: #192b3a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail__header h2 { color: #eef4f8; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail button {
+  border-color: #607a90;
+  color: #eef4f8;
+  background: #24486a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail button:hover:not(:disabled) { background: #335f82; }
+.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail__content { color: #eef4f8; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__detail-evidence > figcaption { color: #c7d9e7; }
+.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__detail-evidence > .act3-investigation__comparison-placeholder { border-color: #607a90; color: #eef4f8; background: #24486a; }
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls--compact-mobile .photo-viewport__adjustments > summary {
+  border-color: #8ea9bd;
+  color: #eef4f8;
+  background: #24486a;
+}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls--compact-mobile .photo-viewport__adjustments > summary:hover { background: #335f82; }
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls--compact-mobile .photo-viewport__adjustments > summary:focus-visible { outline: 3px solid #eef4f8; outline-offset: 2px; }
+.act3-investigation .photo-viewport__marker--region{border-color:#ffd274!important;background:rgb(255 210 116 / 2%)!important;box-shadow:0 0 0 1px #142331,inset 0 0 0 1px rgb(255 255 255 / 12%)!important}
+.act3-investigation .photo-viewport__marker--active.photo-viewport__marker--focus-box.photo-viewport__marker--region,
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__marker--active.photo-viewport__marker--focus-box.photo-viewport__marker--region{border:2px solid #d2e2ee!important;border-style:solid!important;background:rgb(36 72 106 / 5%)!important;box-shadow:0 0 0 1px #142331,inset 0 0 0 1px rgb(239 243 247 / 20%)!important}
+.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__marker--active.photo-viewport__marker--region:focus-visible{outline:3px solid #eef4f8!important;outline-offset:2px;box-shadow:0 0 0 2px #142331,0 0 0 7px #77a7c9!important}

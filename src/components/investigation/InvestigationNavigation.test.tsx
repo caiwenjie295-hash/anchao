@@ -68,8 +68,9 @@ describe('InvestigationNavigation', () => {
         { actionId: 'finish', kind: 'story', label: '结束本阶段', state: 'blocked', reason: '还有一处必需观察。', relatedMaterials: [{ id: 'photo', label: '当前照片' }], onOpenMaterial },
       ]} />));
       const primary = [...host.querySelectorAll<HTMLButtonElement>('[data-action-emphasis="primary"]')];
-      expect(primary).toHaveLength(2);
-      expect(primary.map((button) => button.textContent)).toEqual(['上一张', '下一张']);
+      expect(primary).toHaveLength(1);
+      expect(primary.map((button) => button.textContent)).toEqual(['下一张']);
+      expect(host.querySelector('[data-action-id="back"]')?.getAttribute('data-action-emphasis')).toBe('secondary');
 
       const menu = host.querySelector<HTMLDetailsElement>('.investigation-navigation__other-actions')!;
       expect(menu.open).toBe(false);
@@ -81,6 +82,28 @@ describe('InvestigationNavigation', () => {
       expect(host.querySelector('.investigation-navigation__reason')?.textContent).toContain('还有一处必需观察。');
       await act(async () => { host.querySelector<HTMLButtonElement>('.investigation-navigation__material')!.click(); });
       expect(onOpenMaterial).toHaveBeenCalledWith({ id: 'photo', label: '当前照片' });
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
+
+  it('keeps first and last photo placeholders paired with the available route', async () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = createRoot(host);
+    const route = (actionId: string, kind: 'return' | 'move') => ({ actionId, kind, label: kind === 'return' ? '返回原路' : '下一张现场照片', state: 'ready' as const });
+    try {
+      await act(async () => root.render(<InvestigationNavigation presentation="photo-stage" actions={[route('first-next', 'move')]} />));
+      expect(host.querySelector('.investigation-navigation__photo-pair')?.children).toHaveLength(2);
+      expect(host.querySelector('.investigation-navigation__photo-empty')?.textContent).toBe('上一张');
+      expect(host.querySelector('[data-action-id="first-next"]')?.getAttribute('data-action-emphasis')).toBe('primary');
+
+      await act(async () => root.render(<InvestigationNavigation presentation="photo-stage" actions={[route('last-back', 'return')]} />));
+      expect(host.querySelector('.investigation-navigation__photo-pair')?.children).toHaveLength(2);
+      expect(host.querySelector('.investigation-navigation__photo-empty')?.textContent).toBe('下一张');
+      expect(host.querySelector('[data-action-id="last-back"]')?.getAttribute('data-action-emphasis')).toBe('secondary');
+      expect(host.querySelector('[data-action-emphasis="primary"]')).toBeNull();
     } finally {
       await act(async () => root.unmount());
       host.remove();

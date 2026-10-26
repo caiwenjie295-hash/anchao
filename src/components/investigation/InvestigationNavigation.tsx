@@ -89,7 +89,7 @@ export function InvestigationNavigation({ actions, label = '可前往地点与�
       <nav className="investigation-navigation investigation-navigation--photo-stage" aria-label="现场照片导航与其他行动">
         <div className="investigation-navigation__photo-pair">
           {previousAction
-            ? renderAction(previousAction, 'primary', '上一张')
+            ? renderAction(previousAction, 'secondary', '上一张')
             : <button type="button" className="investigation-navigation__photo-empty" disabled aria-label="没有上一张现场照片">上一张</button>}
           {nextAction
             ? renderAction(nextAction, 'primary', '下一张')

@@ -175,11 +175,15 @@
 .investigation-shell__photo-tools-actions { display: flex; flex-wrap: wrap; gap: 7px; padding-top: 4px; border-top: 1px solid #d3d9d4; }
 .investigation-shell--act3-photo-stage .investigation-shell__scene { min-height: 0; overflow: hidden; }
 .investigation-shell--act3-photo-stage .investigation-shell__operations { padding: 4px max(8px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); }
-.investigation-shell--act3-photo-stage .investigation-navigation--photo-stage { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; gap: 7px; }
-.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair { display: contents; }
-.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__item { min-width: 0; max-width: none; flex: none; }
+.investigation-shell--act3-photo-stage .investigation-navigation--photo-stage { display: flex; min-width: 0; align-items: center; justify-content: center; gap: 7px; }
+.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair { display: flex; min-width: 0; align-items: center; gap: 7px; }
+.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__item { min-width: 0; max-width: none; flex: 0 1 auto; }
 .investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__item .investigation-navigation__action,
 .investigation-shell--act3-photo-stage .investigation-navigation__photo-empty { min-height: 44px; justify-content: center; padding: 5px 8px; }
+.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action { width: auto; min-width: 84px; }
+.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__photo-empty { width: auto; min-width: 84px; flex: 0 0 auto; }
+.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="secondary"] { border-color: #b7c1ba; color: #465249; background: #eef1ee; font-weight: 500; }
+.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="secondary"]:hover:not(:disabled) { border-color: #89978d; color: #354239; background: #e4e9e5; }
 .investigation-shell--act3-photo-stage .investigation-navigation__photo-empty { width: 100%; border-color: #b8c1bb; color: #647169; background: #e7ebe7; }
 .investigation-shell--act3-photo-stage .investigation-navigation__other-actions { position: relative; min-width: 0; }
 .investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary { display: grid; width: 48px; min-height: 44px; place-items: center; padding: 0 5px; border: 1px solid #9aa69e; border-radius: 6px; color: #344239; background: #f8faf7; cursor: pointer; font-size: .76rem; list-style: none; }
@@ -198,10 +202,14 @@
   .investigation-shell--act3-photo-stage .investigation-shell__place h1 { font-size: .86rem; }
   .investigation-shell--act3-photo-stage .investigation-shell__place span { font-size: .64rem; }
   .investigation-shell--act3-photo-stage .investigation-shell__operations { padding-top: 3px; padding-bottom: calc(3px + env(safe-area-inset-bottom)); }
-  .investigation-shell--act3-photo-stage .investigation-navigation--photo-stage { gap: 5px; }
+  .investigation-shell--act3-photo-stage .investigation-navigation--photo-stage { width: 100%; justify-content: stretch; gap: 5px; }
+  .investigation-shell--act3-photo-stage .investigation-navigation__photo-pair { flex: 1 1 auto; }
   .investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__item .investigation-navigation__action,
   .investigation-shell--act3-photo-stage .investigation-navigation__photo-empty,
   .investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary { min-height: 44px; }
+  .investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__item { flex: 1 1 0; }
+  .investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action { width: 100%; min-width: 0; }
+  .investigation-shell--act3-photo-stage .investigation-navigation__photo-pair > .investigation-navigation__photo-empty { width: auto; min-width: 0; flex: 1 1 0; }
 }
 @media (max-height: 440px) {
   .investigation-shell--act3-photo-stage .investigation-shell__header { min-height: 34px; padding-top: 1px; padding-bottom: 1px; }

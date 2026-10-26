@@ -5,7 +5,7 @@ import { createDefaultState } from '../../core/defaultState';
 import { EventBus } from '../../core/eventBus';
 import { StateManager } from '../../core/stateManager';
 import { tales } from '../../data/act2TalesData';
-import { TalesInvestigation } from './TalesInvestigation';
+import { countDistinctTaleSources, TalesInvestigation } from './TalesInvestigation';
 
 describe('TalesInvestigation', () => {
   let container: HTMLDivElement; let root: Root; let manager: StateManager;
@@ -68,6 +68,16 @@ describe('TalesInvestigation', () => {
     expect(manager.getState().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED).toBe(true);
     expect(container.textContent).toContain('来源和机制仍不清楚');
     expect(manager.getState().modules.notepad.autoEntryIds).toContain('NOTE_A2_T04_004');
+  });
+
+  it('counts multiple selected passages from one tale as one distinct supporting source', () => {
+    const evidenceById = new Map([
+      ['passage-a', { taleId: 'tale-one' }],
+      ['passage-b', { taleId: 'tale-one' }],
+      ['passage-c', { taleId: 'tale-two' }],
+    ]);
+    expect(countDistinctTaleSources(['passage-a', 'passage-b'], evidenceById)).toBe(1);
+    expect(countDistinctTaleSources(['passage-a', 'passage-b', 'passage-c'], evidenceById)).toBe(2);
   });
 
   it('offers read, unselected stories before an unread third story and focuses that story’s evidence', async () => {

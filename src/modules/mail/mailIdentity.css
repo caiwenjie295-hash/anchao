@@ -34,3 +34,8 @@
   display: grid;
   place-items: center;
 }
+.mail-detail__investigation-step{display:grid;justify-items:start;gap:.5rem;margin:1rem 0;padding:.85rem 1rem;border-left:3px solid #426a53;border-radius:6px;background:#edf2ec;color:#263a31}
+.mail-detail__investigation-step p{margin:0;line-height:1.6}
+.mail-detail__investigation-step button{min-height:44px;border:1px solid #315b45;border-radius:7px;padding:.55rem .85rem;background:#315b45;color:#fff;font:inherit;font-weight:650;cursor:pointer}
+.mail-detail__investigation-step button:hover{background:#254b37}
+.mail-detail__investigation-step button:focus-visible{outline:3px solid #285c83;outline-offset:2px}

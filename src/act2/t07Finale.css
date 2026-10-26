@@ -650,6 +650,27 @@
   font-weight: 500;
 }
 
+.t07-frame__placeholder{z-index:2}
+.t07-frame__retry,.t07-finale__image-retry,.t07-finale__frame-assessment button{min-height:44px;padding:.55rem .8rem;border:1px solid #48645c;border-radius:6px;background:#fff;color:#203b32;font-weight:650}
+.t07-frame__retry:hover,.t07-finale__image-retry:hover,.t07-finale__frame-assessment button:hover{background:#e8eee9}
+.t07-frame__retry:focus-visible,.t07-finale__image-retry:focus-visible,.t07-finale__frame-assessment button:focus-visible{outline:3px solid #285c83;outline-offset:2px}
+.t07-finale__media-status{margin:0;padding:.45rem .6rem;border-left:3px solid #87978f;border-radius:3px;background:#f0f2ef;color:#34433c;line-height:1.55}
+.t07-finale__fine-controls{display:grid;gap:.55rem;padding:.55rem .7rem;border:1px solid #c9d2ce;border-radius:8px;background:#f7f8f5}
+.t07-finale__fine-controls>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:650}
+.t07-finale__fine-controls-buttons{display:flex;flex-wrap:wrap;gap:.45rem}
+.t07-finale__filmstrip-item>.t07-frame{width:100%;height:auto;max-height:94px;aspect-ratio:16/9;min-height:0;margin:0;border-radius:4px}
+.t07-finale__filmstrip-item>.t07-frame .t07-frame__image-plane>img{object-fit:cover}
+.t07-finale__filmstrip-select{width:100%;min-height:44px;display:grid;justify-items:start;gap:.25rem;padding:.45rem!important;text-align:left!important;background:#f8f9f6!important}
+.t07-finale__filmstrip-select[aria-pressed=true]{border-color:#426a53;background:#e7eee8!important;box-shadow:inset 0 0 0 1px #426a53}
+.t07-finale__filmstrip-select small{font-size:.76rem;color:#56625c;font-variant-numeric:tabular-nums}
+.t07-finale__frame-assessment{display:grid;gap:.45rem;padding:.7rem .8rem;border:1px solid #c9d2ce;border-radius:8px;background:#f3f5f1;color:#33413b}
+.t07-finale__frame-assessment p{margin:0;line-height:1.6}
+.t07-finale__compare-image-recovery{display:grid;gap:.4rem;min-width:0;width:100%}
+.t07-finale__compare-image-recovery .t07-finale__media-status{font-size:.9rem}
+.t07-finale__compare-image-recovery .photo-viewport__load-state{display:none}
+.t07-finale__filmstrip-item .t07-frame__placeholder p{max-width:24ch;font-size:.78rem}
+.t07-finale__filmstrip-item .t07-frame__retry{min-height:36px;padding:.35rem .55rem;font-size:.78rem}
+
 /* Fail status bar: warm gray, not success green (shell is parent of .t07-finale) */
 .investigation-shell.t07-shell--mismatch-status .investigation-shell__status {
   background: #e6e1d6 !important;

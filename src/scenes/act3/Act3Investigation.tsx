@@ -16,6 +16,7 @@ import { act3FirstLensId, act3LensById, act3RequiredClueIds, act3StageDoc, ACT3_
 import { act3LensDescriptionFor, act3LensTitleFor, act3MovementClassForStage, act3MovementForStage, act3ObjectiveFor, act3PlaceForLens, act3RouteLabelFor, act3StageCompletionLabel } from '../../data/act3Presentation';
 import { findAct3RoutePathToClue, getAct3RouteAvailability } from '../../story/investigation/act3RoutePolicy';
 import { act3HotspotActionLabel } from '../../story/investigation/actionPresentation';
+import { act3HotspotPrompt } from './act3HotspotPrompt';
 
 type Act3PhotoViewportProps = ComponentProps<typeof PhotoViewport> & { explorationMode?: boolean; revealBeat?: boolean };
 const Act3PhotoViewport = PhotoViewport as ComponentType<Act3PhotoViewportProps>;
@@ -43,6 +44,32 @@ const STANCE_LABEL: Record<Act3Lens['stance'], string> = {
   crouch: '低处观察',
   enter: '进入室内',
 };
+
+function displayedLensTitle(stage: Act3ActiveStage, lens: Act3Lens, inspectedClueIds: readonly string[]): string {
+  const title = act3LensTitleFor(lens.id, lens.title, inspectedClueIds);
+  if (stage === 'T03' && lens.id === 'LENS_A3_T03_002' && !inspectedClueIds.includes('CLUE_A3_T03_24H')) return '门牌近处';
+  if (stage === 'T03' && lens.id === 'LENS_A3_T03_004' && !inspectedClueIds.includes('CLUE_A3_T03_48_72H')) return '门牌近处';
+  return title;
+}
+
+function displayedLensPlace(stage: Act3ActiveStage, lens: Act3Lens, inspectedClueIds: readonly string[]): string {
+  const hasObserved24HourMarker = inspectedClueIds.includes('CLUE_A3_T03_24H');
+  if (stage === 'T03' && ['LENS_A3_T03_002', 'LENS_A3_T03_003'].includes(lens.id) && !hasObserved24HourMarker) return '走廊房门';
+  if (stage === 'T03' && lens.id === 'LENS_A3_T03_004' && !inspectedClueIds.includes('CLUE_A3_T03_48_72H')) return '走廊房门';
+  return act3PlaceForLens(lens.id, lens.title);
+}
+
+function observationRoleForClue(clueId: string, requiredClueIds: ReadonlySet<string>, routeRequiredClueIds: ReadonlySet<string>): { value: string; label: string; isRequired: boolean; isRouteRequired: boolean } {
+  const isRequired = requiredClueIds.has(clueId);
+  const isRouteRequired = routeRequiredClueIds.has(clueId);
+  const roles = [
+    ...(isRequired ? ['required'] : []),
+    ...(isRouteRequired ? ['route'] : []),
+  ];
+  if (!roles.length) roles.push('optional');
+  const labels = roles.map((role) => role === 'required' ? '阶段必需' : role === 'route' ? '路线依据' : '可选观察');
+  return { value: roles.join(' '), label: labels.join(' · '), isRequired, isRouteRequired };
+}
 
 function ComparisonPhoto({ assetId, alt, caption, placeholder }: { assetId: string; alt: string; caption: string; placeholder: string }) {
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -105,6 +132,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const state = useAppSelector(manager, selectAct3Snapshot, equalAct3Snapshot);
   const stage = state.modules.act3.stage;
   const [hotspotId, setHotspotId] = useState<string | null>(null);
+  const [readNarrationLensIds, setReadNarrationLensIds] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
     if (stage === 'inactive') return;
@@ -126,45 +154,62 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const assetSrc = assetLoader.get(lens.assetId)?.src;
   const lensHotspot = hotspotId ? lens.hotspots.find((item) => item.clueId === hotspotId) : undefined;
   const inspected = state.modules.act3.inspectedClueIds;
-  const lensTitle = act3LensTitleFor(lens.id, lens.title, inspected);
+  const lensTitle = displayedLensTitle(stage, lens, inspected);
+  const lensPlace = displayedLensPlace(stage, lens, inspected);
   const lensDescription = act3LensDescriptionFor(lens.id, lens.description, inspected);
   const samePlaceLenses = doc.lenses.filter((item) => act3PlaceForLens(item.id, item.title) === act3PlaceForLens(lens.id, lens.title));
   const samePlaceLensIndex = samePlaceLenses.findIndex((item) => item.id === lens.id) + 1;
   const requiredClueIds = act3RequiredClueIds(stage);
+  const requiredClueIdSet = new Set(requiredClueIds);
+  const routeRequiredClueIdSet = new Set(doc.lenses.flatMap((item) => item.requiresClueIds ?? []));
   const missingRequiredIds = requiredClueIds.filter((id) => !inspected.includes(id));
   const completedRequiredCount = requiredClueIds.length - missingRequiredIds.length;
   const observedPhotoHotspotCount = lens.hotspots.filter((hotspot) => inspected.includes(hotspot.clueId)).length;
   const unobservedPhotoHotspotCount = lens.hotspots.length - observedPhotoHotspotCount;
+  const hotspotRole = (hotspot: Act3Hotspot) => observationRoleForClue(hotspot.clueId, requiredClueIdSet, routeRequiredClueIdSet);
+  const pendingPhotoHotspots = lens.hotspots.filter((hotspot) => !inspected.includes(hotspot.clueId));
+  const pendingPhotoRequiredCount = pendingPhotoHotspots.filter((hotspot) => hotspotRole(hotspot).isRequired).length;
+  const pendingPhotoRouteOnlyCount = pendingPhotoHotspots.filter((hotspot) => {
+    const role = hotspotRole(hotspot);
+    return role.isRouteRequired && !role.isRequired;
+  }).length;
+  const pendingPhotoOptionalCount = pendingPhotoHotspots.filter((hotspot) => {
+    const role = hotspotRole(hotspot);
+    return !role.isRequired && !role.isRouteRequired;
+  }).length;
   const nextStage = ACT3_STAGE_NEXT[stage];
 
   const hotspotByClue = new Map(doc.lenses.flatMap((item) => item.hotspots.map((hotspot) => [hotspot.clueId, { hotspot, lensId: item.id }] as const)));
   const currentMissingRequiredHotspot = lens.hotspots.find((hotspot) => missingRequiredIds.includes(hotspot.clueId));
-  const missingOnCurrentPhotoCount = lens.hotspots.filter((hotspot) => missingRequiredIds.includes(hotspot.clueId)).length;
   const nextMissingRequired = missingRequiredIds.map((id) => hotspotByClue.get(id)?.hotspot).find((hotspot) => hotspot !== undefined);
   const missingXiaoyueMemory = [currentMissingRequiredHotspot, nextMissingRequired]
     .some((hotspot) => hotspot?.clueId === 'CLUE_A3_T07_XIAOYUE_MEMORY');
-  const currentPhotoNeedsObservationHint = `当前照片还有${unobservedPhotoHotspotCount}处未观察热点，请先查看黄色热点。`;
+  const currentPhotoNeedsObservationHint = (() => {
+    if (pendingPhotoRequiredCount > 0) {
+      const routeNote = pendingPhotoRouteOnlyCount > 0 ? `另有${pendingPhotoRouteOnlyCount}处路线依据待查看。` : '';
+      const optionalNote = pendingPhotoOptionalCount > 0 ? `另外${pendingPhotoOptionalCount}处是可选观察。` : '';
+      return `当前照片还有${pendingPhotoRequiredCount}处阶段必需观察未完成，请主动查看对应热点。${routeNote}${optionalNote}`;
+    }
+    if (pendingPhotoRouteOnlyCount > 0) {
+      const optionalNote = pendingPhotoOptionalCount > 0 ? `另有${pendingPhotoOptionalCount}处可选观察。` : '';
+      return `当前照片还有${pendingPhotoRouteOnlyCount}处路线依据待查看；查看后可进入关联镜头。${optionalNote}`;
+    }
+    return `当前照片还有${pendingPhotoOptionalCount}处可选观察；可按需要查看，也可沿现有地点路线继续。`;
+  })();
+  const missingRequiredHint = missingRequiredIds.length === 0
+    ? '本阶段必需观察已齐。'
+    : missingXiaoyueMemory
+      ? `本阶段还缺${missingRequiredIds.length}处必需观察，请沿现有路线去听小月说完这一段。`
+      : `本阶段还缺${missingRequiredIds.length}处必需观察，请沿现有地点路线继续寻找。`;
   const blockedForwardHint = unobservedPhotoHotspotCount > 0
-    ? `${currentPhotoNeedsObservationHint} ${missingRequiredIds.length === 0
-      ? '本阶段必需观察已齐。'
-      : missingOnCurrentPhotoCount > 0
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
-        : missingXiaoyueMemory
-          ? `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，再听小月说完这一段。`
-          : `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，沿现有地点路线继续寻找。`}`
+    ? `${currentPhotoNeedsObservationHint} ${missingRequiredHint}`
     : missingRequiredIds.length === 0
       ? '本阶段必需观察已齐，当前照片上的热点也都已观察。'
       : missingXiaoyueMemory
         ? `本阶段还缺${missingRequiredIds.length}处必需观察。先听小月说完这一段，再继续。`
         : `本阶段还缺${missingRequiredIds.length}处必需观察；当前照片热点已全部观察，请沿现有地点路线前往其他照片。`;
   const photoObservationNote = unobservedPhotoHotspotCount > 0
-    ? `${currentPhotoNeedsObservationHint} ${missingRequiredIds.length === 0
-      ? '本阶段必需观察已齐。'
-      : missingOnCurrentPhotoCount > 0
-        ? `本阶段还缺${missingRequiredIds.length}处必需观察，其中${missingOnCurrentPhotoCount}处就在当前照片。`
-        : missingXiaoyueMemory
-          ? `本阶段还缺${missingRequiredIds.length}处必需观察；完成当前照片后，再听小月说完这一段。`
-          : `本阶段还缺${missingRequiredIds.length}处必需观察。`}`
+    ? `${currentPhotoNeedsObservationHint} ${missingRequiredHint}`
     : missingRequiredIds.length === 0
       ? '本阶段必需观察已齐，当前照片上的热点也都已查看。'
       : missingXiaoyueMemory
@@ -186,9 +231,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
   const findMaterialLinks = (clueIds: string[]): InvestigationMaterialLink[] => clueIds.flatMap((clueId) => {
     const entry = hotspotByClue.get(clueId);
     if (!entry || safePathToMissingRequiredClue(clueId) === null) return [];
-    return [{ id: clueId, label: act3HotspotActionLabel(stage, clueId, entry.hotspot.label, inspected) }];
+    return [{ id: clueId, label: act3HotspotPrompt(stage, clueId, entry.hotspot.label, inspected) }];
   });
-  const hotspotLabel = (hotspot: Act3Hotspot) => act3HotspotActionLabel(stage, hotspot.clueId, hotspot.label, inspected);
+  const hotspotLabel = (hotspot: Act3Hotspot) => act3HotspotPrompt(stage, hotspot.clueId, hotspot.label, inspected);
 
   const openHotspot = (clueId: string) => {
     manager.inspectAct3Clue(clueId);
@@ -283,8 +328,13 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     || (stage === 'T06' && lens.id === 'LENS_A3_T06_007' && inspected.includes('CLUE_A3_T06_SHRINE'))
     || (stage === 'T07' && lens.id === 'LENS_A3_T07_007' && inspected.includes('CLUE_A3_T07_NOTEBOOK_PICKUP'))
   );
+  const pendingPhotoRoleSummary = [
+    ...(pendingPhotoRequiredCount > 0 ? [`${pendingPhotoRequiredCount}处阶段必需观察`] : []),
+    ...(pendingPhotoRouteOnlyCount > 0 ? [`${pendingPhotoRouteOnlyCount}处路线依据`] : []),
+    ...(pendingPhotoOptionalCount > 0 ? [`${pendingPhotoOptionalCount}处可选观察`] : []),
+  ].join('、');
   const conciseStatus = unobservedPhotoHotspotCount > 0
-    ? `本图待看${unobservedPhotoHotspotCount}处 · 本阶段还差${missingRequiredIds.length}项`
+    ? `${pendingPhotoRoleSummary ? `本图${pendingPhotoRoleSummary}待看` : `本图待看${unobservedPhotoHotspotCount}处`} · ${missingRequiredIds.length ? `本阶段还差${missingRequiredIds.length}项` : '本阶段必需观察已齐'}`
     : missingRequiredIds.length > 0
       ? `本图已清 · 本阶段还差${missingRequiredIds.length}项`
       : stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
@@ -295,7 +345,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     photoStage
     ariaLabel="第三幕调查"
     actLabel={`第三幕 · ${movement}`}
-    locationLabel={act3PlaceForLens(lens.id, lens.title)}
+    locationLabel={lensPlace}
     contextLabel={samePlaceLenses.length > 1 ? `同名现场照片 ${samePlaceLensIndex} / ${samePlaceLenses.length}` : STANCE_LABEL[lens.stance]}
     objective={stage === 'T07' && state.game.flags.FLAG_A3_SITE_EXITED === true
       ? '已和小月离开旧址，手边的笔记还有内容可读。'
@@ -307,10 +357,24 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
     <main className="act3-investigation__lens" data-act3-stage={stage} data-asset-id={lens.assetId} data-observation-stance={lens.stance}>
-      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat}>
+      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat} quietHotspotLabels compactMobileControls>
         <div className="act3-investigation__photo-overlay" data-photo-control>
-          <details className="act3-investigation__narration">
-            <summary>现场旁白</summary>
+          <details
+            key={lens.id}
+            className="act3-investigation__narration"
+            onToggle={(event) => {
+              if (!event.currentTarget.open) return;
+              setReadNarrationLensIds((previous) => {
+                if (previous.has(lens.id)) return previous;
+                const next = new Set(previous);
+                next.add(lens.id);
+                return next;
+              });
+            }}
+          >
+            <summary aria-label={readNarrationLensIds.has(lens.id) ? '现场旁白' : '现场旁白，未读'}>
+              现场旁白{!readNarrationLensIds.has(lens.id) && <span className="act3-investigation__narration-unread" aria-hidden="true" />}
+            </summary>
             <div className="act3-investigation__narration-panel">
               <h2>{lensTitle}</h2>
               <p>{lensDescription}</p>
@@ -329,8 +393,9 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
                 <ul className="act3-investigation__photo-status" aria-label="当前照片观察状态">
                   {lens.hotspots.map((hotspot) => {
                     const known = inspected.includes(hotspot.clueId);
-                    return <li key={hotspot.clueId} data-observation-state={known ? 'observed' : 'pending'}>
-                      <span>{hotspotLabel(hotspot)}</span><strong>{known ? '已观察' : '待观察'}</strong>
+                    const role = hotspotRole(hotspot);
+                    return <li key={hotspot.clueId} data-observation-clue-id={hotspot.clueId} data-observation-role={role.value} data-observation-state={known ? 'observed' : 'pending'}>
+                      <span>{hotspotLabel(hotspot)}</span><small className="act3-investigation__observation-role">{role.label}</small><strong>{known ? '已观察' : '待观察'}</strong>
                     </li>;
                   })}
                 </ul>
