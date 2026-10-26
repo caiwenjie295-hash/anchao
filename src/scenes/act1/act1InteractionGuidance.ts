@@ -47,7 +47,9 @@ export function scenePhotoGuidance(
   const continueReason = missingRequiredFlags.length === 0
     ? ''
     : missingSceneFlags.length > 0
-      ? `${missingSceneFlags.map((flagId) => missingSceneFlagNotice(scene, flagId)).join('；')}${requiredPhotoMissing ? '；保存现场照片' : ''}；完成后才能${scene.continueLabel}。`
+      ? requiredPhotoMissing
+        ? `${missingSceneFlags.map((flagId) => missingSceneFlagNotice(scene, flagId)).join('；')}；还要保存现场照片后才能${scene.continueLabel}。`
+        : `${missingSceneFlags.map((flagId) => missingSceneFlagNotice(scene, flagId)).join('；')}；完成后才能${scene.continueLabel}。`
       : requiredPhotoMissing && scene.capturePhotoId
         ? `保存现场照片后才能${scene.continueLabel}。`
       : '还有一项现场记录未完成，完成后才能继续。';
