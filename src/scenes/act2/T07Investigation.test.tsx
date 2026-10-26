@@ -51,13 +51,16 @@ describe('T07 promotion investigation', () => {
   });
 
   const render = async () => { await act(async () => { root.render(<T07Investigation manager={manager} />); }); };
+  const loadImage = async (image: HTMLImageElement) => {
+    Object.defineProperty(image, 'naturalWidth', { configurable: true, value: 1448 });
+    Object.defineProperty(image, 'naturalHeight', { configurable: true, value: 1086 });
+    await act(async () => { image.dispatchEvent(new Event('load')); });
+  };
   const loadPendingImages = async () => {
     const pending = [...container.querySelectorAll<HTMLImageElement>('img[aria-hidden="true"]')].filter((image) => image.dataset.testLoaded !== 'true');
     for (const image of pending) {
-      Object.defineProperty(image, 'naturalWidth', { configurable: true, value: 1448 });
-      Object.defineProperty(image, 'naturalHeight', { configurable: true, value: 1086 });
       image.dataset.testLoaded = 'true';
-      await act(async () => { image.dispatchEvent(new Event('load')); });
+      await loadImage(image);
     }
   };
   const button = (selector: string): HTMLButtonElement => {
@@ -186,6 +189,67 @@ describe('T07 promotion investigation', () => {
     expect(flags().FLAG_A2_PROMO_VIDEO_WATCHED).toBe(true);
   });
 
+  it('pauses at a slow frame, ignores an old load, retries the current image and captures its displayed time', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await loadPendingImages();
+    await seek(6600);
+    await loadPendingImages();
+    const previousImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
+    expect(previousImage.getAttribute('src')).toBe(assetLoader.get('IMG_A2_T07_TRAIL_WALK_001')?.src);
+
+    await click('.t07-finale__play');
+    await play(act2T07.video.frameMs);
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6800');
+    expect(button('.t07-finale__play').textContent).toBe('播放');
+    expect(button('.t07-finale__capture').disabled).toBe(true);
+    expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('正在载入');
+    await play(2000);
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe('6800');
+
+    await act(async () => { previousImage.dispatchEvent(new Event('load')); });
+    expect(button('.t07-finale__capture').disabled).toBe(true);
+    const templeImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
+    const failedSource = templeImage.getAttribute('src');
+    await act(async () => { templeImage.dispatchEvent(new Event('error')); });
+    expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('载入失败');
+    expect(container.querySelector('.t07-frame__placeholder')?.textContent).toContain('不能完成这项观察或核对');
+    expect(button('.t07-finale__capture').disabled).toBe(true);
+
+    await click('.t07-frame__retry');
+    const retryImage = container.querySelector<HTMLImageElement>('.t07-finale__screen img')!;
+    expect(retryImage.getAttribute('src')).not.toBe(failedSource);
+    expect(retryImage.getAttribute('src')).toContain('t07-retry=1');
+    await act(async () => { previousImage.dispatchEvent(new Event('load')); });
+    expect(button('.t07-finale__capture').disabled).toBe(true);
+    await loadPendingImages();
+    expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('已完整显示');
+    expect(button('.t07-finale__play').textContent).toBe('播放');
+    expect(button('.t07-finale__capture').disabled).toBe(false);
+
+    await click('.t07-finale__capture');
+    expect(manager.getState().modules.act2Research.t07.capturedAtMsByFrameId.FRAME_A2_T07_001).toBe(6800);
+    await click('.t07-finale__play');
+    await play(800);
+    expect(manager.getState().modules.act2Research.t07.capturedAtMsByFrameId.FRAME_A2_T07_001).toBe(6800);
+  });
+
+  it('keeps only play, capture and progress in the primary controls and preserves keyboard stepping', async () => {
+    await render();
+    await loadPendingImages();
+    await click('.t07-finale__video-open');
+    await loadPendingImages();
+    const primaryControls = container.querySelector('.t07-finale__controls')!;
+    expect(primaryControls.querySelectorAll('button')).toHaveLength(2);
+    expect(container.querySelector<HTMLDetailsElement>('.t07-finale__fine-controls')?.open).toBe(false);
+    await act(async () => { container.querySelector('.t07-finale__fine-controls summary')?.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+    expect(container.querySelectorAll('.t07-finale__fine-controls-buttons button')).toHaveLength(4);
+    const player = container.querySelector('.t07-finale__player')!;
+    await act(async () => { player.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })); });
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(String(act2T07.video.frameMs));
+  });
+
   it('records the frame-to-exterior comparison with one semantic confirmation', async () => {
     await render();
     await loadPendingImages();
@@ -299,6 +363,96 @@ describe('T07 promotion investigation', () => {
     expect(container.textContent).toContain('基本确定是同一个地方');
     expect(comparisonPanel()).toContain(act2T07.comparison.xiaoyueLine);
     expect(comparisonPanel()).toContain(act2T07.comparison.replyLine);
+  });
+
+  it('explains the limits of a trail frame and returns to the video without losing saved frames', async () => {
+    const restoredState = manager.getState();
+    restoredState.game.flags = { ...restoredState.game.flags, FLAG_A2_PROMO_VIDEO_FOUND: true };
+    restoredState.modules.act2Research.t07.capturedFrameIds = ['FRAME_A2_T07_002'];
+    restoredState.modules.act2Research.t07.capturedAtMsByFrameId = { FRAME_A2_T07_002: 5000 };
+    manager = new StateManager(new EventBus(), restoredState);
+
+    await render();
+    await clickTab('受访视频');
+    await loadPendingImages();
+    await seek(3000);
+    const timeBeforeReturn = (container.querySelector('.t07-finale__seek') as HTMLInputElement).value;
+    await clickTab('外景对照');
+    expect(container.querySelector('.t07-finale__frame-assessment')?.textContent).toContain('树林和路线');
+    expect(container.querySelector('.t07-finale__frame-assessment')?.textContent).toContain('还不能确认');
+    expect(button('.t07-finale__frame-assessment button').textContent).toContain('返回视频');
+    const capturedBeforeReturn = [...manager.getState().modules.act2Research.t07.capturedFrameIds];
+
+    await click('.t07-finale__frame-assessment button');
+    expect(button('.t07-finale__tab.is-active').textContent).toBe('受访视频');
+    expect((container.querySelector('.t07-finale__seek') as HTMLInputElement).value).toBe(timeBeforeReturn);
+    expect(button('.t07-finale__play').disabled).toBe(true);
+    expect(container.querySelector('#t07-video-playback-status')?.textContent).toContain('正在载入');
+    await loadPendingImages();
+    expect(button('.t07-finale__play').disabled).toBe(false);
+    expect(manager.getState().modules.act2Research.t07.capturedFrameIds).toEqual(capturedBeforeReturn);
+  });
+
+  it('keeps comparison pictures, captions and observation state on the selected frame through quick switches and retries', async () => {
+    const restoredState = manager.getState();
+    restoredState.modules.act2Research.t07.capturedFrameIds = ['FRAME_A2_T07_001', 'FRAME_A2_T07_002'];
+    restoredState.modules.act2Research.t07.capturedAtMsByFrameId = { FRAME_A2_T07_001: 7000, FRAME_A2_T07_002: 5000 };
+    manager = new StateManager(new EventBus(), restoredState);
+
+    await render();
+    await clickTab('外景对照');
+    await loadPendingImages();
+    const trailChoice = [...container.querySelectorAll<HTMLButtonElement>('.t07-finale__candidate-list button')].find((item) => item.textContent?.includes('山路行进'))!;
+    const templeChoice = [...container.querySelectorAll<HTMLButtonElement>('.t07-finale__candidate-list button')].find((item) => item.getAttribute('data-frame-kind') === 'temple')!;
+    await act(async () => { trailChoice.click(); });
+    const staleTrailImage = [...container.querySelectorAll<HTMLImageElement>('.t07-finale__compare-side img')]
+      .find((image) => image.getAttribute('src') === assetLoader.get('IMG_A2_T07_TRAIL_WALK_001')?.src)!;
+    expect(button('.t07-finale__compare').disabled).toBe(true);
+
+    await act(async () => { templeChoice.click(); });
+    await loadImage(staleTrailImage);
+    expect(container.querySelectorAll('.t07-finale__candidate-list button[aria-pressed="true"]')).toHaveLength(1);
+    expect(container.querySelector('.t07-finale__source-line')?.textContent).toContain('00:06.8–00:08.6');
+    expect(button('.t07-finale__compare').disabled).toBe(true);
+
+    await loadPendingImages();
+    expect(container.querySelector<HTMLButtonElement>('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.disabled).toBe(false);
+    await act(async () => { container.querySelector<HTMLInputElement>('input[name="t07-comparison-feature"][value="square-opening"]')?.click(); });
+    expect(button('.t07-finale__compare').disabled).toBe(false);
+    const templeScreenshot = [...container.querySelectorAll<HTMLImageElement>('.t07-finale__compare-side img')]
+      .find((image) => image.getAttribute('src')?.startsWith(assetLoader.get('IMG_A2_T07_005')?.src ?? ''))!;
+    const sourceBeforeRetry = templeScreenshot.getAttribute('src');
+    await act(async () => { templeScreenshot.dispatchEvent(new Event('error')); });
+    expect(button('.t07-finale__compare').disabled).toBe(true);
+    await click('.t07-finale__compare-image-recovery .t07-finale__image-retry');
+    const retriedTempleScreenshot = [...container.querySelectorAll<HTMLImageElement>('.t07-finale__compare-side img')]
+      .find((image) => image.getAttribute('src')?.includes('t07-retry=1'))!;
+    expect(retriedTempleScreenshot.getAttribute('src')).not.toBe(sourceBeforeRetry);
+    await loadImage(staleTrailImage);
+    expect(button('.t07-finale__compare').disabled).toBe(true);
+    await loadPendingImages();
+    expect(button('.t07-finale__compare').disabled).toBe(false);
+
+    const templeObservation = container.querySelector<HTMLButtonElement>('.t07-finale__compare-side:first-child .t07-finale__observe-text')!;
+    await act(async () => { templeObservation.click(); });
+    await act(async () => { trailChoice.click(); });
+    expect(container.querySelector('.t07-finale__source-line')?.textContent).toContain('00:04.0–00:06.4');
+    expect(container.querySelectorAll('.t07-finale__compare-side figcaption')[1]?.textContent).toBe('第一次徒步拍下的树林照片');
+    expect(container.querySelector('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.getAttribute('aria-pressed')).toBe('false');
+    await loadPendingImages();
+    await act(async () => { container.querySelector<HTMLButtonElement>('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.click(); });
+    expect(container.querySelector('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.getAttribute('aria-pressed')).toBe('true');
+    await act(async () => { templeChoice.click(); });
+    await loadPendingImages();
+    expect(container.querySelector('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.getAttribute('aria-pressed')).toBe('true');
+
+    await clickTab('宣传资料');
+    await clickTab('外景对照');
+    expect(container.querySelector<HTMLButtonElement>('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.disabled).toBe(true);
+    expect(container.querySelector('#t07-compare-media-status')?.textContent).toContain('载入失败');
+    await loadPendingImages();
+    expect(container.querySelector<HTMLButtonElement>('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.disabled).toBe(false);
+    expect(container.querySelector('.t07-finale__compare-side:first-child .t07-finale__observe-text')?.getAttribute('aria-pressed')).toBe('true');
   });
 
   it('restores the comparison dialogue from an existing temple-confirmed save', async () => {
