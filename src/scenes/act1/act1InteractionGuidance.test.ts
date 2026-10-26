@@ -38,16 +38,16 @@ describe('Act 1 scene interaction guidance', () => {
     expect(saved.continueReason).toBe('');
   });
 
-  it('aligns the ruined temple photo with both original scene records before descent', () => {
+  it('keeps the ruined temple photo on its original hotspot gate and names arrival only in the descent reason', () => {
     const state = createDefaultState();
     const scene = sceneById.get('SCENE_A1_I_001')!;
     const hotspots = hotspotsBySceneId.get(scene.id)!;
 
     const noneFound = scenePhotoGuidance(scene, hotspots, state)!;
     expect(noneFound.canCapture).toBe(false);
-    expect(noneFound.reason).toContain('到达“山腰破庙”');
     expect(noneFound.reason).toContain('“补”');
-    expect(noneFound.continueReason).toBe('保存现场照片后才能下山。');
+    expect(noneFound.continueReason).toContain('“山腰破庙”的到达记录尚未完成');
+    expect(noneFound.continueReason).toContain('保存现场照片');
 
     state.game.flags.FLAG_A1_TEMPLE_FOUND = true;
     const arrivalOnly = scenePhotoGuidance(scene, hotspots, state)!;
@@ -59,10 +59,10 @@ describe('Act 1 scene interaction guidance', () => {
     state.game.flags.FLAG_A1_TEMPLE_FOUND = false;
     state.game.flags.FLAG_A1_BU_FOUND = true;
     const buOnly = scenePhotoGuidance(scene, hotspots, state)!;
-    expect(buOnly.canCapture).toBe(false);
-    expect(buOnly.reason).toContain('到达“山腰破庙”');
-    expect(buOnly.reason).not.toContain('“补”');
-    expect(buOnly.continueReason).toBe('保存现场照片后才能下山。');
+    expect(buOnly.canCapture).toBe(true);
+    expect(buOnly.reason).toContain('可以保存');
+    expect(buOnly.continueReason).toContain('“山腰破庙”的到达记录尚未完成');
+    expect(buOnly.continueReason).toContain('保存现场照片');
 
     state.game.flags.FLAG_A1_TEMPLE_FOUND = true;
     const ready = scenePhotoGuidance(scene, hotspots, state)!;

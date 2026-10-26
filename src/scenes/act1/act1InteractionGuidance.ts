@@ -16,9 +16,9 @@ export function optionalEnvironmentHint(hotspots: readonly SceneHotspot[]): stri
     : null;
 }
 
-function requiredSceneFlagAction(scene: SceneRecord, flagId: string): string {
-  if (flagId === 'FLAG_A1_TEMPLE_FOUND') return `确认已到达“${scene.title}”`;
-  return '完成现场记录';
+function missingSceneFlagNotice(scene: SceneRecord, flagId: string): string {
+  if (flagId === 'FLAG_A1_TEMPLE_FOUND') return `“${scene.title}”的到达记录尚未完成`;
+  return `“${scene.title}”现场记录尚未完成`;
 }
 
 export function scenePhotoGuidance(
@@ -29,35 +29,27 @@ export function scenePhotoGuidance(
   if (!scene.capturePhotoId) return null;
   const captured = state.modules.scene.capturedPhotoIds.includes(scene.capturePhotoId);
   const requiredHotspots = hotspots.filter((hotspot) => hotspot.hotspotKind !== 'environment' && hotspot.triggerFlags.length > 0);
-  const requiredHotspotFlags = new Set(requiredHotspots.flatMap((hotspot) => hotspot.triggerFlags));
   const photoTakenFlags = new Set(scene.requiredFlagIds.filter((flagId) => flagId.endsWith('_PHOTO_TAKEN')));
-  const requiredObservationFlags = new Set([
-    ...requiredHotspotFlags,
-    ...scene.requiredFlagIds.filter((flagId) => !photoTakenFlags.has(flagId)),
-  ]);
-  const missingObservationFlags = [...requiredObservationFlags].filter((flagId) => state.game.flags[flagId] !== true);
-  const missingHotspots = requiredHotspots.filter((hotspot) => hotspot.triggerFlags.some((flagId) => missingObservationFlags.includes(flagId)));
   const hotspotFlags = new Set(requiredHotspots.flatMap((hotspot) => hotspot.triggerFlags));
+  const missingHotspots = requiredHotspots.filter((hotspot) => hotspot.triggerFlags.some((flagId) => state.game.flags[flagId] !== true));
   const missingSceneFlags = scene.requiredFlagIds.filter((flagId) =>
     !photoTakenFlags.has(flagId) && !hotspotFlags.has(flagId) && state.game.flags[flagId] !== true,
   );
-  const canCapture = !captured && missingObservationFlags.length === 0;
-  const missingActions = [
-    ...missingSceneFlags.map((flagId) => requiredSceneFlagAction(scene, flagId)),
-    ...missingHotspots.map((hotspot) => `查看“${hotspot.label}”`),
-  ];
+  const canCapture = !captured && missingHotspots.length === 0;
   const reason = captured
     ? `“${scene.title}”照片已保存。`
-    : missingActions.length > 0
-      ? `先${missingActions.join('、')}，再拍摄这张照片。`
+    : missingHotspots.length > 0
+      ? `先查看${missingHotspots.map((hotspot) => `“${hotspot.label}”`).join('、')}，再拍摄这张照片。`
       : `可以保存“${scene.title}”的现场照片。`;
 
   const missingRequiredFlags = scene.requiredFlagIds.filter((flagId) => state.game.flags[flagId] !== true);
-  const requiredPhotoMissing = missingRequiredFlags.length > 0 && !captured;
+  const requiredPhotoMissing = [...photoTakenFlags].some((flagId) => state.game.flags[flagId] !== true) && !captured;
   const continueReason = missingRequiredFlags.length === 0
     ? ''
-    : requiredPhotoMissing && scene.capturePhotoId
-      ? `保存现场照片后才能${scene.continueLabel}。`
+    : missingSceneFlags.length > 0
+      ? `${missingSceneFlags.map((flagId) => missingSceneFlagNotice(scene, flagId)).join('；')}${requiredPhotoMissing ? '；保存现场照片' : ''}；完成后才能${scene.continueLabel}。`
+      : requiredPhotoMissing && scene.capturePhotoId
+        ? `保存现场照片后才能${scene.continueLabel}。`
       : '还有一项现场记录未完成，完成后才能继续。';
 
   return {
