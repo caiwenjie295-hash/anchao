@@ -428,3 +428,8 @@ Node24.15.0/npm11.12.1。最终提交101文件472项完整通过，运行命令 
 
 - 场景和照片使用 CSS/SVG 原型，用于验证叙事与交互；不代表正式美术质量。
 - `npm test`：13 个测试文件、48 项通过；`npm run build`、`npm run build:offline`、`npm run test:offline` 均通过。离线测试在 jsdom 的模拟 origin 中完成，内置浏览器的 `file://` 打开受本机安全策略拦截，因此未完成真实浏览器视觉走查，也未验证跨浏览器的 `file://` 存档行为。
+
+
+## 2026-11-10 UX-DESIGNEER-20261110 云端接续检查点
+
+电脑端第一轮改造及原桌面恢复已保存到独立分支；产品31fe7ac，检查点679项测试与网页构建通过。新增鼠标聚光、图书馆边距、互动拍立得及最后浏览器/离线完整验收待完成。详见根目录CLOUD_HANDOFF.md和docs/ux-designeer-20261110/validation.md；不合main。
