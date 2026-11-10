@@ -69,3 +69,37 @@
   .act2-shelf-map__hotspot > span { padding: 3px; font-size: 10px; }
   .act2-shelf-map__text-links button { min-height: 44px; }
 }
+
+/* Library photograph sits in the archive column as a single framed document. */
+.act2-reading-room--library .act2-shelf-map { gap: 12px; }
+.act2-reading-room--library .act2-shelf-map__plane {
+  border: 1px solid #c9c2b4;
+  background: #e8e3d9;
+  box-shadow: 0 1px 0 rgb(46 47 43 / 7%);
+}
+.act2-reading-room--library .act2-shelf-map__hotspot:hover:not(:disabled) { border-color: #f3e5c2; background: rgb(155 124 71 / 18%); }
+.act2-reading-room--library .act2-shelf-map__hotspot.is-selected:not(:disabled) {
+  border-color: #f1ddb0;
+  background: rgb(155 124 71 / 24%);
+  box-shadow: inset 0 0 0 1px rgb(155 124 71 / 56%);
+}
+.act2-reading-room--library .act2-shelf-map__hotspot.is-selected:not(:disabled) > span { color: #f7f1e3; background: #493d29; }
+.act2-reading-room--library .act2-shelf-map__text-links {
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #d6cfbf;
+}
+.act2-reading-room--library .act2-shelf-map__text-links > p { color: #79766c; font-size: 12px; }
+.act2-reading-room--library .act2-shelf-map__text-links ul { gap: 8px; }
+.act2-reading-room--library .act2-shelf-map__text-links button {
+  min-height: 44px;
+  padding: 7px 10px;
+  border-color: #d1c8b6;
+  border-radius: 2px;
+  color: #455156;
+  background: #f6f3ea;
+}
+.act2-reading-room--library .act2-shelf-map__text-links button:hover:not(:disabled) { border-color: #9d804c; color: #2c3c41; background: #eee8d9; }
+.act2-reading-room--library .act2-shelf-map__text-links button[aria-current="true"] { border-color: #987847; color: #382e1e; background: #e9e0ce; }
+.act2-reading-room--library .act2-shelf-map__text-links button:disabled { color: #858176; }
+.act2-reading-room--library .act2-shelf-map__locked { padding: 8px 10px; border-left: 2px solid #a1844e; color: #676961; background: #eeebe2; }

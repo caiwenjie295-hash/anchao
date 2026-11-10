@@ -346,3 +346,187 @@
   background: var(--lib-paper, #ebe6dc);
   color: var(--lib-ink, #2a2926);
 }
+
+/* T03 archive spacing scale; keep the scene's catalog, shelf, and reader as
+   separate working zones instead of stacking nested cards. */
+.act2-reading-room--library .act2-library {
+  --a2-space-8: 8px;
+  --a2-space-12: 12px;
+  --a2-space-16: 16px;
+  --a2-space-24: 24px;
+  --a2-space-32: 32px;
+}
+.act2-reading-room--library .act2-library__catalog,
+.act2-reading-room--library .act2-library__shelf {
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #d6cfbf;
+  background: transparent;
+}
+.act2-reading-room--library .act2-library__catalog > summary {
+  min-height: 48px;
+  padding: 0 0 var(--a2-space-8);
+  border-bottom: 1px solid #d6cfbf;
+  color: #26383f;
+  font-size: 15px;
+}
+.act2-reading-room--library .act2-library__catalog > summary small { color: #766b58; font-size: 12px; }
+.act2-reading-room--library .act2-library__catalog-body {
+  display: grid;
+  gap: var(--a2-space-12);
+  padding-top: var(--a2-space-12);
+}
+.act2-reading-room--library .act2-library__hint { margin: 0; color: #526067; line-height: 1.6; }
+.act2-reading-room--library .act2-library__sections { gap: var(--a2-space-8); }
+.act2-reading-room--library .act2-library__section {
+  min-height: 44px;
+  border-color: #d4cbbb;
+  color: #36454a;
+  background: #f8f6ef;
+  transition: border-color 140ms ease, color 140ms ease, background-color 140ms ease;
+}
+.act2-reading-room--library .act2-library__section:hover:not([aria-current="true"]):not([aria-pressed="true"]) {
+  border-color: #a38a58;
+  color: #27373d;
+  background: #eee8d9;
+}
+.act2-reading-room--library .act2-library__section[aria-current="true"],
+.act2-reading-room--library .act2-library__section[aria-pressed="true"] {
+  border-color: #987847;
+  color: #342a1b;
+  background: #e9e0ce;
+  box-shadow: inset 3px 0 #987847;
+}
+.act2-reading-room--library .act2-library__section-note {
+  min-height: 0;
+  margin: 0;
+  padding: var(--a2-space-8) var(--a2-space-12);
+  border-left: 2px solid #a1844e;
+  color: #505b5c;
+  background: transparent;
+  line-height: 1.6;
+}
+.act2-reading-room--library .act2-library__noise-note { margin: 0; color: #78766e; line-height: 1.5; }
+.act2-reading-room--library .act2-library__shelf {
+  display: grid;
+  gap: var(--a2-space-12);
+  padding-top: var(--a2-space-16);
+}
+.act2-reading-room--library .act2-library__shelf .act2-library__subtitle {
+  margin: 0;
+  color: #26383f;
+  font-size: 15px;
+  font-weight: 600;
+}
+.act2-reading-room--library .act2-library__volume-context {
+  grid-template-columns: minmax(0, 112px) minmax(0, 1fr);
+  gap: var(--a2-space-8) var(--a2-space-12);
+  color: #66706d;
+  line-height: 1.6;
+}
+.act2-reading-room--library .act2-library__volume-context > p span { color: #35464a; }
+.act2-reading-room--library .act2-library__volume-cover img { border: 0; border-bottom: 1px solid #d4cbbb; background: #ece8dd; }
+.act2-reading-room--library .act2-library__volume-cover figcaption { padding-top: 4px; color: #767167; }
+.act2-reading-room--library .act2-library__reader {
+  display: grid;
+  align-content: start;
+  gap: var(--a2-space-16);
+  padding: clamp(20px, 2.1vw, var(--a2-space-32));
+  border-top: 2px solid #9a7d4b;
+  border-bottom: 1px solid #d6cfbf;
+  background: #faf8f1;
+}
+.act2-reading-room--library .act2-library__reader-title {
+  margin: 0;
+  padding: 0 0 var(--a2-space-12);
+  border-bottom: 1px solid #d6cfbf;
+  color: #24363d;
+  font-family: var(--font-reader, Georgia, serif);
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+}
+.act2-reading-room--library .act2-library__paper-empty {
+  min-height: 240px;
+  padding: var(--a2-space-32);
+  border: 0;
+  border-block: 1px solid #d9d2c3;
+  color: #70716a;
+  background: transparent;
+}
+.act2-reading-room--library .act2-library__reader-instruction { color: #737168; }
+.act2-reading-room--library .act2-library__leaves { gap: 0 var(--a2-space-12); padding-bottom: var(--a2-space-8) !important; border-bottom: 1px solid #e0dacd; }
+.act2-reading-room--library .act2-library__leaf { min-height: 32px; padding: 5px 2px; border: 0; border-bottom: 2px solid transparent; color: #7b7a72; background: transparent; }
+.act2-reading-room--library .act2-library__leaf[aria-current="page"] { border-bottom-color: #9a7d4b; color: #3a3224; background: transparent; }
+.act2-reading-room--library .act2-library__page {
+  position: relative;
+  justify-self: stretch;
+  max-width: none;
+  gap: var(--a2-space-24);
+  padding: clamp(24px, 3vw, var(--a2-space-32));
+  border: 0;
+  border-block: 1px solid #d7d0c1;
+  color: #303535;
+  background: #fbfaf5;
+  box-shadow: none;
+  line-height: 1.8;
+}
+.act2-reading-room--library .act2-library__page-head { gap: var(--a2-space-8) var(--a2-space-16); padding-bottom: var(--a2-space-12); border-bottom-color: #d8d1c3; }
+.act2-reading-room--library .act2-library__page-head h3 { color: #27383d; font-family: var(--font-reader, Georgia, serif); font-weight: 500; }
+.act2-reading-room--library .act2-library__page-leaf { color: #777469; }
+.act2-reading-room--library .act2-library__page-text { color: #2d3332; font-family: var(--font-reader, Georgia, serif); line-height: 1.95; }
+.act2-reading-room--library .act2-library__page-text p { margin-bottom: 1.05em; }
+.act2-reading-room--library .act2-library__paper-illustration { gap: var(--a2-space-8); padding: var(--a2-space-12) 0; border: 0; border-block: 1px solid #e1dbce; background: transparent; }
+.act2-reading-room--library .act2-library__paper-illustration img { max-height: 250px; border: 0; background: transparent; }
+.act2-reading-room--library .act2-library__paper-illustration figcaption { color: #77746a; }
+.act2-reading-room--library .act2-library__excerpt { gap: var(--a2-space-12); padding: var(--a2-space-16); border-left-width: 2px; background: #f1ede2; }
+.act2-reading-room--library .act2-library__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--a2-space-12);
+  padding-top: var(--a2-space-12);
+  border-top: 1px solid #d6cfbf;
+}
+.act2-reading-room--library .act2-library__pager,
+.act2-reading-room--library .act2-library__tools { gap: var(--a2-space-8); }
+.act2-reading-room--library .act2-library__tools { padding-left: var(--a2-space-16); border-left: 1px solid #d6cfbf; }
+.act2-reading-room--library .act2-library__pager { opacity: 1; }
+.act2-reading-room--library .act2-library__prev,
+.act2-reading-room--library .act2-library__next,
+.act2-reading-room--library .act2-library__zoom-out,
+.act2-reading-room--library .act2-library__zoom-in,
+.act2-reading-room--library .act2-library__bookmark {
+  min-height: 44px;
+  padding: 0 var(--a2-space-12);
+  border: 1px solid #ad9a73;
+  border-radius: 2px;
+  color: #38464a;
+  background: #f7f4eb;
+  font-size: 13px;
+}
+.act2-reading-room--library .act2-library__prev:hover:not(:disabled),
+.act2-reading-room--library .act2-library__next:hover:not(:disabled),
+.act2-reading-room--library .act2-library__zoom-out:hover:not(:disabled),
+.act2-reading-room--library .act2-library__zoom-in:hover:not(:disabled),
+.act2-reading-room--library .act2-library__bookmark:hover:not(:disabled) { border-color: #765d32; background: #e8ddc5; }
+.act2-reading-room--library .act2-library__prev:disabled,
+.act2-reading-room--library .act2-library__next:disabled,
+.act2-reading-room--library .act2-library__zoom-out:disabled,
+.act2-reading-room--library .act2-library__zoom-in:disabled { border-color: #d4d0c5; color: #888980; background: #eeece5; }
+.act2-reading-room--library .act2-library__bookmark[aria-pressed="true"] { border-color: #8e7040; color: #392f20; background: #e9e0ce; }
+.act2-reading-room--library .act2-library__zoom-value { color: #77766e; }
+.act2-reading-room--library .act2-library__keywords { max-width: none; margin-top: var(--a2-space-8); border-top-color: #d6cfbf; }
+.act2-reading-room--library .act2-library__keywords-title { min-height: 44px; padding-inline: 0; color: #74684e; }
+.act2-reading-room--library .act2-library__keyword-list { gap: var(--a2-space-8); }
+.act2-reading-room--library .act2-library__keyword { padding: var(--a2-space-8) var(--a2-space-12); border-color: #d6cfbf; background: #f7f4eb; }
+.act2-reading-room--library .act2-library__keyword[aria-pressed="true"] { border-color: #9b7c47; background: #e9e0ce; }
+
+@container act2-reading-room (max-width: 1100px) {
+  .act2-reading-room--library .act2-library__controls { align-items: stretch; }
+  .act2-reading-room--library .act2-library__pager,
+  .act2-reading-room--library .act2-library__tools { flex: 1 1 100%; }
+  .act2-reading-room--library .act2-library__tools { padding: var(--a2-space-12) 0 0; border-top: 1px solid #d6cfbf; border-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .act2-reading-room--library .act2-library__section { transition: none; }
+}
