@@ -46,4 +46,3 @@ viewport.html?width=1440&height=900提供精确尺寸iframe。motion=reduce或po
 - 该门禁不等于人工逐章完整通关；视觉夹具只证明列出的真实UI行为。手机未专项处理。构建仍有原有大bundle提示。
 - 连续切换reduce/coarse隔离预览曾遇一次原图complete但loading未退，reload后正常；未改原PhotoViewport加载算法，后续观察未复现。此观察保留于implementation.md，勿声称缓存/设备全矩阵无问题。
 - 只批准当前改造分支交付；不合main、不改旧发布指针。最终文档提交后仅重建离线并复核SHA/产物，产品不再变化。
-
