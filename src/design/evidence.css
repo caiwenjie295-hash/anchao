@@ -6,7 +6,12 @@
 
 /* One visible brass focus treatment across controls; photographic hotspots
    keep their own blue focus ring because it communicates the selected region. */
-:focus-visible:not(.photo-viewport__marker) {
+.app-window :is(.wechat-app, .mail-app, .browser-app, .notepad-app, .explorer-app, .photos-app) :focus-visible:not(.photo-viewport__marker),
+.investigation-shell :focus-visible:not(.photo-viewport__marker),
+.investigation-progress :focus-visible,
+.chapter-navigation__menu :focus-visible,
+.chapter-navigation__confirmation :focus-visible,
+.story-transition :focus-visible:not(.photo-viewport__marker) {
   outline: 3px solid #bd9b5b !important;
   outline-offset: 3px !important;
 }
