@@ -38,11 +38,15 @@ if (mode !== 'opening') {
   }
   saveState(state, storage);
 }
-if (params.get('motion') === 'reduce') {
+if (params.get('motion') === 'reduce' || params.get('pointer') === 'coarse') {
   const nativeMatchMedia = window.matchMedia.bind(window);
-  window.matchMedia = (query: string) => query.includes('prefers-reduced-motion')
-    ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => true }
-    : nativeMatchMedia(query);
+  window.matchMedia = (query: string) => {
+    const reduce = params.get('motion') === 'reduce' && query.includes('prefers-reduced-motion');
+    const coarse = params.get('pointer') === 'coarse' && (query.includes('pointer: fine') || query.includes('hover: hover'));
+    return reduce || coarse
+      ? { matches: reduce, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent: () => true }
+      : nativeMatchMedia(query);
+  };
 }
 const { default: App } = await import('../../src/App');
 createRoot(document.getElementById('root')!).render(<App />);
