@@ -71,9 +71,11 @@
 .polaroid-photo {
   box-sizing: border-box;
   display: grid;
-  justify-items: stretch;
+  justify-items: center;
   gap: 12px;
-  width: min(100%, 760px);
+  width: fit-content;
+  max-width: min(100%, 760px);
+  justify-self: center;
   margin: 0 auto;
   padding: clamp(12px, 2.2vw, 22px) clamp(12px, 2.2vw, 22px) clamp(20px, 3vw, 30px);
   border: 1px solid #d4cbbb;
@@ -90,12 +92,13 @@
 .polaroid-photo[data-pointer-active="false"] { transition-duration: 340ms, 180ms; }
 .polaroid-photo > img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
   max-height: min(54dvh, 560px);
   object-fit: contain;
   object-position: center;
-  background: #eeece5;
+  background: transparent;
 }
 .polaroid-photo > .act3-investigation__comparison-placeholder {
   box-sizing: border-box;
@@ -117,10 +120,12 @@
   text-align: center;
 }
 .act3-investigation__detail-evidence { display: grid; gap: 14px; width: min(100%, 760px); margin: 0 auto 16px; }
-.act3-investigation__detail-photo { width: 100%; }
+.act3-investigation__detail-photo { width: fit-content; max-width: 100%; }
 .act3-investigation__paper-transcript { max-width: 760px; margin: 0 auto; }
 .scene-clue-focus__image--independent.polaroid-photo {
-  width: min(100%, 720px);
+  width: fit-content;
+  max-width: min(100%, 720px);
+  justify-self: center;
   aspect-ratio: auto;
   overflow: visible;
   border: 1px solid #d4cbbb;
@@ -129,9 +134,11 @@
   background: #fffdf7;
 }
 .scene-clue-focus__image--independent.polaroid-photo > img {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
   max-height: min(54dvh, 520px);
+  background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
