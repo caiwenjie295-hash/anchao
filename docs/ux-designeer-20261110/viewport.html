@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>暗潮 · 固定尺寸隔离预览</title>
+<style>html,body{margin:0;background:#0d1720}body{width:max-content}iframe{display:block;border:0}</style></head>
+<body><iframe title="暗潮隔离预览"></iframe><script>
+const query=new URLSearchParams(location.search);
+const width=Number(query.get('width')||1280),height=Number(query.get('height')||800);
+if(![320,390,768,1280,1440].includes(width)||height<500||height>1200)throw new Error('Unsupported review dimensions');
+const frame=document.querySelector('iframe');frame.width=width;frame.height=height;
+query.delete('width');query.delete('height');frame.src='./fixture.html?'+query;
+</script></body></html>
