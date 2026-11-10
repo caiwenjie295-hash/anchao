@@ -8,15 +8,15 @@ import { isStoryTransitionReached, storyTransitions } from '../../src/data/story
 const storage = installFixtureMemoryStorage(window).storage;
 const params = new URLSearchParams(location.search);
 const mode = params.get('mode') ?? 'opening';
-const modes = ['opening', 'desktop', 'photo-editor', 'a1-cave', 'a1-temple', ...FIXTURE_MODES];
+const modes = ['opening', 'desktop', 'photo-editor', 'a1-entry', 'a1-cave', 'a1-temple', ...FIXTURE_MODES];
 if (!modes.includes(mode)) throw new Error('Unknown isolated preview');
 if (mode !== 'opening') {
-  const state = buildCheckpoint(mode === 'desktop' ? 'a1-start' : ['photo-editor', 'a1-cave', 'a1-temple'].includes(mode) ? 'a1-f' : mode as FixtureMode);
+  const state = buildCheckpoint(mode === 'desktop' ? 'a1-start' : ['photo-editor', 'a1-entry', 'a1-cave', 'a1-temple'].includes(mode) ? 'a1-f' : mode as FixtureMode);
   if (mode === 'desktop') state.modules.storyTransitions.seenIds = ['TRANSITION_A1_INTRO'];
-  if (mode === 'a1-cave' || mode === 'a1-temple') {
-    state.game.phase = mode === 'a1-cave' ? 'H' : 'I';
+  if (mode === 'a1-entry' || mode === 'a1-cave' || mode === 'a1-temple') {
+    state.game.phase = mode === 'a1-entry' ? 'G' : mode === 'a1-cave' ? 'H' : 'I';
     state.modules.scene.journeyStarted = true;
-    state.modules.scene.currentSceneId = mode === 'a1-cave' ? 'SCENE_A1_H_001' : 'SCENE_A1_I_001';
+    state.modules.scene.currentSceneId = mode === 'a1-entry' ? 'SCENE_A1_G_001' : mode === 'a1-cave' ? 'SCENE_A1_H_001' : 'SCENE_A1_I_001';
     state.modules.scene.visitedSceneIds = ['SCENE_A1_G_001', 'SCENE_A1_G_002', 'SCENE_A1_G_003', 'SCENE_A1_H_001'];
     if (mode === 'a1-temple') {
       state.modules.scene.visitedSceneIds.push('SCENE_A1_I_001');
