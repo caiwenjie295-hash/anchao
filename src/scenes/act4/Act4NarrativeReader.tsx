@@ -563,7 +563,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
     onExit={onExit}
   >
     <main className={`a4-reader a4-reader--${presentationKind}${privateBlogView ? ' a4-reader--private-blog-open' : ''}`} style={{ '--a4-reader-font-size': `${uiPreferences.readerFontSize}px` } as CSSProperties} data-act4-stage={currentStage} data-reading-stage={stage} data-presentation-kind={presentationKind} ref={readerRef} tabIndex={-1}>
-      <article className="a4-reader__story" aria-label={`${displayTitle}故事`}>
+      <aside className="a4-reader__desk-tools" aria-label="阅读目录与进度">
         <header className="a4-reader__heading">
           <h2 className="sr-only">{displayTitle}</h2>
           <p className="a4-reader__perspective" data-perspective={section.perspective}>
@@ -581,6 +581,8 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
             </button>)}
           </nav>
         </details>
+      </aside>
+      <article className="a4-reader__story" aria-label={`${displayTitle}故事`}>
         {t01NextStepHint && <p className="a4-reader__next-step">{t01NextStepHint}</p>}
 
         <div className="a4-reader__blocks">

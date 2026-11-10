@@ -392,6 +392,111 @@
 .a4-private-blog-gateway { border: 0; border-top: 1px solid #d2caba; border-bottom: 1px solid #d2caba; border-radius: 0; background: #eee9dd; }
 .a4-private-blog-gateway__card { border: 0; border-top: 2px solid #9d804b; border-bottom: 1px solid #d4cbb7; border-radius: 0; background: #faf8f1; box-shadow: none; }
 
+/* Keep A4's title, progress and directory in view beside the active paper. */
+.a4-reader__desk-tools {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 10px;
+  align-self: start;
+  max-height: calc(100dvh - 190px);
+  overflow: auto;
+  padding: 12px;
+  border-top: 2px solid #9d804b;
+  border-bottom: 1px solid #d4cbb7;
+  background: #f7f4eb;
+}
+.a4-reader__story { grid-column: 1; grid-row: 1; }
+.a4-reader__heading { margin: 0 0 12px; padding-bottom: 10px; }
+.a4-reader__index { margin-bottom: 0; }
+.a4-reader__pager {
+  position: sticky;
+  top: 8px;
+  z-index: 4;
+  padding: 8px 10px;
+  border-block: 1px solid #d2caba;
+  background: #f3f0e7f2;
+}
+.a4-reader--first-person .a4-reader__desk-tools,
+.a4-reader--private-blog-open .a4-reader__desk-tools { grid-column: 1; grid-row: 1; position: static; max-height: none; overflow: visible; }
+.a4-reader--first-person .a4-reader__story,
+.a4-reader--private-blog-open .a4-reader__story { grid-column: 1; grid-row: 2; }
+
+/* Bring the library's dense catalog and paper controls into the same archive system. */
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__section {
+  min-height: 44px;
+  border-color: #cfc6b3;
+  border-radius: 0;
+  color: #344148;
+  background: #f8f6ef;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__section:hover:not([aria-current="true"]):not([aria-pressed="true"]) {
+  border-color: #a1844e;
+  background: #eee8d9;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__section[aria-current="true"],
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__section[aria-pressed="true"] {
+  border-color: #a1844e;
+  background: #e9e0ce;
+  box-shadow: inset 3px 0 #9b7a43;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__pager {
+  border-top-color: #d6cfbf;
+  background: #f6f3ea;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark {
+  min-height: 44px;
+  border-color: #a48b5b;
+  border-radius: 2px;
+  color: #354248;
+  background: #f9f7f0;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark:hover {
+  border-color: #765d32;
+  background: #e8ddc5;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev:disabled,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next:disabled,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out:disabled,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in:disabled {
+  border-color: #d4d0c5;
+  color: #85877f;
+  background: #ebe9e2;
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark[aria-pressed="true"] {
+  border-color: #8d7040;
+  color: #382e1e;
+  background: #e9e0ce;
+}
+
+/* A4's ready action and footer keep the dark archive strip used by its paper. */
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-shell__operations {
+  border-top-color: #283e47;
+  background: #172c36;
+}
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__title { color: #c6c8bd; }
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action--ready {
+  border-color: #a88a54;
+  color: #fffaf0;
+  background: #80663a;
+  box-shadow: 0 2px 0 #564326;
+}
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action--ready:hover:not(:disabled) { background: #927848; }
+
+@media (max-width: 900px) {
+  .a4-reader { grid-template-columns: minmax(0, 1fr); }
+  .a4-reader__desk-tools { grid-column: 1; grid-row: 1; position: static; max-height: none; overflow: visible; }
+  .a4-reader__story { grid-column: 1; grid-row: 2; }
+}
+
 @keyframes evidence-panel-arrive {
   from { opacity: 0; transform: translateY(7px) scale(.99); }
   to { opacity: 1; transform: translateY(0) scale(1); }
