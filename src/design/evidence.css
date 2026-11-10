@@ -1,0 +1,405 @@
+/*
+ * Investigation and reader presentation layer.
+ * These selectors intentionally follow the older scene sheets so the shared
+ * archive system wins without changing any scene state or evidence behavior.
+ */
+
+/* One visible brass focus treatment across controls; photographic hotspots
+   keep their own blue focus ring because it communicates the selected region. */
+:focus-visible:not(.photo-viewport__marker) {
+  outline: 3px solid #bd9b5b !important;
+  outline-offset: 3px !important;
+}
+
+.investigation-progress__close {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 64px;
+  white-space: nowrap;
+}
+
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration {
+  --ui-page: #0d1b24;
+  --ui-surface: #f7f4eb;
+  --ui-surface-muted: #ece8dd;
+  --ui-text: #27343a;
+  --ui-text-muted: #697477;
+  --ui-border: #cec7b8;
+  --ui-accent: #8b6d3d;
+  --ui-accent-soft: #eee6d5;
+  --ui-success: #596d60;
+  background: #0d1b24;
+}
+
+/* The photo remains the largest, darkest layer; its controls read as a brass
+   instrument strip rather than a second blue application frame. */
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__header {
+  min-height: 50px;
+  align-items: center;
+  gap: 14px;
+  padding: 5px clamp(14px, 2vw, 26px);
+  border-bottom: 1px solid #89754f;
+  color: #f0ede4;
+  background: linear-gradient(100deg, #1b303a 0%, #10232d 72%, #172b34 100%);
+  box-shadow: 0 3px 14px #07101866;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place > p { color: #c4a76b; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place h1 { color: #f1eee5; font-family: var(--font-reader); font-weight: 500; letter-spacing: .04em; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__place > span { color: #b8c4c3; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__header .investigation-shell__exit,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__header .investigation-progress-trigger {
+  min-height: 44px;
+  border: 1px solid #9f8958;
+  border-radius: 2px;
+  color: #f5f0e3;
+  background: #243943;
+  box-shadow: inset 0 1px #ffffff0d;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__header .investigation-shell__exit:hover,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__header .investigation-progress-trigger:hover { border-color: #c1a36b; background: #304a53; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__goal {
+  border-bottom: 1px solid #cfc7b6;
+  color: #303a3d;
+  background: #f3f0e7;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__goal strong { color: #80663a; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__goal span { color: #384449; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage.investigation-shell--exploration .investigation-shell__scene,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__lens,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__frame { background: #09151d; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls {
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid #b29963;
+  border-radius: 2px;
+  background: rgb(11 24 31 / 92%);
+  box-shadow: 0 8px 22px #0006;
+  backdrop-filter: blur(8px);
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button {
+  min-height: 42px !important;
+  border: 1px solid #6c7c7c !important;
+  border-radius: 2px !important;
+  color: #f1eee4 !important;
+  background: #253d45 !important;
+  transition: transform 120ms ease, color 120ms ease, background-color 120ms ease, border-color 120ms ease !important;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button:hover:not(:disabled) { border-color: #b69a60 !important; background: #38515a !important; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button:active:not(:disabled) { transform: translateY(1px); }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button:disabled { opacity: .52; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls .photo-viewport__zoom-in {
+  min-width: 58px !important;
+  border-color: #d1b677 !important;
+  color: #19262c !important;
+  background: #d4bc83 !important;
+  font-weight: 750;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls .photo-viewport__zoom-in:hover:not(:disabled) { background: #e1cc9c !important; }
+
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help > summary,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools > summary {
+  min-height: 44px;
+  border: 1px solid #9c8553;
+  border-radius: 2px;
+  color: #f3ead6;
+  background: #1c333d;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help > summary:hover,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools > summary:hover { background: #2a444d; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-help-panel,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel {
+  border: 1px solid #c2ad7a;
+  border-radius: 2px;
+  color: #29363a;
+  background: rgb(248 245 235 / 98%);
+  box-shadow: 0 18px 38px #0007;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel > p strong { color: #80663a; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-actions { border-top-color: #d7cfbd; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel button {
+  min-height: 44px;
+  border: 1px solid #8e7a4f;
+  border-radius: 2px;
+  color: #332c20;
+  background: #e9e1ce;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__photo-tools-panel button:hover:not(:disabled) { border-color: #70582d; background: #ddd0b1; }
+
+/* Navigation is a true footer rail, with one warm primary and quiet secondary
+   actions. The blue in-photo target remains untouched as an observation cue. */
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__operations {
+  padding: 6px max(12px, env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom));
+  border-top: 1px solid #8f7a50;
+  background: #122630;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__title { color: #bfad83; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-empty,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary { min-height: 44px; border-radius: 2px; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="primary"] {
+  border-color: #c2a469;
+  color: #17242a;
+  background: #cfb77e;
+  box-shadow: 0 2px 0 #75613b;
+  font-weight: 700;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="primary"]:hover:not(:disabled) { border-color: #dfc68d; background: #ddc990; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="secondary"] {
+  border-color: #61757b;
+  color: #e2e7e0;
+  background: #213740;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action[data-action-emphasis="secondary"]:hover:not(:disabled) { border-color: #a69160; color: #f3eee1; background: #2b434b; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-pair .investigation-navigation__action:disabled,
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__photo-empty { border-color: #53676b; color: #9ba8a5; background: #1a2e37; box-shadow: none; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary { border-color: #9d8758; color: #efe8d8; background: #203943; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions > summary > span:last-child { color: #17252b; background: #c6ad76; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions[open] > .investigation-navigation__actions {
+  border-color: #c0ab78;
+  border-radius: 2px;
+  background: #f6f2e8;
+  box-shadow: 0 18px 42px #0008;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__item { color: #26353b; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--ready {
+  border-color: #8e7040;
+  color: #fffaf0;
+  background: #80663a;
+  box-shadow: 0 2px 0 #564326;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--ready:hover:not(:disabled) { background: #927848; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--blocked { border-color: #c4bda9; color: #626b6b; background: #ece9e0; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__other-actions .investigation-navigation__action--completed { border-color: #c9c4b6; color: #6d766f; background: #f3f1e9; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__reason { border-left-color: #a1834d; color: #3a4547; background: #f4f0e5; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__material { border-color: #9b8557; color: #302a20; background: #e9e0cb; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-navigation__material:hover:not(:disabled) { background: #ddd0ae; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-shell__status { border-top-color: #334a52; color: #c3ceca; background: #172b34; }
+
+/* Evidence details open as a warm, quiet archive panel over the photograph. */
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail {
+  border: 1px solid #b39a63;
+  border-radius: 2px;
+  color: #28363b;
+  background: #f6f2e8;
+  box-shadow: 0 28px 90px #0009, 0 2px 0 #fff8 inset;
+  animation: evidence-panel-arrive 180ms cubic-bezier(.2,.7,.25,1) both;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail__header { border-bottom-color: #d4ccba; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail__header h2 { color: #21343b; font-family: var(--font-reader); }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail__content { color: #344147; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail button {
+  min-height: 44px;
+  border: 1px solid #7c6234;
+  border-radius: 2px;
+  color: #fffaf0;
+  background: #80663a;
+  box-shadow: 0 2px 0 #564326;
+}
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail button:hover:not(:disabled) { background: #927848; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__detail-evidence > figcaption { color: #626c6d; }
+.investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .act3-investigation__detail-evidence > .act3-investigation__comparison-placeholder { border-color: #d1c8b4; color: #687174; background: #eee9dd; }
+
+/* Act 2 keeps its paper fieldbook and library, but uses the common archive
+   header/footer and consistent brass action roles. */
+.investigation-shell.investigation-shell--act2-field-notes {
+  --ui-page: #f0eee6;
+  --ui-surface: #fbfaf5;
+  --ui-surface-muted: #ece8dc;
+  --ui-text: #292f30;
+  --ui-text-muted: #656b67;
+  --ui-border: #ccc5b6;
+  --ui-accent: #80643a;
+  --ui-accent-soft: #eee6d5;
+  --ui-success: #596d60;
+}
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__header {
+  border-bottom-color: #293e47;
+  color: #f2efe6;
+  background: linear-gradient(180deg, #203742, #142a35);
+}
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__place p { color: #c5a96e; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__place h1 { color: #f3efe4; font-family: var(--font-reader); font-weight: 500; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__place span { color: #c2cecc; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__goal--on-demand { border-color: #d2caba; background: #f7f4ea; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__operations { border-top-color: #283e47; background: #172c36; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-navigation__title { color: #c6c8bd; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-navigation__action--ready {
+  border-color: #a88a54;
+  color: #fffaf0;
+  background: #80663a;
+  box-shadow: 0 2px 0 #564326;
+}
+.investigation-shell.investigation-shell--act2-field-notes .investigation-navigation__action--ready:hover:not(:disabled) { background: #927848; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-navigation__action--blocked { border-color: #60747a; color: #d8e0dc; background: #243b44; }
+.investigation-shell.investigation-shell--act2-field-notes .investigation-shell__status { border-color: #d4ccb9; color: #475b4a; background: #e8ece3; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__intro,
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__dialogue,
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__puzzle,
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__resolution { border-radius: 0; box-shadow: none; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__fieldbook-page { border: 0; border-left: 2px solid #9c7d4c; background: #fbfaf5; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__elder-list button { min-height: 56px; border-radius: 0; background: #f6f3ea; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__elder-list button:hover { background: #eee7d7; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__elder-list button.is-active { border-color: #896d40; background: #e9e0ce; box-shadow: inset 3px 0 #9d7d48; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__dialogue-heading { border-bottom-color: #d7d0c1; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__reply { background: #eee7d7; }
+.investigation-shell.investigation-shell--act2-field-notes .act2-bridge__part { border-radius: 0; background: #f7f4ec; }
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-shell__header,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-shell__header {
+  border-bottom-color: #293e47;
+  color: #f2efe6;
+  background: linear-gradient(180deg, #203742, #142a35);
+}
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-shell__place p,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-shell__place p { color: #c5a96e; }
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-shell__place h1,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-shell__place h1 { color: #f3efe4; font-family: var(--font-reader); font-weight: 500; }
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-shell__place span,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-shell__place span { color: #c2cecc; }
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-shell__operations,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-shell__operations { border-top-color: #283e47; background: #172c36; }
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-navigation__action--ready,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-navigation__action--ready { border-color: #a88a54; color: #fffaf0; background: #80663a; box-shadow: 0 2px 0 #564326; }
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-navigation__action--ready:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-navigation__action--ready:hover:not(:disabled) { background: #927848; }
+.investigation-shell.investigation-shell--reading:has(.act2-library) .investigation-navigation__action--blocked,
+.investigation-shell.investigation-shell--reading:has(.act2-tales) .investigation-navigation__action--blocked { border-color: #60747a; color: #d8e0dc; background: #243b44; }
+.act2-library__catalog,
+.act2-library__shelf { border-color: #d6cfbf; background: #f6f3ea; box-shadow: none; }
+.act2-library__page { border: 0; border-top: 2px solid #9a7d4b; border-bottom: 1px solid #d2caba; background: #fbfaf5; box-shadow: none; }
+.act2-library__page-head { border-color: #d6cfbf; }
+.act2-library__page-head h3 { font-family: var(--font-reader); font-weight: 500; }
+.act2-library__page-text { font-family: var(--font-reader); font-size: 16px; line-height: 1.95; }
+.act2-library__section { min-height: 44px; border-radius: 0; background: #f8f6ef; }
+.act2-library__section[aria-current="true"], .act2-library__section[aria-pressed="true"] { border-color: #a1844e; background: #e9e0ce; box-shadow: inset 3px 0 #9b7a43; }
+.act2-library__paper-empty { border: 0; border-top: 1px solid #d2caba; background: #f6f3ea; }
+.act2-library__leaf { border: 0; border-bottom: 1px solid #d5cfbf; border-radius: 0; background: transparent; }
+.act2-library__leaf[aria-current="page"] { border-bottom: 2px solid #927544; background: #ede6d6; }
+.act2-tales__shelf, .act2-tales__index, .act2-tales__evidence-list { border: 0; border-bottom: 1px solid #d4cdbc; background: #f6f3ea; }
+.act2-tales__paper { border: 0; border-top: 2px solid #9a7d4b; border-bottom: 1px solid #d2caba; background: #fbfaf5; box-shadow: none; }
+.act2-tales__paper > header { border-bottom-color: #d6cfbf; }
+.act2-tales__paper > header h3 { font-family: var(--font-reader); font-weight: 500; }
+.act2-tales__record { border: 0; border-bottom: 1px solid #d6cfbf; border-radius: 0; background: transparent; }
+.act2-tales__record:hover, .act2-tales__record[aria-current="true"] { border-color: #ad9561; background: #eee8d9; }
+.act2-tales__hypothesis-options button { border-radius: 0; }
+
+/* Act 4: a warm reading desk with paper typography, slim rules and a separate
+   dark photographic plate. Keep the existing column/scroll logic intact. */
+.a4-reader {
+  color: #2a302f;
+  background: #f3f0e7;
+}
+.a4-reader__story { max-width: 900px; }
+.a4-reader__heading { margin-bottom: 20px; padding-bottom: 13px; border-bottom-color: #cfc8b8; }
+.a4-reader__heading h2 { color: #1e3036; font-family: var(--font-reader); font-weight: 500; }
+.a4-reader__heading p, .a4-reader__perspective { color: #6d685d !important; }
+.a4-reader__perspective { padding: 5px 0; border: 0; border-bottom: 1px solid #b59a63; border-radius: 0; background: transparent; font-weight: 500; }
+.a4-reader__index {
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #d5cebf;
+  border-bottom: 1px solid #d5cebf;
+  border-radius: 0;
+  background: transparent;
+}
+.a4-reader__index summary { min-height: 46px; color: #6f5932; font-weight: 650; }
+.a4-reader__index-chapter-progress { color: #68706c; }
+.a4-reader__index nav { gap: 5px; padding: 0 0 10px; }
+.a4-reader__index button, .a4-reader__previous button, .a4-reader__return-current {
+  min-height: 44px;
+  border: 1px solid #aaa392;
+  border-radius: 2px;
+  color: #354248;
+  background: #f9f7f0;
+}
+.a4-reader__index button[aria-current="page"] { border-color: #9c7d48; color: #382d1b; background: #ece4d2; }
+.a4-reader__next-step { border-left-color: #a5844b; color: #3c4547; background: #eee7d7; }
+.a4-reader__block-stack { margin: 18px 0 26px; }
+.a4-reader__block { border-bottom-color: #d6cfbf; }
+.a4-reader__block h3, .a4-reader__interaction h3 { color: #455359; font-family: var(--font-reader); font-weight: 500; }
+.a4-reader__paragraphs { color: #2c3434; font-family: var(--font-reader); line-height: 1.95; }
+.a4-reader__paragraph--mail-field { color: #786443; }
+.a4-reader__block--email .a4-reader__segment--whole {
+  padding: 16px clamp(14px, 3vw, 26px);
+  border: 0;
+  border-top: 1px solid #c9c2b3;
+  border-bottom: 1px solid #d7d1c4;
+  border-radius: 0;
+  background: #f8f6ef;
+}
+.a4-reader__block--email .a4-reader__paragraph--mail-field { border-top-color: #d9d2c4; }
+.a4-reader__block--timeline .a4-reader__segment--page { border: 0; border-left: 2px solid #a58a58; border-radius: 0; background: #f8f6ef; }
+.a4-reader__explanation { border: 0; border-left: 2px solid #a1844e; border-radius: 0; color: #455052; background: #ece8de; }
+.a4-reader__explanation > summary { min-height: 44px; color: #51462e; }
+.a4-reader__art { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.a4-reader__art img { border: 1px solid #7b7567; border-radius: 0; background: #0d1c25; box-shadow: 0 12px 28px #121b2028; }
+.a4-reader__art-placeholder { background: #e9e4d8; }
+.a4-reader__interaction {
+  margin: 20px 0;
+  padding: clamp(14px, 2vw, 22px);
+  border: 0;
+  border-top: 1px solid #c6bda9;
+  border-bottom: 1px solid #d2c9b7;
+  border-radius: 0;
+  background: #eee9dd;
+}
+.a4-reader__interaction button, .a4-reader__art button, .a4-reader__inline-art button,
+.a4-reader__cover-art > button, .a4-reader__pager button, .a4-reader__page-directory button,
+.a4-reader__page-index button, .a4-reader__notebook-pager button, .a4-reader__zoom button {
+  min-height: 44px;
+  border: 1px solid #9b8453;
+  border-radius: 2px;
+  color: #3a3020;
+  background: #eee6d4;
+  transition: color 130ms ease, border-color 130ms ease, background-color 130ms ease, box-shadow 130ms ease, transform 130ms ease;
+}
+.a4-reader__interaction button:hover:not(:disabled), .a4-reader__art button:hover:not(:disabled),
+.a4-reader__inline-art button:hover:not(:disabled), .a4-reader__cover-art > button:hover:not(:disabled),
+.a4-reader__pager button:hover:not(:disabled), .a4-reader__page-directory button:hover:not(:disabled),
+.a4-reader__page-index button:hover:not(:disabled), .a4-reader__notebook-pager button:hover:not(:disabled),
+.a4-reader__zoom button:hover:not(:disabled) { border-color: #70582e; background: #e1d3b2; }
+.a4-reader__interaction button:disabled, .a4-reader__pager button:disabled, .a4-reader__notebook-pager button:disabled { border-color: #d0cbbc; color: #84877f; background: #e9e6de; box-shadow: none; }
+.a4-reader__pager button:last-child:not(:disabled), .a4-reader__notebook-pager button:last-child:not(:disabled) {
+  border-color: #7b6034;
+  color: #fffaf0;
+  background: #80663a;
+  box-shadow: 0 2px 0 #564326;
+}
+.a4-reader__pager button:last-child:hover:not(:disabled), .a4-reader__notebook-pager button:last-child:hover:not(:disabled) { background: #927848; }
+.a4-reader__pager button:active:not(:disabled), .a4-reader__notebook-pager button:active:not(:disabled), .a4-reader__interaction button:active:not(:disabled) { transform: translateY(1px); }
+.a4-reader__pager-status, .a4-reader__displayed-progress { color: #69716e; }
+.a4-reader__page-directory { color: #626b67; }
+.a4-reader__page-directory button[aria-current="page"], .a4-reader__page-index button[aria-current="page"] { border-color: #a1844e; background: #e9e0ce; }
+.a4-reader__cover { gap: 14px; padding: clamp(12px, 2vw, 20px); border: 0; border-top: 2px solid #a1844e; border-bottom: 1px solid #d4cbb7; border-radius: 0; background: #f7f4eb; }
+.a4-reader__cover-art { background: #0d1c25; }
+.a4-reader__cover-art img { background: #0d1c25; }
+.a4-reader__cover-copy h3 { color: #23353b; font-family: var(--font-reader); font-weight: 500; }
+.a4-reader__cover-copy p, .a4-reader__cover-copy span, .a4-reader__art p, .a4-reader__inline-art figcaption { color: #6b6b61; }
+.a4-reader__inline-art img { border: 1px solid #8d836d; box-shadow: 0 10px 24px #17232a20; }
+.a4-reader__past-block, .a4-reader__final-recap { border: 0; border-top: 1px solid #d0c8b8; border-bottom: 1px solid #d0c8b8; border-radius: 0; background: #eeeae0; }
+.a4-reader__past-block > summary, .a4-reader__final-recap > summary { min-height: 46px; color: #51462e; }
+.a4-reader__ending { border: 0; border-top: 2px solid #9d804b; border-bottom: 1px solid #d3cab8; border-radius: 0; background: #eee9dd; }
+.a4-reader__wordlists article { border: 0; border-left: 2px solid #9e8350; border-radius: 0; background: #eee9dd; }
+.a4-reader--first-person { background: #f2eee4; }
+.a4-reader--private-blog-open { background: #f3f0e7; }
+.a4-private-blog-gateway { border: 0; border-top: 1px solid #d2caba; border-bottom: 1px solid #d2caba; border-radius: 0; background: #eee9dd; }
+.a4-private-blog-gateway__card { border: 0; border-top: 2px solid #9d804b; border-bottom: 1px solid #d4cbb7; border-radius: 0; background: #faf8f1; box-shadow: none; }
+
+@keyframes evidence-panel-arrive {
+  from { opacity: 0; transform: translateY(7px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .investigation-detail,
+  .investigation-shell.act3-investigation.investigation-shell--act3-photo-stage .photo-viewport__controls button,
+  .a4-reader__interaction button, .a4-reader__art button, .a4-reader__inline-art button,
+  .a4-reader__cover-art > button, .a4-reader__pager button, .a4-reader__page-directory button,
+  .a4-reader__page-index button, .a4-reader__notebook-pager button, .a4-reader__zoom button {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

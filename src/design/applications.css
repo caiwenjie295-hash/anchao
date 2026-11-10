@@ -1,0 +1,238 @@
+/* WeChat: a calm conversation ledger with a readable message column. */
+.app-window--wechat .wechat-app {
+  grid-template-columns: minmax(230px, 30%) minmax(0, 1fr);
+  color: #27343a;
+  background: #f5f3ec;
+}
+.app-window--wechat .wechat-list {
+  border-right: 1px solid #c8c5b9;
+  background: #e9e7de;
+}
+.app-window--wechat .wechat-list__header {
+  flex-basis: 58px;
+  padding-inline: 18px;
+  border-bottom: 1px solid #d0cbbb;
+  color: #263941;
+}
+.app-window--wechat .wechat-list__header h2 { font-family: var(--font-reader); font-size: 19px; font-weight: 500; }
+.app-window--wechat .wechat-list__header > span { color: #8c7445; }
+.app-window--wechat .wechat-conversation {
+  min-height: 74px;
+  padding: 11px 14px;
+  border-bottom: 1px solid #d8d5cb;
+  color: #29373c;
+  background: transparent;
+  transition: background-color 130ms ease, box-shadow 130ms ease;
+}
+.app-window--wechat .wechat-conversation:hover { background: #f0eee5; }
+.app-window--wechat .wechat-conversation--selected { box-shadow: inset 3px 0 #a48650; background: #f7f5ed; }
+.app-window--wechat .wechat-conversation__top strong { font-size: 14px; font-weight: 620; }
+.app-window--wechat .wechat-conversation__preview { color: #687477; }
+.app-window--wechat .wechat-avatar { border-radius: 2px; box-shadow: 0 1px 0 #fff8; }
+.app-window--wechat .wechat-chat { background: #f5f3ec; }
+.app-window--wechat .wechat-chat__header {
+  flex-basis: 58px;
+  padding-inline: clamp(18px, 3vw, 34px);
+  border-bottom: 1px solid #d5d2c7;
+  background: #fbfaf5;
+}
+.app-window--wechat .wechat-chat__header h3 { color: #1f3037; font-family: var(--font-reader); font-size: 18px; font-weight: 500; }
+.app-window--wechat .wechat-chat__messages {
+  gap: 14px;
+  padding: 24px clamp(18px, 5vw, 56px);
+  background: radial-gradient(ellipse at 50% 0%, #fbfaf5 0%, #f3f1e9 72%);
+}
+.app-window--wechat .wechat-message__body {
+  border: 1px solid #e0ddd3;
+  border-radius: 2px;
+  color: #28353a;
+  background: #fffef9;
+  box-shadow: 0 1px 0 #fff;
+}
+.app-window--wechat .wechat-message--self .wechat-message__body { border-color: #d5d7d0; background: #e6e8e1; }
+.app-window--wechat .wechat-message--system .wechat-message__body { border: 0; color: #6c7472; background: transparent; box-shadow: none; }
+.app-window--wechat .wechat-message--image .wechat-message__body { border-color: #c5bda8; background: #e6e0d2; }
+.app-window--wechat .wechat-message--file .wechat-message__body { border-left: 3px solid #9b7a43; }
+.app-window--wechat .wechat-chat__composer { flex-basis: 78px; padding: 14px 24px; border-top-color: #d5d2c7; color: #778080; background: #ebe9e1; }
+
+/* Mail: one paper inbox, restrained folder rail, and a clear reading column. */
+.app-window--mail .mail-app { color: #29383d; background: #fbfaf5; }
+.app-window--mail .mail-toolbar { min-height: 54px; gap: 10px; padding: 6px 14px; border-bottom-color: #c8c5b9; background: #e6e4db; }
+.app-window--mail .mail-search { min-height: 40px; border-color: #9d9c90; border-radius: 2px; color: #536167; background: #f9f8f2; }
+.app-window--mail .mail-search:focus-within { border-color: #9a7a46; box-shadow: 0 0 0 2px #eee6d5; }
+.app-window--mail .mail-search input { height: 38px; color: #26373e; }
+.app-window--mail .mail-toolbar__actions { gap: 4px; }
+.app-window--mail .mail-folders {
+  gap: 4px;
+  padding: 17px 10px;
+  border-right-color: #344b53;
+  color: #e8e8df;
+  background: #172e38;
+}
+.app-window--mail .mail-folders__account { margin: 0 6px 14px; color: #c7cfca; }
+.app-window--mail .mail-folders__account strong { color: #f4f0e5; }
+.app-window--mail .mail-folders__account small { color: #b1bfbe; }
+.app-window--mail .mail-account-avatar, .app-window--mail .mail-avatar { border-radius: 2px; background: #60787d; }
+.app-window--mail .mail-folders > button {
+  min-height: 42px;
+  border-radius: 0;
+  color: #d0d7d2;
+}
+.app-window--mail .mail-folders > button:hover { background: #29434b; }
+.app-window--mail .mail-folders > button.mail-folder--active { box-shadow: inset 3px 0 #c0a36c; color: #f8f4e8; background: #29434b; }
+.app-window--mail .mail-list, .app-window--mail .mail-reading-pane { background: #fbfaf5; }
+.app-window--mail .mail-list { border-right-color: #cecabd; }
+.app-window--mail .mail-list__header { min-height: 52px; border-bottom-color: #d6d2c7; }
+.app-window--mail .mail-list__header h2 { color: #23343a; font-family: var(--font-reader); font-size: 17px; font-weight: 500; }
+.app-window--mail .mail-group h3 { height: 31px; padding-inline: 14px; border-bottom-color: #dedacf; color: #72613f; background: #f1efe7; font-size: 11px; letter-spacing: .08em; }
+.app-window--mail .mail-list__scroll > .mail-group:first-child h3,
+.app-window--mail .mail-group:first-of-type h3 { border-bottom: 1px solid #d5c9ab; box-shadow: inset 0 -1px #b29760; color: #6f572e; background: #f0ebdc; }
+.app-window--mail .mail-list__scroll > .mail-group:not(:first-child) h3 { border-bottom-color: #e4e0d5; color: #697477; background: #f7f6ef; }
+.app-window--mail .mail-row { min-height: 58px; border-bottom-color: #e1ded4; }
+.app-window--mail .mail-row:hover { background: #f5f3eb; }
+.app-window--mail .mail-row--selected, .app-window--mail .mail-row--selected:hover { box-shadow: inset 3px 0 #a5874e; background: #efe9db; }
+.app-window--mail .mail-row__from { color: #29383d; }
+.app-window--mail .mail-row__indicator { background: #9a7a46; }
+.app-window--mail .mail-reading-pane { border-left: 1px solid #d5d0c4; }
+.app-window--mail .mail-detail { padding-inline: clamp(20px, 4vw, 50px); }
+.app-window--mail .mail-detail__header { border-bottom-color: #d8d4c9; }
+.app-window--mail .mail-detail__subject-row { padding-block: 22px 15px; }
+.app-window--mail .mail-detail__subject-row h2 { color: #1e3037; font-family: var(--font-reader); font-size: clamp(19px, 2vw, 25px); font-weight: 500; line-height: 1.4; }
+.app-window--mail .mail-detail__sender { border-bottom-color: #dedacf; }
+.app-window--mail .mail-detail__body { color: #303b3d; font-size: 15px; line-height: 1.85; }
+.app-window--mail .mail-attachments { border-top-color: #d8d4c9; }
+.app-window--mail .mail-attachment { grid-template-columns: 28px minmax(0, 1fr); border: 0; border-bottom: 1px solid #dedacf; border-radius: 0; background: transparent; }
+.app-window--mail .mail-attachment b { color: #8b7040; }
+
+/* Browser: restrained dark chrome outside, paper research pages inside. */
+.app-window--browser .browser-app { color: #28373d; background: #f2f0e8; }
+.app-window--browser .browser-tabs { min-height: 42px; border-bottom-color: #2c414b; background: #132934; }
+.app-window--browser .browser-tab { min-height: 42px; border-right-color: #3b515a; color: #b7c2c0; background: #1a333e; }
+.app-window--browser .browser-tab--active { color: #27373e; background: #f4f2ea; }
+.app-window--browser .browser-tab__select { min-height: 42px; }
+.app-window--browser .browser-tab__close { color: inherit; }
+.app-window--browser .browser-tab__close:hover { color: #fff; background: #39515a; }
+.app-window--browser .browser-tab--active .browser-tab__close:hover { color: #28383e; background: #e4e0d4; }
+.app-window--browser .browser-new-tab { border: 0; color: #e3e4dc; background: #132934; }
+.app-window--browser .browser-toolbar { min-height: 54px; padding: 5px 12px; border-bottom-color: #ccd0c8; background: #e7e6dd; }
+.app-window--browser .browser-toolbar__nav { gap: 4px; }
+.app-window--browser .browser-toolbar__nav button { border: 1px solid #a8a79b; border-radius: 2px; color: #38464a; background: #f6f4ec; }
+.app-window--browser .browser-toolbar__nav button:disabled { border-color: #d2cfc5; color: #7b8483; background: #e8e6de; }
+.app-window--browser .browser-address { min-height: 40px; border-color: #a5a699; border-radius: 2px; background: #fbfaf5; }
+.app-window--browser .browser-address:focus-within { border-color: #947747; box-shadow: 0 0 0 2px #e9e0cd; }
+.app-window--browser .browser-history-button { min-height: 44px; }
+.app-window--browser .browser-toolbar__source { color: #536268; }
+.app-window--browser .browser-content { background: #f3f1e9; }
+.app-window--browser .browser-home { justify-items: start; padding: clamp(30px, 6vw, 72px); color: #27373d; background: #f3f1e9; text-align: left; }
+.app-window--browser .browser-home > div { width: min(560px, 100%); }
+.app-window--browser .browser-home__eyebrow { color: #806a40; letter-spacing: .12em; }
+.app-window--browser .browser-home h2 { color: #23353d; font-family: var(--font-reader); font-size: clamp(26px, 3vw, 36px); font-weight: 500; }
+.app-window--browser .browser-home p:not(.browser-home__eyebrow) { max-width: 56ch; line-height: 1.7; }
+.app-window--browser .browser-results, .app-window--browser .browser-page {
+  width: min(100%, 1100px);
+  padding: clamp(22px, 4vw, 50px) clamp(20px, 5vw, 60px) 52px;
+  background: #fbfaf5;
+}
+.app-window--browser .browser-results__summary, .app-window--browser .browser-page__masthead,
+.app-window--browser .browser-page__byline, .app-window--browser .browser-page__footer { border-color: #d5d1c5; }
+.app-window--browser .browser-results__summary > p:first-child,
+.app-window--browser .browser-page__kicker { color: #856d3e; letter-spacing: .08em; }
+.app-window--browser .browser-results h2, .app-window--browser .browser-page h1 { color: #1f3038; font-family: var(--font-reader); font-weight: 500; }
+.app-window--browser .browser-results .browser-result { gap: 5px; padding: 16px 0; border: 0; border-bottom: 1px solid #dfdbd0; border-radius: 0; background: transparent; }
+.app-window--browser .browser-results .browser-result:hover { background: #f3f0e7; }
+.app-window--browser .browser-result__title, .app-window--browser .browser-page a { color: #725a31; text-decoration-color: #b49a66; text-underline-offset: .18em; }
+.app-window--browser .browser-page__aside, .app-window--browser .browser-cases li,
+.app-window--browser .browser-listing, .app-window--browser .browser-thread__post,
+.app-window--browser .browser-weather__rows > li, .app-window--browser .browser-page__actions,
+.app-window--browser .browser-page__tags li {
+  border: 0;
+  border-bottom: 1px solid #ddd8cb;
+  border-radius: 0;
+  background: transparent;
+}
+.app-window--browser .browser-page__aside, .app-window--browser .browser-cases li,
+.app-window--browser .browser-listing, .app-window--browser .browser-thread__post,
+.app-window--browser .browser-weather__rows > li, .app-window--browser .browser-page__actions { padding: 12px 0; }
+.app-window--browser .browser-thread__post { border-left: 2px solid #9b8252; }
+.app-window--browser .browser-page__aside h2, .app-window--browser .browser-guide h2,
+.app-window--browser .browser-weather h2, .app-window--browser .browser-mapboard h2,
+.app-window--browser .browser-listing h2, .app-window--browser .browser-cases h2 { font-family: var(--font-reader); font-weight: 500; }
+.app-window--browser .browser-history { border-color: #bcb5a3; border-radius: 2px; background: #fbfaf5; box-shadow: 0 16px 36px #0b192026; }
+.app-window--browser .browser-history button { min-height: 44px; border-bottom: 1px solid #e0dccf; border-radius: 0; }
+.app-window--browser .browser-next-investigation { border: 0; border-top: 2px solid #9c804d; border-radius: 0; background: #f3f0e7; box-shadow: 0 14px 28px #101b201c; }
+
+/* Notes: an open working page with a quiet ruled writing surface. */
+.app-window--notepad .notepad-app { color: #29373d; background: #f7f5ed; font-family: var(--font-ui); }
+.app-window--notepad .investigation-hub__titlebar { border-bottom: 1px solid #d1ccbf; background: #efede5; }
+.app-window--notepad .investigation-hub__titlebar h2 { color: #203139; font-family: var(--font-reader); font-size: 17px; font-weight: 500; }
+.app-window--notepad .investigation-hub__titlebar p { color: #7a6741; }
+.app-window--notepad .investigation-hub__tabs { gap: 0; border-bottom: 1px solid #c7c2b4; background: #e5e2d8; }
+.app-window--notepad .investigation-hub__tabs button { min-height: 44px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; color: #526168; background: transparent; }
+.app-window--notepad .investigation-hub__tabs button[aria-pressed="true"] { border-bottom-color: #a1834b; color: #28373d; background: #f7f5ed; }
+.app-window--notepad .investigation-hub__current { background: #f7f5ed; }
+.app-window--notepad .investigation-hub__eyebrow { color: #806a40; }
+.app-window--notepad .investigation-hub__current h3 { color: #1f3037; font-family: var(--font-reader); font-weight: 500; }
+.app-window--notepad .investigation-hub__recap { color: #37454a; }
+.app-window--notepad .investigation-hub__next { border-left: 2px solid #a3844d; border-radius: 0; color: #344148; background: #eee9dc; }
+.app-window--notepad .investigation-hub__next strong { color: #7c6740; }
+.app-window--notepad .investigation-hub__review-act3 { border: 0; border-bottom: 1px solid #9c9d94; border-radius: 0; color: #425259; background: transparent; }
+.app-window--notepad .notepad-entry { border-left: 2px solid #a1844e; border-radius: 0; color: #33434a; background: transparent; }
+.app-window--notepad .notepad-entry--decision { border-left-color: #566f72; color: #263a40; background: #eceee8; }
+.app-window--notepad .investigation-hub__notes textarea,
+.app-window--notepad .notepad-body textarea {
+  border: 0;
+  border-top: 1px solid #d2cdbf;
+  border-radius: 0;
+  color: #29393f;
+  background: repeating-linear-gradient(180deg, #fbfaf4 0, #fbfaf4 31px, #e8e3d7 32px, #fbfaf4 33px);
+  font: 15px/2 "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+}
+.app-window--notepad .investigation-hub__records, .app-window--notepad .investigation-hub__notes { background: #f7f5ed; }
+
+/* Explorer: large proof thumbnails, no nested image cards. */
+.app-window--explorer .explorer-app { grid-template-columns: 174px minmax(0, 1fr); color: #29373d; background: #f8f6ef; }
+.app-window--explorer .explorer-app aside { gap: 5px; border-right-color: #324954; background: #172e38; }
+.app-window--explorer .explorer-app aside h2, .app-window--explorer .explorer-tree__branch { color: #e4e6de; }
+.app-window--explorer .explorer-app aside h2 { margin-bottom: 11px; }
+.app-window--explorer .explorer-tree__branch > span { color: #c1a36a; }
+.app-window--explorer .explorer-app aside > button { border: 0; border-left: 2px solid transparent; border-radius: 0; color: #d1d9d5; background: transparent; }
+.app-window--explorer .explorer-app aside > button:hover { background: #29434c; }
+.app-window--explorer .explorer-app aside > .explorer-active { border-left-color: #c0a36b !important; color: #f3eee0 !important; background: #29434c !important; }
+.app-window--explorer .explorer-app main { background: #f8f6ef; }
+.app-window--explorer .explorer-breadcrumb ol { color: #707a7b; }
+.app-window--explorer .explorer-breadcrumb li + li::before { color: #a0844f; }
+.app-window--explorer .explorer-folder-heading { margin: 12px 0 20px; padding-bottom: 13px; border-bottom: 1px solid #d7d1c3; }
+.app-window--explorer .explorer-folder-heading h2 { color: #20333a; font-family: var(--font-reader); font-size: 24px; font-weight: 500; }
+.app-window--explorer .photo-files { gap: 12px 18px; }
+.app-window--explorer .photo-file { gap: 0 9px; padding: 0 0 11px; border: 0; border-bottom: 1px solid #dbd7cc; background: transparent; }
+.app-window--explorer .photo-file:hover { background: #f0ede4; }
+.app-window--explorer .photo-file--selected, .app-window--explorer .photo-file--selected:hover { box-shadow: inset 0 -2px #a8894e; background: #f0ece0; }
+.app-window--explorer .photo-file .photo-thumb { width: 100%; height: clamp(130px, 20cqw, 200px); margin-bottom: 10px; border: 1px solid #bab8ad; border-radius: 0; object-fit: cover; background: #ebe8dc; }
+.app-window--explorer .photo-file__meta strong { color: #26353b; font-size: 14px; }
+.app-window--explorer .photo-file__status { padding: 0; color: #6e684f; background: transparent; font-size: 11px; }
+
+/* Photo editor: the image is the hero; controls form one instrument rail. */
+.app-window--photos .photos-app { color: #28363c; background: #f5f3eb; }
+.app-window--photos .photos-app > header { min-height: 58px; padding: 10px 18px; border-bottom-color: #263d47; color: #f1eee5; background: #172e38; }
+.app-window--photos .photos-app > header h2 { color: #f1eee5; font-family: var(--font-reader); font-size: 18px; font-weight: 500; }
+.app-window--photos .photos-app > header span, .app-window--photos .photos-app > header p { color: #c7d0cc; }
+.app-window--photos .photo-stage { padding: 22px 24px 56px; background: #0d1d27; }
+.app-window--photos .photo-scroll { display: grid; place-items: center; }
+.app-window--photos .evidence-photo { border: 1px solid #857c69; border-radius: 0; box-shadow: 0 20px 52px #0009, 0 0 0 6px #172e38; }
+.app-window--photos .photo-zoom-controls { bottom: 8px; min-height: 42px; border: 1px solid #847653; border-radius: 2px; color: #f0ede4; background: rgb(14 30 39 / 96%); }
+.app-window--photos .photo-zoom-controls button { min-width: 42px; min-height: 42px; border: 0; color: #eee8d9; background: transparent; }
+.app-window--photos .photo-controls { gap: 6px; padding: 15px 17px; border-top: 0; border-left: 1px solid #d0cab9; background: #f1efe7; }
+.app-window--photos .photo-controls__heading { margin-bottom: 4px; padding-bottom: 10px; border-bottom: 1px solid #d2cbbb; }
+.app-window--photos .photo-controls__heading h3 { color: #26373e; font-family: var(--font-reader); font-size: 18px; font-weight: 500; }
+.app-window--photos .photo-controls label { min-height: 48px; padding: 3px 0; border-bottom: 1px solid #dfdbd0; color: #35444a; }
+.app-window--photos .photo-controls input { accent-color: #927544; }
+.app-window--photos .photo-controls output { color: #736141; font-variant-numeric: tabular-nums; }
+.app-window--photos .photo-controls p { color: #59676a; line-height: 1.6; }
+.app-window--photos .photo-discovery { border-top-color: #d1cbbb; background: #f8f6ef; }
+.app-window--photos .photo-discovery span { color: #45614e; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-window--wechat .wechat-conversation,
+  .app-window--photos .photo-stage,
+  .app-window--explorer .photo-file { transition: none !important; }
+}

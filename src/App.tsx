@@ -51,6 +51,8 @@ import './imageAssets.css';
 import './components/sceneTransition.css';
 import './components/scenePolish/scenePolish.css';
 import './design/theme.css';
+import './design/applications.css';
+import './design/evidence.css';
 
 type SelectableDesktopIconProps = ComponentProps<typeof DesktopIcon> & { selected?: boolean; onSelect?: () => void };
 const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIconProps>;
