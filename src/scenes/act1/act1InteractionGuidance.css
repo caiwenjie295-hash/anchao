@@ -2,3 +2,17 @@
 .act1-interaction-guidance__photo{flex:1 1 100%;margin:0;padding:.5rem .65rem;border-radius:5px;background:#f0ede5;color:#48443c;font-size:.9rem;line-height:1.5}
 .act1-interaction-guidance__continue{display:block;max-width:46ch;line-height:1.5}
 .act1-scene .act1-interaction-guidance__photo[role=status]{color:#48443c}
+
+/* Keep an optional hint from taking the scene photo's flexible grid row. */
+.act1-scene:has(> .act1-interaction-guidance__optional){grid-template-rows:auto auto minmax(0,1fr) auto auto}
+
+/* Photo-led A1 scenes use the surrounding page color in their 4:3 letterbox. */
+.act1-scene .act1-scene__canvas--image{background:transparent}
+
+@media (min-width:761px){
+  .act1-scene__actions{width:min(58%,760px);max-width:100%;flex-wrap:wrap;row-gap:8px}
+  .act1-scene__actions .act1-interaction-guidance__photo{flex:1 0 100%;width:100%;min-width:0}
+  .act1-scene__actions .scene-camera,
+  .act1-scene__actions .scene-continue{min-height:44px;flex:0 0 auto;white-space:nowrap}
+  .act1-scene__actions .scene-continue__hint{flex:1 0 100%;max-width:none;text-align:right}
+}
