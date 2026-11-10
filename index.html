@@ -3,29 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#080a09" />
+    <meta name="theme-color" content="#0b1720" />
     <title>暗潮 · 四幕互动调查体验</title>
     <style>
-      html, body { margin: 0; background: #080a09; }
-      #anchao-startup { --startup-ink: #e5e7e4; position: fixed; z-index: 40000; inset: 0; box-sizing: border-box; display: grid; place-items: center; overflow: auto; padding: 28px; background: #080a09; color: var(--startup-ink); font: 14px/1.7 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; }
-      .anchao-startup__content { width: min(340px, 100%); text-align: center; }
-      .anchao-startup__title { margin: 0 0 28px; color: #f1f1ec; font-size: 24px; font-weight: 400; letter-spacing: .45em; text-indent: .45em; }
-      #anchao-startup-copy { margin: 0 0 18px; color: #c6cbc7; font-size: 14px; font-weight: 400; }
-      .anchao-startup__track { position: relative; height: 2px; overflow: hidden; background: #303631; }
-      #anchao-startup-fill { position: relative; width: 3%; height: 100%; background: #d6ddd5; transition: width 300ms linear; }
-      #anchao-startup-fill::after { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, #fff, transparent); transform: translateX(-100%); animation: anchao-startup-shine 1.8s ease-in-out infinite; content: ""; }
-      #anchao-startup-progress { margin: 12px 0 0; color: #8f9a92; font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .1em; }
-       .anchao-startup__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; font-size: 11px; color: #9ca79e; }
+      html, body { margin: 0; background: #0b1720; }
+      #anchao-startup { --startup-ink: #efede5; position: fixed; z-index: 40000; inset: 0; box-sizing: border-box; display: grid; place-items: center; overflow: auto; padding: 28px; background: radial-gradient(ellipse at 50% 42%, #1c3039 0%, #101f29 42%, #08131c 100%); color: var(--startup-ink); font: 14px/1.7 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      #anchao-startup::before { position: absolute; inset: 22px; border: 1px solid rgb(190 164 111 / 22%); pointer-events: none; content: ""; }
+      .anchao-startup__content { position: relative; width: min(430px, 100%); text-align: left; }
+      .anchao-startup__title { margin: 0 0 30px; color: #f4f0e4; font: 500 clamp(42px, 8vw, 68px)/1.1 "Songti SC", "Noto Serif SC", "SimSun", serif; letter-spacing: .28em; text-indent: .18em; }
+      #anchao-startup-copy { margin: 0 0 18px; color: #d2d8d4; font-size: 14px; font-weight: 400; }
+      .anchao-startup__track { position: relative; height: 3px; margin-top: 28px; overflow: hidden; background: #35474d; }
+      #anchao-startup-fill { position: relative; width: 3%; height: 100%; background: #b99b61; transition: width 300ms linear; }
+      #anchao-startup-fill::after { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, #f5e6c3, transparent); transform: translateX(-100%); animation: anchao-startup-shine 1.8s ease-in-out infinite; content: ""; }
+      #anchao-startup-progress { margin: 11px 0 0; color: #d0b77e; font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+       .anchao-startup__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 21px 0 0; padding-top: 12px; border-top: 1px solid rgb(202 194 169 / 24%); font-size: 11px; color: #aebcbd; }
       .anchao-startup__stats dt { margin-bottom: 3px; }
-      .anchao-startup__stats dd { margin: 0; color: #c6cbc7; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-      #anchao-startup-detail { min-height: 3.4em; margin: 18px 0 0; color: #9ca79e; font-size: 12px; overflow-wrap: anywhere; }
+      .anchao-startup__stats dd { margin: 0; color: #e1e4dc; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      #anchao-startup-detail { min-height: 3.4em; margin: 16px 0 0; color: #b6c0bc; font-size: 12px; overflow-wrap: anywhere; }
       @media (max-width: 340px) { #anchao-startup { padding: 18px; } .anchao-startup__stats { grid-template-columns: 1fr; gap: 6px; } .anchao-startup__stats div { display: flex; justify-content: space-between; gap: 12px; } }
       @media (max-height: 400px) { #anchao-startup { place-items: start center; padding-block: 18px; } .anchao-startup__title { margin-bottom: 12px; } }
-      #anchao-startup-retry { min-height: 44px; margin-top: 20px; padding: 8px 24px; border: 1px solid #819087; border-radius: 3px; color: #e5e7e4; background: #17211b; font: inherit; cursor: pointer; }
-      #anchao-startup-retry:focus-visible { outline: 2px solid #e5e7e4; outline-offset: 4px; }
+      #anchao-startup-retry { min-height: 44px; margin-top: 20px; padding: 8px 24px; border: 1px solid #b89a5d; border-radius: 2px; color: #f5efdf; background: #725a32; box-shadow: 0 2px 0 #493b27; font: inherit; cursor: pointer; transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease; }
+      #anchao-startup-retry:hover { background: #866d40; }
+      #anchao-startup-retry:active { transform: translateY(2px); box-shadow: none; }
+      #anchao-startup-retry:focus-visible { outline: 3px solid #e2c27e; outline-offset: 4px; }
       #anchao-startup-retry[hidden] { display: none; }
       @keyframes anchao-startup-shine { to { transform: translateX(100%); } }
-      @media (prefers-reduced-motion: reduce) { #anchao-startup-fill { transition: none; } #anchao-startup-fill::after { animation: none; } }
+      @media (prefers-reduced-motion: reduce) { #anchao-startup-fill, #anchao-startup-retry { transition: none; } #anchao-startup-fill::after { animation: none; } #anchao-startup-retry:active { transform: none; } }
     </style>
   </head>
   <body>

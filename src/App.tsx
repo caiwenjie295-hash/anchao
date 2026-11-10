@@ -50,6 +50,7 @@ import './styles.css';
 import './imageAssets.css';
 import './components/sceneTransition.css';
 import './components/scenePolish/scenePolish.css';
+import './design/theme.css';
 
 type SelectableDesktopIconProps = ComponentProps<typeof DesktopIcon> & { selected?: boolean; onSelect?: () => void };
 const SelectableDesktopIcon = DesktopIcon as ComponentType<SelectableDesktopIconProps>;
@@ -392,6 +393,10 @@ export default function App() {
     <main className={`desktop${sceneOpen ? ' desktop--scene-hidden' : ''}${taskCardVisible ? ' desktop--task-card-visible' : ''}${taskCardExpanded ? ' desktop--task-card-expanded' : ''}`} style={desktopStyle} data-asset-id="IMG_A1_A_001" aria-label={desktopLabel} aria-hidden={sceneOpen} inert={sceneOpen ? true : undefined} onClick={(event) => { const target = event.target as HTMLElement; if (target === event.currentTarget || target.classList.contains('desktop__icons')) setSelectedAppId(null); }}>
       <a className="skip-link" href="#taskbar">跳到任务栏</a>
       <h1 className="sr-only">{desktopLabel}</h1>
+      <div className="desktop__masthead" aria-label="暗潮调查工作台">
+        <span className="desktop__masthead-mark" aria-hidden="true">潮</span>
+        <span className="desktop__masthead-copy"><strong>暗潮</strong><span>调查工作台</span></span>
+      </div>
       <div className="desktop__icons" aria-label="桌面应用">
         {apps.map((app) => <SelectableDesktopIcon key={app.appId} app={app} onOpen={() => openApp(app.appId)} selected={selectedAppId === app.appId} onSelect={() => setSelectedAppId(app.appId)} />)}
       </div>

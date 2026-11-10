@@ -6,7 +6,9 @@ import { AppIcon } from './AppIcon';
 export function Taskbar({ desktop, onAppClick, time, chapterNavigation }: { desktop: DesktopState; onAppClick: (appId: AppId) => void; time: Date; chapterNavigation?: ReactNode }) {
   return (
     <footer className="taskbar" aria-label="任务栏">
+      <span className="taskbar__brand" aria-hidden="true">暗潮<span>调查工作台</span></span>
       <div className="taskbar__apps">
+        <span className="taskbar__apps-label">应用</span>
         {apps.map((app) => {
           const windowState = desktop.windows[app.appId];
           const opened = windowState.status !== 'closed';
