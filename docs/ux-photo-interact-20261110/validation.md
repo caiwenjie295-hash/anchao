@@ -1,6 +1,6 @@
 # 聚光、图书馆间距与拍立得验收
 
-状态：实施中，尚未批准。基线85cc140f，旧主线3d3ec299保持不变。
+状态：APPROVED，电脑视觉与完整离线门禁已完成。基线85cc140f，旧主线3d3ec299保持不变。
 
 ## 已确认基线
 
@@ -38,6 +38,12 @@ viewport.html?width=1440&height=900提供精确尺寸iframe。motion=reduce或po
 
 本地截图在外层03_测试与验收/UX-PHOTO-INTERACT-20261110-validation/screenshots。主要文件：spotlight-final-1440.jpg、polaroid-final-1280.jpg、polaroid-final-1440.jpg、a1-polaroid-final-1280.jpg、library-reading-final-1440.jpg、desktop-protected-1280.jpg。旧截图含修订前问题，仅最终文件代表交付。
 
-## 待最终门禁收口
+## 最终收口与门禁
 
-A4自动定位段首与完整quality:gate结果将在产品冻结后补入。本轮不使用视觉夹具冒充整轮通关；完整离线双轮由原有验收脚本单独执行。
+- A4产品ed934d1改桌面pager为正常文档流；原代码直接调整scene.scrollTop，scroll-margin无效，因此移除初版无效规则。1280初始页、第二页与1440第二页复看首行完整、键盘翻页2/7及自动回焦正常。截图reader-final-first-1280.jpg、reader-final-second-1280.jpg、reader-final-second-1440.jpg。
+- 冻结源679fbac4，Node24.15.0/npm11.12.1，完整quality:gate --base-ref=85cc140f通过，原超时/脚本/断言未改。135个测试文件：unit180+component480+acceptance31=691项全部通过；TypeScript、网页build、离线build通过。
+- 默认离线双轮通过：第一幕A–K、照片编辑、存档重载、结局、清零再载入；包含第二幕T01–T07、第三幕T00–T07、第四幕T01–T10；本地资源、无网络依赖、零运行时错误断言通过。277文件，86,136,393bytes（82.15MiB），包逐文件SHA256通过；真实Mac Chrome file://打开并挂载桌面/本地图片通过。完整日志final-quality-gate.log位于外层QA目录。
+- 该门禁不等于人工逐章完整通关；视觉夹具只证明列出的真实UI行为。手机未专项处理。构建仍有原有大bundle提示。
+- 连续切换reduce/coarse隔离预览曾遇一次原图complete但loading未退，reload后正常；未改原PhotoViewport加载算法，后续观察未复现。此观察保留于implementation.md，勿声称缓存/设备全矩阵无问题。
+- 只批准当前改造分支交付；不合main、不改旧发布指针。最终文档提交后仅重建离线并复核SHA/产物，产品不再变化。
+
