@@ -1,6 +1,6 @@
 # UX-PHOTO-INTERACT-20261110 实施记录
 
-状态：进行中；首节点完成图书馆间距与聚光叶子组件，等待主审桌面复核；照片画面接入和拍立得展示仍在第二节点。
+状态：进行中；第一、第二节点的产品接入已完成，等待主审最终浏览器/离线质量验收。
 
 ## 第一节点
 
@@ -9,15 +9,19 @@
 - 新增聚光指针节流、清理、媒体偏好、静态回退和提示淡出测试。
 - 未改变书架热点坐标、照片比例、目录/卷册/翻页/书签状态或虚拟桌面。
 
+## 第二节点
+
+- `PhotoViewport` 增加默认关闭的 `investigationSpotlight` 可选 prop；只在第三幕显式启用，聚光层按资源 key 重建并使用照片 frame 坐标。热点、工具与手势仍由原处理器管理；键盘可见焦点减弱遮罩，鼠标继续移动后恢复局部亮起。
+- `PolaroidPhoto` 用于第三幕有独立细节图的热点特写及第一幕独立线索照片。卡片有暖白纸边、厚底边与柔和投影，指针倾斜限制在 ±3°，移出复位；照片比例、alt、标题/说明保留，长转录保持静止在卡片之外。
+- 第一幕普通背景裁切分支未包装；第三幕原蓝色热点、缩放、拖动、观察时机和弹层关闭/Esc/焦点约束均未修改。
+- A2 页缘热区强制保持透明无边框，仅 hover/focus 显示折角线索；A4 活跃阅读段与封面添加 scroll margin，为 sticky 翻页条留出自动焦点空间。
+
 ## 后续节点
 
-- 将聚光可选 prop 接入 PhotoViewport，默认关闭，仅 A3 显式启用；确保换镜头重新绑定 frame，工具、键盘焦点和蓝色热点保持清晰。
-- 以纸卡交互包装 A3 独立细节照片，保留长转录静止、原 alt/标题/说明、关闭/Esc/回焦和图片失败回退；第一幕只复用可确认的独立细节图片分支。
-- 修正 A4 sticky 翻页工具与自动焦点正文段首的遮挡，保持原 focus effect 和分页状态。
 - 主审进行 1280/1440 宽屏实看与完整网页/离线质量门禁；本记录不代表最终视觉验收。
 
 ## 验证
 
-- 第一节点 `git diff --check`：通过。
-- `InvestigationSpotlight.test.tsx` 与 `LibraryResearch.test.tsx`：17 项通过。
-- Node `v24.15.0` 下 `npm run build`：通过（517 modules）；保留既有主 JS chunk 大于 500 kB 的 Vite 提示。
+- 第一节点 `git diff --check`、`InvestigationSpotlight.test.tsx` 与 `LibraryResearch.test.tsx`：通过；17 项。
+- 第二节点 `PhotoViewportSpotlight.test.tsx`、`PolaroidPhoto.test.tsx`、`InvestigationSpotlight.test.tsx`、`SceneClueFocus.test.tsx`、`LibraryResearch.test.tsx`、`Act3Investigation.test.tsx`：53 项通过。
+- Node `v24.15.0` 下 `npm run build`：通过（520 modules）；保留既有主 JS chunk 大于 500 kB 的 Vite 提示。第二节点 `git diff --check`：通过。

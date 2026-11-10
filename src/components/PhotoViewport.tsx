@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { InvestigationNavigation } from './investigation/InvestigationNavigation';
+import { InvestigationSpotlight } from '../design/photoInteractions/InvestigationSpotlight';
 import type { InvestigationAction, InvestigationActionKind, InvestigationActionState } from './investigation/types';
 import './photoViewport.css';
 
@@ -43,6 +44,8 @@ export interface PhotoViewportProps {
   quietHotspotLabels?: boolean;
   /** Opt-in compact zoom controls for mobile photo stages; other callers keep the full toolbar. */
   compactMobileControls?: boolean;
+  /** Optional frame-sized investigation veil. Disabled for all existing callers by default. */
+  investigationSpotlight?: boolean;
   onImageAvailabilityChange?: (available: boolean) => void;
 }
 export type PhotoFit = 'contain' | 'cover';
@@ -78,7 +81,7 @@ export const calculatePhotoInitialOffset = (
   };
 };
 
-export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, fit = 'contain', initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, quietHotspotLabels = false, compactMobileControls = false, onImageAvailabilityChange }: PhotoViewportProps) {
+export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, fit = 'contain', initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, quietHotspotLabels = false, compactMobileControls = false, investigationSpotlight = false, onImageAvailabilityChange }: PhotoViewportProps) {
   const [zoom, setZoom] = useState(1);
   const [fullImageView, setFullImageView] = useState(false);
   const [compactViewport, setCompactViewport] = useState(() => compactMobileControls && typeof window !== 'undefined' && window.matchMedia?.('(max-width: 600px)').matches === true);
@@ -564,6 +567,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
             {imageLoaded && imageOverlay && <div className="photo-viewport__image-overlay">{imageOverlay}</div>}
           </div>}
         </div>
+        {imageLoaded && investigationSpotlight && <InvestigationSpotlight key={resourceKey} frameRef={frame} />}
         {imageUrl && !imageLoaded && <div className="photo-viewport__load-state" role="status">{imageFailed ? `${imageAlt}载入失败。可从下方文字线索继续调查。` : `正在载入${imageAlt}…`}</div>}
         {!imageUrl && <div className="photo-viewport__missing" role="img" aria-label={imageAlt}>眼前的景象隐入暗处。可从文字线索继续调查</div>}
         <div className={'photo-viewport__controls' + (compactMobileControls ? ' photo-viewport__controls--compact-mobile' : '')} aria-label="画面操作" data-photo-control={compactMobileControls ? true : undefined}>

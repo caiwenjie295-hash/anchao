@@ -491,6 +491,13 @@
 }
 .investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action--ready:hover:not(:disabled) { background: #927848; }
 
+/* Native focus scrolling leaves room for the sticky page controls above the text. */
+.a4-reader__segment[data-reader-active="true"],
+.a4-reader__cover[data-reader-active="true"] {
+  scroll-margin-top: 84px;
+  scroll-margin-block-start: 84px;
+}
+
 @media (max-width: 900px) {
   .a4-reader { grid-template-columns: minmax(0, 1fr); }
   .a4-reader__desk-tools { grid-column: 1; grid-row: 1; position: static; max-height: none; overflow: visible; }

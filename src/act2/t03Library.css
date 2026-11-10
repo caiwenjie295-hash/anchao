@@ -530,3 +530,40 @@
 @media (prefers-reduced-motion: reduce) {
   .act2-reading-room--library .act2-library__section { transition: none; }
 }
+
+/* Edge-turn buttons remain hit areas; only the paper edge itself gets feedback. */
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn {
+  display: grid !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn:focus-visible:not(:disabled) {
+  border: 0 !important;
+  color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn:disabled {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn:focus-visible:not(:disabled) .act2-library__page-turn-corner {
+  width: 24px;
+  height: 24px;
+  border-color: transparent transparent #8e7040 #8e7040;
+  opacity: 1;
+  filter: drop-shadow(0 0 2px #fffdf7);
+}
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn--next:focus-visible:not(:disabled) .act2-library__page-turn-corner {
+  border-color: transparent #8e7040 #8e7040 transparent;
+}

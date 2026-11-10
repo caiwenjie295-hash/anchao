@@ -9,6 +9,7 @@ import '../../act3/act3Scene.css';
 import { PhotoViewport, type PhotoMarker } from '../../components/PhotoViewport';
 import { InvestigationDetail } from '../../components/investigation/InvestigationDetail';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
+import { PolaroidPhoto } from '../../design/photoInteractions/PolaroidPhoto';
 import type { InvestigationAction, InvestigationMaterialLink } from '../../components/investigation/types';
 import { act3PhotoLayout } from '../../data/act3PhotoLayout';
 import { act3ComparisonPhotoDetailAssetId } from '../../data/act3ComparisonPhotoDetails';
@@ -114,18 +115,20 @@ function ClueDetailEvidence({ stage, hotspot }: { stage: Act3ActiveStage; hotspo
   const assetId = act3DetailImageIdForClue(hotspot.clueId);
   if (!assetId) return null;
   const asset = assetLoader.get(assetId);
-  return <figure className="act3-investigation__detail-evidence" data-asset-id={assetId}>
-    {asset?.src
-      ? <img src={asset.src} alt={paper?.alt ?? `${hotspot.label}的独立照片细节`} />
-      : <div className="act3-investigation__comparison-placeholder" role="img" aria-label={`${hotspot.label}的独立照片细节暂不可用`}>{hotspot.observation ?? hotspot.label}</div>}
-    <figcaption>{paper ? `${paper.title}纸片 · 实物细节` : stage === 'T06' && hotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE' ? '空神龛底座 · 近景' : `${hotspot.label} · 独立细节`}</figcaption>
+  const caption = paper ? `${paper.title}纸片 · 实物细节` : stage === 'T06' && hotspot.clueId === 'CLUE_A3_T06_EMPTY_BASE' ? '空神龛底座 · 近景' : `${hotspot.label} · 独立细节`;
+  return <div className="act3-investigation__detail-evidence" data-asset-id={assetId}>
+    <PolaroidPhoto className="act3-investigation__detail-photo" caption={caption}>
+      {asset?.src
+        ? <img src={asset.src} alt={paper?.alt ?? `${hotspot.label}的独立照片细节`} />
+        : <div className="act3-investigation__comparison-placeholder" role="img" aria-label={`${hotspot.label}的独立照片细节暂不可用`}>{hotspot.observation ?? hotspot.label}</div>}
+    </PolaroidPhoto>
     {paper && <div className="act3-investigation__paper-transcript" aria-label={`${paper.title}纸片可辨文字`}>
       <h3>纸面文字</h3>
       <strong>{paper.title}</strong>
       <ul>{paper.lines.map((line) => <li key={line}>{line}</li>)}</ul>
       <p>{paper.note}</p>
     </div>}
-  </figure>;
+  </div>;
 }
 
 export function Act3Investigation({ manager = defaultManager, onReturnToDesktop, onOpenAct4 }: Act3InvestigationProps) {
@@ -357,7 +360,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
     <main className="act3-investigation__lens" data-act3-stage={stage} data-asset-id={lens.assetId} data-observation-stance={lens.stance}>
-      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat} quietHotspotLabels compactMobileControls>
+      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat} quietHotspotLabels compactMobileControls investigationSpotlight>
         <div className="act3-investigation__photo-overlay" data-photo-control>
           <details
             key={lens.id}

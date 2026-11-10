@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { SceneHotspot } from '../../data/sceneData';
 import { useCurtainExit } from '../../components/scenePolish/useCurtainExit';
+import { PolaroidPhoto } from '../../design/photoInteractions/PolaroidPhoto';
 
 export interface SceneClueFocusProps {
   hotspot: SceneHotspot;
@@ -83,9 +84,9 @@ export function SceneClueFocus({ hotspot, imageSrc, backgroundSrc, onClose }: Sc
           <button ref={closeButtonRef} type="button" aria-disabled={closing} onClick={() => beginExit()}>关闭特写</button>
         </header>
         {imageUrl && !imageFailed && isIndependentImage ? (
-          <figure className="scene-clue-focus__image scene-clue-focus__image--independent">
+          <PolaroidPhoto className="scene-clue-focus__image scene-clue-focus__image--independent" caption={hotspot.label}>
             <img key={`${hotspot.id}-${retryAttempt}`} src={imageUrl} alt={hotspot.label} data-asset-id={hotspot.imageAssetId} onError={() => setImageFailed(true)} />
-          </figure>
+          </PolaroidPhoto>
         ) : imageUrl && !imageFailed && backgroundSrc ? (
           <figure className="scene-clue-focus__image scene-clue-focus__image--background" aria-label={`${hotspot.label}的局部放大`}>
             <img
