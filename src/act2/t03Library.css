@@ -553,6 +553,7 @@
   background: transparent !important;
   box-shadow: none !important;
 }
+.investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn:focus-visible:not(:disabled) { outline: none !important; }
 .investigation-shell.investigation-shell--reading .act2-reading-room--library .act2-library__page-turn:disabled {
   opacity: 0 !important;
   pointer-events: none !important;
