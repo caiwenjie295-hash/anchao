@@ -491,11 +491,13 @@
 }
 .investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action--ready:hover:not(:disabled) { background: #927848; }
 
-/* Native focus scrolling leaves room for the sticky page controls above the text. */
-.a4-reader__segment[data-reader-active="true"],
-.a4-reader__cover[data-reader-active="true"] {
-  scroll-margin-top: 84px;
-  scroll-margin-block-start: 84px;
+/* The reader scrolls its own scene directly, so keep page controls in normal flow. */
+@media (min-width: 901px) {
+  .a4-reader__pager {
+    position: static;
+    top: auto;
+    z-index: auto;
+  }
 }
 
 @media (max-width: 900px) {
