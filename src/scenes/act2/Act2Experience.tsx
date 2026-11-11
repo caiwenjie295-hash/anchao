@@ -2,7 +2,6 @@ import { StateManager, stateManager as defaultManager } from '../../core/stateMa
 import type { Act2Stage } from '../../core/types';
 import { BridgeInvestigation } from './BridgeInvestigation';
 import { LibraryResearch } from './LibraryResearch';
-import { TalesInvestigation } from './TalesInvestigation';
 import { SchoolInvestigation } from './SchoolInvestigation';
 import { T07Investigation } from './T07Investigation';
 
@@ -50,10 +49,10 @@ export function Act2Experience({ stage, sceneOpen, onDismissScene, onResumeScene
       >
         {isBridge
           ? <BridgeInvestigation manager={manager} onReturnDesktop={onDismissScene} />
-          : isLibrary ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} />
+          : isLibrary || stage === 'tales' ? <LibraryResearch manager={manager} onReturnToDesktop={onDismissScene} />
             : isSchool ? <SchoolInvestigation manager={manager} onReturnToDesktop={onDismissScene} />
               : isFinale ? <T07Investigation manager={manager} onReturnToDesktop={onDismissScene} onEnterAct3={onEnterAct3} />
-                : <TalesInvestigation manager={manager} onReturnToDesktop={onDismissScene} />}
+                : null}
       </div>
     );
   }

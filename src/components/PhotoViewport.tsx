@@ -3,6 +3,7 @@ import { InvestigationNavigation } from './investigation/InvestigationNavigation
 import { InvestigationSpotlight } from '../design/photoInteractions/InvestigationSpotlight';
 import type { InvestigationAction, InvestigationActionKind, InvestigationActionState } from './investigation/types';
 import './photoViewport.css';
+import '../design/photo-spotlight.css';
 
 export interface PhotoMarker {
   id: string;
@@ -47,6 +48,8 @@ export interface PhotoViewportProps {
   /** Optional frame-sized investigation veil. Disabled for all existing callers by default. */
   investigationSpotlight?: boolean;
   onImageAvailabilityChange?: (available: boolean) => void;
+  /** Opt-in pointer spotlight for investigation photos; existing callers stay unchanged. */
+  pointerSpotlight?: boolean;
 }
 export type PhotoFit = 'contain' | 'cover';
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
@@ -81,7 +84,59 @@ export const calculatePhotoInitialOffset = (
   };
 };
 
-export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, fit = 'contain', initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, quietHotspotLabels = false, compactMobileControls = false, investigationSpotlight = false, onImageAvailabilityChange }: PhotoViewportProps) {
+const SPOTLIGHT_FILL = 'rgb(0 0 0 / 52%)';
+const SPOTLIGHT_CORE_PX = 120;
+const SPOTLIGHT_FEATHER_PX = 64;
+const SPOTLIGHT_GLOW_REACH_PX = 200;
+
+function prefersSpotlightReducedMotion() {
+  try {
+    return typeof window === 'undefined' || !window.matchMedia
+      || window.matchMedia('(prefers-reduced-motion: reduce)').matches === true;
+  } catch {
+    return true;
+  }
+}
+
+function readCssPx(element: Element | null, name: string, fallback: number) {
+  if (!element) return fallback;
+  const value = Number.parseFloat(getComputedStyle(element).getPropertyValue(name));
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function isSpotlightChrome(target: EventTarget | null) {
+  if (!(target instanceof Element)) return false;
+  return Boolean(target.closest('[data-photo-control], .photo-viewport__controls, .photo-viewport__overlay'));
+}
+
+function fillSpotlightCover(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = SPOTLIGHT_FILL;
+  ctx.fillRect(0, 0, width, height);
+}
+
+function eraseSpotlightHole(ctx: CanvasRenderingContext2D, x: number, y: number, core: number, feather: number) {
+  const outer = Math.max(core + feather, 1);
+  const inner = Math.max(Math.min(core - 8, outer), 0);
+  const gradient = ctx.createRadialGradient(x, y, 0, x, y, outer);
+  gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+  gradient.addColorStop(inner / outer, 'rgba(0, 0, 0, 1)');
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(x, y, outer, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function planeCssSize(plane: HTMLElement | null, fallbackWidth: number, fallbackHeight: number) {
+  const width = parseFloat(plane?.style.width || '') || fallbackWidth;
+  const height = parseFloat(plane?.style.height || '') || fallbackHeight;
+  return { width, height };
+}
+
+export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, children, imageOverlay, fit = 'contain', initialView, transitionDirection = 'forward', explorationMode = false, revealBeat = false, quietHotspotLabels = false, compactMobileControls = false, investigationSpotlight = false, pointerSpotlight = false, onImageAvailabilityChange }: PhotoViewportProps) {
   const [zoom, setZoom] = useState(1);
   const [fullImageView, setFullImageView] = useState(false);
   const [compactViewport, setCompactViewport] = useState(() => compactMobileControls && typeof window !== 'undefined' && window.matchMedia?.('(max-width: 600px)').matches === true);
@@ -99,6 +154,14 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   const effectiveFit = fullImageView ? 'contain' : fit;
   const imageFailed = Boolean(imageUrl && failedResourceKey === resourceKey);
   const frame = useRef<HTMLDivElement>(null);
+  const planeRef = useRef<HTMLDivElement>(null);
+  const spotlightCanvasRef = useRef<HTMLCanvasElement>(null);
+  const glowLayerRef = useRef<HTMLDivElement>(null);
+  const reducedSpotlightRef = useRef(true);
+  const spotlightBufferKey = useRef<string | null>(null);
+  const lastErasePoint = useRef<{ x: number; y: number } | null>(null);
+  const hotspotsRef = useRef(hotspots);
+  hotspotsRef.current = hotspots;
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const markerGestures = useRef(new Map<number, { markerId: string; startX: number; startY: number; lastX: number; lastY: number; moved: boolean }>());
   const suppressedMarkerClicks = useRef(new Set<string>());
@@ -134,6 +197,153 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   }, [compactMobileControls]);
 
   useEffect(() => { if (compactMobileControls) setAdjustmentsOpen(false); }, [sceneKey, compactMobileControls]);
+
+  const markSpotlightReduced = (reduced: boolean) => {
+    reducedSpotlightRef.current = reduced;
+    const reducedValue = reduced ? 'true' : 'false';
+    if (spotlightCanvasRef.current) spotlightCanvasRef.current.dataset.reduced = reducedValue;
+    if (glowLayerRef.current) glowLayerRef.current.dataset.reduced = reducedValue;
+  };
+
+  const resetSpotlightGlow = () => {
+    const layer = glowLayerRef.current;
+    if (!layer) return;
+    for (const spot of layer.querySelectorAll<HTMLElement>('[data-glow-id]')) {
+      spot.style.setProperty('--spotlight-glow-intensity', '0');
+    }
+  };
+
+  const updateSpotlightGlow = (clientX: number, clientY: number) => {
+    const layer = glowLayerRef.current;
+    const plane = planeRef.current;
+    if (!layer || !plane || reducedSpotlightRef.current) return;
+    const planeRect = plane.getBoundingClientRect();
+    if (planeRect.width < 1 || planeRect.height < 1) return;
+    const reach = readCssPx(layer, '--spotlight-glow-reach', SPOTLIGHT_GLOW_REACH_PX);
+    const css = planeCssSize(plane, planeRect.width, planeRect.height);
+    const screenScale = planeRect.width / Math.max(css.width, 1);
+    layer.style.setProperty('--spotlight-glow-size', `${(reach * 2) / screenScale}px`);
+    for (const spot of layer.querySelectorAll<HTMLElement>('[data-glow-id]')) {
+      const marker = hotspotsRef.current.find((item) => item.id === spot.dataset.glowId && !item.disabled);
+      if (!marker) {
+        spot.style.setProperty('--spotlight-glow-intensity', '0');
+        continue;
+      }
+      const x = planeRect.left + marker.x * planeRect.width;
+      const y = planeRect.top + marker.y * planeRect.height;
+      const distance = Math.hypot(clientX - x, clientY - y);
+      const intensity = distance >= reach ? 0 : 1 - distance / reach;
+      spot.style.setProperty('--spotlight-glow-intensity', String(intensity));
+    }
+  };
+
+  const eraseSpotlightAtPointer = (clientX: number, clientY: number) => {
+    if (reducedSpotlightRef.current) return;
+    const canvas = spotlightCanvasRef.current;
+    const plane = planeRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !plane || !ctx || canvas.width < 1 || canvas.height < 1) return;
+    const rect = plane.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) return;
+    const x = (clientX - rect.left) / rect.width * canvas.width;
+    const y = (clientY - rect.top) / rect.height * canvas.height;
+    const screenToCanvas = canvas.width / rect.width;
+    const core = readCssPx(canvas, '--spotlight-core', SPOTLIGHT_CORE_PX) * screenToCanvas;
+    const feather = readCssPx(canvas, '--spotlight-feather', SPOTLIGHT_FEATHER_PX) * screenToCanvas;
+    const previous = lastErasePoint.current;
+    const stamp = (px: number, py: number) => eraseSpotlightHole(ctx, px, py, core, feather);
+    if (!previous) stamp(x, y);
+    else {
+      const dx = x - previous.x;
+      const dy = y - previous.y;
+      const distance = Math.hypot(dx, dy);
+      const step = Math.max(core / 4, 8);
+      const count = Math.max(1, Math.ceil(distance / step));
+      for (let index = 1; index <= count; index += 1) stamp(previous.x + dx * index / count, previous.y + dy * index / count);
+    }
+    lastErasePoint.current = { x, y };
+  };
+
+  const applySpotlightPointer = (event: { clientX: number; clientY: number; target: EventTarget | null }) => {
+    if (!pointerSpotlight || reducedSpotlightRef.current) return;
+    updateSpotlightGlow(event.clientX, event.clientY);
+    if (isSpotlightChrome(event.target)) return;
+    eraseSpotlightAtPointer(event.clientX, event.clientY);
+  };
+
+  const leaveSpotlightPointer = () => {
+    lastErasePoint.current = null;
+    resetSpotlightGlow();
+  };
+
+  useLayoutEffect(() => {
+    if (!pointerSpotlight || !imageLoaded) {
+      if (!imageLoaded) spotlightBufferKey.current = null;
+      return;
+    }
+    const canvas = spotlightCanvasRef.current;
+    const plane = planeRef.current;
+    if (!canvas || !plane) return;
+    const css = planeCssSize(plane, 0, 0);
+    if (css.width < 1 || css.height < 1) return;
+    const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+    const nextWidth = Math.max(1, Math.round(css.width * dpr));
+    const nextHeight = Math.max(1, Math.round(css.height * dpr));
+    const sameResource = spotlightBufferKey.current === resourceKey;
+    const sizeChanged = canvas.width !== nextWidth || canvas.height !== nextHeight;
+    let preserved: HTMLCanvasElement | null = null;
+    if (sameResource && sizeChanged && canvas.width > 0 && canvas.height > 0) {
+      preserved = document.createElement('canvas');
+      preserved.width = canvas.width;
+      preserved.height = canvas.height;
+      preserved.getContext('2d')?.drawImage(canvas, 0, 0);
+    }
+    if (sizeChanged) {
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+    }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    if (!sameResource) {
+      fillSpotlightCover(ctx, canvas.width, canvas.height);
+      lastErasePoint.current = null;
+      spotlightBufferKey.current = resourceKey;
+    } else if (preserved) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(preserved, 0, 0, canvas.width, canvas.height);
+    }
+    markSpotlightReduced(prefersSpotlightReducedMotion());
+  }, [pointerSpotlight, imageLoaded, resourceKey, imageSize.width, imageSize.height, frameSize.width, frameSize.height, effectiveFit]);
+
+  useEffect(() => {
+    if (!pointerSpotlight) return;
+    const box = frame.current;
+    const sync = () => {
+      const reduced = prefersSpotlightReducedMotion();
+      markSpotlightReduced(reduced);
+      if (reduced) {
+        lastErasePoint.current = null;
+        resetSpotlightGlow();
+      }
+    };
+    sync();
+    const follow = (event: PointerEvent) => { applySpotlightPointer(event); };
+    const leave = () => { leaveSpotlightPointer(); };
+    box?.addEventListener('pointerenter', follow);
+    box?.addEventListener('pointermove', follow);
+    box?.addEventListener('pointerleave', leave);
+    const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    media?.addEventListener?.('change', sync);
+    return () => {
+      box?.removeEventListener('pointerenter', follow);
+      box?.removeEventListener('pointermove', follow);
+      box?.removeEventListener('pointerleave', leave);
+      media?.removeEventListener?.('change', sync);
+    };
+  }, [pointerSpotlight, sceneKey, imageLoaded]);
+
 
   // 审查 P1：sceneKey 变化会重建 key={sceneKey} 子树，frame 节点被替换但组件不重挂载。
   // 依赖 sceneKey 重新绑定观察，并始终读取 ref.current，避免观察已分离的旧节点。
@@ -428,7 +638,7 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
   };
 
   return (
-    <div className={'photo-viewport photo-viewport--' + transitionDirection + (explorationMode ? ' photo-viewport--exploration' : '') + (effectiveFit === 'cover' ? ' photo-viewport--cover' : '') + (quietHotspotLabels ? ' photo-viewport--quiet-hotspot-labels' : '')}>
+    <div className={'photo-viewport photo-viewport--' + transitionDirection + (explorationMode ? ' photo-viewport--exploration' : '') + (effectiveFit === 'cover' ? ' photo-viewport--cover' : '') + (quietHotspotLabels ? ' photo-viewport--quiet-hotspot-labels' : '') + (pointerSpotlight ? ' photo-viewport--spotlight' : '')}>
       <div className={'photo-viewport__scene' + (handoffImage ? ' is-transitioning' : '')} key={sceneKey} style={{ '--scene-transition-ms': `${transitionMs}ms` } as CSSProperties} onFocusCapture={(event) => {
         if (restoringFocus.current) return;
         const target = event.target as HTMLElement;
@@ -466,7 +676,11 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           pinch.current = pointers.current.size === 2 ? distance() : null;
           pointerMoved.current = false;
         }}
+        onPointerEnter={(event) => {
+          applySpotlightPointer(event);
+        }}
         onPointerMove={(event) => {
+          applySpotlightPointer(event);
           const prior = pointers.current.get(event.pointerId);
           if (!prior) return;
           pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -490,9 +704,12 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
           if (!pointerMoved.current && imageLoaded && event.target === frame.current) changeZoom(zoom === 1 ? 1.7 : 1);
         }}
         onPointerCancel={(event) => { pointers.current.delete(event.pointerId); pinch.current = null; }}
+        onPointerLeave={() => {
+          leaveSpotlightPointer();
+        }}
       >
         <div className="photo-viewport__world" style={{ transform: 'translate(' + offset.x + 'px, ' + offset.y + 'px) scale(' + zoom + ')' }}>
-          {imageUrl && <div className="photo-viewport__plane" style={planeStyle}>
+          {imageUrl && <div ref={planeRef} className="photo-viewport__plane" style={planeStyle}>
             <img
               key={resourceKey}
               src={imageUrl}
@@ -564,10 +781,29 @@ export function PhotoViewport({ sceneKey, imageUrl, imageAlt, hotspots, routes, 
                 <span className="photo-viewport__marker-label">{marker.label}</span>
               </button>
             ))}
+            {pointerSpotlight && imageLoaded && (
+              <canvas ref={spotlightCanvasRef} className="photo-viewport__spotlight" aria-hidden="true" style={{ pointerEvents: 'none' }} />
+            )}
+            {pointerSpotlight && imageLoaded && (
+              <div ref={glowLayerRef} className="photo-viewport__spotlight-glow" aria-hidden="true" style={{ pointerEvents: 'none' }}>
+                {hotspots.filter((marker) => !marker.disabled).map((marker) => (
+                  <span
+                    key={marker.id}
+                    data-glow-id={marker.id}
+                    className="photo-viewport__spotlight-glow-spot"
+                    style={{
+                      '--marker-x': (marker.x * 100) + '%',
+                      '--marker-y': (marker.y * 100) + '%',
+                      '--spotlight-glow-intensity': 0,
+                    } as CSSProperties}
+                  />
+                ))}
+              </div>
+            )}
             {imageLoaded && imageOverlay && <div className="photo-viewport__image-overlay">{imageOverlay}</div>}
           </div>}
         </div>
-        {imageLoaded && investigationSpotlight && <InvestigationSpotlight key={resourceKey} frameRef={frame} />}
+        {imageLoaded && investigationSpotlight && !pointerSpotlight && <InvestigationSpotlight key={resourceKey} frameRef={frame} />}
         {imageUrl && !imageLoaded && <div className="photo-viewport__load-state" role="status">{imageFailed ? `${imageAlt}载入失败。可从下方文字线索继续调查。` : `正在载入${imageAlt}…`}</div>}
         {!imageUrl && <div className="photo-viewport__missing" role="img" aria-label={imageAlt}>眼前的景象隐入暗处。可从文字线索继续调查</div>}
         <div className={'photo-viewport__controls' + (compactMobileControls ? ' photo-viewport__controls--compact-mobile' : '')} aria-label="画面操作" data-photo-control={compactMobileControls ? true : undefined}>

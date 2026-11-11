@@ -361,9 +361,13 @@
 .a4-reader__cover-copy p { margin: 0 0 6px; color: #59615d; }
 .a4-reader__cover-copy h3 { margin: 0 0 9px; color: #303a34; font-size: clamp(1.2rem, 2vw, 1.6rem); }
 .a4-reader__cover-copy span { color: #59615d; }
-.a4-reader__inline-art { display: grid; justify-items: center; gap: 6px; width: min(100%, 820px); margin: 18px auto 0; }
-.a4-reader__inline-art img { display: block; width: auto; max-width: 100%; max-height: min(34dvh, 360px); object-fit: contain; }
-.a4-reader__inline-art button { min-height: 44px; padding: 6px 12px; border: 1px solid #858b91; border-radius: 6px; color: #25292d; background: #f7f8f9; font: inherit; cursor: pointer; }
+.a4-reader__block--with-inline-art { display: flow-root; }
+.a4-reader__inline-art { float: right; display: grid; justify-items: end; gap: 6px; width: min(42%, 280px); max-width: 280px; margin: 12px 12px 12px 20px; }
+.a4-reader__inline-art-frame { position: relative; display: block; max-width: 100%; }
+.a4-reader__inline-art img { display: block; width: auto; max-width: 100%; max-height: min(34dvh, 280px); object-fit: contain; }
+.a4-reader__inline-art button.a4-reader__zoom-mag,
+.a4-reader__zoom-mag { position: absolute; right: 4px; bottom: 4px; display: grid; place-items: center; width: 32px; height: 32px; min-width: 32px; min-height: 32px; padding: 0; border: 1px solid #858b91; border-radius: 999px; color: #25292d; background: rgba(247, 248, 249, 0.94); box-shadow: 0 1px 3px rgba(20, 24, 28, 0.28); font: inherit; cursor: pointer; }
+.a4-reader__zoom-mag svg { display: block; }
 .a4-reader__inline-art figcaption { color: #59615d; }
 .a4-private-blog-gateway { display: grid; min-height: 300px; align-content: center; justify-items: center; gap: 14px; padding: clamp(22px, 5vw, 58px); border: 1px solid #d3d9d5; border-radius: 10px; background: linear-gradient(145deg, #f7f8f6, #e8ece9); text-align: center; }
 .a4-private-blog-gateway:focus { outline: 2px solid #789382; outline-offset: 2px; }
@@ -456,6 +460,7 @@
   .a4-reader__cover { padding: 12px; }
   .a4-reader__cover-art { min-height: 150px; }
   .a4-reader__cover-art img { max-height: min(54dvh, 500px); }
+  .a4-reader__inline-art { float: none; width: min(100%, 480px); max-width: 100%; margin: 12px auto; }
   .a4-reader__inline-art img { max-height: min(28dvh, 260px); }
   .a4-reader__notebook-pager { gap: 8px; }
   .a4-reader__notebook-pager button { padding-inline: 10px; }
@@ -485,4 +490,21 @@
 .act4-ending__actions a:focus-visible {
   outline: 3px solid #fff;
   outline-offset: 3px;
+}
+
+/* Act4 王澳 reader is a scene shell, not frozen virtual-desktop chrome. */
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action--ready[data-action-emphasis="primary"],
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"] {
+  border-color: #8a5a22;
+  color: #2a1a0c;
+  background: linear-gradient(180deg, #e2b05a 0%, #c4842e 55%, #a86a22 100%);
+  box-shadow: 0 1px 0 rgba(255, 236, 190, 0.45) inset, 0 2px 4px rgba(40, 24, 8, 0.28);
+  font-weight: 650;
+}
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action--ready[data-action-emphasis="primary"]:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.a4-reader) .investigation-navigation__action[data-action-state="ready"][data-action-emphasis="primary"]:focus-visible {
+  filter: brightness(1.06);
+  color: #1a1008;
+  background: linear-gradient(180deg, #e8bc68 0%, #cc8c36 55%, #b07228 100%);
 }

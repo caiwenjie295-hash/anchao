@@ -685,7 +685,7 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
             const leadSegments = segments.filter((item) => item.role === 'lead');
             return <div className="a4-reader__block-stack" key={block.id}>
               <section
-                className={`a4-reader__block a4-reader__block--${block.kind}${stage === 'T03' ? ' a4-reader__block--timeline' : ''}${isMailBlock ? ' a4-reader__block--email' : ''}`}
+                className={`a4-reader__block a4-reader__block--${block.kind}${stage === 'T03' ? ' a4-reader__block--timeline' : ''}${isMailBlock ? ' a4-reader__block--email' : ''}${coverAssetId && !showCover ? ' a4-reader__block--with-inline-art' : ''}`}
                 data-block-id={block.id}
                 data-source-ref-id={block.sourceRefId}
                 data-content-kind={block.kind}
@@ -734,16 +734,25 @@ function Act4NarrativeReaderView({ manager = stateManager, onExit }: { manager?:
                     <summary>王澳当时记得的事</summary>
                     {renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
                   </details>
-                  : renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
-                {coverAssetId && <figure className="a4-reader__inline-art" data-illustration-id={coverAssetId}>
-                  {coverAvailable
-                    ? <img src={coverSource} alt={coverAlt} onError={() => setFailedIllustrationAssetId(coverAssetId)} />
-                    : <figcaption>{coverAlt}（配图暂不可用）</figcaption>}
-                  {coverAvailable && <button ref={zoomButtonRef} type="button" onClick={() => {
-                    setZoomedIllustration({ assetId: act4IllustrationDetailAssetIdForSource(coverAssetId) ?? coverAssetId, alt: coverAlt });
-                    setZoomOpen(true);
-                  }}>放大配图</button>}
-                </figure>}
+                  : <>
+                    {coverAssetId && !showCover && <figure className="a4-reader__inline-art" data-illustration-id={coverAssetId}>
+                      {coverAvailable
+                        ? <div className="a4-reader__inline-art-frame">
+                          <img src={coverSource} alt={coverAlt} onError={() => setFailedIllustrationAssetId(coverAssetId)} />
+                          <button ref={zoomButtonRef} type="button" className="a4-reader__zoom-mag" aria-label="放大配图" onClick={() => {
+                            setZoomedIllustration({ assetId: act4IllustrationDetailAssetIdForSource(coverAssetId) ?? coverAssetId, alt: coverAlt });
+                            setZoomOpen(true);
+                          }}>
+                            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                              <circle cx="6.5" cy="6.5" r="4.2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                              <path d="M9.6 9.6 13.2 13.2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                            </svg>
+                          </button>
+                        </div>
+                        : <figcaption>{coverAlt}（配图暂不可用）</figcaption>}
+                    </figure>}
+                    {renderVisibleSegments(block.id, block.paragraphs, currentPage, visibleSegments, pageIndex, pages.length)}
+                  </>}
                 </>}
               </section>
               {mayContinueBlock && renderInteractionAfter(block.id)}

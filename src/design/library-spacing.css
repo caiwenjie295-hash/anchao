@@ -1,0 +1,637 @@
+/* Library spacing from Damir Sokolovsky “Unslopping a vibecoded dashboard”
+   after-state (UX-DESIGNEER-20261110). Tokens stay on the library reading
+   room only — never on :root, never on desktop window chrome.
+
+   After-state scale taken from the demo’s own labels:
+   16 / 24 spacing, 36 row height, 18 group gap, 32 list row,
+   20 main top inset, window inset 10 top / 16 left. */
+
+.act2-reading-room--library,
+.act2-library {
+  --lib-space-10: 10px;
+  --lib-space-16: 16px;
+  --lib-space-18: 18px;
+  --lib-space-20: 20px;
+  --lib-space-24: 24px;
+  --lib-space-32: 32px;
+  --lib-space-36: 36px;
+  --lib-rule: #d6cfbf;
+  --lib-paper-field: #f6f3ea;
+  --lib-paper-sheet: #fbfaf5;
+}
+
+/* Content-area inset only. Do not touch OS window chrome. */
+.act2-reading-room.act2-reading-room--library {
+  gap: var(--lib-space-16);
+  padding: var(--lib-space-10) var(--lib-space-16) var(--lib-space-16);
+  background: var(--lib-paper-field);
+}
+
+.act2-reading-room--library .act2-reading-room__heading {
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--lib-rule);
+}
+
+@media (min-height: 880px) {
+  .act2-reading-room--library .act2-reading-room__heading {
+    gap: var(--lib-space-16);
+    padding-bottom: var(--lib-space-16);
+  }
+}
+
+/* Fill the investigation scene so the shelf cannot be scrolled off-screen. */
+.investigation-shell:has(.act2-reading-room--library) {
+  overflow: hidden;
+}
+
+.investigation-shell:has(.act2-reading-room--library) .investigation-shell__scene {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.investigation-shell:has(.act2-reading-room--library) .act2-library {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Two columns: archive | 1px rule | reader. No boxed cards. */
+.act2-reading-room.act2-reading-room--library {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.act2-reading-room--library .act2-reading-room__heading {
+  min-height: 0;
+}
+
+.act2-reading-room--library .act2-reading-room__workspace {
+  display: grid;
+  gap: var(--lib-space-24);
+  min-width: 0;
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.act2-reading-room--library .act2-reading-room__archive {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: stretch;
+  gap: var(--lib-space-16);
+  min-width: 0;
+  min-height: 0;
+  padding-right: var(--lib-space-16);
+  border-right: 1px solid var(--lib-rule);
+  background: transparent;
+  overflow: clip;
+}
+
+.act2-reading-room--library .act2-reading-room__reader {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-content: stretch;
+  gap: var(--lib-space-16);
+  min-width: 0;
+  min-height: 0;
+  padding-top: var(--lib-space-20);
+  overflow: hidden;
+}
+
+.act2-reading-room--library .act2-library__reader {
+  min-height: 0;
+  overflow: auto;
+}
+
+.act2-reading-room--library .act2-library__result,
+.act2-reading-room--library .act2-library__ambience {
+  min-width: 0;
+  padding-bottom: 2px;
+}
+
+.act2-reading-room--library .act2-library__catalog,
+.act2-reading-room--library .act2-library__shelf {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__catalog > summary {
+  min-height: var(--lib-space-36);
+  padding: 0;
+}
+
+.act2-reading-room--library .act2-library__catalog {
+  display: grid;
+  grid-template-rows: auto auto;
+  height: auto;
+  min-height: min-content;
+  max-height: none;
+  overflow: clip;
+  align-self: start;
+  z-index: 1;
+}
+
+.act2-reading-room--library .act2-library__catalog > summary {
+  box-sizing: border-box;
+  height: var(--lib-space-36);
+  min-height: var(--lib-space-36);
+  max-height: var(--lib-space-36);
+}
+
+.act2-reading-room--library .act2-library__catalog-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: 8px;
+  overflow: clip;
+}
+
+/* Notes and (at 1280-tall) the catalog hint must not steal the shelf plane. */
+.act2-reading-room--library .act2-library__hint,
+.act2-reading-room--library .act2-library__noise-note,
+.act2-reading-room--library .act2-library__section-note {
+  display: none;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  overflow: clip;
+  border: 0;
+}
+
+@media (min-height: 880px) {
+  .act2-reading-room--library .act2-library__catalog-body {
+    padding-top: var(--lib-space-16);
+  }
+
+  .act2-reading-room--library .act2-library__hint {
+    display: block;
+    flex: none;
+    margin: 0 0 8px;
+    overflow: clip;
+  }
+}
+
+.act2-reading-room--library .act2-library__sections {
+  flex: none;
+  gap: 8px;
+  margin: 0;
+}
+
+.investigation-shell:has(.act2-reading-room--library) button.act2-library__section,
+.act2-reading-room--library .act2-library__section {
+  box-sizing: border-box;
+  height: var(--lib-space-36);
+  min-height: var(--lib-space-36);
+  max-height: var(--lib-space-36);
+  padding: 0 6px;
+  box-shadow: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+/* Key solving category only: restrained brass glow, never purple or a badge. */
+@keyframes lib-key-glow {
+  from { box-shadow: 0 0 0 1px #c4a36a, 0 0 7px 1px rgb(138 106 59 / 42%); }
+  to { box-shadow: 0 0 0 1px #d8b56a, 0 0 12px 2px rgb(138 106 59 / 62%); }
+}
+
+.act2-reading-room--library .act2-library__section--key,
+.act2-reading-room--library .act2-library__section--key[aria-current="true"],
+.act2-reading-room--library .act2-library__section--key[aria-pressed="true"] {
+  border-color: #c4a36a;
+  box-shadow: 0 0 0 1px #c4a36a, 0 0 10px 2px rgb(138 106 59 / 55%);
+  animation: lib-key-glow 2.8s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act2-reading-room--library .act2-library__section--key,
+  .act2-reading-room--library .act2-library__section--key[aria-current="true"],
+  .act2-reading-room--library .act2-library__section--key[aria-pressed="true"] {
+    animation: none;
+    box-shadow: 0 0 0 1px #c4a36a, 0 0 10px 2px rgb(138 106 59 / 55%);
+  }
+}
+
+.act2-reading-room--library .act2-library__section[aria-current="true"],
+.act2-reading-room--library .act2-library__section[aria-pressed="true"] {
+  box-shadow: none;
+}
+
+/* Keep the narrowed-section cue as a fill edge, not a second outline. */
+.act2-reading-room--library .act2-library__section--narrowed,
+.act2-reading-room--library .act2-library__section--narrowed[aria-current="true"],
+.act2-reading-room--library .act2-library__section--narrowed[aria-pressed="true"] {
+  box-shadow: inset 3px 0 #8a6a3b;
+}
+
+@keyframes lib-key-glow-narrowed {
+  from { box-shadow: inset 3px 0 #8a6a3b, 0 0 0 1px #c4a36a, 0 0 7px 1px rgb(138 106 59 / 42%); }
+  to { box-shadow: inset 3px 0 #8a6a3b, 0 0 0 1px #d8b56a, 0 0 12px 2px rgb(138 106 59 / 62%); }
+}
+
+.act2-reading-room--library .act2-library__section--key.act2-library__section--narrowed,
+.act2-reading-room--library .act2-library__section--key.act2-library__section--narrowed[aria-current="true"],
+.act2-reading-room--library .act2-library__section--key.act2-library__section--narrowed[aria-pressed="true"] {
+  box-shadow: inset 3px 0 #8a6a3b, 0 0 0 1px #c4a36a, 0 0 8px rgb(138 106 59 / 45%);
+  animation-name: lib-key-glow-narrowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act2-reading-room--library .act2-library__section--key.act2-library__section--narrowed,
+  .act2-reading-room--library .act2-library__section--key.act2-library__section--narrowed[aria-current="true"],
+  .act2-reading-room--library .act2-library__section--key.act2-library__section--narrowed[aria-pressed="true"] {
+    animation: none;
+    box-shadow: inset 3px 0 #8a6a3b, 0 0 0 1px #c4a36a, 0 0 8px rgb(138 106 59 / 45%);
+  }
+}
+
+.act2-reading-room--library .act2-library__shelf {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  min-height: 0;
+  overflow: clip;
+}
+
+@media (min-height: 880px) {
+  .act2-reading-room--library .act2-library__shelf {
+    gap: var(--lib-space-16);
+  }
+}
+
+.act2-reading-room--library .act2-shelf-map {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 8px;
+  min-height: 0;
+  overflow: clip;
+  align-self: stretch;
+}
+
+/* Photo frame only. Size from the definite row height so aspect stays and the plane cannot collapse or overflow. */
+.act2-reading-room--library .act2-shelf-map__plane {
+  box-sizing: border-box;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  justify-self: start;
+  align-self: stretch;
+  overflow: hidden;
+}
+
+.act2-reading-room--library .act2-library__volume-context {
+  display: flex;
+  grid-template-columns: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  max-height: 48px;
+  overflow: clip;
+}
+
+.act2-reading-room--library .act2-library__volume-cover {
+  flex: none;
+  width: 40px;
+  margin: 0;
+  min-width: 0;
+}
+
+.act2-reading-room--library .act2-library__volume-cover img {
+  display: block;
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  object-fit: cover;
+}
+
+.act2-reading-room--library .act2-library__volume-cover figcaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.act2-reading-room--library .act2-library__volume-context > p {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Once a volume is in hand, keep the plane + blurb; text links are a duplicate entry. */
+.act2-reading-room--library .act2-library__shelf:has(.act2-library__volume-context) .act2-shelf-map__text-links {
+  display: none;
+}
+
+.investigation-shell:has(.act2-reading-room--library) .act2-shelf-map__hotspot {
+  min-width: 0;
+  min-height: 0;
+}
+
+.act2-reading-room--library .act2-shelf-map__text-links {
+  gap: 4px;
+  min-height: 0;
+}
+
+.act2-reading-room--library .act2-shelf-map__text-links > p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.act2-reading-room--library .act2-shelf-map__text-links ul {
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.act2-reading-room--library .act2-shelf-map__text-links button {
+  min-width: 0;
+  min-height: var(--lib-space-32);
+  padding: 0 8px;
+  overflow: hidden;
+  box-shadow: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.act2-reading-room--library .act2-shelf-map__text-links button[aria-current="true"] {
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__reader {
+  gap: var(--lib-space-16);
+}
+
+.act2-reading-room--library .act2-library__reader-title {
+  margin: 0;
+  min-height: var(--lib-space-36);
+  padding-bottom: var(--lib-space-16);
+}
+
+.act2-reading-room--library .act2-library__reader-instruction {
+  margin: 0;
+}
+
+.act2-reading-room--library .act2-library__paper-empty {
+  min-height: 220px;
+  padding: var(--lib-space-24);
+  border: 0;
+  background: transparent;
+}
+
+.act2-reading-room--library .act2-library__leaves {
+  gap: var(--lib-space-16);
+}
+
+/* Index tabs: no stroked count chips. */
+.act2-reading-room--library .act2-library__leaf {
+  min-height: var(--lib-space-32);
+  padding: 0 var(--lib-space-16);
+  border: 0;
+  border-bottom: 1px solid var(--lib-rule);
+  background: transparent;
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__leaf[aria-current="page"] {
+  border-bottom-width: 1px;
+  border-bottom-color: #927544;
+  background: #ede6d6;
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__page {
+  display: flex;
+  max-width: 84ch;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--lib-space-16);
+  justify-self: center;
+  padding: var(--lib-space-24);
+  background: var(--lib-paper-sheet);
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__page-head {
+  gap: var(--lib-space-16);
+  padding-bottom: var(--lib-space-16);
+}
+
+.act2-reading-room--library .act2-library__paper-illustration {
+  gap: var(--lib-space-16);
+  margin: 0;
+  padding: 0 0 var(--lib-space-16);
+  border: 0;
+  border-bottom: 1px solid var(--lib-rule);
+  background: transparent;
+}
+
+.act2-reading-room--library .act2-library__excerpt {
+  gap: var(--lib-space-16);
+  padding: var(--lib-space-16) var(--lib-space-24);
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__controls,
+.act2-reading-room--library .act2-library__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lib-space-18);
+  margin-top: var(--lib-space-16);
+  padding-top: var(--lib-space-16);
+  border-top: 1px solid var(--lib-rule);
+  background: transparent;
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__pager,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__tools,
+.act2-reading-room--library .act2-library__pager,
+.act2-reading-room--library .act2-library__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lib-space-16);
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  opacity: 1;
+}
+
+/* Secondary pager: quiet 1px edge. Tools: same quiet stroke, no fill wash. */
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next,
+.act2-reading-room--library .act2-library__prev,
+.act2-reading-room--library .act2-library__next {
+  min-height: var(--lib-space-32);
+  padding: 0 var(--lib-space-16);
+  border: 1px solid var(--lib-rule);
+  border-radius: 0;
+  color: #5a564e;
+  background: transparent;
+  box-shadow: none;
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark,
+.act2-reading-room--library .act2-library__zoom-out,
+.act2-reading-room--library .act2-library__zoom-in,
+.act2-reading-room--library .act2-library__bookmark {
+  display: inline-grid;
+  width: var(--lib-space-32);
+  min-width: var(--lib-space-32);
+  min-height: var(--lib-space-32);
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--lib-rule);
+  border-radius: 0;
+  color: #2a2926;
+  background: transparent;
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__bookmark[aria-pressed="true"] svg path {
+  fill: currentColor;
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in:hover:not(:disabled),
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark:hover,
+.act2-reading-room--library .act2-library__prev:hover:not(:disabled),
+.act2-reading-room--library .act2-library__next:hover:not(:disabled),
+.act2-reading-room--library .act2-library__zoom-out:hover:not(:disabled),
+.act2-reading-room--library .act2-library__zoom-in:hover:not(:disabled),
+.act2-reading-room--library .act2-library__bookmark:hover {
+  border-color: #8a6a3b;
+  background: transparent;
+  box-shadow: none;
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark[aria-pressed="true"],
+.act2-reading-room--library .act2-library__bookmark[aria-pressed="true"] {
+  border-color: #8a6a3b;
+  color: #2a2926;
+  background: #e9e0ce;
+  box-shadow: none;
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev:disabled,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next:disabled,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out:disabled,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in:disabled,
+.act2-reading-room--library .act2-library__prev:disabled,
+.act2-reading-room--library .act2-library__next:disabled,
+.act2-reading-room--library .act2-library__zoom-out:disabled,
+.act2-reading-room--library .act2-library__zoom-in:disabled {
+  border-color: #d4d0c5;
+  color: #85877f;
+  background: transparent;
+  box-shadow: none;
+}
+
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__prev:focus-visible,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__next:focus-visible,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-out:focus-visible,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__zoom-in:focus-visible,
+.investigation-shell.investigation-shell--reading:has(.act2-library) .act2-library__bookmark:focus-visible,
+.act2-reading-room--library .act2-library__prev:focus-visible,
+.act2-reading-room--library .act2-library__next:focus-visible,
+.act2-reading-room--library .act2-library__zoom-out:focus-visible,
+.act2-reading-room--library .act2-library__zoom-in:focus-visible,
+.act2-reading-room--library .act2-library__bookmark:focus-visible {
+  outline: 2px solid #8a6a3b;
+  outline-offset: 2px;
+}
+
+.act2-reading-room--library .act2-library__keywords {
+  max-width: 84ch;
+  justify-self: center;
+  width: 100%;
+  margin-top: var(--lib-space-16);
+  padding-top: var(--lib-space-16);
+}
+
+.act2-reading-room--library .act2-library__keywords-title {
+  min-height: var(--lib-space-36);
+  padding: var(--lib-space-16) 0;
+}
+
+.act2-reading-room--library .act2-library__keyword-list {
+  gap: var(--lib-space-16);
+  margin: 0 0 var(--lib-space-16);
+}
+
+.act2-reading-room--library .act2-library__keyword {
+  gap: var(--lib-space-16);
+  padding: var(--lib-space-16);
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__keyword[aria-pressed="true"] {
+  box-shadow: none;
+}
+
+.act2-reading-room--library .act2-library__conclusion {
+  max-width: 84ch;
+  padding: var(--lib-space-16) var(--lib-space-24);
+}
+
+@container act2-reading-room (min-width: 721px) and (max-width: 1100px) {
+  .act2-reading-room--library .act2-reading-room__workspace {
+    gap: var(--lib-space-16);
+    grid-template-columns: minmax(220px, .42fr) minmax(0, .58fr);
+  }
+
+  .act2-reading-room--library .act2-library__page {
+    padding: var(--lib-space-16) var(--lib-space-24);
+  }
+}
+
+@container act2-reading-room (max-width: 720px) {
+  .act2-reading-room.act2-reading-room--library {
+    gap: var(--lib-space-16);
+    padding: var(--lib-space-10) var(--lib-space-16) var(--lib-space-16);
+  }
+
+  .act2-reading-room--library .act2-reading-room__workspace {
+    gap: var(--lib-space-16);
+  }
+
+  .act2-reading-room--library .act2-reading-room__archive {
+    padding-right: 0;
+    padding-bottom: var(--lib-space-16);
+    border-right: 0;
+    border-bottom: 1px solid var(--lib-rule);
+  }
+
+  .act2-reading-room--library .act2-reading-room__reader {
+    padding-top: var(--lib-space-20);
+  }
+
+  .act2-reading-room--library .act2-library__page {
+    padding: var(--lib-space-16) var(--lib-space-24);
+  }
+}

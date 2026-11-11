@@ -290,13 +290,14 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     expect(stage()).toBe('library');
     expect(pick('.act2-library')).not.toBeNull();
 
-    // 错误目录无推进。
+    // 走近查阅架后，错误目录签无推进，三册仍同时可见。
+    await click(pick('.act2-library__consult'));
     await click(pick('[data-section-id="SECTION_A2_T03_001"]'));
     expect(library().visitedSectionIds).toEqual(['SECTION_A2_T03_001']);
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBeUndefined();
-    expect(pick('[data-volume-id="VOLUME_A2_T03_002"]')).toBeNull();
+    expect(pick('[data-volume-id="VOLUME_A2_T03_002"]')).not.toBeNull();
 
-    // 正确目录 → 目标卷册可见。
+    // 正确目录签仍写入旗标；书脊可直接抽取。
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
     expect(flags().FLAG_A2_LOCAL_GAZETTE_FOUND).toBe(true);
     await click(pick('[data-shelf-entry-id="VOLUME_A2_T03_002"]'));
@@ -309,19 +310,24 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await click(pick('.act2-library__next'));
     expect(library().currentPageId).toBe('PAGE_A2_T03_004');
     expect(flags().FLAG_A2_BUMUZHI_FOUND).toBeUndefined();
-    await click(pick('.act2-library__next'));
+    await click(pick('[data-toc-target="bumuzhi"]'));
     expect(library().currentPageId).toBe('PAGE_A2_T03_005');
     expect(flags().FLAG_A2_BUMUZHI_FOUND).toBe(true);
     expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
     expect(autoEntries()).toContain('NOTE_A2_T03_001');
+    expect(pick('.act2-library__inpage-excerpt')?.textContent).toBe('摘录此段');
+    expect(pick('.investigation-shell__operations [data-action-id="A2_T03_TO_TALES"]')).toBeNull();
+    await click(pick('.act2-library__inpage-excerpt'));
     expect(pick('.act2-library__conclusion')?.textContent).toContain('缺什么，就用某种东西补什么。');
-
-    // 阅读完成后保持在 T03，玩家仍需主动选择前往志异调查。
-    expect(stage()).toBe('library');
-    expect(pick('[data-action-id="A2_T03_TO_TALES"]')?.getAttribute('data-action-state')).toBe('ready');
     const text = container.textContent ?? '';
     for (const term of ['身份冲突的答案', '案例一']) expect(text).not.toContain(term);
     expect(text).toContain('县志只记到这里');
+    expect(pick('.act2-library__excerpt-drawer [data-action-id="A2_T03_TO_TALES"]')?.getAttribute('data-action-state')).toBe('ready');
+
+    // 阅读完成后保持在 T03；不摘录也可合上卷册后使用继续对照 CTA，玩家仍需主动选择翻到卷末乡录。
+    await click(pick('.act2-library__close-reader'));
+    expect(stage()).toBe('library');
+    expect(pick('[data-action-id="A2_T03_TO_TALES"]')?.getAttribute('data-action-state')).toBe('ready');
 
     // 返回桌面再继续，阅读结果仍在。
     await click(pick('.investigation-shell__exit'));
@@ -330,17 +336,20 @@ describe('Second-act T01–T03 acceptance: wired into the real desktop', () => {
     await click(pick('.act2-experience__continue'));
     expect(pick('.act2-library')).not.toBeNull();
     expect(flags().FLAG_A2_BUMU_RULE_BASIC_KNOWN).toBe(true);
+    if (pick('.act2-library__close-reader')) await click(pick('.act2-library__close-reader'));
     await click(pick('[data-action-id="A2_T03_TO_TALES"]'));
     expect(stage()).toBe('tales');
-    expect(pick('.act2-tales__shelf')).not.toBeNull();
+    expect(pick('.act2-library')).not.toBeNull();
+    expect(container.textContent).toContain('卷末 · 乡录残页');
   });
 
   it('restores a migrated second-act save mid-second-act and clears everything on reset', async () => {
     await reachLibrary();
+    await click(pick('.act2-library__consult'));
     await click(pick('[data-section-id="SECTION_A2_T03_009"]'));
     await click(pick('[data-shelf-entry-id="VOLUME_A2_T03_002"]'));
     await click(pick('.act2-library__next'));
-    await click(pick('.act2-library__next'));
+    await click(pick('[data-toc-target="bumuzhi"]'));
 
     const saved = loadState();
     expect(saved.schemaVersion).toBe(13);

@@ -360,7 +360,7 @@ export function Act3Investigation({ manager = defaultManager, onReturnToDesktop,
     onOpenMaterial={(_actionId, materialId) => openRelatedMaterial(materialId)}
   >
     <main className="act3-investigation__lens" data-act3-stage={stage} data-asset-id={lens.assetId} data-observation-stance={lens.stance}>
-      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat} quietHotspotLabels compactMobileControls investigationSpotlight>
+      <Act3PhotoViewport sceneKey={lens.id} imageUrl={assetSrc} imageAlt={lensTitle} hotspots={photoHotspots} routes={[]} fit="cover" transitionDirection={lens.stance === 'crouch' ? 'back' : 'forward'} explorationMode revealBeat={revealBeat} quietHotspotLabels compactMobileControls pointerSpotlight>
         <div className="act3-investigation__photo-overlay" data-photo-control>
           <details
             key={lens.id}

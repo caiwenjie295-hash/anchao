@@ -282,7 +282,7 @@ describe('Act4 reading experience', () => {
       const noteArt = hiddenNote.querySelector<HTMLElement>('.a4-reader__inline-art')!;
       expect(noteBody.textContent)
         .toContain('我把笔记塞进塑料袋');
-      expect(noteBody.compareDocumentPosition(noteArt) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(noteBody.compareDocumentPosition(noteArt) & Node.DOCUMENT_POSITION_PRECEDING).toBe(Node.DOCUMENT_POSITION_PRECEDING);
       expect(host.querySelector('[data-block-id="T09_WALK_TO_DOOR"]')).toBeNull();
       expect(host.querySelector('[data-block-id="T09_BROADCAST"]')).toBeNull();
       await selectLastPage(host, 'T09_NOTE_HIDDEN');
