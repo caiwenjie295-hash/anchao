@@ -15,7 +15,7 @@ Codex主审：本合同、docs/ux-library-v4f-20261111/除implementation.md外�
 1. 执行者独立新agent/UX-LIBRARY-V4F-20261111-luna-max工作树，从当前review最新建。用git apply --3way --binary预检/应用并逐项处理冲突；禁止reset/强推/整树覆盖。若先基线建补丁commit须报告后由主审集成。不合main。
 2. 图书馆以用户v4f为准：全景/九格架→书→封面/目录/本卷阙/补母志/卷末三志异/后记，保留固定分页、抽屉与判断条件。SHOW_FENGTUZHI_MISSING_PAGES保持补丁默认true；说明列出的七条尚未处理意见不擅自优化，仅记录。
 3. 新图片绝对URL /assets/library/...在file与子路径部署会丢图。保留public图片，LibraryResearch通过相对静态import ?url（可import public内文件，Vite是否支持须验证；不支持再申请复制到src/assets新子树）让生产/离线包emit带hash资源，并使file可用。不得引入远端地址/依赖。测试适配实际打包URL，不能断言网络根目录。
-4. 不允许A3两套聚光同时画罩或照片套两层纸框。旧investigationSpotlight默认兼容可保留，新pointerSpotlight按补丁A3启用时关闭旧层；拍立得以补丁InvestigationDetail效果为准，A3内旧PolaroidPhoto wrapper可撤掉恢复原figure，使纸片长转录仍在倾斜卡片外；A1独立照片纸框保留。原Esc/焦点/观察/缩放/拖动/蓝色选中态不改。
+4. 用户中途明确“拍立得效果你做的更好，那个保留”：保留当前review PolaroidPhoto、A3 ClueDetailEvidence wrapper和A1独立照片纸框，不纳入补丁InvestigationDetail.tsx/InvestigationDetail.test.tsx/polaroidCard.css三路径的替换，除非确有必要的独立类型修复且不改变效果。旧investigationSpotlight默认兼容可保留，新pointerSpotlight按补丁A3启用时关闭旧层，禁止双层罩。长纸片转录继续在倾斜卡片外，原Esc/焦点/观察/缩放/拖动/蓝色选中态不改。
 5. 连续指针不写游戏状态；减少动态/粗指针/无canvas可回退；原PhotoViewport缓存load已知观察不扩展修复除非本次导致。按补丁实际行为记录聚光，勿声称A1也启用。
 6. 第一幕act1InteractionGuidance.css修复不可回退；A4正文不被pager盖住，保留2f/ed934旧收口。审查旧evidence样式高优先级可能压新library CSS，必要时只对新库作用域调整。
 

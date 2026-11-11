@@ -17,3 +17,7 @@
 - 组合Node24.15.0完整quality gate，原默认超时/断言保留；若离线旧UI路径迁移，记录修改范围与对应业务覆盖。旧691/用户709均不能充当新全量数字。
 
 日志/截图放外层03_测试与验收/UX-LIBRARY-V4F-20261111；源码不提交大截图、依赖、dist或离线生成物。
+
+## 用户补充取舍
+
+用户明确保留当前review拍立得，不采用补丁替换。InvestigationDetail.tsx/对应test/polaroidCard.css替换不纳入，A1/A3保留原PolaroidPhoto与长文字静止方案；其余补丁继续合并。
