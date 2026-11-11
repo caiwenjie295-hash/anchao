@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactElement } from 'react';
-import libraryPanoramaUrl from '../../../public/assets/library/07-library-panorama-v2.jpg?url';
-import libraryShelfTextureUrl from '../../../public/assets/library/02-shelf-closeup.jpg?url';
+import libraryPanoramaUrl from '../../../public/assets/library/07-library-panorama-v2.jpg?url&no-inline';
+import libraryShelfTextureUrl from '../../../public/assets/library/02-shelf-closeup.jpg?url&no-inline';
 import { InvestigationShell } from '../../components/investigation/InvestigationShell';
 import type { InvestigationAction } from '../../components/investigation/types';
 import { stateManager, type StateManager } from '../../core/stateManager';
