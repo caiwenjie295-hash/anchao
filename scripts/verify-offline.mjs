@@ -582,7 +582,7 @@ async function advanceAct2() {
   assert.equal(comparisonRows.length, 3, 'all read records appear as cross-source comparisons');
   assert.deepEqual(comparisonRows.map((row) => row.querySelector('h3')?.textContent.trim()), ['周三，石匠', '六儿', '北村哑女']);
   assert.equal(state().modules.act2Research.tales.supportingEvidenceIds.length, 2);
-  assert.match(query('.act2-library__evidence-summary').textContent, /2.*2.*篇来源/);
+  assert.match(query('.act2-tales__evidence-list summary').textContent, /2.*2.*篇来源/);
   await click('[data-inference-id="accompanied-change"]');
   await click('[data-action-id="A2_T04_CONFIRM_PATTERN"]');
   assert.equal(state().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED, true);
