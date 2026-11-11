@@ -2405,11 +2405,6 @@
 
 /* The previous library paper rule targets every .act2-library__page; keep the v4f book frame intact. */
 .act2-library.act2-library--view-reader .act2-library__page.act2-library__book {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  max-width: none;
-  width: min(920px, 100%);
-  gap: 0;
   padding: 0;
   border: 0;
   border-block: 0;
