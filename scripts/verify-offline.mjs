@@ -519,58 +519,70 @@ async function advanceAct2() {
   assert.ok(query('.act2-library'));
   assert.equal(query('main.desktop').hasAttribute('inert'), true);
 
-  // 错误目录无推进。
-  await click('details.act2-library__catalog > summary');
+  // v4f: panorama -> consult shelf -> catalog. Wrong categories do not unlock the gazette.
+  assertLocalImage(query('.act2-library__panorama-image').src);
+  await click('.act2-library__consult');
+  assert.equal(document().querySelectorAll('.act2-library__bay').length, 9);
   await click('[data-section-id="SECTION_A2_T03_001"]');
   assert.equal(state().game.flags.FLAG_A2_LOCAL_GAZETTE_FOUND, undefined);
-  assert.equal(document().querySelector('[data-volume-id="VOLUME_A2_T03_002"]'), null);
-
-  // 正确目录 → 目标卷册。
+  assert.deepEqual(state().modules.act2Research.library.openedVolumeIds, []);
   await click('[data-section-id="SECTION_A2_T03_009"]');
   assert.equal(state().game.flags.FLAG_A2_LOCAL_GAZETTE_FOUND, true);
   await click('[data-shelf-entry-id="VOLUME_A2_T03_002"]');
-
-  // 只能逐页到达目标页：页序不是可激活控件。
-  assert.equal(document().querySelectorAll('.act2-library__leaves button, .act2-library__leaves a, [data-page-id][role="button"]').length, 0);
   await click('.act2-library__next');
   assert.equal(state().modules.act2Research.library.currentPageId, 'PAGE_A2_T03_004');
+  assert.notEqual(state().game.flags.FLAG_A2_BUMUZHI_FOUND, true);
+  // The TOC's missing chapters stay non-interactive; the page corner visits their shared leaf.
+  assert.equal(document().querySelectorAll('[data-missing-id] button').length, 0);
+  await click('.act2-library__next');
+  assert.match(query('.act2-library__book').textContent, /本卷阙/);
   assert.notEqual(state().game.flags.FLAG_A2_BUMUZHI_FOUND, true);
   await click('.act2-library__next');
   assert.equal(state().modules.act2Research.library.currentPageId, 'PAGE_A2_T03_005');
   assert.equal(state().game.flags.FLAG_A2_BUMUZHI_FOUND, true);
-
   assert.equal(state().game.flags.FLAG_A2_BUMU_RULE_BASIC_KNOWN, true);
   assert.ok(state().modules.notepad.autoEntryIds.includes('NOTE_A2_T03_001'));
-  assert.match(query('.act2-library__conclusion').textContent, /缺什么，就用某种东西补什么。/);
-
-  // 页面阅读已完成，后续志异仍需玩家明确发起行动。
+  assert.match(query('.act2-library__book').textContent, /唯补人所缺/);
   assert.equal(state().modules.act2Research.stage, 'library');
-  assert.equal(query('[data-action-id="A2_T03_TO_TALES"]').getAttribute('data-action-state'), 'ready');
-  // 桌面仍留在 DOM 中（被 aria-hidden），因此只检查第二幕场景与存档。
   const sceneText = query('.act2-library').textContent;
   for (const term of ['记忆', '身份', '性格', '转移', '案例一']) assert.equal(sceneText.includes(term), false, `T03 must not show T04 term: ${term}`);
   assert.equal(sceneText.includes('T04'), false);
   for (const term of ['记忆', '身份', '性格', '转移']) assert.equal(save().includes(term), false, `T03 must not persist T04 term: ${term}`);
-
-  // T04：打开两篇原文、选取跨篇片段，并确认有边界的暂定判断。
-  await click('[data-action-id="A2_T03_TO_TALES"]');
+  // Excerpt is optional: the page corner can enter the endmatter without saving it.
+  assert.deepEqual(state().modules.act2Research.library.excerptedEntryIds, []);
+  await click('.act2-library__next');
   assert.equal(state().modules.act2Research.stage, 'tales');
-  await click('details.act2-tales__index > summary');
-  for (const title of ['石工补指', '书生遗事']) {
-    await textButton(title, '.act2-tales__record');
-    const supportingPassage = query('.act2-tales__evidence blockquote');
-    assert.ok(supportingPassage.textContent.trim().length > 0, `${title} should show its original supporting passage before selection`);
-    assert.match(supportingPassage.textContent, title === '石工补指' ? /二指渐可屈伸/ : /六儿竟能读出废书数行/);
-    await click('.act2-tales__evidence button');
-    assert.equal(query('.act2-tales__evidence button').getAttribute('aria-pressed'), 'true', `${title} supporting passage should be selected`);
+  assert.deepEqual(state().modules.act2Research.library.excerptedEntryIds, []);
+
+  // T04 now lives in the same book. Read every visible final chunk, selecting two sources.
+  const records = JSON.parse(await readFile('data/act2_tales.json', 'utf8')).records.filter((record) => record.paragraphs?.length);
+  for (const [index, record] of records.entries()) {
+    await click('.act2-library__to-catalog');
+    await click(`[data-tale-toc="${record.id}"]`);
+    const count = Number(query('.act2-library').getAttribute('data-tale-spreads'));
+    assert.ok(Number.isInteger(count) && count >= 1 && count <= 16, 'tale has a bounded visible spread count');
+    for (let spread = 1; spread < count; spread++) await click('.act2-library__next');
+    const finalText = [...document().querySelectorAll(`.act2-library__page [data-tale-id="${record.id}"]`)].map((node) => node.textContent).join('');
+    assert.ok(finalText.includes(record.paragraphs.at(-1)), `${record.title} final paragraph must be visible`);
+    if (index < 2) {
+      assert.equal(document().querySelector('[data-action-id="A2_T04_OPEN_JUDGMENT"]'), null, 'judgment waits for all three complete tales');
+      await click('.act2-library__support-tab');
+      const supportingPassage = query('.act2-library__support-drawer .act2-tales__evidence blockquote');
+      assert.ok(supportingPassage.textContent.trim().length > 0, `${record.title} exposes its source before selection`);
+      assert.match(supportingPassage.textContent, index === 0 ? /二指渐可屈伸/ : /六儿竟能读出废书数行/);
+      await click('.act2-library__support-drawer .act2-tales__evidence button');
+      assert.equal(query('.act2-library__support-drawer .act2-tales__evidence button').getAttribute('aria-pressed'), 'true');
+      await click('.act2-library__support-drawer .act2-library__excerpt-close');
+    }
   }
-  await click('details.act2-tales__comparison > summary');
-  const comparisonRows = [...query('.act2-tales__comparison tbody').querySelectorAll('tr')];
-  assert.equal(comparisonRows.length, 2, 'the two read records appear as two cross-source character comparisons');
-  assert.deepEqual(comparisonRows.map((row) => row.querySelector('th[scope="row"]')?.textContent.trim()), ['周三，石匠', '六儿']);
+  assert.equal(records.length, 3);
+  assert.equal(state().modules.act2Research.tales.readTaleIds.length, 3);
+  await click('[data-action-id="A2_T04_OPEN_JUDGMENT"]');
+  const comparisonRows = [...document().querySelectorAll('.act2-library__person-card')];
+  assert.equal(comparisonRows.length, 3, 'all read records appear as cross-source comparisons');
+  assert.deepEqual(comparisonRows.map((row) => row.querySelector('h3')?.textContent.trim()), ['周三，石匠', '六儿', '北村哑女']);
   assert.equal(state().modules.act2Research.tales.supportingEvidenceIds.length, 2);
-  assert.match(query('.act2-tales__evidence-list summary').textContent, /2\/2 篇来源/);
-  await click('details.act2-tales__hypotheses > summary');
+  assert.match(query('.act2-library__evidence-summary').textContent, /2.*2.*篇来源/);
   await click('[data-inference-id="accompanied-change"]');
   await click('[data-action-id="A2_T04_CONFIRM_PATTERN"]');
   assert.equal(state().game.flags.FLAG_A2_TRANSFER_RULE_INFERRED, true);

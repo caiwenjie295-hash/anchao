@@ -6,9 +6,9 @@
 
 ## 唯一所有权
 
-Luna Max唯一产品/测试写入：补丁内全部26路径（git apply --stat可列出）；以及必要的src/design/photoInteractions/**、src/design/evidence.css、src/scenes/act1/SceneClueFocus.tsx（仅避免双层纸框兼容，保留A1现有效果），src/assets/library-v4f-20261111/**（仅当Vite拒绝public静态import时复制补丁原3张jpg字节，禁止重生成/变更hash）；scripts/verify-offline.mjs（仅原正常UI路径迁移，保留双轮及完整业务断言/无网络/零错误/清档覆盖），docs/ux-library-v4f-20261111/implementation.md。若需其他路径先报告主审分配；禁止core/story生产逻辑、data正文、原资源映射、桌面外壳、package和配置、无关脚本。补丁已包含src/story的两项测试更新，允许按真实新UI更新而不弱化业务断言。导入的原public图片字节保持。
+Luna Max唯一产品/测试写入：补丁内全部26路径（git apply --stat可列出）；以及必要的src/design/photoInteractions/**、src/design/evidence.css、src/scenes/act1/SceneClueFocus.tsx（仅避免双层纸框兼容，保留A1现有效果），src/assets/library-v4f-20261111/**（仅当Vite拒绝public静态import时复制补丁原3张jpg字节，禁止重生成/变更hash），docs/ux-library-v4f-20261111/implementation.md。若需其他路径先报告主审分配；禁止core/story生产逻辑、data正文、原资源映射、桌面外壳、package和配置、无关脚本。补丁已包含src/story的两项测试更新，允许按真实新UI更新而不弱化业务断言。导入的原public图片字节保持。
 
-Codex主审：本合同、docs/ux-library-v4f-20261111/除implementation.md外的文档与夹具、docs/reviews/UX-LIBRARY-V4F-20261111.md、CLOUD_HANDOFF/维护导航/progress/changelog/todo。只读参考产品，做集成和组合验收。节点应用/cherry-pick后实看，不复制执行者WIP。
+Codex主审：scripts/verify-offline.mjs（唯一写入者，正常UI路径迁移，保留双轮/业务断言/无网络/零错误/清档）；本合同、docs/ux-library-v4f-20261111/除implementation.md外的文档与夹具、docs/reviews/UX-LIBRARY-V4F-20261111.md、CLOUD_HANDOFF/维护导航/progress/changelog/todo。只读参考产品，做集成和组合验收。节点应用/cherry-pick后实看，不复制执行者WIP。
 
 ## 合并规则
 
