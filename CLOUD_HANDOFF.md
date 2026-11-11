@@ -1,5 +1,12 @@
 # 暗潮：电脑端改造云端交接
 
+## 2026-11-11 v4f补丁已合并（APPROVED）
+
+当前改造分支codex/UX-DESIGNEER-20261110-review已纳入用户v4f图书馆、聚光及A4改动；按用户补充取舍保留原PolaroidPhoto，排除补丁的InvestigationDetail/对应测试/polaroidCard.css三项替换。main与第一幕2f013da布局修复不变。定位与验收见docs/ux-library-v4f-20261111/，合同与审查见同任务工单/review。源码本地仍在_worktrees/UX-DESIGNEER-20261110-review。
+
+718项（137文件）通过，网页/离线build通过，279文件86,762,598bytes SHA校验和真实Mac Chrome file通过；新版正常UI路径双轮离线及四幕流程/存档重载/清零/无网络/零运行时错误全部通过。完整gate初次在图片内联断言失败，已加no-inline修复，保留原断言，重跑受影响build/离线/包/Chrome检查通过。最终产品82a8284；最后文档提交仅重建同源包。用户七条待改意见及missing-pages=true保留，手机未专项；旧第一幕擦除/白光请求不在此次图书馆整合中宣称完成。
+
+
 更新：2026-11-10。
 
 最新用户纠偏节点：`2f013da`修复A1首场景被说明挤没、图片灰绿侧底与动作按钮断行；1280实看/build通过，本轮全量与离线尚未重验。新增“持续擦除黑遮罩+靠近热点白光”尚未实施。五小时剩30%暂停约束仍有效。当前ZIP为旧eb970196；继续先读`docs/work_orders/工单/UX-SCENE-CORRECTIONS-20261110.md`与对应validation，不要把下方上一轮APPROVED当本轮验收。

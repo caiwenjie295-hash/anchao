@@ -1,6 +1,6 @@
 # v4f用户补丁整合验收
 
-状态：进行中，尚未批准。当前review基线9d92af7，补丁基线85cc140，main3d3ec299保持。
+状态：APPROVED。当前review基线9d92af7，补丁基线85cc140，main3d3ec299保持。
 
 ## 来源
 
@@ -21,3 +21,12 @@
 ## 用户补充取舍
 
 用户明确保留当前review拍立得，不采用补丁替换。InvestigationDetail.tsx/对应test/polaroidCard.css替换不纳入，A1/A3保留原PolaroidPhoto与长文字静止方案；其余补丁继续合并。
+
+## 最终验收
+
+- 合并节点37d60f7；最终书框de31908；独立资源82a8284。仅两个三方冲突：PhotoViewport合并prop且A3只用新罩；Act3保留原Polaroid、仅换聚光prop。3张public原图字节保留，2张运行图经静态import+no-inline独立emit进入离线包。旧第一幕/核心/data/桌面无变更。
+- 生产夹具1280x800走通全景/九格/取册/目录/未解锁提示/补母志/摘录/卷末；最终金框上三篇各两翻(data-spreads=2)，都到末段才出现判断。两来源片段选中后确认暂定判断，才出现前往高中；1280/1440判断抽屉保持分页2，1280书页缩0.8位于x41.4至718.6，完整位于520px抽屉左侧。实际UI范围为隔离内存夹具，不冒充人工整轮通关。
+- A1入口图片394px高、透明侧底；拍照/下山nowrap保留；A1/A3均preferred-polaroid=1、patchCard=0。A3新mask=1旧mask=0，真实指针拖动与热点/特写关闭正常。截图在外层QA/screenshots，包括judgment-final-1280/1440.jpg、preferred-polaroid-a1-1280及a3-1440.jpg。
+- Node24.15.0：137文件718测试（180unit/507component/31acceptance）通过。首轮quality-gate在离线图片内联检查失败，原检查未弱化；改?url&no-inline与CSS?no-inline后重新web/offline build、默认test:offline双轮/四幕、包SHA与Chrome file均通过。279文件86,762,598bytes。日志quality-gate.log、offline-final.log、build-final.log。后两构建的变化仅asset query，不重复无关718项。
+- QA脚本只迁移T03/T04真实UI步骤：全景/架/目录/阙页/目标页/同卷志异/三篇末段/支持片段/判断。保留原Flag、笔记、两来源、摘录可选、学校后续、四幕、双轮、清零与无外网/零错误断言，未改超时。CSS匹配器有非致命BREAK日志，退出0和原错误断言通过。
+- 默认本卷阙开关仍true，用户说明七条未实施意见只记录。原main和旧release-main指针不动。当前批准特性分支交付，不执行main合并。
